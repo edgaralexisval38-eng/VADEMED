@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Otitis Media Aguda · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0a7c5c;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.recb{background:#f0faf6;border:1px solid #cdeadd;border-radius:var(--rs);padding:10px 12px;margin-top:10px;font-size:12px;color:var(--gray-700);line-height:1.6;}
+.recb b{color:var(--ac);}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#0a7c5c;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1a4a3c,#0a7c5c);">
+  <div class="hdr-top">
+    <div class="hdr-icon">👂</div>
+    <div>
+      <div class="hdr-eye">Pediatría · Medicina General · ORL</div>
+      <div class="hdr-title">Otitis Media Aguda</div>
+      <div class="hdr-sub">AAP 2013 · Consenso SEIP/AEPap 2023 · Guía-ABE 2023 · GPC IMSS</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Pico al 3er año</span>
+    <span class="badge">Amoxicilina dosis alta</span>
+    <span class="badge">Espera vigilante</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">3er año</div><div class="qs-l">pico de incidencia</div></div>
+  <div class="qs"><div class="qs-v">80%</div><div class="qs-l">resuelve solo (adulto)</div></div>
+  <div class="qs"><div class="qs-v">Amoxicilina</div><div class="qs-l">de elección</div></div>
+  <div class="qs"><div class="qs-v">Espera</div><div class="qs-l">vigilante (no compl.)</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>OMA:</strong> infección aguda del oído medio con inicio brusco (&lt;48 h), <strong>derrame en oído medio</strong> e <strong>inflamación</strong>. Es la infección bacteriana más frecuente en la infancia y la principal causa de prescripción de antibióticos en pediatría. El <strong>80% resuelve solo</strong> → la "espera vigilante" es el estándar en casos no complicados.</p>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <thead><tr><th>Tipo</th><th>Criterios</th><th>Manejo</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">OMA confirmada</td><td>Inicio agudo + derrame + inflamación (otalgia/hiperemia)</td><td>ATB si criterios; si no, espera vigilante</td></tr>
+        <tr><td class="dn">OME (oído secretor)</td><td>Derrame SIN inflamación aguda</td><td>NO antibiótico · observar 3 meses</td></tr>
+        <tr><td class="dn">OMA recurrente</td><td>≥3 en 6 meses o ≥4 en 12 meses</td><td>Referir ORL · valorar tubos</td></tr>
+        <tr><td class="dn">OMA con perforación</td><td>Otorrea aguda por perforación</td><td>ATB oral + gotas de quinolona · sin agua</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><strong>No confundir OMA con OME.</strong> La otitis media con efusión (derrame sin inflamación) NO requiere antibióticos. Tratar OME con ATB es un error común que favorece la resistencia.</div></div>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Dato</th><th>Cifra</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Niños con ≥1 episodio</td><td>80% antes de los 3 años</td></tr>
+      <tr><td class="dn">Pico de incidencia</td><td>6-18 meses (trompa inmadura)</td></tr>
+      <tr><td class="dn">Resolución espontánea adulto</td><td>80% en 3 días</td></tr>
+      <tr><td class="dn">Resolución espontánea &lt;2 a</td><td>30-40% (umbral de ATB más bajo)</td></tr>
+      <tr><td class="dn">OMA recurrente</td><td>20% de los niños con OMA</td></tr>
+      <tr><td class="dn">Mastoiditis</td><td>0.004-0.02% · NNT con ATB ≈ 4,831</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="fp" style="background:var(--rl);color:var(--r);"><strong>Trompa de Eustaquio:</strong> en niños &lt;3 a es más horizontal (30° vs 45°), corta y flácida → el moco nasofaríngeo asciende al oído medio durante las IRA. La presión negativa aspira bacterias/virus → inflamación.</div>
+    <div class="fp" style="background:var(--al);color:var(--a);"><strong>Patógenos:</strong> S. pneumoniae (25-40%), H. influenzae no tipificable (20-30%), M. catarrhalis (10-15%). H. influenzae y M. catarrhalis producen betalactamasas; el neumococo NO (altera sus PBP) → <strong>amoxicilina a dosis alta (80-90 mg/kg/día)</strong> supera la MIC del neumococo resistente, no el clavulánico.</div>
+    <div class="fp" style="background:var(--bl);color:var(--b);"><strong>Resolución espontánea:</strong> 80% en adultos, 30-40% en &lt;2 a, por drenaje tubárico o perforación con otorrea. El ATB acelera el dolor 24-48 h pero no cambia el resultado a 7 días en &gt;2 a con OMA no grave.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Factor</th><th>Riesgo</th><th>Modificable</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Edad &lt;2 años</td><td>Complicaciones/recurrencia ×3-5</td><td>No</td></tr>
+      <tr><td class="dn">Guardería</td><td>×2-3</td><td>Parcial</td></tr>
+      <tr><td class="dn">Chupete</td><td>×2</td><td>✅ Limitar al inicio del sueño</td></tr>
+      <tr><td class="dn">Lactancia materna &lt;6 m</td><td>Protector (su ausencia = riesgo)</td><td>✅ Promover</td></tr>
+      <tr><td class="dn">Tabaquismo en el hogar</td><td>×2-3</td><td>✅ Eliminar humo</td></tr>
+      <tr><td class="dn">Paladar hendido</td><td>Disfunción tubárica severa</td><td>✅ Corrección quirúrgica</td></tr>
+      <tr><td class="dn">No vacunado VNC-13</td><td>Mayor riesgo por neumococo</td><td>✅ Vacunar</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica y otoscopía</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Signo</th><th>Lactante</th><th>Niño 1-5a</th><th>&gt;5a / adulto</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Otalgia</td><td>Irritabilidad, jala oreja</td><td>Dolor referido</td><td>Otalgia intensa</td></tr>
+        <tr><td class="dn">Fiebre</td><td>&gt;38° frecuente</td><td>Frecuente</td><td>40% sin fiebre</td></tr>
+        <tr><td class="dn">Otoscopía</td><td>MT abombada + eritema</td><td>Abombada + opaca</td><td>Abombada/eritematosa</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-g" style="margin-top:10px;"><span class="ai">🔎</span><div><strong>Confirman OMA:</strong> abombamiento de la MT (el signo de mayor valor), opacificación/color amarillento, pérdida del reflejo luminoso, hiperemia intensa, movilidad reducida (otoscopía neumática). <strong>NO confirman:</strong> MT solo eritematosa sin abombamiento (puede ser por llanto/fiebre); MT normal descarta OMA.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — no cometer</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Dar ATB a todo niño con otalgia + fiebre.</strong> La OMA requiere abombamiento + derrame + inflamación. Confirmar con otoscopía.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>No ofrecer la espera vigilante</strong> en &gt;2 a con OMA no grave: es equivalente al ATB inmediato con menos efectos adversos. La clave es asegurar el seguimiento.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Amoxicilina a dosis estándar (40 mg/kg/día).</strong> La dosis ALTA (80-90) es esencial para superar la MIC del neumococo resistente.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Amoxicilina-clavulanato como 1ª línea universal.</strong> El clavulánico no ayuda contra el neumococo y da más diarrea. Reservar para fracaso, conjuntivitis purulenta, recurrente o ATB reciente.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Antihistamínicos/descongestivos/mucolíticos:</strong> sin beneficio; más efectos adversos. Contraindicados.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>No referir la mastoiditis</strong> (dolor retroauricular + eritema + desplazamiento del pabellón) — emergencia ORL.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">ATB inmediato vs espera vigilante</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Situación</th><th>&lt;6 m</th><th>6m-2a unilat</th><th>6m-2a bilat</th><th>&gt;2a</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">No grave</td><td class="dm">ATB</td><td>Espera</td><td class="dm">ATB</td><td>Espera</td></tr>
+        <tr><td class="dn">Grave (fiebre ≥39° / otalgia &gt;48h / tóxico)</td><td class="dm">ATB</td><td class="dm">ATB</td><td class="dm">ATB</td><td class="dm">ATB</td></tr>
+        <tr><td class="dn">Otorrea</td><td class="dm">ATB</td><td class="dm">ATB</td><td class="dm">ATB</td><td class="dm">ATB</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-i" style="margin-top:10px;"><span class="ai">📋</span><div><strong>ATB inmediato a cualquier edad:</strong> fiebre ≥39° en 24 h · otalgia severa &gt;48 h · otorrea · bilateral en &lt;2 a · inmunocomprometido / implante coclear · sin posibilidad de seguimiento · fracaso previo.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔦</span><span class="st">Técnica otoscópica</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Tracción del pabellón:</strong> arriba-atrás en &gt;2 a; abajo-atrás en &lt;2 a. Espéculo grande sin forzar. Evaluar color, transparencia, posición, reflejo luminoso y movilidad (otoscopio neumático).</p>
+    <div class="tw" style="margin-top:6px;"><table class="t">
+      <thead><tr><th>Hallazgo</th><th>Normal</th><th>OMA</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Posición</td><td>Cóncava</td><td class="dm">Abombada ⭐</td></tr>
+        <tr><td class="dn">Color</td><td>Gris nacarado</td><td>Eritematosa/amarilla/opaca</td></tr>
+        <tr><td class="dn">Reflejo luminoso</td><td>Intacto</td><td>Ausente/distorsionado</td></tr>
+        <tr><td class="dn">Movilidad</td><td>Normal</td><td>Reducida/ausente</td></tr>
+      </tbody>
+    </table></div>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Diagnóstico</th><th>Clave</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Otitis externa</td><td>Dolor al traccionar el pabellón · MT normal · conducto edematoso</td></tr>
+      <tr><td class="dn">OME (oído secretor)</td><td>Derrame SIN inflamación · sin otalgia aguda · sin fiebre</td></tr>
+      <tr><td class="dn">Miringitis bullosa</td><td>Ampollas sobre la MT · muy dolorosa · viral</td></tr>
+      <tr><td class="dn">Otalgia referida</td><td>MT normal · dolor dentario/ATM/faríngeo</td></tr>
+      <tr><td class="dn">Colesteatoma</td><td>Otorrea crónica maloliente · retracción/perforación atical</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios diagnósticos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Estudio</th><th>Cuándo / utilidad</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Otoscopía ± neumática</td><td>Siempre · estándar de oro</td></tr>
+      <tr><td class="dn">Timpanometría</td><td>OMA recurrente / OME · curva B = derrame</td></tr>
+      <tr><td class="dn">Audiometría</td><td>Hipoacusia &gt;3 meses · OME persistente</td></tr>
+      <tr><td class="dn">Timpanocentesis</td><td>OMA grave refractaria · inmunocomprometido · neonato · cultivo</td></tr>
+      <tr><td class="dn">TAC temporal</td><td>Sospecha de mastoiditis / complicación intracraneal</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Gravedad de OMA — decisión de antibiótico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Clasifica la OMA como <strong>grave o no grave</strong> para decidir entre <strong>antibiótico inmediato</strong> y <strong>espera vigilante</strong>.</div></div>
+    <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:14px;">
+      <div id="grav-items"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button onclick="calcGrav()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular</button>
+        <button onclick="resetGrav()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+      </div>
+      <div id="grav-result" style="display:none;margin-top:10px;"></div>
+    </div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">➕</span><div>Indican ATB inmediato también: edad &lt;6 m · otorrea · inmunocomprometido/implante coclear · sin posibilidad de seguimiento · fracaso previo.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍼</span><span class="st">Sospecha de OMA en el lactante</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Orienta la <strong>sospecha</strong> en &lt;12 m (síntomas inespecíficos); la confirmación es siempre por otoscopía.</div></div>
+    <div class="prose"><p>Sospechar OMA si: irritabilidad inexplicada + fiebre sin foco · jala/frota el oído (50%) · llanto nocturno nuevo / mal sueño · recuperación incompleta de IRA con fiebre persistente.</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">¿ATB tópico u oral?</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Decide la <strong>vía del antibiótico</strong> (tópico ótico vs oral) según haya o no perforación/tubos.</div></div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>Situación</th><th>Tópico</th><th>Oral</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Otorrea sin perforación visible</td><td>No</td><td>Sí</td></tr>
+        <tr><td class="dn">Otorrea con perforación</td><td>✅ Quinolona ótica</td><td>Sí (combinado)</td></tr>
+        <tr><td class="dn">Tubos de ventilación + otorrea</td><td>✅ 1ª línea tópica</td><td>Solo si sistémico</td></tr>
+        <tr><td class="dn">Otitis externa</td><td>✅ 1ª línea</td><td>No (salvo complicada)</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚨</span><div>Si hay dolor/eritema retroauricular + desplazamiento del pabellón → mastoiditis: urgencias, TAC, ATB IV y ORL (no manejo ambulatorio).</div></div>
+    <div id="oma-step"></div>
+  </div></div>
+</div>
+
+<!-- TX CONSULTA -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Tratamiento por situación — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="oma-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showOmaPop('pedi',this)">👶 Pediátrico</button>
+      <button class="pchip" onclick="showOmaPop('adulto',this)">🧑 Adulto</button>
+      <button class="pchip" onclick="showOmaPop('embarazo',this)">🤰 Embarazo</button>
+      <button class="pchip" onclick="showOmaPop('fracaso',this)">💊 Fracaso a amoxicilina</button>
+      <button class="pchip" onclick="showOmaPop('perfor',this)">🦻 Con perforación</button>
+      <button class="pchip" onclick="showOmaPop('alergia',this)">⚠️ Alérgico a penicilina</button>
+      <button class="pchip" onclick="showOmaPop('recurrente',this)">🔄 Recurrente</button>
+    </div>
+    <div id="oma-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- TX HOSP -->
+<div class="panel" id="tab-txh">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛏️</span><span class="st">Hospitalario — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="hosp-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showHospPop('mastoid',this)">🚨 Mastoiditis</button>
+      <button class="pchip" onclick="showHospPop('intracraneal',this)">🧠 Intracraneales</button>
+      <button class="pchip" onclick="showHospPop('neonato',this)">👶 Neonato (&lt;1 mes)</button>
+    </div>
+    <div id="hosp-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacosOma(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="ind-b"><div class="ind-bh">Indicaciones por fármaco — enfermería y cuidador</div>
+    <div class="ind-bb" id="ind-list"></div>
+  </div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="escen-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="escen-out"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Seguimiento por fase</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">Espera vigilante</div><div class="fu-x">48-72 h: ¿mejoró el dolor/fiebre? Si persiste → amoxicilina; si mejora → continuar sin ATB.</div></div>
+    <div class="fu-r"><div class="fu-t">Con ATB</div><div class="fu-x">48-72 h: ¿respuesta? Si fracaso → amoxicilina-clavulanato.</div></div>
+    <div class="fu-r"><div class="fu-t">Post-alta</div><div class="fu-x">2-4 sem: ¿hipoacusia / derrame residual? Otoscopía ± timpanometría.</div></div>
+    <div class="fu-r"><div class="fu-t">Con perforación</div><div class="fu-x">4-6 sem: ¿cierre? Si persiste &gt;3 meses → ORL.</div></div>
+    <div class="fu-r"><div class="fu-t">Recurrente</div><div class="fu-x">3-6 meses: nuevos episodios + audiometría → ORL / tubos.</div></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div>El derrame residual (OME) puede durar 4-6 semanas sin indicar fracaso: 40% a las 4 sem, 10% a los 3 meses. Solo se interviene si persiste &gt;3 meses con hipoacusia.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👂</span><span class="st">Seguimiento de hipoacusia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Niño &lt;5 a: otoscopía + timpanometría a las 4-8 sem. Derrame &gt;3 meses (OME) con hipoacusia &gt;20-30 dB → ORL para tubos. <strong>Metas:</strong> audiometría &lt;20 dB y timpanograma tipo A = resolución completa (tipo B = derrame persistente).</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">OMA recurrente</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Tras el 3er episodio en 6 meses: identificar factores, completar VNC-13 y referir a ORL (valorar tubos ± adenoidectomía). Audiometría/timpanometría semestral con tubos.</p></div>
+    <div class="recb"><b>Recurrencia:</b> lo más modificable que la reduce: vacunación (VNC-13 reduce OMA neumocócica vacunal 34%), eliminar el tabaquismo pasivo, suspender el chupete y lactancia materna exclusiva &gt;6 meses. Los tubos reducen ~1.5 episodios/año.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦻</span><span class="st">OMA con perforación</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>4 sem: ¿cerró? 6-8 sem: otoscopía + audiometría básica. Persistente &gt;3 meses → ORL (timpanoplastia). <strong>No introducir agua</strong> en el oído; al bañarse usar tapón/algodón con vaselina; evitar bucear hasta confirmar el cierre. Solo es seguro el ciprofloxacino ótico (no gotas con alcohol).</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Referencia urgente a ORL</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Criterio</th><th>Por qué</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Eritema/desplazamiento del pabellón</td><td class="dm">Mastoiditis (URGENTE)</td></tr>
+      <tr><td class="dn">Parálisis facial ipsilateral</td><td class="dm">Complicación intratemporal (URGENTE)</td></tr>
+      <tr><td class="dn">Vértigo + hipoacusia súbita</td><td class="dm">Laberintitis (URGENTE)</td></tr>
+      <tr><td class="dn">Cefalea + rigidez de nuca</td><td class="dm">Meningitis otógena (URGENTE)</td></tr>
+      <tr><td class="dn">Otorrea maloliente crónica &gt;3 m</td><td>Posible colesteatoma</td></tr>
+      <tr><td class="dn">OMA recurrente / OME &gt;3 m</td><td>Valorar tubos de ventilación</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Resumen de evidencia</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Espera vigilante — nivel A:</strong> el ATB inmediato solo acorta el dolor ~1 día (Rovers, Lancet 2006). AAP 2013 la estableció como opción válida en ≥6 m con OMA no grave y seguimiento. No es "no hacer nada": requiere analgesia y plan a 48-72 h.</p>
+    <p><strong>Amoxicilina dosis alta — nivel A:</strong> los betalactámicos dependen del T&gt;MIC; 80-90 mg/kg/día supera la MIC del neumococo con sensibilidad reducida (SEIP/AEPap 2023; Guía-ABE 2023). El clavulánico no ayuda contra el neumococo.</p>
+    <p><strong>Amoxi-clavulanato en fracaso — nivel A:</strong> cubre H. influenzae/M. catarrhalis productores de betalactamasas (erradicación 95% vs 50%). La formulación 14:1/ES da la dosis alta de amoxicilina con menos diarrea.</p>
+    <p><strong>Ceftriaxona IM — nivel A:</strong> 3 dosis IM equivalen a 10 días de amoxicilina oral (Varsano 1997); útil si vómito o dudas de adherencia.</p>
+    <p><strong>Mastoiditis — nivel B:</strong> ceftriaxona IV (± vancomicina si neumococo resistente); mastoidectomía en 20-30% (absceso/coalescente). NNT ≈ 4,831 para prevenir 1 mastoiditis: el ATB universal no se justifica por ello.</p>
+    <p><strong>Sin antihistamínicos/descongestivos — nivel A:</strong> no aceleran la resolución y aumentan efectos adversos; contraindicados.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Guías y referencias</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2013</span></div><div class="bib-r">Lieberthal AS et al. <strong>The Diagnosis and Management of Acute Otitis Media (AAP).</strong> Pediatrics 2013;131(3):e964-e999.</div></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2023</span></div><div class="bib-r">Consenso <strong>SEIP/AEPap</strong>. Etiología, diagnóstico y tratamiento de OMA y sinusitis. An Pediatr (Barc) 2023;98(5):362-372.</div></div>
+    <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2023</span></div><div class="bib-r"><strong>Guía-ABE:</strong> Otitis media aguda (v.3/2023).</div></div>
+    <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2006</span></div><div class="bib-r">Rovers MM et al. <strong>Antibiotics for acute otitis media: meta-analysis (IPD).</strong> Lancet 2006;368:1429-1435.</div></div>
+    <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">1997</span></div><div class="bib-r">Varsano I et al. <strong>Ceftriaxona IM vs amoxicilina-clavulanato oral en OMA.</strong> Eur J Pediatr 1997.</div></div>
+    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">2024</span></div><div class="bib-r"><strong>MSD Manual · GPC IMSS</strong> — Otitis Media Aguda.</div></div>
+  </div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ===== Escala de gravedad (checkbox) ===== */
+var GRAV_Q=['Fiebre ≥39 °C en las últimas 24 h','Otalgia severa (>moderada) o duración >48 h','OMA bilateral en menor de 2 años'];
+function buildGrav(){
+  var el=document.getElementById('grav-items');if(!el)return;
+  var h='';
+  GRAV_Q.forEach(function(q,i){
+    h+='<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;padding:9px 12px;background:#f9fafb;border:1.5px solid #e2e8f0;border-radius:var(--rs);margin-bottom:6px;">'
+      +'<input type="checkbox" name="grav'+i+'" style="accent-color:#0a7c5c;width:16px;height:16px;flex-shrink:0;"> '+q+'</label>';
+  });
+  el.innerHTML=h;
+}
+function calcGrav(){
+  var c=0;for(var i=0;i<GRAV_Q.length;i++){if(document.querySelector('input[name="grav'+i+'"]:checked'))c++;}
+  var cat,color,bg,act;
+  if(c===0){cat='OMA NO grave';color='#166534';bg='#dcfce7';act='Espera vigilante 48-72 h si >6 meses y hay posibilidad de seguimiento (+ analgesia siempre).';}
+  else{cat='OMA GRAVE';color='#7b1c1c';bg='#fdeaea';act='Antibiótico inmediato: amoxicilina dosis alta 80-90 mg/kg/día.';}
+  var el=document.getElementById('grav-result');
+  el.innerHTML='<div style="background:'+bg+';border-left:4px solid '+color+';border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:28px;font-weight:900;color:'+color+';">'+c+'/3</div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+color+';">'+cat+'</div>'
+    +'<div style="font-size:12.5px;color:#374151;margin-top:6px;line-height:1.6;">'+act+'</div></div>';
+  el.style.display='block';
+}
+function resetGrav(){var c=document.getElementById('grav-items');if(c){var r=c.querySelectorAll('input');for(var i=0;i<r.length;i++)r[i].checked=false;}var el=document.getElementById('grav-result');if(el){el.style.display='none';el.innerHTML='';}}
+
+/* ===== Calculadora pediátrica ===== */
+function omaCalcHTML(idp){
+  return '<div class="calc-w"><div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:10px;">Calculadora pediátrica por peso (amoxicilina dosis alta + analgesia)</div>'
+    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;"><span style="font-size:12px;color:#374151;">Peso:</span>'
+    +'<input id="'+idp+'-peso" type="number" min="3" max="40" placeholder="kg" class="calc-in"><span style="font-size:12px;color:#6b7280;">kg</span>'
+    +'<button onclick="calcOma(\''+idp+'\')" style="padding:7px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;">Calcular</button></div>'
+    +'<div id="'+idp+'-result" style="display:none;"></div></div>';
+}
+function calcOma(idp){
+  var kg=parseFloat(document.getElementById(idp+'-peso').value);
+  var out=document.getElementById(idp+'-result');
+  if(!kg||kg<3||kg>40){out.style.display='block';out.innerHTML='<div style="color:#c0392b;font-size:12px;">Ingresa un peso entre 3 y 40 kg.</div>';return;}
+  function R(n){return Math.round(n);}function R1(n){return Math.round(n*10)/10;}
+  var dayL=R(80*kg),dayH=Math.min(R(90*kg),3000);
+  var c8=R(85*kg/3),c12=R(85*kg/2);
+  var c8_250=R1(c8/50),c8_400=R1(c8/80),c12_250=R1(c12/50),c12_400=R1(c12/80);
+  var para=R(15*kg),ibu=R(10*kg);
+  var ceft=Math.min(R(50*kg),1000);
+  function row(t,v){return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">'+t+'</span><span style="font-weight:700;color:#0a7c5c;text-align:right;max-width:62%;">'+v+'</span></div>';}
+  var h='<div style="background:#f0faf6;border-radius:var(--rs);padding:10px 12px;">';
+  h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:6px;">Dosis para '+kg+' kg</div>';
+  h+='<div style="font-size:11px;font-weight:700;color:#0a5c45;margin:4px 0 2px;">AMOXICILINA (80-90 mg/kg/día)</div>';
+  h+=row('Dosis diaria',dayL+'-'+dayH+' mg/día');
+  h+=row('c/8h',c8+' mg ≈ '+c8_250+' mL (250/5) · '+c8_400+' mL (400/5)');
+  h+=row('c/12h',c12+' mg ≈ '+c12_250+' mL (250/5) · '+c12_400+' mL (400/5)');
+  h+='<div style="font-size:11px;font-weight:700;color:#7a4a00;margin:8px 0 2px;">ANALGESIA</div>';
+  h+=row('Paracetamol (15 mg/kg c/6-8h)',para+' mg/dosis');
+  h+=row('Ibuprofeno >6m (10 mg/kg c/6-8h)',ibu+' mg/dosis');
+  h+='<div style="font-size:11px;font-weight:700;color:#1a3a5c;margin:8px 0 2px;">RESCATE</div>';
+  h+=row('Ceftriaxona IM (50 mg/kg, máx 1 g)',ceft+' mg/dosis × 1-3 días');
+  h+='</div>';
+  out.style.display='block';out.innerHTML=h;
+}
+
+/* ===== Fichas de fármaco (chips) ===== */
+function omaFpToggle(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:58%;">'+v+'</span></div>';}
+function buildOmaCards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='oc-'+i+'-'+Math.random().toString(36).substr(2,4);
+    var col=f.pri?color:'#374151';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="omaFpToggle(\''+fid+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-arr" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.dp)h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';">Dosis pediátrica</div><div style="font-size:13.5px;font-weight:800;color:'+col+';">'+f.dp+'</div>';
+    if(f.da)h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';margin-top:4px;">Dosis adulto</div><div style="font-size:13.5px;font-weight:700;color:'+col+';">'+f.da+'</div>';
+    if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">Duración: '+f.dur+'</div>';
+    h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía/Intervalo/Timing',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('FDA / Lactancia',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+var OMA_POP={
+  pedi:function(){
+    return '<div class="alert a-i"><span class="ai">💡</span><div>Analgesia PRIMERO: el dolor es lo más molesto, no esperes al ATB. Paracetamol o ibuprofeno desde la 1ª consulta.</div></div>'
+    +omaCalcHTML('oma-ped')
+    +buildOmaCards('#0a7c5c',[
+      {n:'Paracetamol VO',pri:true,linea:'⭐ Analgesia — siempre, dé o no antibiótico',
+       dp:'10-15 mg/kg/dosis c/6-8h (máx 5 dosis/día · 75 mg/kg/día)',da:'500-1000 mg c/6-8h',dur:'Mientras dure el dolor (48-72 h)',
+       iv:'VO · c/6-8h · con o sin alimentos',pres:'Susp 120/160/250 mg/5 mL · tabs 500 mg · Tempra · Panadol · genérico · IMSS',fda:'B · compatible',ci:'Hepatopatía grave',ea:'Hepatotoxicidad por sobredosis',
+       nota:'Puede alternarse con ibuprofeno cada 4 h para mejor control del dolor en OMA grave.'},
+      {n:'Ibuprofeno VO',pri:true,linea:'Analgesia (>6 meses) — más potente para otalgia',
+       dp:'5-10 mg/kg/dosis c/6-8h (máx 40 mg/kg/día)',da:'400 mg c/8h',dur:'Mientras dure el dolor',
+       iv:'VO · c/6-8h · con alimentos',pres:'Susp 100/200 mg/5 mL · tabs 200/400 mg · Advil · Motrin · genérico · IMSS',fda:'C/D (evitar 3er trim embarazo)',ci:'<6 meses · IR · trombocitopenia',ea:'GI, renal',
+       nota:'Mayor efecto antiinflamatorio/analgésico que el paracetamol para la otalgia.'},
+      {n:'Amoxicilina VO',pri:true,linea:'⭐ Antibiótico de 1ª línea — dosis ALTA',
+       dp:'80-90 mg/kg/día en 2-3 dosis (máx 3 g/día) · c/12h: 40-45 mg/kg/dosis · c/8h: 26-30 mg/kg/dosis',da:'500 mg c/8h o 875 mg c/12h',
+       dur:'<2 a o grave: 10 días · 2-5 a: 7 días · >5 a: 5-7 días',
+       iv:'VO · c/8-12h · con o sin alimentos',pres:'Susp 125/250/400 mg/5 mL · caps 250/500 mg · tabs 500 mg · Amoxil · genérico · IMSS',fda:'B · compatible ✅',ci:'Alergia a penicilinas',ea:'Diarrea, exantema, candidiasis oral',
+       nota:'La dosis ALTA es esencial (la estándar de 40 mg/kg/día no supera la MIC del neumococo resistente). El clavulánico NO ayuda contra el neumococo.'}
+    ]);
+  },
+  adulto:function(){
+    return '<div class="alert a-i"><span class="ai">🧑</span><div>Espera vigilante en el adulto sano sin gravedad: analgesia y, si no mejora en 48-72 h, iniciar amoxicilina.</div></div>'
+    +buildOmaCards('#0a7c5c',[
+      {n:'Amoxicilina VO',pri:true,linea:'⭐ Primera línea',
+       da:'500 mg c/8h o 875 mg c/12h × 5-7 días · grave: 875-1000 mg c/8h × 7-10 días',
+       iv:'VO · c/8-12h · con o sin alimentos',pres:'Tabs 500/875 mg · caps 250/500 mg · Amoxil · genérico · IMSS',fda:'B',ci:'Alergia a penicilinas',ea:'Diarrea, exantema',
+       nota:'875 mg c/12h tiene mejor adherencia que 500 mg c/8h con igual eficacia.'},
+      {n:'Amoxicilina-clavulanato VO',pri:false,linea:'2ª línea (fracaso / ATB reciente / conjuntivitis)',
+       da:'875/125 mg c/12h × 5-7 días (o 500/125 c/8h)',
+       iv:'VO · c/12h · con alimentos',pres:'Tabs 500/125 · 875/125 mg · Augmentin · Clavulin · genérico · IMSS',fda:'B',ci:'Hepatopatía · ictericia previa por el fármaco',ea:'Diarrea (clavulanato)',
+       nota:'Cubre H. influenzae/M. catarrhalis productores de betalactamasas.'},
+      {n:'Analgesia',pri:true,linea:'Siempre',
+       da:'Paracetamol 500-1000 mg c/6-8h · o ibuprofeno 400 mg c/8h',
+       iv:'VO · c/6-8h',pres:'Paracetamol tabs 500 mg · ibuprofeno 400 mg · genérico · IMSS',fda:'Paracetamol B',ci:'—',ea:'—',
+       nota:'Control del dolor desde la primera consulta.'}
+    ]);
+  },
+  embarazo:function(){
+    return '<div class="alert a-i"><span class="ai">🤰</span><div>Amoxicilina 1ª línea; paracetamol para el dolor. Evitar ibuprofeno en 3er trimestre, fluoroquinolonas y claritromicina.</div></div>'
+    +'<div class="tw"><table class="t"><thead><tr><th>Fármaco</th><th>Cat FDA</th><th>Indicación</th></tr></thead><tbody>'
+    +'<tr><td class="dn">Amoxicilina VO</td><td>B ✅</td><td>500 mg c/8h × 7-10 días</td></tr>'
+    +'<tr><td class="dn">Amoxi-clavulanato</td><td>B ✅</td><td>875/125 mg c/12h si fracaso</td></tr>'
+    +'<tr><td class="dn">Azitromicina</td><td>B ✅</td><td>500 mg día 1, 250 mg días 2-5 (si alergia a penicilina)</td></tr>'
+    +'<tr><td class="dn">Paracetamol</td><td>B ✅</td><td>Analgesia 1ª línea, todos los trimestres</td></tr>'
+    +'<tr><td class="dn">Ibuprofeno</td><td>C/D ⚠️</td><td>Solo 1er-2do trimestre (evitar 3er)</td></tr>'
+    +'<tr><td class="dn">Ciprofloxacino</td><td>C ⚠️</td><td>Evitar (artropatía fetal)</td></tr>'
+    +'<tr><td class="dn">Claritromicina</td><td>C ⚠️</td><td>Evitar</td></tr>'
+    +'</tbody></table></div>';
+  },
+  fracaso:function(){
+    return '<div class="alert a-w"><span class="ai">⚠️</span><div>Fracaso = persistencia de fiebre Y/O otalgia tras 48-72 h de amoxicilina bien dosificada. La otorrea persistente en un niño ya mejorado NO es fracaso.</div></div>'
+    +buildOmaCards('#7b1c1c',[
+      {n:'Amoxicilina-clavulanato VO',pri:true,linea:'⭐ 1ª opción de rescate',
+       dp:'90 mg/kg/día de amoxicilina en 2 dosis (proporción 14:1 o ES = menos diarrea) · máx 3 g amox/día',da:'875/125 mg c/12h × 7-10 días',
+       dur:'10 días (pediátrico)',iv:'VO · c/12h · con alimentos',pres:'Susp 250/62.5 · 400/57 · Augmentin ES 600/42.9 mg/5 mL · tabs 875/125 · genérico · IMSS',fda:'B',ci:'Hepatopatía · colestasis previa',ea:'Diarrea (15-20%)',
+       nota:'Cubre H. influenzae/M. catarrhalis productores de betalactamasas (erradicación 95% vs 50%).'},
+      {n:'Ceftriaxona IM',pri:false,linea:'2ª opción (no tolera VO / fracaso a amoxi-clav)',
+       dp:'50 mg/kg/dosis IM (máx 1 g) × 1-3 días',da:'1 g IM/día × 1-3 días',
+       iv:'IM (reconstituir con lidocaína 1%) · 1-3 días consecutivos',pres:'Fco amp 500 mg/1 g · Rocephin · genérico · IMSS',fda:'B',ci:'Alergia a cefalosporinas',ea:'Dolor en el sitio, diarrea',
+       nota:'3 dosis IM ≈ 10 días de amoxicilina oral (Varsano 1997). Útil si vómito o dudas de adherencia.'},
+      {n:'Clindamicina VO',pri:false,linea:'3ª línea (neumococo multirresistente, bajo ORL)',
+       dp:'30-40 mg/kg/día en 3 dosis × 10 días',da:'300-450 mg c/8h',
+       iv:'VO · c/8h',pres:'Caps 75/150/300 mg · susp 75 mg/5 mL · Dalacin C · genérico',fda:'B',ci:'Colitis por C. difficile',ea:'Diarrea, colitis',
+       nota:'NO cubre H. influenzae. Solo para neumococo resistente sensible a clindamicina.'}
+    ]);
+  },
+  perfor:function(){
+    return '<div class="alert a-i"><span class="ai">🦻</span><div>OMA con otorrea por perforación: ATB oral (igual que sin perforación) + gotas óticas de quinolona. No introducir agua.</div></div>'
+    +buildOmaCards('#1a3a5c',[
+      {n:'Ciprofloxacino ótico',pri:true,linea:'⭐ ATB tópico (añadido al oral)',
+       dp:'3-4 gotas en el conducto c/12h × 7 días',da:'Igual',
+       iv:'Tópico ótico · c/12h · tibiar el frasco antes',pres:'Cipro ótico 0.3% fco 5-10 mL · Ciloxan ótico · Ciprodex (con dexametasona) · genérico',fda:'C (uso tópico)',ci:'Hipersensibilidad a quinolonas',ea:'Prurito, irritación local',
+       nota:'Ciprodex (cipro+dexametasona) reduce inflamación/edema. La otorrea aislada que mejora (sin fiebre/dolor) NO obliga a cambiar el ATB oral.'},
+      {n:'Amoxicilina VO (sistémico)',pri:true,linea:'Mismo esquema que OMA sin perforación',
+       dp:'80-90 mg/kg/día en 2-3 dosis',da:'500 mg c/8h / 875 mg c/12h',dur:'Según edad/gravedad',
+       iv:'VO · c/8-12h',pres:'Susp 250/400 mg/5 mL · tabs 500/875 mg · IMSS',fda:'B',ci:'Alergia a penicilinas',ea:'Diarrea',
+       nota:'Protección del oído: no agua; algodón con vaselina al bañarse. Perforación &gt;3 meses → ORL (timpanoplastia).'}
+    ]);
+  },
+  alergia:function(){
+    return '<div class="alert a-w"><span class="ai">⚠️</span><div><strong>Leve</strong> (exantema sin urticaria/anafilaxia): 80-90% tolera cefalosporinas. <strong>Grave</strong> (anafilaxia, urticaria, angioedema, SJS): evitar todos los betalactámicos.</div></div>'
+    +buildOmaCards('#7a4a00',[
+      {n:'Cefdinir VO',pri:true,linea:'Alergia LEVE — cefalosporina 3ª gen',
+       dp:'14 mg/kg/día en 1-2 dosis × 5-7 días (máx 600 mg/día)',da:'300 mg c/12h o 600 mg c/24h',
+       iv:'VO · c/12-24h',pres:'Susp 125 mg/5 mL · caps 300 mg · Omnicef · genérico',fda:'B',ci:'Alergia grave a penicilina',ea:'Diarrea, heces rojizas (con hierro)',
+       nota:'Buena opción en alergia no anafiláctica.'},
+      {n:'Cefuroxima VO',pri:false,linea:'Alergia LEVE — cefalosporina 2ª gen',
+       dp:'30 mg/kg/día en 2 dosis × 10 días (máx 500 mg/dosis)',da:'500 mg c/12h × 5-7 días',
+       iv:'VO · c/12h con alimentos',pres:'Susp 125 mg/5 mL · tabs 250/500 mg · Zinnat · Ceftin · genérico',fda:'B',ci:'Alergia grave a penicilina',ea:'Diarrea',
+       nota:'Alternativa de cefalosporina oral.'},
+      {n:'Azitromicina VO',pri:false,linea:'Alergia GRAVE — macrólido',
+       dp:'10 mg/kg día 1 → 5 mg/kg/día × 4 d (máx 500 mg/día)',da:'500 mg día 1, 250 mg días 2-5',
+       iv:'VO · c/24h',pres:'Susp 200 mg/5 mL · tabs 250/500 mg · Zithromax · genérico · IMSS',fda:'B',ci:'QT prolongado',ea:'GI, QT',
+       nota:'Eficacia inferior (resistencia del neumococo a macrólidos ~30%). Solo si no hay otra opción.'},
+      {n:'Claritromicina VO',pri:false,linea:'Alergia GRAVE — alternativa a azitromicina',
+       dp:'15 mg/kg/día en 2 dosis × 7-10 días (máx 1 g/día)',da:'500 mg c/12h × 7 días',
+       iv:'VO · c/12h',pres:'Susp 125/250 mg/5 mL · tabs 250/500 mg · Klacid · genérico · IMSS',fda:'C (evitar embarazo)',ci:'Embarazo · hepatopatía · QT',ea:'Disgeusia, GI',
+       nota:'Misma limitación de resistencia que la azitromicina.'}
+    ]);
+  },
+  recurrente:function(){
+    return '<div class="alert a-i"><span class="ai">🔄</span><div>≥3 episodios en 6 meses o ≥4 en 12. Referir a ORL: valorar tubos de ventilación ± adenoidectomía; audiometría/timpanometría.</div></div>'
+    +'<div class="prose"><p><strong>Medidas preventivas:</strong> completar VNC-13 (+ VNC-15/20), influenza anual, eliminar humo de tabaco, suspender chupete (o solo al inicio del sueño), promover lactancia materna.</p><p><strong>Profilaxis antibiótica:</strong> NO recomendada (Guía-ABE 2023, AAP 2013) — aumenta resistencias sin beneficio claro en la era post-VNC-13.</p></div>';
+  }
+};
+function showOmaPop(id,btn){var ch=document.querySelectorAll('#oma-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('oma-pop-out');if(out&&OMA_POP[id])out.innerHTML=OMA_POP[id]();}
+
+/* ===== Tx Hosp ===== */
+var HOSP_POP={
+  mastoid:function(){
+    return '<div class="alert a-r"><span class="ai">🚨</span><div>Dolor + eritema + edema retroauricular + desplazamiento del pabellón = mastoiditis aguda. TAC temporal + hospitalización + ATB IV inmediato + ORL.</div></div>'
+    +buildOmaCards('#7b1c1c',[
+      {n:'Ceftriaxona IV',pri:true,linea:'⭐ Primera línea',
+       dp:'50-100 mg/kg/día c/24h (máx 2 g/día)',da:'2 g IV c/24h',dur:'3-5 días IV → oral según cultivo',
+       iv:'IV · 1-2 g en 100 mL SSN, 30 min · c/24h',pres:'Fco amp 500 mg/1 g/2 g · Rocephin · IMSS',fda:'B',ci:'Alergia a cefalosporinas',ea:'Diarrea',
+       nota:'ATB IV ANTES de los resultados de imagen. Mastoidectomía si absceso subperióstico/coalescente o sin mejoría en 48-72 h.'},
+      {n:'+ Vancomicina IV',pri:false,linea:'Si sospecha de neumococo resistente / sin mejoría',
+       dp:'40-60 mg/kg/día en 4 dosis',da:'15-20 mg/kg c/8-12h',
+       iv:'IV · cada dosis en 250 mL SSN, ≥60 min (riesgo de "red man")',pres:'Fco 500 mg/1 g · genérico · IMSS',fda:'C',ci:'—',ea:'Nefrotoxicidad, red man',
+       nota:'Monitorear niveles (valle 10-20 µg/mL) y función renal.'}
+    ]);
+  },
+  intracraneal:function(){
+    return '<div class="alert a-r"><span class="ai">🧠</span><div>Alarmas: cefalea intensa/progresiva, vómito en proyectil, rigidez de nuca, parálisis facial, vértigo + hipoacusia súbita, alteración de conciencia. → TAC/RMN + neurocirugía.</div></div>'
+    +buildOmaCards('#7b1c1c',[
+      {n:'Ceftriaxona + Vancomicina IV',pri:true,linea:'⭐ Complicación intracraneal',
+       dp:'Ceftriaxona 100 mg/kg/día + Vancomicina 60 mg/kg/día IV',da:'Ceftriaxona 4 g/día + Vancomicina 30-45 mg/kg/día',dur:'14-21 días según complicación',
+       iv:'IV',pres:'Ceftriaxona fco 1/2 g · Vancomicina fco 500 mg/1 g · IMSS',fda:'B/C',ci:'—',ea:'Nefrotoxicidad',
+       nota:'Si meningitis: dexametasona 0.15 mg/kg IV c/6h × 4 días, la 1ª dosis 15-30 min ANTES o junto con el ATB.'}
+    ]);
+  },
+  neonato:function(){
+    return '<div class="alert a-r"><span class="ai">👶</span><div>OMA en &lt;1 mes = SIEMPRE hospitalizar (riesgo de gramnegativos, S. aureus, EGB y sepsis). Neonatología + ORL.</div></div>'
+    +buildOmaCards('#1a3a5c',[
+      {n:'Ampicilina + Gentamicina IV',pri:true,linea:'⭐ Esquema neonatal',
+       dp:'Ampicilina 100-200 mg/kg/día c/6h + Gentamicina 4-5 mg/kg c/24h',da:'—',dur:'Según evolución y cultivos',
+       iv:'IV',pres:'Ampicilina fco 500 mg/1 g · Gentamicina amp 20/80 mg · IMSS',fda:'—',ci:'—',ea:'Nefro/ototoxicidad (gentamicina)',
+       nota:'Cobertura de patógenos neonatales; ajustar por cultivo y vigilar función renal.'}
+    ]);
+  }
+};
+function showHospPop(id,btn){var ch=document.querySelectorAll('#hosp-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('hosp-pop-out');if(out&&HOSP_POP[id])out.innerHTML=HOSP_POP[id]();}
+
+/* ===== Algoritmo ===== */
+var OMA_ALGO={
+  start:{p:'¿La otoscopía confirma OMA? (MT abombada + derrame + inflamación)',o:[
+    {t:'SÍ — OMA confirmada',n:'crit'},
+    {t:'NO — MT normal/eritema aislado',n:'rNoOma'}
+  ]},
+  crit:{p:'¿Hay criterios de antibiótico inmediato? (<6 m, fiebre ≥39°, otalgia severa >48h, bilateral <2a, otorrea, inmunocomprometido, sin seguimiento)',o:[
+    {t:'SÍ',n:'rATB'},
+    {t:'NO (>2 a, no grave)',n:'espera'}
+  ]},
+  espera:{p:'Espera vigilante 48-72 h: ¿mejoró?',o:[
+    {t:'SÍ — mejoró',n:'rEspera'},
+    {t:'NO — persiste',n:'rATB'}
+  ]},
+  rNoOma:{r:1,titulo:'No es OMA',color:'#7a4a00',
+    atb:'Sin antibiótico para OMA.',
+    plan:'Diagnóstico diferencial: OME (derrame sin inflamación), otitis externa, otalgia referida, miringitis bullosa.',
+    extra:'Analgesia y reevaluar según el diagnóstico real.'},
+  rEspera:{r:1,titulo:'Espera vigilante — mejoró',color:'#0a7c5c',
+    atb:'Sin antibiótico.',
+    plan:'Continuar analgesia (paracetamol/ibuprofeno). Control en 2-3 días.',
+    extra:'Indicar regresar si reaparece fiebre/dolor o aparece otorrea/datos de alarma.'},
+  rATB:{r:1,titulo:'Antibiótico indicado',color:'#0a5c45',
+    atb:'Amoxicilina dosis ALTA 80-90 mg/kg/día en 2-3 dosis (niño) · 500 mg c/8h o 875 mg c/12h (adulto). Calcula los mg/dosis y mL en la calculadora del chip Pediátrico.',
+    plan:'Duración: <2 a o grave 10 días · 2-5 a 7 días · >5 a 5-7 días. Analgesia siempre.',
+    extra:'Reevaluar a las 48-72 h. Fracaso (persiste fiebre/dolor) → amoxicilina-clavulanato dosis alta (o ceftriaxona IM). Si conjuntivitis purulenta o amoxicilina en <4 sem: empezar con amoxi-clavulanato.'}
+};
+var omaHist=[];
+function renderOmaStep(sid){
+  var s=OMA_ALGO[sid];if(!s)return;
+  if(s.r){renderOmaResult(s);return;}
+  var h='<div style="background:#f0faf6;border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#0a5c45;margin-bottom:10px;">'+s.p+'</div>';
+  s.o.forEach(function(o,i){h+='<button onclick="omaSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;background:#fff;border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;">'+o.t+'</button>';});
+  if(omaHist.length)h+='<button onclick="omaBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';
+  h+='</div>';
+  document.getElementById('oma-step').innerHTML=h;
+}
+function omaSel(sid,i){omaHist.push(sid);renderOmaStep(OMA_ALGO[sid].o[i].n);}
+function omaBack(){if(omaHist.length)renderOmaStep(omaHist.pop());}
+function resetOma(){omaHist=[];renderOmaStep('start');}
+function renderOmaResult(s){
+  var h='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.titulo+'</div></div>';
+  h+='<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">Antibiótico</div><div style="font-size:12.5px;color:#064e3b;line-height:1.6;">'+s.atb+'</div></div>';
+  h+='<div style="background:#e6f1fb;border-left:3px solid #1a6bbd;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">Plan / duración</div><div style="font-size:12.5px;color:#0c3b6e;line-height:1.6;">'+s.plan+'</div></div>';
+  h+='<div style="background:#fff8e1;border-left:3px solid #d97706;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7a4a00;margin-bottom:3px;">Seguimiento</div><div style="font-size:12px;color:#7a4a00;line-height:1.6;">'+s.extra+'</div></div>';
+  h+='<button onclick="resetOma()" style="margin-top:6px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>';
+  document.getElementById('oma-step').innerHTML=h;
+}
+
+/* ===== Fármacos (buscador) ===== */
+var FARMACOS_OMA=[
+  {familia:'Analgésicos / antipiréticos',color:'#0a7c5c',farmacos:[
+    {n:'Paracetamol',ini:'Niño 10-15 mg/kg c/6-8h · adulto 500-1000 mg c/6-8h',obj:'Dolor/fiebre',iv:'VO',pr:'Susp 120/160/250 mg/5 mL · tabs 500 mg · IMSS',ci:'Hepatopatía grave',ea:'Hepatotoxicidad por sobredosis',nota:'⭐ Analgesia 1ª línea, siempre.'},
+    {n:'Ibuprofeno',ini:'Niño 5-10 mg/kg c/6-8h · adulto 400 mg c/8h',obj:'Otalgia',iv:'VO con alimentos',pr:'Susp 100/200 mg/5 mL · tabs 200/400 mg · IMSS',ci:'<6 meses · IR',ea:'GI, renal',nota:'Más potente para el dolor; >6 meses.'}
+  ]},
+  {familia:'Penicilinas',color:'#0a5c45',farmacos:[
+    {n:'Amoxicilina',ini:'Niño 80-90 mg/kg/día c/8-12h · adulto 500 c/8h o 875 c/12h',obj:'OMA 1ª línea',iv:'VO',pr:'Susp 125/250/400 mg/5 mL · tabs 500/875 mg · IMSS',ci:'Alergia a penicilinas',ea:'Diarrea, exantema',nota:'⭐ Dosis ALTA esencial.'},
+    {n:'Amoxicilina-clavulanato',ini:'Niño 90 mg/kg/día (amox) c/12h · adulto 875/125 c/12h',obj:'Fracaso / conjuntivitis / ATB reciente',iv:'VO con alimentos',pr:'Susp 250/62.5 · 400/57 · ES 600/42.9 · tabs 875/125 · IMSS',ci:'Hepatopatía',ea:'Diarrea (clavulanato)',nota:'Formulación 14:1/ES = menos diarrea.'}
+  ]},
+  {familia:'Cefalosporinas',color:'#1a3a5c',farmacos:[
+    {n:'Ceftriaxona',ini:'Niño 50 mg/kg IM (máx 1 g) × 1-3 d · mastoiditis 50-100 mg/kg/día IV',obj:'Rescate / hospital',iv:'IM/IV',pr:'Fco 500 mg/1 g/2 g · Rocephin · IMSS',ci:'Alergia a cefalosporinas',ea:'Dolor IM, diarrea',nota:'3 dosis IM ≈ 10 d de amoxicilina oral.'},
+    {n:'Cefdinir',ini:'Niño 14 mg/kg/día · adulto 300 mg c/12h',obj:'Alergia leve a penicilina',iv:'VO',pr:'Susp 125 mg/5 mL · caps 300 mg · Omnicef',ci:'Alergia grave a penicilina',ea:'Diarrea',nota:'3ª gen oral.'},
+    {n:'Cefuroxima',ini:'Niño 30 mg/kg/día c/12h · adulto 500 mg c/12h',obj:'Alergia leve a penicilina',iv:'VO con alimentos',pr:'Susp 125 mg/5 mL · tabs 250/500 mg · Zinnat',ci:'Alergia grave a penicilina',ea:'Diarrea',nota:'2ª gen oral.'}
+  ]},
+  {familia:'Macrólidos',color:'#7a4a00',farmacos:[
+    {n:'Azitromicina',ini:'Niño 10 mg/kg d1 → 5 mg/kg × 4 d · adulto 500/250 mg',obj:'Alergia grave a betalactámicos',iv:'VO',pr:'Susp 200 mg/5 mL · tabs 250/500 mg · IMSS',ci:'QT',ea:'GI, QT',nota:'Eficacia inferior (resistencia ~30%).'},
+    {n:'Claritromicina',ini:'Niño 15 mg/kg/día c/12h · adulto 500 mg c/12h',obj:'Alternativa a azitromicina',iv:'VO',pr:'Susp 125/250 mg/5 mL · tabs 250/500 mg · IMSS',ci:'Embarazo · QT',ea:'Disgeusia, GI',nota:'Evitar en embarazo.'}
+  ]},
+  {familia:'Otros sistémicos',color:'#4a1d8a',farmacos:[
+    {n:'Clindamicina',ini:'Niño 30-40 mg/kg/día c/8h',obj:'Neumococo multirresistente (ORL)',iv:'VO',pr:'Caps 75/150/300 mg · susp 75 mg/5 mL · Dalacin C',ci:'—',ea:'Colitis por C. difficile',nota:'No cubre H. influenzae.'},
+    {n:'Vancomicina IV',ini:'Niño 40-60 mg/kg/día · adulto 15-20 mg/kg c/8-12h',obj:'Mastoiditis / intracraneal resistente',iv:'IV ≥60 min',pr:'Fco 500 mg/1 g · IMSS',ci:'—',ea:'Nefrotoxicidad, red man',nota:'Monitorear niveles.'}
+  ]},
+  {familia:'Tópicos óticos',color:'#0c3b6e',farmacos:[
+    {n:'Ciprofloxacino ótico',ini:'3-4 gotas c/12h × 7 d',obj:'Perforación / tubos / externa',iv:'Tópico, tibiar antes',pr:'Cipro ótico 0.3% · Ciloxan · Ciprodex (con dexametasona)',ci:'Hipersensibilidad',ea:'Prurito local',nota:'Seguro con perforación.'}
+  ]}
+];
+function farmOmaTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display!=='none'&&el.style.display!=='';el.style.display=open?'none':'block';if(arr)arr.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function filtrarFarmacosOma(q){
+  var list=document.getElementById('farm-list');if(!list)return;
+  var term=(q||'').toLowerCase().trim(),h='',total=0;
+  FARMACOS_OMA.forEach(function(fam,fi){
+    var famH='';
+    fam.farmacos.forEach(function(f,fki){
+      if(!term||(f.n+' '+f.pr+' '+f.nota).toLowerCase().indexOf(term)!==-1){
+        var fkId='fo-'+fi+'-'+fki;
+        famH+='<div style="border-bottom:1px solid #f3f4f6;">';
+        famH+='<div onclick="farmOmaTog(\''+fkId+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid '+fam.color+';">';
+        famH+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+        famH+='<span id="'+fkId+'-arr" style="font-size:11px;color:#6b7280;">&#9658; ver</span></div>';
+        famH+='<div id="'+fkId+'" style="display:none;padding:10px 12px;background:#fff;">';
+        [['Dosis',f.ini,'#374151'],['Indicación',f.obj,'#c0392b'],['Vía/Intervalo',f.iv,'#1a3a5c'],['Presentaciones MX',f.pr,'#374151'],['Contraindicaciones',f.ci,'#c0392b'],['Efectos adversos',f.ea,'#374151']].forEach(function(r){
+          famH+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+r[0]+'</span><span style="font-weight:600;color:'+r[2]+';text-align:right;max-width:58%;">'+r[1]+'</span></div>';
+        });
+        famH+='<div style="font-size:11px;color:#374151;background:#f0f9ff;border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">'+f.nota+'</div>';
+        famH+='</div></div>';total++;
+      }
+    });
+    if(famH){h+='<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;"><div style="background:'+fam.color+';color:#fff;padding:8px 12px;font-size:13px;font-weight:700;">'+fam.familia+'</div>'+famH+'</div>';}
+  });
+  list.innerHTML=h||'<div style="text-align:center;padding:20px;color:#9ca3af;">Sin resultados</div>';
+  var cnt=document.getElementById('farm-count');if(cnt)cnt.textContent=total+' fármaco(s)';
+}
+
+/* ===== Indicaciones ===== */
+var IND_OMA=[
+  {n:'Amoxicilina suspensión (pediátrica)',enf:'Calcular: peso × 80-90 mg/kg/día ÷ dosis al día = mg/dosis; con susp 250 mg/5 mL → mg/dosis ÷ 50 = mL. Escribir en la receta: concentración del frasco, mL/dosis, frecuencia y días.',pac:'Agite el frasco antes de cada toma y mida con la jeringa dosificadora (no cuchara). Puede mezclarla con leche, jugo o yogurt. Complete TODOS los días aunque mejore antes. Guarde el frasco en el refrigerador (dura 7-10 días).'},
+  {n:'Amoxicilina-clavulanato suspensión',enf:'Igual cálculo por amoxicilina; dar con alimentos para reducir la diarrea.',pac:'Dé el medicamento CON la comida (reduce la diarrea). La diarrea leve es esperable; si es abundante, con sangre o con fiebre, consulte. Refrigerar.'},
+  {n:'Ceftriaxona IM',enf:'Reconstituir 1 g con 3.5 mL de lidocaína 1% → IM en vasto lateral del muslo (niño) o glúteo (adulto). Dosis 50 mg/kg (máx 1 g).',pac:'Se aplica una inyección hoy y quizá 1-2 más en días seguidos. Es normal que duela 24-48 h. El niño puede bañarse normalmente.'},
+  {n:'Paracetamol/Ibuprofeno (analgesia)',enf:'Dosis por peso; puede alternarse paracetamol e ibuprofeno cada 4 h en dolor intenso.',pac:'Dé la dosis indicada cada 6-8 h mientras haya dolor o fiebre; no exceda 5 dosis de paracetamol al día. El ibuprofeno con alimentos.'},
+  {n:'Ciprofloxacino gotas óticas',enf:'Verificar que sea quinolona (segura con perforación). 3-4 gotas c/12h × 7 días.',pac:'Tibie el frasco entre las manos 1-2 min (el líquido frío marea). Acueste al niño con el oído hacia arriba, jale el pabellón atrás-arriba, ponga 3-4 gotas y presione el trago 4-5 veces. Mantenga la posición 2-3 min. NO meta hisopos.'}
+];
+function buildIndOma(){
+  var el=document.getElementById('ind-list');if(!el)return;
+  var h='';
+  IND_OMA.forEach(function(it){
+    h+='<div style="background:#f0faf6;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--gm);">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px;">'+it.n+'</div>';
+    h+='<div style="font-size:12.5px;color:#374151;line-height:1.6;margin-bottom:4px;"><strong>Enfermería:</strong> '+it.enf+'</div>';
+    h+='<div style="font-size:12.5px;color:#374151;line-height:1.6;"><strong>Cuidador:</strong> '+it.pac+'</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+/* ===== Escenarios ===== */
+var ESCEN_OMA={
+  lactante:{t:'Lactante <6 meses con OMA',col:'#0a7c5c',clin:'Irritabilidad, fiebre, jala oreja; síntomas inespecíficos.',pat:'Neumococo, H. influenzae.',tx:'ATB inmediato SIEMPRE en <6 m: amoxicilina 80-90 mg/kg/día × 10 días + analgesia.',esc:'Aspecto tóxico o <1 mes → hospitalizar.',compl:'Sepsis, mastoiditis.'},
+  recur:{t:'OMA recurrente',col:'#1a3a5c',clin:'≥3 episodios en 6 m o ≥4 en 12 m.',pat:'Neumococo/H. influenzae; disfunción tubárica.',tx:'Tratar el episodio según perfil; referir ORL para tubos ± adenoidectomía; completar VNC-13.',esc:'Hipoacusia conductiva o retraso del lenguaje → ORL/audiología.',compl:'Hipoacusia, retraso del lenguaje.'},
+  tubos:{t:'Niño con tubos de ventilación + otorrea',col:'#0c3b6e',clin:'Otorrea por el tubo, generalmente sin fiebre.',pat:'Flora del conducto / Pseudomonas.',tx:'ATB TÓPICO primero (ciprofloxacino gotas), sin sistémico. El tubo drena; la otorrea es esperada.',esc:'Solo ATB sistémico si fiebre alta + otalgia y no mejora con gotas.',compl:'Obstrucción del tubo, granuloma.'},
+  conjun:{t:'OMA + conjuntivitis purulenta',col:'#7a4a00',clin:'OMA con ojo rojo y secreción purulenta.',pat:'H. influenzae no tipificable (casi exclusivo, productor de betalactamasas).',tx:'Amoxicilina-clavulanato directamente (no amoxicilina sola). Conjuntivitis: limpiar con suero, gotas oftálmicas rara vez necesarias.',esc:'Si no mejora → reevaluar.',compl:'—'},
+  mastoid:{t:'Mastoiditis',col:'#7b1c1c',clin:'Dolor/eritema retroauricular + desplazamiento del pabellón + antecedente de OMA.',pat:'Neumococo, S. pyogenes, S. aureus.',tx:'TAC + hospitalización + ceftriaxona IV (± vancomicina) + ORL.',esc:'Absceso/coalescente o sin mejoría 48-72 h → mastoidectomía.',compl:'Absceso subperióstico, complicación intracraneal.'},
+  facial:{t:'OMA + parálisis facial',col:'#c0392b',clin:'Parálisis facial periférica ipsilateral al oído afectado.',pat:'Inflamación del nervio facial en su trayecto intratemporal.',tx:'Urgencia ORL: ATB IV + miringotomía descompresiva + corticoide; TAC para descartar mastoiditis/colesteatoma.',esc:'Siempre ORL urgente.',compl:'Parálisis residual.'}
+};
+function buildEscenChips(){
+  var el=document.getElementById('escen-chips');if(!el)return;
+  var L=[['lactante','🍼 Lactante <6m'],['recur','🔄 Recurrente'],['tubos','🏊 Con tubos'],['conjun','🦠 + Conjuntivitis'],['mastoid','🚨 Mastoiditis'],['facial','🤕 + Parálisis facial']];
+  var h='';
+  L.forEach(function(x,i){h+='<button class="pchip'+(i===0?' on':'')+'" onclick="showOmaEscen(\''+x[0]+'\',this)">'+x[1]+'</button>';});
+  el.innerHTML=h;
+}
+function showOmaEscen(id,btn){
+  var ch=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var s=ESCEN_OMA[id];if(!s)return;
+  function blk(t,v,c){return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+v+'</div></div>';}
+  var h='<div style="background:'+s.col+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.t+'</div></div>';
+  h+=blk('Presentación',s.clin,'#6b7280');
+  h+=blk('Patógeno probable',s.pat,'#6b7280');
+  h+=blk('Tratamiento',s.tx,'#c0392b');
+  h+=blk('Cuándo hospitalizar / referir',s.esc,'#7a4a00');
+  h+=blk('Complicaciones',s.compl,'#7b1c1c');
+  document.getElementById('escen-out').innerHTML=h;
+}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  buildGrav();
+  resetOma();
+  showOmaPop('pedi',document.querySelector('#oma-pop-chips .pchip.on'));
+  showHospPop('mastoid',document.querySelector('#hosp-pop-chips .pchip.on'));
+  filtrarFarmacosOma('');
+  buildIndOma();
+  buildEscenChips();
+  showOmaEscen('lactante',document.querySelector('#escen-chips .pchip.on'));
+});
+</script>
+</body>
+</html>

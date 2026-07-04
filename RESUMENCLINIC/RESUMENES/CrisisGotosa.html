@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Crisis Gotosa · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --p:#4a1060;--pm:#7c3aed;--pl:#ede9fe;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#7b1c1c;--act:#fdeaea;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.tab.bib.on{color:var(--bm);border-bottom-color:var(--bm);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}.prose strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-gr{background:var(--gray-100);color:var(--gray-700);border-left:3px solid #6b7280;}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}.kt strong{color:var(--gray-900);}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.fp{display:flex;align-items:flex-start;}
+.fp-l{width:34px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fp-d{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.fp-li{width:2px;background:#e5e7eb;flex:1;min-height:18px;}
+.fp-c{flex:1;padding:0 0 14px 10px;}
+.fp-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.fp-x{font-size:12px;color:var(--gray-600);line-height:1.55;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.ci{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;}
+.ci:last-child{border-bottom:none;}
+.cb{width:18px;height:18px;border:2px solid var(--ac);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.cb.on{background:var(--ac);}
+.cb.on::after{content:'\2713';color:#fff;font-size:11px;font-weight:700;}
+.cl{flex:1;font-size:12.5px;color:var(--gray-700);}
+.cp{font-size:12px;font-weight:700;color:var(--ac);flex-shrink:0;}
+.fcard{background:#fff;border:1px solid var(--bd);border-left:4px solid var(--ac);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.fcard-t{font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:2px;}
+.fcard-d{font-size:12.5px;color:var(--ac);font-weight:700;margin-bottom:4px;}
+.fcard-c{font-size:12px;color:var(--gray-600);line-height:1.55;}.fcard-c b{color:var(--gray-700);}
+.dl{margin:5px 0 7px;border-top:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);padding:4px 0;}
+.dl > div{display:flex;gap:8px;font-size:12px;padding:2.5px 0;align-items:baseline;}
+.dl .k{color:var(--gray-600);min-width:104px;flex-shrink:0;font-weight:600;font-size:11px;text-transform:uppercase;}
+.dl .v{color:var(--ac);font-weight:600;}
+.esc-intro{background:var(--bl);border-left:3px solid var(--bm);border-radius:var(--rs);padding:9px 12px;font-size:12px;color:var(--b);line-height:1.6;margin-bottom:10px;}
+.esc-intro b{color:var(--b);}
+.biblio-header{background:linear-gradient(135deg,#1a0a0a,#7b1c1c);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:600;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+<style>:root{--ac:#4c2a86;--act:#ece7f6;} .biblio-header{background:linear-gradient(135deg,#1e1140,#4c2a86);} .tab.bib.on{color:#4c2a86;border-bottom-color:#4c2a86;}</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1e1140,#4c2a86);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦶</div>
+    <div>
+      <div class="hdr-eye">Reumatología · Urgencias</div>
+      <div class="hdr-title">Crisis Gotosa</div>
+      <div class="hdr-sub">Ataque agudo de gota · ACR 2020 · EULAR</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Tratar en menos de 24 h</span>
+    <span class="badge">Colchicina · AINE · esteroide</span>
+    <span class="badge">⚠️ Descartar séptica</span>
+    <span class="badge">No suspender ULT</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Podagra</div><div class="qs-l">1ª MTF típica</div></div>
+  <div class="qs"><div class="qs-v">Cristales</div><div class="qs-l">UMS, birrefringencia (−)</div></div>
+  <div class="qs"><div class="qs-v">3 opciones</div><div class="qs-l">1ª línea equivalentes</div></div>
+  <div class="qs"><div class="qs-v">Urato menor de 6</div><div class="qs-l">meta de la ULT</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('dif',this)">⚖️ Diferencial</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txa',this)">🏥 Tx del ataque</button>
+  <button class="tab" onclick="showT('ult',this)">💧 ULT</button>
+  <button class="tab" onclick="showT('emb',this)">🤰 Embarazo</button>
+  <button class="tab" onclick="showT('far',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('esce',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('vid',this)">🥗 Estilo de vida</button>
+  <button class="tab bib" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y puntos clave</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>La <strong>crisis gotosa</strong> es una artritis aguda por depósito de cristales de <strong>urato monosódico</strong>. Suele ser <strong>monoarticular</strong>, de inicio rápido (horas), con dolor intenso, eritema, calor y edema. La <strong>podagra</strong> (1ª metatarsofalángica) es la presentación clásica.</p></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">⚠️</span><div><div class="at">Siempre descartar artritis séptica</div>Una monoartritis aguda caliente puede ser infección. Ante fiebre, inmunosupresión o duda → <strong>artrocentesis</strong> (Gram, cultivo, citológico) antes de asumir que es gota.</div></div>
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>Tratar lo antes posible</strong> (idealmente en menos de 24 h del inicio): a menor demora, mejor respuesta.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><strong>Tres opciones de primera línea equivalentes:</strong> colchicina (dosis baja), AINE o glucocorticoide. La elección depende de las <strong>comorbilidades</strong>.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">El <strong>ácido úrico sérico puede estar normal</strong> durante el ataque: no lo descarta. Repetir el urato semanas después.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><strong>No suspender</strong> la terapia reductora de urato (ULT) si el paciente ya la toma. La ULT incluso puede <strong>iniciarse durante el ataque</strong> con profilaxis antiinflamatoria.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">El <strong>hielo tópico</strong> es un coadyuvante útil.</span></div>
+  </div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Diagnóstico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">🔬</span><div><div class="at">Estándar de oro: artrocentesis</div>Cristales de urato monosódico en el líquido sinovial: <strong>forma de aguja, birrefringencia negativa</strong> bajo luz polarizada. Además permite descartar infección (Gram, cultivo, recuento celular).</div></div>
+    <div class="tw" style="margin-top:8px;"><table class="t"><thead><tr><th>Apoyo diagnóstico</th><th>Detalle</th></tr></thead><tbody>
+      <tr><td class="dn">Clínica</td><td>Monoartritis de inicio rápido, podagra, episodios previos, factores de riesgo</td></tr>
+      <tr><td class="dn">Ácido úrico</td><td>Suele estar alto, pero puede ser normal en el ataque. Confirmar fuera de la crisis</td></tr>
+      <tr><td class="dn">Ultrasonido</td><td>Signo del doble contorno; agregados de cristales</td></tr>
+      <tr><td class="dn">TC de doble energía</td><td>Detecta depósitos de urato (casos dudosos o tofos)</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- DIFERENCIAL -->
+<div class="panel" id="tab-dif">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Diagnóstico diferencial</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Entidad</th><th>Claves</th></tr></thead><tbody>
+      <tr><td class="dn">Artritis séptica</td><td><strong>Lo que NO se debe pasar.</strong> Fiebre, líquido purulento, leucocitos muy altos, Gram/cultivo positivos. Urgencia.</td></tr>
+      <tr><td class="dn">Pseudogota (CPPD)</td><td>Cristales romboidales, birrefringencia <strong>positiva</strong>. Rodilla/muñeca; condrocalcinosis en la radiografía.</td></tr>
+      <tr><td class="dn">Celulitis</td><td>Eritema sin afección articular real; no hay dolor a la movilización pasiva intensa.</td></tr>
+      <tr><td class="dn">Artritis reactiva / psoriásica</td><td>Contexto, otras articulaciones, datos sistémicos.</td></tr>
+    </tbody></table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div>Gota e infección <strong>pueden coexistir</strong>. Si hay duda, tratar la posible séptica (artrocentesis + antibiótico) hasta descartarla.</div></div>
+  </div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-alg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="ae-step"></div></div></div>
+</div>
+
+<!-- TX DEL ATAQUE -->
+<div class="panel" id="tab-txa">
+  <div class="esc-intro"><b>Tratamiento del ataque.</b> Iniciar pronto. Las tres primeras líneas son equivalentes: elegir por comorbilidad. Toca "► ver" para dosis y consideración.</div>
+  <div id="txa-content"></div>
+</div>
+
+<!-- ULT -->
+<div class="panel" id="tab-ult">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">¿A quién y cómo? (treat-to-target)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">👥</span><div><div class="at">Indicaciones de ULT</div>2 o más ataques al año, tofos, o daño radiográfico por gota. <strong>Considerar</strong> tras el primer ataque si hay ERC estadio 3 o mayor, urato mayor de 9 mg/dL o urolitiasis.</div></div>
+    <div class="tw" style="margin-top:8px;"><table class="t"><thead><tr><th>Paso</th><th>Detalle</th></tr></thead><tbody>
+      <tr><td class="dn">Meta</td><td>Urato sérico <strong>menor de 6 mg/dL</strong> (menor de 5 si hay tofos o gota grave)</td></tr>
+      <tr><td class="dn">1ª línea</td><td><strong>Alopurinol</strong> (incluso en ERC): iniciar 100 mg/día (50 mg si ERC estadio 4 o mayor) y titular cada 2-5 semanas a la meta</td></tr>
+      <tr><td class="dn">HLA-B*5801</td><td>Tamizar antes del alopurinol en ascendencia del sudeste asiático (han, coreana, tailandesa) y afrodescendiente</td></tr>
+      <tr><td class="dn">Alternativas</td><td>Febuxostat (iniciar 40 mg/día; cautela cardiovascular) · probenecid (uricosúrico) · pegloticasa (refractaria)</td></tr>
+      <tr><td class="dn">Profilaxis</td><td>Antiinflamatorio (colchicina 0.5 mg/día, AINE o prednisona dosis baja) durante <strong>3-6 meses</strong> al iniciar la ULT</td></tr>
+    </tbody></table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">📈</span><div>Al iniciar o subir la ULT puede desencadenarse un ataque (por movilización de cristales): por eso se da profilaxis antiinflamatoria, sin suspender la ULT.</div></div>
+  </div></div>
+</div>
+
+<!-- EMBARAZO -->
+<div class="panel" id="tab-emb">
+  <div class="esc-intro"><b>Gota en el embarazo.</b> Es poco frecuente, pero la elección del fármaco cambia por seguridad fetal. El <b>corticoide</b> suele ser la opción más segura para el ataque; la <b>ULT no se inicia</b> en el embarazo.</div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Ataque agudo en el embarazo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">✅</span><div><div class="at">Preferido: glucocorticoide</div><strong>Prednisona</strong> a la dosis eficaz más baja por pocos días (o infiltración intraarticular si es 1-2 articulaciones) es lo de mejor perfil en el embarazo. Excluir artritis séptica antes de infiltrar.</div></div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">AINE — solo con cautela</div>Evitar en el <strong>tercer trimestre</strong> (cierre del conducto arterioso, oligohidramnios) y cerca del término. Si se usan, que sea breve, en el 1er-2º trimestre y con la dosis menor.</div></div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Colchicina</div>Tradicionalmente se evitaba, pero la experiencia (p. ej. en fiebre mediterránea familiar) sugiere un riesgo bajo; usar solo si es necesaria y vigilando interacciones. Evitar con inhibidores de CYP3A4/P-gp.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Terapia reductora de urato</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚫</span><div><div class="at">No iniciar ULT en el embarazo</div>Alopurinol y febuxostat <strong>no se inician</strong> (datos limitados); el probenecid tampoco se recomienda. Si la paciente ya tomaba ULT, la conducta se individualiza (a menudo se suspende). Decidir con reumatología.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍼</span><span class="st">Lactancia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-g"><span class="ai">✅</span><div>Para el ataque son compatibles la <strong>prednisona</strong> (baja transferencia) y los AINE de vida media corta (ibuprofeno). La <strong>colchicina</strong> puede usarse con precaución. El <strong>alopurinol</strong> se evita o se usa con cautela por datos limitados.</div></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-far">
+  <div style="margin-bottom:10px;"><input oninput="filtrarF(this.value)" placeholder="🔍 Buscar fármaco..." style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:13px;font-family:inherit;"></div>
+  <div id="far-content"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind"><div id="ind-content"></div></div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esce">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="esce-chips"></div>
+  <div id="esce-content"></div>
+</div>
+
+<!-- ESTILO DE VIDA -->
+<div class="panel" id="tab-vid">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥗</span><span class="st">Estilo de vida y seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Medida</th><th>Detalle</th></tr></thead><tbody>
+      <tr><td class="dn">Limitar</td><td>Carnes rojas y vísceras, mariscos, alcohol (sobre todo cerveza y licores), bebidas azucaradas y con fructosa</td></tr>
+      <tr><td class="dn">Favorecer</td><td>Lácteos bajos en grasa, hidratación abundante, pérdida de peso, ejercicio</td></tr>
+      <tr><td class="dn">Revisar fármacos</td><td>Las tiazidas y los diuréticos de asa suben el urato; el losartán y el amlodipino lo bajan ligeramente (útiles si hay hipertensión)</td></tr>
+      <tr><td class="dn">Comorbilidades</td><td>Tratar hipertensión, dislipidemia, diabetes y enfermedad renal asociadas</td></tr>
+    </tbody></table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">📅</span><div>La dieta sola rara vez alcanza la meta de urato: la ULT es el pilar en quien tiene indicación. Vigilar el urato hasta lograr y mantener la meta.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Crisis gotosa</h2><p>ACR 2020 · EULAR</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Guía vigente</span></div><div class="biblio-ref">FitzGerald JD, Dalbeth N, Mikuls T, et al. <em>2020 American College of Rheumatology Guideline for the Management of Gout.</em> Arthritis Care Res. 2020;72(6):744-760.</div><a class="biblio-link" href="https://doi.org/10.1002/acr.24180" target="_blank">🔗 DOI: 10.1002/acr.24180</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2017</span><span class="biblio-level lv-a">EULAR</span></div><div class="biblio-ref">Richette P, Doherty M, Pascual E, et al. <em>2016 updated EULAR evidence-based recommendations for the management of gout.</em> Ann Rheum Dis. 2017;76(1):29-42.</div><a class="biblio-link" href="https://doi.org/10.1136/annrheumdis-2016-209707" target="_blank">🔗 DOI: 10.1136/annrheumdis-2016-209707</a></div>
+  </div></div>
+  <div class="nivel-legend"><div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guías</div><div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones</div></div>
+  <div class="alert a-i" style="margin-top:10px;"><span class="ai">📅</span><div>Última revisión: junio 2025.</div></div>
+</div>
+
+<script>
+function showT(id,el){document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var b=h.querySelector('.sg'),s=h.nextElementSibling;if(!s)return;s.classList.toggle('hidden');if(b)b.classList.toggle('open');}
+function poprow(l,v,c){return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f3f4f6;gap:10px;"><span style="font-size:12px;color:#6b7280;flex-shrink:0;">'+l+'</span><span style="font-size:12px;font-weight:600;color:'+c+';text-align:right;">'+v+'</span></div>';}
+var ROJO='#7b1c1c',AZUL='#0c3b6e',MORADO='#4a1060',AMBAR='#7a4a00',VERDE='#0a5c45',GRIS='#374151',INDIGO='#4c2a86';
+function lineBg(c){return c===ROJO?'#fdeaea':c===AMBAR?'#fff8e1':c===VERDE?'#e1f5ee':c===AZUL?'#e6f1fb':c===MORADO?'#ede9fe':c===INDIGO?'#ece7f6':'#f3f4f6';}
+function togC(id){var b=document.getElementById(id),a=document.getElementById(id+'-a');if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';if(a)a.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function buildPil(data,cid,pfx){
+  var d=document.getElementById(cid);if(!d)return;var h='',idx=0;
+  data.forEach(function(p){
+    h+='<div style="border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #e2e8f0;background:#fff;"><div style="background:'+p.color+';color:#fff;padding:10px 14px;font-size:13px;font-weight:700;">'+p.pilar+'</div>';
+    p.items.forEach(function(it){
+      var tid=pfx+(idx++);
+      h+='<div style="border-left:3px solid '+it.lc+';"><div onclick="togC(\''+tid+'\')" style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;border-bottom:1px solid #f3f4f6;"><div style="display:flex;flex-direction:column;gap:4px;min-width:0;">';
+      h+='<span style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:'+it.lc+';background:'+lineBg(it.lc)+';padding:2px 8px;border-radius:10px;align-self:flex-start;">'+it.linea+'</span><span style="font-size:13.5px;font-weight:700;color:#111827;">'+it.n+'</span></div>';
+      h+='<span id="'+tid+'-a" style="font-size:12px;color:#9ca3af;font-weight:600;white-space:nowrap;flex-shrink:0;">&#9658; ver</span></div>';
+      h+='<div id="'+tid+'" style="display:none;padding:8px 14px 12px;border-bottom:1px solid #f3f4f6;">';
+      it.dosis.forEach(function(ds){h+=poprow(ds[0],ds[1],it.lc);});
+      if(it.intv)h+=poprow('Intervalo',it.intv,'#4c2a86');
+      if(it.dur)h+=poprow('Duración',it.dur,'#4c2a86');
+      if(it.ci)h+=poprow('Contraindicaciones',it.ci,'#c0392b');
+      if(it.prec)h+=poprow('Precauciones',it.prec,'#7a4a00');
+      if(it.cons)h+='<div style="font-size:11.5px;color:#374151;margin-top:8px;padding:7px 10px;background:'+lineBg(it.lc)+';border-radius:6px;line-height:1.6;"><b>Consideración:</b> '+it.cons+'</div>';
+      h+='</div></div>';
+    });
+    h+='</div>';
+  });
+  d.innerHTML=h;
+}
+var TXA=[
+ {pilar:'1 · Primera línea (equivalentes — elegir por comorbilidad)',color:ROJO,items:[
+   {linea:'Opción A',lc:ROJO,n:'Colchicina (dosis baja)',dosis:[['Inicio','1.0-1.2 mg VO al primer signo'],['1 h después','0.5-0.6 mg (total ~1.5-1.8 mg el día 1)'],['Después','0.5-0.6 mg c/12-24 h hasta que ceda']],intv:'c/12-24h tras el día 1',dur:'Hasta resolver; no repetir el ciclo en menos de 3 días',ci:'ERC avanzada CON inhibidor de CYP3A4/P-gp · hepatopatía grave',prec:'Ajustar en ERC/hepatopatía. Toxicidad grave con claritromicina, ciclosporina, verapamilo y estatinas (miopatía)',cons:'Más útil en las primeras 24 h del ataque.'},
+   {linea:'Opción B',lc:ROJO,n:'AINE a dosis plena',dosis:[['Naproxeno','500 mg c/12 h'],['Indometacina','50 mg c/8 h']],intv:'c/8-12h',dur:'Hasta resolver y 2-3 días más',ci:'ERC · úlcera/sangrado digestivo · IC · anticoagulación · 3er trimestre del embarazo',prec:'Asociar inhibidor de bomba de protones si hay riesgo gástrico; vigilar función renal y presión',cons:'Cualquier AINE a dosis plena es equivalente.'},
+   {linea:'Opción C',lc:ROJO,n:'Glucocorticoide sistémico',dosis:[['Prednisona','30-40 mg/día (0.5 mg/kg) 3-5 días, luego reducir 7-10 días'],['Si no tolera VO','metilprednisolona IV o triamcinolona IM']],intv:'c/24h',dur:'3-5 días + descenso en 7-10 días',ci:'Infección no controlada (sin cobertura)',prec:'Vigilar glucemia, presión y retención de líquidos',cons:'Elección si hay ERC, anticoagulación, intolerancia a AINE o afección poliarticular.'},
+ ]},
+ {pilar:'2 · Local / coadyuvante',color:AMBAR,items:[
+   {linea:'Mono/oligoarticular',lc:AMBAR,n:'Infiltración intraarticular de glucocorticoide',dosis:[['Triamcinolona','intraarticular, según la articulación']],intv:'Dosis única (repetible)',dur:'Según respuesta',ci:'Sospecha de artritis séptica',prec:'EXCLUIR infección antes de infiltrar',cons:'Útil si solo 1-2 articulaciones.'},
+   {linea:'Coadyuvante',lc:VERDE,n:'Hielo tópico',dosis:[['Aplicación','local intermitente']],cons:'Alivia el dolor; se suma al tratamiento farmacológico.'},
+ ]},
+ {pilar:'3 · Refractaria o contraindicaciones a todo lo anterior',color:AZUL,items:[
+   {linea:'Selecto',lc:AZUL,n:'Inhibidor de IL-1',dosis:[['Anakinra','100 mg/día SC algunos días'],['Canakinumab','dosis única SC']],intv:'anakinra c/24h',dur:'Algunos días',ci:'Infección activa',prec:'Precaución ante infección; costo elevado',cons:'Cuando fallan o se contraindican colchicina, AINE y glucocorticoides.'},
+ ]},
+ {pilar:'4 · Qué hacer con la terapia reductora de urato',color:GRIS,items:[
+   {linea:'Regla',lc:GRIS,n:'No suspender la ULT durante el ataque',dosis:[['Si ya la toma','continuarla sin cambios'],['Inicio durante el ataque','posible, con profilaxis antiinflamatoria']],prec:'Suspender la ULT en plena crisis empeora el control a largo plazo',cons:'Ver la pestaña de ULT para iniciar/titular.'},
+ ]},
+];
+var FARMACOS=[
+  {familia:'Tratamiento del ataque',color:ROJO,farmacos:[
+    {n:'Colchicina',lin:'1ª línea (opción A)',obj:'Dosis baja',dosis:'1.0-1.2 mg → 0.5-0.6 mg a la 1 h (total día 1 ~1.5-1.8 mg) → 0.5-0.6 mg c/12-24h',intv:'c/12-24h hasta resolver',dur:'Hasta que ceda; no repetir el ciclo en menos de 3 días',iv:'VO',pr:'Tabletas 0.5/1 mg · IMSS',ci:'ERC avanzada CON inhibidor de CYP3A4/P-gp · hepatopatía grave',prec:'Ajustar en ERC/hepatopatía. Toxicidad grave con claritromicina, ciclosporina, verapamilo y estatinas (miopatía). Más útil en las primeras 24 h',ea:'Diarrea · náusea · (miopatía/citopenias en toxicidad)',nota:'Igual eficacia con menos efectos que la dosis alta.'},
+    {n:'Naproxeno',lin:'1ª línea (opción B)',obj:'AINE a dosis plena',dosis:'500 mg c/12 h',intv:'c/12h',dur:'Hasta resolver y 2-3 días más',iv:'VO',pr:'Tabletas · IMSS',ci:'ERC · úlcera/sangrado digestivo · IC · anticoagulación · 3er trimestre del embarazo',prec:'Asociar inhibidor de bomba de protones si hay riesgo gástrico; vigilar función renal y presión',ea:'Gastritis · sangrado · retención · daño renal',nota:'Cualquier AINE a dosis plena es equivalente.'},
+    {n:'Indometacina',lin:'1ª línea (opción B)',obj:'AINE',dosis:'50 mg c/8 h',intv:'c/8h',dur:'Reducir al mejorar',iv:'VO',pr:'Cápsulas · IMSS',ci:'ERC · úlcera · IC · anticoagulación · 3er trimestre',prec:'Más efectos en SNC (cefalea, mareo); IBP si riesgo gástrico',ea:'GI · cefalea · mareo',nota:'AINE clásico para gota.'},
+    {n:'Prednisona',lin:'1ª línea (opción C)',obj:'Glucocorticoide sistémico',dosis:'30-40 mg/día (0.5 mg/kg) 3-5 días, luego reducir',intv:'c/24h',dur:'3-5 días + descenso en 7-10 días',iv:'VO',pr:'Tabletas · IMSS',ci:'Infección no controlada (sin cobertura)',prec:'Vigilar glucemia, presión y retención de líquidos; no suspender de golpe si el curso es prolongado',ea:'Hiperglucemia · HTA · retención · insomnio',nota:'Elección en ERC, anticoagulado o intolerancia a AINE.'},
+    {n:'Triamcinolona',lin:'Local (mono/oligoarticular)',obj:'Esteroide intraarticular/IM',dosis:'Intraarticular según la articulación; IM si no tolera VO',intv:'Dosis única (repetible)',dur:'Según respuesta',iv:'Intraarticular / IM',pr:'Ampolla',ci:'Sospecha de artritis séptica',prec:'EXCLUIR infección antes de infiltrar',ea:'Efectos locales · hiperglucemia',nota:'Útil si solo 1-2 articulaciones.'},
+    {n:'Anakinra',lin:'Refractaria (IL-1)',obj:'Inhibidor de IL-1',dosis:'100 mg/día SC por algunos días (canakinumab dosis única SC)',intv:'c/24h (anakinra)',dur:'Algunos días',iv:'SC',pr:'Jeringa',ci:'Infección activa',prec:'Precaución ante infección; costo elevado',ea:'Reacción en el sitio · infección',nota:'Cuando fallan colchicina, AINE y glucocorticoides.'},
+  ]},
+  {familia:'Terapia reductora de urato (ULT)',color:INDIGO,farmacos:[
+    {n:'Alopurinol',lin:'1ª línea ULT',obj:'Inhibidor de xantina oxidasa',dosis:'100 mg/día (50 si ERC estadio 4+) → titular c/2-5 sem (máx 800 mg)',intv:'c/24h',dur:'Crónica (de por vida); meta urato menor de 6',iv:'VO',pr:'Tabletas · IMSS',ci:'Hipersensibilidad previa al alopurinol',prec:'Tamizar HLA-B*5801 en ascendencia del sudeste asiático y afrodescendiente. NO suspender durante un ataque. Profilaxis antiinflamatoria 3-6 meses al iniciar',ea:'Exantema · síndrome de hipersensibilidad (SJS/NET)',nota:'Útil incluso en ERC.'},
+    {n:'Febuxostat',lin:'2ª línea ULT',obj:'Inhibidor de xantina oxidasa',dosis:'40 mg/día → 80 mg/día',intv:'c/24h',dur:'Crónica; meta urato menor de 6',iv:'VO',pr:'Tabletas',ci:'Cardiopatía grave (valorar riesgo CV)',prec:'Vigilancia cardiovascular; transaminasas. Profilaxis antiinflamatoria al iniciar',ea:'Elevación de transaminasas · eventos cardiovasculares',nota:'Si no se logra meta o hay intolerancia al alopurinol.'},
+    {n:'Probenecid',lin:'Uricosúrico (alternativa)',obj:'Aumenta la excreción de urato',dosis:'500 mg 1-2 veces/día → titular',intv:'c/12-24h',dur:'Crónica',iv:'VO',pr:'Tabletas',ci:'Urolitiasis · ERC avanzada (TFG baja)',prec:'Hidratación abundante. Evitar si litiasis o TFG baja',ea:'Litiasis · molestias GI',nota:'Opción si no se toleran los inhibidores de xantina oxidasa.'},
+    {n:'Pegloticasa',lin:'Refractaria',obj:'Uricasa IV',dosis:'8 mg IV cada 2 semanas',intv:'c/2 sem',dur:'Según respuesta',iv:'IV',pr:'Vial (3er nivel)',ci:'Deficiencia de G6PD · anafilaxia previa',prec:'Premedicar; suspender si el urato vuelve a subir (riesgo de reacción a la infusión)',ea:'Reacción a la infusión · anafilaxia',nota:'Para gota tofácea refractaria.'},
+  ]},
+];
+function togFar(id){var b=document.getElementById(id),a=document.getElementById(id+'-a');if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';if(a)a.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function filtrarF(q){
+  var d=document.getElementById('far-content');if(!d)return;q=(q||'').toLowerCase();var h='',idx=0;
+  FARMACOS.forEach(function(fam){
+    var match=fam.farmacos.filter(function(f){return !q||f.n.toLowerCase().indexOf(q)!==-1||f.obj.toLowerCase().indexOf(q)!==-1;});
+    if(!match.length)return;
+    h+='<div style="border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #e2e8f0;background:#fff;"><div style="background:'+fam.color+';color:#fff;padding:10px 14px;font-size:13px;font-weight:700;">'+fam.familia+'</div>';
+    match.forEach(function(f){var fid='f'+(idx++),ab=!!q;
+      h+='<div style="border-left:3px solid '+fam.color+';"><div onclick="togFar(\''+fid+'\')" style="padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;border-bottom:1px solid #f3f4f6;"><span style="font-size:14px;font-weight:700;color:'+fam.color+';">'+f.n+'</span><span id="'+fid+'-a" style="font-size:12px;color:#9ca3af;font-weight:600;white-space:nowrap;flex-shrink:0;">'+(ab?'&#9660; ocultar':'&#9658; ver')+'</span></div>';
+      h+='<div id="'+fid+'" style="display:'+(ab?'block':'none')+';padding:8px 14px 12px;border-bottom:1px solid #f3f4f6;"><div style="font-size:11px;color:#6b7280;margin-bottom:8px;"><b style="color:'+fam.color+';">'+f.lin+'</b> · '+f.obj+'</div>';
+      h+=poprow('Dosis',f.dosis,'#4c2a86')+poprow('Intervalo',f.intv,'#4c2a86')+poprow('Duración',f.dur,'#4c2a86')+poprow('Vía',f.iv,'#4c2a86')+poprow('Presentaciones MX',f.pr,'#374151')+poprow('Contraindicaciones',f.ci,'#c0392b')+poprow('Precauciones',f.prec,'#7a4a00')+poprow('Efectos adversos',f.ea,'#374151');
+      if(f.nota)h+='<div style="font-size:11.5px;color:#374151;margin-top:6px;padding:6px 10px;background:#ece7f6;border-radius:6px;line-height:1.6;">'+f.nota+'</div>';
+      h+='</div></div>';
+    });
+    h+='</div>';
+  });
+  d.innerHTML=h||'<div style="color:#6b7280;text-align:center;padding:20px;">Sin resultados</div>';
+}
+var IND=[
+  {familia:'Tratamiento del ataque',color:ROJO,farmacos:[
+    {n:'Colchicina',dosis:[{label:'1.0-1.2 mg al inicio, 0.5-0.6 mg 1 h después, luego 0.5-0.6 mg c/12-24h'}],via:'VO',enfermeria:'Confirmar función renal/hepática y la lista de medicamentos (estatinas, claritromicina, ciclosporina) por riesgo de toxicidad. Vigilar diarrea. NO repetir un ciclo completo de colchicina en menos de 3 días.',paciente:'Tome la colchicina como se le indica; suele dar diarrea. Avise si tiene dolor muscular intenso o debilidad. No la combine con otros medicamentos sin avisar.',alarma:'Diarrea intensa, debilidad muscular o moretones → avisar.'},
+    {n:'Prednisona',dosis:[{label:'30-40 mg/día por 3-5 días, luego reducir en 7-10 días'}],via:'VO',enfermeria:'Vigilar glucemia (sobre todo en diabéticos) y presión arterial. No suspender de golpe si el curso es prolongado. Tomar con alimento.',paciente:'Tome el esteroide con comida. Puede subirle el azúcar y la presión. No lo suspenda de golpe; siga la pauta de reducción.',alarma:'Glucemia muy alta o síntomas de infección → avisar.'},
+    {n:'AINE (naproxeno)',dosis:[{label:'500 mg c/12 h hasta resolver y 2-3 días más'}],via:'VO',enfermeria:'Administrar con alimento. Asociar IBP si hay riesgo gástrico. Vigilar función renal, presión y signos de sangrado. Evitar en ERC, úlcera, IC y 3er trimestre del embarazo.',paciente:'Tome el antiinflamatorio con comida. Avise si tiene dolor de estómago, heces negras o hinchazón.',alarma:'Dolor abdominal intenso, heces negras o hinchazón → avisar.'},
+  ]},
+  {familia:'Terapia reductora de urato',color:INDIGO,farmacos:[
+    {n:'Alopurinol',dosis:[{label:'Iniciar 100 mg/día (50 si ERC avanzada) y titular a la meta de urato menor de 6'}],via:'VO',enfermeria:'No iniciar/titular sin profilaxis antiinflamatoria. NO suspender durante un ataque. Vigilar exantema y suspender ante rash (riesgo de hipersensibilidad grave).',paciente:'Este medicamento es de uso diario y a largo plazo para bajar el ácido úrico. Al principio podría darle un ataque: es esperado, no lo suspenda. Avise de inmediato si le sale salpullido.',alarma:'Salpullido, fiebre o ampollas → suspender y avisar (hipersensibilidad).'},
+    {n:'Febuxostat',dosis:[{label:'40 mg/día, titular a 80 mg/día'}],via:'VO',enfermeria:'Alternativa al alopurinol. Vigilancia cardiovascular y de transaminasas. Igual que el alopurinol: con profilaxis al iniciar y sin suspender en un ataque.',paciente:'Otra pastilla diaria para bajar el ácido úrico. Avise si tiene dolor en el pecho o se siente mal del corazón.',alarma:'Dolor torácico o palpitaciones → avisar.'},
+  ]},
+];
+function togInd(id){var b=document.getElementById(id),a=document.getElementById(id+'-a');if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';if(a)a.style.transform=open?'rotate(0deg)':'rotate(180deg)';}
+function buildInd(){
+  var d=document.getElementById('ind-content');if(!d)return;var h='';
+  IND.forEach(function(g,gi){var bid='indg'+gi,ab=(gi===0);
+    h+='<div class="ind-b"><div class="ind-bh" onclick="togInd(\''+bid+'\')" style="background:'+g.color+';cursor:pointer;"><span>'+g.familia+'</span><span id="'+bid+'-a" style="transition:transform 0.2s;transform:'+(ab?'rotate(180deg)':'rotate(0deg)')+';">⌄</span></div><div id="'+bid+'" style="display:'+(ab?'block':'none')+';padding:10px 14px;">';
+    g.farmacos.forEach(function(f){
+      h+='<div style="background:#f9fafb;border-radius:8px;padding:10px 12px;margin-bottom:10px;"><div style="font-size:13px;font-weight:700;color:'+g.color+';margin-bottom:6px;">'+f.n+'</div>';
+      f.dosis.forEach(function(d2){h+='<div style="font-size:12px;font-weight:700;color:'+g.color+';padding:3px 0 3px 10px;border-left:3px solid '+g.color+';margin-bottom:4px;">'+d2.label+'</div>';});
+      h+='<div style="font-size:11px;color:#374151;margin-top:4px;"><span style="font-weight:700;">Vía:</span> '+f.via+'</div>';
+      h+='<div style="margin-top:8px;background:#e6f1fb;border-radius:6px;padding:8px 10px;"><div style="font-size:10px;font-weight:700;color:#0c3b6e;margin-bottom:3px;">👩‍⚕️ Enfermería</div><div style="font-size:12px;color:#1a3a5c;line-height:1.6;">'+f.enfermeria+'</div></div>';
+      h+='<div style="margin-top:6px;background:#e1f5ee;border-radius:6px;padding:8px 10px;"><div style="font-size:10px;font-weight:700;color:#0a5c45;margin-bottom:3px;">🧑 Paciente</div><div style="font-size:12px;color:#0a3a20;line-height:1.6;">'+f.paciente+'</div></div>';
+      if(f.alarma)h+='<div style="margin-top:6px;font-size:11.5px;color:#7b1c1c;padding:6px 10px;background:#fdeaea;border-radius:6px;border-left:3px solid #c0392b;">🚨 '+f.alarma+'</div>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  });
+  d.innerHTML=h;
+}
+var ESC={
+  erc:{t:'Enfermedad renal crónica',col:AZUL,clin:'Muy frecuente en gota; limita el uso de AINE y obliga a ajustar la colchicina.',tx:'• EVITAR AINE.\n• Glucocorticoide (oral o intraarticular) como primera opción del ataque.\n• Colchicina a dosis reducida y con cautela (toxicidad).\n• ULT: alopurinol iniciando bajo (50 mg) y titulando.',compl:'La colchicina con inhibidores de CYP3A4/P-gp en ERC puede causar toxicidad grave.'},
+  anticoag:{t:'Anticoagulado / riesgo digestivo',col:ROJO,clin:'Antecedente de úlcera/sangrado o anticoagulación: los AINE son peligrosos.',tx:'• Preferir glucocorticoide sistémico o infiltración intraarticular.\n• Evitar AINE.\n• Colchicina es alternativa (vigilar interacciones).',compl:'Si se usa AINE pese a todo, asociar IBP y reevaluar el riesgo.'},
+  cardio:{t:'Cardiópata / IC / hipertensión',col:AMBAR,clin:'Los AINE causan retención de sodio, suben la presión y empeoran la insuficiencia cardiaca.',tx:'• Evitar AINE.\n• Colchicina o glucocorticoide según el caso.\n• Vigilar glucemia, presión y volumen con el esteroide.\n• En ULT, valorar el perfil cardiovascular del febuxostat.',compl:'Equilibrar el control del ataque con el riesgo cardiovascular.'},
+  poli:{t:'Ataque poliarticular / no tolera VO',col:MORADO,clin:'Afección de varias articulaciones o paciente que no puede tomar medicamentos por boca.',tx:'• Glucocorticoide sistémico (IM o IV).\n• Considerar inhibidor de IL-1 si es refractario o hay contraindicaciones.\n• Combinar modalidades si es necesario.',compl:'Un ataque poliarticular florido también obliga a descartar infección.'},
+  inter:{t:'Interacciones de la colchicina',col:GRIS,clin:'La colchicina depende de CYP3A4 y P-glucoproteína: varios fármacos elevan su concentración.',tx:'• Cuidado con claritromicina, ciclosporina, verapamilo, diltiazem y estatinas.\n• En ERC o hepatopatía + estos fármacos: evitar o reducir mucho la dosis.\n• Vigilar miopatía y citopenias.',compl:'La toxicidad por colchicina puede ser grave (medular, neuromuscular).'},
+};
+var ESC_CHIPS=[['erc','🧪 ERC'],['anticoag','🩸 Anticoagulado'],['cardio','💔 Cardiópata'],['poli','🦵 Poliarticular'],['inter','⚠️ Interacciones']];
+function initEsce(){var c=document.getElementById('esce-chips');if(!c)return;ESC_CHIPS.forEach(function(ch,i){var btn=document.createElement('button');btn.className='pchip'+(i===0?' on':'');btn.textContent=ch[1];btn.onclick=(function(k,el){return function(){document.querySelectorAll('#esce-chips .pchip').forEach(function(x){x.classList.remove('on');});el.classList.add('on');showEsce(k);};})(ch[0],btn);c.appendChild(btn);});showEsce('erc');}
+function showEsce(k){var s=ESC[k],d=document.getElementById('esce-content');if(!s||!d)return;d.innerHTML='<div style="background:'+s.col+';color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.t+'</div></div>'+'<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">🩺 Contexto</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.clin+'</div></div>'+'<div style="background:var(--act);border-radius:var(--rs);border:1px solid #e2e8f0;padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:4px;">💊 Manejo</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.tx.replace(/\n/g,'<br>')+'</div></div>'+'<div style="background:#fdeaea;border-radius:var(--rs);border:1px solid #f3c0c0;padding:10px 12px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:4px;">⚠️ Clave</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.compl+'</div></div>';}
+var ALGO={
+  start:{p:'Monoartritis aguda, caliente y muy dolorosa. ¿Hay datos que obliguen a descartar artritis séptica (fiebre, inmunosupresión, aspecto purulento)?',hint:'Gota e infección pueden coexistir. Ante la duda, manda la artrocentesis.',o:[
+    {t:'🚨 Sí: sospecha de séptica',n:'rSEP',c:'#fdeaea'},
+    {t:'➡️ No: cuadro compatible con gota',n:'comorb',c:'#ece7f6'}
+  ]},
+  comorb:{p:'Elige el fármaco del ataque según las comorbilidades. ¿Cuál describe mejor al paciente?',hint:'Las 3 primeras líneas son equivalentes; la comorbilidad decide.',o:[
+    {t:'🟢 Sin ERC, úlcera, anticoagulación ni cardiopatía',n:'rAINE',c:'#e1f5ee'},
+    {t:'🔵 ERC, anticoagulado, úlcera o cardiopatía',n:'rGC',c:'#e6f1fb'},
+    {t:'🟣 Solo 1-2 articulaciones',n:'rIA',c:'#ece7f6'}
+  ]},
+  rSEP:{r:1,titulo:'Descartar artritis séptica primero',color:ROJO,dx:'Monoartritis con datos de posible infección.',tx:'🔬 Artrocentesis urgente: Gram, cultivo, recuento celular y cristales\n💉 Iniciar antibiótico empírico si hay sospecha alta, hasta descartar\n🚫 No asumir que es gota solo por la clínica',alarma:'Una artritis séptica no tratada destruye la articulación.'},
+  rAINE:{r:1,titulo:'AINE o colchicina',color:VERDE,dx:'Sin comorbilidad que lo contraindique.',tx:'💊 AINE a dosis plena (naproxeno 500 mg c/12 h) hasta resolver, o\n💊 Colchicina dosis baja (1.0-1.2 mg → 0.5-0.6 mg a la 1 h, luego diario)\n🧊 Hielo local\n🎯 Valorar ULT después del ataque',alarma:'Colchicina: cuidado con interacciones (estatinas, claritromicina).'},
+  rGC:{r:1,titulo:'Glucocorticoide',color:AZUL,dx:'ERC, anticoagulación, úlcera o cardiopatía.',tx:'💊 Prednisona 30-40 mg/día, reducir en 7-10 días (o IM/IV si no tolera VO)\n🚫 Evitar AINE\n🧊 Hielo local\n🩺 Vigilar glucemia y presión',alarma:'Descartar infección antes de dar esteroide sistémico si hay duda.'},
+  rIA:{r:1,titulo:'Infiltración intraarticular',color:MORADO,dx:'Afección de 1-2 articulaciones.',tx:'💉 Glucocorticoide intraarticular (triamcinolona)\n🔬 SOLO tras excluir artritis séptica\n🧊 Hielo local',alarma:'Nunca infiltrar una articulación potencialmente infectada.'},
+};
+var aeHist=[],aeLabels=[];
+function aeBread(){if(!aeLabels.length)return '';var h='<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">';aeLabels.forEach(function(r,i){h+='<div style="font-size:10px;background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:2px 8px;color:#374151;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+r+'</div>';if(i<aeLabels.length-1)h+='<span style="color:#9ca3af;font-size:10px;">›</span>';});return h+'</div>';}
+function aeRender(sid){var s=ALGO[sid];if(!s)return;if(s.r){aeResult(s);return;}var h=aeBread();h+='<div style="background:var(--act);border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#2e1a52;margin-bottom:6px;">'+s.p+'</div>';if(s.hint)h+='<div style="font-size:11.5px;color:#6b7280;background:#fff;border-radius:var(--rs);padding:7px 10px;margin-bottom:10px;border-left:2px solid #d1d5db;">💡 '+s.hint+'</div>';s.o.forEach(function(o,i){h+='<button onclick="aeSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;background:'+(o.c||'#fff')+';border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;font-weight:500;">'+o.t+'</button>';});if(aeHist.length)h+='<button onclick="aeBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';h+='</div>';document.getElementById('ae-step').innerHTML=h;}
+function aeSel(sid,i){var o=ALGO[sid].o[i];var lbl=o.t.replace(/^[^A-Za-zÁÉÍÓÚáéíóúÑñ]+/,'');aeLabels.push(lbl.substring(0,30)+(lbl.length>30?'…':''));aeHist.push(sid);aeRender(o.n);}
+function aeBack(){if(aeHist.length){aeLabels.pop();aeRender(aeHist.pop());}}
+function aeReset(){aeHist=[];aeLabels=[];aeRender('start');}
+function aeResult(s){function blk(t,v,c,bg){return '<div style="background:'+bg+';border-left:3px solid '+c+';border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+v.replace(/\n/g,'<br>')+'</div></div>';}var h=aeBread();h+='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.titulo+'</div></div>';h+=blk('🔍 Interpretación',s.dx,'#6b7280','#fff');h+=blk('💊 Conducta',s.tx,'#4c2a86','var(--act)');h+=blk('🚨 Clave',s.alarma,'#7b1c1c','#fdeaea');h+='<button onclick="aeReset()" style="margin-top:4px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>';document.getElementById('ae-step').innerHTML=h;}
+window.addEventListener('load',function(){
+  var t=document.getElementById('tab-res');if(t)t.classList.add('on');
+  filtrarF('');buildInd();initEsce();aeRender('start');buildPil(TXA,'txa-content','txa');
+});
+</script>
+</body>
+</html>

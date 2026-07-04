@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sonda Foley · Clínica Rápida</title>
+<style>
+:root{--ac:#b45309;--act:#fdf2e3;--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--bd:#e2e8f0;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;}*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#7c3a06,#b45309);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.78);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:13px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform .2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}.prose strong{color:var(--gray-900);}
+.esc-intro{background:var(--act);border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:#7c3a06;margin-bottom:12px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}.kp:last-child{margin-bottom:0;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;padding:0 4px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}.kt strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:4px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.calc-in{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;font-size:15px;font-family:inherit;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block;}
+.calc-res{margin-top:12px;}
+.chkitem{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:6px;cursor:pointer;border:1px solid #eef0f3;margin-bottom:5px;}
+.chkitem.done{background:var(--act);}
+.chkbox{font-size:15px;color:var(--ac);flex-shrink:0;line-height:1.3;}
+.chktxt{font-size:12.5px;color:var(--gray-700);line-height:1.45;}
+.chkitem.done .chktxt{text-decoration:line-through;color:var(--gray-400);}
+.svgwrap{width:100%;background:#fffdf8;border:1px solid var(--bd);border-radius:6px;margin:6px 0;}
+.biblio-header{background:linear-gradient(135deg,#7c3a06,#b45309);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--act);padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--act);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:600;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">💧</div>
+    <div>
+      <div class="hdr-eye">Procedimientos · Vía urinaria</div>
+      <div class="hdr-title">Sonda Foley</div>
+      <div class="hdr-sub">Cateterismo vesical · técnica estéril</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Orina antes de inflar</span>
+    <span class="badge">Agua estéril 10 mL</span>
+    <span class="badge">Cerrado y bajo la vejiga</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">14-16 Fr</div><div class="qs-l">adulto</div></div>
+  <div class="qs"><div class="qs-v">10 mL</div><div class="qs-l">globo (agua)</div></div>
+  <div class="qs"><div class="qs-v">Estéril</div><div class="qs-l">técnica</div></div>
+  <div class="qs"><div class="qs-v">2×TET</div><div class="qs-l">calibre niño</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('mat',this)">🧰 Materiales</button>
+  <button class="tab" onclick="showT('tec',this)">✅ Técnica</button>
+  <button class="tab" onclick="showT('cal',this)">📏 Calibre y globo</button>
+  <button class="tab" onclick="showT('pro',this)">🔧 Problemas</button>
+  <button class="tab" onclick="showT('pre',this)">🧼 Prevención</button>
+  <button class="tab" onclick="showT('com',this)">⚠️ Complicaciones</button>
+  <button class="tab" onclick="showT('ret',this)">🧷 Retiro</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Indicaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Retención urinaria aguda</strong> · medición estricta de <strong>diuresis</strong> (paciente crítico) · perioperatorio · obstrucción vesical · vejiga neurógena · cuidado de heridas sacras/perineales en incontinentes · confort en fin de vida · <strong>hematuria con coágulos</strong> (sonda de 3 vías para irrigación). Sólo si hay indicación clara: la mejor sonda es la que se retira pronto.</p>
+  </div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⛔</span><span class="st">Contraindicaciones — ¡sospecha de lesión uretral!</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚫</span><div><b>NO sondes</b> si hay <b>sangre en el meato</b> (signo más importante), hematoma perineal/escrotal/peneano, <b>próstata flotante o ascendida</b> al tacto, o fractura de pelvis. Sospecha lesión uretral → <b>uretrografía retrógrada</b> y urología antes de cualquier intento.</div></div>
+    <div class="prose" style="margin-top:8px;"><p>Otras precauciones: estenosis uretral conocida, cirugía uretral o del cuello vesical reciente, anatomía alterada (consultar urología).</p></div>
+  </div></div>
+</div>
+
+<!-- MATERIALES -->
+<div class="panel" id="tab-mat">
+  <div class="esc-intro"><b>Materiales.</b> Arriba el pedido listo para enfermería; abajo la verificación.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Pedido para enfermería</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="text-align:right;margin-bottom:8px;"><button onclick="copyPedido()" style="padding:7px 14px;background:var(--ac);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">📋 Copiar pedido</button> <span id="copy-ok" style="font-size:11px;color:#0a5c45;font-weight:700;"></span></div>
+    <div class="tw"><table class="t"><thead><tr><th style="width:46px;">Cant.</th><th>Material</th></tr></thead><tbody>
+      <tr><td class="dn">1</td><td><b>Sonda Foley</b> del calibre indicado (adulto 14-16 Fr) + <b>1 de respaldo</b></td></tr>
+      <tr><td class="dn">1</td><td><b>Bolsa colectora</b> con sistema de drenaje <b>cerrado</b> + tubo</td></tr>
+      <tr><td class="dn">1</td><td><b>Jeringa de 10 mL con agua estéril</b> (para el globo) — viene en el kit</td></tr>
+      <tr><td class="dn">1</td><td><b>Lidocaína gel 2%</b> (5-10 mL; en hombre se instila en la uretra)</td></tr>
+      <tr><td class="dn">1</td><td>Kit de cateterismo: <b>campo fenestrado estéril</b>, gasas, pinza, riñón</td></tr>
+      <tr><td class="dn">1</td><td><b>Guantes estériles</b> (talla) · antiséptico (clorhexidina o yodopovidona)</td></tr>
+      <tr><td class="dn">1</td><td>Cinta/sujetador para fijar la sonda al muslo</td></tr>
+      <tr><td class="dn">—</td><td>Frasco para urocultivo si se requiere; contenedor de residuos</td></tr>
+    </tbody></table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">🚱</span><div>El globo se infla <b>solo con agua estéril</b> (no salino: cristaliza y no se desinfla; no aire).</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Verificación rápida</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="chkitem" onclick="chkT(this)"><span class="chkbox">☐</span><span class="chktxt">Descartar sospecha de lesión uretral antes de empezar</span></div>
+    <div class="chkitem" onclick="chkT(this)"><span class="chkbox">☐</span><span class="chktxt">Explicar el procedimiento; privacidad y consentimiento</span></div>
+    <div class="chkitem" onclick="chkT(this)"><span class="chkbox">☐</span><span class="chktxt">Higiene de manos y técnica estéril; campo estéril</span></div>
+    <div class="chkitem" onclick="chkT(this)"><span class="chkbox">☐</span><span class="chktxt">Probar (no inflar) el globo solo si el fabricante lo indica; lubricar bien</span></div>
+    <div class="chkitem" onclick="chkT(this)"><span class="chkbox">☐</span><span class="chktxt">Bolsa colectora lista, por debajo del nivel de la vejiga</span></div>
+  </div></div>
+</div>
+
+<!-- TÉCNICA -->
+<div class="panel" id="tab-tec">
+  <div class="esc-intro"><b>Técnica estéril.</b> Regla de oro: <b>ve salir orina ANTES de inflar el globo</b>. Si hay dolor intenso al inflar, detente (globo en la uretra).</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧼</span><span class="st">Pasos generales</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt">Higiene de manos, guantes estériles, campo fenestrado. Posición: mujer en rana (rodillas flexionadas); hombre con piernas extendidas.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt">Antisepsia del meato con la <b>mano no dominante</b> (ya no estéril): de adentro hacia afuera. Mantén esa mano fija exponiendo el meato.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><b>Lubrica</b> bien la sonda (en hombre, instila lidocaína gel en la uretra y espera 1-2 min).</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt">Inserta con la mano dominante hasta <b>ver salir orina</b>.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt">Avanza un poco más e <b>infla el globo con 10 mL de agua estéril</b>; retrocede hasta sentir tope en el cuello vesical.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt">Conecta a la bolsa (cerrada), <b>fija al muslo</b> y deja la bolsa <b>por debajo de la vejiga</b>. En hombre, <b>recoloca el prepucio</b>.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">♂️</span><span class="st">Hombre</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Sujeta el pene con <b>tracción suave a 90°</b> (perpendicular) para enderezar la uretra. Avanza <b>hasta el pabellón/bifurcación</b> de la sonda antes de inflar (la uretra es larga). En el esfínter externo notarás resistencia: <b>pausa</b> y deja que se relaje. Con próstata grande usa <b>coudé</b> (punta curva hacia arriba).</p></div>
+    <svg viewBox="0 0 320 160" class="svgwrap" xmlns="http://www.w3.org/2000/svg">
+      <text x="160" y="13" font-size="8" fill="#6b7280" text-anchor="middle" font-style="italic">trayecto (esquemático): avanzar hasta el pabellón</text>
+      <ellipse cx="248" cy="78" rx="46" ry="36" fill="#fde9c8" stroke="#b45309" stroke-width="1.5"/>
+      <text x="248" y="54" font-size="8" fill="#b45309" font-weight="700" text-anchor="middle">vejiga</text>
+      <circle cx="192" cy="92" r="15" fill="#f3d2b0" stroke="#b45309" stroke-width="1.2"/>
+      <text x="192" y="124" font-size="7.5" fill="#c0392b" text-anchor="middle" font-weight="700">próstata</text>
+      <text x="192" y="133" font-size="7" fill="#c0392b" text-anchor="middle">(resistencia)</text>
+      <rect x="26" y="84" width="150" height="10" rx="5" fill="#f3d2b0" stroke="#caa65a" stroke-width="0.8"/>
+      <text x="40" y="80" font-size="7.5" fill="#8a6d3b">uretra (pene)</text>
+      <text x="20" y="104" font-size="7.5" fill="#374151">meato</text>
+      <line x1="34" y1="89" x2="236" y2="84" stroke="#374151" stroke-width="2.5"/>
+      <ellipse cx="236" cy="84" rx="9" ry="6" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.2"/>
+      <text x="230" y="70" font-size="7.5" fill="#1d4ed8" font-weight="700">globo</text>
+      <text x="150" y="150" font-size="7.5" fill="#0a5c45" text-anchor="middle">globo SOLO dentro de la vejiga, tras ver orina</text>
+    </svg>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">♀️</span><span class="st">Mujer</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Separa los labios con dos dedos y tira <b>hacia arriba</b> (hacia la cabeza) para exponer el <b>meato</b>, que está <b>entre el clítoris y la vagina</b>. La uretra es <b>corta</b> (sale orina pronto): inserta ~la mitad, avanza un poco más y luego infla. La uretra va <b>ligeramente hacia arriba</b>: no la fuerces hacia abajo.</p></div>
+    <svg viewBox="0 0 320 165" class="svgwrap" xmlns="http://www.w3.org/2000/svg">
+      <text x="160" y="13" font-size="8" fill="#6b7280" text-anchor="middle" font-style="italic">localización del meato (vulva)</text>
+      <ellipse cx="120" cy="40" rx="9" ry="6" fill="#f3d2b0" stroke="#caa65a"/>
+      <text x="150" y="43" font-size="8" fill="#374151">clítoris</text>
+      <ellipse cx="120" cy="74" rx="7" ry="5" fill="#fdeaea" stroke="#c0392b" stroke-width="1.5"/>
+      <text x="150" y="70" font-size="8.5" fill="#c0392b" font-weight="700">meato uretral</text>
+      <text x="150" y="80" font-size="7" fill="#c0392b">(aquí va la sonda)</text>
+      <ellipse cx="120" cy="112" rx="13" ry="9" fill="#fbe3ee" stroke="#9d174d"/>
+      <text x="150" y="115" font-size="8" fill="#9d174d">introito vaginal</text>
+      <text x="120" y="150" font-size="7.5" fill="#374151" text-anchor="middle">orden de arriba a abajo: clítoris · meato · vagina</text>
+    </svg>
+  </div></div>
+</div>
+
+<!-- CALIBRE -->
+<div class="panel" id="tab-cal">
+  <div class="esc-intro"><b>Calibre (French)</b> = diámetro externo. Elige el <b>menor que drene bien</b> (menos trauma). El globo se infla con <b>agua estéril</b>.</div>
+  <div class="sec"><div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Calibre</th></tr></thead><tbody>
+      <tr><td class="dn">Mujer (adulta)</td><td>14-16 Fr</td></tr>
+      <tr><td class="dn">Hombre (adulto)</td><td>16-18 Fr (16 en la mayoría)</td></tr>
+      <tr><td class="dn">Hematuria / coágulos</td><td>20-24 Fr de <b>3 vías</b> (irrigación continua)</td></tr>
+      <tr><td class="dn">Próstata grande / difícil</td><td><b>Coudé</b> (punta curva) o cambiar de calibre</td></tr>
+    </tbody></table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🎈</span><div><b>Globo:</b> estándar de 5 mL → inflar con <b>10 mL de agua estéril</b> (cuenta el lumen + el globo). Sonda de 3 vías: globo de <b>30 mL</b>. Revisa el volumen impreso en la válvula. Nunca inflar antes de ver orina.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👶</span><span class="st">Calibre pediátrico (2 × TET)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Sonda (Fr) = <b>2 × TET</b>, con TET (sin globo) = (edad/4)+4. Escribe la edad:</p></div>
+    <label class="calc-lbl" style="margin-top:4px;">Edad (años)</label>
+    <input id="edadP" class="calc-in" type="number" inputmode="decimal" oninput="calcPed()" placeholder="ej. 6">
+    <div id="ped-res" class="calc-res"><div class="prose" style="color:#6b7280;">Escribe la edad…</div></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🍼</span><div><b>Neonato (&lt;2500 g):</b> sonda especial <b>sin globo</b> (sonda de alimentación 5-6 Fr); fíjala con cinta. Diuresis normal en niños: 1-2 mL/kg/h.</div></div>
+  </div></div>
+</div>
+
+<!-- PROBLEMAS -->
+<div class="panel" id="tab-pro">
+  <div class="esc-intro"><b>Solución de problemas.</b> Tras 2 intentos fallidos o sin retorno tras maniobras → <b>urología</b>.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">No sale orina</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Verifica que estés en la uretra (no en vagina). Si la vejiga está llena (palpa/ecografía) e insertaste lo suficiente, <b>irriga 10-20 mL de salino estéril</b> por la sonda: si regresa con orina, estás dentro. Si no regresa o hubo resistencia → <b>no infles</b> y consulta urología.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚧</span><span class="st">No avanza (resistencia)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>En el esfínter: pausa y pide que respire/relaje. En próstata grande: usa <b>coudé</b> (curva hacia arriba) o <b>otro calibre</b>. Nunca fuerces (riesgo de falso trayecto). Tras 2 intentos → urología.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎈</span><span class="st">El globo no se desinfla</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>No lo revientes a ciegas. Intenta aspirar con jeringa; si falla, <b>corta la válvula de inflado</b>. Si persiste, urología (técnicas como instilar aceite mineral para disolver el globo, o punción guiada). No tracciones con fuerza.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Parafimosis</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Si retiraste el prepucio para limpiar, <b>recolócalo SIEMPRE</b> al terminar. Si queda retraído y se edematiza (parafimosis) es una <b>urgencia</b>: reducirlo de inmediato.</p></div></div></div>
+</div>
+
+<!-- PREVENCIÓN -->
+<div class="panel" id="tab-pre">
+  <div class="esc-intro"><b>Prevención de infección (CAUTI).</b> El mayor factor de riesgo es el tiempo con sonda: retírala lo antes posible.</div>
+  <div class="sec"><div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Indicación correcta</strong> y la menor duración posible; revisión diaria de la necesidad.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>Inserción aséptica</strong> (manos, técnica estéril, antiséptico).</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Sistema de drenaje cerrado</strong>; no desconectar.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Bolsa por debajo de la vejiga</strong>, sin asas dependientes ni apoyada en el piso; flujo libre.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Fijar</strong> la sonda y mantener higiene del meato; <strong>retiro oportuno</strong>.</div></div>
+  </div></div>
+</div>
+
+<!-- COMPLICACIONES -->
+<div class="panel" id="tab-com">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚡</span><span class="st">Complicaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Lesión uretral / falso trayecto</strong> (forzar, inflar el globo en la uretra) · <strong>hematuria</strong> · <strong>infección (CAUTI)</strong> · <strong>parafimosis</strong> (no recolocar el prepucio) · espasmo vesical · obstrucción/desalojo · globo que no desinfla · <strong>diuresis postobstructiva</strong> tras drenar una retención (vigila y repón líquidos/electrolitos).</p>
+  </div></div></div>
+  <div class="sec"><div class="sb">
+    <div class="alert a-r"><span class="ai">🛑</span><div><b>Dolor intenso o sangre al inflar el globo</b> = globo en la uretra. <b>Desínflalo, reposiciona</b> (avanza hasta ver orina) y vuelve a inflar; si hay sangre en el meato, urología.</div></div>
+  </div></div>
+</div>
+
+<!-- RETIRO -->
+<div class="panel" id="tab-ret">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧷</span><span class="st">Retiro</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Cuando ya no esté indicada. <b>Desinfla por completo el globo</b> aspirando toda el agua con la jeringa (deja que salga sola, no tires del émbolo con fuerza si hay resistencia). Retira la sonda con suavidad. Vigila que el paciente <b>orine</b> en las siguientes horas (descarta retención).</p></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Si el globo no desinfla, ver la pestaña 🔧 Problemas.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Sonda Foley</h2><p>Guías y referencias de cateterismo vesical</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Fuentes</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2025</span></div>
+        <div class="biblio-ref">Merck Manual. <em>How To Do Urethral Catheterization in a Male / Female</em> (calibres, globo, contraindicaciones).</div>
+        <a class="biblio-link" href="https://www.merckmanuals.com/professional/genitourinary-disorders/how-to-do-genitourinary-procedures/how-to-do-urethral-catheterization-in-a-male" target="_blank">🔗 Merck</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">Medscape</span></div>
+        <div class="biblio-ref">Medscape. <em>Urethral Catheterization in Men: Technique</em> (lesión uretral, globo que no desinfla).</div>
+        <a class="biblio-link" href="https://emedicine.medscape.com/article/80716-overview" target="_blank">🔗 Medscape</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">CDC</span></div>
+        <div class="biblio-ref">CDC/HICPAC. <em>Guideline for Prevention of Catheter-Associated Urinary Tract Infections (CAUTI)</em>.</div>
+        <a class="biblio-link" href="https://www.cdc.gov/infection-control/hcp/cauti/" target="_blank">🔗 CDC</a></div>
+      <div class="biblio-item" style="color:var(--gray-600);font-size:11px;">Última revisión: junio 2025. Ajustar al kit local; ante cualquier sospecha de lesión uretral, urología antes de sondar.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var ROJO='#7b1c1c',AZUL='#0c3b6e',VERDE='#0a5c45',AMBAR='#7a4a00',GRIS='#374151',FOL='#b45309';
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function cNum(id){var e=document.getElementById(id);if(!e)return NaN;var v=parseFloat(e.value);return isNaN(v)?NaN:v;}
+function cRes(id,html){var e=document.getElementById(id);if(e)e.innerHTML=html;}
+function chkT(el){el.classList.toggle('done');var b=el.querySelector('.chkbox');if(b)b.innerHTML=el.classList.contains('done')?'☑':'☐';}
+
+function calcPed(){
+  var e=cNum('edadP');
+  if(isNaN(e)||e<0){cRes('ped-res','<div class="prose" style="color:#6b7280;">Escribe la edad…</div>');return;}
+  var ett=(e/4)+4;
+  var foley=2*ett;
+  var foleyR=2*Math.round(foley/2);
+  var h='<div class="tw"><table class="t"><tbody>';
+  h+='<tr><td class="dn">TET (sin globo)</td><td>(edad/4)+4 = ('+e+'/4)+4 = <b>'+ett.toFixed(1)+' mm</b></td></tr>';
+  h+='<tr><td class="dn">Sonda Foley</td><td>2 × TET = 2 × '+ett.toFixed(1)+' = <b style="color:'+FOL+';font-size:15px;">'+foleyR+' Fr</b> (≈'+foley.toFixed(0)+')</td></tr>';
+  h+='</tbody></table></div>';
+  h+='<div class="alert a-i" style="margin-top:8px;"><span class="ai">📏</span><div>Estimación; elige el <b>menor calibre que drene bien</b>. En lactantes/neonatos usa sonda sin globo.</div></div>';
+  cRes('ped-res',h);
+}
+
+function copyPedido(){
+  var txt='PEDIDO DE MATERIAL — SONDA FOLEY\n'+
+  '1 sonda Foley del calibre indicado (adulto 14-16 Fr) + 1 de respaldo\n'+
+  '1 bolsa colectora con sistema de drenaje cerrado + tubo\n'+
+  '1 jeringa de 10 mL con agua estéril (globo)\n'+
+  '1 lidocaína gel 2% (5-10 mL)\n'+
+  '1 kit de cateterismo (campo fenestrado, gasas, pinza, riñón)\n'+
+  '1 guantes estériles (talla) + antiséptico (clorhexidina o yodopovidona)\n'+
+  '1 cinta/sujetador para fijar al muslo\n'+
+  'frasco para urocultivo si se requiere; contenedor de residuos\n'+
+  'Recordatorio: inflar el globo SOLO con agua estéril y tras ver orina.';
+  var ok=document.getElementById('copy-ok');
+  function done(){if(ok){ok.innerHTML='✓ copiado';setTimeout(function(){ok.innerHTML='';},2000);}}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallback();});}
+    else fallback();
+  }catch(e){fallback();}
+  function fallback(){
+    try{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}
+    catch(e2){if(ok)ok.innerHTML='copia manual';}
+  }
+}
+
+window.addEventListener('load',function(){
+  calcPed();
+});
+</script>
+</body>
+</html>

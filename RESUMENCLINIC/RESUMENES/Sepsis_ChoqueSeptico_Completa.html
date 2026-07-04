@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Sepsis y Choque Séptico — Clínica Rápida</title>
+<style>
+:root{--green:#0a5c45;--green-mid:#0f7a5a;--green-light:#e1f5ee;--green-pale:#f0faf6;--blue:#0c3b6e;--blue-mid:#1a6bbd;--blue-light:#e6f1fb;--red:#7b1c1c;--red-mid:#c0392b;--red-light:#fdeaea;--amber:#7a4a00;--amber-mid:#d97706;--amber-light:#fff8e1;--purple:#4a1d8a;--purple-light:#ede9fe;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--border:#e2e8f0;--radius:10px;--radius-sm:6px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#7b1c1c 0%,#991b1b 100%);color:#fff;padding:0;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 14px;flex-wrap:wrap;}
+.hdr-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.15);color:#fff;}
+.hdr-badge.dark{background:#7b1c1c;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--border);}
+.qstat{padding:10px 8px;text-align:center;border-right:1px solid var(--border);}
+.qstat:last-child{border-right:none;}
+.qstat-val{font-size:14px;font-weight:700;color:var(--red-mid);}
+.qstat-lbl{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--border);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 14px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab.active{color:var(--red-mid);border-bottom-color:var(--red-mid);}
+.tab.enf{color:#7c3aed;}.tab.enf.active{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tab.bib{color:var(--blue-mid);}.tab.bib.active{color:var(--blue-mid);border-bottom-color:var(--blue-mid);}
+.tab.calc{color:var(--red-mid);}.tab.calc.active{color:var(--red-mid);border-bottom-color:var(--red-mid);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.active{display:block;}
+.sec{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;}
+.sec-hdr{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.sec-icon{font-size:16px;}
+.sec-title{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sec-toggle{font-size:18px;color:var(--gray-400);transition:transform 0.2s;}
+.sec-toggle.open{transform:rotate(180deg);}
+.sec-body{padding:14px;}
+.sec-body.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--gray-900);font-weight:600;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--radius-sm);background:var(--red-light);border-left:3px solid var(--red-mid);margin-bottom:6px;}
+.kp:last-child{margin-bottom:0;}
+.kp-num{background:var(--red-mid);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kp-text{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.alert{border-radius:var(--radius-sm);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.alert-ico{font-size:16px;flex-shrink:0;margin-top:1px;}
+.alert-title{font-weight:700;margin-bottom:2px;}
+.a-danger{background:var(--red-light);color:var(--red);border-left:3px solid var(--red-mid);}
+.a-warn{background:var(--amber-light);color:var(--amber);border-left:3px solid var(--amber-mid);}
+.a-info{background:var(--blue-light);color:var(--blue);border-left:3px solid var(--blue-mid);}
+.a-ok{background:var(--green-light);color:var(--green);border-left:3px solid var(--green-mid);}
+.a-gray{background:var(--gray-100);color:var(--gray-700);border-left:3px solid #6b7280;}
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border);}
+table.dtbl{width:100%;border-collapse:collapse;font-size:12px;}
+.dtbl th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--border);}
+.dtbl td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.dtbl tr:last-child td{border-bottom:none;}
+.dtbl tr:hover td{background:var(--gray-50);}
+.dn{font-weight:700;color:var(--blue);}
+.dm{color:var(--red);font-weight:600;}
+.dnote{color:var(--gray-600);font-size:11px;}
+.linea-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.l1{background:#7b1c1c;color:#fff;}
+.l2{background:#b91c1c;color:#fff;}
+.l3{background:#dc2626;color:#fff;}
+.lc{background:var(--blue-light);color:var(--blue);}
+.lr{background:var(--red-light);color:var(--red);}
+.drug-name{font-weight:700;color:var(--blue);display:block;margin-bottom:2px;}
+.drug-note{color:var(--gray-600);font-size:11px;margin-top:2px;display:block;}
+.drug-max{color:var(--red);font-size:11px;font-weight:600;}
+.algo-node{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.algo-start{background:#7b1c1c;color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.algo-end-ok{background:var(--green-light);color:var(--green);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--green-mid);}
+.algo-action{background:#fff;border:1.5px solid var(--border);color:var(--gray-900);}
+.algo-decision{background:var(--amber-light);border:1.5px solid var(--amber-mid);color:var(--amber);font-weight:600;}
+.algo-danger{background:var(--red-light);border:1.5px solid var(--red-mid);color:var(--red);font-weight:600;}
+.algo-arrow{text-align:center;font-size:18px;color:var(--gray-400);line-height:1;margin:2px 0;}
+.algo-branch{display:flex;gap:8px;margin-bottom:4px;}
+.algo-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.algo-no{flex:1;background:var(--red-light);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--red);font-weight:600;}
+.branch-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.fpath-row{display:flex;align-items:flex-start;}
+.fpath-left{width:40px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fpath-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.fpath-line{width:2px;background:var(--gray-200);flex:1;min-height:20px;}
+.fpath-content{flex:1;padding:0 0 14px 12px;}
+.fpath-title{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.fpath-desc{font-size:12px;color:var(--gray-600);line-height:1.55;}
+.ddx-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;}
+.ddx-row:last-child{border-bottom:none;}
+.ddx-name{font-weight:600;color:var(--gray-900);min-width:140px;flex-shrink:0;}
+.ddx-diff{color:var(--gray-600);flex:1;}
+.comp-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.comp-item:last-child{border-bottom:none;}
+.comp-icon{font-size:16px;flex-shrink:0;}
+.comp-name{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.comp-desc{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.case-card{border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;border-left:3px solid;}
+.case-card:last-child{margin-bottom:0;}
+.case-title{font-size:12px;font-weight:700;margin-bottom:4px;}
+.case-body{font-size:12px;line-height:1.6;color:var(--gray-700);}
+.c-emb{background:#fce7f3;border-color:#db2777;}.c-emb .case-title{color:#9d174d;}
+.c-ped{background:#fff8e1;border-color:#f59e0b;}.c-ped .case-title{color:#92400e;}
+.c-anc{background:#ede9fe;border-color:#7c3aed;}.c-anc .case-title{color:#4c1d95;}
+.c-irc{background:#e0f2fe;border-color:#0284c7;}.c-irc .case-title{color:#0c4a6e;}
+.fu-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-row:last-child{border-bottom:none;}
+.fu-time{min-width:90px;font-size:11px;font-weight:700;color:var(--red-mid);text-transform:uppercase;padding-top:2px;}
+.fu-text{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.sema-row{display:flex;gap:6px;margin-bottom:10px;}
+.sema-item{flex:1;border-radius:var(--radius-sm);padding:8px 4px;text-align:center;}
+.sema-ltr{font-size:18px;font-weight:800;display:block;}
+.sema-txt{font-size:9px;display:block;margin-top:2px;font-weight:500;}
+.sA{background:#d1fae5;color:#065f46;}.sB{background:#dbeafe;color:#1e40af;}.sC{background:#fef3c7;color:#92400e;}.sD{background:#fee2e2;color:#991b1b;}.sX{background:#1f2937;color:#f9fafb;}
+.s-active{box-shadow:0 0 0 2.5px #374151;transform:scale(1.05);}.s-inactive{opacity:0.3;}
+.lp{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10.5px;font-weight:600;margin-left:4px;}
+.lp-r{background:var(--red-light);color:var(--red);}.lp-g{background:var(--green-light);color:var(--green);}.lp-a{background:var(--amber-light);color:var(--amber);}.lp-b{background:var(--blue-light);color:var(--blue);}
+.hosp-card{border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;}
+.hosp-card:last-child{margin-bottom:0;}
+.hosp-q{background:var(--red-light);border:1px solid #fca5a5;}
+.hosp-h{background:var(--amber-light);border:1px solid #fcd34d;}
+.hosp-title{font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:6px;}
+.hosp-q .hosp-title{color:var(--red);}.hosp-h .hosp-title{color:var(--amber);}
+.hosp-item{font-size:11.5px;color:var(--gray-700);margin-bottom:3px;padding-left:12px;position:relative;line-height:1.5;}
+.hosp-item::before{content:'•';position:absolute;left:0;opacity:0.6;}
+.bundle-step{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;}
+.bundle-num{background:var(--red-mid);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.bundle-text{font-size:12.5px;color:var(--gray-700);line-height:1.5;flex:1;}
+.bundle-text strong{color:var(--gray-900);}
+.bundle-time{font-size:10px;font-weight:700;color:var(--red-mid);white-space:nowrap;}
+.calc-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;}
+.calc-hdr{padding:12px 14px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;}
+.calc-title{font-size:14px;font-weight:700;color:var(--gray-900);}
+.calc-subtitle{font-size:11px;color:var(--gray-600);margin-top:2px;}
+.calc-body{padding:14px;}
+.calc-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;}
+.calc-item:last-child{border-bottom:none;}
+.calc-cb{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px;}
+.calc-cb.on{background:var(--red-mid);border-color:var(--red-mid);}
+.calc-cb.on::after{content:'✓';color:#fff;font-size:12px;font-weight:700;}
+.calc-label{flex:1;font-size:13px;color:var(--gray-700);line-height:1.4;}
+.calc-pts{font-size:12px;font-weight:700;color:var(--gray-400);flex-shrink:0;padding-top:2px;}
+.calc-result{margin-top:14px;border-radius:var(--radius-sm);padding:14px;text-align:center;transition:all 0.3s;}
+.result-score{font-size:36px;font-weight:800;line-height:1;}
+.result-label{font-size:13px;font-weight:600;margin-top:4px;}
+.result-action{font-size:12px;margin-top:6px;line-height:1.5;opacity:0.9;}
+.res-low{background:#d1fae5;color:#065f46;}
+.res-mid{background:var(--amber-light);color:#92400e;}
+.res-high{background:var(--red-light);color:var(--red);}
+.enf-hdr{background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.enf-block{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;}
+.enf-block-hdr{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.enf-block-body{padding:12px 14px;}
+.enf-order{background:#ede9fe;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.enf-order-title{font-size:11px;font-weight:700;text-transform:uppercase;color:#4c1d95;margin-bottom:6px;}
+.enf-order-item{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.enf-order-item::before{content:'▸';position:absolute;left:0;color:#7c3aed;}
+.enf-check{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;}
+.enf-check:last-child{border-bottom:none;}
+.enf-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.enf-cb.on{background:#7c3aed;border-color:#7c3aed;}
+.enf-cb.on::after{content:'✓';color:#fff;font-size:10px;font-weight:700;}
+.enf-freq{font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.enf-alarm{background:var(--red-light);border-left:3px solid var(--red-mid);border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--red);}
+.enf-alarm strong{font-weight:700;display:block;margin-bottom:2px;}
+.enf-vital{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.enf-vital-card{background:var(--gray-50);border-radius:var(--radius-sm);padding:8px 10px;border:1px solid var(--border);}
+.enf-vital-name{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:2px;}
+.enf-vital-val{font-size:12px;color:var(--gray-900);}
+.enf-vital-freq{font-size:10px;color:#7c3aed;font-weight:600;margin-top:2px;}
+.print-btn{background:#4c1d95;color:#fff;border:none;padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-hdr{background:linear-gradient(135deg,#0c3b6e,#1a6bbd);color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.bib-sec{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;}
+.bib-sec-hdr{background:var(--blue-light);padding:8px 14px;font-size:12px;font-weight:700;color:var(--blue);border-bottom:1px solid var(--border);}
+.bib-body{padding:10px 14px;}
+.bib-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-item:last-child{border-bottom:none;}
+.bib-num{display:inline-block;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-year{display:inline-block;background:var(--green-light);color:var(--green);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-ref{color:var(--gray-700);line-height:1.65;}
+.bib-ref em{color:var(--blue);font-style:italic;}
+.lv{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.bib-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--blue-mid);text-decoration:none;font-weight:500;}
+@media print{.tabbar,.print-btn{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sec-body.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--border);font-size:13px;color:var(--red-mid);cursor:pointer;width:100%;font-family:inherit;">‹ Regresar</button>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦠</div>
+    <div>
+      <div class="hdr-eyebrow">Urgencias · Medicina Interna · UCI</div>
+      <div class="hdr-title">Sepsis y Choque Séptico</div>
+      <div class="hdr-sub">Surviving Sepsis Campaign 2021 + GPC IMSS-084 · Bundle 1h</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="hdr-badge dark">🚨 Código Sepsis</span>
+    <span class="hdr-badge">Mortalidad 25-40%</span>
+    <span class="hdr-badge">Bundle 1h obligatorio</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qstat"><div class="qstat-val">1h</div><div class="qstat-lbl">antibiótico máx.</div></div>
+  <div class="qstat"><div class="qstat-val">30mL/kg</div><div class="qstat-lbl">bolo inicial</div></div>
+  <div class="qstat"><div class="qstat-val">≥65</div><div class="qstat-lbl">TAM meta (mmHg)</div></div>
+  <div class="qstat"><div class="qstat-val">SOFA≥2</div><div class="qstat-lbl">criterio diagnóstico</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab active" onclick="showTab('resumen',this)">📋 Resumen</button>
+  <button class="tab" onclick="showTab('fisiopato',this)">🔬 Fisiopato</button>
+  <button class="tab" onclick="showTab('diagnostico',this)">🧪 Diagnóstico</button>
+  <button class="tab" onclick="showTab('tratamiento',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showTab('algoritmo',this)">🔄 Algoritmo</button>
+  <button class="tab calc" onclick="showTab('escalas',this)">📊 Escalas</button>
+  <button class="tab" onclick="showTab('ajustes',this)">⚖️ Ajustes</button>
+  <button class="tab" onclick="showTab('complicaciones',this)">⚠️ Complic.</button>
+  <button class="tab" onclick="showTab('especiales',this)">👥 Especiales</button>
+  <button class="tab" onclick="showTab('seguimiento',this)">📅 Seguimiento</button>
+  <button class="tab enf" onclick="showTab('enfermeria',this)">🩺 Enfermería</button>
+  <button class="tab bib" onclick="showTab('biblio',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel active" id="tab-resumen">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">📌</span><span class="sec-title">Definición y puntos clave (Sepsis-3, 2016)</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="prose" style="margin-bottom:12px;"><p><strong>Sepsis:</strong> Disfunción orgánica potencialmente mortal causada por una respuesta desregulada del huésped a la infección. Criterio: <strong>SOFA ≥2</strong> puntos con sospecha de infección.<br><strong>Choque séptico:</strong> Subconjunto de sepsis con hipotensión que requiere vasopresores para mantener TAM ≥65 mmHg + lactato &gt;2 mmol/L a pesar de reanimación adecuada.</p></div>
+      <div class="kp"><div class="kp-num">1</div><div class="kp-text"><strong>Bundle de 1 hora (SSC 2021):</strong> Hemocultivos → antibiótico → bolo SSN 30 mL/kg → lactato. Todo en 1 hora del reconocimiento. Cada hora de retraso en antibiótico aumenta mortalidad 7%.</div></div>
+      <div class="kp"><div class="kp-num">2</div><div class="kp-text"><strong>Hemocultivos ANTES del antibiótico</strong> — pero no más de 45 min de retraso. Si no es posible obtener, dar antibiótico igual. El cultivo nunca justifica diferir el antibiótico.</div></div>
+      <div class="kp"><div class="kp-num">3</div><div class="kp-text"><strong>Norepinefrina es el vasopresor de primera línea</strong> en choque séptico. Iniciar si TAM &lt;65 después del bolo. Meta: TAM ≥65 mmHg. Agregar vasopresina si se necesita &gt;0.25 mcg/kg/min de NE.</div></div>
+      <div class="kp"><div class="kp-num">4</div><div class="kp-text"><strong>Lactato:</strong> Si &gt;2 mmol/L → repetir en 2h. Guiar reanimación para normalizar lactato. Lactato &gt;4 = alto riesgo, independientemente de PA.</div></div>
+      <div class="kp"><div class="kp-num">5</div><div class="kp-text"><strong>Antibiótico empírico de amplio espectro</strong> desde el primer contacto. Cubrir gramnegativos (incluyendo Pseudomonas si factores de riesgo) y anaerobios según foco. Desescalar a las 48-72h según cultivos.</div></div>
+      <div class="kp"><div class="kp-num">6</div><div class="kp-text"><strong>Control del foco:</strong> Indispensable para curar la sepsis. Drenar absceso, retirar catéter infectado, cirugía si peritonitis. Sin control de foco, los antibióticos no son suficientes.</div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🚨</span><span class="sec-title">Alertas críticas</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="alert a-danger"><span class="alert-ico">🚨</span><div><div class="alert-title">Reconocimiento precoz — cada hora cuenta</div>Triaje: fiebre/hipotermia + taquicardia + taquipnea + alteración del estado mental = sospecha sepsis. Activar código sepsis. No esperar resultados de laboratorio para iniciar reanimación.</div></div>
+      <div class="alert a-danger"><span class="alert-ico">⚡</span><div><div class="alert-title">Antibiótico en &lt;1 hora — objetivo no negociable</div>SSC 2021 y GPC IMSS: &lt;1 hora desde el reconocimiento. Por cada hora de retraso: +7% mortalidad. El "esperar cultivos" causa muertes evitables.</div></div>
+      <div class="alert a-warn"><span class="alert-ico">💧</span><div><div class="alert-title">No sobrehidratar — reevaluar después del bolo</div>El bolo 30 mL/kg es el inicio, no un objetivo. Reevaluar con clínica (llenado capilar, diuresis, PAS) o eco bedside cada 30 min. Exceso de fluidos aumenta mortalidad.</div></div>
+      <div class="alert a-warn"><span class="alert-ico">⚠️</span><div><div class="alert-title">Corticoide: solo si choque refractario a vasopresores</div>Hidrocortisona 200 mg/día IV solo si se requieren &gt;0.25 mcg/kg/min de NE. No de rutina en sepsis sin choque.</div></div>
+      <div class="alert a-info"><span class="alert-ico">🩸</span><div><div class="alert-title">Meta de hemoglobina en sepsis: 7 g/dL</div>No transfundir por encima de 7 g/dL salvo isquemia miocárdica activa, hipoxemia severa o sangrado activo. SSC 2021.</div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">⏱️</span><span class="sec-title">Bundle de 1 hora — SSC 2021</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="bundle-step"><div class="bundle-num">1</div><div class="bundle-text"><strong>Medir lactato sérico.</strong> Si &gt;2 mmol/L: repetir en 2h para evaluar aclaramiento. Si &gt;4: alta mortalidad, UCI urgente.</div><div class="bundle-time">0-15 min</div></div>
+      <div class="bundle-step"><div class="bundle-num">2</div><div class="bundle-text"><strong>Hemocultivos x2</strong> (aerobio + anaerobio) de sitios diferentes antes del antibiótico. No retrasar antibiótico más de 45 min por los cultivos.</div><div class="bundle-time">0-20 min</div></div>
+      <div class="bundle-step"><div class="bundle-num">3</div><div class="bundle-text"><strong>Antibiótico IV de amplio espectro.</strong> Dosis máxima desde el inicio. Cubrir foco probable. Uno o dos fármacos según gravedad.</div><div class="bundle-time">&lt;1 hora</div></div>
+      <div class="bundle-step"><div class="bundle-num">4</div><div class="bundle-text"><strong>Bolo de cristaloide 30 mL/kg IV</strong> si hipotensión (TAM &lt;65) o lactato ≥4 mmol/L. Reevaluar a los 30 min. Usar SSN o Ringer Lactato.</div><div class="bundle-time">&lt;3 horas</div></div>
+      <div class="bundle-step"><div class="bundle-num">5</div><div class="bundle-text"><strong>Norepinefrina</strong> si TAM &lt;65 después del bolo de fluidos. No esperar a que termine el bolo si hay choque profundo. Meta TAM ≥65 mmHg.</div><div class="bundle-time">Si hipotensión</div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🏥</span><span class="sec-title">Criterios de UCI</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="hosp-card hosp-q">
+        <div class="hosp-title">🔴 UCI obligatoria</div>
+        <div class="hosp-item">Choque séptico (requiere vasopresores)</div>
+        <div class="hosp-item">Insuficiencia respiratoria: SatO₂ &lt;90% con O₂ o FR &gt;30</div>
+        <div class="hosp-item">Lactato &gt;4 mmol/L</div>
+        <div class="hosp-item">Alteración del estado mental (Glasgow &lt;14)</div>
+        <div class="hosp-item">Disfunción orgánica múltiple (SOFA &gt;6)</div>
+        <div class="hosp-item">Oliguria refractaria a fluidos</div>
+      </div>
+      <div class="hosp-card hosp-h">
+        <div class="hosp-title">🟡 Hospitalización con vigilancia estrecha</div>
+        <div class="hosp-item">Sepsis sin choque (SOFA 2-5) con respuesta inicial a antibiótico</div>
+        <div class="hosp-item">Lactato 2-4 mmol/L con tendencia a la baja</div>
+        <div class="hosp-item">Foco controlable sin cirugía urgente</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FISIOPATOLOGÍA -->
+<div class="panel" id="tab-fisiopato">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">⚙️</span><span class="sec-title">Cascada fisiopatológica</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="fpath-row"><div class="fpath-left"><div class="fpath-dot" style="background:#ef4444;"></div><div class="fpath-line"></div></div><div class="fpath-content"><div class="fpath-title">1. Reconocimiento del patógeno</div><div class="fpath-desc">PAMPs (patrones moleculares asociados a patógenos: LPS, peptidoglucano, DNA bacteriano) son reconocidos por TLR (toll-like receptors) en macrófagos, neutrófilos y células endoteliales. Desencadena la respuesta inflamatoria sistémica.</div></div></div>
+      <div class="fpath-row"><div class="fpath-left"><div class="fpath-dot" style="background:#f97316;"></div><div class="fpath-line"></div></div><div class="fpath-content"><div class="fpath-title">2. Tormenta de citocinas</div><div class="fpath-desc">Liberación masiva de TNF-α, IL-1β, IL-6, IL-8 → activación endotelial sistémica. Estas citocinas causan: vasodilatación, aumento de permeabilidad vascular, activación de la coagulación (CID) y depresión miocárdica.</div></div></div>
+      <div class="fpath-row"><div class="fpath-left"><div class="fpath-dot" style="background:#eab308;"></div><div class="fpath-line"></div></div><div class="fpath-content"><div class="fpath-title">3. Disfunción endotelial y vasodilatación</div><div class="fpath-desc">Sobreproducción de óxido nítrico (NO) → vasodilatación severa → hipotensión distributiva. Aumento de permeabilidad → extravasación de líquidos → "tercer espacio" → hipovolemia relativa a pesar de edema.</div></div></div>
+      <div class="fpath-row"><div class="fpath-left"><div class="fpath-dot" style="background:#84cc16;"></div><div class="fpath-line"></div></div><div class="fpath-content"><div class="fpath-title">4. Disfunción mitocondrial e hipoxia tisular</div><div class="fpath-desc">Las citocinas y el NO inhiben la cadena respiratoria mitocondrial → las células no pueden usar el O₂ (disoxia citopática) → metabolismo anaeróbico → acidosis láctica. Esta es la base del lactato elevado en sepsis.</div></div></div>
+      <div class="fpath-row"><div class="fpath-left"><div class="fpath-dot" style="background:#06b6d4;"></div><div class="fpath-line"></div></div><div class="fpath-content"><div class="fpath-title">5. Coagulopatía de la sepsis</div><div class="fpath-desc">Activación de la cascada de coagulación + inhibición de fibrinólisis → microtrombosis sistémica → isquemia orgánica → falla multiorgánica. Puede progresar a CID (coagulación intravascular diseminada) con trombosis y hemorragia simultáneas.</div></div></div>
+      <div class="fpath-row"><div class="fpath-left"><div class="fpath-dot" style="background:#8b5cf6;"></div><div class="fpath-line" style="background:transparent;"></div></div><div class="fpath-content"><div class="fpath-title">6. Falla multiorgánica (FMO)</div><div class="fpath-desc">Afectación secuencial o simultánea de órganos: pulmón (SDRA), riñón (IRA), hígado, corazón (depresión miocárdica), SNC (encefalopatía), adrenal (insuficiencia relativa). Cada órgano adicional disfuncional aumenta la mortalidad ~15%.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-diagnostico">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🧪</span><span class="sec-title">Criterios diagnósticos Sepsis-3</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="alert a-gray" style="margin-bottom:12px;"><span class="alert-ico">📋</span><div><div class="alert-title">Criterios Sepsis-3 (Singer et al, JAMA 2016 — vigente)</div>Sepsis = Infección sospechada o confirmada + <strong>SOFA ≥2</strong> puntos de incremento agudo.<br>Choque séptico = Sepsis + vasopresores para TAM ≥65 + lactato &gt;2 mmol/L sin hipovolemia.</div></div>
+      <div class="tbl-wrap"><table class="dtbl">
+        <thead><tr><th>Órgano</th><th>Variable</th><th>0 pts</th><th>1 pt</th><th>2 pts</th><th>3 pts</th><th>4 pts</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Respiratorio</td><td>PaO₂/FiO₂</td><td>≥400</td><td>300-399</td><td>200-299</td><td>100-199+VMI</td><td>&lt;100+VMI</td></tr>
+          <tr><td class="dn">Coagulación</td><td>Plaquetas (×10³)</td><td>≥150</td><td>100-149</td><td>50-99</td><td>20-49</td><td>&lt;20</td></tr>
+          <tr><td class="dn">Hígado</td><td>Bilirrubina (mg/dL)</td><td>&lt;1.2</td><td>1.2-1.9</td><td>2.0-5.9</td><td>6.0-11.9</td><td>≥12</td></tr>
+          <tr><td class="dn">Cardiovascular</td><td>TAM o vasopresores</td><td>≥70</td><td>&lt;70</td><td>Dopa≤5 o Dob</td><td>Dopa&gt;5 o NE≤0.1</td><td>Dopa&gt;15 o NE&gt;0.1</td></tr>
+          <tr><td class="dn">SNC</td><td>Glasgow</td><td>15</td><td>13-14</td><td>10-12</td><td>6-9</td><td>&lt;6</td></tr>
+          <tr><td class="dn">Renal</td><td>Creatinina (mg/dL)</td><td>&lt;1.2</td><td>1.2-1.9</td><td>2.0-3.4</td><td>3.5-4.9 ó UO&lt;500</td><td>≥5 ó UO&lt;200</td></div></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">📋</span><span class="sec-title">Estudios al ingreso — Sepsis workup</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="tbl-wrap"><table class="dtbl">
+        <thead><tr><th>Estudio</th><th>Hallazgo / Uso</th><th>Cuándo</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Hemocultivos x2</td><td>Aerobio + anaerobio. Sitios distintos. Antes del antibiótico.</td><td>Inmediato (≤20 min)</td></tr>
+          <tr><td class="dn">Lactato sérico</td><td>&gt;2 = sepsis + riesgo. &gt;4 = alto riesgo, UCI. Aclaramiento &gt;10% en 2h = buena respuesta.</td><td>Inmediato</td></tr>
+          <tr><td class="dn">BH con diferencial</td><td>Leucocitosis o leucopenia (ambas son criterios). Trombocitopenia = CID.</td><td>Inmediato</td></tr>
+          <tr><td class="dn">QS (BUN, Cr, glucosa)</td><td>Disfunción renal, hiperglucemia de estrés.</td><td>Inmediato</td></tr>
+          <tr><td class="dn">Gasometría arterial</td><td>pH, PaO₂, PaCO₂, HCO₃, Lactato. SOFA respiratorio.</td><td>Inmediato si compromiso respiratorio</td></tr>
+          <tr><td class="dn">Pruebas de coagulación</td><td>TP, TTP, fibrinógeno, dímero D. Evalúa CID.</td><td>Inmediato</td></tr>
+          <tr><td class="dn">Bilirrubinas / PFH</td><td>Disfunción hepática. SOFA hepático.</td><td>Inmediato</td></tr>
+          <tr><td class="dn">Procalcitonina</td><td>&gt;0.5: infección bacteriana probable. Guía duración de antibiótico (suspender si &lt;0.5 o baja &gt;80%).</td><td>Al ingreso</td></tr>
+          <tr><td class="dn">PCR</td><td>Marcador inflamatorio. Menos específico que PCT.</td><td>Al ingreso</td></tr>
+          <tr><td class="dn">EGO + urocultivo</td><td>Foco urinario (causa más frecuente de sepsis en IMSS).</td><td>Al ingreso</td></tr>
+          <tr><td class="dn">RX tórax</td><td>Foco pulmonar, SDRA incipiente, edema.</td><td>Al ingreso</td></tr>
+          <tr><td class="dn">ECG</td><td>Descartar SCA como desencadenante. Arritmias por alteraciones electrolíticas.</td><td>Al ingreso</td></tr>
+          <tr><td class="dn">Eco bedside (FAST)</td><td>Función ventricular, derrame pericárdico, estado de volumen.</td><td>Si hay choque</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🔍</span><span class="sec-title">Diagnóstico diferencial del choque</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="ddx-row"><div class="ddx-name">Choque hipovolémico</div><div class="ddx-diff">Hemorragia, deshidratación. PVC baja, extremidades frías, responde a volumen. Lactato elevado por hipoperfusión.</div></div>
+      <div class="ddx-row"><div class="ddx-name">Choque cardiogénico</div><div class="ddx-diff">SCA, IC descompensada. Extremidades frías, PVC alta, estertores, BNP elevado. Eco: FEVI baja.</div></div>
+      <div class="ddx-row"><div class="ddx-name">Choque obstructivo</div><div class="ddx-diff">TEP masivo o tamponade cardíaco. Ingurgitación yugular, taquicardia, hipotensión sin respuesta a volumen. Eco: dilatación VD / derrame pericárdico.</div></div>
+      <div class="ddx-row"><div class="ddx-name">Choque anafiláctico</div><div class="ddx-diff">Antecedente de exposición a alérgeno. Urticaria, angioedema, broncoespasmo. Responde a adrenalina IM.</div></div>
+      <div class="ddx-row"><div class="ddx-name">Choque neurogénico</div><div class="ddx-diff">Trauma medular. Bradicardia + hipotensión (sin taquicardia). Extremidades tibias y rosadas (vasodilatación sin compensación simpática).</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-tratamiento">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">💊</span><span class="sec-title">Antibióticos empíricos — por foco</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="alert a-gray" style="margin-bottom:10px;"><span class="alert-ico">ℹ️</span><div>Iniciar antibiótico empírico de amplio espectro en la primera hora. Desescalar a las 48-72h según cultivos y sensibilidades. Duración: 7-10 días en la mayoría de los casos.</div></div>
+      <div class="tbl-wrap"><table class="dtbl">
+        <thead><tr><th>Línea</th><th>Fármaco</th><th>Dosis</th><th>Vía</th><th>Dosis máx.</th><th>Nota / Foco</th></tr></thead>
+        <tbody>
+          <tr><td><span class="linea-badge l1">1ª IMSS</span></td><td><span class="drug-name">Ceftriaxona</span></td><td>2 g IV c/24h</td><td>IV</td><td class="drug-max">4 g/día</td><td><span class="drug-note">Foco urinario, NAC, infección abdominal leve. Cuadro básico IMSS.</span></td></tr>
+          <tr><td><span class="linea-badge l1">1ª IMSS</span></td><td><span class="drug-name">Ceftriaxona + Metronidazol</span></td><td>Ceftx 2g c/24h + Metro 500mg c/8h IV</td><td>IV</td><td class="drug-max">—</td><td><span class="drug-note">Sepsis abdominal, peritonitis. Cobertura gramneg + anaerobios.</span></td></tr>
+          <tr><td><span class="linea-badge l2">2ª Línea</span></td><td><span class="drug-name">Piperacilina-Tazobactam</span></td><td>4.5 g IV c/6-8h</td><td>IV</td><td class="drug-max">18 g/día</td><td><span class="drug-note">Sospecha de Pseudomonas (EPOC, inmunosupresión, hospitalización reciente). Sepsis grave.</span></td></tr>
+          <tr><td><span class="linea-badge l2">2ª Línea</span></td><td><span class="drug-name">Meropenem</span></td><td>1-2 g IV c/8h</td><td>IV</td><td class="drug-max">6 g/día</td><td><span class="drug-note">Choque séptico, gérmenes multirresistentes, falla de 1ª línea, neutropenia febril.</span></td></tr>
+          <tr><td><span class="linea-badge l3">3ª Línea</span></td><td><span class="drug-name">Imipenem-Cilastatina</span></td><td>500 mg-1g IV c/6-8h</td><td>IV</td><td class="drug-max">4 g/día</td><td><span class="drug-note">Gérmenes BLEE o KPC. Según cultivos. Interconsulta Infectología.</span></td></tr>
+          <tr><td><span class="linea-badge lc">+ MRSA</span></td><td><span class="drug-name">Vancomicina</span></td><td>25-30 mg/kg dosis carga, luego 15-20 mg/kg c/8-12h</td><td>IV</td><td class="drug-max">Guiar por niveles</td><td><span class="drug-note">Sospecha de MRSA: catéter, piel/tejidos blandos, neumonía nosocomial, usuario ADVP.</span></td></tr>
+          <tr><td><span class="linea-badge lc">+ Hongos</span></td><td><span class="drug-name">Caspofungina</span></td><td>70 mg día 1, luego 50 mg/día</td><td>IV</td><td class="drug-max">70 mg/día</td><td><span class="drug-note">Candidemia sospechada: inmunosuprimidos, NTP prolongada, cirugía abdominal reciente, cultivos previos de Candida.</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">💧</span><span class="sec-title">Reanimación hemodinámica</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="tbl-wrap"><table class="dtbl">
+        <thead><tr><th>Línea</th><th>Fármaco / Solución</th><th>Dosis</th><th>Vía</th><th>Dosis máx.</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td><span class="linea-badge l1">1ª Línea</span></td><td><span class="drug-name">Sol. Salina 0.9% o Ringer Lactato</span></td><td>30 mL/kg en 1-3h (bolo inicial)</td><td>IV</td><td class="drug-max">—</td><td><span class="drug-note">SSC 2021: Ringer Lactato preferido si disponible (menos hipercloremia). Reevaluar respuesta.</span></td></tr>
+          <tr><td><span class="linea-badge l1">Vasopresor 1ª</span></td><td><span class="drug-name">Norepinefrina (NE)</span></td><td>0.01-0.5 mcg/kg/min, titular</td><td>IV central</td><td class="drug-max">1-2 mcg/kg/min</td><td><span class="drug-note">Iniciar si TAM &lt;65 después del bolo. Preferir acceso central. Meta: TAM ≥65 mmHg.</span></td></tr>
+          <tr><td><span class="linea-badge l2">Vasopresor 2ª</span></td><td><span class="drug-name">Vasopresina</span></td><td>0.03-0.04 U/min fija</td><td>IV</td><td class="drug-max">0.04 U/min</td><td><span class="drug-note">Añadir si NE &gt;0.25 mcg/kg/min. Reduce dosis de NE. No titular (dosis fija).</span></td></tr>
+          <tr><td><span class="linea-badge l3">Inotrópico</span></td><td><span class="drug-name">Dobutamina</span></td><td>2-20 mcg/kg/min</td><td>IV</td><td class="drug-max">20 mcg/kg/min</td><td><span class="drug-note">Solo si disfunción miocárdica comprobada (eco: FEVI baja, bajo gasto). No de rutina.</span></td></tr>
+          <tr><td><span class="linea-badge lc">Corticoide</span></td><td><span class="drug-name">Hidrocortisona</span></td><td>200 mg/día IV continua o 50 mg c/6h</td><td>IV</td><td class="drug-max">200 mg/día</td><td><span class="drug-note">Solo si choque refractario a ≥2 vasopresores. No de rutina. Reducir progresivamente al retirar vasopresores.</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🩸</span><span class="sec-title">Metas de reanimación y soporte general</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="tbl-wrap"><table class="dtbl">
+        <thead><tr><th>Parámetro</th><th>Meta SSC 2021</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">TAM</td><td>≥65 mmHg</td><td>Puede ser &gt;65 en HAS crónica o enfermedad cerebrovascular</td></tr>
+          <tr><td class="dn">Lactato</td><td>Normalizar (&lt;2) o aclaramiento &gt;10% en 2h</td><td>Mejor marcador de perfusión que la PA</td></tr>
+          <tr><td class="dn">Diuresis</td><td>≥0.5 mL/kg/h</td><td>No forzar con diuréticos para "lograr" esta meta</td></tr>
+          <tr><td class="dn">Hemoglobina</td><td>Transfundir si &lt;7 g/dL</td><td>&lt;8 si cardiopatía isquémica activa</td></tr>
+          <tr><td class="dn">Glucosa</td><td>140-180 mg/dL</td><td>Protocolo de insulina si &gt;180 persistente. Evitar hipoglucemia</td></tr>
+          <tr><td class="dn">SatO₂</td><td>≥92% (meta conservadora)</td><td>Evitar hiperoxia (SatO₂ 92-96% es suficiente)</td></tr>
+          <tr><td class="dn">Plaquetas</td><td>Transfundir si &lt;10k o &lt;20k con sangrado</td><td>En procedimientos: mantener &gt;50k</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algoritmo">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🔄</span><span class="sec-title">Algoritmo de manejo — Sepsis / Choque séptico</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="algo-node algo-start">🦠 SOSPECHA DE SEPSIS<br><span style="font-size:11px;font-weight:400;">Infección + ≥2 criterios SIRS o SOFA ≥2</span></div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-action"><strong>ACTIVAR CÓDIGO SEPSIS — Reloj inicia</strong><br>Acceso IV grueso x2 · Oxígeno · Monitor · ECG · Avisar médico urgente</div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-action"><strong>LABS URGENTES SIMULTÁNEOS (0-15 min)</strong><br>Lactato · Hemocultivos x2 · BH · QS · Coagulación · GSA · EGO · RX tórax</div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-danger">⚡ ANTIBIÓTICO IV — &lt;1 HORA DEL RECONOCIMIENTO<br>Dosis máxima. Cubrir foco probable. Ver tabla de antibióticos.</div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-decision">❓ ¿TAM &lt;65 mmHg o Lactato ≥4 mmol/L?</div>
+      <div class="algo-branch">
+        <div class="algo-yes"><div class="branch-lbl">✅ SÍ — Choque</div>Bolo SSN/RL 30 mL/kg en 1-3h. Iniciar Norepinefrina si TAM sigue &lt;65 después del bolo. UCI urgente.</div>
+        <div class="algo-no"><div class="branch-lbl">❌ NO — Sepsis sin choque</div>Hidratación de mantenimiento. Monitoreo c/1h. Reevaluar lactato en 2h.</div>
+      </div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-decision">❓ ¿Respuesta a bolo de fluidos? (TAM ≥65, lactato baja)</div>
+      <div class="algo-branch">
+        <div class="algo-yes"><div class="branch-lbl">✅ SÍ</div>Continuar reanimación guiada por metas. Reevaluar c/30 min. Identificar y controlar foco.</div>
+        <div class="algo-no"><div class="branch-lbl">❌ NO</div>Norepinefrina IV (central o periférico urgente). Vasopresina si NE &gt;0.25. Dobutamina si disfunción miocárdica. Hidrocortisona si refractario.</div>
+      </div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-action"><strong>CONTROL DEL FOCO</strong><br>Drenaje de absceso · Retiro de catéter · Cirugía si necesario · Cultivos adicionales (LCR, líquido articular)</div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-action"><strong>DESESCALADA 48-72h</strong><br>Revisar cultivos · Ajustar antibiótico a espectro mínimo · Guiar por procalcitonina · Duración: 7-10 días</div>
+      <div class="algo-arrow">↓</div>
+      <div class="algo-node algo-end-ok">✅ Estabilización → Piso / Alta con seguimiento</div>
+    </div>
+  </div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-escalas">
+  <div class="calc-card">
+    <div class="calc-hdr">
+      <div>
+        <div class="calc-title">📊 qSOFA — Screening rápido de sepsis</div>
+        <div class="calc-subtitle">Herramienta de tamizaje fuera de UCI · SSC 2021</div>
+      </div>
+      <button style="background:var(--red-mid);color:#fff;border:none;padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;" onclick="resetqSOFA()">↺ Reset</button>
+    </div>
+    <div class="calc-body">
+      <div class="calc-item" onclick="toggleQ(this,1)"><div class="calc-cb" id="q0"></div><div class="calc-label"><strong>Frecuencia respiratoria</strong> ≥22 rpm</div><div class="calc-pts">+1</div></div>
+      <div class="calc-item" onclick="toggleQ(this,1)"><div class="calc-cb" id="q1"></div><div class="calc-label"><strong>Alteración del estado mental</strong> (Glasgow &lt;15)</div><div class="calc-pts">+1</div></div>
+      <div class="calc-item" onclick="toggleQ(this,1)"><div class="calc-cb" id="q2"></div><div class="calc-label"><strong>Presión arterial sistólica</strong> ≤100 mmHg</div><div class="calc-pts">+1</div></div>
+      <div class="calc-result res-low" id="q_result">
+        <div class="result-score" id="q_score">0</div>
+        <div class="result-label">de 3 puntos</div>
+        <div class="result-action" id="q_interp">Marca los criterios presentes</div>
+      </div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;"><div style="width:10px;height:10px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>0-1 pts: Riesgo bajo. Monitoreo. Puede tener sepsis si SOFA ≥2.</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;"><div style="width:10px;height:10px;border-radius:50%;background:#ef4444;flex-shrink:0;"></div>≥2 pts: Alto riesgo de mortalidad. Activar código sepsis. SOFA completo urgente.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">📊</span><span class="sec-title">Escala SOFA completa (Sequential Organ Failure Assessment)</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="prose"><p>Ver tabla diagnóstica en pestaña "Diagnóstico" para el puntaje completo. <strong>SOFA ≥2 puntos</strong> de incremento agudo = criterio de sepsis. Cada punto adicional incrementa la mortalidad ~10%.</p></div>
+      <div class="alert a-info" style="margin-top:10px;"><span class="alert-ico">📊</span><div><div class="alert-title">Interpretación SOFA</div>
+        0-6 pts: Mortalidad &lt;10% · 7-9 pts: 15-20% · 10-12 pts: 40-50% · 13-14 pts: 50-60% · 15 pts: &gt;80% · 15-24 pts: &gt;90%
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- AJUSTES -->
+<div class="panel" id="tab-ajustes">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🫘</span><span class="sec-title">Ajuste en insuficiencia renal</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="prose">
+        <p><strong>Vancomicina:</strong> Guiar por niveles (AUC/MIC). Extender intervalos si TFG &lt;50. En diálisis: dosis variable según niveles.</p>
+        <p><strong>Piperacilina-Tazobactam:</strong> TFG 20-40: 3.375 g c/8h. TFG &lt;20: 2.25 g c/8h. Ajustar.</p>
+        <p><strong>Meropenem:</strong> TFG 26-50: 1g c/12h. TFG 10-25: 500mg c/12h. TFG &lt;10: 500mg c/24h.</p>
+        <p><strong>Norepinefrina:</strong> Sin ajuste (metabolismo hepático). Vigilar efecto si hipoperfusión hepática.</p>
+        <p><strong>Fluidos:</strong> Reducir volumen del bolo en IRA oligúrica con sobrecarga conocida. Considerar diálisis si oliguria refractaria.</p>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">🌡️</span><span class="sec-title">Seguridad en embarazo</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="sema-row">
+        <div class="sema-item sA s-inactive"><span class="sema-ltr">A</span><span class="sema-txt">Seguro</span></div>
+        <div class="sema-item sB s-inactive"><span class="sema-ltr">B</span><span class="sema-txt">Prob. seguro</span></div>
+        <div class="sema-item sC s-active"><span class="sema-ltr">C</span><span class="sema-txt">Precaución</span></div>
+        <div class="sema-item sD s-inactive"><span class="sema-ltr">D</span><span class="sema-txt">Riesgo fetal</span></div>
+        <div class="sema-item sX s-inactive"><span class="sema-ltr">X</span><span class="sema-txt">Contraindicado</span></div>
+      </div>
+      <div class="alert a-warn" style="margin-top:10px;"><span class="alert-ico">🤰</span><div><div class="alert-title">Sepsis en embarazo — Sepsis obstétrica</div>
+        Causa #1 de muerte materna en países en desarrollo. Fuentes más frecuentes: ITU, endometritis, corioamnionitis, aborto séptico.<br><br>
+        <strong>Seguros:</strong> Ceftriaxona (Cat B), Ampicilina (Cat B), Metronidazol post-1er trimestre, Gentamicina puntual, Norepinefrina en emergencia.<br>
+        <strong>Evitar:</strong> Quinolonas (Cat C), Vancomicina (Cat C — solo si MRSA confirmado), Meropenem (Cat B pero datos limitados).<br>
+        <strong>Fluidos:</strong> Precaución con volumen excesivo — edema pulmonar más frecuente en embarazo. Monitoreo fetal continuo.
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLICACIONES -->
+<div class="panel" id="tab-complicaciones">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">⚠️</span><span class="sec-title">Complicaciones de la sepsis</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="comp-item"><div class="comp-icon">🫁</div><div><div class="comp-name">SDRA (Síndrome de Distrés Respiratorio Agudo) <span class="lp lp-r">40% de sepsis grave</span></div><div class="comp-desc">PaO₂/FiO₂ &lt;300 + infiltrados bilaterales + no origen cardíaco. Ventilación protectora: VT 6 mL/kg peso ideal, PEEP ≥5, presión plateau &lt;30 cmH₂O. Prono si P/F &lt;150.</div></div></div>
+      <div class="comp-item"><div class="comp-icon">🫘</div><div><div class="comp-name">IRA (Injuria Renal Aguda) séptica <span class="lp lp-r">50% de sepsis grave</span></div><div class="comp-desc">Cr &gt;1.5x basal o UO &lt;0.5 mL/kg/h por 6h. Evitar nefrotóxicos. Diálisis si oliguria refractaria, K &gt;6.5, acidosis severa o sobrecarga.</div></div></div>
+      <div class="comp-item"><div class="comp-icon">🩸</div><div><div class="comp-name">CID (Coagulación Intravascular Diseminada) <span class="lp lp-r">Grave</span></div><div class="comp-desc">Trombosis + hemorragia. TP prolongado, plaquetas &lt;100k, fibrinógeno bajo, dímero D muy elevado. Tratar la sepsis de fondo. Plasma si sangrado + TP &gt;1.5x. Plaquetas si &lt;50k con sangrado activo.</div></div></div>
+      <div class="comp-item"><div class="comp-icon">🧠</div><div><div class="comp-name">Encefalopatía séptica <span class="lp lp-a">Frecuente</span></div><div class="comp-desc">Confusión, agitación, stupor. Excluir otras causas (hipoglucemia, meningitis, ACV). No usar sedantes rutinariamente. Trata la causa. Reorienta frecuentemente.</div></div></div>
+      <div class="comp-item"><div class="comp-icon">❤️</div><div><div class="comp-name">Depresión miocárdica séptica <span class="lp lp-a">20-30%</span></div><div class="comp-desc">FEVI reducida transitoriamente (reversible en 7-10 días si sobrevive). Eco bedside: diagnóstico. Dobutamina si bajo gasto confirmado. No usar rutinariamente.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ESPECIALES -->
+<div class="panel" id="tab-especiales">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">👥</span><span class="sec-title">Poblaciones especiales</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="case-card c-ped"><div class="case-title">🧒 Sepsis pediátrica</div><div class="case-body">Definición diferente: SIRS + infección (no Sepsis-3 en niños &lt;18 años). Signos: fiebre o hipotermia, taquicardia, taquipnea, alteración de perfusión. Antibiótico &lt;1h igual. Bolo SSN 10-20 mL/kg (no 30 mL/kg de adulto) — reevaluar. Dexametasona en meningitis bacteriana pediátrica. Mayor riesgo de edema cerebral con sobrehidratación.</div></div>
+      <div class="case-card c-anc"><div class="case-title">👴 Adulto mayor</div><div class="case-body">Presentación atípica: sin fiebre (20%), sin leucocitosis. Solo confusión, caída, incontinencia nueva. Umbral bajo para sospechar sepsis. Mayor sensibilidad a vasoactivos — iniciar NE a dosis bajas. Ajustar antibióticos a función renal. Considerar Do Not Resuscitate si establecido.</div></div>
+      <div class="case-card c-irc"><div class="case-title">🫘 Inmunosuprimido / neutropenia febril</div><div class="case-body">Neutropenia febril: neutrófilos &lt;500 + fiebre. Antibiótico en &lt;60 min (no 1 hora — más urgente). Ceftazidima o Piperacilina-Tazobactam + Vancomicina si sospecha de MRSA. Agregar antifúngico si &gt;7 días de antibiótico sin respuesta. GCSF en neutropenia severa.</div></div>
+      <div class="case-card c-emb"><div class="case-title">🤰 Sepsis obstétrica</div><div class="case-body">Causa #1 de muerte materna. Corioamnionitis, endometritis, aborto séptico, mastitis. Antibiótico: Ampicilina + Gentamicina ± Metronidazol. Monitoreo fetal continuo. Resolver el foco (parto si corioamnionitis, legrado si aborto séptico). Consulta urgente obstetricia + UCI obstétrica.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seguimiento">
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog(this)"><span class="sec-icon">📅</span><span class="sec-title">Seguimiento y desescalada</span><span class="sec-toggle open">⌄</span></div>
+    <div class="sec-body">
+      <div class="fu-row"><div class="fu-time">1-6h</div><div class="fu-text">Verificar metas de reanimación: TAM ≥65, lactato en descenso, diuresis ≥0.5 mL/kg/h. Reevaluar necesidad de vasopresor. Ecocardiograma si no responde.</div></div>
+      <div class="fu-row"><div class="fu-time">6-12h</div><div class="fu-text">Revisar cultivos preliminares. Evaluar control de foco (¿se drenó?, ¿se retiró el catéter?). Ajustar antibiótico si hay datos del germen.</div></div>
+      <div class="fu-row"><div class="fu-time">24-48h</div><div class="fu-text">Cultivos finales. Iniciar desescalada de antibiótico según sensibilidades. Reducir vasopresores progresivamente si hemodinámicamente estable.</div></div>
+      <div class="fu-row"><div class="fu-time">48-72h</div><div class="fu-text">Procalcitonina: si &lt;0.5 o baja &gt;80% — evaluar suspender antibiótico. Movilización temprana. Inicio de nutrición enteral si tolera.</div></div>
+      <div class="fu-row"><div class="fu-time">7-10 días</div><div class="fu-text">Duración estándar de antibiótico. Extender solo si foco no controlado, bacteriemia por S. aureus (&gt;14 días), endocarditis o foco poco accesible.</div></div>
+      <div class="fu-row"><div class="fu-time">Alta</div><div class="fu-text">Educación: signos de alarma de recaída. Control con médico en 7-10 días. Seguimiento de complicaciones tardías (IRA persistente, neuropatía del paciente crítico, PTSD post-UCI).</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ENFERMERÍA -->
+<div class="panel" id="tab-enfermeria">
+  <div class="enf-hdr">
+    <h2 style="font-size:15px;font-weight:700;margin-bottom:4px;">🩺 Hoja de Enfermería — Sepsis / Choque Séptico</h2>
+    <p style="font-size:12px;opacity:0.85;">Código sepsis · Bundle 1h · Monitoreo intensivo · Imprimible</p>
+  </div>
+  <div class="enf-block">
+    <div class="enf-block-hdr">⏱️ Bundle de 1 hora — Acciones de enfermería</div>
+    <div class="enf-block-body">
+      <div class="enf-order">
+        <div class="enf-order-title">🚨 Al reconocimiento — primeros 15 min</div>
+        <div class="enf-order-item">Instalar 2 accesos venosos periféricos calibre 16-18G — simultáneamente</div>
+        <div class="enf-order-item">Monitoreo continuo: ECG, SatO₂, TA no invasiva c/5 min</div>
+        <div class="enf-order-item">Tomar muestras URGENTES: BH, QS, coagulación, lactato, GSA — ANTES del antibiótico</div>
+        <div class="enf-order-item">Hemocultivos x2 (aerobio + anaerobio) de sitios distintos — técnica estéril estricta</div>
+        <div class="enf-order-item">EGO con sonda Foley si se instala — registrar color y cantidad inicial</div>
+        <div class="enf-order-item">Oxígeno: mascarilla Venturi 35-50% o cánula nasal 4-6 L/min — meta SatO₂ 92-96%</div>
+        <div class="enf-order-item">Instalar sonda Foley para medir diuresis horaria — registrar hora de instalación</div>
+      </div>
+      <div class="enf-order">
+        <div class="enf-order-title">⚡ Antibiótico — antes de 60 min del reconocimiento</div>
+        <div class="enf-order-item">Preparar y administrar antibiótico IV indicado por el médico EN BOLO RÁPIDO (30 min)</div>
+        <div class="enf-order-item">Registrar: nombre del antibiótico, dosis, hora exacta de inicio de infusión</div>
+        <div class="enf-order-item">Verificar alergias en el expediente antes de administrar</div>
+      </div>
+      <div class="enf-order">
+        <div class="enf-order-title">💧 Bolo de fluidos — si TAM &lt;65 o lactato ≥4</div>
+        <div class="enf-order-item">Pasar SSN 0.9% o Ringer Lactato: 30 mL/kg del peso real en 1-3 horas</div>
+        <div class="enf-order-item">Para un adulto de 70 kg = 2,100 mL en 1-3h (macrogotero o bomba en la velocidad indicada)</div>
+        <div class="enf-order-item">Reevaluar TA, FC, diuresis y estado respiratorio cada 30 min durante el bolo</div>
+        <div class="enf-order-item">Si aparece dificultad respiratoria o SpO₂ cae: detener bolo y avisar médico INMEDIATO</div>
+      </div>
+    </div>
+  </div>
+  <div class="enf-block">
+    <div class="enf-block-hdr">🕐 Monitoreo frecuente</div>
+    <div class="enf-block-body">
+      <div class="enf-vital">
+        <div class="enf-vital-card"><div class="enf-vital-name">TA + FC + FR</div><div class="enf-vital-val">Meta: TAM ≥65 mmHg · FC &lt;100 · FR &lt;25</div><div class="enf-vital-freq">Cada 15 min (choque) → c/1h al estabilizar</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">Diuresis horaria</div><div class="enf-vital-val">Meta: ≥0.5 mL/kg/h. Ej: 70kg → ≥35 mL/h</div><div class="enf-vital-freq">Cada hora</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">SatO₂ + temperatura</div><div class="enf-vital-val">Meta SatO₂ 92-96%. Temperatura axilar/rectal</div><div class="enf-vital-freq">Continuo / Cada 1h</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">Estado neurológico</div><div class="enf-vital-val">Glasgow, orientación, agitación, pupilas</div><div class="enf-vital-freq">Cada hora</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">Lactato sérico</div><div class="enf-vital-val">Repetir en 2h si inicial &gt;2. Meta: aclaramiento &gt;10%</div><div class="enf-vital-freq">A las 2h del inicial</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">Balance hídrico</div><div class="enf-vital-val">Ingresos – egresos totales. Vigilar sobrecarga.</div><div class="enf-vital-freq">Cada 4h y 24h</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">Vasopresores</div><div class="enf-vital-val">Dosis actual de NE en mcg/kg/min. Tendencia.</div><div class="enf-vital-freq">Cada 30 min · Ajustar según TA</div></div>
+        <div class="enf-vital-card"><div class="enf-vital-name">Accesos y catéteres</div><div class="enf-vital-val">Permeabilidad, signos de infección, posición</div><div class="enf-vital-freq">Cada 2h</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="enf-block">
+    <div class="enf-block-hdr">✅ Checklist por turno — Código Sepsis</div>
+    <div class="enf-block-body">
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Confirmar que antibiótico fue administrado y registrar hora exacta de inicio</div><div class="enf-freq">Inicio turno</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Verificar dosis y velocidad del vasopresor en bomba vs indicación médica escrita</div><div class="enf-freq">C/turno</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Registrar diuresis horaria y calcular balance hídrico parcial</div><div class="enf-freq">C/hora</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Verificar resultados de laboratorio y reportar al médico si TAC, K, Cr fuera de metas</div><div class="enf-freq">Al recibir</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Evaluar estado neurológico (Glasgow) y comparar con evaluación previa</div><div class="enf-freq">C/1h</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Revisar sitios de catéter/acceso IV — signos de infección local</div><div class="enf-freq">C/turno</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Repetir lactato sérico a las 2h del inicial si fue &gt;2 mmol/L</div><div class="enf-freq">A las 2h</div></div>
+      <div class="enf-check"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Verificar glucosa capilar — meta 140-180. Avisar si &lt;70 o &gt;250</div><div class="enf-freq">C/2h</div></div>
+    </div>
+  </div>
+  <div class="enf-block">
+    <div class="enf-block-hdr">🚨 Señales de alarma — Avisar INMEDIATO</div>
+    <div class="enf-block-body">
+      <div class="enf-alarm"><strong>TAM &lt;65 mmHg que no responde a aumento de vasopresor o a fluidos</strong>Choque refractario. Avisar médico urgente. Preparar dobutamina e hidrocortisona.</div>
+      <div class="enf-alarm"><strong>Diuresis &lt;0.5 mL/kg/h por 2h consecutivas</strong>Oliguria que puede indicar IRA o hipoperfusión renal persistente.</div>
+      <div class="enf-alarm"><strong>SatO₂ &lt;90% o FR &gt;30 rpm a pesar de O₂ suplementario</strong>Insuficiencia respiratoria → preparar equipo de intubación y VMI.</div>
+      <div class="enf-alarm"><strong>Deterioro del Glasgow ≥2 puntos respecto a la última evaluación</strong>Encefalopatía progresiva o complicación nueva. Revisar glucosa, PA, SatO₂.</div>
+      <div class="enf-alarm"><strong>Aparición de petequias, púrpura o sangrado en múltiples sitios</strong>Signos de CID. Tomar coagulación urgente. Avisar médico.</div>
+      <div class="enf-alarm"><strong>FC &gt;140 lpm o arritmia nueva en monitor</strong>ECG de 12 derivaciones urgente. Avisar cardiología si persiste.</div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:10px 0;"><button class="print-btn" onclick="window.print()">🖨️ Imprimir hoja de enfermería</button></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-biblio">
+  <div class="bib-hdr">
+    <h2 style="font-size:15px;font-weight:700;margin-bottom:4px;">📚 Bibliografía — Sepsis y Choque Séptico</h2>
+    <p style="font-size:12px;opacity:0.85;">Surviving Sepsis Campaign 2021 + GPC IMSS-084 + Sepsis-3</p>
+  </div>
+  <div class="bib-sec">
+    <div class="bib-sec-hdr">🇲🇽 GPC IMSS / CENETEC</div>
+    <div class="bib-body">
+      <div class="bib-item">
+        <div><span class="bib-num">1</span><span class="bib-year">2009 (vigente)</span><span class="lv lv-b">GPC</span></div>
+        <div class="bib-ref">Instituto Mexicano del Seguro Social. <em>Diagnóstico y Tratamiento de Sepsis Grave y Choque Séptico en el Adulto.</em> Catálogo Maestro de GPC: IMSS-084-08. Secretaría de Salud México.</div>
+        <a class="bib-link" href="https://www.imss.gob.mx/sites/all/statics/guiasclinicas/084GER.pdf" target="_blank">🔗 GPC IMSS-084 (PDF)</a>
+      </div>
+    </div>
+  </div>
+  <div class="bib-sec">
+    <div class="bib-sec-hdr">🌍 Guías internacionales</div>
+    <div class="bib-body">
+      <div class="bib-item">
+        <div><span class="bib-num">2</span><span class="bib-year">2021</span><span class="lv lv-a">Nivel A</span></div>
+        <div class="bib-ref">Evans L, et al. <em>Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021.</em> Intensive Care Med. 2021;47(11):1181-1247.</div>
+        <a class="bib-link" href="https://pubmed.ncbi.nlm.nih.gov/34599691/" target="_blank">🔗 PubMed: 34599691</a>
+      </div>
+      <div class="bib-item">
+        <div><span class="bib-num">3</span><span class="bib-year">2016</span><span class="lv lv-a">Nivel A — Definición vigente</span></div>
+        <div class="bib-ref">Singer M, et al. <em>The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3).</em> JAMA. 2016;315(8):801-810.</div>
+        <a class="bib-link" href="https://pubmed.ncbi.nlm.nih.gov/26903338/" target="_blank">🔗 PubMed: 26903338</a>
+      </div>
+      <div class="bib-item">
+        <div><span class="bib-num">4</span><span class="bib-year">2022</span><span class="lv lv-a">Nivel A · ECA</span></div>
+        <div class="bib-ref">SMART Trial: Semler MW, et al. <em>Balanced Crystalloids versus Saline in Critically Ill Adults.</em> NEJM. 2018;378(9):829-839.</div>
+        <a class="bib-link" href="https://pubmed.ncbi.nlm.nih.gov/29485925/" target="_blank">🔗 PubMed: 29485925</a>
+      </div>
+      <div class="bib-item">
+        <div><span class="bib-num">5</span><span class="bib-year">2023</span><span class="lv lv-a">Nivel A · Metaanálisis</span></div>
+        <div class="bib-ref">ADRENAL Trial: Venkatesh B, et al. <em>Adjunctive Glucocorticoid Therapy in Patients with Septic Shock.</em> NEJM. 2018;378(9):797-808.</div>
+        <a class="bib-link" href="https://pubmed.ncbi.nlm.nih.gov/29347874/" target="_blank">🔗 PubMed: 29347874</a>
+      </div>
+    </div>
+  </div>
+  <div class="bib-sec">
+    <div class="bib-sec-hdr">📕 Libros de referencia</div>
+    <div class="bib-body">
+      <div class="bib-item">
+        <div><span class="bib-num">6</span><span class="lv lv-exp">Experto</span></div>
+        <div class="bib-ref">Harrison's Principles of Internal Medicine. 21ª ed. McGraw-Hill. 2022. Capítulo 297: Sepsis y choque séptico.</div>
+      </div>
+      <div class="bib-item">
+        <div><span class="bib-num">7</span><span class="lv lv-exp">Experto</span></div>
+        <div class="bib-ref">Tintinalli JE, et al. <em>Emergency Medicine: A Comprehensive Study Guide.</em> 9ª ed. McGraw-Hill. 2020. Capítulo 146: Sepsis.</div>
+      </div>
+    </div>
+  </div>
+  <div class="alert a-info" style="margin:0 0 20px;"><span class="alert-ico">ℹ️</span><div>Guía basada en SSC 2021 y GPC IMSS-084. La GPC IMSS es de 2009 y no refleja los criterios Sepsis-3 (2016) — se recomienda usar SSC 2021 para decisiones clínicas. Última revisión: junio 2025.</div></div>
+</div>
+
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function tog(hdr){
+  const body=hdr.nextElementSibling;
+  const toggle=hdr.querySelector('.sec-toggle');
+  body.classList.toggle('hidden');
+  toggle.classList.toggle('open');
+}
+let qScore=0;
+function toggleQ(el,pts){
+  const cb=el.querySelector('.calc-cb');
+  const isOn=cb.classList.contains('on');
+  cb.classList.toggle('on');
+  qScore+=(isOn?-pts:pts);
+  const scoreEl=document.getElementById('q_score');
+  const resultEl=document.getElementById('q_result');
+  const interpEl=document.getElementById('q_interp');
+  scoreEl.textContent=qScore;
+  resultEl.className='calc-result';
+  if(qScore<=1){resultEl.classList.add('res-low');interpEl.innerHTML='<strong>Riesgo bajo</strong><br>Monitoreo. Puede tener sepsis — calcular SOFA si hay sospecha clínica.';}
+  else{resultEl.classList.add('res-high');interpEl.innerHTML='<strong>Alto riesgo de mortalidad ≥2 pts</strong><br>Activar Código Sepsis. Calcular SOFA completo. Iniciar Bundle 1h inmediato.';}
+}
+function resetqSOFA(){
+  qScore=0;
+  document.querySelectorAll('.calc-cb').forEach(cb=>cb.classList.remove('on'));
+  document.getElementById('q_score').textContent='0';
+  document.getElementById('q_result').className='calc-result res-low';
+  document.getElementById('q_interp').textContent='Marca los criterios presentes';
+}
+</script>
+</body>
+</html>

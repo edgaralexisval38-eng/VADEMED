@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>EPOC y Exacerbación · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0c3b6e;--act:#e6f1fb;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,#0a1a3a,#1a3060);}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}.prose strong{color:var(--gray-900);}
+.prose ul{margin:4px 0 8px 18px;}.prose li{margin-bottom:4px;line-height:1.55;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;padding:0 4px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;}
+.biblio-header{background:linear-gradient(135deg,#0a1a3a,#1a3060);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e0f2fe;color:#075985;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:600;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calcinput{width:100%;padding:9px 11px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;}
+.scoreres{margin-top:10px;padding:11px;border-radius:8px;background:#fff;border:1px solid var(--bd);}
+.scoretot{font-size:20px;font-weight:800;color:var(--ac);}
+.pilar-banner{background:linear-gradient(135deg,#0a1a3a,#1a3060);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px;}
+.pilar-icon{font-size:28px;flex-shrink:0;}
+.pilar-title{font-size:14px;font-weight:800;margin-bottom:3px;}
+.pilar-sub{font-size:12px;opacity:0.9;line-height:1.5;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫁</div>
+    <div>
+      <div class="hdr-eye">Neumología · Crónico y agudo</div>
+      <div class="hdr-title">EPOC y Exacerbación</div>
+      <div class="hdr-sub">Diagnóstico, GOLD ABE y tratamiento en consulta y hospital</div>
+    </div>
+  </div>
+  <div class="hdr-badges"><span class="badge">GOLD 2026</span><span class="badge">FEV₁/FVC &lt; 0.7</span><span class="badge">Rome</span></div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">3.ª</div><div class="qs-l">causa de muerte</div></div>
+  <div class="qs"><div class="qs-v">&lt;0.7</div><div class="qs-l">FEV₁/FVC posBD</div></div>
+  <div class="qs"><div class="qs-v">A·B·E</div><div class="qs-l">grupos GOLD</div></div>
+  <div class="qs"><div class="qs-v">88-92%</div><div class="qs-l">SpO₂ objetivo</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('escal',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('far',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('esc2',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="alert a-i"><span class="ai">🫁</span><div><div class="at">EPOC en una frase</div>Enfermedad heterogénea, prevenible y tratable, con <strong>limitación crónica al flujo aéreo</strong> (FEV₁/FVC &lt;0.7 posbroncodilatador) por anomalías de vía aérea y/o alveolares. GOLD 2026 clasifica en grupos <strong>A-B-E</strong> y usa <strong>Rome</strong> para las exacerbaciones.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Estadificación de la obstrucción (GOLD 1-4)</strong> por FEV₁% posBD: ≥80 / 50-79 / 30-49 / &lt;30.</li>
+    <li><strong>Grupos ABE</strong> (síntomas + exacerbaciones): A pocos síntomas · B muchos síntomas · E exacerbador.</li>
+    <li><strong>Exacerbación (Rome):</strong> leve / moderada / grave por clínica y gasometría.</li>
+    <li><strong>Etiotipos:</strong> tabaco, biomasa/ambiental, genético (déficit de alfa-1 antitripsina), desarrollo pulmonar anómalo, infecciones.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Una de las primeras causas de muerte (≈<strong>3.ª global</strong>). En América Latina el estudio <strong>PLATINO</strong> mostró alta prevalencia y gran <strong>subdiagnóstico</strong>. En México pesan el tabaquismo y la <strong>exposición a humo de biomasa (leña)</strong>, sobre todo en mujeres del medio rural.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Inflamación crónica → <strong>bronquitis/bronquiolitis</strong> (moco, estrechamiento de vía pequeña) y <strong>enfisema</strong> (destrucción alveolar, pérdida de retracción elástica) → <strong>limitación al flujo espiratorio</strong>, atrapamiento aéreo e <strong>hiperinflación</strong> (explica la disnea), alteración del intercambio (hipoxemia ± hipercapnia) y, en fases avanzadas, hipertensión pulmonar/cor pulmonale. Las exacerbaciones aceleran la caída del FEV₁.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Tabaquismo</strong> (principal) y humo de segunda mano.</li>
+    <li><strong>Humo de biomasa/leña</strong> y exposición ocupacional/contaminación.</li>
+    <li><strong>Déficit de alfa-1 antitripsina</strong> (EPOC temprana, enfisema basal, no fumadores).</li>
+    <li>Desarrollo pulmonar anómalo (prematuridad, infecciones en la infancia), <strong>tuberculosis previa</strong>, asma/hiperreactividad, nivel socioeconómico bajo.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Presentación clínica</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Disnea</strong> progresiva, persistente, de esfuerzo (síntoma cardinal).</li>
+    <li><strong>Tos crónica</strong> y <strong>expectoración</strong> crónica.</li>
+    <li>Infecciones respiratorias bajas de repetición; sibilancias y opresión torácica.</li>
+    <li>En fases avanzadas: pérdida de peso, fatiga, signos de cor pulmonale.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li>Diagnosticar EPOC <strong>sin espirometría</strong> (FEV₁/FVC &lt;0.7 posBD).</li>
+    <li>Usar <strong>corticoide inhalado de rutina</strong> sin indicación (riesgo de neumonía); ignorar los eosinófilos.</li>
+    <li>No revisar <strong>técnica de inhalación/adherencia</strong> antes de escalar.</li>
+    <li>Dar oxígeno a flujo alto en la exacerbación y provocar <strong>hipercapnia</strong> (objetivo 88-92%).</li>
+    <li>No buscar lo que <strong>simula exacerbación</strong> (TEP, insuficiencia cardiaca, neumonía, neumotórax).</li>
+  </ul></div></div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Cuándo sospecharla</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Mayor de 40 años con factor de riesgo + disnea progresiva, tos y/o expectoración crónicas o infecciones respiratorias de repetición. Cuantificar disnea con <strong>mMRC</strong> e impacto con <strong>CAT</strong> (pestaña Escalas).</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥇</span><span class="st">Estándar de oro — espirometría</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>El diagnóstico es <strong>espirométrico</strong>: <strong>FEV₁/FVC &lt;0.70 posbroncodilatador</strong> confirma la limitación persistente al flujo aéreo. La gravedad de la obstrucción se grada GOLD 1-4 por el FEV₁% (calculadora en Escalas).</p></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">ℹ️</span><div>GOLD ya <strong>no</strong> usa la reversibilidad pre/posBD para decidir el tratamiento. El cociente diagnóstico se evalúa <strong>posBD</strong>.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Asma</strong> y solapamiento asma-EPOC (inicio temprano, variabilidad, atopia; si hay asma, el corticoide inhalado es obligado).</li>
+    <li>Insuficiencia cardiaca, <strong>bronquiectasias</strong>, tuberculosis/secuelas, bronquiolitis, fibrosis pulmonar.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios diagnósticos</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Espirometría</strong> posBD (confirmatoria).</li>
+    <li><strong>Eosinófilos</strong> en sangre (deciden el corticoide inhalado) y biometría hemática.</li>
+    <li><strong>Alfa-1 antitripsina</strong> al menos una vez (sobre todo en EPOC temprana).</li>
+    <li>Radiografía/<strong>tomografía</strong> de tórax (otras causas, enfisema, cribado de cáncer), oximetría/<strong>gasometría</strong>, valorar comorbilidad cardiovascular.</li>
+  </ul></div></div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-escal">
+  <div class="alert a-i"><span class="ai">📊</span><div>Estadificación (GOLD 1-4), gravedad por grupos (ABE) y síntomas (mMRC, CAT), y gravedad de la exacerbación (Rome). Todas interactivas.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌬️</span><span class="st">GOLD 1-4 · obstrucción por FEV₁</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="calc-w"><div style="font-size:12px;font-weight:700;margin-bottom:5px;">FEV₁ (% del predicho, posBD)</div>
+    <input class="calcinput" id="gold-fev" type="number" inputmode="decimal" placeholder="ej. 45" oninput="calcGOLD()">
+    <div class="scoreres" id="gold-res"></div></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Clasificador ABE</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="calc-w" id="abe-box">
+    <div style="font-size:12px;font-weight:700;margin-bottom:5px;">1 · Síntomas</div>
+    <button class="pchip" data-ax="sx" data-v="lo" onclick="abeOpt(this)">Pocos (mMRC 0-1 / CAT &lt;10)</button>
+    <button class="pchip" data-ax="sx" data-v="hi" onclick="abeOpt(this)">Muchos (mMRC ≥2 / CAT ≥10)</button>
+    <div style="font-size:12px;font-weight:700;margin:10px 0 5px;">2 · Exacerbaciones (último año)</div>
+    <button class="pchip" data-ax="ex" data-v="lo" onclick="abeOpt(this)">0-1 moderadas, sin hospitalización</button>
+    <button class="pchip" data-ax="ex" data-v="hi" onclick="abeOpt(this)">≥2 moderadas o ≥1 hospitalización</button>
+    <div class="scoreres" id="abe-res"></div></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌬️</span><span class="st">mMRC · disnea</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="calc-w" id="mmrc-box" style="display:flex;flex-wrap:wrap;gap:6px;">
+    <button class="pchip" data-v="0" onclick="mmrcOpt(this)">0 · esfuerzo intenso</button>
+    <button class="pchip" data-v="1" onclick="mmrcOpt(this)">1 · al apurar/cuesta</button>
+    <button class="pchip" data-v="2" onclick="mmrcOpt(this)">2 · más lento / se detiene</button>
+    <button class="pchip" data-v="3" onclick="mmrcOpt(this)">3 · se detiene a ~100 m</button>
+    <button class="pchip" data-v="4" onclick="mmrcOpt(this)">4 · al vestirse / no sale</button>
+    <div class="scoreres" id="mmrc-res" style="width:100%;"></div></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">CAT · impacto (0-40)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="calc-w" id="cat-box"></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Rome · gravedad de la exacerbación</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="calc-w" id="rome-box">
+    <div style="font-size:12px;font-weight:700;margin-bottom:5px;">Criterios clínicos (marca los presentes)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <button class="pchip" data-crit="1" onclick="romeOpt(this)">Disnea VAS ≥5</button>
+      <button class="pchip" data-crit="1" onclick="romeOpt(this)">FR ≥24</button>
+      <button class="pchip" data-crit="1" onclick="romeOpt(this)">FC ≥95</button>
+      <button class="pchip" data-crit="1" onclick="romeOpt(this)">SpO₂ &lt;92% / caída &gt;3%</button>
+      <button class="pchip" data-crit="1" onclick="romeOpt(this)">PCR ≥10 mg/L</button>
+    </div>
+    <div style="font-size:12px;font-weight:700;margin:10px 0 5px;">Gasometría (si disponible)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <button class="pchip on" data-abg="none" onclick="romeAbg(this)">Sin GA / normal</button>
+      <button class="pchip" data-abg="mod" onclick="romeAbg(this)">Hipoxemia/hipercapnia sin acidosis (pH&gt;7.35)</button>
+      <button class="pchip" data-abg="sev" onclick="romeAbg(this)">PaCO₂&gt;45 + pH&lt;7.35</button>
+    </div>
+    <div class="scoreres" id="rome-res"></div></div></div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-alg">
+  <div class="alert a-i"><span class="ai">🔀</span><div>Algoritmo GOLD 2026: separa tratamiento <strong>inicial</strong> (grupo ABE) del de <strong>seguimiento</strong> (por rasgo: disnea o exacerbaciones). Recórrelo paso a paso.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌳</span><span class="st">Algoritmo terapéutico interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="ra-step"></div></div></div>
+</div>
+
+<!-- TX CONSULTA -->
+<div class="panel" id="tab-txc">
+  <div class="pilar-banner">
+    <div class="pilar-icon">💨</div>
+    <div>
+      <div class="pilar-title">La base es la doble broncodilatación (LABA + LAMA)</div>
+      <div class="pilar-sub">El corticoide inhalado se añade según eosinófilos/fenotipo. Combinar siempre con medidas no farmacológicas. Confirma la presentación en tu cuadro básico (IMSS).</div>
+    </div>
+  </div>
+  <div id="txc-content"></div>
+</div>
+
+<!-- TX HOSP -->
+<div class="panel" id="tab-txh">
+  <div class="alert a-r"><span class="ai">🚑</span><div><strong>Exacerbación moderada-grave o insuficiencia respiratoria:</strong> oxígeno controlado, broncodilatadores, corticoide sistémico, antibiótico selectivo y <strong>ventilación no invasiva temprana</strong> en acidosis hipercápnica.</div></div>
+  <div id="txh-content"></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-far">
+  <div style="margin-bottom:10px;"><input oninput="filtrarFar(this.value)" placeholder="🔍 Buscar fármaco..." style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:13px;font-family:inherit;"></div>
+  <div id="far-content"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind"><div id="ind-content"></div></div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esc2">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="esc2-chips"></div>
+  <div id="esc2-content"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento y criterios de respuesta</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Evaluación</th><th>Acción</th></tr></thead><tbody>
+    <tr><td><strong>1-3 meses</strong></td><td>Síntomas (mMRC/CAT), técnica de inhalación, adherencia, tabaquismo</td><td>Optimizar dispositivo/técnica antes de escalar</td></tr>
+    <tr><td><strong>Tras exacerbación</strong></td><td>Revisar tratamiento, eosinófilos</td><td>Escalar (dual→triple si eos ≥100), rehabilitación temprana</td></tr>
+    <tr><td><strong>Anual</strong></td><td>Espirometría, comorbilidades, vacunas</td><td>Ciclo evaluar → revisar → ajustar</td></tr>
+    <tr><td><strong>Continuo</strong></td><td>Riesgo cardiovascular (sube tras exacerbación), ansiedad/depresión</td><td>Tratar comorbilidad; valorar oxígeno/paliativos</td></tr>
+    </tbody></table></div>
+    <div style="height:8px;"></div>
+    <div class="alert a-w"><span class="ai">📋</span><div><strong>Criterios de referencia a neumología:</strong> duda diagnóstica · EPOC temprana o déficit de alfa-1 antitripsina · exacerbaciones a pesar de triple · valorar oxígeno domiciliario/biológicos · evaluación quirúrgica (bullas, reducción de volumen, trasplante).</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Escalada y desescalada</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">↑</span><span class="kt"><strong>Escalar:</strong> disnea en monoterapia → LABA+LAMA · exacerbaciones en dual + eos ≥100 → triple · persiste exacerbando → roflumilast/azitromicina o biológico (dupilumab si eos ≥300).</span></div>
+    <div class="kp"><span class="kn">↓</span><span class="kt"><strong>Desescalar corticoide inhalado</strong> si no hay indicación (eos &lt;100, neumonías de repetición): retirar bajo vigilancia, manteniendo la doble broncodilatación.</span></div>
+    <div class="kp"><span class="kn">✓</span><span class="kt"><strong>Nunca se suspenden</strong> el cese tabáquico ni las medidas no farmacológicas.</span></div>
+  </div></div>
+</div>
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — EPOC</h2><p>GOLD 2026 · Rome · IMPACT/ETHOS · PLATINO</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías internacionales</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2026</span><span class="biblio-level lv-a">Nivel A — Guía vigente</span></div>
+        <div class="biblio-ref">Global Initiative for Chronic Obstructive Lung Disease. <em>Global Strategy for Prevention, Diagnosis and Management of COPD — 2026 Report.</em></div>
+        <a class="biblio-link" href="https://goldcopd.org/" target="_blank">🔗 goldcopd.org</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A — Cambios clave 2026</span></div>
+        <div class="biblio-ref">GOLD. <em>Key Changes Summary — 2026 Report</em> (nov 2025): Rome, actividad de la enfermedad, inicial vs seguimiento, biológicos.</div>
+        <a class="biblio-link" href="https://goldcopd.org/2026-gold-report/" target="_blank">🔗 Key changes</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Estudios clave</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A — Definición de exacerbación</span></div>
+        <div class="biblio-ref">Celli BR, et al. <em>An Updated Definition and Severity Classification of COPD Exacerbations: The Rome Proposal.</em> Am J Respir Crit Care Med 2021.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/34038703/" target="_blank">🔗 PubMed: 34038703</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2011</span><span class="biblio-level lv-a">Nivel A — Azitromicina profiláctica</span></div>
+        <div class="biblio-ref">Albert RK, et al. <em>Azithromycin for Prevention of Exacerbations of COPD.</em> N Engl J Med 2011;365:689-698.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/21864166/" target="_blank">🔗 PubMed: 21864166</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Nivel A — Triple (IMPACT)</span></div>
+        <div class="biblio-ref">Lipson DA, et al. <em>Once-Daily Single-Inhaler Triple vs Dual Therapy in Patients with COPD (IMPACT).</em> N Engl J Med 2018;378:1671-1680.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/29668352/" target="_blank">🔗 PubMed: 29668352</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A — Triple (ETHOS)</span></div>
+        <div class="biblio-ref">Rabe KF, et al. <em>Triple Inhaled Therapy at Two Glucocorticoid Doses in Moderate-to-Very-Severe COPD (ETHOS).</em> N Engl J Med 2020;383:35-48.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/32579807/" target="_blank">🔗 PubMed: 32579807</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">2005</span><span class="biblio-level lv-b">Nivel B — Epidemiología LatAm</span></div>
+        <div class="biblio-ref">Menezes AMB, et al. <em>COPD in five Latin American cities (PLATINO): a prevalence study.</em> Lancet 2005;366:1875-1881.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/16310554/" target="_blank">🔗 PubMed: 16310554</a></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Ensayos clínicos / metaanálisis</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Estudios de cohorte</div>
+    <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Opinión de expertos</div>
+  </div>
+  <div class="alert a-i" style="margin-top:10px;"><span class="ai">📅</span><div>Dosis de ficha técnica/GOLD 2026; confirma presentación y disponibilidad en el cuadro básico (IMSS) antes de prescribir. Última revisión: junio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+  var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  if(el)el.classList.add('on');window.scrollTo(0,0);
+}
+function tog(h){var b=h.querySelector('.sg'),s=h.nextElementSibling;if(!s)return;s.classList.toggle('hidden');if(b)b.classList.toggle('open');}
+function poprow(l,v,c){return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f3f4f6;gap:10px;"><span style="font-size:12px;color:#6b7280;flex-shrink:0;">'+l+'</span><span style="font-size:12px;font-weight:600;color:'+c+';text-align:right;">'+v+'</span></div>';}
+var L1='#0c3b6e',L2='#7a4a00',L3='#374151',LC='#0a5c45';
+function buildRACards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='rac'+i+Math.random().toString(36).substr(2,4);
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="raT(\''+fid+'\')" style="background:'+color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px;">'+(f.linea||'')+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-a" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    if(f.da){
+      h+='<div style="background:'+color+'15;border-bottom:2px solid '+color+'33;padding:12px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:6px;">💊 Dosis y duración</div>';
+      var doses=f.da.split(' · ');
+      if(doses.length>1){doses.forEach(function(d){if(d.trim())h+='<div style="font-size:13px;font-weight:700;color:'+color+';padding:3px 0 3px 10px;border-left:3px solid '+color+';margin-bottom:4px;">'+d.trim()+'</div>';});}
+      else{h+='<div style="font-size:13.5px;font-weight:800;color:'+color+';">'+f.da+'</div>';}
+      h+='</div>';
+    }
+    if(f.prep&&f.prep!=='—'){
+      h+='<div style="background:#e8f1fb;border-bottom:1px solid #c8ddf0;padding:11px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:5px;">⚠️ Cómo administrar / Técnica</div>';
+      h+='<div style="font-size:12.5px;color:#16335c;line-height:1.65;">'+f.prep.replace(/\n/g,'<br>')+'</div></div>';
+    }
+    h+='<div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    if(f.ef)h+=poprow('Eficacia',f.ef,'#166534');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#f0f6fc;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:4px;">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.75;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+function raT(id){var d=document.getElementById(id),a=document.getElementById(id+'-a');if(!d)return;var v=d.style.display!=='none';d.style.display=v?'none':'block';if(a)a.innerHTML=v?'&#8964;':'&#8963;';}
+function buildLinea(label,sub,color,farmacos){return '<div style="background:'+color+';color:#fff;border-radius:6px;padding:6px 12px;margin-bottom:8px;font-size:11px;font-weight:700;">'+label+'</div>'+buildRACards(color,farmacos);}
+
+/* ===== ESCALAS ===== */
+function calcGOLD(){var e=document.getElementById('gold-fev'),r=document.getElementById('gold-res');if(!r)return;var f=e?parseFloat(e.value):NaN;if(isNaN(f)){r.innerHTML='<div style="color:#6b7280;font-size:12px;">Ingresa el FEV₁ % del predicho (posBD)…</div>';return;}var g,t;if(f>=80){g='1 (leve)';t='FEV₁ ≥ 80%';}else if(f>=50){g='2 (moderada)';t='FEV₁ 50-79%';}else if(f>=30){g='3 (grave)';t='FEV₁ 30-49%';}else{g='4 (muy grave)';t='FEV₁ < 30%';}r.innerHTML='<div class="scoretot">GOLD '+g+'</div><div style="font-size:12px;color:#374151;margin-top:4px;">'+t+'. Requiere FEV₁/FVC &lt;0.7 posBD para el diagnóstico.</div>';}
+function abeOpt(el){var ax=el.getAttribute('data-ax');document.querySelectorAll('#abe-box .pchip[data-ax="'+ax+'"]').forEach(function(b){b.classList.remove('on');});el.classList.add('on');calcABE();}
+function abeGet(ax){var on=document.querySelectorAll('#abe-box .pchip.on[data-ax="'+ax+'"]');return on.length?on[0].getAttribute('data-v'):null;}
+function calcABE(){var r=document.getElementById('abe-res');if(!r)return;var sx=abeGet('sx'),ex=abeGet('ex');if(!sx||!ex){r.innerHTML='<div style="color:#6b7280;font-size:12px;">Elige síntomas y exacerbaciones…</div>';return;}var grp,tx;if(ex==='hi'){grp='E';tx='LABA + LAMA. Considerar añadir corticoide inhalado si eosinófilos ≥300/µL.';}else if(sx==='lo'){grp='A';tx='Un broncodilatador (de acción prolongada).';}else{grp='B';tx='LABA + LAMA (doble broncodilatación).';}r.innerHTML='<div class="scoretot">Grupo '+grp+'</div><div style="font-size:12.5px;color:#374151;margin-top:4px;"><b>Tratamiento inicial:</b> '+tx+'</div>';}
+function mmrcOpt(el){document.querySelectorAll('#mmrc-box .pchip').forEach(function(b){b.classList.remove('on');});el.classList.add('on');var r=document.getElementById('mmrc-res');if(r)r.innerHTML='<div style="font-size:12.5px;color:#374151;">Grado <b>mMRC '+el.getAttribute('data-v')+'</b>. Umbral de síntomas altos: <b>mMRC ≥2</b>.</div>';}
+var CAT_ITEMS=['Tos','Flema','Opresión torácica','Disnea al subir cuesta/escaleras','Actividades en casa','Salir con confianza','Sueño','Energía'];
+var catV=[-1,-1,-1,-1,-1,-1,-1,-1];
+function initCAT(){var box=document.getElementById('cat-box');if(!box)return;var h='';CAT_ITEMS.forEach(function(it,i){h+='<div style="margin-bottom:8px;"><div style="font-size:12px;font-weight:700;margin-bottom:4px;">'+(i+1)+' · '+it+'</div><div style="display:flex;gap:5px;flex-wrap:wrap;">';for(var v=0;v<=5;v++){h+='<button class="pchip" id="cat-'+i+'-'+v+'" onclick="setCAT('+i+','+v+',this)" style="min-width:30px;text-align:center;padding:6px 9px;">'+v+'</button>';}h+='</div></div>';});h+='<div class="scoreres" id="cat-res"></div>';box.innerHTML=h;}
+function setCAT(i,v,el){catV[i]=v;for(var j=0;j<=5;j++){var b=document.getElementById('cat-'+i+'-'+j);if(b)b.classList.remove('on');}el.classList.add('on');var done=0,t=0;catV.forEach(function(x){if(x>=0){done++;t+=x;}});var r=document.getElementById('cat-res');if(!r)return;if(done<8){r.innerHTML='<div style="font-size:12px;color:#6b7280;">Responde los 8 ítems ('+done+'/8)…</div>';return;}var txt=t<10?'Bajo impacto (&lt;10)':t<=20?'Impacto medio (10-20)':t<=30?'Impacto alto (21-30)':'Impacto muy alto (&gt;30)';r.innerHTML='<div class="scoretot">'+t+' / 40</div><div style="font-size:12.5px;color:#374151;margin-top:3px;">'+txt+'. Umbral de síntomas altos: <b>CAT ≥10</b>.</div>';}
+function romeOpt(el){el.classList.toggle('on');calcRome();}
+function romeAbg(el){document.querySelectorAll('#rome-box .pchip[data-abg]').forEach(function(b){b.classList.remove('on');});el.classList.add('on');calcRome();}
+function calcRome(){var r=document.getElementById('rome-res');if(!r)return;var crit=document.querySelectorAll('#rome-box .pchip.on[data-crit]').length;var ab=document.querySelectorAll('#rome-box .pchip.on[data-abg]');var abg=ab.length?ab[0].getAttribute('data-abg'):'none';var grv,txt;if(abg==='sev'){grv='GRAVE';txt='Hipercapnia (PaCO₂&gt;45) + acidosis (pH&lt;7.35). Hospital, oxígeno controlado y <b>ventilación no invasiva temprana</b>.';}else if(abg==='mod'||crit>=3){grv='MODERADA';txt='≥3 criterios o gasometría con hipoxemia/hipercapnia sin acidosis. Broncodilatador + <b>corticoide 5 días</b> ± antibiótico.';}else{grv='LEVE';txt='Aumento del <b>broncodilatador de acción corta</b>.';}r.innerHTML='<div class="scoretot">Exacerbación '+grv+'</div><div style="font-size:11.5px;color:#6b7280;margin-top:2px;">Criterios clínicos: '+crit+'/5</div><div style="font-size:12.5px;color:#374151;margin-top:4px;">'+txt+'</div>';}
+</script>
+<script>
+/* ===== TX CONSULTA ===== */
+function TXC_CONSULTA(){
+  return buildLinea('1ª línea — broncodilatación de mantenimiento','',L1,[
+    {n:'LABA + LAMA (combinación)',linea:'⭐ 1ª línea — grupos B y E (doble broncodilatación)',
+     da:'Indacaterol/glicopirronio 110/50 µg c/24h · Umeclidinio/vilanterol 62.5/25 µg c/24h · Tiotropio/olodaterol 5/5 µg c/24h · Glicopirronio/formoterol 7.2/5 µg c/12h · Duración: crónica e indefinida',
+     prep:'Verificar la técnica en cada visita. Polvo seco: espirar fuera, sellar labios, inhalación rápida y profunda, apnea 5-10 s. Niebla suave (Respimat): inhalación lenta y sostenida. Si exacerba con eosinófilos altos, escalar a triple.',
+     iv:'Inhalada (polvo seco o niebla suave)',
+     pres:'Polvo inh. 110/50 µg · polvo inh. 62.5/25 µg · sol. inh. 2.5/2.5 µg (2 disparos = 5/5) · polvo inh. 7.2/5 µg',
+     fda:'LABA categoría C · LAMA datos limitados · lactancia: absorción mínima, probablemente compatible',
+     ci:'Glaucoma de ángulo estrecho · retención urinaria / hiperplasia prostática · taquiarritmias · hipokalemia',
+     ea:'Boca seca · tos · cefalea · temblor · palpitaciones',
+     nota:'GOLD 2026: la doble broncodilatación es la base en B y E; mejora función pulmonar, síntomas y exacerbaciones frente a la monoterapia. Un solo inhalador favorece la adherencia.'},
+    {n:'Monoterapia LAMA',linea:'⭐ 1ª línea — grupo A (un broncodilatador)',
+     da:'Tiotropio 18 µg c/24h (o 5 µg niebla suave) · Umeclidinio 62.5 µg c/24h · Glicopirronio 50 µg c/24h · Aclidinio 400 µg c/12h',
+     prep:'Una toma diaria (salvo aclidinio c/12h). Revisar técnica. Si persisten síntomas o exacerbaciones, escalar a LABA + LAMA.',
+     iv:'Inhalada',
+     pres:'Cápsula polvo inh. 18 µg · sol. inh. 2.5 µg/disparo · polvo inh. 62.5 µg · cápsula polvo 50 µg · polvo 400 µg',
+     fda:'Categoría C / datos limitados · usar si el beneficio supera el riesgo',
+     ci:'Glaucoma de ángulo estrecho · retención urinaria / hiperplasia prostática',
+     ea:'Boca seca · estreñimiento · retención urinaria',
+     nota:'GOLD 2026: en grupo A, un broncodilatador de acción prolongada; el LAMA reduce más las exacerbaciones que el LABA en monoterapia.'},
+    {n:'Monoterapia LABA',linea:'1ª línea (alternativa) — broncodilatador de acción prolongada',
+     da:'Formoterol 12 µg c/12h · Salmeterol 50 µg c/12h · Indacaterol 75-150 µg c/24h · Olodaterol 5 µg c/24h',
+     prep:'No usar LABA en monoterapia si hay asma concomitante (requiere corticoide inhalado). Revisar técnica.',
+     iv:'Inhalada',
+     pres:'Polvo/cápsula 12 µg · polvo/MDI 50 µg · cápsula 75 µg y 150 µg · sol. inh. 2.5 µg/disparo',
+     fda:'Categoría C · continuar si estaba bien controlada antes del embarazo',
+     ci:'Taquiarritmias · cardiopatía isquémica · hipokalemia',
+     ea:'Temblor · palpitaciones · calambres',
+     nota:'Opción de un broncodilatador en EPOC pura. En general se prefiere iniciar con LAMA o con doble broncodilatación según el grupo.'}
+  ])
+  +buildLinea('2ª línea — añadir corticoide inhalado (triple)','',L2,[
+    {n:'Triple: LABA + LAMA + ICS',linea:'2ª línea — exacerbador con eosinófilos elevados o asma',
+     da:'Fluticasona furoato/umeclidinio/vilanterol 100/62.5/25 µg c/24h · Budesonida/glicopirronio/formoterol 160/7.2/5 µg c/12h · Beclometasona/formoterol/glicopirronio 87/5/9 µg c/12h · Duración: crónica; reevaluar el ICS',
+     prep:'Enjuagar la boca tras el corticoide inhalado (previene candidiasis y disfonía). Verificar técnica. Si persisten exacerbaciones, valorar roflumilast/azitromicina o biológico.',
+     iv:'Inhalada',
+     pres:'Polvo inh. 100/62.5/25 µg · MDI 160/7.2/5 µg · MDI 87/5/9 µg',
+     fda:'Budesonida = corticoide inhalado preferido en embarazo (mayor evidencia); lactancia compatible',
+     ci:'A favor del ICS: eos ≥300, o ≥100 + exacerbador, o asma. En contra: eos &lt;100, neumonías de repetición, micobacterias',
+     ea:'Candidiasis oral · disfonía · mayor riesgo de neumonía',
+     nota:'IMPACT (Lipson 2018) y ETHOS (Rabe 2020): la triple reduce exacerbaciones frente a la doble en exacerbadores con eosinófilos elevados. GOLD 2026 prefiere triple sobre LABA+ICS.'}
+  ])
+  +buildLinea('3ª línea — orales en el fenotipo exacerbador','',L3,[
+    {n:'Roflumilast',linea:'3ª línea — bronquitis crónica + FEV₁ &lt;50%',
+     da:'500 µg VO c/24h · con o sin alimentos · duración según respuesta/tolerancia',
+     prep:'Indicado en bronquitis crónica con FEV₁ &lt;50% y exacerbaciones a pesar del tratamiento inhalado. Vigilar peso y estado de ánimo.',
+     iv:'Vía oral',
+     pres:'Tableta 500 µg',
+     fda:'Evitar en embarazo y lactancia (datos insuficientes)',
+     ci:'Hepatopatía moderada-grave · precaución en bajo peso y trastornos psiquiátricos',
+     ea:'Náusea · diarrea · pérdida de peso · alteración del ánimo',
+     nota:'Inhibidor de PDE4: reduce exacerbaciones en el fenotipo bronquitis crónica grave exacerbador (GOLD 2026).'},
+    {n:'Azitromicina (profilaxis)',linea:'3ª línea — exacerbador (preferente exfumadores)',
+     da:'250 mg VO c/24h · o 500 mg 3 veces/semana · meses, reevaluar',
+     prep:'Descartar micobacterias (cultivo/PPD según contexto) y valorar QT (ECG) antes de iniciar. Reevaluar periódicamente.',
+     iv:'Vía oral',
+     pres:'Tableta 250 mg y 500 mg · suspensión oral',
+     fda:'Categoría B · compatible con lactancia',
+     ci:'Prolongación del QT · hipoacusia · interacciones',
+     ea:'Molestias gastrointestinales · QT · ototoxicidad · resistencias',
+     nota:'Reduce la frecuencia de exacerbaciones en pacientes seleccionados (Albert, NEJM 2011); GOLD 2026 la incluye como opción.'}
+  ])
+  +buildLinea('Coadyuvantes sintomáticos — rescate inmediato','',LC,[
+    {n:'SABA / SAMA (a demanda)',linea:'Para todos los pacientes — alivio inmediato',
+     da:'Salbutamol 100 µg, 1-2 disparos c/4-6h por razón necesaria (neb 2.5-5 mg) · Ipratropio 20 µg, 2 disparos c/6h (neb 250-500 µg)',
+     prep:'Usar con cámara espaciadora para mejorar el depósito. Todos los pacientes deben tener un broncodilatador de rescate.',
+     iv:'Inhalada / nebulizada',
+     pres:'MDI 100 µg/disparo · sol. nebulizar 5 mg/mL · ipratropio MDI 20 µg/disparo · sol. nebulizar 250 µg/mL',
+     fda:'Salbutamol = SABA de elección en embarazo · ipratropio categoría B',
+     ci:'Taquicardia/temblor (SABA) · glaucoma con uso ocular accidental (SAMA)',
+     ea:'Temblor · taquicardia · boca seca',
+     nota:'Alivio inmediato; no sustituye al tratamiento de mantenimiento.'}
+  ])
+  +buildLinea('Coadyuvantes preventivos — lo que más cambia el pronóstico','',LC,[
+    {n:'Medidas no farmacológicas',linea:'Siempre, en paralelo al tratamiento inhalado',
+     da:'Cese tabáquico (consejo + reemplazo de nicotina / vareniclina / bupropión) · Vacunas (influenza, neumococo, VSR, COVID, Tdap) · Rehabilitación pulmonar · Actividad física · Educación y plan de acción',
+     prep:'El cese tabáquico es la intervención que más modifica la evolución. La rehabilitación pulmonar es especialmente útil tras una exacerbación.',
+     iv:'—',
+     pres:'No aplica',
+     fda:'Seguras en todas las poblaciones',
+     ci:'—',
+     ea:'—',
+     nota:'Reducen síntomas, exacerbaciones y mortalidad. Indispensables en todos los grupos.'},
+    {n:'Oxígeno domiciliario (LTOT)',linea:'Solo si hipoxemia grave',
+     da:'Indicado si PaO₂ ≤55 mmHg (o &lt;60 con cor pulmonale/poliglobulia) · ≥15 h/día · objetivo SpO₂ ≥90%',
+     prep:'Confirmar con gasometría en estabilidad. No indicado solo por disnea sin hipoxemia.',
+     iv:'Oxígeno suplementario',
+     pres:'Concentrador / cilindro · cánula nasal',
+     fda:'—',ci:'Tabaquismo activo (riesgo de quemadura)',ea:'Sequedad nasal',
+     nota:'Mejora la supervivencia solo en hipoxemia grave; no en hipoxemia leve-moderada (GOLD 2026).'}
+  ]);
+}
+
+/* ===== TX HOSPITAL ===== */
+function TXH_HOSP(){
+  return buildLinea('1ª línea — exacerbación moderada/grave','',L1,[
+    {n:'Oxígeno controlado',linea:'⭐ Objetivo SpO₂ 88-92%',
+     da:'Titular el flujo para SpO₂ 88-92% · Gasometría arterial en &lt;30 min',
+     prep:'El oxígeno a flujo alto puede empeorar la hipercapnia. Si hay acidosis hipercápnica, valorar ventilación no invasiva.',
+     iv:'Cánula / mascarilla (Venturi)',pres:'Oxígeno suplementario',fda:'—',
+     ci:'—',ea:'Hipercapnia si flujo excesivo',
+     nota:'GOLD 2026: mantener 88-92% y reevaluar con gasometría.'},
+    {n:'Broncodilatador de acción corta (SABD)',linea:'⭐ Broncodilatación intensiva',
+     da:'Salbutamol 2.5-5 mg + ipratropio 0.5 mg nebulizados c/4-6h (o con cámara) · ajustar a la respuesta',
+     prep:'Reiniciar el broncodilatador de acción prolongada de mantenimiento cuanto antes. Metilxantinas no recomendadas.',
+     iv:'Nebulizada / inhalada',pres:'Sol. nebulizar salbutamol 5 mg/mL · ipratropio 250 µg/mL',
+     fda:'Salbutamol elección · ipratropio categoría B',ci:'—',ea:'Taquicardia · temblor',
+     nota:'Base del manejo sintomático de la exacerbación.'},
+    {n:'Corticoide sistémico',linea:'⭐ Antiinflamatorio — exacerbación mod/grave',
+     da:'Prednisona 40 mg VO c/24h × 5 días · si no tolera VO: metilprednisolona IV equivalente',
+     prep:'No prolongar de rutina ni requiere reducción gradual. Vigilar glucemia.',
+     iv:'Oral / IV',pres:'Prednisona tableta 5 mg y 50 mg · metilprednisolona ámpula IV 40/125/500 mg',
+     fda:'Usar si es necesario, menor dosis · compatible con lactancia',
+     ci:'Precaución en diabetes/infección',ea:'Hiperglucemia · insomnio · HTA',
+     nota:'GOLD 2026: corticoide 5 días acorta la recuperación y mejora la función pulmonar.'},
+    {n:'Antibióticos',linea:'Si esputo purulento / soporte ventilatorio',
+     da:'Sin riesgo de Pseudomonas: amoxicilina-clavulanato 875/125 mg c/12h · o azitromicina 500 mg día 1 luego 250 mg/día · o doxiciclina 100 mg c/12h · Riesgo de Pseudomonas: ciprofloxacino 500-750 mg c/12h · Duración: 5 días',
+     prep:'Indicar ante esputo purulento, antecedente de infección o necesidad de soporte ventilatorio. Ajustar a cultivo y alergias.',
+     iv:'Oral / IV',pres:'Amox-clav tab 875/125 mg · azitromicina tab 250/500 mg · doxiciclina cáps 100 mg · ciprofloxacino tab 250/500/750 mg',
+     fda:'Preferir amox-clav o azitromicina en embarazo; evitar fluoroquinolonas/doxiciclina',
+     ci:'Alergias · QT (macrólidos/quinolonas)',ea:'Diarrea · QT · tendinopatía (quinolonas)',
+     nota:'La PCR puede apoyar la decisión de antibiótico (GOLD 2026).'}
+  ])
+  +buildLinea('Soporte ventilatorio','',L2,[
+    {n:'Ventilación no invasiva (VNI)',linea:'⭐ Acidosis respiratoria hipercápnica',
+     da:'Indicar si pH ≤7.35 + PaCO₂ ≥45, disnea grave con fatiga o hipoxemia persistente',
+     prep:'Iniciar temprano: reduce intubación y mortalidad. Vigilar tolerancia y nivel de alerta.',
+     iv:'Mascarilla (BiPAP)',pres:'Ventilador no invasivo',fda:'—',
+     ci:'Paro respiratorio · alteración grave del alerta · vómito/aspiración · inestabilidad',
+     ea:'Lesión por presión facial · distensión gástrica',
+     nota:'Intervención clave de la exacerbación grave. Si falla o se contraindica, ventilación invasiva.'}
+  ])
+  +buildLinea('Coadyuvantes hospitalarios','',LC,[
+    {n:'Medidas de soporte',linea:'En paralelo',
+     da:'Profilaxis de enfermedad tromboembólica · equilibrio hídrico y nutrición · tratar comorbilidad (cardiaca) · descartar TEP/neumonía/ICC/neumotórax',
+     prep:'Rehabilitación temprana e inicio del plan de egreso desde el ingreso.',
+     iv:'—',pres:'No aplica',fda:'—',ci:'—',ea:'—',
+     nota:'El riesgo cardiovascular aumenta tras la exacerbación: vigilancia estrecha.'}
+  ]);
+}
+
+/* ===== FÁRMACOS (catálogo) ===== */
+var FARMACOS_EPOC=[
+  {familia:'LAMA (antimuscarínico de acción prolongada)',color:L1,farmacos:[
+    {n:'Tiotropio',ini:'18 µg c/24h (o 5 µg niebla suave)',obj:'⭐ Base · grupo A y combinaciones',iv:'Inhalada',pr:'Cápsula polvo inh. 18 µg · sol. inh. 2.5 µg/disparo',fda:'C · datos limitados embarazo',ci:'Glaucoma ángulo estrecho · retención urinaria',ea:'Boca seca · estreñimiento',nota:'LAMA con mayor evidencia; reduce exacerbaciones.'},
+    {n:'Umeclidinio / Glicopirronio / Aclidinio',ini:'62.5 / 50 / 400 µg',obj:'Alternativas LAMA',iv:'Inhalada',pr:'Polvo inh. 62.5 µg c/24h · cápsula 50 µg c/24h · polvo 400 µg c/12h',fda:'Datos limitados',ci:'Igual que tiotropio',ea:'Boca seca',nota:'Elegir según dispositivo y adherencia.'}
+  ]},
+  {familia:'LABA (β2-agonista de acción prolongada)',color:L1,farmacos:[
+    {n:'Formoterol / Salmeterol',ini:'12 / 50 µg c/12h',obj:'Broncodilatación c/12h',iv:'Inhalada',pr:'Polvo/cápsula 12 µg · polvo/MDI 50 µg',fda:'C',ci:'Taquiarritmias · cardiopatía isquémica',ea:'Temblor · palpitaciones',nota:'Formoterol tiene inicio rápido. No usar solo si hay asma.'},
+    {n:'Indacaterol / Olodaterol',ini:'75-150 / 5 µg c/24h',obj:'Broncodilatación c/24h',iv:'Inhalada',pr:'Cápsula 75 µg y 150 µg · sol. inh. 2.5 µg/disparo',fda:'C / datos limitados',ci:'Igual',ea:'Igual',nota:'Una toma diaria.'}
+  ]},
+  {familia:'LABA + LAMA (doble broncodilatación)',color:L1,farmacos:[
+    {n:'Combinaciones LABA/LAMA',ini:'1 inhalación c/12-24h según producto',obj:'⭐ 1ª línea grupos B y E',iv:'Inhalada',pr:'Polvo 110/50 µg · polvo 62.5/25 µg · sol. inh. 5/5 µg · polvo 7.2/5 µg',fda:'C / datos limitados',ci:'Glaucoma · retención urinaria · taquiarritmias',ea:'Boca seca · temblor',nota:'Base del tratamiento; superior a monoterapia.'}
+  ]},
+  {familia:'ICS y triple (corticoide inhalado)',color:L2,farmacos:[
+    {n:'Triple LABA+LAMA+ICS',ini:'1 inhalación c/12-24h',obj:'Exacerbador con eosinófilos altos / asma',iv:'Inhalada',pr:'Polvo 100/62.5/25 µg · MDI 160/7.2/5 µg · MDI 87/5/9 µg',fda:'Budesonida preferida en embarazo',ci:'Eos &lt;100 · neumonías de repetición · micobacterias',ea:'Candidiasis · disfonía · neumonía',nota:'Enjuagar la boca. IMPACT/ETHOS: reduce exacerbaciones.'}
+  ]},
+  {familia:'SABA / SAMA (rescate)',color:LC,farmacos:[
+    {n:'Salbutamol / Ipratropio',ini:'Salbutamol 100 µg 1-2 disp c/4-6h · Ipratropio 20 µg 2 disp c/6h',obj:'Alivio inmediato — para todos',iv:'Inhalada / nebulizada',pr:'MDI 100 µg/disparo · sol. neb. 5 mg/mL · MDI 20 µg/disparo · sol. neb. 250 µg/mL',fda:'Salbutamol elección embarazo · ipratropio B',ci:'Taquicardia (SABA)',ea:'Temblor · taquicardia · boca seca',nota:'Todos los pacientes deben tener rescate.'}
+  ]},
+  {familia:'Orales (fenotipo exacerbador)',color:L3,farmacos:[
+    {n:'Roflumilast',ini:'500 µg VO c/24h',obj:'Bronquitis crónica + FEV₁ &lt;50%',iv:'Vía oral',pr:'Tableta 500 µg',fda:'Evitar en embarazo',ci:'Hepatopatía mod-grave · bajo peso · psiquiátrico',ea:'Náusea · diarrea · pérdida de peso · ánimo',nota:'Inhibidor de PDE4; reduce exacerbaciones.'},
+    {n:'Azitromicina',ini:'250 mg/día o 500 mg 3×/sem',obj:'Profilaxis en exacerbador',iv:'Vía oral',pr:'Tableta 250 mg y 500 mg · suspensión',fda:'B',ci:'QT largo · descartar micobacterias',ea:'GI · QT · ototoxicidad',nota:'Albert 2011: reduce exacerbaciones.'}
+  ]},
+  {familia:'Corticoide sistémico (exacerbación)',color:L2,farmacos:[
+    {n:'Prednisona / Metilprednisolona',ini:'Prednisona 40 mg/día × 5 días',obj:'Exacerbación moderada/grave',iv:'Oral / IV',pr:'Prednisona tab 5 mg y 50 mg · metilprednisolona ámpula 40/125/500 mg',fda:'Usar si necesario · lactancia compatible',ci:'Precaución diabetes/infección',ea:'Hiperglucemia · insomnio · HTA',nota:'5 días; sin reducción gradual de rutina.'}
+  ]},
+  {familia:'Antibióticos (exacerbación)',color:L3,farmacos:[
+    {n:'Amox-clav / Azitromicina / Doxiciclina',ini:'5 días',obj:'Esputo purulento / soporte ventilatorio',iv:'Oral / IV',pr:'Amox-clav 875/125 mg · azitromicina 250/500 mg · doxiciclina 100 mg',fda:'Preferir amox-clav/azitromicina en embarazo',ci:'Alergias · QT',ea:'Diarrea · QT',nota:'Elección según riesgo y resistencia local.'},
+    {n:'Ciprofloxacino / Levofloxacino',ini:'Cipro 500-750 mg c/12h · Levo 500-750 mg/día',obj:'Riesgo de Pseudomonas',iv:'Oral / IV',pr:'Cipro tab 250/500/750 mg · levo tab 500/750 mg',fda:'Evitar en embarazo',ci:'Tendinopatía · QT · aneurisma aórtico',ea:'Tendinitis · QT · disglucemia',nota:'Guiar por cultivo de esputo.'}
+  ]}
+];
+</script>
+<script>
+/* ===== INDICACIONES ===== */
+var IND_EPOC=[
+  {familia:'Inhaladores de mantenimiento — técnica',color:'#0c3b6e',farmacos:[
+    {n:'LAMA · LABA · LABA+LAMA (mantenimiento diario)',
+     dosis:[{label:'Una o dos inhalaciones al día según el dispositivo'},{label:'Todos los días, aunque se sienta bien'}],
+     via:'Inhalada · polvo seco, niebla suave (Respimat) o aerosol (MDI)',
+     enfermeria:'Enseñar y VERIFICAR la técnica en cada consulta. Polvo seco: espirar fuera del dispositivo, sellar labios, inhalación rápida y profunda, apnea 5-10 s. Niebla suave/MDI: inhalación lenta y sostenida; con MDI usar cámara espaciadora. Una mala técnica simula falla del tratamiento.',
+     paciente:'Use su inhalador TODOS LOS DÍAS, aunque respire bien — es de mantenimiento, no de rescate. Saque el aire, ponga los labios en la boquilla y jale el aire según le enseñaron; aguante la respiración unos segundos. Pregunte si tiene dudas con su aparato.',
+     nota:'La adherencia y la técnica correcta son tan importantes como la elección del fármaco.',
+     alarma:'Si usa el rescate más de lo habitual o se despierta por falta de aire → acudir a revisión.'}
+  ]},
+  {familia:'Corticoide inhalado / triple',color:'#7a4a00',farmacos:[
+    {n:'Corticoide inhalado (en combinación triple)',
+     dosis:[{label:'Según el combo triple, una o dos veces al día'}],
+     via:'Inhalada · DESPUÉS enjuagar la boca',
+     enfermeria:'Indicar SIEMPRE enjuagar la boca y escupir tras la dosis (previene candidiasis y disfonía). Reforzar que el corticoide inhalado no es de rescate. Revisar conteo de neumonías.',
+     paciente:'Después de usar este inhalador, enjuáguese la boca con agua y escúpala para evitar hongos en la boca y ronquera. No lo use para los ataques de falta de aire.',
+     nota:'Se añade cuando hay exacerbaciones con eosinófilos altos o asma asociada.',
+     alarma:'Fiebre, tos con flema y dificultad para respirar → descartar neumonía.'}
+  ]},
+  {familia:'Rescate (SABA/SAMA)',color:'#0a5c45',farmacos:[
+    {n:'Salbutamol / Ipratropio a demanda',
+     dosis:[{label:'Salbutamol 1-2 disparos cada 4-6h por razón necesaria'},{label:'Ipratropio 2 disparos cada 6h'}],
+     via:'Inhalada · con cámara espaciadora',
+     enfermeria:'Enseñar a usar la cámara espaciadora. Explicar la diferencia entre rescate y mantenimiento. Anotar cuántas veces lo usa (marcador de control).',
+     paciente:'Este es su inhalador de RESCATE: úselo cuando le falte el aire. Si lo necesita muchas veces al día o ya no le alivia, busque atención.',
+     nota:'El aumento del uso de rescate indica peor control.',
+     alarma:'Falta de aire que no cede con el rescate → urgencias.'}
+  ]},
+  {familia:'Exacerbación — corticoide y antibiótico',color:'#c0392b',farmacos:[
+    {n:'Prednisona 40 mg × 5 días',
+     dosis:[{label:'40 mg por la mañana durante 5 días'}],
+     via:'Vía oral',
+     enfermeria:'Tomar con alimentos. Vigilar glucemia en diabéticos. No requiere reducción gradual.',
+     paciente:'Tome esta cortisona en la mañana por 5 días para desinflamar sus bronquios. Si es diabético, vigile su azúcar. No la deje antes de tiempo sin indicación.',
+     nota:'Acorta la recuperación de la exacerbación.',
+     alarma:'Vómito, confusión o azúcar muy alta → avisar.'},
+    {n:'Antibiótico 5 días (si esputo purulento)',
+     dosis:[{label:'Amox-clav 875/125 mg cada 12h, o el indicado, por 5 días'}],
+     via:'Vía oral',
+     enfermeria:'Completar los 5 días. Vigilar diarrea/alergia. Confirmar que el esputo es purulento o que hay criterio de antibiótico.',
+     paciente:'Tome el antibiótico completo aunque se sienta mejor. Si le da ronchas, hinchazón o mucha diarrea, suspéndalo y avise.',
+     nota:'Solo si la flema es purulenta o hay soporte ventilatorio.',
+     alarma:'Reacción alérgica (ronchas, hinchazón, dificultad para respirar) → urgencias.'}
+  ]},
+  {familia:'Oxígeno',color:'#0c3b6e',farmacos:[
+    {n:'Oxígeno controlado',
+     dosis:[{label:'Objetivo SpO₂ 88-92% en la exacerbación'},{label:'Domiciliario solo si hipoxemia grave (≥15 h/día)'}],
+     via:'Cánula nasal / mascarilla',
+     enfermeria:'No subir el flujo por encima de lo indicado (riesgo de retener CO₂). Control con oximetría y gasometría. Educar sobre NO fumar con el oxígeno.',
+     paciente:'Use el oxígeno al flujo indicado, ni más ni menos. NUNCA fume ni acerque fuego cuando lo tenga puesto.',
+     nota:'Demasiado oxígeno puede ser peligroso en la EPOC.',
+     alarma:'Somnolencia, confusión o dolor de cabeza con el oxígeno → puede ser retención de CO₂, acuda.'}
+  ]}
+];
+
+/* ===== ESCENARIOS ===== */
+var ESC_EPOC={
+  embarazo:{t:'EPOC en el embarazo',col:L1,
+    clin:'Poco frecuente. El control respiratorio inadecuado supone más riesgo para el binomio que la mayoría de los fármacos. Manejo conjunto con neumología y obstetricia.',
+    tx:'• Mantener el tratamiento que controla a la paciente, a la dosis mínima eficaz. • Rescate: salbutamol (SABA de elección). • Corticoide inhalado: budesonida (preferido por evidencia). • Broncodilatadores de acción prolongada: datos limitados, continuar si estaba bien controlada. • Corticoide sistémico solo si es necesario. • EVITAR roflumilast. • Cese tabáquico esencial.',
+    compl:'Control inadecuado → hipoxemia materna → riesgo fetal. La mayoría de los inhalados tienen absorción sistémica mínima.'},
+  adulto_mayor:{t:'Adulto mayor',col:'#1a3060',
+    clin:'Mayor carga de comorbilidad, polifarmacia y dificultad con los dispositivos. Vigilar deterioro cognitivo y fragilidad.',
+    tx:'• Preferir esquemas una vez al día y dispositivos sencillos; valorar cámara o nebulización si hay mala coordinación o flujo bajo. • Vigilar carga anticolinérgica del LAMA (boca seca, retención urinaria, glaucoma). • Precaución cardiovascular con LABA. • Desescalar el corticoide inhalado si no hay indicación (neumonía, osteoporosis). • Revisar técnica en cada visita; cuidar nutrición y comorbilidades.',
+    compl:'Caídas, neumonía por corticoide inhalado innecesario, interacciones por polifarmacia.'},
+  exacerbador:{t:'Exacerbador con eosinófilos elevados',col:'#7a4a00',
+    clin:'Exacerbaciones repetidas a pesar de la broncodilatación. Los eosinófilos en sangre guían el uso del corticoide inhalado.',
+    tx:'• eos ≥300, o ≥100 con exacerbaciones → añadir corticoide inhalado (triple). • Si persiste a pesar de triple y eos &lt;100 → roflumilast (FEV₁&lt;50% + bronquitis crónica) o azitromicina (exfumadores). • Si persiste con eos ≥300 y rasgos T2 → valorar biológico (dupilumab). • Meta: cero exacerbaciones.',
+    compl:'Caída acelerada del FEV₁ y hospitalizaciones evitables si no se escala.'},
+  insufresp:{t:'Insuficiencia respiratoria aguda',col:'#7b1c1c',
+    clin:'Exacerbación grave con hipoxemia y/o hipercapnia. Buscar acidosis respiratoria.',
+    tx:'• Oxígeno controlado, objetivo SpO₂ 88-92%, gasometría en &lt;30 min. • Broncodilatadores nebulizados + corticoide sistémico ± antibiótico. • Ventilación no invasiva temprana si pH ≤7.35 + PaCO₂ ≥45. • Ventilación invasiva si falla/contraindica la no invasiva. • Descartar TEP, neumonía, insuficiencia cardiaca, neumotórax.',
+    compl:'Paro respiratorio, intubación tardía y mortalidad si no se inicia la VNI a tiempo.'},
+  cardiovascular:{t:'Comorbilidad cardiovascular',col:'#0c3b6e',
+    clin:'La cardiopatía coexiste con frecuencia; el riesgo cardiovascular AUMENTA tras una exacerbación. La disnea puede ser cardiaca.',
+    tx:'• No suspender betabloqueadores cardioselectivos si están indicados (son seguros en EPOC). • Usar broncodilatadores con vigilancia en arritmias/cardiopatía isquémica. • Optimizar el tratamiento cardiovascular. • Diferenciar exacerbación de insuficiencia cardiaca descompensada.',
+    compl:'Eventos cardiovasculares en las semanas posteriores a una exacerbación.'},
+  alfa1:{t:'Déficit de alfa-1 antitripsina',col:L3,
+    clin:'Sospechar en EPOC temprana (&lt;45 años), enfisema de predominio basal o no fumadores. Determinar al menos una vez en la vida.',
+    tx:'• Confirmar con niveles de alfa-1 antitripsina y fenotipo/genotipo. • Mismo tratamiento inhalado de la EPOC + cese tabáquico estricto. • Valorar terapia de aumento (reposición) en casos seleccionados. • Consejo y estudio familiar.',
+    compl:'Progresión acelerada del enfisema si no se identifica ni se trata el tabaquismo.'}
+};
+var ESC_CHIPS2=[['embarazo','🤰 Embarazo'],['adulto_mayor','👴 Adulto mayor'],['exacerbador','🔁 Exacerbador eosinofílico'],['insufresp','🫁 Insuf. respiratoria'],['cardiovascular','❤️ Comorbilidad CV'],['alfa1','🧬 Déficit alfa-1']];
+
+/* ===== ALGORITMO (árbol GOLD 2026) ===== */
+var ALGO_EPOC={
+  start:{p:'¿El paciente INICIA tratamiento o está en SEGUIMIENTO?',hint:'El abordaje inicial usa el grupo ABE; el seguimiento usa el rasgo dominante.',o:[
+    {t:'🆕 Inicia tratamiento (naïve)',n:'inicia',c:'#e6f1fb'},
+    {t:'🔄 En seguimiento (ya con tratamiento)',n:'segui',c:'#f3f4f6'}
+  ]},
+  inicia:{p:'¿Cuál es el grupo GOLD ABE?',hint:'Síntomas (mMRC/CAT) + exacerbaciones del último año.',o:[
+    {t:'A — pocos síntomas, 0-1 exacerbaciones leves',n:'rA',c:'#e1f5ee'},
+    {t:'B — muchos síntomas, 0-1 exacerbaciones leves',n:'rB',c:'#fff8e1'},
+    {t:'E — ≥2 moderadas o ≥1 hospitalización',n:'qEos',c:'#fdeaea'}
+  ]},
+  qEos:{p:'Grupo E — ¿eosinófilos ≥300/µL?',o:[
+    {t:'Sí, ≥300',n:'rEt',c:'#fdeaea'},
+    {t:'No, <300',n:'rEd',c:'#e6f1fb'}
+  ]},
+  segui:{p:'¿Qué rasgo predomina?',o:[
+    {t:'😮‍💨 Disnea',n:'dys',c:'#e6f1fb'},
+    {t:'🔁 Exacerbaciones',n:'exa',c:'#fff8e1'}
+  ]},
+  dys:{p:'Disnea — ¿en qué tratamiento está?',o:[
+    {t:'En monoterapia (un broncodilatador)',n:'rDmono',c:'#e6f1fb'},
+    {t:'Ya en LABA + LAMA',n:'rDdual',c:'#f3f4f6'}
+  ]},
+  exa:{p:'Exacerbaciones — ¿tratamiento actual?',o:[
+    {t:'Monoterapia',n:'rEmono',c:'#e6f1fb'},
+    {t:'LABA + LAMA',n:'qEos2',c:'#fff8e1'},
+    {t:'Triple',n:'rTf',c:'#fdeaea'}
+  ]},
+  qEos2:{p:'En LABA + LAMA — ¿eosinófilos ≥100/µL?',o:[
+    {t:'Sí, ≥100',n:'rTriple',c:'#fff8e1'},
+    {t:'No, <100',n:'rRoflAzi',c:'#f3f4f6'}
+  ]},
+  rA:{r:1,titulo:'Grupo A',color:L1,dx:'Pocos síntomas y bajo riesgo de exacerbación.',tx:'Un broncodilatador de acción prolongada (LAMA preferente). Medidas no farmacológicas y rescate.',alarma:'Si aparecen síntomas o exacerbaciones → escalar a LABA + LAMA.'},
+  rB:{r:1,titulo:'Grupo B',color:L1,dx:'Muchos síntomas, bajo riesgo de exacerbación.',tx:'LABA + LAMA (doble broncodilatación). Rehabilitación pulmonar.',alarma:'Si la disnea persiste con dual → revisar técnica y otras causas.'},
+  rEt:{r:1,titulo:'Grupo E · eosinófilos ≥300',color:'#7b1c1c',dx:'Exacerbador con eosinofilia.',tx:'LABA + LAMA + corticoide inhalado (triple) de inicio.',alarma:'Vigilar neumonías; reevaluar el corticoide inhalado.'},
+  rEd:{r:1,titulo:'Grupo E · eosinófilos <300',color:L2,dx:'Exacerbador sin eosinofilia alta.',tx:'LABA + LAMA. Añadir corticoide inhalado si persisten exacerbaciones y eos ≥100.',alarma:'Reevaluar a las pocas semanas (meta: cero exacerbaciones).'},
+  rDmono:{r:1,titulo:'Disnea en monoterapia',color:L1,dx:'Disnea persistente con un solo broncodilatador.',tx:'Escalar a LABA + LAMA. Revisar técnica, adherencia y dispositivo.',alarma:'Si no mejora con dual → buscar otras causas (cardiaca, anemia, desacondicionamiento).'},
+  rDdual:{r:1,titulo:'Disnea ya con LABA + LAMA',color:L3,dx:'Disnea a pesar de la doble broncodilatación.',tx:'Revisar técnica/adherencia, cambiar dispositivo/molécula, rehabilitación pulmonar y buscar OTRAS CAUSAS de disnea.',alarma:'No añadir corticoide inhalado solo por disnea sin exacerbaciones.'},
+  rEmono:{r:1,titulo:'Exacerbaciones en monoterapia',color:L2,dx:'Exacerba con un solo broncodilatador.',tx:'Escalar a LABA + LAMA.',alarma:'Si continúa exacerbando, valorar eosinófilos para añadir corticoide inhalado.'},
+  rTriple:{r:1,titulo:'Añadir corticoide inhalado (triple)',color:'#7b1c1c',dx:'Exacerbador en LABA+LAMA con eos ≥100.',tx:'LABA + LAMA + corticoide inhalado (triple).',alarma:'Enjuagar la boca; vigilar neumonías.'},
+  rRoflAzi:{r:1,titulo:'Eosinófilos <100',color:L3,dx:'Exacerbador con eosinófilos bajos (poco probable que responda al corticoide inhalado).',tx:'Roflumilast (FEV₁<50% + bronquitis crónica) o azitromicina (exfumadores).',alarma:'Descartar micobacterias antes de la azitromicina; vigilar QT.'},
+  rTf:{r:1,titulo:'Triple y sigue exacerbando',color:'#7b1c1c',dx:'Exacerbaciones a pesar de la triple terapia.',tx:'Optimizar adherencia/técnica; valorar roflumilast/azitromicina; biológico (dupilumab) si eos ≥300 y rasgos T2.',alarma:'Referir a neumología.'}
+};
+
+/* ===== RENDER: Fármacos ===== */
+function togFar(id){var b=document.getElementById(id),a=document.getElementById(id+'-a');if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';if(a)a.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function filtrarFar(q){var d=document.getElementById('far-content');if(!d)return;q=(q||'').toLowerCase();var h='',idx=0;FARMACOS_EPOC.forEach(function(fam){var match=fam.farmacos.filter(function(f){return !q||f.n.toLowerCase().indexOf(q)!==-1||(f.obj||'').toLowerCase().indexOf(q)!==-1;});if(!match.length)return;h+='<div style="border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #e2e8f0;background:#fff;">';h+='<div style="background:'+fam.color+';color:#fff;padding:10px 14px;font-size:13px;font-weight:700;">'+fam.familia+'</div>';match.forEach(function(f){var fid='far'+(idx++),ab=!!q;h+='<div style="border-left:3px solid '+fam.color+';">';h+='<div onclick="togFar(\''+fid+'\')" style="padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;border-bottom:1px solid #f3f4f6;">';h+='<span style="font-size:14px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+fid+'-a" style="font-size:12px;color:#9ca3af;font-weight:600;white-space:nowrap;flex-shrink:0;">'+(ab?'&#9660; ocultar':'&#9658; ver')+'</span></div>';h+='<div id="'+fid+'" style="display:'+(ab?'block':'none')+';padding:8px 14px 12px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;color:#6b7280;margin-bottom:8px;">'+f.ini+' · '+f.obj+'</div>';h+=poprow('Vía',f.iv,'#1a3a5c');h+=poprow('Presentaciones MX',f.pr,'#374151');h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');h+=poprow('Contraindicaciones',f.ci,'#c0392b');h+=poprow('Efectos adversos',f.ea,'#374151');if(f.nota)h+='<div style="font-size:11.5px;color:#374151;margin-top:6px;padding:6px 10px;background:#f0f6fc;border-radius:6px;line-height:1.6;">'+f.nota+'</div>';h+='</div></div>';});h+='</div>';});d.innerHTML=h||'<div style="color:#6b7280;text-align:center;padding:20px;">Sin resultados</div>';}
+
+/* ===== RENDER: Indicaciones ===== */
+function togInd(id){var b=document.getElementById(id),a=document.getElementById(id+'-a');if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';if(a)a.style.transform=open?'rotate(0deg)':'rotate(180deg)';}
+function buildIndEpoc(){var d=document.getElementById('ind-content');if(!d)return;var h='';IND_EPOC.forEach(function(g,gi){var bid='indg'+gi,ab=(gi===0);h+='<div class="ind-b">';h+='<div class="ind-bh" onclick="togInd(\''+bid+'\')" style="background:'+g.color+';cursor:pointer;"><span>'+g.familia+'</span><span id="'+bid+'-a" style="transition:transform 0.2s;transform:'+(ab?'rotate(180deg)':'rotate(0deg)')+';">⌄</span></div>';h+='<div id="'+bid+'" style="display:'+(ab?'block':'none')+';padding:10px 14px;">';g.farmacos.forEach(function(f){h+='<div style="background:#f9fafb;border-radius:8px;padding:10px 12px;margin-bottom:10px;">';h+='<div style="font-size:13px;font-weight:700;color:'+g.color+';margin-bottom:6px;">'+f.n+'</div>';f.dosis.forEach(function(d2){h+='<div style="font-size:12px;font-weight:700;color:'+g.color+';padding:3px 0 3px 10px;border-left:3px solid '+g.color+';margin-bottom:4px;">'+d2.label+'</div>';});h+='<div style="font-size:11px;color:#374151;margin-top:4px;"><span style="font-weight:700;">Vía:</span> '+f.via+'</div>';h+='<div style="margin-top:8px;background:#e6f1fb;border-radius:6px;padding:8px 10px;"><div style="font-size:10px;font-weight:700;color:#0c3b6e;margin-bottom:3px;">👩‍⚕️ Enfermería</div><div style="font-size:12px;color:#16335c;line-height:1.6;">'+f.enfermeria+'</div></div>';h+='<div style="margin-top:6px;background:#e6f4ed;border-radius:6px;padding:8px 10px;"><div style="font-size:10px;font-weight:700;color:#1a5c3a;margin-bottom:3px;">🧑 Paciente</div><div style="font-size:12px;color:#0a3a20;line-height:1.6;">'+f.paciente+'</div></div>';if(f.nota)h+='<div style="margin-top:6px;font-size:11.5px;color:#374151;padding:6px 10px;background:#f9fafb;border-radius:6px;">📋 '+f.nota+'</div>';if(f.alarma)h+='<div style="margin-top:6px;font-size:11.5px;color:#7b1c1c;padding:6px 10px;background:#fdeaea;border-radius:6px;border-left:3px solid #c0392b;">🚨 '+f.alarma+'</div>';h+='</div>';});h+='</div></div>';});d.innerHTML=h;}
+
+/* ===== RENDER: Escenarios ===== */
+function initEsc2(){var c=document.getElementById('esc2-chips'),d=document.getElementById('esc2-content');if(!c||!d)return;ESC_CHIPS2.forEach(function(ch,i){var b=document.createElement('button');b.className='pchip'+(i===0?' on':'');b.textContent=ch[1];b.onclick=(function(k,el){return function(){document.querySelectorAll('#esc2-chips .pchip').forEach(function(x){x.classList.remove('on');});el.classList.add('on');showEsc2(k);};})(ch[0],b);c.appendChild(b);});showEsc2('embarazo');}
+function showEsc2(k){var s=ESC_EPOC[k],d=document.getElementById('esc2-content');if(!s||!d)return;d.innerHTML='<div style="background:'+s.col+';color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.t+'</div></div>'+'<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">🩺 Presentación clínica</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.clin+'</div></div>'+'<div style="background:var(--act);border-radius:var(--rs);border:1px solid var(--bd);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:4px;">💊 Tratamiento específico</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.tx+'</div></div>'+'<div style="background:#fdeaea;border-radius:var(--rs);border:1px solid #f3c0c0;padding:10px 12px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:4px;">⚠️ Complicaciones si no se trata</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.compl+'</div></div>';}
+
+/* ===== RENDER: Algoritmo ===== */
+var raHist=[],raLabels=[];
+function renderRaBread(){var h='<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:10px;font-size:10px;color:#6b7280;">';h+='<span style="background:var(--act);color:var(--ac);padding:2px 8px;border-radius:10px;font-weight:700;">Inicio</span>';raLabels.forEach(function(l,i){h+='<span style="color:#9ca3af;">›</span><span style="background:#f3f4f6;padding:2px 8px;border-radius:10px;">'+l+'</span>';});return h+'</div>';}
+function renderRaStep(sid){var s=ALGO_EPOC[sid];if(!s)return;if(s.r){renderRaResult(s);return;}var h=renderRaBread();h+='<div style="background:var(--act);border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;">';h+='<div style="font-size:13px;font-weight:700;color:#16335c;margin-bottom:6px;">'+s.p+'</div>';if(s.hint)h+='<div style="font-size:11.5px;color:#6b7280;background:#fff;border-radius:var(--rs);padding:7px 10px;margin-bottom:10px;border-left:2px solid #d1d5db;">💡 '+s.hint+'</div>';s.o.forEach(function(o,i){h+='<button onclick="raSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;background:'+(o.c||'#fff')+';border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;font-weight:500;font-family:inherit;">'+o.t+'</button>';});if(raHist.length)h+='<button onclick="raBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;font-family:inherit;">← Volver</button>';h+='</div>';var el=document.getElementById('ra-step');if(el)el.innerHTML=h;}
+function raSel(sid,i){var o=ALGO_EPOC[sid].o[i];var lbl=o.t.replace(/^[^A-Za-z0-9]+/,'');raLabels.push(lbl.substring(0,26)+(lbl.length>26?'…':''));raHist.push(sid);renderRaStep(o.n);}
+function raBack(){if(raHist.length){raLabels.pop();renderRaStep(raHist.pop());}}
+function resetRa(){raHist=[];raLabels=[];renderRaStep('start');}
+function renderRaResult(s){function blk(t,v,c,bg){return '<div style="background:'+bg+';border-left:3px solid '+c+';border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+v.replace(/\n/g,'<br>')+'</div></div>';}var h=renderRaBread();h+='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.titulo+'</div></div>';h+=blk('🔍 Diagnóstico',s.dx,'#6b7280','#fff');h+=blk('💊 Tratamiento',s.tx,L1,'var(--act)');h+=blk('🚨 Señales de alarma',s.alarma,'#7b1c1c','#fdeaea');h+='<button onclick="resetRa()" style="margin-top:4px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;">↩ Empezar de nuevo</button>';var el=document.getElementById('ra-step');if(el)el.innerHTML=h;}
+
+window.addEventListener('load',function(){
+  var t=document.getElementById('tab-res');if(t)t.classList.add('on');
+  var c=document.getElementById('txc-content');if(c)c.innerHTML=TXC_CONSULTA();
+  var hh=document.getElementById('txh-content');if(hh)hh.innerHTML=TXH_HOSP();
+  filtrarFar('');buildIndEpoc();initEsc2();renderRaStep('start');initCAT();
+  calcGOLD();calcABE();calcRome();
+});
+</script>
+</body>
+</html>

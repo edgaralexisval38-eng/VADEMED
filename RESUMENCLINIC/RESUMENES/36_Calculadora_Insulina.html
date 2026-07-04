@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Calculadora de insulina · Clínica Rápida</title>
+<style>
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--gp:#f0faf6;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--p:#4a1d8a;--pl:#ede9fe;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--bd:#e2e8f0;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--g);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.tab.ind.on{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tab.bib.on{color:var(--bm);border-bottom-color:var(--bm);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform 0.2s;flex-shrink:0;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--gray-900);}
+.prose ul{padding-left:18px;margin-bottom:8px;}.prose li{margin-bottom:3px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kp:last-child{margin-bottom:0;}
+.kn{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.kt strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-gr{background:var(--gray-100);color:var(--gray-700);border-left:3px solid #6b7280;}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.t tr:hover td{background:var(--gray-50);}
+.dn{font-weight:700;color:var(--g);}
+.dm{color:var(--r);font-weight:600;}
+.dn2{color:var(--gray-600);font-size:11px;}
+.lb{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.l1{background:var(--g);color:#fff;}.l2{background:var(--gm);color:#fff;}.l3{background:#6b7280;color:#fff;}.lc{background:var(--gl);color:var(--g);}
+.dname{font-weight:700;color:var(--g);display:block;margin-bottom:1px;}
+.dnote{color:var(--gray-600);font-size:11px;margin-top:2px;display:block;line-height:1.4;}
+.nodar{background:var(--rl);border:1.5px solid var(--rm);border-radius:var(--rs);padding:12px 14px;margin-top:12px;}
+.nodar-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.nodar-i{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;color:var(--r);border-bottom:1px solid rgba(192,57,43,0.15);}
+.nodar-i:last-child{border-bottom:none;}
+.nodar-i::before{content:'X';font-size:12px;flex-shrink:0;margin-top:1px;font-weight:700;}
+.pres-box{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-top:12px;}
+.pres-t{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.pres-row{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.pres-row:last-child{border-bottom:none;}
+.pres-drug{font-weight:600;color:var(--g);min-width:110px;flex-shrink:0;}
+.pres-detail{color:var(--gray-700);flex:1;}
+.fp{display:flex;align-items:flex-start;}
+.fp-l{width:40px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fp-d{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.fp-li{width:2px;background:var(--gray-200);flex:1;min-height:20px;}
+.fp-c{flex:1;padding:0 0 14px 12px;}
+.fp-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.fp-x{font-size:12px;color:var(--gray-600);line-height:1.55;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-start{background:var(--g);color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.a-end{background:var(--gl);color:var(--g);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--gm);}
+.a-act{background:#fff;border:1.5px solid var(--bd);color:var(--gray-900);}
+.a-dec{background:var(--al);border:1.5px solid var(--am);color:var(--a);font-weight:600;}
+.a-arr{text-align:center;font-size:18px;color:var(--gray-400);margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--rl);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--r);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--gray-50);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--gray-900);}
+.lab-a{font-size:11px;color:var(--r);margin-top:3px;font-weight:600;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:90px;font-size:11px;font-weight:700;color:var(--g);text-transform:uppercase;padding-top:2px;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ab{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab-ok{background:var(--gl);border-color:var(--gm);}
+.ab-no{background:var(--rl);border-color:var(--rm);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--g);}.ab-no .ab-t{color:var(--r);}
+.ab-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.ab-i::before{content:'o';position:absolute;left:0;opacity:0.6;}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--gray-900);padding:5px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--rl);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--r);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'!';position:absolute;left:0;font-size:11px;font-weight:700;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.lp{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10.5px;font-weight:600;margin-left:4px;}
+.lp-r{background:var(--rl);color:var(--r);}.lp-a{background:var(--al);color:var(--a);}.lp-g{background:var(--gl);color:var(--g);}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);transition:all 0.15s;}
+.pchip.on{background:var(--g);border-color:var(--g);color:#fff;}
+.pchip.pchip-w.on{background:var(--am);border-color:var(--am);color:#fff;}
+.p-drug-card{background:#fff;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;overflow:hidden;}
+.p-result-hdr{background:var(--g);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.p-dose-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.p-dose-row:last-child{border-bottom:none;}
+.p-dose-lbl{color:var(--gray-600);}
+.p-dose-val{font-weight:600;color:var(--gray-900);}
+.p-pres{background:var(--gray-50);border-radius:var(--rs);padding:6px 10px;margin-top:6px;font-size:11px;color:var(--gray-600);}
+.p-nota{background:var(--gl);border-radius:var(--rs);padding:7px 10px;margin-top:6px;font-size:11px;color:var(--g);line-height:1.5;}
+.ind-h{background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.ind-o{background:var(--pl);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.ind-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--p);margin-bottom:6px;}
+.ind-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.ind-oi::before{content:'>';position:absolute;left:0;color:#7c3aed;font-weight:700;}
+.ind-c{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);}
+.ind-c:last-child{border-bottom:none;}
+.ind-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ind-cb.on{background:#7c3aed;border-color:#7c3aed;}
+.ind-cb.on::after{content:'v';color:#fff;font-size:10px;font-weight:700;}
+.ind-f{font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.ind-al{background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--r);}
+.ind-al strong{font-weight:700;display:block;margin-bottom:2px;}
+.pbtn{background:#4c1d95;color:#fff;border:none;padding:10px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-h{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.bib-s{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.bib-sh{background:var(--gl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--g);border-bottom:1px solid var(--bd);}
+.bib-sb{padding:10px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+.lv{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-e{background:var(--pl);color:var(--p);}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--g);text-decoration:none;font-weight:500;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-card{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;text-align:center;}
+.stat-num{font-size:22px;font-weight:700;color:var(--g);}
+.stat-lbl{font-size:11px;color:var(--gray-600);margin-top:2px;}
+.epi-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;}
+.epi-r:last-child{border-bottom:none;}
+.epi-k{font-weight:600;color:var(--gray-900);min-width:110px;flex-shrink:0;}
+.epi-v{color:var(--gray-700);flex:1;}
+.hosp-ctx{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;}
+.hosp-ctx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px;}
+.hosp-ctx-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.hosp-ctx-i::before{content:'>';position:absolute;left:0;color:var(--g);font-weight:700;}
+.sc{border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;margin-bottom:10px;}
+.sc-h{background:var(--gl);padding:8px 12px;font-size:12px;font-weight:700;color:var(--g);}
+.sc-b{padding:10px 12px;}
+.sc-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.sc-r:last-child{border-bottom:none;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:8px;}
+.calc-r{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.calc-l{font-size:12px;color:var(--gray-700);min-width:70px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.calc-in:focus{border-color:var(--g);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:12px;text-align:center;}
+.res-ok{background:var(--gl);color:var(--g);}
+.res-mid{background:var(--al);color:var(--a);}
+.res-high{background:var(--rl);color:var(--r);}
+.res-score{font-size:26px;font-weight:700;}
+.res-label{font-size:13px;font-weight:600;margin-top:4px;}
+.res-action{font-size:12px;margin-top:6px;line-height:1.5;opacity:0.9;}
+@media(max-width:480px){.epi-k{min-width:85px;}.grid2{grid-template-columns:1fr;}.lab-g{grid-template-columns:1fr;}}
+@media print{.tabbar,.pbtn{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+/* Tema azul Asma */
+.hdr{background:linear-gradient(135deg,#0c3b6e,#1a6bbd)!important;}
+.qs-v{color:var(--b);}
+.tab.on{color:var(--b);border-bottom-color:var(--b);}
+/* Tarjetas de medicamento (ricas, color por clase) */
+.med{background:#fff;border:1px solid var(--bd);border-left:5px solid #6b7280;border-radius:var(--rad);margin-bottom:12px;overflow:hidden;}
+.med-h{padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.med-ic{font-size:22px;flex-shrink:0;line-height:1;}
+.med-nm{font-size:14px;font-weight:700;color:var(--gray-900);}
+.med-cls{font-size:11px;color:var(--gray-600);margin-top:1px;}
+.med-line{font-size:10px;font-weight:700;color:#fff;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;background:#6b7280;}
+.med-b{padding:4px 12px 10px;}
+.med-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--gray-100);}
+.med-row:last-child{border-bottom:none;}
+.med-k{min-width:88px;flex-shrink:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--gray-400);padding-top:1px;}
+.med-v{font-size:12.5px;color:var(--gray-700);line-height:1.5;flex:1;}
+.med-v strong{color:var(--gray-900);}
+.med-dose{font-size:13px;font-weight:700;color:var(--gray-900);}
+.med-warn{font-size:12px;color:var(--r);font-weight:600;}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--gray-100);}
+.step:last-child{border-bottom:none;}
+.step-n{width:30px;height:30px;border-radius:8px;background:var(--bl);color:var(--b);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-c{flex:1;}
+.step-t{font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.step-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.step-x b{color:var(--b);}
+/* Selector interactivo */
+.atool-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:12px;line-height:1.4;}
+.atool-opt{display:block;width:100%;text-align:left;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:11px 13px;font-size:13px;font-weight:600;color:var(--gray-900);cursor:pointer;margin-bottom:8px;font-family:inherit;transition:all 0.15s;}
+.atool-opt:hover{border-color:var(--bm);background:var(--bl);}
+.atool-opt .sub{display:block;font-size:11px;font-weight:500;color:var(--gray-600);margin-top:2px;}
+.atool-back{background:none;border:none;color:var(--bm);font-size:12px;font-weight:700;cursor:pointer;padding:0;margin-bottom:12px;font-family:inherit;}
+.atool-res{border-radius:10px;padding:14px;border:1.5px solid;}
+.atool-res-t{font-size:15px;font-weight:700;margin-bottom:4px;}
+.atool-res-s{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:8px;}
+.atool-li{font-size:12.5px;line-height:1.6;padding:4px 0 4px 16px;position:relative;color:var(--gray-700);}
+.atool-li::before{content:'▸';position:absolute;left:0;color:var(--gray-400);}
+.atool-li b{color:var(--gray-900);}
+/* Guía GEMA interactiva */
+.g-h{color:#fff;font-weight:700;font-size:15px;padding:10px 14px;border-radius:8px;margin-bottom:10px;}
+.g-blk{border-radius:8px;padding:9px 12px;margin-bottom:7px;}
+.g-blk .bt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
+.g-blk .bx{font-size:12.5px;line-height:1.55;color:var(--gray-900);}
+.g-lad{display:flex;align-items:flex-end;gap:4px;margin-bottom:12px;}
+.g-lad .s{flex:1;border-radius:4px 4px 0 0;}
+.g-base{background:linear-gradient(90deg,#0c3b6e,#1a6bbd);color:#fff;border-radius:8px;padding:9px 12px;font-size:11px;line-height:1.5;margin-top:10px;}
+
+/* ===== Tema Endocrino (teal) ===== */
+:root{--g:#0e7490;--gm:#0891b2;--gl:#e0f2f7;--gp:#f0fafc;}
+.hdr{background:linear-gradient(135deg,#083344,#0e7490)!important;}
+.qs-v{color:#0e7490;}
+.tab.on{color:#0e7490;border-bottom-color:#0e7490;}
+.bib-h{background:linear-gradient(135deg,#083344,#0e7490);}
+
+/* ===== Calculadoras ===== */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+.calc-head{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;}
+.calc-head .cti{font-size:18px;}
+.calc-head .ct{flex:1;font-size:14px;font-weight:700;color:#0e7490;}
+.calc-chev{color:#94a3b8;transition:transform .2s;font-size:16px;}
+.calc-w.open .calc-chev{transform:rotate(180deg);}
+.calc-body{display:none;padding:0 14px 14px;}
+.calc-w.open .calc-body{display:block;}
+.calc-lbl{font-size:12px;font-weight:600;color:#475569;margin:11px 0 4px;}
+.calc-in{width:100%;padding:9px 11px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;}
+.calc-in:focus{border-color:#0e7490;}
+.calc-btns{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0;}
+.calc-opt{font-size:12px;border:1.5px solid var(--bd);background:#fff;color:#334155;border-radius:8px;padding:7px 10px;cursor:pointer;font-family:inherit;line-height:1.2;}
+.calc-opt.on{background:#0e7490;border-color:#0e7490;color:#fff;font-weight:700;}
+.calc-res{background:#f0fafc;border:1px solid #b8e0ea;border-radius:10px;padding:12px;margin-top:13px;font-size:13px;color:#0f3d4d;line-height:1.55;}
+.calc-res .big{font-size:21px;font-weight:800;color:#0e7490;display:block;margin:2px 0;}
+.calc-res .sub{font-size:11.5px;color:#5b7782;}
+.calc-formula{background:#effafc;border:1px solid #bce3ec;border-left:3px solid #0e7490;border-radius:8px;padding:9px 11px;margin-top:11px;font-size:11.5px;color:#155e75;line-height:1.5;}
+.calc-formula b{color:#0e7490;}
+.calc-reset{background:#fff;color:#0e7490;border:1.5px solid var(--bd);border-radius:7px;padding:5px 10px;font-size:11.5px;font-family:inherit;cursor:pointer;}
+
+.rx-inj{display:flex;gap:11px;align-items:flex-start;background:#f4fafc;border:1px solid #d6ecf2;border-radius:9px;padding:10px 12px;margin-bottom:7px;}
+.rx-dose{font-weight:800;color:#0e7490;font-size:15px;white-space:nowrap;min-width:60px;}
+.rx-tx{font-size:12.5px;color:#0f3d4d;line-height:1.4;}
+.rx-tx b{color:#0b2b38;}
+.rx-when{display:block;font-size:11px;color:#5b7782;margin-top:2px;}
+.rx-note{margin-top:8px;font-size:11.5px;color:#5b7782;line-height:1.55;background:#f8fafc;border-radius:7px;padding:8px 10px;}
+.rx-receta{margin-top:9px;background:#0e7490;color:#fff;border-radius:9px;padding:10px 12px;font-size:12px;line-height:1.5;}
+.rx-receta b{color:#fff;}
+.rxref{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #eef2f4;font-size:12.5px;}
+.rxref:last-child{border-bottom:none;}
+.rxref-n{font-weight:700;color:#0e7490;min-width:120px;flex-shrink:0;}
+.rxref-d{color:#374151;line-height:1.45;}
+
+.ini-band{border-radius:8px;padding:9px 12px;font-size:13px;font-weight:800;color:#fff;margin-bottom:8px;}
+.ini-band.sev{background:#dc2626;}
+.ini-band.high{background:#ea580c;}
+.ini-band.okb{background:#0e7490;}
+.ini-tx{font-size:12.5px;color:#0f3d4d;line-height:1.55;margin-bottom:6px;}
+.ini-tx strong{color:#0b2b38;}
+.ini-note{margin-top:8px;font-size:11.5px;color:#5b7782;line-height:1.55;background:#f8fafc;border-radius:7px;padding:8px 10px;}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:#0e7490;cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">💉</div>
+    <div>
+      <div class="hdr-eye">Endocrinología</div>
+      <div class="hdr-title">Calculadora de insulina</div>
+      <div class="hdr-sub">Ambulatorio · hospital · corticoides</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">TDD 0.3-0.5 U/kg</span>
+    <span class="badge">Reparto 50/50</span>
+    <span class="badge">Corrección 1800/1500</span>
+    <span class="badge">No usar en CAD/EHH</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">0.3-0.5</div><div class="qs-l">U/kg dosis total diaria</div></div>
+  <div class="qs"><div class="qs-v">50/50</div><div class="qs-l">basal / bolo</div></div>
+  <div class="qs"><div class="qs-v">1800</div><div class="qs-l">÷ TDD = factor (rápida)</div></div>
+  <div class="qs"><div class="qs-v">&lt;70</div><div class="qs-l">mg/dL = hipoglucemia</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('insul',this)">💉 Insulinas</button>
+  <button class="tab" onclick="showT('calc',this)">🧮 Calculadoras</button><button class="tab" onclick="showT('rx',this)">💉 Por insulina</button><button class="tab" onclick="showT('ini',this)">🎯 Metas e inicio</button>
+  <button class="tab" onclick="showT('conv',this)">🔄 Conversión</button>
+  <button class="tab" onclick="showT('amb',this)">🩺 Ambulatorio</button>
+  <button class="tab" onclick="showT('cort',this)">💊 Corticoides</button>
+  <button class="tab" onclick="showT('hosp',this)">🏥 Hospital</button>
+  <button class="tab" onclick="showT('esp',this)">🤰 Especiales</button>
+  <button class="tab" onclick="showT('iv',this)">🚑 IV (CAD/EHH)</button>
+  <button class="tab" onclick="showT('seg',this)">⚠️ Seguridad</button>
+  <button class="tab bib" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Las piezas de un esquema</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">🔵</div><div class="kt"><strong>Basal:</strong> frena la producción hepática de glucosa; cubre el <strong>ayuno y entre comidas</strong>. Glargina, detemir, degludec o NPH. ~50% de la dosis total, 1 vez al día.</div></div>
+    <div class="kp"><div class="kn">🟢</div><div class="kt"><strong>Prandial (bolo):</strong> cubre los <strong>carbohidratos de la comida</strong>. Insulina rápida o regular, antes de cada comida. ~50% de la dosis ÷ 3.</div></div>
+    <div class="kp"><div class="kn">🟠</div><div class="kt"><strong>Correccional:</strong> dosis <strong>extra</strong> para bajar una glucosa alta, según el factor de sensibilidad. Se suma al bolo.</div></div>
+    <div class="kp"><div class="kn">🟣</div><div class="kt"><strong>Premezclada (bifásica):</strong> basal + prandial <strong>en una sola inyección</strong> (70/30, 75/25, 50/50). Cómoda pero menos flexible.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🕒</span><span class="st">Prandial, preprandial, posprandial...</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">🍴</div><div><div class="co-n">Preprandial</div><div class="co-d"><strong>Antes</strong> de comer: ahí se mide la glucosa y se aplica el bolo prandial (+ corrección si hace falta). Meta típica 80-130 mg/dL.</div></div></div>
+    <div class="co-i"><div class="co-ico">🍚</div><div><div class="co-n">Prandial (bolo de comida)</div><div class="co-d">La dosis que cubre esa comida. Rápida <strong>0-15 min antes</strong>; regular <strong>30 min antes</strong>.</div></div></div>
+    <div class="co-i"><div class="co-ico">⏱️</div><div><div class="co-n">Posprandial</div><div class="co-d">1-2 h <strong>después</strong> de comer. Meta &lt;180 mg/dL.</div></div></div>
+    <div class="co-i"><div class="co-ico">🌙</div><div><div class="co-n">Basal</div><div class="co-d">Cubre la noche y el ayuno; se aplica a la <strong>misma hora</strong> cada día.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Esquemas de insulina</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Esquema</th><th>En qué consiste</th><th>Para quién</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Basal-bolo</td><td>Basal 1×/día + rápida en cada comida + correcciones</td><td>DM1; DM2 intensivo; hospital. El más fisiológico</td></tr>
+        <tr><td class="dn">Basal plus</td><td>Basal + 1 bolo en la comida principal</td><td>Transición; cuando un solo bolo controla</td></tr>
+        <tr><td class="dn">Solo basal (+ orales)</td><td>Basal 0.1-0.2 U/kg + antidiabéticos orales</td><td>Inicio de insulina en DM2</td></tr>
+        <tr><td class="dn">Premezclada 2×/día</td><td>Bifásica antes de desayuno y cena</td><td>Adherencia/comodidad; horarios fijos</td></tr>
+        <tr><td class="dn">NPH + regular</td><td>Convencional 2×/día</td><td>Opción económica</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Para construir la dosis exacta usa la pestaña <strong>🧮 Calculadoras → Esquema completo</strong>: ingresa la dosis total y reparte basal/prandial/corrección.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Cuándo reducir / no usar</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="al-b">
+      <div class="al-t">Empezar más bajo (0.2-0.3 U/kg)</div>
+      <div class="al-i"><strong>≥70 años</strong>, fragilidad, bajo peso o ingesta escasa.</div>
+      <div class="al-i"><strong>ERC</strong> (eGFR &lt;60): la insulina se elimina más lento.</div>
+      <div class="al-i">Al ingresar: reducir ~20-25% la dosis del domicilio.</div>
+    </div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚫</span><div><strong>No usar en CAD ni EHH:</strong> requieren insulina <strong>regular IV</strong> por protocolo (pestaña IV).</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-insul">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Perfiles de acción</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:10px 8px 4px;">
+      <svg viewBox="0 0 360 212" style="width:100%;height:auto;">
+        <line x1="30" y1="178" x2="348" y2="178" stroke="#cbd5e1" stroke-width="1"/>
+        <line x1="30" y1="26" x2="30" y2="178" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="28" y="195" font-size="8" fill="#94a3b8">0</text>
+        <text x="106" y="195" font-size="8" fill="#94a3b8">6</text>
+        <text x="184" y="195" font-size="8" fill="#94a3b8">12</text>
+        <text x="262" y="195" font-size="8" fill="#94a3b8">18</text>
+        <text x="332" y="195" font-size="8" fill="#94a3b8">24 h</text>
+        <text x="34" y="34" font-size="8" fill="#94a3b8">efecto</text>
+        <path d="M30,175 C40,175 45,66 50,56 C62,98 88,175 96,175" fill="none" stroke="#0e7490" stroke-width="2.4"/>
+        <path d="M30,175 C52,175 62,96 70,82 C92,124 116,175 122,175" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+        <path d="M30,175 C62,175 84,110 108,101 C152,96 224,170 264,177" fill="none" stroke="#ea580c" stroke-width="2.4"/>
+        <path d="M30,170 C48,136 70,132 92,131 L314,129 C332,129 342,135 348,139" fill="none" stroke="#16a34a" stroke-width="2.4"/>
+      </svg>
+      <div style="display:flex;flex-wrap:wrap;gap:10px 16px;padding:6px 8px 8px;font-size:11px;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:3px;background:#0e7490;border-radius:2px;"></span>Rápida</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:3px;background:#2563eb;border-radius:2px;"></span>Regular</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:3px;background:#ea580c;border-radius:2px;"></span>NPH</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:3px;background:#16a34a;border-radius:2px;"></span>Basal (análoga)</span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;">Esquemático, no a escala exacta. El pico y la duración varían con la dosis y la persona.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Tabla de inicio, pico y duración</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Tipo</th><th>Inicio</th><th>Pico</th><th>Duración</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Rápida (aspart, lispro, glulisina)</td><td>10-15 min</td><td>1-3 h</td><td>3-5 h</td></tr>
+        <tr><td class="dn">Ultrarrápida (Fiasp)</td><td>~2.5 min</td><td>~1 h</td><td>3-5 h</td></tr>
+        <tr><td class="dn">Regular (humana)</td><td>30-60 min</td><td>2-4 h</td><td>5-8 h</td></tr>
+        <tr><td class="dn">NPH (intermedia)</td><td>1-2 h</td><td>4-12 h</td><td>14-24 h</td></tr>
+        <tr><td class="dn">Glargina U-100 / detemir</td><td>1-2 h</td><td>sin pico*</td><td>~24 h</td></tr>
+        <tr><td class="dn">Glargina U-300 (Toujeo)</td><td>~6 h</td><td>sin pico</td><td>hasta 36 h</td></tr>
+        <tr><td class="dn">Degludec (Tresiba)</td><td>~1 h</td><td>sin pico</td><td>&gt;42 h</td></tr>
+        <tr><td class="dn">Premezclada (70/30, 75/25, 50/50)</td><td>según mezcla</td><td>doble pico</td><td>10-16 h</td></tr>
+      </tbody>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">*Detemir tiene un pico leve y a veces se aplica 2 veces al día. Solo la <strong>regular</strong> se usa por vía intravenosa.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Catálogo por categoría</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #0e7490;"><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#0e7490;">Rápida (análogos)</div><div style="font-size:11.5px;color:#64748b;margin-top:1px;">aspart · lispro · glulisina · Fiasp</div></div><svg viewBox="0 0 120 44" style="width:120px;height:44px;flex-shrink:0;"><line x1="4" y1="40" x2="116" y2="40" stroke="#e2e8f0" stroke-width="1"/><path d="M6,38 C12,38 15,9 20,8 C26,20 33,38 38,38 L116,38" fill="none" stroke="#0e7490" stroke-width="2"/></svg></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Inicio 10-15 min</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Pico 1-3 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Dur 3-5 h</span></div><div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.5;"><strong>Bolo prandial</strong>, 0-15 min antes de comer. Fiasp aún más rápida (al iniciar o hasta 20 min después).</div></div><div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #2563eb;"><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#2563eb;">Regular (humana)</div><div style="font-size:11.5px;color:#64748b;margin-top:1px;">Humulin R · Novolin R</div></div><svg viewBox="0 0 120 44" style="width:120px;height:44px;flex-shrink:0;"><line x1="4" y1="40" x2="116" y2="40" stroke="#e2e8f0" stroke-width="1"/><path d="M6,38 C14,38 18,13 24,11 C32,24 40,38 46,38 L116,38" fill="none" stroke="#2563eb" stroke-width="2"/></svg></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Inicio 30-60 min</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Pico 2-4 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Dur 5-8 h</span></div><div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.5;">Bolo prandial <strong>30 min antes</strong> de comer. Es la <strong>única para infusión IV</strong> (CAD/EHH).</div></div><div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #ea580c;"><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#ea580c;">NPH (intermedia)</div><div style="font-size:11.5px;color:#64748b;margin-top:1px;">Humulin N · Novolin N</div></div><svg viewBox="0 0 120 44" style="width:120px;height:44px;flex-shrink:0;"><line x1="4" y1="40" x2="116" y2="40" stroke="#e2e8f0" stroke-width="1"/><path d="M6,38 C16,38 26,15 36,13 C56,11 80,36 92,38 L116,38" fill="none" stroke="#ea580c" stroke-width="2"/></svg></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Inicio 1-2 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Pico 4-12 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Dur 14-24 h</span></div><div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.5;">Basal económica con <strong>pico marcado</strong> (cuidado con hipoglucemia nocturna). Útil con corticoides matutinos.</div></div><div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #16a34a;"><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#16a34a;">Larga (basal análoga)</div><div style="font-size:11.5px;color:#64748b;margin-top:1px;">glargina U-100 (Lantus/Basaglar) · detemir</div></div><svg viewBox="0 0 120 44" style="width:120px;height:44px;flex-shrink:0;"><line x1="4" y1="40" x2="116" y2="40" stroke="#e2e8f0" stroke-width="1"/><path d="M6,35 C10,23 16,21 22,21 L108,20 L116,20" fill="none" stroke="#16a34a" stroke-width="2"/></svg></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Inicio 1-2 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Sin pico</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Dur ~24 h</span></div><div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.5;">Basal de fondo, 1 vez al día a la <strong>misma hora</strong>. Menos hipoglucemia nocturna que NPH.</div></div><div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #15803d;"><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#15803d;">Ultralarga</div><div style="font-size:11.5px;color:#64748b;margin-top:1px;">glargina U-300 (Toujeo) · degludec (Tresiba)</div></div><svg viewBox="0 0 120 44" style="width:120px;height:44px;flex-shrink:0;"><line x1="4" y1="40" x2="116" y2="40" stroke="#e2e8f0" stroke-width="1"/><path d="M6,33 C10,25 16,24 22,24 L116,23" fill="none" stroke="#15803d" stroke-width="2"/></svg></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Inicio ~1-6 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Sin pico</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Dur 36 a >42 h</span></div><div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.5;">Perfil aún más plano y largo; <strong>menos hipoglucemia</strong> y más margen de horario.</div></div><div style="background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #9333ea;"><div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#9333ea;">Premezclada (bifásica)</div><div style="font-size:11.5px;color:#64748b;margin-top:1px;">70/30 · 75/25 · 50/50 · NovoMix 30</div></div><svg viewBox="0 0 120 44" style="width:120px;height:44px;flex-shrink:0;"><line x1="4" y1="40" x2="116" y2="40" stroke="#e2e8f0" stroke-width="1"/><path d="M6,38 C10,38 13,12 18,11 C24,20 28,26 34,25 C52,22 74,36 92,38 L116,38" fill="none" stroke="#9333ea" stroke-width="2"/></svg></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;"><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Doble pico</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">Dur 10-16 h</span><span style="font-size:10.5px;background:#f1f5f9;border-radius:20px;padding:3px 9px;color:#475569;font-weight:600;">2×/día</span></div><div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.5;">Basal + prandial en una inyección; <strong>cómoda</strong> pero menos flexible. Antes de desayuno y cena.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-calc">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">💡</span><div>Calcula primero la <strong>TDD</strong>; el factor de corrección y el ratio de carbohidratos la usan como base.</div></div>
+
+  <!-- Ajusta tu dosis con recomendación -->
+  <div class="calc-w open">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🎚️</span><span class="ct">Ajusta tu dosis (con recomendación)</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Peso (kg)</div>
+      <input class="calc-in" id="aj-peso" type="number" inputmode="decimal" placeholder="Ej. 70" oninput="calcAjuste()">
+      <div class="calc-lbl">Dosis total que quieres dar (U/día)</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="calc-opt" onclick="ajNudge(-2)" style="min-width:42px;font-size:15px;font-weight:700;">−2</button>
+        <input class="calc-in" id="aj-dose" type="number" inputmode="decimal" placeholder="Ej. 30" oninput="calcAjuste()" style="flex:1;text-align:center;">
+        <button class="calc-opt" onclick="ajNudge(2)" style="min-width:42px;font-size:15px;font-weight:700;">+2</button>
+      </div>
+      <div class="calc-res" id="aj-res">Ingresa el peso y la dosis.</div>
+      <div class="calc-formula"><b>📐 Cómo evalúa:</b> compara tu dosis con el rango inicial recomendado (0.3-0.5 U/kg), la clasifica (baja / adecuada / alta / muy alta), reparte basal-bolo y avisa si la basal rebasa 0.5 U/kg.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetAj()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <!-- Esquema completo desde dosis exacta -->
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">✨</span><span class="ct">Esquema completo desde una dosis exacta</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Dosis total diaria — TDD (U)</div>
+      <input class="calc-in" id="esq-tdd" type="number" inputmode="decimal" placeholder="Ej. 40" oninput="calcEsq()">
+      <div class="calc-lbl">Número de comidas con bolo</div>
+      <div class="calc-btns" id="esq-meals">
+        <button class="calc-opt" onclick="setEsqMeals(2,this)">2</button>
+        <button class="calc-opt on" onclick="setEsqMeals(3,this)">3</button>
+        <button class="calc-opt" onclick="setEsqMeals(4,this)">4</button>
+      </div>
+      <div class="calc-lbl">Reparto basal / bolo</div>
+      <div class="calc-btns" id="esq-split">
+        <button class="calc-opt on" onclick="setEsqSplit(50,this)">50 / 50</button>
+        <button class="calc-opt" onclick="setEsqSplit(40,this)">40 / 60 (más bolo)</button>
+        <button class="calc-opt" onclick="setEsqSplit(60,this)">60 / 40 (más basal)</button>
+      </div>
+      <div class="calc-res" id="esq-res">Ingresa la dosis total diaria.</div>
+      <div class="calc-formula"><b>📐 Reparto:</b> basal = TDD × %basal · bolo = resto ÷ comidas. Factor de corrección = 1800 ÷ TDD (rápida). Ratio de carbohidratos = 500 ÷ TDD.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetEsq()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <!-- TDD + reparto -->
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🧮</span><span class="ct">Dosis total diaria y reparto basal-bolo</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Peso (kg)</div>
+      <input class="calc-in" id="tdd-peso" type="number" inputmode="decimal" placeholder="Ej. 70" oninput="calcTDD()">
+      <div class="calc-lbl">Escenario</div>
+      <div class="calc-btns" id="tdd-scen">
+        <button class="calc-opt" onclick="setTddF('naive',this)">Ambulatorio (basal, sin insulina previa)</button>
+        <button class="calc-opt on" onclick="setTddF('bb',this)">Inicio basal-bolo</button>
+        <button class="calc-opt" onclick="setTddF('h1',this)">Hospital · glucosa 140-200</button>
+        <button class="calc-opt" onclick="setTddF('h2',this)">Hospital · glucosa 201-400</button>
+      </div>
+      <div class="calc-btns" style="margin-top:6px;">
+        <button class="calc-opt" id="tdd-renal" onclick="toggleRenal(this)">≥ 70 años o ERC (eGFR &lt;60)</button>
+      </div>
+      <div class="calc-res" id="tdd-res">Ingresa el peso.</div>
+      <div class="calc-formula"><b>📐 Fórmula:</b> TDD = peso × factor (0.4-0.5 hospital; 0.1-0.2 si solo basal). Basal = 50% · Bolo = 50% ÷ 3 comidas. Reducir a ~0.25 U/kg si ≥70 años o ERC.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetTDD()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <!-- Corrección -->
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🎯</span><span class="ct">Factor de corrección (insulina sensibilidad)</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Dosis total diaria (U)</div>
+      <input class="calc-in" id="cor-tdd" type="number" inputmode="decimal" placeholder="Ej. 40" oninput="calcCor()">
+      <div class="calc-lbl">Tipo de insulina</div>
+      <div class="calc-btns" id="cor-rule">
+        <button class="calc-opt on" onclick="setCorRule(1800,this)">Rápida (aspart/lispro/glulisina) — 1800</button>
+        <button class="calc-opt" onclick="setCorRule(1500,this)">Regular — 1500</button>
+      </div>
+      <div class="calc-lbl">Glucosa actual (mg/dL)</div>
+      <input class="calc-in" id="cor-glu" type="number" inputmode="decimal" placeholder="Ej. 250" oninput="calcCor()">
+      <div class="calc-lbl">Meta (mg/dL)</div>
+      <input class="calc-in" id="cor-meta" type="number" inputmode="decimal" placeholder="150" oninput="calcCor()">
+      <div class="calc-res" id="cor-res">Ingresa la dosis total diaria.</div>
+      <div class="calc-formula"><b>📐 Fórmula:</b> Factor = 1800 (o 1500) ÷ TDD = cuánto baja la glucosa 1 U. Dosis de corrección = (glucosa − meta) ÷ factor.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetCor()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <!-- Carbohidratos -->
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🍞</span><span class="ct">Ratio insulina / carbohidratos</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Dosis total diaria (U)</div>
+      <input class="calc-in" id="carb-tdd" type="number" inputmode="decimal" placeholder="Ej. 40" oninput="calcCarb()">
+      <div class="calc-lbl">Carbohidratos de la comida (g) — opcional</div>
+      <input class="calc-in" id="carb-g" type="number" inputmode="decimal" placeholder="Ej. 60" oninput="calcCarb()">
+      <div class="calc-res" id="carb-res">Ingresa la dosis total diaria.</div>
+      <div class="calc-formula"><b>📐 Fórmula:</b> Ratio = 500 ÷ TDD = g de carbohidrato que cubre 1 U. Dosis prandial = gramos ÷ ratio.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetCarb()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="tab-rx">
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">💉</span><span class="ct">Prescripción por insulina / esquema</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Dosis total diaria — TDD (U)</div>
+      <input class="calc-in" id="rx-tdd" type="number" inputmode="decimal" placeholder="Ej. 40" oninput="calcRx()">
+      <div class="calc-lbl">Esquema / insulina</div>
+      <select class="calc-in" id="rx-reg" oninput="calcRx()">
+        <optgroup label="Basal-bolo">
+          <option value="bb_glar">Basal-bolo — glargina/degludec + rápida</option>
+          <option value="bb_det">Basal-bolo — detemir + rápida</option>
+          <option value="bb_nph">Basal-bolo — NPH (basal) + rápida</option>
+        </optgroup>
+        <optgroup label="Solo basal">
+          <option value="basal_glar">Solo basal — glargina/degludec (1×/día)</option>
+          <option value="basal_det">Solo basal — detemir (1–2×/día)</option>
+          <option value="basal_nph">Solo basal — NPH (2×/día)</option>
+        </optgroup>
+        <optgroup label="Mezclas / bifásicas (2×/día)">
+          <option value="premix70">Premezclada 70/30</option>
+          <option value="premix75">Premezclada 75/25</option>
+          <option value="premix50">Premezclada 50/50</option>
+          <option value="nph_reg">NPH + regular (convencional)</option>
+        </optgroup>
+        <optgroup label="Otros">
+          <option value="basalplus">Basal plus — basal + 1 bolo</option>
+        </optgroup>
+      </select>
+      <div class="calc-res" id="rx-res">Ingresa la TDD y elige el esquema.</div>
+      <div class="calc-formula"><b>📐 Nota:</b> repartos <strong>iniciales estimados</strong>: glargina/degludec 1×/día; detemir 1–2×; NPH y premezcladas 2×/día (2/3 AM · 1/3 PM); rápida con cada comida (0–15 min antes); regular 30 min antes. Siempre <strong>individualizar y titular</strong> según glucosas.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetRx()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">📋</span><span class="ct">Cómo se prescribe cada insulina</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="rxref"><span class="rxref-n">Glargina U-100/U-300</span><span class="rxref-d">1×/día, siempre a la misma hora. Sin pico; con o sin alimentos.</span></div>
+      <div class="rxref"><span class="rxref-n">Degludec</span><span class="rxref-d">1×/día, horario flexible (ultralarga, &gt;42 h).</span></div>
+      <div class="rxref"><span class="rxref-n">Detemir</span><span class="rxref-d">1–2×/día a la misma hora; con frecuencia 2× en DM1 o dosis altas.</span></div>
+      <div class="rxref"><span class="rxref-n">NPH (basal)</span><span class="rxref-d">2×/día: 2/3 en la mañana, 1/3 en la noche. Al iniciar en DM2 puede darse solo nocturna.</span></div>
+      <div class="rxref"><span class="rxref-n">Rápida (aspart/lispro/glulisina)</span><span class="rxref-d">Con cada comida, 0–15 min antes. Bolo = mitad de la TDD ÷ n.º de comidas.</span></div>
+      <div class="rxref"><span class="rxref-n">Regular</span><span class="rxref-d">Con cada comida, 30 min antes. Única para infusión IV (CAD/EHH).</span></div>
+      <div class="rxref"><span class="rxref-n">Premezclada 70/30 · 75/25 · 50/50</span><span class="rxref-d">2×/día antes de desayuno y cena (2/3 : 1/3). Cada dosis = intermedia + rápida en proporción fija.</span></div>
+    </div>
+  </div>
+</div>
+
+  <div class="panel" id="tab-ini">
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🎯</span><span class="ct">Metas glucémicas por contexto</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="rxref"><span class="rxref-n">Ambulatorio (general)</span><span class="rxref-d">Ayuno/preprandial 80–130 · posprandial &lt;180 · HbA1c &lt;7%</span></div>
+      <div class="rxref"><span class="rxref-n">Ancianos / frágiles</span><span class="rxref-d">Metas más laxas (ayuno ~90–150) · HbA1c &lt;8%</span></div>
+      <div class="rxref"><span class="rxref-n">Embarazo / DMG</span><span class="rxref-d">Ayuno &lt;95 · 1 h posprandial &lt;140 · 2 h &lt;120</span></div>
+      <div class="rxref"><span class="rxref-n">Hospital (no crítico)</span><span class="rxref-d">Glucosa 140–180 · evitar &lt;100</span></div>
+      <div class="rxref"><span class="rxref-n">Hospital (crítico / UCI)</span><span class="rxref-d">140–180 con infusión IV</span></div>
+      <div class="calc-formula"><b>📐 Cuándo iniciar insulina (DM2):</b> glucosa ≥300 mg/dL, HbA1c &gt;10%, o síntomas de hiperglucemia / catabolismo (baja de peso, cetosis). Si la HbA1c está ≥1.5% sobre la meta → terapia doble o agente más potente. La ADA prefiere GLP-1 RA salvo hiperglucemia grave.</div>
+    </div>
+  </div>
+  <div class="calc-w">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🚀</span><span class="ct">¿A qué dosis iniciar? (según HbA1c y glucemia)</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Peso (kg) — opcional, para dosis por kg</div>
+      <input class="calc-in" id="ini-peso" type="number" inputmode="decimal" placeholder="Ej. 80" oninput="calcIni()">
+      <div class="calc-lbl">HbA1c (%)</div>
+      <input class="calc-in" id="ini-a1c" type="number" inputmode="decimal" placeholder="Ej. 9.5" oninput="calcIni()">
+      <div class="calc-lbl">Glucosa (mg/dL) — ayuno o al azar</div>
+      <input class="calc-in" id="ini-glu" type="number" inputmode="decimal" placeholder="Ej. 260" oninput="calcIni()">
+      <div class="calc-lbl">¿Síntomas catabólicos o cetosis? (baja de peso, poliuria intensa, cetonas)</div>
+      <div class="calc-btns" id="ini-cat">
+        <button class="calc-opt on" onclick="setIniCatab(false,this)">No</button>
+        <button class="calc-opt" onclick="setIniCatab(true,this)">Sí</button>
+      </div>
+      <div class="calc-res" id="ini-res">Ingresa la HbA1c y/o la glucosa.</div>
+      <div class="calc-formula"><b>📐 Criterio:</b> grave (A1c &gt;10%, glucosa ≥300 o catabolismo) → basal-bolo 0.4–0.5 U/kg. Descontrol importante (A1c 8.5–10 o glucosa 250–299) → basal ~0.2 U/kg + GLP-1 RA. Menor descontrol → basal 10 U o 0.1–0.2 U/kg (o GLP-1 RA primero). Estimación inicial — individualizar.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetIni()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+</div>
+
+  <div class="panel" id="tab-conv">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">💡</span><div>La conversión es un <strong>punto de partida</strong>; reajustar en los días siguientes según las glucosas.</div></div>
+
+  <div class="calc-w open">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🔄</span><span class="ct">Conversión entre insulinas</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Dosis actual (U/día, total de esa insulina)</div>
+      <input class="calc-in" id="conv-dose" type="number" inputmode="decimal" placeholder="Ej. 40" oninput="calcConv()">
+      <div class="calc-lbl">Tipo de conversión</div>
+      <div class="calc-btns" id="conv-type" style="flex-direction:column;align-items:stretch;">
+        <button class="calc-opt on" onclick="setConv(0,this)">NPH 1×/día → glargina o detemir</button>
+        <button class="calc-opt" onclick="setConv(1,this)">NPH 2×/día → glargina o detemir</button>
+        <button class="calc-opt" onclick="setConv(2,this)">NPH o U-100 1× → glargina U-300 (Toujeo)</button>
+        <button class="calc-opt" onclick="setConv(3,this)">Basal 2×/día → glargina U-300</button>
+        <button class="calc-opt" onclick="setConv(4,this)">Glargina U-100 → U-300</button>
+        <button class="calc-opt" onclick="setConv(5,this)">Glargina U-300 → U-100</button>
+        <button class="calc-opt" onclick="setConv(6,this)">Premezclada → basal-bolo</button>
+        <button class="calc-opt" onclick="setConv(7,this)">Detemir → glargina</button>
+      </div>
+      <div class="calc-res" id="conv-res">Ingresa la dosis actual.</div>
+      <div class="calc-formula"><b>📐 Reglas:</b> NPH 1× → basal larga 1:1 · NPH 2× o U-300→U-100: reducir 20% · U-100→U-300: 1:1 (puede requerir 10-15% más) · premezclada → repartir 50/50.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetConv()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Reglas de conversión</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>De → A</th><th>Ajuste</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">NPH 1× → glargina/detemir</td><td>Igual (1:1)</td></tr>
+        <tr><td class="dn">NPH 2× → glargina/detemir</td><td>Reducir 20%</td></tr>
+        <tr><td class="dn">NPH/U-100 1× → glargina U-300</td><td>Igual (1:1)</td></tr>
+        <tr><td class="dn">Glargina U-100 → U-300</td><td>1:1 (luego +10-15% si hace falta)</td></tr>
+        <tr><td class="dn">Glargina U-300 → U-100</td><td>Reducir 20%</td></tr>
+        <tr><td class="dn">Detemir → glargina</td><td>~10% menos</td></tr>
+        <tr><td class="dn">Premezclada → basal-bolo</td><td>50% basal / 50% bolo</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-amb">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">¿Cuándo iniciar insulina en DM2?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">•</div><div class="kt"><strong>HbA1c muy alta</strong> (&gt;10%) o glucosa &gt;300 mg/dL.</div></div>
+    <div class="kp"><div class="kn">•</div><div class="kt"><strong>Síntomas catabólicos</strong> (pérdida de peso, poliuria, cetonas).</div></div>
+    <div class="kp"><div class="kn">•</div><div class="kt">No se alcanza la meta <strong>a pesar de orales</strong> a dosis máximas toleradas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚀</span><span class="st">Cómo iniciar (basal)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">Empieza con basal</div><div class="step-x"><strong>10 U/día</strong> o <strong>0.1-0.2 U/kg/día</strong> (glargina, detemir o NPH nocturna). Continuar metformina.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">Titula a meta de ayuno</div><div class="step-x"><strong>+2 U cada 3 días</strong> hasta glucosa en ayuno 80-130 mg/dL (usa la calculadora de abajo).</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">¿Basal alta y aún fuera de meta?</div><div class="step-x">Si la basal pasa de <strong>0.5 U/kg</strong> y la posprandial sigue alta, añadir <strong>bolo</strong> (basal plus → basal-bolo).</div></div></div>
+  </div></div>
+
+  <div class="calc-w open">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">📈</span><span class="ct">Titulación de la basal</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Basal actual (U)</div>
+      <input class="calc-in" id="tit-basal" type="number" inputmode="decimal" placeholder="Ej. 20" oninput="calcTit()">
+      <div class="calc-lbl">Glucosa de ayuno, promedio de 3 días (mg/dL)</div>
+      <input class="calc-in" id="tit-glu" type="number" inputmode="decimal" placeholder="Ej. 160" oninput="calcTit()">
+      <div class="calc-res" id="tit-res">Ingresa la basal actual y el ayuno promedio.</div>
+      <div class="calc-formula"><b>📐 Treat-to-target:</b> meta de ayuno 80-130. &gt;180: +4 U · 131-180: +2 U · 80-130: sin cambio · 70-79: −2 U · &lt;70: −4 U. Ajustar cada 3 días.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetTit()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas glucémicas por contexto</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Contexto</th><th>Ayuno / preprandial</th><th>Posprandial / HbA1c</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Ambulatorio</td><td>80-130 mg/dL</td><td>&lt;180 · HbA1c &lt;7%</td></tr>
+        <tr><td class="dn">Ancianos / frágiles</td><td>más laxo</td><td>HbA1c &lt;8%</td></tr>
+        <tr><td class="dn">Hospital (no crítico)</td><td colspan="2">140-180 mg/dL</td></tr>
+        <tr><td class="dn">Embarazo</td><td>&lt;95 mg/dL</td><td>1 h &lt;140 · 2 h &lt;120</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-cort">
+  <div class="alert a-w" style="margin-bottom:12px;"><span class="ai">💊</span><div><div class="at">Hiperglucemia por corticoides</div>Los esteroides suben sobre todo la glucosa <strong>de la tarde-noche</strong>. La <strong>NPH matutina</strong> (con el esteroide) es ideal porque su pico coincide con el efecto del corticoide.</div></div>
+
+  <div class="calc-w open">
+    <div class="calc-head" onclick="calcTog(this.parentNode)"><span class="cti">🧮</span><span class="ct">NPH por corticoide (según peso y dosis)</span><span class="calc-chev">⌄</span></div>
+    <div class="calc-body">
+      <div class="calc-lbl">Peso (kg)</div>
+      <input class="calc-in" id="st-peso" type="number" inputmode="decimal" placeholder="Ej. 70" oninput="calcSteroid()">
+      <div class="calc-lbl">Corticoide</div>
+      <div class="calc-btns" id="st-type">
+        <button class="calc-opt on" onclick="setStType('Prednisona',1,false,this)">Prednisona / Prednisolona</button>
+        <button class="calc-opt" onclick="setStType('Metilprednisolona',1.25,false,this)">Metilprednisolona</button>
+        <button class="calc-opt" onclick="setStType('Dexametasona',6.67,true,this)">Dexametasona</button>
+        <button class="calc-opt" onclick="setStType('Hidrocortisona',0.25,false,this)">Hidrocortisona</button>
+      </div>
+      <div class="calc-lbl">Dosis del corticoide (mg/día)</div>
+      <input class="calc-in" id="st-dose" type="number" inputmode="decimal" placeholder="Ej. 40" oninput="calcSteroid()">
+      <div class="calc-res" id="st-res">Ingresa el peso y la dosis.</div>
+      <div class="calc-formula"><b>📐 Criterio:</b> NPH por peso según la dosis equivalente de prednisona — ≥40 mg: 0.4 U/kg · 30 mg: 0.3 · 20 mg: 0.2 · ≤10 mg: 0.1. Dar con el esteroide y <strong>reducir al bajar el esteroide</strong>.</div>
+      <div style="margin-top:10px;"><button class="calc-reset" onclick="resetSteroid()">↺ Reiniciar</button></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📝</span><span class="st">Claves del manejo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">Iguala el tiempo de acción</div><div class="step-x">Esteroide matutino una vez al día → <strong>NPH matutina</strong>. Esteroide cada 12 h → NPH cada 12 h o esquema basal-bolo.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">Dexametasona es de acción larga</div><div class="step-x">Dura 36-72 h; suele convenir <strong>insulina basal (glargina)</strong> en vez de NPH, y a menudo esquema basal-bolo completo.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">Reduce al desescalar (peligro de hipoglucemia)</div><div class="step-x">El error más frecuente: no bajar la insulina cuando se reduce el esteroide. Ajustar con <strong>cada cambio</strong> de dosis.</div></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-c"><div class="step-t">Vigila la tarde y la noche</div><div class="step-x">El patrón típico es glucosa normal en ayunas y elevada por la tarde; enfoca las mediciones ahí.</div></div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-hosp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Al ingreso</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">Suspende los orales y arranca insulina</div><div class="step-x">En el hospitalizado, preferir esquema <strong>basal-bolo</strong> (no solo escala móvil). Reducir ~20-25% la dosis del domicilio.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">Metas</div><div class="step-x">No crítico: glucosa <strong>140-180 mg/dL</strong> (puede ser más laxa en frágiles). Evitar &lt;100.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">Monitoreo</div><div class="step-x">Antes de cada comida y al acostarse; si no come, cada 4-6 h.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Ajuste diario de la basal</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Glucosa en ayunas / preprandial</th><th>Ajuste</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">100-180 mg/dL</td><td>Sin cambios</td></tr>
+        <tr><td class="dn">&gt;180-240</td><td>Aumentar basal ~10%</td></tr>
+        <tr><td class="dn">&gt;240</td><td>Aumentar basal ~20%</td></tr>
+        <tr><td class="dn">70-99</td><td>Reducir basal ~10%</td></tr>
+        <tr><td class="dn">&lt;70 (hipoglucemia)</td><td>Reducir la dosis total ~20%</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Escala de corrección (suplementaria)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="font-size:11.5px;color:#6b7280;margin-bottom:8px;">Unidades de insulina rápida <strong>adicionales</strong> según la glucosa y la sensibilidad. El factor de corrección (pestaña Calculadoras) es más individualizado.</div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>Glucosa (mg/dL)</th><th>Sensible*</th><th>Habitual</th><th>Resistente**</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">150-199</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td class="dn">200-249</td><td>2</td><td>3</td><td>4</td></tr>
+        <tr><td class="dn">250-299</td><td>3</td><td>5</td><td>7</td></tr>
+        <tr><td class="dn">300-349</td><td>4</td><td>7</td><td>10</td></tr>
+        <tr><td class="dn">≥350</td><td>5</td><td>8</td><td>12</td></tr>
+      </tbody>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">*Sensible: TDD &lt;40 U o delgado. **Resistente: TDD &gt;80 U, obesidad o esteroides.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Casos especiales</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">🚫</div><div><div class="co-n">Ayuno / NPO</div><div class="co-d">Continuar la <strong>basal completa</strong>; suspender los bolos prandiales; corregir cada 4-6 h. Vigilar hipoglucemia.</div></div></div>
+    <div class="co-i"><div class="co-ico">🍼</div><div><div class="co-n">Nutrición enteral continua</div><div class="co-d">Cubrir con basal + correcciones; algunos añaden insulina rápida cada 4-6 h. Si se interrumpe la fórmula, riesgo de hipoglucemia.</div></div></div>
+    <div class="co-i"><div class="co-ico">💧</div><div><div class="co-n">Nutrición parenteral (NPT)</div><div class="co-d">Suele añadirse insulina regular a la bolsa según el contenido de dextrosa.</div></div></div>
+    <div class="co-i"><div class="co-ico">🩺</div><div><div class="co-n">Enfermedad renal</div><div class="co-d">Reducir la dosis; mayor riesgo de hipoglucemia por aclaramiento lento.</div></div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-esp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤰</span><span class="st">Embarazo / diabetes gestacional</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i" style="margin-bottom:8px;"><span class="ai">🎯</span><div><div class="at">Metas (más estrictas)</div>Ayuno/preprandial <strong>&lt;95</strong> · 1 h posprandial <strong>&lt;140</strong> · 2 h <strong>&lt;120</strong> mg/dL.</div></div>
+    <div class="co-i"><div class="co-ico">✅</div><div><div class="co-n">Insulinas seguras</div><div class="co-d">Aspart, lispro, regular y NPH (más experiencia). La insulina es la <strong>primera línea</strong> farmacológica.</div></div></div>
+    <div class="co-i"><div class="co-ico">⚖️</div><div><div class="co-n">Glargina / detemir</div><div class="co-d">Menos datos; detemir con evidencia razonable. Usar según criterio si ya las usaba.</div></div></div>
+    <div class="co-i"><div class="co-ico">🧪</div><div><div class="co-n">Cetonas</div><div class="co-d">Medir si glucosa &gt;200; riesgo de cetoacidosis incluso con glucosas no tan altas.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔪</span><span class="st">Perioperatorio / ayuno para procedimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">Noche previa y mañana</div><div class="step-x"><strong>Basal:</strong> dar la dosis habitual o reducir ~20% (sobre todo si NPH). Nunca suspenderla en DM1.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">En ayuno</div><div class="step-x">Suspender los <strong>bolos prandiales</strong>; corregir cada 4-6 h con rápida. Suspender orales el día del procedimiento.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">Cirugía mayor / glucosa inestable</div><div class="step-x">Considerar <strong>infusión IV</strong> con dextrosa y monitoreo frecuente.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤒</span><span class="st">Días de enfermedad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r" style="margin-bottom:8px;"><span class="ai">⚠️</span><div><strong>Nunca suspender la insulina basal</strong>, aunque no coma: el estrés de la enfermedad sube la glucosa y suspenderla puede desencadenar <strong>cetoacidosis</strong>.</div></div>
+    <div class="co-i"><div class="co-ico">💧</div><div><div class="co-n">Hidratación y monitoreo</div><div class="co-d">Líquidos abundantes; glucosa cada 2-4 h.</div></div></div>
+    <div class="co-i"><div class="co-ico">🧪</div><div><div class="co-n">Cetonas</div><div class="co-d">Medir si glucosa &gt;250 (o DM1 enferma). Cetonas + vómito → urgencias.</div></div></div>
+    <div class="co-i"><div class="co-ico">🚩</div><div><div class="co-n">Banderas rojas</div><div class="co-d">Vómito persistente, cetonas altas, glucosa persistentemente &gt;300, deshidratación → evaluar CAD.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Enfermedad renal y dosis muy altas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Situación</th><th>Ajuste</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">eGFR 10-50</td><td>Reducir ~25% la dosis</td></tr>
+        <tr><td class="dn">eGFR &lt;10</td><td>Reducir ~50% la dosis</td></tr>
+        <tr><td class="dn">&gt;200 U/día (resistencia)</td><td>Considerar insulina regular <strong>U-500</strong></td></tr>
+      </tbody>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">En ERC la insulina se elimina más lento → mayor riesgo de hipoglucemia.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-iv">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🚑</span><div><div class="at">Insulina intravenosa — solo por protocolo</div>La CAD y el EHH se manejan con <strong>insulina IV según el protocolo de la unidad</strong>, con monitoreo horario. Esta sección es de referencia; no la uses como dosificador automático.</div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">1️⃣</span><span class="st">Antes de la insulina</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="hosp-ctx"><div class="hosp-ctx-t">Primero, lo primero</div>
+      <div class="hosp-ctx-i"><strong>Líquidos IV</strong> (solución salina) antes que la insulina.</div>
+      <div class="hosp-ctx-i"><strong>Potasio:</strong> si K &lt; 3.3 mEq/L, <strong>reponer y NO iniciar insulina</strong> hasta corregir (la insulina baja el potasio).</div>
+      <div class="hosp-ctx-i">Buscar y tratar el desencadenante (infección, omisión de insulina, etc.).</div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">2️⃣</span><span class="st">Infusión de insulina (referencia)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="hosp-ctx"><div class="hosp-ctx-t">Esquema habitual</div>
+      <div class="hosp-ctx-i">Infusión de insulina regular a <strong>0.1 U/kg/h</strong> (con o sin bolo inicial de 0.1 U/kg), o <strong>0.14 U/kg/h</strong> sin bolo.</div>
+      <div class="hosp-ctx-i">Objetivo: que la glucosa baje <strong>50-75 mg/dL por hora</strong>.</div>
+      <div class="hosp-ctx-i">Cuando la glucosa llegue a ~200 (CAD) o ~250-300 (EHH), <strong>agregar dextrosa</strong> y bajar la infusión.</div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">3️⃣</span><span class="st">Transición a subcutánea</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="hosp-ctx"><div class="hosp-ctx-t">Al resolver</div>
+      <div class="hosp-ctx-i">Resuelta la CAD (anion gap normal, paciente comiendo): pasar a basal-bolo subcutáneo.</div>
+      <div class="hosp-ctx-i"><strong>Solapar</strong> la insulina basal 1-2 h <strong>antes</strong> de suspender la infusión (evita el rebote).</div>
+    </div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔻</span><span class="st">Hipoglucemia (&lt;70 mg/dL)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">Consciente</div><div class="step-x"><strong>Regla del 15:</strong> 15 g de carbohidrato rápido (≈120 mL de jugo, 3 tabletas de glucosa o 1 cucharada de azúcar); repetir glucosa a los 15 min y repetir si sigue &lt;70.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">Inconsciente / no puede tragar</div><div class="step-x">Dextrosa IV: <strong>25 g = 50 mL de glucosado al 50%</strong> (o 250 mL al 10%); o <strong>glucagón 1 mg</strong> IM/SC. Luego mantener con dextrosa.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">Después</div><div class="step-x">Buscar la causa (omisión de comida, dosis alta, ERC) y <strong>reducir la insulina ~20%</strong>.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores peligrosos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>No reducir al bajar el esteroide:</strong> causa hipoglucemia.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dar bolo prandial a quien no come:</strong> suspender el bolo si está en ayuno.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Apilar correcciones</strong> (“stacking”): no corregir antes de que actúe la dosis previa (esperar ~3-4 h).</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Confundir el tipo de insulina:</strong> rápida vs basal vs premezclada — verificar siempre.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Usar escala móvil sola</strong> en hospitalizados: es reactiva; preferir basal-bolo.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>No reducir en ERC/ancianos:</strong> mayor riesgo de hipoglucemia.</div></div>
+  </div></div>
+
+  <div class="alert a-r"><span class="ai">⚠️</span><div>Herramienta de apoyo; <strong>no sustituye el juicio clínico</strong> ni los protocolos locales. Verificar cada dosis.</div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="bib-h">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.8;margin-bottom:4px;">Fuentes</div>
+    <div style="font-size:17px;font-weight:700;">Bibliografía</div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">Guías</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">ADA</span><span class="bib-y">2024</span><span class="lv lv-a">Estándar</span>
+        <div class="bib-r" style="margin-top:4px;">American Diabetes Association. <strong>Standards of Care in Diabetes — 2024</strong> (manejo hospitalario y dosificación de insulina).</div></div>
+      <div class="bib-i"><span class="bib-n">Endocrine Society</span><span class="bib-y">2022</span><span class="lv lv-a">Hospital</span>
+        <div class="bib-r" style="margin-top:4px;"><strong>Management of Hyperglycemia in Hospitalized Patients in Non-Critical Care Setting.</strong></div></div>
+    </div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">Conversión y ambulatorio</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">Clinician.com / Drugs.com</span><span class="bib-y">2023-26</span><span class="lv lv-b">Transición</span>
+        <div class="bib-r" style="margin-top:4px;">Revisiones de <strong>conversión entre insulinas</strong> (NPH→análogos, U-100↔U-300).</div></div>
+      <div class="bib-i"><span class="bib-n">ADA</span><span class="bib-y">2026</span><span class="lv lv-a">Embarazo</span>
+        <div class="bib-r" style="margin-top:4px;">Standards of Care — <strong>Management of Diabetes in Pregnancy</strong> (metas y insulinas seguras) · ACOG.</div></div>
+    </div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">Corticoides</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">Pharmacotherapy</span><span class="bib-y">2021</span><span class="lv lv-b">NPH</span>
+        <div class="bib-r" style="margin-top:4px;">Stone et al. <strong>Insulin NPH for steroid-induced hyperglycemia</strong> (dosis por peso según el corticoide).</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showT(id, el){
+  var panels=document.querySelectorAll('.panel');
+  for(var i=0;i<panels.length;i++){panels[i].classList.remove('on');}
+  var p=document.getElementById('tab-'+id);
+  if(p)p.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++){tabs[j].classList.remove('on');}
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling;
+  var sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+
+function renderFicha(f,idx){
+  var bc=f.co==="#0a5c45"?"rgba(10,92,69,0.06)":f.co==="#0c3b6e"?"rgba(12,59,110,0.06)":f.co==="#7a4a00"?"rgba(122,74,0,0.06)":f.co==="#7b1c1c"?"rgba(123,28,28,0.06)":f.co==="#0f7a5a"?"rgba(15,122,90,0.06)":f.co==="#9d2c5f"?"rgba(157,44,95,0.06)":"rgba(55,65,81,0.06)";
+  return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
+    +"<div onclick='toggleFicha("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='farr-"+idx+"'>&#8964;</span></div>"
+    +"<div id='fbody-"+idx+"' style='display:none;'>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Clase farmacologica</div><div style='font-size:12px;color:#374151;'>"+f.cl+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis</div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Inicio</span><span style='font-weight:600;text-align:right;'>"+f.ini+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Esquema</span><span style='font-weight:700;color:#c0392b;text-align:right;'>"+f.esq+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Via</span><span style='font-weight:600;text-align:right;'>"+f.iv+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Duracion</span><span style='font-weight:700;color:"+f.co+";text-align:right;'>"+(f.dur||"—")+"</span></div>"
+    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentacion MX:</strong> "+f.pr+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Indicaciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.ind+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Contraindicaciones</div><div style='font-size:12px;color:#c0392b;line-height:1.6;'>"+f.ci+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Precauciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.prec+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Titulacion</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.tit+"</div></div>"
+    +"<div style='padding:12px 14px;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Evidencia</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.ev+"</div></div>"
+    +"</div></div>";
+}
+function toggleFicha(idx){
+  var b=document.getElementById("fbody-"+idx),a=document.getElementById("farr-"+idx);
+  if(b.style.display==="none"){b.style.display="block";a.style.transform="rotate(180deg)";}
+  else{b.style.display="none";a.style.transform="rotate(0deg)";}
+}
+
+function filtrarFarmacos(q){
+  var list=document.getElementById("farm-list"),count=document.getElementById("farm-count");
+  if(!list)return;
+  var term=q.toLowerCase().trim();
+  var byName={};
+  for(var i=0;i<FARMACOS_ASMA.length;i++){byName[FARMACOS_ASMA[i].n]=i;}
+  var html="",found=0;
+  for(var g=0;g<FAMILIAS.length;g++){
+    var names=FAMILIAS[g][1],block="",cnt=0;
+    for(var k=0;k<names.length;k++){
+      var idx=byName[names[k]];if(idx===undefined)continue;
+      var f=FARMACOS_ASMA[idx];
+      var s=(f.n+" "+f.m+" "+f.cl+" "+f.pi+" "+f.ind).toLowerCase();
+      if(!term||s.indexOf(term)!==-1){block+=renderFicha(f,idx);cnt++;found++;}
+    }
+    if(cnt){html+="<div style='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#0c3b6e;margin:14px 0 6px;padding-left:2px;'>"+FAMILIAS[g][0]+"</div>"+block;}
+  }
+  list.innerHTML=html||"<div style='text-align:center;padding:20px;color:#9ca3af;font-size:13px;'>Sin resultados</div>";
+  if(count)count.textContent=found+(found===1?" farmaco":" farmacos");
+}
+
+function renderIndic(){
+  var list=document.getElementById("ind-list");
+  if(!list)return;
+  var html="";
+  for(var i=0;i<INDIC.length;i++){
+    var it=INDIC[i];
+    html+="<div class='ind-b'><div class='ind-bh'>"+it.nm+"</div><div class='ind-bb'>";
+    html+="<div style='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;' id='inddoses-"+i+"'>";
+    for(var j=0;j<it.doses.length;j++){
+      html+="<button class='pchip"+(j===0?" on":"")+"' onclick='selDosis("+i+","+j+")'>"+it.doses[j].d+"</button>";
+    }
+    html+="</div>";
+    html+="<div class='alert a-i'><span class='ai'>&#128105;&#8205;&#9877;&#65039;</span><div><div class='at'>Enfermeria</div><span id='indenf-tx-"+i+"'>"+it.doses[0].enf+"</span></div></div>";
+    html+="<div class='alert a-g'><span class='ai'>&#129489;</span><div><div class='at'>Paciente</div><span id='indpac-tx-"+i+"'>"+it.doses[0].pac+"</span></div></div>";
+    html+="</div></div>";
+  }
+  list.innerHTML=html;
+}
+function selDosis(i,j){
+  var it=INDIC[i];
+  document.getElementById("indenf-tx-"+i).textContent=it.doses[j].enf;
+  document.getElementById("indpac-tx-"+i).textContent=it.doses[j].pac;
+  var cont=document.getElementById("inddoses-"+i);
+  var chips=cont.getElementsByClassName("pchip");
+  for(var k=0;k<chips.length;k++){chips[k].classList.remove("on");}
+  chips[j].classList.add("on");
+}
+
+function renderEscen(){
+  var chips=document.getElementById("esce-chips");
+  if(!chips)return;
+  var html="";
+  for(var i=0;i<ESCEN.length;i++){
+    html+="<button class='pchip"+(i===0?" on":"")+"' onclick='selEscen("+i+")'>"+ESCEN[i].ic+" "+ESCEN[i].t+"</button>";
+  }
+  chips.innerHTML=html;
+  document.getElementById("esce-content").innerHTML=ESCEN[0].html;
+}
+function selEscen(i){
+  document.getElementById("esce-content").innerHTML=ESCEN[i].html;
+  var chips=document.getElementById("esce-chips").getElementsByClassName("pchip");
+  for(var k=0;k<chips.length;k++){chips[k].classList.remove("on");}
+  chips[i].classList.add("on");
+}
+
+function calcTog(el){el.classList.toggle('open');}
+function num(id){var v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;}
+
+/* ===== TDD + reparto ===== */
+var tddScen='bb', tddRenal=false;
+var SCEN={naive:{f:0.15,basalOnly:true,lo:0.1,hi:0.2},bb:{f:0.4,basalOnly:false,lo:0.3,hi:0.5},h1:{f:0.4,basalOnly:false},h2:{f:0.5,basalOnly:false}};
+function setTddF(k,btn){tddScen=k;var bs=document.querySelectorAll('#tdd-scen .calc-opt');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');btn.classList.add('on');calcTDD();}
+function toggleRenal(btn){tddRenal=!tddRenal;btn.classList.toggle('on',tddRenal);calcTDD();}
+function calcTDD(){
+  var w=num('tdd-peso'),res=document.getElementById('tdd-res');var s=SCEN[tddScen];
+  if(!w||w<=0){res.innerHTML='Ingresa el peso.';return;}
+  var f=s.f;var note='';
+  if(tddRenal){f=s.basalOnly?0.1:0.25;note=' \u00b7 dosis reducida por edad \u226570 o ERC';}
+  var tdd=Math.round(w*f);
+  if(s.basalOnly){
+    res.innerHTML='<span class="big">'+tdd+' U/d\u00eda de basal</span><span class="sub">glargina, detemir o NPH, 1 vez al d\u00eda ('+f+' U/kg'+note+')</span>'
+      +'<div style="margin-top:8px;font-size:12px;">A\u00f1adir insulina r\u00e1pida en comidas si la glucosa posprandial sigue alta.</div>';
+  }else{
+    var basal=Math.round(tdd/2),bolo=tdd-basal,meal=Math.round(bolo/3);
+    res.innerHTML='<span class="big">TDD '+tdd+' U/d\u00eda</span><span class="sub">'+f+' U/kg'+note+'</span>'
+      +'<div style="margin-top:8px;font-size:12.5px;line-height:1.7;">'
+      +'\u2022 <strong>Basal:</strong> '+basal+' U (1\u00d7/d\u00eda)<br>'
+      +'\u2022 <strong>Bolo total:</strong> '+bolo+' U \u2192 <strong>'+meal+' U por comida</strong> (r\u00e1pida, antes de cada comida)</div>'
+      +'<div style="margin-top:6px;font-size:11px;color:#5b7782;">Dar la basal completa aunque est\u00e9 en ayuno; suspender el bolo si no come.</div>'+(basal/w>0.5?'<div style="margin-top:8px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px;font-size:11px;color:#b91c1c;">\u26A0\uFE0F La basal supera 0.5 U/kg: considera reforzar bolos en vez de subir m\u00e1s la basal.</div>':'');
+  }
+}
+function resetTDD(){document.getElementById('tdd-peso').value='';tddRenal=false;document.getElementById('tdd-renal').classList.remove('on');calcTDD();}
+
+/* ===== Correcci\u00f3n ===== */
+var corRule=1800;
+function setCorRule(r,btn){corRule=r;var bs=document.querySelectorAll('#cor-rule .calc-opt');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');btn.classList.add('on');calcCor();}
+function calcCor(){
+  var tdd=num('cor-tdd'),g=num('cor-glu'),meta=num('cor-meta');if(meta===null)meta=150;
+  var res=document.getElementById('cor-res');
+  if(!tdd||tdd<=0){res.innerHTML='Ingresa la dosis total diaria.';return;}
+  var isf=Math.round(corRule/tdd);
+  var h='<span class="big">Factor: 1 U baja ~'+isf+' mg/dL</span><span class="sub">'+corRule+' \u00f7 '+tdd+' U</span>';
+  if(g&&g>meta){
+    var corr=Math.round((g-meta)/isf);
+    h+='<div style="margin-top:8px;font-size:13px;">Correcci\u00f3n para '+g+'\u2192'+meta+': <strong style="font-size:16px;color:#0e7490;">'+corr+' U</strong> de insulina r\u00e1pida.</div>'+(corr>=8?'<div style="margin-top:7px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:7px;font-size:11px;color:#92400e;">\u26A0\uFE0F Correcci\u00f3n alta: evita apilar dosis; espera 3-4 h antes de corregir de nuevo.</div>':'');
+  }else if(g){
+    h+='<div style="margin-top:8px;font-size:12.5px;color:#0a7d4f;">La glucosa ya est\u00e1 en meta o por debajo: no requiere correcci\u00f3n.</div>';
+  }
+  res.innerHTML=h;
+}
+function resetCor(){document.getElementById('cor-tdd').value='';document.getElementById('cor-glu').value='';document.getElementById('cor-meta').value='';calcCor();}
+
+/* ===== Carbohidratos ===== */
+function calcCarb(){
+  var tdd=num('carb-tdd'),g=num('carb-g'),res=document.getElementById('carb-res');
+  if(!tdd||tdd<=0){res.innerHTML='Ingresa la dosis total diaria.';return;}
+  var ratio=Math.round(500/tdd);
+  var h='<span class="big">1 U por ~'+ratio+' g</span><span class="sub">500 \u00f7 '+tdd+' U</span>';
+  if(g&&g>0){var d=(g/ratio).toFixed(1);h+='<div style="margin-top:8px;font-size:13px;">Para '+g+' g: <strong style="font-size:16px;color:#0e7490;">'+d+' U</strong> de insulina r\u00e1pida.</div>';}
+  res.innerHTML=h;
+}
+function resetCarb(){document.getElementById('carb-tdd').value='';document.getElementById('carb-g').value='';calcCarb();}
+
+/* ===== Corticoides ===== */
+var stName='Prednisona', stFactor=1, stLong=false;
+function setStType(name,factor,long,btn){stName=name;stFactor=factor;stLong=long;var bs=document.querySelectorAll('#st-type .calc-opt');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');btn.classList.add('on');calcSteroid();}
+function calcSteroid(){
+  var w=num('st-peso'),d=num('st-dose'),res=document.getElementById('st-res');
+  if(!w||!d||w<=0||d<=0){res.innerHTML='Ingresa el peso y la dosis.';return;}
+  var pred=d*stFactor;
+  var tier= pred>=40?0.4: pred>=30?0.3: pred>=20?0.2: pred>=10?0.1:0.1;
+  var nph=Math.round(w*tier);
+  var h='<span class="big">'+nph+' U de NPH</span><span class="sub">'+tier+' U/kg \u00b7 equivale a ~'+Math.round(pred)+' mg de prednisona</span>';
+  h+='<div style="margin-top:8px;font-size:12px;">Dar junto con el corticoide (matutino) y <strong>reducir al desescalar</strong> el esteroide.</div>';
+  if(stLong){h+='<div class="calc-formula" style="margin-top:10px;"><b>\u26A0\uFE0F Dexametasona</b> es de acci\u00f3n larga (36-72 h): suele convenir <strong>insulina basal (glargina)</strong> en vez de NPH, y con frecuencia esquema basal-bolo completo.</div>';}
+  res.innerHTML=h;
+}
+function resetSteroid(){document.getElementById('st-peso').value='';document.getElementById('st-dose').value='';calcSteroid();}
+
+
+/* ===== Ajusta tu dosis (con recomendaci\u00f3n) ===== */
+function ajNudge(d){var el=document.getElementById('aj-dose');var v=parseFloat(el.value)||0;v=Math.max(0,Math.round((v+d)*10)/10);el.value=v;calcAjuste();}
+function calcAjuste(){
+  var w=num('aj-peso'),dose=num('aj-dose'),res=document.getElementById('aj-res');
+  if(!w||w<=0){res.innerHTML='Ingresa el peso.';return;}
+  var lo=Math.round(w*0.3),hi=Math.round(w*0.5),mid=Math.round(w*0.4);
+  if(!dose||dose<=0){res.innerHTML='Rango inicial recomendado: <strong>'+lo+'\u2013'+hi+' U/d\u00eda</strong> (sugerido '+mid+'). Ingresa la dosis que quieres dar para evaluarla.';return;}
+  var perkg=dose/w,cat,col,msg;
+  if(perkg<0.3){cat='Baja';col='#ca8a04';msg='Por debajo del inicio habitual. Razonable en ancianos, ERC o bajo peso; vigila que alcance las metas.';}
+  else if(perkg<=0.5){cat='Adecuada';col='#15803d';msg='Dentro del rango inicial recomendado.';}
+  else if(perkg<=0.7){cat='Alta';col='#ea580c';msg='Por encima del inicio t\u00edpico. Puede ser apropiada en resistencia, obesidad o esteroides; vigila hipoglucemia.';}
+  else{cat='Muy alta';col='#dc2626';msg='Dosis elevada (>0.7 U/kg). Confirma la indicaci\u00f3n y vigila estrechamente.';}
+  var basal=Math.round(dose/2),bolo=dose-basal,meal=Math.round(bolo/3),isf=Math.round(1800/dose),ratio=Math.round(500/dose),bkg=basal/w;
+  var h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap;"><span style="background:'+col+';color:#fff;font-size:12px;font-weight:700;border-radius:20px;padding:3px 12px;">'+cat+'</span><span style="font-size:12px;color:#5b7782;">'+dose+' U = '+perkg.toFixed(2)+' U/kg</span></div>';
+  h+='<div style="font-size:12.5px;color:#0f3d4d;margin-bottom:7px;">'+msg+'</div>';
+  h+='<div style="font-size:11.5px;color:#5b7782;margin-bottom:8px;">Rango recomendado: <strong>'+lo+'\u2013'+hi+' U/d\u00eda</strong> (0.3\u20130.5 U/kg).</div>';
+  h+='<div style="font-size:12.5px;line-height:1.85;border-top:1px solid #d6ecf2;padding-top:8px;">Con esa dosis:<br>\u2022 <strong>Basal '+basal+' U</strong> (1\u00d7/d\u00eda)<br>\u2022 <strong>'+meal+' U por comida</strong> (bolo \u00f73)<br>\u2022 corrige 1 U \u2248 '+isf+' mg/dL \u00b7 1 U por '+ratio+' g</div>';
+  if(bkg>0.5){h+='<div style="margin-top:8px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px;font-size:11px;color:#b91c1c;">\u26A0\uFE0F La basal ('+basal+' U = '+bkg.toFixed(2)+' U/kg) supera 0.5 U/kg. En vez de subir m\u00e1s la basal, refuerza o ajusta los bolos prandiales.</div>';}
+  res.innerHTML=h;
+}
+function resetAj(){document.getElementById('aj-peso').value='';document.getElementById('aj-dose').value='';calcAjuste();}
+
+/* ===== Conversión entre insulinas ===== */
+var CONVP=[
+ {f:1.0,out:"Glargina o detemir 1\u00d7/d\u00eda",n:"Unidad por unidad (1:1)."},
+ {f:0.8,out:"Glargina o detemir 1\u00d7/d\u00eda",n:"Reducir 20% (la NPH 2\u00d7 tiene picos marcados)."},
+ {f:1.0,out:"Glargina U-300 (Toujeo) 1\u00d7/d\u00eda",n:"Inicio 1:1."},
+ {f:0.8,out:"Glargina U-300 (Toujeo) 1\u00d7/d\u00eda",n:"Reducir 20% (ven\u00edas de basal 2\u00d7)."},
+ {f:1.0,out:"Glargina U-300 (Toujeo)",n:"Inicio 1:1; suele requerir 10-15% m\u00e1s con el tiempo."},
+ {f:0.8,out:"Glargina U-100 (Lantus/Basaglar)",n:"Reducir 20%."},
+ {f:1.0,out:"Basal-bolo",n:"Repartir 50% basal y 50% bolo (\u00f73 comidas).",split:true},
+ {f:0.9,out:"Glargina (Lantus)",n:"La glargina suele requerir ~10% menos que la detemir."}
+];
+var convI=0;
+function setConv(i,btn){convI=i;var bs=document.querySelectorAll("#conv-type .calc-opt");for(var k=0;k<bs.length;k++)bs[k].classList.remove("on");btn.classList.add("on");calcConv();}
+function calcConv(){
+  var d=num("conv-dose"),res=document.getElementById("conv-res");
+  if(!d||d<=0){res.innerHTML="Ingresa la dosis actual.";return;}
+  var p=CONVP[convI],nd=Math.round(d*p.f);
+  var h='<span class="big">'+nd+' U/d\u00eda</span><span class="sub">'+p.out+'</span><div style="margin-top:6px;font-size:12.5px;color:#0f3d4d;">'+p.n+'</div>';
+  if(p.split){var basal=Math.round(nd/2),bolo=nd-basal,meal=Math.round(bolo/3);h+='<div style="margin-top:6px;font-size:12.5px;">\u2192 Basal '+basal+' U + <strong>'+meal+' U por comida</strong> (\u00d73).</div>';}
+  h+='<div style="margin-top:7px;font-size:11px;color:#5b7782;">Reajustar en los d\u00edas siguientes seg\u00fan las glucosas.</div>';
+  res.innerHTML=h;
+}
+function resetConv(){document.getElementById("conv-dose").value="";calcConv();}
+
+/* ===== Titulación de la basal ===== */
+function calcTit(){
+  var b=num("tit-basal"),g=num("tit-glu"),res=document.getElementById("tit-res");
+  if(!b||b<=0||!g){res.innerHTML="Ingresa la basal actual y el ayuno promedio.";return;}
+  var adj,col,txt;
+  if(g<70){adj=-4;col="#dc2626";txt="Hipoglucemia: reducir la basal.";}
+  else if(g<80){adj=-2;col="#ca8a04";txt="Algo bajo: reducir.";}
+  else if(g<=130){adj=0;col="#15803d";txt="En meta: sin cambios.";}
+  else if(g<=180){adj=2;col="#ea580c";txt="Por arriba de meta: subir.";}
+  else{adj=4;col="#dc2626";txt="Muy alto: subir.";}
+  var nb=Math.max(0,b+adj);
+  var h='<span class="big">'+nb+' U</span><span class="sub">'+(adj>0?"+":"")+adj+" U respecto a "+b+' U</span><div style="margin-top:6px;font-size:12.5px;color:'+col+';font-weight:600;">'+txt+'</div>';
+  h+='<div style="margin-top:6px;font-size:11.5px;color:#5b7782;">Titular cada 3 d\u00edas con el promedio de ayuno (meta 80-130). Si la basal supera 0.5 U/kg y la posprandial sigue alta, a\u00f1adir bolo.</div>';
+  res.innerHTML=h;
+}
+function resetTit(){document.getElementById("tit-basal").value="";document.getElementById("tit-glu").value="";calcTit();}
+
+/* ===== Esquema completo desde TDD exacta ===== */
+var esqMeals=3, esqBasal=50;
+function setEsqMeals(n,btn){esqMeals=n;var bs=document.querySelectorAll('#esq-meals .calc-opt');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');btn.classList.add('on');calcEsq();}
+function setEsqSplit(b,btn){esqBasal=b;var bs=document.querySelectorAll('#esq-split .calc-opt');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');btn.classList.add('on');calcEsq();}
+function calcEsq(){
+  var tdd=num('esq-tdd'),res=document.getElementById('esq-res');
+  if(!tdd||tdd<=0){res.innerHTML='Ingresa la dosis total diaria.';return;}
+  var basal=Math.round(tdd*esqBasal/100);
+  var bolo=tdd-basal;
+  var meal=Math.round(bolo/esqMeals);
+  var isf=Math.round(1800/tdd);
+  var ratio=Math.round(500/tdd);
+  res.innerHTML='<span class="big">TDD '+tdd+' U/d\u00eda</span><span class="sub">reparto '+esqBasal+' / '+(100-esqBasal)+'</span>'
+    +'<div style="margin-top:8px;font-size:12.5px;line-height:1.85;">'
+    +'\u2022 <strong>Basal:</strong> '+basal+' U (1\u00d7/d\u00eda \u2014 glargina, detemir o NPH)<br>'
+    +'\u2022 <strong>Bolo total:</strong> '+bolo+' U \u2192 <strong>'+meal+' U por comida</strong> ('+esqMeals+' comidas, insulina r\u00e1pida)<br>'
+    +'\u2022 <strong>Factor de correcci\u00f3n:</strong> 1 U baja ~'+isf+' mg/dL<br>'
+    +'\u2022 <strong>Ratio carbohidratos:</strong> 1 U por ~'+ratio+' g</div>'
+    +'<div style="margin-top:6px;font-size:11px;color:#5b7782;">Dar la basal completa aunque est\u00e9 en ayuno; suspender el bolo si no come. Ajustar seg\u00fan glucosas.</div>';
+}
+function resetEsq(){document.getElementById('esq-tdd').value='';calcEsq();}
+
+
+/* ==== Prescripción por insulina ==== */
+function rxi(dose,name,when){return '<div class="rx-inj"><span class="rx-dose">'+dose+' U</span><span class="rx-tx"><b>'+name+'</b><span class="rx-when">'+when+'</span></span></div>';}
+function calcRx(){
+  var tdd=num('rx-tdd'),reg=document.getElementById('rx-reg').value,res=document.getElementById('rx-res');
+  if(!tdd||tdd<=0){res.innerHTML='Ingresa la TDD y elige el esquema.';return;}
+  var R=Math.round,h='',rec='';
+  var rapWhen='con cada comida (desayuno, comida y cena), 0–15 min antes · ×3';
+  if(reg==='bb_glar'||reg==='bb_det'||reg==='bb_nph'||reg==='basalplus'){
+    var basal=R(tdd*0.5),bolo=tdd-basal,meal=R(bolo/3);
+    if(reg==='bb_glar'){
+      h+=rxi(basal,'Glargina o degludec (basal)','1 vez al día, a la misma hora');
+      h+=rxi(meal,'Rápida — aspart/lispro/glulisina (bolo)',rapWhen);
+      rec='Glargina '+basal+' U SC c/24 h + aspart '+meal+' U SC antes de cada comida (×3).';
+    }else if(reg==='bb_det'){
+      h+=rxi(basal,'Detemir (basal)','1×/día (dividir en 2 si dosis alta o control nocturno insuficiente)');
+      h+=rxi(meal,'Rápida (bolo)',rapWhen);
+      rec='Detemir '+basal+' U SC (1–2×/día) + aspart '+meal+' U antes de cada comida.';
+    }else if(reg==='bb_nph'){
+      var am=R(basal*2/3),pm=basal-am;
+      h+=rxi(am,'NPH (basal) — mañana','antes del desayuno');
+      h+=rxi(pm,'NPH (basal) — noche','antes de la cena o al acostarse');
+      h+=rxi(meal,'Rápida (bolo)',rapWhen);
+      rec='NPH '+am+' U AM + '+pm+' U PM + aspart '+meal+' U antes de cada comida.';
+    }else{
+      h+=rxi(basal,'Glargina o degludec (basal)','1 vez al día, a la misma hora');
+      h+=rxi(bolo,'Rápida (1 bolo)','en la comida principal (la de mayor carga de carbohidratos)');
+      rec='Glargina '+basal+' U SC c/24 h + aspart '+bolo+' U en la comida principal.';
+    }
+  }else if(reg==='basal_glar'){
+    h+=rxi(tdd,'Glargina o degludec (basal)','1 vez al día, a la misma hora');
+    h+='<div class="rx-note">Solo basal: continuar antidiabéticos orales. Si la glucosa posprandial sigue alta, añadir bolo (basal plus → basal-bolo).</div>';
+    rec='Glargina '+tdd+' U SC c/24 h.';
+  }else if(reg==='basal_det'){
+    var am=R(tdd*0.5),pm=tdd-am;
+    h+=rxi(tdd,'Detemir (basal)','1 vez al día');
+    h+='<div class="rx-note">Si requiere 2×/día (dosis alta o control nocturno insuficiente): '+am+' U en la mañana + '+pm+' U en la noche.</div>';
+    rec='Detemir '+tdd+' U SC 1×/día (o '+am+'/'+pm+' U si 2×/día).';
+  }else if(reg==='basal_nph'){
+    var am=R(tdd*2/3),pm=tdd-am;
+    h+=rxi(am,'NPH — mañana','antes del desayuno');
+    h+=rxi(pm,'NPH — noche','antes de la cena o al acostarse');
+    h+='<div class="rx-note">Reparto 2/3 mañana · 1/3 noche. Al iniciar en DM2 puede darse solo la dosis nocturna.</div>';
+    rec='NPH '+am+' U AM + '+pm+' U PM.';
+  }else if(reg==='nph_reg'){
+    var am=R(tdd*2/3),pm=tdd-am,amN=R(am*2/3),amR=am-amN,pmN=R(pm*0.5),pmR=pm-pmN;
+    h+=rxi(am,'Mañana — NPH '+amN+' U + Regular '+amR+' U','antes del desayuno (regular 30 min antes)');
+    h+=rxi(pm,'Noche — NPH '+pmN+' U + Regular '+pmR+' U','antes de la cena (regular 30 min antes)');
+    h+='<div class="rx-note">Esquema convencional (regla de los tercios): 2/3 de la TDD en la mañana (2/3 NPH + 1/3 regular) y 1/3 en la noche (½ NPH + ½ regular).</div>';
+    rec='AM: NPH '+amN+' U + reg '+amR+' U (antes del desayuno) · PM: NPH '+pmN+' U + reg '+pmR+' U (antes de la cena).';
+  }else if(reg==='premix70'||reg==='premix75'||reg==='premix50'){
+    var ratio=reg==='premix70'?0.70:reg==='premix75'?0.75:0.50, label=reg==='premix70'?'70/30':reg==='premix75'?'75/25':'50/50';
+    var am=R(tdd*2/3),pm=tdd-am,aB=R(am*ratio),aP=am-aB,pB=R(pm*ratio),pP=pm-pB;
+    h+=rxi(am,'Premezclada '+label+' — mañana','antes del desayuno (≈ '+aB+' U intermedia + '+aP+' U rápida)');
+    h+=rxi(pm,'Premezclada '+label+' — noche','antes de la cena (≈ '+pB+' U intermedia + '+pP+' U rápida)');
+    h+='<div class="rx-note">Bifásica '+label+' 2×/día: 2/3 antes del desayuno, 1/3 antes de la cena. Menos flexible; requiere horarios y comidas regulares.</div>';
+    rec='Premezclada '+label+': '+am+' U antes del desayuno + '+pm+' U antes de la cena.';
+  }
+  res.innerHTML=h+'<div class="rx-receta"><b>📝 Receta:</b> '+rec+'</div>';
+}
+function resetRx(){document.getElementById('rx-tdd').value='';document.getElementById('rx-res').innerHTML='Ingresa la TDD y elige el esquema.';}
+(function(){var s=document.getElementById('rx-reg');if(s)s.addEventListener('change',calcRx);})();
+
+
+/* ==== Metas e inicio según A1c/glucemia ==== */
+var iniCatab=false;
+function setIniCatab(v,btn){iniCatab=v;var bs=document.querySelectorAll('#ini-cat .calc-opt');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');btn.classList.add('on');calcIni();}
+function calcIni(){
+  var w=num('ini-peso'),a=num('ini-a1c'),g=num('ini-glu'),res=document.getElementById('ini-res');
+  if(a===null&&g===null&&!iniCatab){res.innerHTML='Ingresa la HbA1c y/o la glucosa.';return;}
+  var severe=iniCatab||(a!==null&&a>10)||(g!==null&&g>=300);
+  var high=!severe&&((a!==null&&a>=8.5)||(g!==null&&g>=250));
+  var h='';
+  if(severe){
+    h+='<div class="ini-band sev">Hiperglucemia grave / catabolismo → iniciar insulina de inmediato</div>';
+    if(w){var tddLo=Math.round(w*0.4),tddHi=Math.round(w*0.5),bLo=Math.round(w*0.4*0.5),bHi=Math.round(w*0.5*0.5),mLo=Math.round((w*0.4-bLo)/3),mHi=Math.round((w*0.5-bHi)/3);
+      h+='<div class="ini-tx"><strong>Esquema:</strong> basal-bolo (reemplazo completo). TDD ≈ <strong>'+tddLo+'–'+tddHi+' U/día</strong> (0.4–0.5 U/kg).</div>';
+      h+='<div class="ini-tx">→ Basal <strong>'+bLo+'–'+bHi+' U</strong> (1×/día) + rápida <strong>'+mLo+'–'+mHi+' U por comida</strong> (÷3).</div>';
+    }else{h+='<div class="ini-tx"><strong>Esquema:</strong> basal-bolo, TDD ≈ 0.4–0.5 U/kg/día (basal 50% + rápida ÷3). Ingresa el peso para las unidades.</div>';}
+    h+='<div class="ini-tx">Si hay <strong>cetosis/cetoacidosis</strong> o inestabilidad → protocolo IV y valorar hospitalización.</div>';
+  }else if(high){
+    h+='<div class="ini-band high">Descontrol importante → iniciar insulina basal (± prandial)</div>';
+    if(w){var b=Math.round(w*0.2);h+='<div class="ini-tx"><strong>Esquema:</strong> insulina basal 1×/día ≈ <strong>'+b+' U/día</strong> (0.2 U/kg).</div>';}
+    else{h+='<div class="ini-tx"><strong>Esquema:</strong> insulina basal 1×/día (~0.2 U/kg).</div>';}
+    h+='<div class="ini-tx">Considerar combinar con <strong>GLP-1 RA</strong>. Vigilar la posprandial; si persiste alta, añadir bolo (basal plus → basal-bolo).</div>';
+  }else{
+    h+='<div class="ini-band okb">Descontrol leve-moderado → basal conservador o intensificar orales / GLP-1 RA</div>';
+    if(w){var bl=Math.max(10,Math.round(w*0.1)),bh=Math.round(w*0.2);h+='<div class="ini-tx"><strong>Esquema:</strong> insulina basal 1×/día ≈ <strong>'+bl+'–'+bh+' U/día</strong> (10 U o 0.1–0.2 U/kg).</div>';}
+    else{h+='<div class="ini-tx"><strong>Esquema:</strong> insulina basal 10 U/día o 0.1–0.2 U/kg.</div>';}
+    h+='<div class="ini-tx">La ADA prefiere <strong>GLP-1 RA</strong> antes que insulina salvo hiperglucemia grave o síntomas.</div>';
+  }
+  h+='<div class="ini-note">Continuar metformina/otros agentes. Titular <strong>+2 U cada 3 días</strong> hasta ayuno 80–130 mg/dL. Meta HbA1c &lt;7% (o &lt;8% en frágil/anciano). Estimación inicial: individualizar y titular.</div>';
+  res.innerHTML=h;
+}
+function resetIni(){document.getElementById('ini-peso').value='';document.getElementById('ini-a1c').value='';document.getElementById('ini-glu').value='';iniCatab=false;var bs=document.querySelectorAll('#ini-cat .calc-opt');if(bs.length){bs[0].classList.add('on');bs[1].classList.remove('on');}document.getElementById('ini-res').innerHTML='Ingresa la HbA1c y/o la glucosa.';}
+
+window.addEventListener('load',function(){calcAjuste();calcConv();calcTit();calcEsq();calcTDD();calcCor();calcCarb();calcSteroid();});
+
+</script>
+</body>
+</html>

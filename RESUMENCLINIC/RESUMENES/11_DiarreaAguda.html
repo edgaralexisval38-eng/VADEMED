@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Diarrea Aguda · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#c0392b;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--rl);border-left:3px solid var(--rm);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:90px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.ab{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab-ok{background:var(--gl);border-color:var(--gm);}
+.ab-no{background:var(--rl);border-color:var(--rm);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--g);}
+.ab-no .ab-t{color:var(--r);}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#7a2c00;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.ind-o{background:#fff5ef;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--am);}
+.ind-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--a);margin-bottom:6px;}
+.ind-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.ind-oi::before{content:'>';position:absolute;left:0;color:var(--am);font-weight:700;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--rl);color:var(--r);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+@media(max-width:480px){}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#7a2c00,#c0392b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦠</div>
+    <div>
+      <div class="hdr-eye">Urgencias · Pediatría · Medicina Interna</div>
+      <div class="hdr-title">Diarrea Aguda Infecciosa</div>
+      <div class="hdr-sub">IDSA 2017 · OMS · GPC IMSS/CENETEC 2024 · ACG 2016</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">SRO = pilar</span>
+    <span class="badge">80% viral</span>
+    <span class="badge">Plan A · B · C</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">1.7 mil M</div><div class="qs-l">Episodios/año</div></div>
+  <div class="qs"><div class="qs-v">80%</div><div class="qs-l">Causa viral</div></div>
+  <div class="qs"><div class="qs-v">Plan A-B-C</div><div class="qs-l">Rehidratación</div></div>
+  <div class="qs"><div class="qs-v">SRO</div><div class="qs-l">Tratamiento pilar</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Diarrea aguda:</strong> ≥3 deposiciones sueltas o líquidas en 24 h, de &lt;14 días de duración.</p>
+    <p><strong>Disentería:</strong> diarrea con sangre y/o moco (sugiere etiología bacteriana invasora).</p>
+    <p><strong>Gastroenteritis aguda:</strong> diarrea + vómito + náusea ± fiebre.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Clasificación por etiología</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Tipo</th><th>Claves</th><th>Patógenos</th><th>Tratamiento</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Viral</td><td>Inicio brusco · vómito prominente · sin sangre · febrícula · 1-3 días</td><td>Norovirus · Rotavirus · Adenovirus · Astrovirus</td><td>Solo SRO + Zinc (pediátrico) · sin antibióticos</td></tr>
+        <tr><td class="dn">Bacteriana no invasora</td><td>Acuosa profusa · sin fiebre alta · sin sangre</td><td>ETEC · V. cholerae · S. aureus (toxina)</td><td>SRO · antibiótico solo si grave/inmunocomp.</td></tr>
+        <tr><td class="dn">Invasora (disentería)</td><td>Sangre y moco · fiebre &gt;38.5° · tenesmo · urgencia fecal</td><td>Shigella · Salmonella · Campylobacter · ECEI · E. coli O157:H7</td><td>Antibiótico indicado + SRO</td></tr>
+        <tr><td class="dn">Parasitaria</td><td>Inicio gradual · &gt;7 días · flatulencia · sin fiebre</td><td>Giardia · E. histolytica · Cryptosporidium</td><td>Metronidazol o tinidazol</td></tr>
+        <tr><td class="dn">C. difficile</td><td>Antibióticos previos · hospitalización · acuosa maloliente</td><td>Clostridioides difficile</td><td>Metronidazol o vancomicina oral</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Antibióticos en diarrea viral:</strong> sin beneficio y genera resistencia.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>No dar SRO en diarrea leve:</strong> la rehidratación oral es el tratamiento más importante.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Loperamida en disentería</strong> (sangre + fiebre): contraindicada — retiene la bacteria.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>No dar antibiótico en shigellosis:</strong> siempre lo requiere.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Antibiótico en Salmonella no tifoidea sin complicaciones:</strong> prolonga el estado portador.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>Suspender la alimentación:</strong> alimentar precozmente mejora la recuperación intestinal.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Tabla diferencial de síntomas</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <thead><tr><th>Síntoma</th><th>Viral</th><th>Bact. no invasora</th><th>Disentería</th><th>Parasitaria</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Inicio</td><td>Brusco</td><td>Brusco</td><td>Brusco-gradual</td><td>Gradual</td></tr>
+      <tr><td class="dn">Vómito</td><td>Prominente</td><td>Variable</td><td>Infrecuente</td><td>Raro</td></tr>
+      <tr><td class="dn">Fiebre</td><td>Febrícula &lt;38.5</td><td>Baja o ausente</td><td class="dm">Alta &gt;38.5°</td><td>Ausente</td></tr>
+      <tr><td class="dn">Sangre en heces</td><td>No</td><td>No</td><td class="dm">Sí</td><td>Variable</td></tr>
+      <tr><td class="dn">Duración</td><td>1-3 días</td><td>1-5 días</td><td>3-7 días</td><td>&gt;7 días</td></tr>
+      <tr><td class="dn">Tenesmo</td><td>No</td><td>No</td><td class="dm">Sí</td><td>Variable</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Evaluación de deshidratación (OMS)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <thead><tr><th>Signo</th><th>Sin deshidratación</th><th>Leve-moderada</th><th>Grave</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Estado</td><td>Alerta</td><td>Inquieto/irritable</td><td>Letárgico/inconsciente</td></tr>
+      <tr><td class="dn">Ojos</td><td>Normales</td><td>Hundidos</td><td>Muy hundidos</td></tr>
+      <tr><td class="dn">Boca/lengua</td><td>Húmeda</td><td>Seca</td><td>Muy seca</td></tr>
+      <tr><td class="dn">Sed</td><td>Bebe normal</td><td>Sediento, bebe ávido</td><td>No puede beber</td></tr>
+      <tr><td class="dn">Pliegue cutáneo</td><td>&lt;2 seg</td><td>2-3 seg</td><td>&gt;3 seg</td></tr>
+      <tr><td class="dn">Plan</td><td class="dm">Plan A</td><td class="dm">Plan B</td><td class="dm">Plan C</td></tr>
+      <tr><td class="dn">Déficit</td><td>&lt;5%</td><td>5-10%</td><td>&gt;10%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="alert a-i" style="margin-top:10px;"><span class="ai">🧮</span><div>Usa la <strong>calculadora interactiva</strong> de deshidratación en la pestaña 📊 Escalas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Signos de alarma — hospitalización urgente</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">⚠️</span><div>Diarrea con sangre + fiebre alta · incapacidad para tolerar líquidos · deshidratación grave (Plan C) · sepsis (fiebre &gt;39°, taquicardia, hipotensión) · dolor abdominal severo · edad &lt;3 meses o &gt;70 años con deshidratación · inmunocomprometido · síntomas &gt;7 días sin mejoría.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios diagnósticos</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <thead><tr><th>Estudio</th><th>Cuándo pedirlo</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Coprológico / Coprocultivo</td><td>Sangre en heces · fiebre &gt;38.5° · duración &gt;7 d · brote · inmunocomprometido</td></tr>
+      <tr><td class="dn">BHC + QS + electrolitos</td><td>Deshidratación moderada-grave · sepsis · hospitalización</td></tr>
+      <tr><td class="dn">Toxina C. difficile</td><td>Antibióticos (últimas 8 sem) · hospitalización reciente</td></tr>
+      <tr><td class="dn">Leucocitos en heces</td><td>Sugiere diarrea inflamatoria (invasora)</td></tr>
+      <tr><td class="dn">NO estudios de rutina</td><td>Diarrea acuosa leve, sin sangre ni fiebre alta — autolimitada</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Escala de deshidratación OMS — calculadora</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:14px;">
+      <div id="desh-items"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button onclick="calcDesh()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular</button>
+        <button onclick="resetDesh()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+      </div>
+      <div id="desh-result" style="display:none;margin-top:10px;"></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Calculadora pediátrica de rehidratación (por peso)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="sro-calc-esc"></div></div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">👆</span><div>Responde las preguntas: te da el diagnóstico probable, el plan de rehidratación y si lleva o no antibiótico.</div></div>
+    <div id="dia-step"></div>
+  </div></div>
+</div>
+
+<!-- TX CONSULTA -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Tratamiento por escenario — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="dia-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showDiaPop('planA',this)">💧 Plan A</button>
+      <button class="pchip" onclick="showDiaPop('planB',this)">💧 Plan B</button>
+      <button class="pchip" onclick="showDiaPop('disenteria',this)">🦠 Disentería</button>
+      <button class="pchip" onclick="showDiaPop('cdiff',this)">🧫 C. difficile</button>
+      <button class="pchip" onclick="showDiaPop('pediatrico',this)">👶 Pediátrico</button>
+      <button class="pchip" onclick="showDiaPop('embarazo',this)">🤰 Embarazo</button>
+    </div>
+    <div id="dia-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- TX HOSP -->
+<div class="panel" id="tab-txh">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚪</span><span class="st">Criterios de hospitalización</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚨</span><div>Deshidratación grave (Plan C) · vómito incoercible · disentería con sepsis · fiebre &gt;40° · sangre abundante · complicaciones (SHU, megacolon tóxico) · extremos de edad con deshidratación moderada · inmunocomprometido con diarrea bacteriana.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Plan C — rehidratación IV</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="rx"><div class="rx-t">Adulto</div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--gray-700);">Solución <strong>Hartmann (Ringer lactato)</strong> o SSN 0.9%. <strong>30 mL/kg IV en 30 min</strong> → evaluar → <strong>70 mL/kg IV en 2.5 h</strong>. Total 100 mL/kg en 3 h. Reevaluar cada 30 min; al mejorar pasar a VO.</div>
+    </div>
+    <div class="rx"><div class="rx-t">Pediátrico</div>
+      <div style="font-size:12.5px;line-height:1.7;color:var(--gray-700);"><strong>&lt;1 año:</strong> 100 mL/kg Hartmann IV en 3 h (30 mL/kg en 1 h + 70 mL/kg en 2 h).<br><strong>&gt;1 año:</strong> 100 mL/kg en 3 h. Si puede beber: añadir SRO 5 mL/kg/h.</div>
+    </div>
+    <div class="alert a-i" style="margin-top:10px;"><span class="ai">🧮</span><div>Calcula los mililitros exactos por peso en la calculadora pediátrica (pestaña Escalas o chip Pediátrico).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Antibióticos IV en hospitalización</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <thead><tr><th>Fármaco</th><th>Dosis</th><th>Indicación</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Ceftriaxona IV</td><td>1-2 g c/24h adulto · 50-100 mg/kg/día ped.</td><td>Sepsis por Salmonella · Shigella grave · empírico en sepsis entérica</td></tr>
+      <tr><td class="dn">Ciprofloxacino IV</td><td>400 mg c/12h</td><td>Sepsis por gramnegativos entéricos (adultos)</td></tr>
+      <tr><td class="dn">Metronidazol IV</td><td>500 mg c/8h</td><td>C. difficile grave si no tolera VO · amebiasis invasora</td></tr>
+      <tr><td class="dn">Vancomicina oral</td><td>125-500 mg c/6h VO</td><td>C. difficile grave (VO aunque esté hospitalizado)</td></tr>
+    </tbody>
+  </table></div>
+  <div class="alert a-w" style="margin-top:10px;"><span class="ai">📋</span><div><strong>Monitoreo:</strong> balance hídrico c/4-6 h · electrolitos al ingreso y c/8-12 h · BHC, función renal · signos vitales c/4 h. <strong>Alta:</strong> hidratación adecuada + tolera VO + afebril.</div></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacosDia(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="ind-b"><div class="ind-bh">Indicaciones para enfermería y paciente</div>
+    <div class="ind-bb" id="ind-list"></div>
+  </div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="escen-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="escen-out"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Calendario de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">24-48h (Plan A)</div><div class="fu-x">¿Tolera SRO? ¿Mejora? ¿Signos de alarma? Si empeora: pasar a Plan B o C.</div></div>
+    <div class="fu-r"><div class="fu-t">48-72h (ATB)</div><div class="fu-x">¿Mejoría clínica? ¿Cedió la fiebre? Si no: revisar coprocultivo, cambiar antibiótico.</div></div>
+    <div class="fu-r"><div class="fu-t">5-7 días</div><div class="fu-x">¿Resolución? Si persiste &gt;7 días: buscar parásitos, C. difficile o causa no infecciosa.</div></div>
+    <div class="fu-r"><div class="fu-t">&gt;14 días</div><div class="fu-x">Diarrea crónica: SII posinfeccioso, EII, malabsorción.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Señales de alarma en seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">🌡️</div><div><div class="co-n">Reaparición de fiebre tras mejoría</div><div class="co-d">Salmonella bacteriémica.</div></div></div>
+    <div class="co-i"><div class="co-ico">💧</div><div><div class="co-n">Oliguria / anuria</div><div class="co-d">SHU en STEC (E. coli O157).</div></div></div>
+    <div class="co-i"><div class="co-ico">🩸</div><div><div class="co-n">Sangre abundante que aumenta</div><div class="co-d">Vigilar colitis grave.</div></div></div>
+    <div class="co-i"><div class="co-ico">😖</div><div><div class="co-n">Dolor abdominal que empeora</div><div class="co-d">Megacolon tóxico.</div></div></div>
+    <div class="co-i"><div class="co-ico">🔁</div><div><div class="co-n">Recaída post-antibiótico</div><div class="co-d">C. difficile recurrente.</div></div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Guías y referencias</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2017</span></div><div class="bib-r">Shane AL et al. <strong>2017 IDSA Guidelines for the Diagnosis and Management of Infectious Diarrhea.</strong> Clin Infect Dis 2017;65(12):e45-e80.</div></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2008</span></div><div class="bib-r">OMS. <strong>Tratamiento de la diarrea: Manual clínico para los servicios de salud.</strong> OMS 2008 (vigente).</div></div>
+    <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2024</span></div><div class="bib-r">GPC CENETEC SS-156-2024. <strong>Diagnóstico y Tratamiento de la Diarrea Aguda en niños de 2 meses a 5 años.</strong> México 2024.</div></div>
+    <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2016</span></div><div class="bib-r">Riddle MS, DuPont HL, Connor BA. <strong>ACG Clinical Guideline: Acute Diarrheal Infections in Adults.</strong> Am J Gastroenterol 2016;111:602-622.</div></div>
+    <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">2014</span></div><div class="bib-r">Guarino A et al. <strong>ESPGHAN/ESPID Guidelines for Acute Gastroenteritis in Children in Europe.</strong> JPGN 2014;59(1):132-152.</div></div>
+    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">2019</span></div><div class="bib-r">Szajewska H et al. <strong>Lactobacillus rhamnosus GG for acute gastroenteritis in children.</strong> JPGN 2019.</div></div>
+  </div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ===== Escala de deshidratación (10 signos) ===== */
+var DESH_Q=[
+  {q:'Estado general',o:['Normal (0)','Irritable (1)','Letárgico (2)']},
+  {q:'Ojos',o:['Normales (0)','Hundidos (1)','Muy hundidos (2)']},
+  {q:'Lágrimas',o:['Presentes (0)','Ausentes (1)']},
+  {q:'Boca y lengua',o:['Húmeda (0)','Seca (1)','Muy seca (2)']},
+  {q:'Sed',o:['Normal (0)','Sedienta (1)','No puede beber (2)']},
+  {q:'Pliegue cutáneo',o:['Menor de 2 seg (0)','2-3 seg (1)','Mayor de 3 seg (2)']},
+  {q:'Pulso',o:['Normal (0)','Rápido y débil (1)','Muy débil o ausente (2)']},
+  {q:'Respiración',o:['Normal (0)','Rápida (1)','Muy rápida (2)']},
+  {q:'Fontanela (solo lactante)',o:['Normal / no aplica (0)','Hundida (1)']},
+  {q:'Diuresis',o:['Normal (0)','Reducida (1)','Ausente (2)']}
+];
+function buildDeshItems(){
+  var el=document.getElementById('desh-items'); if(!el) return;
+  var h='';
+  DESH_Q.forEach(function(item,i){
+    h+='<div style="background:#f9fafb;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--ac);">';
+    h+='<div style="font-size:12.5px;font-weight:600;color:#111827;margin-bottom:8px;">'+(i+1)+'. '+item.q+'</div>';
+    h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    item.o.forEach(function(opt){
+      var val=parseInt(opt.match(/\((\d)\)/)[1]);
+      h+='<label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;padding:5px 9px;background:#fff;border:1.5px solid #e2e8f0;border-radius:20px;">'
+        +'<input type="radio" name="desh'+i+'" value="'+val+'" style="accent-color:#c0392b;"> '+opt.replace(/\s*\(\d\)/,'')+'</label>';
+    });
+    h+='</div></div>';
+  });
+  el.innerHTML=h;
+}
+function calcDesh(){
+  var score=0,answered=0;
+  for(var i=0;i<DESH_Q.length;i++){var s=document.querySelector('input[name="desh'+i+'"]:checked');if(s){score+=parseInt(s.value);answered++;}}
+  if(answered<DESH_Q.length){ alert('Responde los 10 signos (usa "no aplica" en fontanela si es adulto).'); return; }
+  var cat,color,bg,plan;
+  if(score<=3){cat='Sin deshidratación';plan='Plan A — manejo en casa con SRO';color='#166534';bg='#dcfce7';}
+  else if(score<=6){cat='Deshidratación leve-moderada';plan='Plan B — SRO supervisada 75 mL/kg en 4 h';color='#92400e';bg='#fef3c7';}
+  else{cat='Deshidratación grave';plan='Plan C — rehidratación IV (Hartmann) inmediata';color='#7b1c1c';bg='#fdeaea';}
+  var el=document.getElementById('desh-result');
+  el.innerHTML='<div style="background:'+bg+';border-left:4px solid '+color+';border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:28px;font-weight:900;color:'+color+';">'+score+' pts</div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+color+';">'+cat+'</div>'
+    +'<div style="font-size:12.5px;color:#374151;margin-top:6px;line-height:1.6;"><strong>'+plan+'</strong></div></div>';
+  el.style.display='block';
+}
+function resetDesh(){
+  var c=document.getElementById('desh-items'); if(c){var rs=c.querySelectorAll('input');for(var i=0;i<rs.length;i++)rs[i].checked=false;}
+  var el=document.getElementById('desh-result'); if(el){el.style.display='none';el.innerHTML='';}
+}
+
+/* ===== Calculadora pediátrica de SRO por peso ===== */
+function sroCalcHTML(idp){
+  return '<div class="calc-w">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:10px;">Calculadora de rehidratación por peso</div>'
+    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">'
+    +'<span style="font-size:12px;color:#374151;">Peso:</span>'
+    +'<input id="'+idp+'-peso" type="number" min="2" max="40" placeholder="kg" class="calc-in">'
+    +'<span style="font-size:12px;color:#6b7280;">kg</span>'
+    +'<button onclick="calcSRO(\''+idp+'\')" style="padding:7px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;">Calcular</button>'
+    +'</div><div id="'+idp+'-result" style="display:none;"></div></div>';
+}
+function calcSRO(idp){
+  var kg=parseFloat(document.getElementById(idp+'-peso').value);
+  var out=document.getElementById(idp+'-result');
+  if(!kg||kg<2||kg>40){ out.style.display='block'; out.innerHTML='<div style="color:#c0392b;font-size:12px;">Ingresa un peso entre 2 y 40 kg.</div>'; return; }
+  function R(n){return Math.round(n);}
+  var aEvac=R(10*kg), aMant=R(100*kg);
+  var b=R(75*kg), bH=R(75*kg/4);
+  var c=R(100*kg), c30=R(30*kg), cResto=R(70*kg);
+  var race=Math.round(1.5*kg*10)/10, raceSob=Math.round(race/30*10)/10;
+  var onda=Math.min(Math.round(0.15*kg*10)/10,4);
+  function row(t,v){return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">'+t+'</span><span style="font-weight:700;color:#c0392b;text-align:right;max-width:62%;">'+v+'</span></div>';}
+  var h='<div style="background:#fff5ef;border-radius:var(--rs);padding:10px 12px;">';
+  h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:6px;">Dosis para '+kg+' kg</div>';
+  h+='<div style="font-size:11px;font-weight:700;color:#166534;margin:6px 0 2px;">PLAN A (sin deshidratación)</div>';
+  h+=row('SRO por evacuación (10 mL/kg)',aEvac+' mL');
+  h+=row('SRO mantenimiento (100 mL/kg/día)',aMant+' mL/día');
+  h+='<div style="font-size:11px;font-weight:700;color:#92400e;margin:8px 0 2px;">PLAN B (leve-moderada)</div>';
+  h+=row('SRO en 4 h (75 mL/kg)',b+' mL');
+  h+=row('Por hora',bH+' mL/h');
+  h+='<div style="font-size:11px;font-weight:700;color:#7b1c1c;margin:8px 0 2px;">PLAN C (grave — IV Hartmann)</div>';
+  h+=row('Total (100 mL/kg)',c+' mL');
+  h+=row('Primeros 30 min (30 mL/kg)',c30+' mL');
+  h+=row('Resto en 2.5 h (70 mL/kg)',cResto+' mL');
+  h+='<div style="font-size:11px;font-weight:700;color:#1a3a5c;margin:8px 0 2px;">COADYUVANTES</div>';
+  h+=row('Zinc (≤5 años)','<6m: 10 mg/día · ≥6m: 20 mg/día × 14 d');
+  h+=row('Racecadotrilo (1.5 mg/kg c/8h)',race+' mg ≈ '+raceSob+' sobre(s) de 30 mg');
+  h+=row('Ondansetrón (0.15 mg/kg, máx 4)',onda+' mg/dosis');
+  h+='</div>';
+  out.style.display='block'; out.innerHTML=h;
+}
+
+/* ===== Fichas de fármaco expandibles (chips de población) ===== */
+function diaFpToggle(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+function buildDiaPopHTML(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='dpop-'+i+'-'+Math.random().toString(36).substr(2,4);
+    var col=f.pri?color:'#374151';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="diaFpToggle(\''+fid+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-arr" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.da) h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';">Dosis adulto</div><div style="font-size:14px;font-weight:800;color:'+col+';margin-bottom:4px;">'+f.da+'</div>';
+    if(f.dp) h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';">Dosis pediátrica</div><div style="font-size:13.5px;font-weight:700;color:'+col+';">'+f.dp+'</div>';
+    h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv) h+=poprow('Vía/Intervalo',f.iv,'#1a3a5c');
+    if(f.pres) h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda) h+=poprow('FDA / Lactancia',f.fda,'#7a4a00');
+    if(f.ci) h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea) h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota) h+='<div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:58%;">'+v+'</span></div>';}
+
+var DIA_POP={
+  planA:function(){
+    return '<div class="alert a-g"><span class="ai">💧</span><div><div class="at">Objetivo: prevenir la deshidratación y mantener la hidratación</div>La SRO es el pilar. Continuar la alimentación normal — NO ayuno.</div></div>'
+    +buildDiaPopHTML('#0a5c45',[
+      {n:'SRO — Sales de Rehidratación Oral',pri:true,linea:'⭐ Pilar del tratamiento',
+       da:'200-400 mL después de cada evacuación líquida',dp:'10 mL/kg después de cada evacuación',
+       iv:'VO · a demanda tras cada evacuación',pres:'Pedialyte · Electrolit · Suero Oral · Viadys · IMSS (sobres)',
+       fda:'Segura · compatible con lactancia',ci:'Ninguna relevante',
+       nota:'Fórmula OMS de osmolaridad reducida: 75 mEq/L Na · 75 Cl · 20 K · 75 mmol/L glucosa. Casera (si no hay comercial): 1 L de agua + 6 cdtas de azúcar + 1/2 cdta de sal.'},
+      {n:'Zinc (solo pediátrico ≤5 años)',pri:true,linea:'OMS — reduce duración 25% (nivel A)',
+       da:'No aplica en adultos',dp:'<6 meses: 10 mg/día · ≥6 meses: 20 mg/día VO × 10-14 días',
+       iv:'VO c/24h',pres:'Sulfato de zinc tabs 20 mg · jarabe · genérico',
+       fda:'Categoría A · seguro',ci:'—',
+       nota:'Reduce la duración y la severidad y previene episodios en los 2-3 meses siguientes (OMS, nivel A).'},
+      {n:'Ondansetrón (si el vómito impide hidratar)',pri:false,linea:'Solo cuando el vómito impide la hidratación oral',
+       da:'4-8 mg VO/IV/IM c/8h',dp:'0.15 mg/kg dosis única (máx 4 mg) VO o IV lento',
+       iv:'VO · IV · IM',pres:'Tabs 4/8 mg · ODT orodispersable · ampolleta 4 mg/2 mL (IMSS) · solución oral difícil de conseguir en MX',
+       fda:'Categoría B · contraindicado en lactancia (ficha técnica)',ci:'QT prolongado',ea:'Cefalea, estreñimiento, QT',
+       nota:'En niños: usar ODT o triturar la tableta de 4 mg en agua/jugo (la suspensión es difícil de conseguir en México). Alternativas: metoclopramida 0.1 mg/kg (riesgo extrapiramidal), dimenhidrinato 1-1.5 mg/kg (sedante), domperidona 0.25 mg/kg.'},
+      {n:'Racecadotrilo (antisecretor)',pri:false,linea:'Inhibidor de encefalinasa — sin efecto sobre la motilidad',
+       da:'100 mg c/8h hasta 2 deposiciones normales (máx 48 h)',dp:'>3 meses: 1.5 mg/kg c/8h (máx 48-72 h)',
+       iv:'VO c/8h',pres:'Hidrasec granulado 30 mg/sobre (pediátrico) · cáps 100 mg (adulto)',
+       fda:'Contraindicado en embarazo · evitar en lactancia',ci:'Diarrea con sangre · diarrea por antibióticos · alergia a sacarosa',
+       nota:'Reduce la secreción de agua y electrolitos SIN retener las heces (a diferencia de la loperamida), por eso es más seguro en niños. Vaciar el sobre directo en la boca con agua o alimento. ESPGHAN: opción cuando la SRO sola no basta.'},
+      {n:'Loperamida (solo adultos)',pri:false,linea:'Solo diarrea acuosa sin fiebre ni sangre',
+       da:'4 mg inicial, luego 2 mg tras cada evacuación · máx 16 mg/día',dp:'No usar en <2 años',
+       iv:'VO',pres:'Caps/tabs 2 mg · solución 1 mg/5 mL · Imodium · genérico · IMSS',
+       fda:'Categoría C · precaución',ci:'CONTRAINDICADA en disentería (sangre/fiebre) y en <2 años',ea:'Estreñimiento, íleo',
+       nota:'Retiene el contenido intestinal: nunca en diarrea invasora ni en C. difficile (retiene toxinas).'},
+      {n:'Probióticos',pri:false,linea:'Evidencia moderada — reducen ~1 día',
+       da:'Según preparado',dp:'Lactobacillus rhamnosus GG o Saccharomyces boulardii',
+       iv:'VO',pres:'Múltiples marcas comerciales',fda:'Seguros',ci:'Precaución en inmunocomprometido grave / catéter central',
+       nota:'Metaanálisis Cochrane: reducen la duración alrededor de 1 día, sobre todo en gastroenteritis viral.'}
+    ]);
+  },
+  planB:function(){
+    return '<div class="alert a-w"><span class="ai">💧</span><div><div class="at">Deshidratación leve-moderada (5-10%) — rehidratar en 4 horas</div>SRO supervisada en consulta/urgencias; reevaluar la hidratación cada hora.</div></div>'
+    +buildDiaPopHTML('#7a4a00',[
+      {n:'SRO supervisada',pri:true,linea:'⭐ Rehidratación del déficit en 4 h',
+       da:'50-100 mL/kg en 4 h (según déficit)',dp:'75 mL/kg en 4 h',
+       iv:'VO en sorbos pequeños frecuentes (5-10 mL c/2-5 min)',pres:'SRO OMS osmolaridad reducida',
+       fda:'Segura',ci:'—',
+       nota:'Si hay vómito: dar con cuchara o jeringa pequeña, esperar 10 min y retomar. Reevaluar cada hora. Al lograr hidratación → pasar a Plan A + alta con instrucciones.'},
+      {n:'Sonda nasogástrica (si fracasa la VO)',pri:false,linea:'Misma cantidad por SNG si no tolera VO',
+       da:'75 mL/kg en 4 h por SNG',dp:'Igual',iv:'SNG',pres:'—',fda:'—',ci:'Íleo, distensión, alteración del estado de alerta',
+       nota:'Alternativa antes de pasar a IV en deshidratación leve-moderada que no tolera la vía oral.'},
+      {n:'Ondansetrón',pri:false,linea:'Para controlar el vómito y permitir la hidratación oral',
+       da:'4-8 mg VO/IV',dp:'0.15 mg/kg (máx 4 mg)',iv:'VO/IV/IM',pres:'Tabs · ODT · ampolleta 4 mg/2 mL',
+       fda:'Categoría B',ci:'QT prolongado',
+       nota:'Una dosis suele bastar para frenar el vómito y permitir la SRO. Si persiste el vómito o fracasa la SRO/SNG → Plan C IV.'}
+    ]);
+  },
+  disenteria:function(){
+    return '<div class="alert a-r"><span class="ai">🦠</span><div><div class="at">Cuándo dar antibiótico (IDSA 2017)</div>Sangre/moco + fiebre &gt;38.5° · síntomas graves o &gt;7 días · inmunocomprometido · viajero. <strong>NO</strong> dar antibiótico en STEC O157:H7 (riesgo de SHU).</div></div>'
+    +buildDiaPopHTML('#7b1c1c',[
+      {n:'Ciprofloxacino (adultos)',pri:true,linea:'Primera línea en el adulto',
+       da:'500 mg c/12h × 3-5 días · o 750 mg dosis única',dp:'Evitar en <18 años (salvo excepciones)',
+       iv:'VO',pres:'Tabs 250/500 mg · Cipro · genérico · IMSS',
+       fda:'Categoría C · contraindicado en embarazo y <18 años',ci:'Embarazo · niños · QT largo · tendinopatía',
+       nota:'Cubre Shigella, Salmonella invasora y ETEC. Vigilar resistencia creciente de Campylobacter a fluoroquinolonas.'},
+      {n:'Azitromicina',pri:true,linea:'⭐ 1ª línea en embarazo, niños, Campylobacter y zonas con resistencia a FQ',
+       da:'500 mg c/24h × 3 días · o 1 g dosis única',dp:'10 mg/kg/día × 3 días (máx 500 mg/día)',
+       iv:'VO',pres:'Tabs 500 mg · caps 250 mg · susp 200 mg/5 mL · Zithromax · genérico · IMSS',
+       fda:'Categoría B · compatible con lactancia',ci:'QT prolongado',
+       nota:'Preferida en Campylobacter (alta resistencia a FQ), embarazo, niños y viajeros de zonas con FQ resistente.'},
+      {n:'Metronidazol (amebiasis)',pri:false,linea:'Entamoeba histolytica',
+       da:'750 mg c/8h × 5-10 días',dp:'35-50 mg/kg/día en 3 dosis × 5-10 días',
+       iv:'VO',pres:'Tabs 250/500 mg · susp 250 mg/5 mL · Flagyl · genérico · IMSS',
+       fda:'Categoría B · evitar 1er trimestre · evitar alcohol',ci:'1er trimestre · alcohol (efecto disulfiram)',
+       nota:'Seguir con un amebicida luminal (paromomicina o tinidazol) para eliminar los quistes y evitar recaídas.'}
+    ]);
+  },
+  cdiff:function(){
+    return '<div class="alert a-w"><span class="ai">🧫</span><div><div class="at">Sospecha de C. difficile</div>Diarrea tras antibióticos (clindamicina, fluoroquinolonas, cefalosporinas), hospitalización reciente, heces acuosas malolientes + cólico. Confirmar con toxina en heces. <strong>Suspender el antibiótico causante</strong> si es posible. <strong>NO loperamida</strong> (retiene toxinas).</div></div>'
+    +buildDiaPopHTML('#0c3b6e',[
+      {n:'Vancomicina oral',pri:true,linea:'⭐ Preferida (episodio inicial y grave/recurrente)',
+       da:'125 mg c/6h VO × 10 días (grave: hasta 500 mg c/6h)',dp:'10 mg/kg c/6h VO (máx 125 mg/dosis)',
+       iv:'Solo VO (la IV NO sirve en C. difficile intestinal)',pres:'Caps 125/250 mg · Vancocin',
+       fda:'Mínima absorción · segura en embarazo',ci:'—',
+       nota:'Guías actuales (IDSA/SHEA) prefieren vancomicina o fidaxomicina sobre el metronidazol incluso en el episodio inicial.'},
+      {n:'Metronidazol VO',pri:false,linea:'Alternativa si no hay vancomicina (leve-moderado)',
+       da:'500 mg c/8h × 10-14 días',dp:'7.5 mg/kg c/8h',
+       iv:'VO (IV solo si no tolera VO, como adyuvante en grave)',pres:'Tabs 500 mg · Flagyl · genérico · IMSS',
+       fda:'Categoría B · evitar alcohol',ci:'1er trimestre · alcohol',
+       nota:'Quedó como alternativa cuando no se dispone de vancomicina/fidaxomicina. Apoyar con SRO; valorar probióticos.'}
+    ]);
+  },
+  pediatrico:function(){
+    return '<div class="alert a-i"><span class="ai">👶</span><div><div class="at">Niño con diarrea aguda</div>SRO + Zinc son la base. Continuar lactancia materna, NO ayuno, reintroducir dieta normal pronto.</div></div>'
+    +sroCalcHTML('sro-ped')
+    +buildDiaPopHTML('#0a5c45',[
+      {n:'Antibióticos pediátricos (solo si están indicados)',pri:true,linea:'Disentería / sepsis',
+       da:'—',dp:'Azitromicina 10 mg/kg/día × 3 d (1ª línea) · Ceftriaxona 50-100 mg/kg/día IV (grave/sepsis) · TMP-SMX solo si sensibilidad confirmada',
+       iv:'VO / IV',pres:'Azitromicina susp 200 mg/5 mL · ceftriaxona ámpula',
+       fda:'Azitromicina B',ci:'Loperamida en <2 años · ciprofloxacino en <18 años (salvo excepciones)',
+       nota:'La mayoría de las diarreas pediátricas son virales y NO requieren antibiótico — solo SRO + zinc.'},
+      {n:'Zinc',pri:true,linea:'OMS — todo niño ≤5 años',
+       da:'—',dp:'<6 meses: 10 mg/día · ≥6 meses: 20 mg/día VO × 14 días',
+       iv:'VO c/24h',pres:'Sulfato de zinc tabs 20 mg · jarabe',fda:'Categoría A',ci:'—',
+       nota:'Reduce duración y severidad y previene recurrencias. Recomendación universal en países en desarrollo.'}
+    ]);
+  },
+  embarazo:function(){
+    return '<div class="alert a-i"><span class="ai">🤰</span><div><div class="at">Diarrea en el embarazo</div>La SRO es la primera línea siempre. Preferir azitromicina sobre ciprofloxacino si se requiere antibiótico.</div></div>'
+    +'<div class="tw"><table class="t"><thead><tr><th>Fármaco</th><th>Cat FDA</th><th>Seguridad</th><th>Nota</th></tr></thead><tbody>'
+    +'<tr><td class="dn">SRO</td><td>No aplica</td><td>✅ Segura</td><td>Primera línea siempre</td></tr>'
+    +'<tr><td class="dn">Ondansetrón</td><td>B</td><td>✅ Compatible (2º-3º trim)</td><td>Precaución en 1er trimestre (datos limitados)</td></tr>'
+    +'<tr><td class="dn">Azitromicina</td><td>B</td><td>✅ 1ª línea antibiótica</td><td>Más segura que ciprofloxacino</td></tr>'
+    +'<tr><td class="dn">Metronidazol</td><td>B</td><td>✅ 2º-3º trimestre</td><td>⚠️ Evitar 1er trimestre</td></tr>'
+    +'<tr><td class="dn">Ciprofloxacino</td><td>C</td><td>⚠️ Evitar</td><td>Riesgo articular fetal</td></tr>'
+    +'<tr><td class="dn">Loperamida</td><td>C</td><td>⚠️ Precaución</td><td>Solo si es estrictamente necesario</td></tr>'
+    +'<tr><td class="dn">Zinc</td><td>A</td><td>✅ Seguro</td><td>Recomendado</td></tr>'
+    +'</tbody></table></div>';
+  }
+};
+function showDiaPop(id,btn){
+  var ch=document.querySelectorAll('#dia-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var out=document.getElementById('dia-pop-out');
+  if(out&&DIA_POP[id])out.innerHTML=DIA_POP[id]();
+}
+
+/* ===== Algoritmo interactivo ===== */
+var DIA_ALGO={
+  start:{p:'¿Hay sangre y/o moco en las heces?',o:[
+    {t:'SÍ — disentería',n:'fiebre'},
+    {t:'NO — diarrea acuosa',n:'vomito'}
+  ]},
+  fiebre:{p:'¿Hay fiebre mayor de 38.5 °C?',o:[
+    {t:'SÍ — bacteriana invasora',n:'rInvasora'},
+    {t:'NO — valorar otras causas',n:'rOtras'}
+  ]},
+  vomito:{p:'¿Vómito prominente + inicio brusco?',o:[
+    {t:'SÍ — probable viral',n:'rViral'},
+    {t:'NO — ¿duración mayor de 7 días?',n:'duracion'}
+  ]},
+  duracion:{p:'¿La diarrea dura más de 7 días?',o:[
+    {t:'SÍ — probable parasitaria',n:'rParasito'},
+    {t:'NO — acuosa autolimitada',n:'rAcuosa'}
+  ]},
+  rInvasora:{r:1,titulo:'Diarrea bacteriana invasora (disentería)',color:'#7b1c1c',
+    dx:'Sangre/moco + fiebre >38.5° → Shigella, Salmonella, Campylobacter, ECEI.',
+    atb:'ANTIBIÓTICO INDICADO: Ciprofloxacino 500 mg c/12h ×3-5 d (adulto) o Azitromicina 500 mg/día ×3 d (embarazo, niños, Campylobacter). NO antibiótico si se sospecha STEC O157:H7.',
+    plan:'Evaluar deshidratación → Plan A / B / C.',
+    alarma:'Regresar si: sangre que aumenta, fiebre persistente, oliguria (SHU), letargia.'},
+  rOtras:{r:1,titulo:'Disentería sin fiebre alta — valorar',color:'#7a4a00',
+    dx:'Sangre sin fiebre alta: considerar amebiasis, EII, STEC, fisura.',
+    atb:'No iniciar antibiótico empírico de inmediato: estudiar (coprológico, leucocitos en heces, toxina si aplica). Si ameba confirmada → metronidazol.',
+    plan:'Hidratar (Plan A/B según estado). NO loperamida.',
+    alarma:'Regresar si aparece fiebre, sangre abundante o deterioro.'},
+  rViral:{r:1,titulo:'Gastroenteritis viral probable',color:'#0a5c45',
+    dx:'Vómito prominente, inicio brusco, sin sangre, febrícula → norovirus/rotavirus.',
+    atb:'SIN antibiótico. SRO + zinc (pediátrico). Ondansetrón si el vómito impide hidratar.',
+    plan:'Plan A en casa; Plan B si deshidratación leve-moderada.',
+    alarma:'Regresar si no tolera líquidos, signos de deshidratación, sangre o fiebre alta.'},
+  rParasito:{r:1,titulo:'Diarrea parasitaria probable',color:'#0c3b6e',
+    dx:'Inicio gradual, >7 días, flatulencia, sin fiebre → Giardia, Entamoeba, Cryptosporidium.',
+    atb:'Metronidazol o tinidazol (según parásito). Confirmar con coproparasitoscópico seriado.',
+    plan:'SRO de soporte. Tratar la causa.',
+    alarma:'Regresar si hay sangre, pérdida de peso marcada o no responde al tratamiento.'},
+  rAcuosa:{r:1,titulo:'Diarrea acuosa aguda autolimitada',color:'#0f7a5a',
+    dx:'Acuosa, sin sangre, sin fiebre alta, corta duración → viral o bacteriana no invasora.',
+    atb:'SIN antibiótico de rutina. SRO + alimentación. Racecadotrilo opcional; loperamida solo en adultos.',
+    plan:'Plan A; reevaluar hidratación.',
+    alarma:'Regresar si dura >7 días, aparece sangre/fiebre o signos de deshidratación.'}
+};
+var diaHist=[];
+function renderDiaStep(sid){
+  var s=DIA_ALGO[sid];if(!s)return;
+  if(s.r){renderDiaResult(s);return;}
+  var h='<div style="background:#fff5ef;border-left:4px solid var(--am);border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:13px;font-weight:700;color:#7a2c00;margin-bottom:10px;">'+s.p+'</div>';
+  s.o.forEach(function(o,i){
+    h+='<button onclick="diaSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;background:#fff;border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;">'+o.t+'</button>';
+  });
+  if(diaHist.length)h+='<button onclick="diaBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';
+  h+='</div>';
+  document.getElementById('dia-step').innerHTML=h;
+}
+function diaSel(sid,i){diaHist.push(sid);renderDiaStep(DIA_ALGO[sid].o[i].n);}
+function diaBack(){if(diaHist.length)renderDiaStep(diaHist.pop());}
+function resetDia(){diaHist=[];renderDiaStep('start');}
+function renderDiaResult(s){
+  var h='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.titulo+'</div></div>';
+  h+='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:3px;">Diagnóstico</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+s.dx+'</div></div>';
+  h+='<div style="background:#fdeaea;border-left:3px solid #c0392b;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:3px;">Antibiótico</div><div style="font-size:12.5px;color:#7b1c1c;line-height:1.6;">'+s.atb+'</div></div>';
+  h+='<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">Rehidratación</div><div style="font-size:12.5px;color:#064e3b;line-height:1.6;">'+s.plan+'</div></div>';
+  h+='<div style="background:#fff8e1;border-left:3px solid #d97706;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7a4a00;margin-bottom:3px;">Signos de alarma para regresar</div><div style="font-size:12px;color:#7a4a00;line-height:1.6;">'+s.alarma+'</div></div>';
+  h+='<button onclick="resetDia()" style="margin-top:6px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>';
+  document.getElementById('dia-step').innerHTML=h;
+}
+
+/* ===== Fármacos (buscador) ===== */
+var FARMACOS_DIA=[
+  {familia:'Rehidratación',color:'#0a5c45',farmacos:[
+    {n:'SRO (Sales de Rehidratación Oral)',ini:'Pilar del tratamiento',obj:'Adulto 200-400 mL/evacuación · niño 10 mL/kg/evacuación',iv:'VO a demanda',pr:'Pedialyte · Electrolit · Suero Oral · Viadys · IMSS',ci:'Ninguna relevante',ea:'Hipernatremia si se prepara mal',nota:'Fórmula OMS: 75 Na · 75 Cl · 20 K · 75 glucosa. Casera: 1 L agua + 6 cdtas azúcar + 1/2 cdta sal.'},
+    {n:'Zinc (pediátrico ≤5 años)',ini:'<6m 10 mg/día · ≥6m 20 mg/día',obj:'× 10-14 días',iv:'VO c/24h',pr:'Sulfato de zinc tabs 20 mg · jarabe',ci:'—',ea:'Náusea ocasional',nota:'OMS nivel A: reduce duración 25% y previene recurrencias.'}
+  ]},
+  {familia:'Antisecretores / antidiarreicos',color:'#7a4a00',farmacos:[
+    {n:'Racecadotrilo (Hidrasec)',ini:'Adulto 100 mg c/8h · niño 1.5 mg/kg c/8h',obj:'Hasta 2 deposiciones normales (máx 48 h)',iv:'VO c/8h',pr:'Granulado 30 mg/sobre · cáps 100 mg',ci:'Sangre en heces · diarrea por antibióticos · alergia a sacarosa',ea:'Cefalea, somnolencia leve',nota:'Antisecretor sin efecto sobre la motilidad — más seguro que loperamida en niños.'},
+    {n:'Loperamida',ini:'4 mg inicial, 2 mg/evacuación',obj:'Máx 16 mg/día',iv:'VO',pr:'Caps/tabs 2 mg · sol 1 mg/5 mL · Imodium · IMSS',ci:'Disentería (sangre/fiebre) · <2 años · C. difficile',ea:'Estreñimiento, íleo',nota:'Solo adultos con diarrea acuosa sin fiebre/sangre. Retiene el contenido intestinal.'},
+    {n:'Subsalicilato de bismuto',ini:'524 mg c/30-60 min PRN',obj:'Máx 8 dosis/día',iv:'VO',pr:'Pepto-Bismol · genérico',ci:'Alergia a salicilatos · niños con cuadro viral (Reye)',ea:'Lengua/heces negras (benigno)',nota:'Útil en diarrea del viajero leve. Evitar en niños por riesgo de Reye.'}
+  ]},
+  {familia:'Antieméticos',color:'#0c3b6e',farmacos:[
+    {n:'Ondansetrón',ini:'Adulto 4-8 mg · niño 0.15 mg/kg',obj:'c/8h (máx 4 mg/dosis en niño)',iv:'VO/ODT/IV/IM',pr:'Tabs 4/8 mg · ODT · ampolleta 4 mg/2 mL (IMSS) · solución oral difícil en MX',ci:'QT prolongado',ea:'Cefalea, estreñimiento, QT',nota:'En niños: ODT o triturar tab de 4 mg (la suspensión es difícil de conseguir en México).'},
+    {n:'Metoclopramida',ini:'Adulto 10 mg · niño 0.1 mg/kg',obj:'c/8h',iv:'VO/IM/IV',pr:'Tabs 10 mg · sol · ampolleta · IMSS',ci:'Obstrucción · epilepsia · <1 año',ea:'Extrapiramidalismo',nota:'Alternativa al ondansetrón; vigilar reacciones distónicas, sobre todo en jóvenes.'},
+    {n:'Dimenhidrinato (Dramamine)',ini:'Adulto 50 mg · niño 1-1.5 mg/kg',obj:'c/6-8h',iv:'VO/IM',pr:'Tabs 50 mg · sol · ampolleta',ci:'Glaucoma · retención urinaria',ea:'Sedación',nota:'Más sedante; alternativa cuando no hay ondansetrón.'},
+    {n:'Domperidona',ini:'Adulto 10 mg · niño 0.25 mg/kg',obj:'c/8h',iv:'VO',pr:'Tabs 10 mg · susp',ci:'QT prolongado · cardiopatía',ea:'QT, galactorrea',nota:'Alternativa; menos efectos centrales que la metoclopramida.'}
+  ]},
+  {familia:'Antibióticos',color:'#7b1c1c',farmacos:[
+    {n:'Ciprofloxacino',ini:'500 mg c/12h × 3-5 d · o 750 mg dosis única',obj:'Bacteriana invasora (adulto)',iv:'VO/IV',pr:'Tabs 250/500 mg · Cipro · IMSS',ci:'Embarazo · <18 años · QT largo',ea:'Tendinopatía, QT, GI',nota:'Cubre Shigella, Salmonella invasora, ETEC. Resistencia creciente de Campylobacter.'},
+    {n:'Azitromicina',ini:'500 mg c/24h × 3 d · niño 10 mg/kg/día × 3 d',obj:'1ª línea general · Campylobacter · embarazo · niños',iv:'VO',pr:'Tabs 500 mg · susp 200 mg/5 mL · IMSS',ci:'QT prolongado',ea:'GI, QT',nota:'Preferida en zonas con FQ resistente y en Campylobacter.'},
+    {n:'Metronidazol',ini:'Ameba 750 mg c/8h × 5-10 d · C. difficile 500 mg c/8h',obj:'Amebiasis · C. difficile leve',iv:'VO/IV',pr:'Tabs 250/500 mg · susp · Flagyl · IMSS',ci:'1er trimestre · alcohol',ea:'Sabor metálico, náusea',nota:'En ameba, seguir con amebicida luminal. Evitar alcohol (efecto disulfiram).'},
+    {n:'Vancomicina oral',ini:'125-500 mg c/6h × 10 d',obj:'C. difficile grave',iv:'Solo VO',pr:'Caps 125/250 mg · Vancocin',ci:'—',ea:'Náusea',nota:'La IV NO sirve en C. difficile intestinal. Preferida en guías actuales.'},
+    {n:'Ceftriaxona IV',ini:'1-2 g c/24h · niño 50-100 mg/kg/día',obj:'Sepsis entérica · Salmonella grave',iv:'IV/IM',pr:'Ámpula 1 g · IMSS',ci:'Alergia a betalactámicos · neonato con calcio IV',ea:'Diarrea, exantema',nota:'Empírico en sepsis de origen entérico y en formas invasoras graves.'},
+    {n:'TMP-SMX',ini:'160/800 mg c/12h × 3-5 d',obj:'Shigella sensible (alternativa)',iv:'VO',pr:'Tabs 160/800 · susp · Bactrim · IMSS',ci:'Embarazo a término · alergia a sulfas · G6PD',ea:'Exantema, citopenias',nota:'Solo si se confirma sensibilidad (resistencia frecuente).'}
+  ]},
+  {familia:'Antiparasitarios',color:'#4a1d8a',farmacos:[
+    {n:'Tinidazol',ini:'Giardia 2 g dosis única · ameba 2 g/día × 3-5 d',obj:'Giardia · amebiasis',iv:'VO',pr:'Tabs 500 mg/1 g · Fasigyn',ci:'1er trimestre · alcohol',ea:'Sabor metálico, náusea',nota:'Más cómodo que el metronidazol (dosis única o ciclo corto). Evitar alcohol.'}
+  ]}
+];
+function farmDiaTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display!=='none'&&el.style.display!=='';
+  el.style.display=open?'none':'block';
+  if(arr)arr.innerHTML=open?'&#9658; ver':'&#9660; ocultar';
+}
+function filtrarFarmacosDia(q){
+  var list=document.getElementById('farm-list');if(!list)return;
+  var term=(q||'').toLowerCase().trim(),h='',total=0;
+  FARMACOS_DIA.forEach(function(fam,fi){
+    var famH='';
+    fam.farmacos.forEach(function(f,fki){
+      if(!term||(f.n+' '+f.pr+' '+f.nota).toLowerCase().indexOf(term)!==-1){
+        var fkId='fdia-'+fi+'-'+fki;
+        famH+='<div style="border-bottom:1px solid #f3f4f6;">';
+        famH+='<div onclick="farmDiaTog(\''+fkId+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid '+fam.color+';">';
+        famH+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+        famH+='<span id="'+fkId+'-arr" style="font-size:11px;color:#6b7280;">&#9658; ver</span></div>';
+        famH+='<div id="'+fkId+'" style="display:none;padding:10px 12px;background:#fff;">';
+        [['Inicio/Dosis',f.ini,'#374151'],['Objetivo',f.obj,'#c0392b'],['Vía/Intervalo',f.iv,'#1a3a5c'],['Presentaciones MX',f.pr,'#374151'],['Contraindicaciones',f.ci,'#c0392b'],['Efectos adversos',f.ea,'#374151']].forEach(function(r){
+          famH+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+r[0]+'</span><span style="font-weight:600;color:'+r[2]+';text-align:right;max-width:58%;">'+r[1]+'</span></div>';
+        });
+        famH+='<div style="font-size:11px;color:#374151;background:#f0f9ff;border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">'+f.nota+'</div>';
+        famH+='</div></div>';total++;
+      }
+    });
+    if(famH){
+      h+='<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+      h+='<div style="background:'+fam.color+';color:#fff;padding:8px 12px;font-size:13px;font-weight:700;">'+fam.familia+'</div>';
+      h+=famH+'</div>';
+    }
+  });
+  list.innerHTML=h||'<div style="text-align:center;padding:20px;color:#9ca3af;">Sin resultados</div>';
+  var cnt=document.getElementById('farm-count');if(cnt)cnt.textContent=total+' fármaco(s)';
+}
+
+/* ===== Indicaciones (enfermería / paciente) ===== */
+var IND_DIA=[
+  {n:'SRO',enf:'Preparar el sobre en el volumen de agua indicado (no agregar azúcar ni hervir tras disolver). Ofrecer en sorbos pequeños frecuentes; registrar evacuaciones y diuresis.',pac:'Tome o dé a su hijo un trago de suero después de cada evacuación. Si vomita, espere 10 minutos y siga con sorbos pequeños. No suspenda la comida.'},
+  {n:'Zinc (niño)',enf:'Administrar la dosis según edad una vez al día durante 14 días, aunque la diarrea ya haya cedido.',pac:'Dé el zinc todos los días durante 14 días completos, aunque la diarrea ya se haya quitado: ayuda a que no regrese.'},
+  {n:'Ondansetrón',enf:'En niños usar tableta orodispersable (ODT) o triturar la tableta de 4 mg en un poco de agua/jugo. Vigilar QT en pacientes de riesgo.',pac:'Si hay mucho vómito, esta tableta lo controla para poder tomar el suero. Déjela disolver en la boca.'},
+  {n:'Azitromicina',enf:'Una vez al día por 3 días. Reconstituir la suspensión y agitar antes de cada toma.',pac:'Tómela una vez al día, a la misma hora, los 3 días completos aunque se sienta mejor.'},
+  {n:'Vancomicina oral (C. difficile)',enf:'Administrar por vía oral cada 6 horas (la presentación IV no sirve para el intestino). Aislamiento de contacto.',pac:'Tómela por la boca cada 6 horas el tratamiento completo. Lávese muy bien las manos con agua y jabón.'}
+];
+function buildIndDia(){
+  var el=document.getElementById('ind-list');if(!el)return;
+  var h='';
+  IND_DIA.forEach(function(it){
+    h+='<div class="ind-o"><div class="ind-ot">'+it.n+'</div>';
+    h+='<div class="ind-oi"><strong>Enfermería:</strong> '+it.enf+'</div>';
+    h+='<div class="ind-oi"><strong>Paciente:</strong> '+it.pac+'</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+/* ===== Escenarios ===== */
+var ESCEN_DIA={
+  noro:{t:'Norovirus / Rotavirus',col:'#0a5c45',
+    clin:'Vómito prominente de inicio brusco, diarrea acuosa, febrícula, 1-3 días. Brotes (cruceros, guarderías).',
+    pat:'Norovirus (todas las edades) · Rotavirus (lactantes no vacunados).',
+    tx:'SRO + zinc (niño). Ondansetrón si el vómito impide hidratar. SIN antibiótico.',
+    hosp:'Deshidratación grave o vómito incoercible.',compl:'Deshidratación.'},
+  shigella:{t:'Shigella (disentería)',col:'#7b1c1c',
+    clin:'Diarrea con sangre y moco, fiebre alta, tenesmo, dolor cólico. Dosis infectante baja (contagio fácil).',
+    pat:'Shigella spp.',
+    tx:'ANTIBIÓTICO siempre: Azitromicina 500 mg/día ×3 d o Ciprofloxacino 500 mg c/12h ×3 d. SRO. NO loperamida.',
+    hosp:'Sepsis, deshidratación grave, convulsiones (niños).',compl:'SHU, convulsiones, megacolon.'},
+  salmonella:{t:'Salmonella no tifoidea',col:'#7a4a00',
+    clin:'Toxiinfección alimentaria (huevo, pollo): diarrea, fiebre, cólico 6-72 h tras el alimento.',
+    pat:'Salmonella enterica no tifoidea.',
+    tx:'Casos no complicados: SOLO SRO (el antibiótico prolonga el estado portador). Antibiótico solo si: <3 meses, >50 años con aterosclerosis, inmunocomprometido, prótesis o sepsis → ceftriaxona/cipro/azitro.',
+    hosp:'Bacteriemia, sepsis, extremos de edad.',compl:'Bacteriemia, focos a distancia.'},
+  campylo:{t:'Campylobacter',col:'#0c3b6e',
+    clin:'Pollo mal cocido / viajero: pródromo febril, dolor abdominal intenso (simula apendicitis), diarrea ± sangre.',
+    pat:'Campylobacter jejuni.',
+    tx:'Si requiere antibiótico: AZITROMICINA (alta resistencia a fluoroquinolonas). SRO.',
+    hosp:'Deshidratación, sepsis.',compl:'Guillain-Barré (postinfeccioso), artritis reactiva.'},
+  cdiff:{t:'C. difficile (post-antibiótico)',col:'#4a1d8a',
+    clin:'Diarrea acuosa maloliente tras antibióticos u hospitalización, dolor cólico, fiebre, leucocitosis.',
+    pat:'Clostridioides difficile (toxinas A/B).',
+    tx:'Suspender el antibiótico causante. Vancomicina oral 125 mg c/6h ×10 d (o fidaxomicina). NO loperamida.',
+    hosp:'Colitis grave, megacolon tóxico, íleo.',compl:'Megacolon tóxico, recurrencia.'},
+  viajero:{t:'Diarrea del viajero',col:'#0f7a5a',
+    clin:'Diarrea acuosa en viajero a zona endémica, 2-4 días, ± náusea y cólico.',
+    pat:'ETEC (más común) · Campylobacter · Shigella · norovirus.',
+    tx:'SRO + loperamida (si acuosa sin fiebre/sangre). Antibiótico si moderada-grave: azitromicina 1 g dosis única o ciprofloxacino. Rifaximina como opción no invasora.',
+    hosp:'Rara; deshidratación grave.',compl:'Diarrea persistente, SII posinfeccioso.'},
+  intox:{t:'Intoxicación alimentaria (toxinas)',col:'#c0392b',
+    clin:'Vómito predominante de inicio muy rápido (1-6 h) tras el alimento, diarrea breve, sin fiebre.',
+    pat:'S. aureus / Bacillus cereus (toxina preformada).',
+    tx:'Autolimitada: SRO + antieméticos. SIN antibiótico (es una toxina, no infección activa).',
+    hosp:'Deshidratación por vómito intenso.',compl:'Deshidratación.'}
+};
+function buildEscenChips(){
+  var el=document.getElementById('escen-chips');if(!el)return;
+  var L=[['noro','🦠 Norovirus/Rotavirus'],['shigella','💀 Shigella'],['salmonella','🐔 Salmonella'],['campylo','🏕️ Campylobacter'],['cdiff','🧫 C. difficile'],['viajero','🌍 Diarrea del viajero'],['intox','🍄 Intoxicación alimentaria']];
+  var h='';
+  L.forEach(function(x,i){h+='<button class="pchip'+(i===0?' on':'')+'" onclick="showDiaEscen(\''+x[0]+'\',this)">'+x[1]+'</button>';});
+  el.innerHTML=h;
+}
+function showDiaEscen(id,btn){
+  var ch=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var s=ESCEN_DIA[id];if(!s)return;
+  var out=document.getElementById('escen-out');
+  function blk(t,v,c){return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+v+'</div></div>';}
+  var h='<div style="background:'+s.col+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.t+'</div></div>';
+  h+=blk('Presentación clínica',s.clin,'#6b7280');
+  h+=blk('Patógeno',s.pat,'#6b7280');
+  h+=blk('Tratamiento',s.tx,'#c0392b');
+  h+=blk('Cuándo hospitalizar',s.hosp,'#7a4a00');
+  h+=blk('Complicaciones a vigilar',s.compl,'#7b1c1c');
+  out.innerHTML=h;
+}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  buildDeshItems();
+  document.getElementById('sro-calc-esc').innerHTML=sroCalcHTML('sro-esc');
+  resetDia();
+  showDiaPop('planA',document.querySelector('#dia-pop-chips .pchip.on'));
+  filtrarFarmacosDia('');
+  buildIndDia();
+  buildEscenChips();
+  showDiaEscen('noro',document.querySelector('#escen-chips .pchip.on'));
+});
+</script>
+</body>
+</html>

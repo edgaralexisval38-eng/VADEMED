@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Insomnio -- Clinica Rapida</title>
+<style>
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--ac:#1c3d5a;--acl:#e6f1fb;--bd:#e2e8f0;--g50:#f9fafb;--g100:#f3f4f6;--g600:#6b7280;--g700:#374151;--g900:#111827;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f1f5f9;color:var(--g900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#1c3d5a,#1e40af);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--g600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--g600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--g900);flex:1;}
+.sg{font-size:18px;color:var(--g600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-ac{background:var(--acl);color:var(--ac);border-left:3px solid var(--ac);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--g50);color:var(--g600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--g100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.kp{display:flex;gap:10px;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--g700);line-height:1.5;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--g900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--g100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:90px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;padding-top:2px;}
+.fu-x{font-size:12.5px;color:var(--g700);line-height:1.55;}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--g600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--g900);padding:5px 0;border-bottom:1px solid var(--g100);line-height:1.5;}.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--rl);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--r);padding:4px 0 4px 18px;position:relative;line-height:1.5;}.al-i::before{content:"!";position:absolute;left:0;font-size:11px;font-weight:700;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-arr{text-align:center;font-size:18px;color:var(--g600);margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--rl);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--r);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--g50);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--g600);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--g900);}.lab-a{font-size:11px;color:var(--r);margin-top:3px;font-weight:600;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--g100);font-size:12px;}.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--gl);color:var(--g);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--g700);line-height:1.65;}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.lv-a{background:#d1fae5;color:#065f46;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+@media(max-width:480px){.lab-g{grid-template-columns:1fr;}.a-br{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">&#128564;</div>
+    <div>
+      <div class="hdr-eye">Neurologia &middot; Psiquiatria &middot; Consulta General</div>
+      <div class="hdr-title">Insomnio Cronico</div>
+      <div class="hdr-sub">AASM 2017 &middot; ACP 2016 &middot; ISRS como hipnoticos &middot; TCC-I gold standard</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">TCC-I primera linea</span>
+    <span class="badge">Farmaco: maximo 4 semanas</span>
+    <span class="badge">Descartar causa secundaria</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">30%</div><div class="qs-l">prevalencia</div></div>
+  <div class="qs"><div class="qs-v">10%</div><div class="qs-l">insomnio cronico</div></div>
+  <div class="qs"><div class="qs-v">2:1</div><div class="qs-l">mujer:hombre</div></div>
+  <div class="qs"><div class="qs-v">4 sem</div><div class="qs-l">max farmaco cronico</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">&#128203; Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">&#129514; Diagnostico</button>
+  <button class="tab" onclick="showT('txc',this)">&#127973; Tratamiento</button>
+  <button class="tab" onclick="showT('algo',this)">&#128260; Algoritmo</button>
+  <button class="tab" onclick="showT('seg',this)">&#128197; Seguimiento</button>
+  <button class="tab" onclick="showT('farm',this)">&#128138; Farmacos</button>
+  <button class="tab" onclick="showT('bib',this)">&#128218; Bibliografia</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128204;</span><span class="st">Definicion y clasificacion</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div style="font-size:13px;line-height:1.7;color:var(--g700);margin-bottom:10px;"><strong>Insomnio:</strong> Dificultad para iniciar o mantener el sueno, o despertar temprano sin poder volver a dormir, a pesar de tener oportunidad y condiciones adecuadas, con consecuencias diurnas (fatiga, dificultad para concentrarse, irritabilidad). Se define como cronico cuando ocurre al menos 3 noches por semana durante mas de 3 meses.</div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>Tipo</th><th>Definicion</th><th>Duracion</th><th>Tratamiento</th></tr></thead>
+      <tbody>
+        <tr><td><span style="background:var(--gl);color:var(--g);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Agudo / transitorio</span></td><td>Insomnio relacionado con estres, viajes, cambio de horario, enfermedad aguda</td><td>Menos de 3 meses</td><td>Higiene del sueno · Farmaco corto plazo si necesario</td></tr>
+        <tr><td><span style="background:var(--al);color:var(--a);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Cronico</span></td><td>3 o mas noches/semana por 3 meses o mas, con afectacion diurna</td><td>Mayor de 3 meses</td><td>TCC-I primera linea · Farmaco solo como complemento corto plazo</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Tipo de insomnio segun momento de la noche</th><th>Caracteristica</th><th>Causa frecuente</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Insomnio de conciliacion (inicio)</td><td>Tarda mas de 30 minutos en quedarse dormido</td><td>Ansiedad · Higiene del sueno inadecuada · Uso de pantallas</td></tr>
+        <tr><td class="dn">Insomnio de mantenimiento</td><td>Se despierta varias veces durante la noche</td><td>Depresion · Dolor cronico · Apnea del sueno · Sindrome de piernas inquietas</td></tr>
+        <tr><td class="dn">Despertar temprano (terminal)</td><td>Se despierta 2-3 horas antes de lo planeado y no puede volver a dormir</td><td>Depresion mayor (el mas tipico) · Anciano</td></tr>
+        <tr><td class="dn">Mixto</td><td>Combinacion de los anteriores</td><td>Insomnio cronico primario · Multiple comorbilidad</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#10060;</span><span class="st">Errores frecuentes</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Dar benzodiacepinas o zolpidem cronicamente.</strong> Las benzodiacepinas y los farmacos Z (zolpidem, zaleplon) solo deben usarse por 2-4 semanas maximas. El uso cronico genera dependencia, tolerancia, deterioro cognitivo (especialmente en anciano) y aumenta el riesgo de caidas y fracturas. La TCC-I tiene resultados superiores a largo plazo.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>No buscar la causa subyacente del insomnio.</strong> El insomnio secundario (por depresion, ansiedad, apnea del sueno, dolor, sindrome de piernas inquietas, medicamentos) requiere tratar la causa. El hipnotico solo es un parche si no se trata la causa.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>No prescribir higiene del sueno.</strong> Las medidas de higiene del sueno son parte obligatoria del tratamiento. Horario fijo de sueno, sin pantallas 1 hora antes, sin alcohol ni cafeina en la tarde, ambiente oscuro y frio. Sin estas medidas el farmaco es ineficaz a largo plazo.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Usar antihistaminicos (difenhidramina) como hipnoticos cronicos.</strong> La difenhidramina genera tolerancia rapida en dias y tiene efectos anticolinergicos significativos. En el anciano aumenta el riesgo de confusion y demencia. Solo uso ocasional muy limitado.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>No considerar la apnea del sueno.</strong> La apnea obstructiva del sueno es una causa muy frecuente de insomnio de mantenimiento y sueno no reparador. Preguntar sobre ronquido, pausa respiratoria nocturna y somnolencia diurna excesiva. Referir a estudio de sueno si se sospecha.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNOSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#129514;</span><span class="st">Causas secundarias de insomnio -- descartar siempre</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Categoria</th><th>Causa</th><th>Clave diagnostica</th></tr></thead>
+      <tbody>
+        <tr><td><span style="background:var(--rl);color:var(--r);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Psiquiatrica</span></td><td class="dn">Depresion mayor · Trastorno de ansiedad · Trastorno de estres postraumatico · Trastorno bipolar</td><td>Despertar temprano tipico de depresion · Insomnio de conciliacion tipico de ansiedad · PHQ-9 y GAD-7</td></tr>
+        <tr><td><span style="background:var(--al);color:var(--a);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Respiratoria</span></td><td class="dn">Apnea obstructiva del sueno · EPOC · Asma nocturna</td><td>Ronquido · Pausas respiratorias · Somnolencia diurna excesiva · Escala de Epworth · Polisomnografia</td></tr>
+        <tr><td><span style="background:var(--al);color:var(--a);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Neurologica</span></td><td class="dn">Sindrome de piernas inquietas · Movimientos periodicos de extremidades durante el sueno</td><td>Necesidad irresistible de mover las piernas · Empeora en reposo nocturno · Mejora con el movimiento</td></tr>
+        <tr><td><span style="background:var(--bl);color:var(--b);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Dolor cronico</span></td><td class="dn">Artritis · Lumbalgia · Fibromialgia · Neuropatia</td><td>El dolor despierta al paciente · Insomnio de mantenimiento · Tratar el dolor mejora el sueno</td></tr>
+        <tr><td><span style="background:var(--gl);color:var(--g);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Endocrina</span></td><td class="dn">Hipertiroidismo · Menopausia (bochornos nocturnos) · Hipoglucemia nocturna</td><td>TSH · FSH/LH · Glucometria nocturna</td></tr>
+        <tr><td><span style="background:var(--acl);color:var(--ac);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Farmacologica</span></td><td class="dn">Corticoides · Betabloqueadores · Broncodilatadores · ISRS (fluoxetina) · Cafeina · Alcohol · Descongestionantes</td><td>Revision de medicamentos y habitos. El alcohol fragmenta el sueno en la segunda mitad de la noche.</td></tr>
+        <tr><td><span style="background:var(--acl);color:var(--ac);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;">Circadiana</span></td><td class="dn">Trabajo en turnos nocturnos · Jet lag · Sindrome de fase de sueno retrasada</td><td>Historia laboral · Horario irregular · Cronotipo del paciente</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">&#128247;</span><div><div class="at">Diario de sueno -- herramienta diagnostica fundamental</div>Pedir al paciente que registre durante 2 semanas: hora de acostarse, tiempo hasta quedarse dormido, numero de despertares, hora de levantarse, calidad subjetiva y somnolencia diurna. Es mas util que cualquier estudio de laboratorio para el insomnio primario.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128202;</span><span class="st">Escala de Epworth -- somnolencia diurna</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div style="font-size:12px;color:var(--g700);margin-bottom:10px;">Probabilidad de quedarse dormido en las siguientes situaciones (0=nunca · 1=poca · 2=moderada · 3=alta):</div>
+    <div id="epw-items" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+    <div id="epw-result" style="display:none;border-radius:var(--rs);padding:12px;text-align:center;"></div>
+  </div></div>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128127;</span><span class="st">Paso 1 -- Higiene del sueno (siempre, con o sin farmaco)</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">&#9989;</span><div>Sin higiene del sueno el farmaco es ineficaz a largo plazo. Estas medidas son obligatorias independientemente del tratamiento farmacologico.</div></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Medida</th><th>Por que funciona</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Horario fijo de levantarse todos los dias (incluyendo fines de semana)</td><td>Ancla el ritmo circadiano. Es la medida mas efectiva en insomnio cronico. Mas importante que la hora de acostarse.</td></tr>
+        <tr><td class="dn">Sin pantallas (telefono, television, computadora) 1 hora antes de dormir</td><td>La luz azul de las pantallas inhibe la secrecion de melatonina y retrasa el inicio del sueno hasta 2 horas.</td></tr>
+        <tr><td class="dn">Sin cafeina despues de las 2 pm</td><td>La cafeina tiene vida media de 5-7 horas. Una taza a las 3 pm todavia tiene efecto estimulante a las 9 pm.</td></tr>
+        <tr><td class="dn">Sin alcohol -- aunque parezca que ayuda a dormir</td><td>El alcohol fragmenta el sueno en la segunda mitad de la noche y suprime el sueno REM. Da sueno al inicio pero reduce la calidad global.</td></tr>
+        <tr><td class="dn">Habitacion oscura, fresca (18-20°C) y silenciosa</td><td>La temperatura corporal baja al inicio del sueno. Un cuarto caliente dificulta la conciliacion.</td></tr>
+        <tr><td class="dn">La cama solo para dormir y sexo -- no para ver television ni trabajar</td><td>Principio de restriccion de estimulo. Evita la asociacion cama-vigilia que perpetua el insomnio.</td></tr>
+        <tr><td class="dn">Si no puede dormir en 20 minutos: levantarse y hacer algo tranquilo hasta tener sueno</td><td>Evita la ansiedad de "tengo que dormir" que es el mayor perpetuador del insomnio.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#129504;</span><span class="st">Paso 2 -- TCC-I (Terapia Cognitivo-Conductual para el Insomnio) -- GOLD STANDARD</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="alert a-ac"><span class="ai">&#128161;</span><div><div class="at">TCC-I es superior al farmaco a largo plazo -- ACP 2016 y AASM 2017</div>La TCC-I produce mejoras que se mantienen mas de 2 anos. El farmaco produce mejora inmediata pero la eficacia disminuye con el tiempo. La TCC-I digital (apps) tambien ha demostrado eficacia.</div></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Componente</th><th>Tecnica</th><th>Para que sirve</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Restriccion del tiempo en cama</td><td>Reducir el tiempo en cama al tiempo real de sueno (ej. si duerme 5h, estar en cama solo 5.5h). Aumentar 15 min/semana si la eficiencia del sueno es mayor del 85%.</td><td>Aumenta la presion de sueno y consolida el sueno. La tecnica mas efectiva de la TCC-I.</td></tr>
+        <tr><td class="dn">Control de estimulos</td><td>Levantarse si no duerme en 20 min. Cama solo para sueno y sexo. Levantarse a la misma hora todos los dias.</td><td>Rompe la asociacion cama-vigilia-ansiedad que perpetua el insomnio.</td></tr>
+        <tr><td class="dn">Reestructuracion cognitiva</td><td>Identificar y cuestionar pensamientos catastroficos sobre el sueno ("si no duermo 8 horas manana sera terrible").</td><td>Reduce la ansiedad anticipatoria que es el mayor perpetuador del insomnio.</td></tr>
+        <tr><td class="dn">Tecnicas de relajacion</td><td>Respiracion diafragmatica. Relajacion muscular progresiva de Jacobson. Imagenes mentales tranquilizantes.</td><td>Reduce la activacion fisiologica que impide el inicio del sueno.</td></tr>
+        <tr><td class="dn">Educacion del sueno</td><td>Explicar la arquitectura del sueno, la variabilidad normal, los mitos del sueno ("debo dormir 8 horas exactas").</td><td>Normaliza la experiencia del paciente y reduce la ansiedad.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128138;</span><span class="st">Paso 3 -- Farmacoterapia (complemento, maximo 4 semanas)</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="alert a-w" style="margin-bottom:12px;"><span class="ai">&#9888;</span><div><div class="at">El farmaco hipnotico es complemento, no tratamiento principal del insomnio cronico</div>Maximo 2-4 semanas de uso continuo. En insomnio cronico: usar de forma intermitente (2-3 veces por semana) en lugar de diario para evitar dependencia y tolerancia.</div></div>
+
+    <div style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="background:var(--ac);color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:12px;">Primera linea</span>
+        <span style="font-size:12px;font-weight:700;color:var(--g900);">Farmacos con menor riesgo de dependencia</span>
+      </div>
+      <div style="border-left:3px solid #1e40af;padding-left:12px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Elegir UNO segun el tipo de insomnio y perfil del paciente</div>
+
+        <div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:6px;overflow:hidden;">
+          <div style="background:var(--ac);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Insomnio de conciliacion -- sin dependencia</span>
+            <span style="font-size:13px;font-weight:700;flex:1;">Melatonina</span>
+            <span style="background:rgba(255,255,255,0.2);padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">Baja potencia</span>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Inicio</span><span style="font-weight:600;">0.5-5 mg · 30-60 min antes de dormir</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Objetivo</span><span style="font-weight:700;color:var(--r);">0.5-5 mg · Dosis efectiva la mas baja posible</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Intervalo</span><span style="font-weight:600;">30-60 minutos antes de la hora deseada de sueno</span></div>
+            <div style="background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:var(--ac);">Presentacion MX:</strong> Tab 1 mg · Tab 3 mg · Tab 5 mg · Tab 10 mg · Presentaciones de liberacion prolongada</div>
+            <div style="background:var(--acl);border-radius:6px;padding:6px 9px;margin-top:5px;font-size:11px;color:var(--g700);line-height:1.5;">Sin dependencia ni tolerancia. Util principalmente en insomnio de conciliacion y en trastornos del ritmo circadiano (jet lag, trabajadores nocturnos). La dosis mas baja efectiva es 0.5 mg -- dosis altas (10 mg) no tienen mayor eficacia. Mas util en anciano (deficiencia natural de melatonina). La forma de liberacion prolongada puede ayudar en insomnio de mantenimiento.</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:6px;overflow:hidden;">
+          <div style="background:#374151;color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Si hay depresion comorbida -- doble beneficio</span>
+            <span style="font-size:13px;font-weight:700;flex:1;">Trazodona (dosis bajas)</span>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Inicio</span><span style="font-weight:600;">25-50 mg al acostarse</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Objetivo</span><span style="font-weight:700;color:var(--r);">50-100 mg al acostarse</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Intervalo</span><span style="font-weight:600;">c/24h al acostarse</span></div>
+            <div style="background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:#374151;">Presentacion MX:</strong> Tab 50 mg · Tab 100 mg</div>
+            <div style="background:rgba(55,65,81,0.07);border-radius:6px;padding:6px 9px;margin-top:5px;font-size:11px;color:var(--g700);line-height:1.5;">A dosis bajas actua como hipnotico sin efecto antidepresivo completo. Sin dependencia ni tolerancia. Util en insomnio con depresion comorbida. Puede causar hipotension ortostatica.</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:6px;overflow:hidden;">
+          <div style="background:#374151;color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Si hay ansiedad comorbida y depresion</span>
+            <span style="font-size:13px;font-weight:700;flex:1;">Mirtazapina (dosis bajas)</span>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Inicio</span><span style="font-weight:600;">7.5-15 mg al acostarse</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Objetivo</span><span style="font-weight:700;color:var(--r);">15 mg al acostarse (a mayor dosis menos sedante)</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Intervalo</span><span style="font-weight:600;">c/24h al acostarse</span></div>
+            <div style="background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:#374151;">Presentacion MX:</strong> Tab 15 mg · Tab 30 mg</div>
+            <div style="background:rgba(55,65,81,0.07);border-radius:6px;padding:6px 9px;margin-top:5px;font-size:11px;color:var(--g700);line-height:1.5;">Hipnotico y antidepresivo. La sedacion es mayor a 15 mg que a 30-45 mg (efecto paradojico -- a dosis mas altas el efecto noradrenergico contraresta la sedacion). Aumento de peso frecuente. Util cuando el insomnio coexiste con depresion y ansiedad.</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:6px;overflow:hidden;">
+          <div style="background:#374151;color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Insomnio de conciliacion y mantenimiento -- nueva generacion</span>
+            <span style="font-size:13px;font-weight:700;flex:1;">Lemborexant o Suvorexant (antagonistas de orexina)</span>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Lemborexant</span><span style="font-weight:600;">5 mg al acostarse (max 10 mg)</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Suvorexant</span><span style="font-weight:700;color:var(--r);">10 mg al acostarse (max 20 mg)</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Intervalo</span><span style="font-weight:600;">c/24h al acostarse · 30 minutos antes</span></div>
+            <div style="background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:#374151;">Presentacion MX:</strong> Disponibilidad limitada en Mexico · Importacion o especialidad</div>
+            <div style="background:rgba(55,65,81,0.07);border-radius:6px;padding:6px 9px;margin-top:5px;font-size:11px;color:var(--g700);line-height:1.5;">Mecanismo novedoso: bloquean la orexina (hipocretina), neurotransmisor que promueve la vigilia. Menor riesgo de abuso que benzodiacepinas. Aprobados FDA. Pueden causar paralisis del sueno o alucinaciones hipnagogicas transitorias. Disponibilidad limitada en Mexico.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:8px;margin:12px 0 8px;">
+      <div style="flex:1;height:1px;background:#e2e8f0;"></div>
+      <span style="font-size:11px;color:#9ca3af;white-space:nowrap;">+ segunda linea si primera no es suficiente -- mayor riesgo de dependencia</span>
+      <div style="flex:1;height:1px;background:#e2e8f0;"></div>
+    </div>
+
+    <div style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span style="background:#7a4a00;color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:12px;">Segunda linea</span>
+        <span style="font-size:12px;font-weight:700;color:var(--g900);">Hipnoticos con mayor riesgo -- uso maximo 2-4 semanas</span>
+      </div>
+      <div style="border-left:3px solid #d97706;padding-left:12px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;">Elegir UNO -- solo uso corto plazo</div>
+
+        <div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:6px;overflow:hidden;">
+          <div style="background:#7a4a00;color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Insomnio de conciliacion</span>
+            <span style="font-size:13px;font-weight:700;flex:1;">Zolpidem (farmaco Z)</span>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Inicio</span><span style="font-weight:600;">5 mg al acostarse (empezar con 5 mg)</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Objetivo</span><span style="font-weight:700;color:var(--r);">5-10 mg al acostarse · Maximo 10 mg · Maximo 4 semanas</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Intervalo</span><span style="font-weight:600;">Al acostarse · Solo si hay al menos 7-8 horas para dormir</span></div>
+            <div style="background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:#7a4a00;">Presentacion MX:</strong> Tab 5 mg · Tab 10 mg · Forma CR (liberacion controlada) 6.25 mg y 12.5 mg</div>
+            <div style="background:rgba(122,74,0,0.07);border-radius:6px;padding:6px 9px;margin-top:5px;font-size:11px;color:var(--g700);line-height:1.5;">Hipnotico no benzodiacepínico. Vida media corta (2.5 horas). Riesgo de dependencia, sonambulismo, conductas complejas durante el sueno (conducir dormido, comer dormido). Maximo 10 mg. Reducir a 5 mg en mujer y anciano. NO mas de 4 semanas continuas.</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:6px;overflow:hidden;">
+          <div style="background:#7b1c1c;color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">Solo si no hay otra opcion -- maxima precaucion</span>
+            <span style="font-size:13px;font-weight:700;flex:1;">Benzodiacepinas de vida media corta</span>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Triazolam</span><span style="font-weight:600;">0.125-0.25 mg al acostarse</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Clonazepam</span><span style="font-weight:700;color:var(--r);">0.25-0.5 mg al acostarse · Maximo 2-4 semanas</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Lorazepam</span><span style="font-weight:600;">0.5-1 mg al acostarse · Solo uso hospitalario o muy breve</span></div>
+            <div style="background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:#7b1c1c;">Presentacion MX:</strong> Clonazepam tab 0.5 mg · 2 mg · Lorazepam tab 1 mg · 2 mg · Triazolam tab 0.125 mg (limitado)</div>
+            <div style="background:rgba(123,28,28,0.07);border-radius:6px;padding:6px 9px;margin-top:5px;font-size:11px;color:var(--g700);line-height:1.5;">USAR SOLO CUANDO NO HAY ALTERNATIVA. Dependencia fisica y psicologica. Tolerancia rapida. Deterioro cognitivo especialmente en anciano. Riesgo de caidas y fracturas. Sindrome de abstinencia con convulsiones si se suspende bruscamente. Nunca prescribir a paciente con apnea del sueno.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="al-b" style="margin-top:10px;"><div class="al-t">Evitar en insomnio cronico:</div>
+      <div class="al-i">Difenhidramina (Benadryl) -- tolerancia en 3-5 dias · Efectos anticolinergicos · Riesgo de deterioro cognitivo en anciano</div>
+      <div class="al-i">Benzodiacepinas de vida media larga (diazepam, flurazepam) -- acumulacion · Sedacion diurna · Caidas en anciano</div>
+      <div class="al-i">Alcohol -- fragmenta el sueno · Suprime sueno REM · Genera dependencia</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128260;</span><span class="st">Algoritmo de manejo</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="an" style="background:var(--ac);color:#fff;text-align:center;font-weight:700;border-radius:24px;">Paciente con dificultad para dormir</div>
+    <div class="a-arr">&#8595;</div>
+    <div class="an" style="background:#fff;border:1.5px solid var(--bd);color:var(--g900);">Definir tipo: conciliacion (tarda en dormir) · mantenimiento (se despierta) · despertar temprano</div>
+    <div class="a-arr">&#8595;</div>
+    <div class="an" style="background:var(--al);border:1.5px solid var(--am);color:var(--a);font-weight:600;">Buscar causa secundaria: depresion · ansiedad · apnea del sueno · dolor · medicamentos · hipertiroidismo</div>
+    <div class="a-br">
+      <div class="a-no"><div class="br-l">Causa identificada</div>Tratar la causa primaria. El insomnio mejora al tratar la enfermedad subyacente.</div>
+      <div class="a-yes"><div class="br-l">Insomnio primario</div>Continuar con TCC-I + higiene del sueno</div>
+    </div>
+    <div class="a-arr">&#8595;</div>
+    <div class="an" style="background:#fff;border:1.5px solid var(--bd);color:var(--g900);">Iniciar: higiene del sueno + TCC-I (referir psicologo o app digital validada)</div>
+    <div class="a-br">
+      <div class="a-yes"><div class="br-l">Responde en 4-8 semanas</div>Continuar TCC-I. Sin farmaco si es posible.</div>
+      <div class="a-no"><div class="br-l">No mejora</div>Agregar farmaco corto plazo: melatonina o trazodona (primera linea). Continuar TCC-I.</div>
+    </div>
+    <div class="a-arr">&#8595;</div>
+    <div class="an" style="background:var(--gl);color:var(--g);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--gm);">Sueno consolidado · Levantar a la misma hora todos los dias · Farmaco solo si crisis</div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128197;</span><span class="st">Seguimiento</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">2 semanas</div><div class="fu-x">Revisar el diario de sueno. Verificar adherencia a higiene del sueno. Evaluar si sigue usando pantallas antes de dormir o consumiendo cafeina en la tarde. Si hay farmaco: evaluar efectos adversos y no renovar sin nueva consulta.</div></div>
+    <div class="fu-r"><div class="fu-t">4-8 semanas</div><div class="fu-x">Evaluar respuesta a TCC-I. La eficiencia del sueno (tiempo dormido / tiempo en cama) debe mejorar a mas del 85%. Comenzar reduccion gradual del farmaco si se habia iniciado.</div></div>
+    <div class="fu-r"><div class="fu-t">3 meses</div><div class="fu-x">Si persiste insomnio a pesar de TCC-I y medidas: considerar estudio del sueno (polisomnografia) para descartar apnea del sueno o movimientos periodicos de extremidades no diagnosticados.</div></div>
+    <div class="fu-r"><div class="fu-t">Referir</div><div class="fu-x">Medicina del sueno o neurologia si: sospecha de apnea del sueno (ronquido intenso, somnolencia diurna severa) · Sindrome de piernas inquietas · Somnambulismo o trastorno del comportamiento durante el sueno REM · Narcolepsia · Insomnio resistente a TCC-I y farmacos.</div></div>
+  </div></div>
+</div>
+
+<!-- FARMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:0.5px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--g50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar farmaco -- ej. melatonina, zolpidem..."
+        style="border:none;background:transparent;font-size:13px;width:100%;outline:none;color:var(--g900);"
+        oninput="filtrarFarmacos(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- BIBLIOGRAFIA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#128218;</span><span class="st">Referencias</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2017</span><span class="lv-a">Guia AASM</span></div><div class="bib-r">Sateia MJ et al. Clinical Practice Guideline for the Pharmacologic Treatment of Chronic Insomnia in Adults: An American Academy of Sleep Medicine Clinical Practice Guideline. J Clin Sleep Med 2017;13:307-349. Recomienda TCC-I sobre farmacoterapia para insomnio cronico.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/27998379/" target="_blank">PubMed: 27998379</a></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2016</span><span class="lv-a">ACP</span></div><div class="bib-r">Qaseem A et al. Management of Chronic Insomnia Disorder in Adults: A Clinical Practice Guideline from the American College of Physicians. Ann Intern Med 2016;165:125-133. TCC-I como tratamiento de primera linea en adultos con insomnio cronico.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/27136449/" target="_blank">PubMed: 27136449</a></div>
+  </div></div>
+</div>
+
+<script>
+function showT(id,btn){
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("on");});
+  document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on");});
+  document.getElementById("tab-"+id).classList.add("on");
+  btn.classList.add("on"); window.scrollTo(0,0);
+}
+function tog(h){
+  var b=h.nextElementSibling,g=h.querySelector(".sg");
+  if(b.classList.contains("hidden")){b.classList.remove("hidden");if(g)g.classList.add("open");}
+  else{b.classList.add("hidden");if(g)g.classList.remove("open");}
+}
+var EPW=["Sentado y leyendo","Viendo television","Sentado inactivo en un lugar publico","Como pasajero en un auto durante 1 hora sin parar","Acostado a descansar en la tarde","Sentado y hablando con alguien","Sentado tranquilamente despues de comer (sin alcohol)","En un auto detenido en el trafico por algunos minutos"];
+function initEPW(){
+  var c=document.getElementById("epw-items");
+  if(!c)return;
+  var h="";
+  for(var i=0;i<EPW.length;i++){
+    h+="<div style='background:var(--g50);padding:9px 10px;border-radius:var(--rs);border:1px solid var(--bd);'>"
+      +"<div style='font-size:12px;color:var(--g900);margin-bottom:6px;'><strong>"+(i+1)+".</strong> "+EPW[i]+"</div>"
+      +"<div style='display:flex;gap:8px;flex-wrap:wrap;'>"
+      +"<label style='font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;'><input type='radio' name='epw"+i+"' value='0' onchange='calcEPW()'>Nunca (0)</label>"
+      +"<label style='font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;'><input type='radio' name='epw"+i+"' value='1' onchange='calcEPW()'>Poca (1)</label>"
+      +"<label style='font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;'><input type='radio' name='epw"+i+"' value='2' onchange='calcEPW()'>Moderada (2)</label>"
+      +"<label style='font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;'><input type='radio' name='epw"+i+"' value='3' onchange='calcEPW()'>Alta (3)</label>"
+      +"</div></div>";
+  }
+  c.innerHTML=h;
+}
+function calcEPW(){
+  var s=0;
+  for(var i=0;i<8;i++){var r=document.querySelector("input[name='epw"+i+"']:checked");if(r)s+=parseInt(r.value);}
+  var el=document.getElementById("epw-result");
+  el.style.display="block";
+  var bg=s<=10?"var(--gl)":s<=16?"var(--al)":"var(--rl)";
+  var co=s<=10?"var(--g)":s<=16?"var(--a)":"var(--r)";
+  el.style.background=bg; el.style.color=co; el.style.padding="12px"; el.style.borderRadius="8px"; el.style.textAlign="center";
+  var lab=s<=10?"Somnolencia normal (0-10)":s<=16?"Somnolencia leve (11-16)":"Somnolencia severa (17-24)";
+  var act=s<=10?"Somnolencia diurna normal. No sugiere trastorno del sueno significativo.":s<=16?"Somnolencia diurna leve-moderada. Evaluar higiene del sueno y causas de insomnio.":"Somnolencia diurna severa. Alta sospecha de apnea del sueno u otro trastorno del sueno. Referir a estudio de sueno (polisomnografia).";
+  el.innerHTML="<div style='font-size:20px;font-weight:700;'>"+s+" / 24 puntos</div><div style='font-size:13px;font-weight:600;margin-top:4px;'>"+lab+"</div><div style='font-size:12px;margin-top:6px;line-height:1.5;'>"+act+"</div>";
+}
+var FARMACOS=[
+  {n:"Melatonina",m:"Natrol · Melatonina Liomont · generico",cl:"Hormona cronobiotica -- sincronizador del ritmo circadiano",pi:"Primera linea en insomnio de conciliacion y trastornos circadianos -- sin dependencia",co:"#1c3d5a",
+   ini:"0.5-1 mg · 30-60 min antes de dormir",obj:"1-5 mg · La dosis mas baja efectiva · Maximo 10 mg (sin beneficio adicional)",iv:"30-60 minutos antes de la hora deseada de sueno · NO al acostarse",
+   pr:"Tab 1 mg · Tab 3 mg · Tab 5 mg · Tab 10 mg · Liberacion prolongada 2 mg · Gotas · Gomitas",
+   ind:"Insomnio de conciliacion · Jet lag · Trastorno del ritmo circadiano por trabajo nocturno · Sindrome de fase de sueno retrasada · Insomnio en anciano (produccion natural de melatonina disminuye con la edad)",
+   ci:"Sin contraindicaciones absolutas · Precaucion en embarazo (datos limitados) · Puede potenciar anticoagulantes",
+   prec:"Sin dependencia ni tolerancia · La dosis baja (0.5-1 mg) suele ser tan efectiva como dosis altas · Tomar 30-60 minutos ANTES de la hora deseada de sueno (no al acostarse) · La forma de liberacion prolongada puede ayudar en insomnio de mantenimiento · Puede causar somnolencia matutina en dosis altas",
+   tit:"Iniciar con 0.5-1 mg. Aumentar a 3-5 mg si no hay respuesta. Las dosis de 10 mg no tienen evidencia de mayor eficacia. La forma de liberacion prolongada (Circadin 2 mg) esta aprobada en Europa para mayores de 55 anos.",
+   ev:"Mayor evidencia en insomnio de conciliacion, jet lag y trastornos circadianos. Meta-analisis: reduce el tiempo hasta quedarse dormido en promedio 7 minutos. Efecto modesto pero sin efectos adversos significativos."},
+  {n:"Trazodona",m:"Desyrel · generico",cl:"Antagonista serotoninergico e inhibidor de recaptacion (SARI) -- sedante a dosis bajas",pi:"Hipnotico sin dependencia en insomnio con depresion o ansiedad comorbida",co:"#1c3d5a",
+   ini:"25-50 mg al acostarse",obj:"50-100 mg al acostarse para insomnio · 150-300 mg para efecto antidepresivo",iv:"c/24h al acostarse (aprovechando la sedacion como beneficio)",
+   pr:"Tab 50 mg · Tab 100 mg",
+   ind:"Insomnio con depresion comorbida · Insomnio en paciente que no puede recibir benzodiacepinas · Complemento hipnotico en depresion tratada con ISRS (el ISRS puede causar insomnio al inicio)",
+   ci:"Infarto reciente · No combinar con IMAO",
+   prec:"Priapismo (raro pero posible en hombre -- advertir) · Hipotension ortostatica al inicio · Sin dependencia ni tolerancia (ventaja sobre benzodiacepinas) · La sedacion puede persistir en la manana a dosis altas",
+   tit:"Para insomnio: 25 mg la primera semana, subir a 50 mg si se tolera. Para efecto antidepresivo: iniciar 150 mg al acostarse.",
+   ev:"Ampliamente usada off-label para insomnio. Revision Cochrane: eficaz para mejorar la calidad subjetiva del sueno. Sin los riesgos de dependencia de las benzodiacepinas."},
+  {n:"Mirtazapina",m:"Remeron · generico",cl:"Antidepresivo NaSSA -- muy sedante a dosis bajas",pi:"Hipnotico y antidepresivo en insomnio con depresion y perdida de peso",co:"#1c3d5a",
+   ini:"7.5-15 mg al acostarse",obj:"15 mg al acostarse para insomnio · 15-45 mg para depresion",iv:"c/24h al acostarse",
+   pr:"Tab 15 mg · Tab 30 mg · Tab 45 mg",
+   ind:"Insomnio con depresion mayor · Insomnio con perdida de peso y apetito · Insomnio en anciano con depresion",
+   ci:"IMAO",
+   prec:"Aumento de peso significativo y frecuente -- advertir al paciente · Paradojico: a 15 mg es mas sedante que a 30-45 mg · Agranulocitosis rara -- vigilar si fiebre y faringitis",
+   tit:"15 mg al acostarse para insomnio. Efecto hipnotico maximo a 15 mg (no aumentar la dosis si el objetivo es el sueno).",
+   ev:"Util cuando el insomnio coexiste con depresion, ansiedad y perdida de peso. El aumento de peso es una ventaja en el paciente con depresion y anorexia."},
+  {n:"Zolpidem",m:"Ambien · Stilnox · generico",cl:"Hipnotico no benzodiacepínico -- agonista de receptor GABA-A (farmaco Z)",pi:"Insomnio de conciliacion a corto plazo -- maximo 4 semanas",co:"#7a4a00",
+   ini:"5 mg al acostarse (siempre empezar con 5 mg)",obj:"5-10 mg al acostarse · Maximo 10 mg · Maximo 4 semanas",iv:"Al acostarse solo si hay al menos 7-8 horas disponibles para dormir",
+   pr:"Tab 5 mg · Tab 10 mg · Tab CR 6.25 mg · Tab CR 12.5 mg",
+   ind:"Insomnio agudo o transitorio (maximo 4 semanas) · Insomnio de conciliacion · Segunda linea despues de melatonina y trazodona",
+   ci:"Apnea del sueno (contraindicacion relativa severa -- puede suprimir el drive respiratorio) · Miastenia gravis · Insuficiencia hepatica severa · Embarazo · Abuso de alcohol o sustancias",
+   prec:"Sonambulismo y conductas complejas durante el sueno (comer, conducir, llamar por telefono dormido) -- advertir · Dependencia con uso cronico · Tolerancia · Amnesia anterograda · Reducir a 5 mg en mujer y anciano (metabolismo mas lento) · No tomar con alcohol (sinergismo mortal) · No manejar maquinaria al dia siguiente",
+   tit:"Siempre iniciar con 5 mg. Solo aumentar a 10 mg si 5 mg es ineficaz. La forma CR ayuda con el insomnio de mantenimiento. Maximo 4 semanas. Para suspender: reducir gradualmente.",
+   ev:"Eficaz a corto plazo. Aprobado FDA. Riesgo de dependencia y tolerancia. La FDA emitio alertas sobre conductas complejas durante el sueno (sonambulismo conduciendo). Superiores las opciones sin dependencia para insomnio cronico."},
+  {n:"Clonazepam",m:"Rivotril · generico",cl:"Benzodiacepina de vida media larga -- potenciador GABA-A",pi:"Solo insomnio con sindrome de piernas inquietas o ansiedad severa comorbida -- maximo 2-4 semanas",co:"#7b1c1c",
+   ini:"0.25-0.5 mg al acostarse",obj:"0.25-0.5 mg al acostarse · Maximo 2 mg · Solo 2-4 semanas",iv:"Al acostarse · Maximo 2-4 semanas",
+   pr:"Tab 0.5 mg · Tab 2 mg · Gotas 2.5 mg/mL",
+   ind:"Insomnio agudo con ansiedad severa cuando otras opciones no son posibles · Sindrome de piernas inquietas · Crisis convulsivas",
+   ci:"Apnea del sueno · Miastenia gravis · Historia de abuso de sustancias · Insuficiencia hepatica severa",
+   prec:"Dependencia fisica y psicologica · Tolerancia en semanas · Deterioro cognitivo especialmente en anciano · Riesgo de caidas y fracturas en anciano · Sindrome de abstinencia severo con convulsiones si se suspende bruscamente · Sedacion diurna por vida media larga · NUNCA en paciente con apnea del sueno",
+   tit:"0.25 mg al acostarse las primeras 2 semanas. Aumentar a 0.5 mg si no hay respuesta. Suspender gradualmente: reducir 0.25 mg cada semana. Nunca suspender bruscamente.",
+   ev:"Alto potencial de dependencia. Solo en situaciones muy especificas y por periodos muy cortos. Los farmacos Z o la melatonina son preferibles para insomnio."},
+  {n:"Difenhidramina",m:"Benadryl · Sominex · generico",cl:"Antihistaminico H1 -- sedacion como efecto adverso usado off-label",pi:"SOLO uso ocasional aislado -- NO cronicamente por tolerancia rapida y efectos anticolinergicos",co:"#7b1c1c",
+   ini:"25-50 mg 30 min antes de dormir",obj:"25-50 mg · Solo uso ocasional 1-3 noches",iv:"30 minutos antes de dormir · Solo ocasional",
+   pr:"Tab 25 mg · Tab 50 mg · Muchos medicamentos de venta libre la contienen",
+   ind:"Insomnio ocasional aislado cuando no hay otra opcion · Nunca para insomnio cronico",
+   ci:"Glaucoma de angulo agudo · Hipertrofia prostatica · Retencion urinaria · Anciano (riesgo de confusion y delirium) · No combinar con otros anticolinergicos",
+   prec:"Tolerancia en 3-5 dias de uso continuo · Efectos anticolinergicos: boca seca, retencion urinaria, estreñimiento, confusion · En anciano: riesgo de delirium y demencia (criterios de Beers: EVITAR en anciano) · Sedacion residual en la manana (resaca antihistaminica)',
+   tit:"25-50 mg ocasional. Nunca mas de 3 noches seguidas. El uso regular pierde eficacia rapidamente.",
+   ev:"Tolerancia rapida (dias). La FDA emitio alertas sobre su uso en anciano. Los criterios de Beers de la Sociedad Americana de Geriatria lo clasifican como potencialmente inapropiado en mayores de 65 anos."}
+];
+function renderFicha(f,idx){
+  var bmap={"#1c3d5a":"rgba(28,61,90,0.06)","#7a4a00":"rgba(122,74,0,0.06)","#7b1c1c":"rgba(123,28,28,0.06)","#374151":"rgba(55,65,81,0.06)"};
+  var bc=bmap[f.co]||"rgba(0,0,0,0.05)";
+  return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
+    +"<div onclick='toggleFicha("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='arr-"+idx+"'>&#8964;</span></div>"
+    +"<div id='body-"+idx+"' style='display:none;'>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Clase farmacologica</div><div style='font-size:12px;color:#374151;'>"+f.cl+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis</div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'><span style='color:#6b7280;'>Inicio</span><span style='font-weight:600;'>"+f.ini+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'><span style='color:#6b7280;'>Objetivo</span><span style='font-weight:700;color:#c0392b;'>"+f.obj+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'><span style='color:#6b7280;'>Intervalo</span><span style='font-weight:600;'>"+f.iv+"</span></div>"
+    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentacion MX:</strong> "+f.pr+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Titulacion</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.tit+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Indicaciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.ind+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Contraindicaciones</div><div style='font-size:12px;color:#c0392b;line-height:1.6;'>"+f.ci+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Precauciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.prec+"</div></div>"
+    +"<div style='padding:12px 14px;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Evidencia</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.ev+"</div></div>"
+    +"</div></div>";
+}
+function toggleFicha(idx){
+  var b=document.getElementById("body-"+idx),a=document.getElementById("arr-"+idx);
+  if(b.style.display==="none"){b.style.display="block";a.style.transform="rotate(180deg)";}
+  else{b.style.display="none";a.style.transform="rotate(0deg)";}
+}
+function filtrarFarmacos(q){
+  var list=document.getElementById("farm-list"),count=document.getElementById("farm-count");
+  if(!list)return;
+  var term=q.toLowerCase().trim(),html="",found=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var f=FARMACOS[i];
+    var s=(f.n+" "+f.m+" "+f.cl+" "+f.pi+" "+f.ind).toLowerCase();
+    if(!term||s.indexOf(term)!==-1){html+=renderFicha(f,i);found++;}
+  }
+  list.innerHTML=html||"<div style='text-align:center;padding:20px;color:#9ca3af;font-size:13px;'>Sin resultados</div>";
+  if(count)count.textContent=found+(found===1?" farmaco":" farmacos");
+}
+window.addEventListener("load",function(){initEPW();filtrarFarmacos("");});
+</script>
+</body>
+</html>

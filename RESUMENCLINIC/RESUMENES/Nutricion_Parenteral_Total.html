@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Nutrición Parenteral Total · Clínica Rápida</title>
+<style>
+
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--g);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--g);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--g);border-color:var(--g);color:#fff;}
+.pchip.pw.on{background:var(--am);border-color:var(--am);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kn{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:80px;font-size:11px;font-weight:700;color:var(--g);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.ab{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab-ok{background:var(--gl);border-color:var(--gm);}
+.ab-no{background:var(--rl);border-color:var(--rm);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--g);}
+.ab-no .ab-t{color:var(--r);}
+.ab-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 14px;position:relative;line-height:1.5;}
+.ab-i::before{content:'o';position:absolute;left:0;opacity:0.6;}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--gray-900);padding:5px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--rl);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--r);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'!';position:absolute;left:0;font-size:11px;font-weight:700;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-start{background:var(--g);color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.a-end{background:var(--gl);color:var(--g);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--gm);}
+.a-act{background:#fff;border:1.5px solid var(--bd);color:var(--gray-900);}
+.a-dec{background:var(--al);border:1.5px solid var(--am);color:var(--a);font-weight:600;}
+.a-arr{text-align:center;font-size:18px;color:var(--gray-600);margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--rl);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--r);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--gray-50);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--gray-900);}
+.lab-a{font-size:11px;color:var(--r);margin-top:3px;font-weight:600;}
+.sc{border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;margin-bottom:10px;}
+.sc-h{background:var(--gl);padding:8px 12px;font-size:12px;font-weight:700;color:var(--g);}
+.sc-b{padding:10px 12px;}
+.sc-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.sc-r:last-child{border-bottom:none;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:12px;text-align:center;}
+.res-ok{background:var(--gl);color:var(--g);}
+.res-mid{background:var(--al);color:var(--a);}
+.res-high{background:var(--rl);color:var(--r);}
+.res-score{font-size:26px;font-weight:700;}
+.res-label{font-size:13px;font-weight:600;margin-top:4px;}
+.res-action{font-size:12px;margin-top:6px;line-height:1.5;opacity:0.9;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.ind-o{background:#ede9fe;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.ind-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:#4a1d8a;margin-bottom:6px;}
+.ind-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.ind-oi::before{content:'>';position:absolute;left:0;color:#7c3aed;font-weight:700;}
+.ind-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ind-cb.on::after{content:'v';color:#7c3aed;font-size:10px;font-weight:700;}
+.ind-al{background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--r);}
+.pbtn{background:#4c1d95;color:#fff;border:none;padding:10px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--g);text-decoration:none;font-weight:500;}
+@media(max-width:480px){.lab-g{grid-template-columns:1fr;}}
+
+.cr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;}
+.cl{font-size:12.5px;color:var(--gray-700);}
+.clab{font-size:11px;font-weight:700;color:var(--gray-600);margin:8px 0 5px;}
+.pchips{display:flex;gap:6px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0f766e,#14b8a6);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🥣</div>
+    <div>
+      <div class="hdr-eye">Nutrición · Medicina Interna · Terapia Intensiva</div>
+      <div class="hdr-title">Nutrición Parenteral Total (NPT)</div>
+      <div class="hdr-sub">ASPEN 2016 · ESPEN 2019 · Adulto</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">GIR menor de 5 mg/kg/min</span>
+    <span class="badge">Central si dextrosa mayor de 12.5%</span>
+    <span class="badge">Vigilar refeeding</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">25</div><div class="qs-l">kcal/kg meta</div></div>
+  <div class="qs"><div class="qs-v">1.2–2</div><div class="qs-l">g/kg proteína</div></div>
+  <div class="qs"><div class="qs-v">menor 5</div><div class="qs-l">GIR mg/kg/min</div></div>
+  <div class="qs"><div class="qs-v">30%</div><div class="qs-l">lípidos de NPC</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('calc',this)">🧮 Calculadora</button>
+  <button class="tab" onclick="showT('req',this)">📊 Requerimientos</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('via',this)">🏥 Vía / Osmolaridad</button>
+  <button class="tab" onclick="showT('comp',this)">⚠️ Complicaciones</button>
+  <button class="tab" onclick="showT('mon',this)">🧪 Monitoreo</button>
+  <button class="tab" onclick="showT('adit',this)">💊 Aditivos</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('ret',this)">📅 Retiro</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Nutrición parenteral total (NPT):</strong> aporte intravenoso de todos los macronutrientes (dextrosa, aminoácidos, lípidos), electrolitos, vitaminas y oligoelementos cuando el tubo digestivo no puede usarse o no cubre los requerimientos.</p></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">✅</span><div><div class="at">Si el intestino funciona, úsalo</div>La vía enteral es preferida (más fisiológica, menos infecciones, más barata). La NPT se reserva para cuando el enteral está contraindicado o es insuficiente.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Indicaciones y contraindicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="ab ab-ok"><div class="ab-t">Indicaciones</div>
+      <div class="ab-i">Íleo u obstrucción intestinal prolongada</div>
+      <div class="ab-i">Síndrome de intestino corto / falla intestinal</div>
+      <div class="ab-i">Fístula enterocutánea de alto gasto</div>
+      <div class="ab-i">Malabsorción severa · isquemia mesentérica</div>
+      <div class="ab-i">Intolerancia o imposibilidad de nutrición enteral por más de 5–7 días</div>
+      <div class="ab-i">Pancreatitis grave sin acceso enteral tolerado</div>
+    </div>
+    <div class="ab ab-no"><div class="ab-t">Contraindicaciones / no indicada</div>
+      <div class="ab-i">Tubo digestivo funcional (usar enteral)</div>
+      <div class="ab-i">Necesidad menor de 5–7 días en paciente bien nutrido</div>
+      <div class="ab-i">Inestabilidad hemodinámica severa (estabilizar primero)</div>
+      <div class="ab-i">Al final de la vida sin beneficio</div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Componentes y aporte calórico</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t"><thead><tr><th>Componente</th><th>Aporte</th><th>Notas</th></tr></thead><tbody>
+      <tr><td class="dn">Dextrosa</td><td>3.4 kcal/g</td><td>Carbohidrato; limita el GIR</td></tr>
+      <tr><td class="dn">Aminoácidos</td><td>4 kcal/g</td><td>Proteína; solución al 10%</td></tr>
+      <tr><td class="dn">Lípidos</td><td>9 kcal/g</td><td>Emulsión 20% ≈ 2 kcal/mL</td></tr>
+      <tr><td class="dn">Electrolitos / vitaminas / oligoelementos</td><td>—</td><td>Aditivos diarios según labs</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- CALCULADORA -->
+<div class="panel" id="tab-calc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Calculadora de NPT (adulto)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="calc-w">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;">1 · Paciente</div>
+      <div class="cr"><span class="cl">Peso (kg)</span><input class="calc-in" id="np-peso" type="number" value="70" oninput="nptCalc()"></div>
+      <div class="cr"><span class="cl">Talla (cm)</span><input class="calc-in" id="np-talla" type="number" placeholder="170" oninput="nptCalc()"></div>
+      <div class="cr"><span class="cl">Sexo</span><span><button class="pchip on" id="sx-m" onclick="nSex('m')">H</button> <button class="pchip" id="sx-f" onclick="nSex('f')">M</button></span></div>
+      <div style="margin-top:6px;font-size:11px;font-weight:700;color:var(--gray-600);">Dosificar sobre</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;" id="wm-row">
+        <button class="pchip on" onclick="nWM('actual',this)">Actual</button>
+        <button class="pchip" onclick="nWM('ideal',this)">Ideal</button>
+        <button class="pchip" onclick="nWM('adj',this)">Ajustado</button>
+      </div>
+      <div id="np-wline" style="font-size:11.5px;color:var(--gray-600);margin-top:8px;background:#fff;border:1px solid var(--bd);border-radius:6px;padding:7px 9px;">Ingresa talla para peso ideal/ajustado.</div>
+    </div>
+
+    <div class="calc-w">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;">2 · Metas</div>
+      <div class="clab">Calorías (kcal/kg)</div>
+      <div class="pchips" id="k-row"><button class="pchip" onclick="nK(20,this)">20</button><button class="pchip on" onclick="nK(25,this)">25</button><button class="pchip" onclick="nK(30,this)">30</button></div>
+      <div class="clab">Proteína (g/kg)</div>
+      <div class="pchips" id="p-row"><button class="pchip" onclick="nP(0.8,this)">0.8</button><button class="pchip on" onclick="nP(1.2,this)">1.2</button><button class="pchip" onclick="nP(1.5,this)">1.5</button><button class="pchip" onclick="nP(2.0,this)">2.0</button></div>
+      <div class="clab">Lípidos (% no proteicas)</div>
+      <div class="pchips" id="l-row"><button class="pchip" onclick="nL(20,this)">20%</button><button class="pchip on" onclick="nL(30,this)">30%</button><button class="pchip" onclick="nL(40,this)">40%</button></div>
+      <div class="cr" style="margin-top:8px;"><span class="cl">Fluidos (mL/kg)</span><input class="calc-in" id="np-fluid" type="number" value="30" oninput="nptCalc()"></div>
+      <div style="margin-top:8px;"><button class="pchip" id="np-auto" onclick="nAuto(this)">⚙️ Auto-ajustar dextrosa a GIR ≤5</button></div>
+    </div>
+
+    <div class="calc-w">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;">3 · Ajustes (opcional)</div>
+      <div class="cr"><span class="cl">Propofol (mL/día)</span><input class="calc-in" id="np-prop" type="number" placeholder="0" oninput="nptCalc()"></div>
+      <div class="cr"><span class="cl">Dextrosa extra (g/día)</span><input class="calc-in" id="np-dex" type="number" placeholder="0" oninput="nptCalc()"></div>
+      <div class="cr"><span class="cl">Triglicéridos (mg/dL)</span><input class="calc-in" id="np-tg" type="number" placeholder="—" oninput="nptCalc()"></div>
+    </div>
+
+    <div id="np-out"></div>
+  </div></div>
+</div>
+
+<!-- REQUERIMIENTOS -->
+<div class="panel" id="tab-req">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Requerimientos diarios (adulto)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Componente</th><th>Rango</th><th>Nota</th></tr></thead><tbody>
+      <tr><td class="dn">Energía</td><td>20–25 kcal/kg (crítico) · 25–30 (repleción)</td><td>Evitar sobrealimentar</td></tr>
+      <tr><td class="dn">Proteína</td><td>1.2–1.5 g/kg (estrés) · 1.5–2.0 (crítico/quemado); TSR/CRRT hasta 2.5</td><td>4 kcal/g</td></tr>
+      <tr><td class="dn">Dextrosa (GIR)</td><td>máximo 4–5 mg/kg/min</td><td>3.4 kcal/g</td></tr>
+      <tr><td class="dn">Lípidos</td><td>≈1 g/kg (máx 2.5); 20–30% de las no proteicas</td><td>9 kcal/g; TG menor de 400</td></tr>
+      <tr><td class="dn">Fluidos</td><td>30–35 mL/kg</td><td>Ajustar a balance</td></tr>
+      <tr><td class="dn">Relación cal:N</td><td>100–150 : 1</td><td>N = proteína/6.25</td></tr>
+    </tbody></table></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div><div class="at">GIR es el número de seguridad</div>Glucosa (g) × 1000 ÷ (peso × 1440) = mg/kg/min. Por encima de 4–5 hay riesgo de hiperglucemia e hígado graso.</div></div>
+  </div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">¿Enteral o parenteral? · Inicio</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="an a-start">¿El tubo digestivo es utilizable?</div>
+    <div class="a-arr">↓</div>
+    <div class="a-br"><div class="a-yes">SÍ → Nutrición enteral (preferida)</div><div class="a-no">NO → Parenteral</div></div>
+    <div class="a-arr">↓</div>
+    <div class="an a-act">¿Se requiere más de 5–7 días? (antes si ya está desnutrido)</div>
+    <div class="a-arr">↓</div>
+    <div class="an a-act">Elegir vía: central (osmolaridad alta / largo plazo) vs periférica (corto plazo, menor de 900 mOsm/L)</div>
+    <div class="a-arr">↓</div>
+    <div class="an a-dec">Iniciar al 50% de la meta el día 1 · avanzar a meta en 2–3 días si tolera glucemia</div>
+    <div class="a-arr">↓</div>
+    <div class="an a-end">Monitorear y titular · retirar de forma gradual</div>
+  </div></div>
+</div>
+
+<!-- VÍA -->
+<div class="panel" id="tab-via">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Vía central vs periférica (osmolaridad)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th></th><th>Central (NPT)</th><th>Periférica (NPP)</th></tr></thead><tbody>
+      <tr><td class="dn">Osmolaridad</td><td>Sin límite</td><td>menor de 900 mOsm/L</td></tr>
+      <tr><td class="dn">Dextrosa final</td><td>Sin límite</td><td>≤ 10–12.5%</td></tr>
+      <tr><td class="dn">Duración</td><td>Largo plazo</td><td>Corto plazo (menor 10–14 días)</td></tr>
+      <tr><td class="dn">Acceso</td><td>Catéter central / PICC</td><td>Vena periférica</td></tr>
+    </tbody></table></div>
+    <div class="alert a-i" style="margin-top:10px;"><span class="ai">🔌</span><div><div class="at">Regla práctica</div>Dextrosa final mayor de 12.5% u osmolaridad mayor de 900 mOsm/L → requiere vía central. La calculadora lo marca automáticamente.</div></div>
+  </div></div>
+</div>
+
+<!-- COMPLICACIONES -->
+<div class="panel" id="tab-comp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones y seguridad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🔻</span><div><div class="at">Síndrome de realimentación (refeeding)</div>En desnutridos/ayuno prolongado: caída de fósforo, potasio y magnesio al reiniciar glucosa. Iniciar al 50%, reponer P/K/Mg y dar tiamina antes.</div></div>
+    <div class="alert a-w"><span class="ai">🍬</span><div><div class="at">Hiperglucemia</div>Muy común. Vigilar glucosa c/6 h; agregar insulina; respetar el GIR menor de 5.</div></div>
+    <div class="alert a-w"><span class="ai">🟠</span><div><div class="at">Colestasis / esteatosis hepática</div>Por sobrealimentación, exceso de dextrosa o NPT prolongada. Evitar overfeeding, considerar ciclar la NPT (12–16 h).</div></div>
+    <div class="alert a-i"><span class="ai">🧫</span><div><div class="at">Infección del catéter</div>Técnica estéril; sospechar sepsis por catéter ante fiebre sin foco. Hipertrigliceridemia: TG mayor de 400 → suspender lípidos.</div></div>
+  </div></div>
+</div>
+
+<!-- MONITOREO -->
+<div class="panel" id="tab-mon">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Monitoreo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Parámetro</th><th>Frecuencia</th></tr></thead><tbody>
+      <tr><td class="dn">Glucosa capilar</td><td>Cada 6 h</td></tr>
+      <tr><td class="dn">Electrolitos + P / Mg</td><td>Diario al inicio, luego 2–3×/semana</td></tr>
+      <tr><td class="dn">Triglicéridos</td><td>Basal y semanal</td></tr>
+      <tr><td class="dn">Pruebas de función hepática</td><td>Semanal</td></tr>
+      <tr><td class="dn">Peso y balance hídrico</td><td>Diario</td></tr>
+      <tr><td class="dn">Nitrógeno ureico / prealbúmina</td><td>Semanal (tendencia)</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- ADITIVOS -->
+<div class="panel" id="tab-adit">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Aditivos diarios</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Aditivo</th><th>Dosis habitual</th></tr></thead><tbody>
+      <tr><td class="dn">Sodio</td><td>1–2 mEq/kg</td></tr>
+      <tr><td class="dn">Potasio</td><td>1–2 mEq/kg (según función renal)</td></tr>
+      <tr><td class="dn">Magnesio</td><td>8–20 mEq</td></tr>
+      <tr><td class="dn">Calcio</td><td>10–15 mEq</td></tr>
+      <tr><td class="dn">Fosfato</td><td>20–40 mmol</td></tr>
+      <tr><td class="dn">Oligoelementos + multivitamínico IV</td><td>1 dosis/día</td></tr>
+    </tbody></table></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div><div class="at">Refeeding</div>Reponer fósforo, potasio, magnesio y tiamina antes de iniciar en pacientes desnutridos.</div></div>
+  </div></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios especiales</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Obesidad:</strong> dosificar sobre peso ajustado; alimentación permisiva (permissive underfeeding), proteína alta.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>ERC / CRRT:</strong> vigilar K/PO4; en CRRT la proteína sube (hasta 2–2.5 g/kg por pérdidas).</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Hepatopatía:</strong> no restringir proteína de rutina; vigilar colestasis; considerar ciclar la NPT.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Crítico:</strong> iniciar hipocalórico (20–25 kcal/kg), proteína 1.5–2; evitar overfeeding temprano.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Propofol:</strong> aporta 1.1 kcal/mL (lípido) — descontarlo (la calculadora lo hace).</div></div>
+  </div></div>
+</div>
+
+<!-- RETIRO -->
+<div class="panel" id="tab-ret">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Retiro y transición</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p><strong>Transición a enteral/oral:</strong> ir subiendo el aporte enteral y bajando la NPT; suspender la NPT cuando el enteral/oral cubra ~60% de las metas.</p>
+      <p><strong>Destete:</strong> no suspender de golpe — reducir a la mitad 1–2 h antes de retirar, o dejar dextrosa al 10% para evitar hipoglucemia de rebote.</p>
+      <p><strong>Ciclado:</strong> infundir en 12–16 h (útil en domicilio o para proteger el hígado en NPT prolongada).</p>
+    </div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Referencias</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="bib-i"><span class="bib-n">ASPEN</span><span class="bib-y">2016</span><div class="bib-r">Guidelines for the Provision and Assessment of Nutrition Support Therapy in the Adult Critically Ill Patient (SCCM/ASPEN).</div></div>
+    <div class="bib-i"><span class="bib-n">ESPEN</span><span class="bib-y">2019</span><div class="bib-r">Guideline on clinical nutrition in the intensive care unit. Clin Nutr.</div></div>
+    <div class="bib-i"><span class="bib-n">ASPEN</span><span class="bib-y">2014</span><div class="bib-r">Appropriate dosing for parenteral nutrition: ASPEN recommendations.</div></div>
+    <div style="font-size:11.5px;color:var(--gray-600);margin-top:8px;">Material de apoyo para adulto. Verificar contra guías vigentes y valoración por nutrición/farmacia.</div>
+  </div></div>
+</div>
+
+<script>
+function showT(id,btn){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.querySelectorAll('.tab');for(i=0;i<t.length;i++)t[i].classList.remove('on');document.getElementById('tab-'+id).classList.add('on');btn.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var b=h.nextElementSibling,g=h.querySelector('.sg');if(b.classList.contains('hidden')){b.classList.remove('hidden');if(g)g.classList.add('open');}else{b.classList.add('hidden');if(g)g.classList.remove('open');}}
+function nm(id){var v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;}
+function fmt(x,d){var p=Math.pow(10,d||0);return String(Math.round(x*p)/p);}
+var nK_=25,nP_=1.2,nL_=30,nSex_='m',nWM_='actual',nAuto_=false;
+function pOn(row,btn){var b=document.getElementById(row).getElementsByClassName('pchip');for(var i=0;i<b.length;i++)b[i].classList.remove('on');btn.classList.add('on');}
+function nK(v,b){nK_=v;pOn('k-row',b);nptCalc();}
+function nP(v,b){nP_=v;pOn('p-row',b);nptCalc();}
+function nL(v,b){nL_=v;pOn('l-row',b);nptCalc();}
+function nWM(v,b){nWM_=v;pOn('wm-row',b);nptCalc();}
+function nSex(v){nSex_=v;document.getElementById('sx-m').classList.toggle('on',v==='m');document.getElementById('sx-f').classList.toggle('on',v==='f');nptCalc();}
+function nAuto(b){nAuto_=!nAuto_;b.classList.toggle('on',nAuto_);nptCalc();}
+function nptCalc(){
+  var wA=nm('np-peso'),talla=nm('np-talla'),fl=nm('np-fluid'),out=document.getElementById('np-out'),wl=document.getElementById('np-wline');
+  var ibw=null,adj=null,bmi=null;
+  if(talla&&talla>0){var inch=talla/2.54;ibw=(nSex_==='f'?45.5:50)+2.3*(inch-60);if(ibw<30)ibw=30;if(wA)adj=ibw+0.4*(wA-ibw);if(wA)bmi=wA/Math.pow(talla/100,2);}
+  if(talla&&talla>0&&wA)wl.innerHTML='Actual <b>'+fmt(wA,0)+'</b> · IMC <b>'+fmt(bmi,1)+'</b> · Ideal <b>'+fmt(ibw,0)+'</b> · Ajustado <b>'+fmt(adj,0)+'</b> kg'+(bmi>=30?' · <span style="color:var(--r);">IMC ≥30: usa ajustado</span>':'');
+  else wl.textContent='Ingresa talla para peso ideal/ajustado.';
+  var w=(nWM_==='ideal'&&ibw)?ibw:(nWM_==='adj'&&adj)?adj:wA;
+  if(!w||w<=0){out.innerHTML='<div class="alert a-w"><span class="ai">✏️</span><div>Ingresa el peso para calcular.</div></div>';return;}
+  var totalKcal=w*nK_,protG=w*nP_,protKcal=protG*4,npc=totalKcal-protKcal;
+  var lipKcal=npc*(nL_/100),dexKcal=npc-lipKcal;
+  var propMl=nm('np-prop')||0,dexExt=nm('np-dex')||0,propKcal=propMl*1.1,propLipG=propKcal/9,dexExtKcal=dexExt*3.4;
+  var lipG=lipKcal/9,dexG=dexKcal/3.4,capped=false;
+  var maxDexG=5*w*1440/1000;
+  if(nAuto_&&dexG>maxDexG){var freed=(dexG-maxDexG)*3.4;dexG=maxDexG;dexKcal=dexG*3.4;var lipCap=2.5*w*9;lipKcal=Math.min(lipKcal+freed,lipCap);lipG=lipKcal/9;capped=true;}
+  var gir=dexG*1000/(w*1440),tpnDexG=Math.max(0,dexG-dexExt),tpnLipG=Math.max(0,lipG-propLipG);
+  var aaMl=protG/0.10,tpnLipMl=tpnLipG/0.2,volW=(wA&&wA>0)?wA:w,vol=(fl&&fl>0)?volW*fl:null;
+  var dexPct=vol?dexG/vol*100:null,lipPerKg=lipG/w,calN=npc/(protG/6.25),tg=nm('np-tg');
+  var d1Dex=dexG*0.5,d1GIR=gir*0.5;
+
+  var h='<div class="calc-result res-ok" style="text-align:left;"><div style="font-size:11px;text-transform:uppercase;font-weight:700;opacity:0.8;">Energía total (meta)</div><div class="res-score" style="font-size:24px;">'+fmt(totalKcal,0)+' kcal/día</div></div>';
+  h+='<div class="tw" style="margin-top:10px;"><table class="t"><tbody>'
+    +'<tr><td class="dn">Aminoácidos</td><td><strong>'+fmt(protG,0)+' g</strong></td><td>'+nP_+' g/kg · '+fmt(aaMl,0)+' mL AA 10%</td></tr>'
+    +'<tr><td class="dn">Dextrosa (NPT)</td><td><strong>'+fmt(tpnDexG,0)+' g</strong></td><td>'+(dexPct?fmt(dexPct,1)+'% final':'')+(dexExt>0?' · +'+fmt(dexExt,0)+' g ext':'')+'</td></tr>'
+    +'<tr><td class="dn">GIR (glucosa total)</td><td><strong>'+fmt(gir,1)+'</strong></td><td>mg/kg/min · meta menor de 5</td></tr>'
+    +'<tr><td class="dn">Lípidos 20% (NPT)</td><td><strong>'+fmt(tpnLipG,0)+' g</strong></td><td>'+fmt(tpnLipMl,0)+' mL · '+fmt(lipPerKg,1)+' g/kg'+(propMl>0?' · propofol '+fmt(propKcal,0)+' kcal':'')+'</td></tr>'
+    +'<tr><td class="dn">Volumen total</td><td><strong>'+(vol?fmt(vol,0)+' mL':'—')+'</strong></td><td>'+(fl?fl+' mL/kg':'')+'</td></tr>'
+    +'<tr><td class="dn">Relación cal:N</td><td><strong>'+fmt(calN,0)+' : 1</strong></td><td>meta 100–150</td></tr>'
+    +'</tbody></table></div>';
+
+  if(gir>5)h+='<div class="alert a-r"><span class="ai">⛔</span><div>GIR '+fmt(gir,1)+' excede 5 mg/kg/min. Baja dextrosa o activa el auto-ajuste.</div></div>';
+  else if(gir>4)h+='<div class="alert a-w"><span class="ai">⚠️</span><div>GIR '+fmt(gir,1)+' cerca del límite. Vigila glucemias.</div></div>';
+  else h+='<div class="alert a-g"><span class="ai">✅</span><div>GIR '+fmt(gir,1)+' mg/kg/min en rango.</div></div>';
+  if(capped)h+='<div class="alert a-g"><span class="ai">⚙️</span><div>Auto-ajuste: dextrosa limitada a GIR 5; exceso a lípidos (tope 2.5 g/kg).</div></div>';
+  if(lipPerKg>2.5)h+='<div class="alert a-r"><span class="ai">⛔</span><div>Lípidos '+fmt(lipPerKg,1)+' g/kg mayor de 2.5. Reduce el % de lípidos.</div></div>';
+  else if(lipPerKg>1)h+='<div class="alert a-w"><span class="ai">⚠️</span><div>Lípidos '+fmt(lipPerKg,1)+' g/kg mayor de 1; vigila triglicéridos.</div></div>';
+  if(tg!==null&&tg>400)h+='<div class="alert a-r"><span class="ai">⛔</span><div>Triglicéridos '+fmt(tg,0)+' mayor de 400 → suspende los lípidos.</div></div>';
+  else if(tg!==null&&tg>=250)h+='<div class="alert a-w"><span class="ai">⚠️</span><div>Triglicéridos '+fmt(tg,0)+' (250–400) → reduce lípidos.</div></div>';
+  if(dexPct!==null&&dexPct>12.5)h+='<div class="alert a-i"><span class="ai">🔌</span><div>Dextrosa '+fmt(dexPct,1)+'% mayor de 12.5% → requiere vía central.</div></div>';
+  else if(dexPct!==null)h+='<div class="alert a-g"><span class="ai">🔌</span><div>Dextrosa '+fmt(dexPct,1)+'% — posible vía periférica si osmolaridad menor de 900.</div></div>';
+  if(propMl>0||dexExt>0)h+='<div class="alert a-g"><span class="ai">➖</span><div>Se descontaron '+(propMl>0?fmt(propKcal,0)+' kcal de propofol':'')+(propMl>0&&dexExt>0?' y ':'')+(dexExt>0?fmt(dexExtKcal,0)+' kcal de dextrosa externa':'')+'.</div></div>';
+  h+='<div class="alert a-w"><span class="ai">🔻</span><div><div class="at">Refeeding</div>Iniciar al 50% (día 1: dextrosa ≈ '+fmt(d1Dex,0)+' g, GIR '+fmt(d1GIR,1)+'); avanzar en 2–3 días. Reponer P/K/Mg y tiamina.</div></div>';
+
+  h+='<div class="rx"><div class="rx-t">Orden NPT (adulto · peso '+nWM_+' '+fmt(w,0)+' kg)</div>'
+    +'<div class="rx-i">Energía: <strong>'+fmt(totalKcal,0)+' kcal/día</strong></div>'
+    +'<div class="rx-i">Aminoácidos: <strong>'+fmt(protG,0)+' g</strong> ('+nP_+' g/kg) ≈ '+fmt(aaMl,0)+' mL AA 10%</div>'
+    +'<div class="rx-i">Dextrosa (NPT): <strong>'+fmt(tpnDexG,0)+' g</strong> — GIR '+fmt(gir,1)+' mg/kg/min</div>'
+    +'<div class="rx-i">Lípidos 20% (NPT): <strong>'+fmt(tpnLipG,0)+' g</strong> ≈ '+fmt(tpnLipMl,0)+' mL</div>'
+    +'<div class="rx-i">Volumen: <strong>'+(vol?fmt(vol,0)+' mL/día':'a definir')+'</strong> · cal:N '+fmt(calN,0)+':1</div>'
+    +(dexPct!==null&&dexPct>12.5?'<div class="rx-i">Vía: <strong>CENTRAL</strong> (dextrosa mayor de 12.5%)</div>':'')
+    +'<div class="rx-i">Iniciar al 50% · electrolitos/vitaminas/oligoelementos según labs · vigilar glucosa c/6 h, TG y PFH</div>'
+    +'</div>';
+  h+='<button class="pbtn" style="background:#0f766e;" onclick="nptCopy()">📋 Copiar orden</button><div id="np-msg" style="text-align:center;font-size:12px;color:var(--g);font-weight:700;margin-top:4px;"></div>';
+  window._nptOrder=document.createElement('div');
+  out.innerHTML=h;
+  // guardar texto de la orden
+  window._nptTxt='ORDEN NPT (adulto, peso '+nWM_+' '+fmt(w,0)+' kg) — meta '+nK_+' kcal/kg\n'
+    +'- Energia total: '+fmt(totalKcal,0)+' kcal/dia\n'
+    +'- Aminoacidos: '+fmt(protG,0)+' g ('+nP_+' g/kg) ~ '+fmt(aaMl,0)+' mL AA 10%\n'
+    +'- Dextrosa (NPT): '+fmt(tpnDexG,0)+' g'+(dexExt>0?' (+'+fmt(dexExt,0)+' g ext)':'')+' - GIR '+fmt(gir,1)+' mg/kg/min\n'
+    +'- Lipidos 20% (NPT): '+fmt(tpnLipG,0)+' g ~ '+fmt(tpnLipMl,0)+' mL ('+fmt(lipPerKg,1)+' g/kg)\n'
+    +'- Volumen: '+(vol?fmt(vol,0)+' mL/dia':'a definir')+' - cal:N '+fmt(calN,0)+':1\n'
+    +(dexPct!==null&&dexPct>12.5?'- Via CENTRAL (dextrosa >12.5%)\n':'')
+    +'- Iniciar al 50% (dia 1 dextrosa ~'+fmt(d1Dex,0)+' g). Avanzar en 2-3 dias. Retiro gradual.\n'
+    +'- Electrolitos, oligoelementos y multivitaminico segun labs. Vigilar glucosa c/6h, TG y PFH.';
+}
+function nptCopy(){var t=window._nptTxt||'',m=document.getElementById('np-msg');var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(ta);if(ok)m.textContent='Copiado ✓';else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){m.textContent='Copiado ✓';});}else m.textContent='Copia manual';setTimeout(function(){m.textContent='';},2500);}
+nptCalc();
+</script>
+
+</body>
+</html>

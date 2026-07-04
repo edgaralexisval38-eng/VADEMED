@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ITU — Infección del Tracto Urinario</title>
+<style>
+:root{--green:#0a5c45;--green-mid:#0f7a5a;--green-light:#e1f5ee;--blue:#0c3b6e;--blue-mid:#1a6bbd;--blue-light:#e6f1fb;--red:#7b1c1c;--red-mid:#c0392b;--red-light:#fdeaea;--amber:#7a4a00;--amber-mid:#d97706;--amber-light:#fff8e1;--purple:#4a1d8a;--purple-light:#ede9fe;--pink:#9d174d;--pink-light:#fce7f3;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--border:#e2e8f0;--radius:10px;--radius-sm:6px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.pop-selector{background:#fff;border-bottom:2px solid var(--border);padding:0;}
+.pop-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--gray-400);padding:10px 14px 6px;}
+.pop-grid{display:grid;grid-template-columns:repeat(4,1fr);}
+.pop-btn{padding:12px 6px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;border-bottom:3px solid transparent;transition:all 0.15s;}
+.pop-btn .pop-icon{font-size:22px;}
+.pop-btn .pop-lbl{font-size:10px;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.3px;}
+.p-adulto{border-bottom-color:var(--blue-mid);background:var(--blue-light);}
+.p-adulto .pop-lbl{color:var(--blue);}
+.p-ped{border-bottom-color:#f59e0b;background:#fff8e1;}
+.p-ped .pop-lbl{color:#92400e;}
+.p-gin{border-bottom-color:#db2777;background:var(--pink-light);}
+.p-gin .pop-lbl{color:var(--pink);}
+.p-anc{border-bottom-color:#7c3aed;background:var(--purple-light);}
+.p-anc .pop-lbl{color:var(--purple);}
+.hdr{color:#fff;padding:0;transition:background 0.2s;}
+.hdr-blue{background:linear-gradient(135deg,#0c3b6e,#1a6bbd);}
+.hdr-amber{background:linear-gradient(135deg,#92400e,#d97706);}
+.hdr-pink{background:linear-gradient(135deg,#9d174d,#db2777);}
+.hdr-purple{background:linear-gradient(135deg,#4a1d8a,#7c3aed);}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.65);margin-bottom:3px;}
+.hdr-title{font-size:18px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.hdr-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--border);}
+.qstat{padding:10px 6px;text-align:center;border-right:1px solid var(--border);}
+.qstat:last-child{border-right:none;}
+.qstat-val{font-size:13px;font-weight:700;}
+.qstat-lbl{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--border);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab.active{color:var(--tc,var(--blue-mid));border-bottom-color:var(--tc,var(--blue-mid));}
+.tab.enf{color:#7c3aed;}.tab.enf.active{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tab.bib{color:var(--blue-mid);}.tab.bib.active{color:var(--blue-mid);border-bottom-color:var(--blue-mid);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.active{display:block;}
+.pc{display:none;}.pc.active{display:block;}
+.sec{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--radius-sm);margin-bottom:6px;border-left:3px solid;}
+.kp:last-child{margin-bottom:0;}
+.kn{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;color:#fff;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.alert{border-radius:var(--radius-sm);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--red-light);color:var(--red);border-left:3px solid var(--red-mid);}
+.a-w{background:var(--amber-light);color:var(--amber);border-left:3px solid var(--amber-mid);}
+.a-i{background:var(--blue-light);color:var(--blue);border-left:3px solid var(--blue-mid);}
+.a-g{background:var(--green-light);color:var(--green);border-left:3px solid var(--green-mid);}
+.a-p{background:var(--pink-light);color:var(--pink);border-left:3px solid #db2777;}
+.a-v{background:var(--purple-light);color:var(--purple);border-left:3px solid #7c3aed;}
+.a-gr{background:var(--gray-100);color:var(--gray-700);border-left:3px solid #6b7280;}
+.tw{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--border);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.t tr:hover td{background:var(--gray-50);}
+.dn{font-weight:700;color:var(--blue);}
+.dm{color:var(--red);font-weight:600;}
+.dn2{color:var(--gray-600);font-size:11px;}
+.lb{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.l1{background:#0c3b6e;color:#fff;}
+.l2{background:#1a6bbd;color:#fff;}
+.l3{background:#6b7280;color:#fff;}
+.lc{background:var(--blue-light);color:var(--blue);}
+.dname{font-weight:700;color:var(--blue);display:block;margin-bottom:2px;}
+.dnote{color:var(--gray-600);font-size:11px;margin-top:2px;display:block;}
+.nodar{background:var(--red-light);border:1.5px solid var(--red-mid);border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;}
+.nodar-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.nodar-i{display:flex;align-items:flex-start;gap:8px;padding:4px 0;font-size:12.5px;color:var(--red);border-bottom:1px solid rgba(192,57,43,0.15);}
+.nodar-i:last-child{border-bottom:none;}
+.nodar-i::before{content:'❌';font-size:12px;flex-shrink:0;margin-top:1px;}
+.inter-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;}
+.inter-i:last-child{border-bottom:none;}
+.inter-d{font-weight:600;color:var(--gray-900);min-width:160px;flex-shrink:0;}
+.inter-e{color:var(--gray-700);flex:1;}
+.sev{font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;flex-shrink:0;}
+.s-a{background:var(--red-light);color:var(--red);}
+.s-m{background:var(--amber-light);color:var(--amber);}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--gray-50);border-radius:var(--radius-sm);padding:8px 10px;border:1px solid var(--border);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:4px;}
+.lab-v{font-size:12.5px;color:var(--gray-900);line-height:1.5;}
+.lab-a{font-size:11px;color:var(--red);margin-top:3px;font-weight:600;}
+.calc-w{background:var(--gray-50);border-radius:var(--radius-sm);padding:12px 14px;border:1px solid var(--border);margin-bottom:10px;}
+.calc-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:8px;}
+.calc-r{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.calc-l{font-size:12px;color:var(--gray-700);flex-shrink:0;}
+.calc-in{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;font-size:14px;font-weight:700;width:90px;text-align:center;outline:none;}
+.calc-in:focus{border-color:var(--blue-mid);}
+.calc-res{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+.calc-rr{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border);font-size:12.5px;}
+.calc-rd{color:var(--blue);font-weight:600;}
+.calc-rv{color:var(--gray-900);font-weight:700;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-start{color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.a-end{background:var(--green-light);color:var(--green);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--green-mid);}
+.a-act{background:#fff;border:1.5px solid var(--border);color:var(--gray-900);}
+.a-dec{background:var(--amber-light);border:1.5px solid var(--amber-mid);color:var(--amber);font-weight:600;}
+.a-dan{background:var(--red-light);border:1.5px solid var(--red-mid);color:var(--red);font-weight:600;}
+.a-arr{text-align:center;font-size:18px;color:var(--gray-400);line-height:1;margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--red-light);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--red);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.sc{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:10px;}
+.sc:last-child{margin-bottom:0;}
+.sc-h{background:var(--blue-light);padding:8px 12px;font-size:12px;font-weight:700;color:var(--blue);}
+.sc-b{padding:10px 12px;}
+.sc-r{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.sc-r:last-child{border-bottom:none;}
+.sm-r{display:flex;gap:6px;margin-bottom:10px;}
+.sm-i{flex:1;border-radius:var(--radius-sm);padding:8px 4px;text-align:center;}
+.sm-l{font-size:18px;font-weight:800;display:block;}
+.sm-t{font-size:9px;display:block;margin-top:2px;font-weight:500;}
+.sA{background:#d1fae5;color:#065f46;}.sB{background:#dbeafe;color:#1e40af;}
+.sC{background:#fef3c7;color:#92400e;}.sD{background:#fee2e2;color:#991b1b;}
+.s-on{box-shadow:0 0 0 2.5px #374151;transform:scale(1.05);}.s-off{opacity:0.3;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:90px;font-size:11px;font-weight:700;text-transform:uppercase;padding-top:2px;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ab{border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab:last-child{margin-bottom:0;}
+.ab-ok{background:var(--green-light);border-color:var(--green-mid);}
+.ab-w{background:var(--amber-light);border-color:var(--amber-mid);}
+.ab-no{background:var(--red-light);border-color:var(--red-mid);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--green);}.ab-w .ab-t{color:var(--amber);}.ab-no .ab-t{color:var(--red);}
+.ab-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.ab-i::before{content:'•';position:absolute;left:0;opacity:0.6;}
+.rx{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--gray-900);padding:5px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--red-light);border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--red);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'⚠️';position:absolute;left:0;font-size:11px;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.lp{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10.5px;font-weight:600;margin-left:4px;}
+.lp-r{background:var(--red-light);color:var(--red);}
+.lp-a{background:var(--amber-light);color:var(--amber);}
+.lp-b{background:var(--blue-light);color:var(--blue);}
+.enf-h{background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.enf-b{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;}
+.enf-bh{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.enf-bb{padding:12px 14px;}
+.enf-o{background:var(--purple-light);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.enf-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.enf-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.enf-oi::before{content:'▸';position:absolute;left:0;color:#7c3aed;}
+.enf-c{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);}
+.enf-c:last-child{border-bottom:none;}
+.enf-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.enf-cb.on{background:#7c3aed;border-color:#7c3aed;}
+.enf-cb.on::after{content:'✓';color:#fff;font-size:10px;font-weight:700;}
+.enf-f{font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.enf-al{background:var(--red-light);border-left:3px solid var(--red-mid);border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--red);}
+.enf-al strong{font-weight:700;display:block;margin-bottom:2px;}
+.pbtn{background:#4c1d95;color:#fff;border:none;padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-h{background:linear-gradient(135deg,#0c3b6e,#1a6bbd);color:#fff;border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.bib-s{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden;}
+.bib-sh{background:var(--blue-light);padding:8px 14px;font-size:12px;font-weight:700;color:var(--blue);border-bottom:1px solid var(--border);}
+.bib-sb{padding:10px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--green-light);color:var(--green);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+.bib-r em{color:var(--blue);font-style:italic;}
+.lv{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-e{background:var(--purple-light);color:var(--purple);}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--blue-mid);text-decoration:none;font-weight:500;}
+@media print{.pop-selector,.tabbar,.pbtn{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--border);font-size:13px;color:var(--blue-mid);cursor:pointer;width:100%;font-family:inherit;">‹ Regresar</button>
+
+<!-- POPULATION SELECTOR -->
+<div class="pop-selector">
+  <div class="pop-title">¿Con quién estás trabajando?</div>
+  <div class="pop-grid">
+    <button class="pop-btn p-adulto" id="pb-adulto" onclick="setPop('adulto')"><span class="pop-icon">👤</span><span class="pop-lbl">Adulto</span></button>
+    <button class="pop-btn" id="pb-ped" onclick="setPop('ped')"><span class="pop-icon">🧒</span><span class="pop-lbl">Pediátrico</span></button>
+    <button class="pop-btn" id="pb-gin" onclick="setPop('gin')"><span class="pop-icon">🌸</span><span class="pop-lbl">Gineco/Obst.</span></button>
+    <button class="pop-btn" id="pb-anc" onclick="setPop('anc')"><span class="pop-icon">👴</span><span class="pop-lbl">Anciano</span></button>
+  </div>
+</div>
+
+<div class="hdr hdr-blue" id="mhdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧫</div>
+    <div>
+      <div class="hdr-eyebrow" id="eye">Adulto · Urología · Medicina Interna</div>
+      <div class="hdr-title">Infección del Tracto Urinario</div>
+      <div class="hdr-sub" id="sub">Cistitis · Pielonefritis · GPC IMSS 2024 + IDSA 2025</div>
+    </div>
+  </div>
+  <div class="hdr-badges" id="badges">
+    <span class="hdr-badge">E. coli 85%</span>
+    <span class="hdr-badge">Fosfomicina dosis única</span>
+    <span class="hdr-badge">IDSA 2025</span>
+  </div>
+</div>
+
+<div class="qstats" id="qs">
+  <div class="qstat"><div class="qstat-val" style="color:var(--blue-mid)">E. coli</div><div class="qstat-lbl">germen #1</div></div>
+  <div class="qstat"><div class="qstat-val" style="color:var(--blue-mid)">3g</div><div class="qstat-lbl">fosfomicina</div></div>
+  <div class="qstat"><div class="qstat-val" style="color:var(--blue-mid)">48-72h</div><div class="qstat-lbl">respuesta</div></div>
+  <div class="qstat"><div class="qstat-val" style="color:var(--blue-mid)">7-14d</div><div class="qstat-lbl">pielonefritis</div></div>
+</div>
+
+<div class="tabbar" id="tbar">
+  <button class="tab active" onclick="showT('resumen',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🧪 Diagnóstico</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('algo',this)">🔄 Algoritmo</button>
+  <button class="tab" onclick="showT('escalas',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('ajustes',this)">⚖️ Ajustes</button>
+  <button class="tab" onclick="showT('comps',this)">⚠️ Complic.</button>
+  <button class="tab" onclick="showT('seguimiento',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('alta',this)">🏠 Alta</button>
+  <button class="tab enf" onclick="showT('enf',this)">🩺 Enfermería</button>
+  <button class="tab bib" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel active" id="tab-resumen">
+  <!-- ADULTO -->
+  <div class="pc active" data-p="adulto">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y puntos clave</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose" style="margin-bottom:12px;"><p><strong>ITU no complicada:</strong> Mujer adulta sana, no gestante, sin anomalías urológicas ni comorbilidades.<br><strong>ITU complicada:</strong> Hombre, embarazo, IRC, DM, catéter, anomalía estructural, hospitalizado o inmunosuprimido.<br><strong>Cistitis:</strong> ITU baja (vejiga). <strong>Pielonefritis:</strong> ITU alta (riñón + pelvis renal) — fiebre obligatoria.</p></div>
+      <div class="kp" style="background:var(--blue-light);border-color:var(--blue-mid);"><div class="kn" style="background:var(--blue);">1</div><div class="kt"><strong>Cistitis no complicada en mujer:</strong> Tratar empíricamente sin urocultivo. Diagnóstico clínico con disuria + frecuencia + urgencia sin flujo vaginal. GPC IMSS 2024.</div></div>
+      <div class="kp" style="background:var(--blue-light);border-color:var(--blue-mid);"><div class="kn" style="background:var(--blue);">2</div><div class="kt"><strong>Bacteriuria asintomática NO tratar</strong> — excepto embarazo y pre-cirugía urológica. Genera resistencias sin beneficio clínico. IDSA 2019.</div></div>
+      <div class="kp" style="background:var(--blue-light);border-color:var(--blue-mid);"><div class="kn" style="background:var(--blue);">3</div><div class="kt"><strong>Urocultivo:</strong> Solo en pielonefritis, embarazo, ITU complicada, recurrente o sin respuesta a 48-72h. No rutinario en cistitis no complicada.</div></div>
+      <div class="kp" style="background:var(--blue-light);border-color:var(--blue-mid);"><div class="kn" style="background:var(--blue);">4</div><div class="kt"><strong>ITU en hombre = siempre complicada.</strong> Pensar en prostatitis, anomalía anatómica o litiasis. Urocultivo siempre. Mínimo 7-14 días de tratamiento.</div></div>
+      <div class="kp" style="background:var(--blue-light);border-color:var(--blue-mid);"><div class="kn" style="background:var(--blue);">5</div><div class="kt"><strong>Pielonefritis:</strong> Fiebre + dolor costovertebral + síntomas urinarios. Hospitalizar si fiebre &gt;38.5°C, vómito, embarazo, inmunosupresión o inestabilidad.</div></div>
+    </div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Alertas críticas</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Urosepsis — fiebre + taquicardia + hipotensión + origen urinario</div>Hemocultivos + urocultivo antes del antibiótico. Ceftriaxona 2g IV. UCI si SOFA ≥2.</div></div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Nitrofurantoína: NO usar en pielonefritis</div>No alcanza tejido renal. Solo sirve para cistitis baja. Error muy frecuente.</div></div>
+      <div class="alert a-w"><span class="ai">💊</span><div><div class="at">Fluoroquinolonas: resistencia de E. coli &gt;30% en México</div>Usar solo con antibiograma confirmado. No primera línea empírica. IDSA 2025.</div></div>
+      <div class="alert a-i"><span class="ai">ℹ️</span><div><div class="at">ITU recurrente (≥3/año): profilaxis</div>Nitrofurantoína 50 mg/noche o fosfomicina 3g c/10 días x 3 meses. Evaluar factores anatómicos.</div></div>
+    </div></div>
+  </div>
+
+  <!-- PEDIÁTRICO -->
+  <div class="pc" data-p="ped">
+    <div class="alert a-w" style="margin-bottom:12px;"><span class="ai">🧒</span><div><div class="at">ITU pediátrica — presentación radicalmente diferente por edad</div>En lactantes puede ser la única manifestación de sepsis. En niños siempre buscar anomalía urológica.</div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Clínica por grupo de edad</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Edad</th><th>Síntomas típicos</th><th>Alerta</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">&lt;3 meses</td><td>Fiebre sin foco, rechazo al alimento, irritabilidad, ictericia</td><td class="dm">Hospitalizar siempre. Sepsis workup.</td></tr>
+          <tr><td class="dn">3 m – 2 años</td><td>Fiebre sin foco, llanto al orinar, orina fétida, vómito</td><td class="dm">EGO y urocultivo si fiebre &gt;38°C sin foco</td></tr>
+          <tr><td class="dn">2 – 5 años</td><td>Disuria, frecuencia, enuresis secundaria, dolor abdominal</td><td>Urocultivo siempre</td></tr>
+          <tr><td class="dn">&gt;5 años</td><td>Similar al adulto: disuria, frecuencia, urgencia</td><td>Si fiebre: descartar pielonefritis</td></tr>
+        </tbody>
+      </table></div>
+      <div class="kp" style="background:#fff8e1;border-color:#f59e0b;margin-top:10px;"><div class="kn" style="background:#d97706;">1</div><div class="kt"><strong>Urocultivo SIEMPRE en pediatría.</strong> Confirma diagnóstico y guía antibiótico. Recolección por cateterismo en &lt;2 años (bolsa tiene alta contaminación).</div></div>
+      <div class="kp" style="background:#fff8e1;border-color:#f59e0b;"><div class="kn" style="background:#d97706;">2</div><div class="kt"><strong>ITU febril = pielonefritis hasta descartar.</strong> USG renal obligatorio en primera ITU febril. CUGM si ITU recurrente o anomalía en USG.</div></div>
+      <div class="kp" style="background:#fff8e1;border-color:#f59e0b;"><div class="kn" style="background:#d97706;">3</div><div class="kt"><strong>Niño (masculino) con ITU = anomalía hasta demostrar lo contrario.</strong> Válvulas uretra posterior, reflujo vesicoureteral. Referir a urología pediátrica.</div></div>
+    </div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Calculadora de dosis pediátrica</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="calc-w">
+        <div class="calc-t">⚖️ Ingresa el peso del paciente:</div>
+        <div class="calc-r"><span class="calc-l">Peso:</span><input type="number" class="calc-in" id="wt" placeholder="kg" min="1" max="80" oninput="calcD()"><span style="font-size:12px;color:var(--gray-600);">kg</span></div>
+        <div class="calc-res" id="cr" style="display:none">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:4px;">Dosis por dosis individual:</div>
+          <div class="calc-rr"><span class="calc-rd">Amox-Clavulanato (40mg/kg/día ÷ c/8h)</span><span class="calc-rv" id="d1">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">Cefixima (8mg/kg/día ÷ c/12h)</span><span class="calc-rv" id="d2">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">Ceftriaxona IV (75mg/kg c/24h)</span><span class="calc-rv" id="d3">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">TMP/SMX (6mg/kg TMP ÷ c/12h)</span><span class="calc-rv" id="d4">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">Gentamicina IV (5mg/kg c/24h)</span><span class="calc-rv" id="d5">—</span></div>
+          <div style="font-size:11px;color:var(--gray-600);margin-top:4px;">* Ajustar si IRC. Verificar con antibiograma.</div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- GINECO -->
+  <div class="pc" data-p="gin">
+    <div class="alert a-p" style="margin-bottom:12px;"><span class="ai">🌸</span><div><div class="at">ITU en embarazo — tratar SIEMPRE incluso asintomática</div>La bacteriuria asintomática en embarazo DEBE tratarse: riesgo de pielonefritis 30-40%, parto pretérmino y bajo peso. GPC IMSS-078.</div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Puntos clave en embarazo</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="kp" style="background:var(--pink-light);border-color:#db2777;"><div class="kn" style="background:#db2777;">1</div><div class="kt"><strong>Bacteriuria asintomática:</strong> Urocultivo en 1er control prenatal (semana 12-16) y en 3er trimestre. Si positivo: tratar 7 días y urocultivo de control a los 7 días.</div></div>
+      <div class="kp" style="background:var(--pink-light);border-color:#db2777;"><div class="kn" style="background:#db2777;">2</div><div class="kt"><strong>Pielonefritis en embarazo:</strong> Hospitalización SIEMPRE. Ceftriaxona IV. Monitoreo fetal. Riesgo de parto pretérmino y sepsis materna.</div></div>
+      <div class="kp" style="background:var(--pink-light);border-color:#db2777;"><div class="kn" style="background:#db2777;">3</div><div class="kt"><strong>Duración mínima 7 días</strong> en embarazo (no dosis única ni 3 días como en no gestante). Urocultivo de control siempre post-tratamiento.</div></div>
+      <div class="kp" style="background:var(--pink-light);border-color:#db2777;"><div class="kn" style="background:#db2777;">4</div><div class="kt"><strong>Seguros:</strong> Amoxicilina, Cefalexina, Ceftriaxona. <strong>EVITAR:</strong> Fluoroquinolonas (toda la gestación), TMP/SMX (1er trimestre y término), Nitrofurantoína (semana 36+).</div></div>
+    </div></div>
+  </div>
+
+  <!-- ANCIANO -->
+  <div class="pc" data-p="anc">
+    <div class="alert a-v" style="margin-bottom:12px;"><span class="ai">👴</span><div><div class="at">ITU en anciano — presentación atípica, sobretratamiento frecuente</div>Confusión y caídas NO son indicación automática de tratar bacteriuria. Exigir síntomas urinarios locales. IDSA 2019.</div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Puntos clave en anciano</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="kp" style="background:var(--purple-light);border-color:#7c3aed;"><div class="kn" style="background:#7c3aed;">1</div><div class="kt"><strong>Bacteriuria asintomática en anciano: NO TRATAR.</strong> Hasta 50% de mujeres &gt;80 años tienen bacteriuria. Tratar sin síntomas genera resistencias sin beneficio. IDSA 2019.</div></div>
+      <div class="kp" style="background:var(--purple-light);border-color:#7c3aed;"><div class="kn" style="background:#7c3aed;">2</div><div class="kt"><strong>Síntomas locales son NECESARIOS:</strong> disuria, frecuencia nueva, urgencia, dolor suprapúbico o costovertebral. Confusión o fiebre aisladas con urocultivo positivo NO son ITU.</div></div>
+      <div class="kp" style="background:var(--purple-light);border-color:#7c3aed;"><div class="kn" style="background:#7c3aed;">3</div><div class="kt"><strong>Nitrofurantoína: EVITAR si TFG &lt;45 o &gt;65 años con IRC.</strong> Riesgo de toxicidad pulmonar, hepática y neuropatía periférica con uso prolongado.</div></div>
+      <div class="kp" style="background:var(--purple-light);border-color:#7c3aed;"><div class="kn" style="background:#7c3aed;">4</div><div class="kt"><strong>Calcular TFG siempre</strong> con Cockcroft-Gault o CKD-EPI. En anciano la creatinina puede ser "normal" con TFG &lt;45 por baja masa muscular.</div></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="pc active" data-p="adulto">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Diagnóstico clínico y laboratorio</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Estudio</th><th>Hallazgo</th><th>Cuándo</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Clínica</td><td>Disuria + frecuencia + urgencia sin flujo vaginal = cistitis. Sensibilidad 75%.</td><td>Primera evaluación — suficiente para tratar cistitis no complicada</td></tr>
+          <tr><td class="dn">Tira reactiva</td><td>Nitritos (+): 90% especificidad. Leucocitos (+): más sensible. Ambos negativos: descarta ITU 95%.</td><td>Si hay duda diagnóstica</td></tr>
+          <tr><td class="dn">EGO microscopía</td><td>&gt;10 leuco/campo = piuria. Bacterias, nitritos, hematuria.</td><td>Pielonefritis, ITU complicada, embarazo</td></tr>
+          <tr><td class="dn">Urocultivo</td><td>≥100,000 UFC/mL = positivo (chorro medio limpio). ≥1,000 UFC en catéter.</td><td>Pielonefritis, embarazo, hombre, recurrente, sin respuesta 48-72h</td></tr>
+          <tr><td class="dn">BH + PCR</td><td>Leucocitosis, neutrofilia, PCR &gt;50 → pielonefritis o urosepsis.</td><td>Fiebre, hospitalización, sospecha sepsis</td></tr>
+          <tr><td class="dn">Creatinina / TFG</td><td>Función renal basal. Guía dosis de antibiótico.</td><td>Pielonefritis, anciano, IRC conocida</td></tr>
+          <tr><td class="dn">Hemocultivos x2</td><td>Bacteriemia en 15-20% de pielonefritis.</td><td>Fiebre &gt;38.5°C, escalofríos, inestabilidad</td></tr>
+          <tr><td class="dn">USG renal</td><td>Absceso, litiasis, hidronefrosis, obstrucción.</td><td>No respuesta en 72h, pielonefritis grave, hombre</td></tr>
+          <tr><td class="dn">TC abdomen-pelvis</td><td>Absceso perinéfrico, pielonefritis enfisematosa, obstrucción.</td><td>No respuesta a Tx en 72h, complicación sospechada</td></tr>
+        </tbody>
+      </table></div>
+      <div style="margin-top:12px;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;">Valores de referencia</div>
+      <div class="lab-g">
+        <div class="lab-c"><div class="lab-n">Leucocitos en orina</div><div class="lab-v">Normal: &lt;5/campo</div><div class="lab-a">Piuria: &gt;10/campo</div></div>
+        <div class="lab-c"><div class="lab-n">Nitritos</div><div class="lab-v">Normal: negativos</div><div class="lab-a">Positivo: gram negativo</div></div>
+        <div class="lab-c"><div class="lab-n">Urocultivo</div><div class="lab-v">Normal: &lt;1,000 UFC/mL</div><div class="lab-a">Positivo: ≥100,000 UFC</div></div>
+        <div class="lab-c"><div class="lab-n">Leucocitos séricos</div><div class="lab-v">Normal: 4,500–11,000</div><div class="lab-a">&gt;15,000 → pielonefritis</div></div>
+        <div class="lab-c"><div class="lab-n">PCR</div><div class="lab-v">Normal: &lt;5 mg/L</div><div class="lab-a">&gt;50 mg/L → pielonefritis</div></div>
+        <div class="lab-c"><div class="lab-n">Creatinina</div><div class="lab-v">M: 0.5-1.1 · H: 0.7-1.3</div><div class="lab-a">&gt;1.5 → ajustar antibiótico</div></div>
+      </div></div>
+    </div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Diagnóstico diferencial</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Diagnóstico</th><th>Cómo diferenciarlo</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Vaginitis / Vaginosis</td><td>Flujo vaginal, prurito, sin disuria prominente. Si hay flujo: examen pélvico antes de tratar como ITU.</td></tr>
+          <tr><td class="dn">Uretritis (ITS)</td><td>Descarga uretral, contacto sexual de riesgo. PCR para Chlamydia y Gonorrea. Urocultivo negativo.</td></tr>
+          <tr><td class="dn">Cólico renal</td><td>Dolor cólico irradiado a ingle, hematuria macroscópica, sin fiebre. USG o TC para litiasis.</td></tr>
+          <tr><td class="dn">Prostatitis aguda</td><td>Hombre: fiebre + disuria + próstata dolorosa al tacto. No hacer masaje prostático. Tratar 4-6 semanas.</td></tr>
+          <tr><td class="dn">Cistitis intersticial</td><td>Síntomas crónicos, urocultivos repetidamente negativos. Cistoscopía diagnóstica.</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="ped">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Diagnóstico pediátrico — técnica de recolección</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Técnica de recolección importa mucho en niños</div>Bolsa colectora: alta tasa de contaminación. Solo sirve para descartar (resultado negativo confiable). Si positiva: confirmar por catéter. Punción suprapúbica: gold standard en &lt;2 años.</div></div>
+      <div class="tw" style="margin-top:10px;"><table class="t">
+        <thead><tr><th>Estudio</th><th>Interpretación pediátrica</th><th>Cuándo</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">EGO / tira reactiva</td><td>Piuria (&gt;5 leuco/campo) + nitritos: alta especificidad. Nitritos negativos aislados no descartan en lactantes.</td><td>Siempre primer paso</td></tr>
+          <tr><td class="dn">Urocultivo por catéter</td><td>≥50,000 UFC/mL = positivo. ≥10,000 + síntomas también significativo.</td><td>SIEMPRE en pediatría antes de tratar</td></tr>
+          <tr><td class="dn">USG renal y vesical</td><td>Buscar hidronefrosis, duplicación, megauréter. Obligatorio en 1ª ITU febril.</td><td>Primera ITU febril en cualquier edad</td></tr>
+          <tr><td class="dn">Gammagrafía DMSA</td><td>Cicatrices renales post-infección. Realizar 4-6 meses después.</td><td>Pielonefritis confirmada o ITU recurrente</td></tr>
+          <tr><td class="dn">CUGM (cistouretrograma)</td><td>Reflujo vesicoureteral. Solo si USG anormal o ITU en niño.</td><td>Según resultado de USG</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="gin">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Diagnóstico en embarazada</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Estudio</th><th>En embarazo</th><th>Frecuencia</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Urocultivo</td><td>Obligatorio. ≥100,000 UFC = positivo. Tratar aunque sea asintomática.</td><td>1er control prenatal + 3er trimestre</td></tr>
+          <tr><td class="dn">EGO</td><td>Screening. Si anormal: confirmar con urocultivo.</td><td>Cada visita prenatal</td></tr>
+          <tr><td class="dn">BH + PCR + creatinina</td><td>Si pielonefritis o sospecha de sepsis obstétrica.</td><td>Si fiebre o síntomas altos</td></tr>
+          <tr><td class="dn">USG renal</td><td>Hidronefrosis derecha fisiológica en embarazo (normal). Si no mejora en 72h.</td><td>Pielonefritis que no responde</td></tr>
+          <tr><td class="dn">Urocultivo de control</td><td>SIEMPRE 7 días post-tratamiento para confirmar erradicación.</td><td>Tras cada tratamiento</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌡️</span><span class="st">Semáforo de antibióticos en embarazo</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Antibiótico</th><th>1er trimestre</th><th>2do trimestre</th><th>3er trimestre</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Amoxicilina / Ampicilina</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td class="dn2">Primera línea. Cat B.</td></tr>
+          <tr><td class="dn">Cefalexina / Ceftriaxona</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td class="dn2">Preferidas. Cat B.</td></tr>
+          <tr><td class="dn">Nitrofurantoína</td><td style="color:var(--amber);font-weight:700;">⚠️ Cautela</td><td style="color:var(--green);font-weight:700;">✅ Seguro</td><td style="color:var(--red);font-weight:700;">❌ Evitar sem 36+</td><td class="dn2">Riesgo anemia hemolítica neonatal.</td></tr>
+          <tr><td class="dn">TMP/SMX</td><td style="color:var(--red);font-weight:700;">❌ Evitar</td><td style="color:var(--amber);font-weight:700;">⚠️ Cautela</td><td style="color:var(--red);font-weight:700;">❌ Evitar</td><td class="dn2">Antifolato (1T) y kernicterus (3T).</td></tr>
+          <tr><td class="dn">Ciprofloxacino</td><td style="color:var(--red);font-weight:700;">❌ Toda gestación</td><td style="color:var(--red);font-weight:700;">❌ Toda gestación</td><td style="color:var(--red);font-weight:700;">❌ Toda gestación</td><td class="dn2">Artropatía fetal. Cat C.</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="anc">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Diagnóstico en anciano</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">NO diagnosticar ITU solo con urocultivo positivo en anciano</div>Hasta 50% de mujeres ancianas tienen bacteriuria asintomática. Un urocultivo positivo SIN síntomas urinarios locales NO es ITU. Buscar otra causa de confusión o fiebre.</div></div>
+      <div class="tw" style="margin-top:10px;"><table class="t">
+        <thead><tr><th>Criterio</th><th>Para diagnosticar ITU en anciano</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Síntomas locales</td><td class="dm">REQUERIDOS: disuria nueva, frecuencia nueva, urgencia, dolor suprapúbico o costovertebral</td></tr>
+          <tr><td class="dn">Urocultivo positivo</td><td>Necesario pero NO suficiente sin síntomas locales</td></tr>
+          <tr><td class="dn">Confusión nueva aislada</td><td>NO diagnostica ITU. Buscar: medicamentos, ACV, hipoglucemia, deshidratación.</td></tr>
+          <tr><td class="dn">Caída aislada</td><td>NO diagnostica ITU por sí sola.</td></tr>
+          <tr><td class="dn">TFG</td><td>Calcular siempre. Fundamental para ajustar dosis. Usar CKD-EPI o Cockcroft-Gault.</td></tr>
+        </tbody>
+      </table></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-tx">
+  <div class="pc active" data-p="adulto">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Cistitis no complicada — mujer adulta</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Línea</th><th>Fármaco</th><th>Dosis adulto</th><th>Duración</th><th>Dosis máx.</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td><span class="lb l1">1ª IMSS</span></td><td><span class="dname">Fosfomicina trometamol</span></td><td>3 g VO dosis única</td><td>1 dosis</td><td class="dm">3 g</td><td><span class="dnote">GPC IMSS 2024. Alta eficacia. Baja resistencia. Disolver en agua.</span></td></tr>
+          <tr><td><span class="lb l1">1ª IMSS</span></td><td><span class="dname">Nitrofurantoína MR</span></td><td>100 mg c/12h VO</td><td>5 días</td><td class="dm">200 mg/día</td><td><span class="dnote">Solo cistitis baja. NO en pielonefritis. Evitar TFG &lt;45.</span></td></tr>
+          <tr><td><span class="lb l2">2ª Línea</span></td><td><span class="dname">TMP/SMX</span></td><td>160/800 mg c/12h VO</td><td>3 días</td><td class="dm">—</td><td><span class="dnote">Solo si resistencia local &lt;20%. En México suele superar el 30%.</span></td></tr>
+          <tr><td><span class="lb l2">2ª Línea</span></td><td><span class="dname">Amoxicilina-Clavulanato</span></td><td>500/125 mg c/8h VO</td><td>5-7 días</td><td class="dm">3 g amox/día</td><td><span class="dnote">Alternativa. Mayores efectos GI.</span></td></tr>
+          <tr><td><span class="lb l3">3ª Línea</span></td><td><span class="dname">Ciprofloxacino</span></td><td>250-500 mg c/12h VO</td><td>3 días</td><td class="dm">1 g/día</td><td><span class="dnote">Alta resistencia local. Reservar. No primera línea empírica.</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="nodar">
+        <div class="nodar-t">🚫 NO dar en cistitis no complicada</div>
+        <div class="nodar-i">Nitrofurantoína si TFG &lt;45 mL/min — ineficaz y tóxica</div>
+        <div class="nodar-i">Ciprofloxacino de primera línea empírica — reservar fluoroquinolonas</div>
+        <div class="nodar-i">Amoxicilina sola sin clavulanato — alta resistencia de E. coli</div>
+      </div>
+    </div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Pielonefritis — adulto</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Línea</th><th>Fármaco</th><th>Dosis</th><th>Vía</th><th>Duración</th><th>Dosis máx.</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td><span class="lb l1">1ª Hosp.</span></td><td><span class="dname">Ceftriaxona</span></td><td>1-2 g c/24h</td><td>IV</td><td>7-14 días (IV→VO)</td><td class="dm">2 g/día</td><td><span class="dnote">GPC IMSS. Transición a VO a las 72h si mejora.</span></td></tr>
+          <tr><td><span class="lb l1">1ª Ambul.</span></td><td><span class="dname">Cefixima</span></td><td>400 mg/día VO</td><td>VO</td><td>10-14 días</td><td class="dm">400 mg/día</td><td><span class="dnote">Pielonefritis leve sin hospitalización. IDSA 2025.</span></td></tr>
+          <tr><td><span class="lb l2">2ª Línea</span></td><td><span class="dname">Pip-Tazobactam</span></td><td>4.5 g IV c/6-8h</td><td>IV</td><td>7-14 días</td><td class="dm">18 g/día</td><td><span class="dnote">Pielonefritis grave / urosepsis / sospecha Pseudomonas.</span></td></tr>
+          <tr><td><span class="lb l3">3ª Línea</span></td><td><span class="dname">Meropenem</span></td><td>1 g IV c/8h</td><td>IV</td><td>Según cultivos</td><td class="dm">3 g/día</td><td><span class="dnote">ESBL o KPC confirmado. Infectología.</span></td></tr>
+          <tr><td><span class="lb lc">Coadyuvante</span></td><td><span class="dname">Ketorolaco</span></td><td>15-30 mg IV c/8h</td><td>IV/IM</td><td>Máx 5 días</td><td class="dm">120 mg/día</td><td><span class="dnote">Analgesia y antipirético. Evitar si IRC.</span></td></tr>
+          <tr><td><span class="lb lc">Coadyuvante</span></td><td><span class="dname">Metamizol</span></td><td>500-1000 mg c/6-8h</td><td>VO/IV</td><td>PRN</td><td class="dm">4 g/día</td><td><span class="dnote">Alternativa analgésica/antipirética.</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="sec" style="margin-top:10px;"><div class="sh" onclick="tog(this)"><span class="si">⚡</span><span class="st">Interacciones medicamentosas importantes</span><span class="sg open">⌄</span></div>
+      <div class="sb">
+        <div class="inter-i"><div class="inter-d">Ciprofloxacino + Antiácidos/Fe/Ca²⁺</div><div class="inter-e">Los cationes divalentes reducen absorción hasta 90%. Separar 2 horas.</div><span class="sev s-a">Alta</span></div>
+        <div class="inter-i"><div class="inter-d">TMP/SMX + Warfarina</div><div class="inter-e">Potencia efecto anticoagulante. Riesgo de sangrado. Monitorear INR.</div><span class="sev s-a">Alta</span></div>
+        <div class="inter-i"><div class="inter-d">TMP/SMX + IECA/ARA-II</div><div class="inter-e">Hiperkalemia, potencialmente fatal en IRC. Vigilar K⁺.</div><span class="sev s-a">Alta</span></div>
+        <div class="inter-i"><div class="inter-d">Ciprofloxacino + QT prolongado</div><div class="inter-e">Prolonga QT. Evitar con antiarrítmicos, antipsicóticos, metadona.</div><span class="sev s-a">Alta</span></div>
+        <div class="inter-i"><div class="inter-d">Gentamicina + Furosemida</div><div class="inter-e">Nefrotoxicidad y ototoxicidad sinérgica. Monitorear creatinina y niveles.</div><span class="sev s-a">Alta</span></div>
+        <div class="inter-i"><div class="inter-d">Nitrofurantoína + Antiácidos (Mg)</div><div class="inter-e">Reducen absorción. Separar 2 horas.</div><span class="sev s-m">Moderada</span></div>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="ped">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Tratamiento pediátrico + calculadora de dosis</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="calc-w">
+        <div class="calc-t">⚖️ Calculadora de dosis — ingresa el peso:</div>
+        <div class="calc-r"><span class="calc-l">Peso:</span><input type="number" class="calc-in" id="wt2" placeholder="kg" min="1" max="80" oninput="calcD2()"><span style="font-size:12px;color:var(--gray-600);">kg</span></div>
+        <div class="calc-res" id="cr2" style="display:none">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:4px;">Dosis por toma:</div>
+          <div class="calc-rr"><span class="calc-rd">Amox-Clavulanato 40mg/kg/día ÷ c/8h</span><span class="calc-rv" id="t1">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">Cefixima 8mg/kg/día ÷ c/12h</span><span class="calc-rv" id="t2">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">Ceftriaxona IV 75mg/kg c/24h</span><span class="calc-rv" id="t3">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">TMP/SMX 6mg/kg TMP ÷ c/12h</span><span class="calc-rv" id="t4">—</span></div>
+          <div class="calc-rr"><span class="calc-rd">Gentamicina IV 5mg/kg c/24h</span><span class="calc-rv" id="t5">—</span></div>
+          <div style="font-size:11px;color:var(--gray-600);margin-top:4px;">* Ajustar si IRC. Verificar con antibiograma.</div>
+        </div>
+      </div>
+      <div class="tw" style="margin-top:10px;"><table class="t">
+        <thead><tr><th>Escenario</th><th>Antibiótico preferido</th><th>Duración</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Cistitis (niña &gt;2 años)</td><td>TMP/SMX VO (si sensible) o Amox-Clavulanato VO</td><td>3-5 días</td></tr>
+          <tr><td class="dn">ITU febril leve</td><td>Cefixima VO o Amox-Clavulanato VO</td><td>10-14 días</td></tr>
+          <tr><td class="dn">ITU febril + hospitalización</td><td>Ceftriaxona IV 75 mg/kg/día c/24h</td><td>Hasta 72h afebril → VO</td></tr>
+          <tr><td class="dn">&lt;3 meses / aspecto tóxico</td><td>Ampicilina IV + Gentamicina IV</td><td>10-14 días IV</td></tr>
+          <tr><td class="dn">Profilaxis recurrente</td><td>TMP/SMX 1-2 mg/kg TMP/noche</td><td>6-12 meses</td></tr>
+        </tbody>
+      </table></div>
+      <div class="nodar" style="margin-top:10px;">
+        <div class="nodar-t">🚫 Nunca usar en pediatría para ITU</div>
+        <div class="nodar-i">Fluoroquinolonas — daño articular en crecimiento</div>
+        <div class="nodar-i">Nitrofurantoína en &lt;1 mes — riesgo de anemia hemolítica</div>
+        <div class="nodar-i">Tetraciclinas en &lt;8 años — manchas dentales permanentes</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="gin">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Tratamiento en embarazo</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Situación</th><th>Antibiótico 1ª línea</th><th>Alternativa</th><th>Duración</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">Bacteriuria asintomática</td><td>Cefalexina 500 mg c/6h</td><td>Amoxicilina 500 mg c/8h</td><td>7 días</td></tr>
+          <tr><td class="dn">Cistitis aguda</td><td>Cefalexina 500 mg c/6h</td><td>Amox-Clavulanato 500/125 c/8h</td><td>7 días mínimo</td></tr>
+          <tr><td class="dn">Pielonefritis leve</td><td>Ceftriaxona 1-2g IV c/24h</td><td>Ampicilina 2g c/6h + Gentamicina 5mg/kg/día</td><td>14 días total</td></tr>
+          <tr><td class="dn">Pielonefritis grave / urosepsis</td><td>Pip-Tazobactam 4.5g IV c/6h</td><td>Meropenem 1g c/8h si resistencia</td><td>14 días</td></tr>
+        </tbody>
+      </table></div>
+      <div class="nodar" style="margin-top:10px;">
+        <div class="nodar-t">🚫 Contraindicados en embarazo</div>
+        <div class="nodar-i">Ciprofloxacino / Levofloxacino — toda la gestación</div>
+        <div class="nodar-i">TMP/SMX — 1er trimestre (antifolato) y última semana (kernicterus)</div>
+        <div class="nodar-i">Nitrofurantoína — semana 36 en adelante</div>
+        <div class="nodar-i">Tetraciclinas — toda la gestación</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="anc">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Tratamiento en anciano — con ajuste renal</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">ℹ️</span><div>Antes de prescribir: calcular TFG real. En ancianos la creatinina puede estar "normal" pero TFG ser &lt;45 por baja masa muscular.</div></div>
+      <div class="tw"><table class="t">
+        <thead><tr><th>Línea</th><th>Fármaco</th><th>Dosis ajustada</th><th>Duración</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td><span class="lb l1">1ª Línea</span></td><td><span class="dname">Fosfomicina trometamol</span></td><td>3 g VO dosis única (cistitis)</td><td>1 dosis</td><td><span class="dnote">Si TFG &gt;30. Buena tolerancia en anciano. No requiere ajuste en dosis única.</span></td></tr>
+          <tr><td><span class="lb l1">1ª Línea</span></td><td><span class="dname">Amox-Clavulanato</span></td><td>500/125 mg c/8h (si TFG &gt;30)</td><td>7 días</td><td><span class="dnote">Cistitis complicada o anciano con comorbilidades.</span></td></tr>
+          <tr><td><span class="lb l2">2ª Línea</span></td><td><span class="dname">Ceftriaxona IV</span></td><td>1 g c/24h</td><td>7-14 días</td><td><span class="dnote">Pielonefritis. Sin ajuste hasta TFG &gt;10. Segura en anciano.</span></td></tr>
+          <tr><td><span class="lb l3">EVITAR</span></td><td><span class="dname">Nitrofurantoína</span></td><td>—</td><td>—</td><td><span class="dnote">EVITAR si TFG &lt;45 o &gt;65 años con IRC. Toxicidad pulmonar y hepática.</span></td></tr>
+          <tr><td><span class="lb l3">Precaución</span></td><td><span class="dname">Ciprofloxacino</span></td><td>250-500 mg c/12h (solo si TFG &gt;50)</td><td>7 días máx.</td><td><span class="dnote">Mayor riesgo de tendinitis, rotura tendinosa, delirium y QT largo en anciano.</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="nodar" style="margin-top:10px;">
+        <div class="nodar-t">🚫 Especial cuidado en anciano</div>
+        <div class="nodar-i">Nitrofurantoína si TFG &lt;45 — toxicidad pulmonar / hepática / neuropatía</div>
+        <div class="nodar-i">Ciprofloxacino en &gt;65 con osteoporosis — rotura tendón de Aquiles</div>
+        <div class="nodar-i">TMP/SMX + IECA/ARA-II — hiperkalemia potencialmente fatal</div>
+        <div class="nodar-i">Gentamicina — alta nefrotoxicidad en IRC. Solo con niveles séricos.</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="pc active" data-p="adulto">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Algoritmo — ITU adulto</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="an a-start" style="background:var(--blue-mid);">🧫 SÍNTOMAS URINARIOS — SOSPECHA ITU</div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Fiebre &gt;38°C, escalofríos o dolor costovertebral?</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ — ITU alta</div>Pielonefritis. Urocultivo + hemocultivos. Ceftriaxona IV. ¿Hospitalizar?</div>
+        <div class="a-yes"><div class="br-l">❌ NO — ITU baja</div>Cistitis probable → continuar →</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Mujer adulta sana, no gestante, sin anomalías?</div>
+      <div class="a-br">
+        <div class="a-yes"><div class="br-l">✅ SÍ — No complicada</div>Tratar empíricamente sin urocultivo. Fosfomicina 3g dosis única.</div>
+        <div class="a-no"><div class="br-l">❌ NO — Complicada</div>Hombre, embarazo, IRC, DM → Urocultivo. Tratar mínimo 7 días.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Respuesta clínica a las 48-72h?</div>
+      <div class="a-br">
+        <div class="a-yes"><div class="br-l">✅ SÍ</div>Completar esquema. Alta con criterios e indicaciones.</div>
+        <div class="a-no"><div class="br-l">❌ NO</div>Urocultivo si no se tomó. Revisar antibiótico. USG/TC si sospecha absceso.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-end">✅ Alta con indicaciones y seguimiento</div>
+    </div></div>
+  </div>
+  <div class="pc" data-p="ped">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Algoritmo — ITU pediátrica</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="an a-start" style="background:#d97706;">🧒 FIEBRE SIN FOCO O SÍNTOMAS URINARIOS EN NIÑO</div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Edad &lt;3 meses?</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ</div>Hospitalizar siempre. Ampicilina IV + Gentamicina IV. Urocultivo por catéter.</div>
+        <div class="a-yes"><div class="br-l">❌ NO — &gt;3 meses</div>EGO + urocultivo por catéter → continuar</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿EGO con piuria y/o nitritos?</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ</div>ITU probable. Iniciar antibiótico. Esperar urocultivo.</div>
+        <div class="a-yes"><div class="br-l">❌ NO</div>Buscar otro foco. No tratar como ITU.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Fiebre ≥38°C? (ITU febril = pielonefritis)</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ</div>Ceftriaxona IV si mal aspecto o &lt;6m. Cefixima VO si buen aspecto. 10-14 días.</div>
+        <div class="a-yes"><div class="br-l">❌ NO</div>Cistitis: Amox-Clav VO 3-5 días.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-end">✅ USG renal en toda primera ITU febril · CUGM según resultado</div>
+    </div></div>
+  </div>
+  <div class="pc" data-p="gin">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Algoritmo — ITU en embarazo</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="an a-start" style="background:#db2777;">🌸 EMBARAZADA — CRIBADO O SÍNTOMAS URINARIOS</div>
+      <div class="a-arr">↓</div>
+      <div class="an a-act">Urocultivo en cada control prenatal (semana 12-16 y 3er trimestre)</div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Urocultivo ≥100,000 UFC? (con o sin síntomas)</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ — Tratar SIEMPRE</div>Cefalexina VO 7 días. Urocultivo de control a los 7 días.</div>
+        <div class="a-yes"><div class="br-l">❌ NO</div>No tratar. Repetir en siguiente control prenatal.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿Fiebre + dolor costovertebral?</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ — Pielonefritis</div>Hospitalizar SIEMPRE. Ceftriaxona IV. Monitoreo fetal. 14 días total.</div>
+        <div class="a-yes"><div class="br-l">❌ NO</div>Cistitis o bacteriuria: VO 7 días + control urocultivo.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-end">✅ Urocultivo de control siempre · Profilaxis si recurrente</div>
+    </div></div>
+  </div>
+  <div class="pc" data-p="anc">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Algoritmo — ITU en anciano</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="an a-start" style="background:#7c3aed;">👴 ANCIANO CON SOSPECHA DE ITU</div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dan">⚠️ PRIMERO: ¿Tiene síntomas urinarios LOCALES?<br><span style="font-size:11px;font-weight:400;">Disuria, frecuencia nueva, urgencia, dolor suprapúbico o costovertebral</span></div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">❌ NO tiene síntomas locales</div>NO diagnosticar ITU aunque urocultivo sea positivo. Buscar otra causa. NO tratar bacteriuria asintomática.</div>
+        <div class="a-yes"><div class="br-l">✅ SÍ tiene síntomas</div>Urocultivo. Calcular TFG. Iniciar antibiótico con dosis ajustada.</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-dec">❓ ¿TFG &lt;45 mL/min?</div>
+      <div class="a-br">
+        <div class="a-no"><div class="br-l">✅ SÍ — IRC</div>Evitar nitrofurantoína. Fosfomicina dosis única o ceftriaxona IV son más seguras. Ajustar todos.</div>
+        <div class="a-yes"><div class="br-l">❌ NO</div>Tratamiento estándar pero mínimo 7 días (no dosis única).</div>
+      </div>
+      <div class="a-arr">↓</div>
+      <div class="an a-end">✅ Urocultivo de control · Vigilar interacciones · No prolongar innecesariamente</div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-escalas">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Criterios de hospitalización en pielonefritis</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="sc"><div class="sc-h">Hospitalizar si cumple alguno:</div>
+    <div class="sc-b">
+      <div class="sc-r"><span style="font-weight:600;">Fiebre &gt;38.5°C persistente</span><span style="color:var(--red);font-weight:600;">Hospitalizar</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Náusea/vómito que impide vía oral</span><span style="color:var(--red);font-weight:600;">Hospitalizar</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Embarazo</span><span style="color:var(--red);font-weight:600;">Hospitalizar SIEMPRE</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Inestabilidad hemodinámica</span><span style="color:var(--red);font-weight:600;">UCI</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Inmunosupresión</span><span style="color:var(--red);font-weight:600;">Hospitalizar</span></div>
+      <div class="sc-r"><span style="font-weight:600;">IRC severa (TFG &lt;30)</span><span style="color:var(--amber);font-weight:600;">Considerar</span></div>
+      <div class="sc-r"><span style="font-weight:600;">No respuesta ambulatoria 48-72h</span><span style="color:var(--amber);font-weight:600;">Hospitalizar</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Sospecha de absceso renal</span><span style="color:var(--red);font-weight:600;">Hospitalizar + imagen</span></div>
+    </div></div>
+    <div class="sc" style="margin-top:10px;"><div class="sc-h">Clasificación ITU para elegir tratamiento</div>
+    <div class="sc-b">
+      <div class="sc-r"><span style="font-weight:600;">Cistitis no complicada</span><span style="font-size:11px;color:var(--gray-600);">Mujer adulta sana → Fosfomicina dosis única</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Cistitis complicada</span><span style="font-size:11px;color:var(--gray-600);">Hombre, embarazo, IRC, DM → 7 días + urocultivo</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Pielonefritis no complicada</span><span style="font-size:11px;color:var(--gray-600);">Mujer sana → 10-14 días, puede ser ambulatoria</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Pielonefritis complicada</span><span style="font-size:11px;color:var(--gray-600);">+ comorbilidades → IV hospitalizado 14 días</span></div>
+      <div class="sc-r"><span style="font-weight:600;">Urosepsis</span><span style="font-size:11px;color:var(--red);font-weight:600;">SOFA ≥2 + origen urinario → UCI + ATB IV &lt;1h</span></div>
+    </div></div>
+  </div></div>
+</div>
+
+<!-- AJUSTES -->
+<div class="panel" id="tab-ajustes">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🫘</span><span class="st">Ajuste de antibióticos según TFG</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Antibiótico</th><th>TFG &gt;60</th><th>TFG 30-60</th><th>TFG 15-30</th><th>TFG &lt;15 / Diálisis</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Fosfomicina (dosis única)</td><td>Normal</td><td>Normal</td><td>Cautela</td><td class="dm">Evitar / ajustar</td></tr>
+        <tr><td class="dn">Nitrofurantoína</td><td>Normal</td><td>Normal</td><td class="dm">Contraindicada</td><td class="dm">Contraindicada</td></tr>
+        <tr><td class="dn">TMP/SMX</td><td>Normal</td><td>Reducir 50%</td><td class="dm">Evitar</td><td class="dm">Evitar</td></tr>
+        <tr><td class="dn">Ciprofloxacino VO</td><td>Normal</td><td>Normal</td><td>250-500 mg c/24h</td><td>250 mg c/24h</td></tr>
+        <tr><td class="dn">Ceftriaxona IV</td><td>Normal</td><td>Normal</td><td>Normal</td><td>Normal</td></tr>
+        <tr><td class="dn">Amox-Clavulanato</td><td>Normal</td><td>500/125 c/12h</td><td>500/125 c/24h</td><td class="dm">Evitar clavulanato</td></tr>
+        <tr><td class="dn">Gentamicina IV</td><td>5-7 mg/kg c/24h</td><td>5 mg/kg c/36h</td><td>4 mg/kg c/48h</td><td class="dm">Con niveles séricos</td></tr>
+        <tr><td class="dn">Pip-Tazobactam</td><td>4.5g c/6h</td><td>4.5g c/8h</td><td>3.375g c/8h</td><td>2.25g c/8h</td></tr>
+        <tr><td class="dn">Meropenem</td><td>1g c/8h</td><td>1g c/12h</td><td>500mg c/12h</td><td>500mg c/24h</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- COMPLICACIONES -->
+<div class="panel" id="tab-comps">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones de la ITU</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">🦠</div><div><div class="co-n">Urosepsis <span class="lp lp-r">Urgencia</span></div><div class="co-d">ITU + SOFA ≥2. Mortalidad 20-40%. Código sepsis: hemocultivos + antibiótico IV &lt;1h + bolo fluidos 30 mL/kg. UCI. E. coli causa 70% de bacteriemias por ITU.</div></div></div>
+    <div class="co-i"><div class="co-ico">🗂️</div><div><div class="co-n">Absceso renal / perinéfrico <span class="lp lp-a">Poco frecuente</span></div><div class="co-d">Sin respuesta a antibióticos en 72h + fiebre persistente → USG o TC urgente. Drenaje percutáneo si &gt;3-5 cm. Antibiótico IV 4-6 semanas. Causa: S. aureus (hematógena) o E. coli (ascendente).</div></div></div>
+    <div class="co-i"><div class="co-ico">💨</div><div><div class="co-n">Pielonefritis enfisematosa <span class="lp lp-r">Emergencia</span></div><div class="co-d">Gas en parénquima renal. DM + E. coli o Klebsiella. TC diagnóstica. Mortalidad 40% sin intervención. Drenaje percutáneo o nefrectomía + antibiótico IV de amplio espectro urgente.</div></div></div>
+    <div class="co-i"><div class="co-ico">🔄</div><div><div class="co-n">ITU recurrente <span class="lp lp-a">Frecuente</span></div><div class="co-d">≥3 episodios/año. Evaluar factores: DM, anomalía anatómica, actividad sexual, posmenopausia. Profilaxis: nitrofurantoína 50 mg/noche o fosfomicina 3g c/10 días x 3 meses.</div></div></div>
+    <div class="co-i"><div class="co-ico">🧪</div><div><div class="co-n">Resistencia antimicrobiana / ESBL <span class="lp lp-a">Creciente</span></div><div class="co-d">E. coli ESBL: resiste cefalosporinas y fluoroquinolonas. Sospecha: ITU recurrente, hospitalización reciente, antibióticos previos. Opciones: ertapenem IM, fosfomicina (cistitis), meropenem. Guiar por antibiograma.</div></div></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seguimiento">
+  <div class="pc active" data-p="adulto">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento — adulto</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="fu-r"><div class="fu-t" style="color:var(--blue-mid)">48-72h</div><div class="fu-x">Si no mejora: urocultivo con antibiograma, ampliar espectro, buscar complicación (absceso, obstrucción).</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:var(--blue-mid)">Fin de Tx</div><div class="fu-x">Cistitis no complicada: no requiere urocultivo de control si hay mejoría. Pielonefritis: urocultivo control 5-7 días post-tratamiento.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:var(--blue-mid)">1 mes</div><div class="fu-x">ITU recurrente (≥3/año): evaluar profilaxis. Hombre: descartar litiasis, HPB, anomalía urológica.</div></div>
+    </div></div>
+  </div>
+  <div class="pc" data-p="ped">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento — pediátrico</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="fu-r"><div class="fu-t" style="color:#d97706">48-72h</div><div class="fu-x">Verificar respuesta clínica y resultado de urocultivo. Ajustar antibiótico si es necesario.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#d97706">Fin de Tx</div><div class="fu-x">Urocultivo de control en toda pielonefritis pediátrica (5-7 días post-tratamiento).</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#d97706">1 mes</div><div class="fu-x">Resultado de USG renal. Si anormal: planear CUGM. Iniciar profilaxis si reflujo vesicoureteral grado III-V.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#d97706">4-6 meses</div><div class="fu-x">Gammagrafía DMSA para evaluar cicatrices renales. Referir a nefrología pediátrica si cicatrices presentes.</div></div>
+    </div></div>
+  </div>
+  <div class="pc" data-p="gin">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento — embarazo</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="fu-r"><div class="fu-t" style="color:#db2777">7 días post-Tx</div><div class="fu-x">Urocultivo de control SIEMPRE. Si persiste positivo: repetir tratamiento según antibiograma.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#db2777">Cada trimestre</div><div class="fu-x">Urocultivo de vigilancia si hubo bacteriuria o ITU previa. Riesgo de recurrencia alto.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#db2777">Si recurrente</div><div class="fu-x">Profilaxis con cefalexina 250 mg/noche hasta el parto (si ≥2 episodios durante el embarazo).</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#db2777">Postparto</div><div class="fu-x">Urocultivo a las 6 semanas postparto para confirmar resolución. Si recurrente: estudio urológico completo.</div></div>
+    </div></div>
+  </div>
+  <div class="pc" data-p="anc">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento — anciano</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="fu-r"><div class="fu-t" style="color:#7c3aed">48-72h</div><div class="fu-x">Si no mejora: revisar urocultivo, descartar complicación, reevaluar si realmente es ITU.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#7c3aed">Fin de Tx</div><div class="fu-x">NO repetir urocultivo de rutina si hay mejoría clínica. Urocultivo positivo sin síntomas post-tratamiento = bacteriuria asintomática → NO tratar.</div></div>
+      <div class="fu-r"><div class="fu-t" style="color:#7c3aed">1 mes</div><div class="fu-x">Si ITU recurrente: evaluar causa (catéter, retención urinaria, HPB, prolapso). Derivar a urología.</div></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ALTA -->
+<div class="panel" id="tab-alta">
+  <div class="pc active" data-p="adulto">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏠</span><span class="st">Criterios de alta — adulto</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="ab ab-ok"><div class="ab-t">✅ Puede darse de alta cuando cumpla TODOS:</div>
+        <div class="ab-i">Afebril (&lt;37.5°C) por al menos 24 horas</div>
+        <div class="ab-i">Tolera vía oral sin vómito</div>
+        <div class="ab-i">Dolor controlado con analgésicos orales</div>
+        <div class="ab-i">Mejoría de síntomas urinarios</div>
+        <div class="ab-i">Acceso a seguimiento ambulatorio confirmado</div>
+      </div>
+      <div class="ab ab-no" style="margin-top:8px;"><div class="ab-t">🚫 NO dar alta si:</div>
+        <div class="ab-i">Fiebre persistente &gt;38°C</div>
+        <div class="ab-i">Intolerancia oral o vómito activo</div>
+        <div class="ab-i">Inestabilidad hemodinámica</div>
+        <div class="ab-i">Sospecha de absceso renal</div>
+        <div class="ab-i">Embarazada con pielonefritis</div>
+      </div>
+    </div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📄</span><span class="st">Indicaciones al egreso</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="rx"><div class="rx-t">💊 Medicamentos al alta (ejemplo pielonefritis)</div>
+        <div class="rx-i">1. <strong>Cefixima 400 mg</strong> — 1 tableta cada 24 horas con alimentos por <strong>____ días</strong></div>
+        <div class="rx-i">2. <strong>Metamizol 500 mg</strong> — 1-2 cápsulas cada 8 horas en caso de fiebre o dolor</div>
+        <div class="rx-i">3. <strong>Hidratación:</strong> Mínimo 2 litros de agua al día</div>
+        <div class="rx-i">4. <strong>No suspender el antibiótico</strong> aunque se sienta mejor</div>
+        <div class="rx-i">5. <strong>Cita de control:</strong> En ____ días o antes si hay alarmas</div>
+      </div>
+      <div class="rx" style="margin-top:10px;"><div class="rx-t">📋 Indicaciones generales</div>
+        <div class="rx-i">✔ Tomar mucha agua — al menos 8 vasos al día</div>
+        <div class="rx-i">✔ Orinar frecuentemente, no retener la orina</div>
+        <div class="rx-i">✔ Limpieza de adelante hacia atrás (mujeres)</div>
+        <div class="rx-i">✔ Orinar después de las relaciones sexuales (si ITU post-coital)</div>
+        <div class="rx-i">✔ Si se indicó urocultivo de control: tomarlo el día ____</div>
+      </div>
+      <div class="al-b"><div class="al-t">🚨 Regresar a urgencias si:</div>
+        <div class="al-i">Fiebre mayor de 38.5°C que no baja con medicamento</div>
+        <div class="al-i">Escalofríos intensos o "temblorina"</div>
+        <div class="al-i">Vómito que no permite tomar los medicamentos</div>
+        <div class="al-i">Empeoramiento del dolor en espalda o costado</div>
+        <div class="al-i">Sangre abundante en la orina o coágulos</div>
+        <div class="al-i">No orinar en más de 8 horas</div>
+        <div class="al-i">Confusión, mareo intenso o desmayo</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="ped">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏠</span><span class="st">Alta pediátrica</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="ab ab-ok"><div class="ab-t">✅ Alta cuando cumpla:</div>
+        <div class="ab-i">Afebril 24-48 horas</div>
+        <div class="ab-i">Tolera medicamento oral sin vómito</div>
+        <div class="ab-i">Activo, alerta, buen aspecto general</div>
+        <div class="ab-i">Padres comprenden el tratamiento y señales de alarma</div>
+      </div>
+      <div class="rx" style="margin-top:8px;"><div class="rx-t">💊 Al alta pediátrico</div>
+        <div class="rx-i">1. <strong>_____ (antibiótico según peso)</strong> — ___ mL/dosis cada ___ horas por ___ días</div>
+        <div class="rx-i">2. <strong>Paracetamol 10-15 mg/kg</strong> cada 6 horas si fiebre o dolor</div>
+        <div class="rx-i">3. Ofrecer líquidos frecuentemente</div>
+        <div class="rx-i">4. Regresar por resultado de urocultivo en _____ días</div>
+      </div>
+      <div class="al-b" style="margin-top:8px;"><div class="al-t">🚨 Llevar al niño a urgencias si:</div>
+        <div class="al-i">Fiebre que no baja con paracetamol</div>
+        <div class="al-i">No quiere tomar líquidos ni medicamento</div>
+        <div class="al-i">Muy decaído, no reacciona bien, pálido</div>
+        <div class="al-i">No orina en más de 6-8 horas</div>
+        <div class="al-i">Convulsiones</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="gin">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏠</span><span class="st">Alta — embarazada con ITU</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="ab ab-ok"><div class="ab-t">✅ Alta pielonefritis obstétrica cuando:</div>
+        <div class="ab-i">Afebril 48 horas consecutivas</div>
+        <div class="ab-i">Tolera vía oral</div>
+        <div class="ab-i">Monitoreo fetal normal</div>
+        <div class="ab-i">Sin contracciones uterinas</div>
+      </div>
+      <div class="rx" style="margin-top:8px;"><div class="rx-t">💊 Al alta embarazada</div>
+        <div class="rx-i">1. <strong>Cefalexina 500 mg</strong> — 1 cápsula cada 6 horas por ___ días (completar 14 días totales)</div>
+        <div class="rx-i">2. <strong>Paracetamol 500 mg</strong> — 1-2 tabletas cada 8h si fiebre o dolor (NO ibuprofeno)</div>
+        <div class="rx-i">3. <strong>Urocultivo de control obligatorio</strong> en 7 días</div>
+        <div class="rx-i">4. Cita con Ginecología en ____ días</div>
+        <div class="rx-i">5. Reposo relativo. Hidratación abundante.</div>
+      </div>
+      <div class="al-b" style="margin-top:8px;"><div class="al-t">🚨 Regresar INMEDIATO si:</div>
+        <div class="al-i">Fiebre mayor de 38°C</div>
+        <div class="al-i">Contracciones uterinas o dolor abdominal bajo</div>
+        <div class="al-i">Disminución de movimientos fetales</div>
+        <div class="al-i">Sangrado vaginal</div>
+        <div class="al-i">Vómito que impide tomar el medicamento</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="pc" data-p="anc">
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏠</span><span class="st">Alta — anciano con ITU</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="ab ab-ok"><div class="ab-t">✅ Alta cuando cumpla:</div>
+        <div class="ab-i">Afebril 24-48 horas</div>
+        <div class="ab-i">Tolera vía oral</div>
+        <div class="ab-i">Estado mental regresó a su basal</div>
+        <div class="ab-i">Cuidador informado del tratamiento</div>
+        <div class="ab-i">TFG revisada y dosis ajustada</div>
+      </div>
+      <div class="rx" style="margin-top:8px;"><div class="rx-t">💊 Al alta anciano</div>
+        <div class="rx-i">1. <strong>Amox-Clavulanato 500/125 mg</strong> — 1 tableta cada 8 horas con alimentos por 7 días</div>
+        <div class="rx-i">2. <strong>Paracetamol 500 mg</strong> — 1 tableta cada 8h si dolor o fiebre (evitar AINE)</div>
+        <div class="rx-i">3. Tomar mucho líquido. Mínimo 6-8 vasos al día.</div>
+        <div class="rx-i">4. No suspender el antibiótico aunque se sienta mejor.</div>
+        <div class="rx-i">5. Cita de revisión en ____ días.</div>
+      </div>
+      <div class="al-b" style="margin-top:8px;"><div class="al-t">🚨 El familiar debe regresar si nota:</div>
+        <div class="al-i">Fiebre o escalofríos</div>
+        <div class="al-i">Más confusión de lo normal</div>
+        <div class="al-i">Caídas frecuentes</div>
+        <div class="al-i">No quiere comer ni tomar líquidos</div>
+        <div class="al-i">No ha orinado en todo el día</div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ENFERMERÍA -->
+<div class="panel" id="tab-enf">
+  <div class="enf-h">
+    <h2 style="font-size:15px;font-weight:700;margin-bottom:4px;">🩺 Hoja de Enfermería — ITU / Pielonefritis</h2>
+    <p style="font-size:12px;opacity:0.85;">Válida para todas las poblaciones · Adaptar según el caso</p>
+  </div>
+  <div class="enf-b">
+    <div class="enf-bh">📋 Órdenes al ingreso</div>
+    <div class="enf-bb">
+      <div class="enf-o"><div class="enf-ot">🔌 Accesos y muestras</div>
+        <div class="enf-oi">Instalar acceso venoso periférico 20-22G si requiere tratamiento IV</div>
+        <div class="enf-oi">Toma de orina ANTES del antibiótico: limpieza genital + chorro medio + frasco estéril</div>
+        <div class="enf-oi">Si fiebre &gt;38.5°C: hemocultivos x2 ANTES del antibiótico</div>
+        <div class="enf-oi">BH, QS, creatinina — enviar urgente</div>
+        <div class="enf-oi">Signos vitales completos: TA, FC, FR, temperatura, SatO₂</div>
+        <div class="enf-oi">Registrar peso (para cálculo de dosis en pediátrico y ajuste renal)</div>
+        <div class="enf-oi">En embarazada: registrar movimientos fetales y presencia de contracciones</div>
+      </div>
+      <div class="enf-o"><div class="enf-ot">💊 Medicamentos</div>
+        <div class="enf-oi">Antibiótico IV: preparar y administrar en 30-60 min de la indicación médica</div>
+        <div class="enf-oi">Analgésico/antipirético: registrar hora y respuesta (EVA antes y 30 min después)</div>
+        <div class="enf-oi">Hidratación IV según indicación. Promover ingesta oral si tolera: mínimo 2 L/día en adultos</div>
+      </div>
+    </div>
+  </div>
+  <div class="enf-b">
+    <div class="enf-bh">✅ Checklist por turno</div>
+    <div class="enf-bb">
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Verificar que muestra de orina y/o hemocultivos fueron tomados ANTES del antibiótico</div><div class="enf-f">Al ingreso</div></div>
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Confirmar dosis del antibiótico según peso y función renal del paciente</div><div class="enf-f">C/dosis</div></div>
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Registrar temperatura — reportar si &gt;38.5°C</div><div class="enf-f">C/4-6h</div></div>
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Medir diuresis horaria si hay sonda Foley. Meta: ≥0.5 mL/kg/h</div><div class="enf-f">C/hora</div></div>
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">En embarazada: registrar movimientos fetales y vigilar contracciones</div><div class="enf-f">C/turno</div></div>
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Evaluar escala de dolor antes y 30 min después del analgésico</div><div class="enf-f">C/4h</div></div>
+      <div class="enf-c"><div class="enf-cb" onclick="this.classList.toggle('on')"></div><div style="flex:1;font-size:12.5px;color:var(--gray-700);">Verificar resultados de urocultivo disponibles y notificar al médico para ajuste de antibiótico</div><div class="enf-f">Al recibir</div></div>
+    </div>
+  </div>
+  <div class="enf-b">
+    <div class="enf-bh">🚨 Señales de alarma — Avisar inmediato</div>
+    <div class="enf-bb">
+      <div class="enf-al"><strong>Fiebre &gt;39°C que no cede + escalofríos intensos</strong>Urosepsis posible. Si no se tomaron hemocultivos: tomarlos ahora antes del antibiótico. Bolo de fluidos. Avisar médico urgente.</div>
+      <div class="enf-al"><strong>FC &gt;100 + TA sistólica &lt;90 mmHg</strong>Choque séptico de origen urinario. Activar código sepsis. Acceso IV + fluidos + antibiótico urgente.</div>
+      <div class="enf-al"><strong>Diuresis &lt;0.5 mL/kg/h por 2h consecutivas</strong>Posible IRA o hipoperfusión. Revisar hidratación. Avisar médico.</div>
+      <div class="enf-al"><strong>Embarazada: contracciones o disminución de movimientos fetales</strong>Monitoreo fetal urgente. Avisar ginecología inmediatamente.</div>
+      <div class="enf-al"><strong>Niño: deterioro brusco, decaimiento extremo, rechazo total al alimento</strong>Posible sepsis o bacteriemia. Avisar médico. Preparar acceso IV urgente.</div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:10px 0;"><button class="pbtn" onclick="window.print()">🖨️ Imprimir hoja de enfermería</button></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="bib-h">
+    <h2 style="font-size:15px;font-weight:700;margin-bottom:4px;">📚 Bibliografía — ITU</h2>
+    <p style="font-size:12px;opacity:0.85;">GPC IMSS 2024 + IDSA 2025 + EAU 2024 + ESPID 2024</p>
+  </div>
+  <div class="bib-s"><div class="bib-sh">🇲🇽 GPC IMSS / CENETEC</div>
+  <div class="bib-sb">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2024</span><span class="lv lv-a">GPC vigente</span></div>
+    <div class="bib-r">IMSS / Secretaría de Salud. <em>Diagnóstico y Tratamiento de Infección Urinaria No Complicada en Mujeres.</em> GPC actualización 2024. CENETEC.</div></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2008</span><span class="lv lv-b">GPC</span></div>
+    <div class="bib-r">IMSS. <em>Diagnóstico y Tratamiento de Infección del Tracto Urinario Bajo Durante el Embarazo.</em> GPC IMSS-078-08.</div>
+    <a class="bib-l" href="https://www.facmed.unam.mx/sg/css/GPC/SIDSS-GPC/gpc/docs/IMSS-078-08-RR.pdf" target="_blank">🔗 PDF</a></div>
+    <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2008</span><span class="lv lv-b">GPC</span></div>
+    <div class="bib-r">IMSS. <em>Prevención, Diagnóstico y Tratamiento de ITU no Complicada en Menores de 18 años.</em> GPC IMSS-027-08.</div>
+    <a class="bib-l" href="https://www.imss.gob.mx/sites/all/statics/guiasclinicas/027GER.pdf" target="_blank">🔗 PDF</a></div>
+  </div></div>
+  <div class="bib-s"><div class="bib-sh">🌍 Guías internacionales</div>
+  <div class="bib-sb">
+    <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2025</span><span class="lv lv-a">Nivel A — vigente</span></div>
+    <div class="bib-r">IDSA. <em>Clinical Practice Guideline for Complicated Urinary Tract Infections.</em> Clinical Infectious Diseases. 2025.</div>
+    <a class="bib-l" href="https://www.idsociety.org/practice-guideline/complicated-urinary-tract-infections/" target="_blank">🔗 IDSA 2025</a></div>
+    <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">2024</span><span class="lv lv-a">Nivel A</span></div>
+    <div class="bib-r">EAU Guidelines Panel. <em>EAU Guidelines on Urological Infections 2024.</em> European Association of Urology.</div>
+    <a class="bib-l" href="https://uroweb.org/guidelines/urological-infections" target="_blank">🔗 EAU 2024</a></div>
+    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">2024</span><span class="lv lv-a">Nivel A</span></div>
+    <div class="bib-r">ESPID Working Group. <em>Guidelines for Complicated UTI in Children.</em> Pediatric Infectious Disease Journal. 2025.</div>
+    <a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/38688800/" target="_blank">🔗 PubMed ESPID 2024</a></div>
+    <div class="bib-i"><div><span class="bib-n">7</span><span class="bib-y">2019</span><span class="lv lv-a">Nivel A — vigente</span></div>
+    <div class="bib-r">Nicolle LE, et al; IDSA. <em>Clinical Practice Guideline for Asymptomatic Bacteriuria: 2019 Update.</em> Clin Infect Dis. 2019;68(10):e83-e110.</div>
+    <a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/30895288/" target="_blank">🔗 PubMed: 30895288</a></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>GPC IMSS 2024, IDSA 2025 (ITU complicada), IDSA 2019 (bacteriuria asintomática). Para resistencias locales de E. coli: consultar antibiograma institucional del IMSS. Última revisión: junio 2025.</div></div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+let cp = 'adulto';
+const pops = {
+  adulto: {cls:'hdr-blue', tc:'#1a6bbd', eye:'Adulto · Urología · Medicina Interna', sub:'Cistitis · Pielonefritis · GPC IMSS 2024 + IDSA 2025', badges:['E. coli 85%','Fosfomicina dosis única','IDSA 2025'], qs:[['E. coli','germen #1'],['3g','fosfomicina'],['48-72h','respuesta'],['7-14d','pielonefritis']]},
+  ped: {cls:'hdr-amber', tc:'#d97706', eye:'Pediátrico · Pediatría · Urología', sub:'ITU febril · Pielonefritis pediátrica · ESPID 2024 + GPC IMSS-027', badges:['Urocultivo siempre','Catéter &lt;2 años','USG en 1ª ITU'], qs:[['Catéter','recolección &lt;2a'],['10-14d','pielonefritis'],['USG','1ª ITU febril'],['ESPID','guía 2024']]},
+  gin: {cls:'hdr-pink', tc:'#db2777', eye:'Gineco-Obstétrico · Primer Nivel', sub:'Bacteriuria en embarazo · Pielonefritis obstétrica · GPC IMSS-078', badges:['Tratar BA en embarazo','Urocultivo c/trimestre','7 días mínimo'], qs:[['Tratar BA','embarazo'],['7 días','mínimo'],['Control','urocultivo'],['Cat B','cefalexina']]},
+  anc: {cls:'hdr-purple', tc:'#7c3aed', eye:'Anciano &gt;65 años · Geriatría · Med. Interna', sub:'Presentación atípica · Bacteriuria asintomática · IDSA 2019 + EAU 2024', badges:['No tratar BA asint.','Calcular TFG real','Presentación atípica'], qs:[['No tratar','bacteriuria BA'],['TFG','calcular siempre'],['7 días','mínimo'],['IDSA','2019']]}
+};
+
+function setPop(p) {
+  cp = p;
+  const d = pops[p];
+  // selector buttons
+  const classes = {adulto:'p-adulto', ped:'p-ped', gin:'p-gin', anc:'p-anc'};
+  Object.entries(classes).forEach(([k,c]) => {
+    const btn = document.getElementById('pb-'+k);
+    btn.className = 'pop-btn' + (k === p ? ' '+c : '');
+  });
+  // header
+  const h = document.getElementById('mhdr');
+  h.className = 'hdr ' + d.cls;
+  document.getElementById('eye').textContent = d.eye;
+  document.getElementById('sub').innerHTML = d.sub;
+  document.getElementById('badges').innerHTML = d.badges.map(b=>`<span class="hdr-badge">${b}</span>`).join('');
+  // qstats
+  document.getElementById('qs').innerHTML = d.qs.map(([v,l])=>`<div class="qstat"><div class="qstat-val" style="color:${d.tc}">${v}</div><div class="qstat-lbl">${l}</div></div>`).join('');
+  // tab color
+  document.querySelectorAll('.tab:not(.enf):not(.bib)').forEach(t => t.style.setProperty('--tc', d.tc));
+  // show/hide pop content
+  document.querySelectorAll('.pc').forEach(c => {
+    c.classList.toggle('active', c.dataset.p === p);
+  });
+}
+
+function showT(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function tog(h) {
+  const b = h.nextElementSibling;
+  const g = h.querySelector('.sg');
+  b.classList.toggle('hidden');
+  g.classList.toggle('open');
+}
+
+function r5(n) { return Math.round(n/5)*5; }
+
+function calcD() {
+  const w = parseFloat(document.getElementById('wt').value);
+  const res = document.getElementById('cr');
+  if (!w || w <= 0) { res.style.display='none'; return; }
+  res.style.display='block';
+  document.getElementById('d1').textContent = r5(w*40/3)+' mg';
+  document.getElementById('d2').textContent = r5(w*8/2)+' mg';
+  document.getElementById('d3').textContent = r5(w*75)+' mg';
+  document.getElementById('d4').textContent = r5(w*6/2)+' mg TMP';
+  document.getElementById('d5').textContent = r5(w*5)+' mg';
+}
+
+function calcD2() {
+  const w = parseFloat(document.getElementById('wt2').value);
+  const res = document.getElementById('cr2');
+  if (!w || w <= 0) { res.style.display='none'; return; }
+  res.style.display='block';
+  document.getElementById('t1').textContent = r5(w*40/3)+' mg';
+  document.getElementById('t2').textContent = r5(w*8/2)+' mg';
+  document.getElementById('t3').textContent = r5(w*75)+' mg';
+  document.getElementById('t4').textContent = r5(w*6/2)+' mg TMP';
+  document.getElementById('t5').textContent = r5(w*5)+' mg';
+}
+
+// init
+setPop('adulto');
+</script>
+</body>
+</html>

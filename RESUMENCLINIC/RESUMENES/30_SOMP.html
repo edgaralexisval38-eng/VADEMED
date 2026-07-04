@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SOMP (antes SOP) · Clínica Rápida</title>
+<style>
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--gp:#f0faf6;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--p:#4a1d8a;--pl:#ede9fe;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--bd:#e2e8f0;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--g);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.tab.ind.on{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tab.bib.on{color:var(--bm);border-bottom-color:var(--bm);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform 0.2s;flex-shrink:0;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--gray-900);}
+.prose ul{padding-left:18px;margin-bottom:8px;}.prose li{margin-bottom:3px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kp:last-child{margin-bottom:0;}
+.kn{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.kt strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-gr{background:var(--gray-100);color:var(--gray-700);border-left:3px solid #6b7280;}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.t tr:hover td{background:var(--gray-50);}
+.dn{font-weight:700;color:var(--g);}
+.dm{color:var(--r);font-weight:600;}
+.dn2{color:var(--gray-600);font-size:11px;}
+.lb{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.l1{background:var(--g);color:#fff;}.l2{background:var(--gm);color:#fff;}.l3{background:#6b7280;color:#fff;}.lc{background:var(--gl);color:var(--g);}
+.dname{font-weight:700;color:var(--g);display:block;margin-bottom:1px;}
+.dnote{color:var(--gray-600);font-size:11px;margin-top:2px;display:block;line-height:1.4;}
+.nodar{background:var(--rl);border:1.5px solid var(--rm);border-radius:var(--rs);padding:12px 14px;margin-top:12px;}
+.nodar-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.nodar-i{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;color:var(--r);border-bottom:1px solid rgba(192,57,43,0.15);}
+.nodar-i:last-child{border-bottom:none;}
+.nodar-i::before{content:'X';font-size:12px;flex-shrink:0;margin-top:1px;font-weight:700;}
+.pres-box{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-top:12px;}
+.pres-t{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.pres-row{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.pres-row:last-child{border-bottom:none;}
+.pres-drug{font-weight:600;color:var(--g);min-width:110px;flex-shrink:0;}
+.pres-detail{color:var(--gray-700);flex:1;}
+.fp{display:flex;align-items:flex-start;}
+.fp-l{width:40px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fp-d{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.fp-li{width:2px;background:var(--gray-200);flex:1;min-height:20px;}
+.fp-c{flex:1;padding:0 0 14px 12px;}
+.fp-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.fp-x{font-size:12px;color:var(--gray-600);line-height:1.55;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-start{background:var(--g);color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.a-end{background:var(--gl);color:var(--g);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--gm);}
+.a-act{background:#fff;border:1.5px solid var(--bd);color:var(--gray-900);}
+.a-dec{background:var(--al);border:1.5px solid var(--am);color:var(--a);font-weight:600;}
+.a-arr{text-align:center;font-size:18px;color:var(--gray-400);margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--rl);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--r);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--gray-50);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--gray-900);}
+.lab-a{font-size:11px;color:var(--r);margin-top:3px;font-weight:600;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:90px;font-size:11px;font-weight:700;color:var(--g);text-transform:uppercase;padding-top:2px;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ab{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab-ok{background:var(--gl);border-color:var(--gm);}
+.ab-no{background:var(--rl);border-color:var(--rm);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--g);}.ab-no .ab-t{color:var(--r);}
+.ab-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.ab-i::before{content:'o';position:absolute;left:0;opacity:0.6;}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--gray-900);padding:5px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--rl);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--r);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'!';position:absolute;left:0;font-size:11px;font-weight:700;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.lp{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10.5px;font-weight:600;margin-left:4px;}
+.lp-r{background:var(--rl);color:var(--r);}.lp-a{background:var(--al);color:var(--a);}.lp-g{background:var(--gl);color:var(--g);}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);transition:all 0.15s;}
+.pchip.on{background:var(--g);border-color:var(--g);color:#fff;}
+.pchip.pchip-w.on{background:var(--am);border-color:var(--am);color:#fff;}
+.p-drug-card{background:#fff;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;overflow:hidden;}
+.p-result-hdr{background:var(--g);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.p-dose-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.p-dose-row:last-child{border-bottom:none;}
+.p-dose-lbl{color:var(--gray-600);}
+.p-dose-val{font-weight:600;color:var(--gray-900);}
+.p-pres{background:var(--gray-50);border-radius:var(--rs);padding:6px 10px;margin-top:6px;font-size:11px;color:var(--gray-600);}
+.p-nota{background:var(--gl);border-radius:var(--rs);padding:7px 10px;margin-top:6px;font-size:11px;color:var(--g);line-height:1.5;}
+.ind-h{background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.ind-o{background:var(--pl);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.ind-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--p);margin-bottom:6px;}
+.ind-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.ind-oi::before{content:'>';position:absolute;left:0;color:#7c3aed;font-weight:700;}
+.ind-c{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);}
+.ind-c:last-child{border-bottom:none;}
+.ind-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ind-cb.on{background:#7c3aed;border-color:#7c3aed;}
+.ind-cb.on::after{content:'v';color:#fff;font-size:10px;font-weight:700;}
+.ind-f{font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.ind-al{background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--r);}
+.ind-al strong{font-weight:700;display:block;margin-bottom:2px;}
+.pbtn{background:#4c1d95;color:#fff;border:none;padding:10px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-h{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.bib-s{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.bib-sh{background:var(--gl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--g);border-bottom:1px solid var(--bd);}
+.bib-sb{padding:10px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+.lv{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-e{background:var(--pl);color:var(--p);}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--g);text-decoration:none;font-weight:500;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-card{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;text-align:center;}
+.stat-num{font-size:22px;font-weight:700;color:var(--g);}
+.stat-lbl{font-size:11px;color:var(--gray-600);margin-top:2px;}
+.epi-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;}
+.epi-r:last-child{border-bottom:none;}
+.epi-k{font-weight:600;color:var(--gray-900);min-width:110px;flex-shrink:0;}
+.epi-v{color:var(--gray-700);flex:1;}
+.hosp-ctx{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;}
+.hosp-ctx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px;}
+.hosp-ctx-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.hosp-ctx-i::before{content:'>';position:absolute;left:0;color:var(--g);font-weight:700;}
+.sc{border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;margin-bottom:10px;}
+.sc-h{background:var(--gl);padding:8px 12px;font-size:12px;font-weight:700;color:var(--g);}
+.sc-b{padding:10px 12px;}
+.sc-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.sc-r:last-child{border-bottom:none;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:8px;}
+.calc-r{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.calc-l{font-size:12px;color:var(--gray-700);min-width:70px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.calc-in:focus{border-color:var(--g);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:12px;text-align:center;}
+.res-ok{background:var(--gl);color:var(--g);}
+.res-mid{background:var(--al);color:var(--a);}
+.res-high{background:var(--rl);color:var(--r);}
+.res-score{font-size:26px;font-weight:700;}
+.res-label{font-size:13px;font-weight:600;margin-top:4px;}
+.res-action{font-size:12px;margin-top:6px;line-height:1.5;opacity:0.9;}
+@media(max-width:480px){.epi-k{min-width:85px;}.grid2{grid-template-columns:1fr;}.lab-g{grid-template-columns:1fr;}}
+@media print{.tabbar,.pbtn{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+/* Tema azul Asma */
+.hdr{background:linear-gradient(135deg,#0c3b6e,#1a6bbd)!important;}
+.qs-v{color:var(--b);}
+.tab.on{color:var(--b);border-bottom-color:var(--b);}
+/* Tarjetas de medicamento (ricas, color por clase) */
+.med{background:#fff;border:1px solid var(--bd);border-left:5px solid #6b7280;border-radius:var(--rad);margin-bottom:12px;overflow:hidden;}
+.med-h{padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.med-ic{font-size:22px;flex-shrink:0;line-height:1;}
+.med-nm{font-size:14px;font-weight:700;color:var(--gray-900);}
+.med-cls{font-size:11px;color:var(--gray-600);margin-top:1px;}
+.med-line{font-size:10px;font-weight:700;color:#fff;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;background:#6b7280;}
+.med-b{padding:4px 12px 10px;}
+.med-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--gray-100);}
+.med-row:last-child{border-bottom:none;}
+.med-k{min-width:88px;flex-shrink:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--gray-400);padding-top:1px;}
+.med-v{font-size:12.5px;color:var(--gray-700);line-height:1.5;flex:1;}
+.med-v strong{color:var(--gray-900);}
+.med-dose{font-size:13px;font-weight:700;color:var(--gray-900);}
+.med-warn{font-size:12px;color:var(--r);font-weight:600;}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--gray-100);}
+.step:last-child{border-bottom:none;}
+.step-n{width:30px;height:30px;border-radius:8px;background:var(--bl);color:var(--b);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-c{flex:1;}
+.step-t{font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.step-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.step-x b{color:var(--b);}
+/* Selector interactivo */
+.atool-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:12px;line-height:1.4;}
+.atool-opt{display:block;width:100%;text-align:left;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:11px 13px;font-size:13px;font-weight:600;color:var(--gray-900);cursor:pointer;margin-bottom:8px;font-family:inherit;transition:all 0.15s;}
+.atool-opt:hover{border-color:var(--bm);background:var(--bl);}
+.atool-opt .sub{display:block;font-size:11px;font-weight:500;color:var(--gray-600);margin-top:2px;}
+.atool-back{background:none;border:none;color:var(--bm);font-size:12px;font-weight:700;cursor:pointer;padding:0;margin-bottom:12px;font-family:inherit;}
+.atool-res{border-radius:10px;padding:14px;border:1.5px solid;}
+.atool-res-t{font-size:15px;font-weight:700;margin-bottom:4px;}
+.atool-res-s{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:8px;}
+.atool-li{font-size:12.5px;line-height:1.6;padding:4px 0 4px 16px;position:relative;color:var(--gray-700);}
+.atool-li::before{content:'▸';position:absolute;left:0;color:var(--gray-400);}
+.atool-li b{color:var(--gray-900);}
+/* Guía GEMA interactiva */
+.g-h{color:#fff;font-weight:700;font-size:15px;padding:10px 14px;border-radius:8px;margin-bottom:10px;}
+.g-blk{border-radius:8px;padding:9px 12px;margin-bottom:7px;}
+.g-blk .bt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
+.g-blk .bx{font-size:12.5px;line-height:1.55;color:var(--gray-900);}
+.g-lad{display:flex;align-items:flex-end;gap:4px;margin-bottom:12px;}
+.g-lad .s{flex:1;border-radius:4px 4px 0 0;}
+.g-base{background:linear-gradient(90deg,#0c3b6e,#1a6bbd);color:#fff;border-radius:8px;padding:9px 12px;font-size:11px;line-height:1.5;margin-top:10px;}
+
+/* ===== Tema Ginecología (rosa/magenta) ===== */
+:root{--g:#9d2c5f;--gm:#b83d75;--gl:#fbe9f1;--gp:#fdf4f8;}
+.hdr{background:linear-gradient(135deg,#4a0a24,#9d2c5f)!important;}
+.qs-v{color:#9d2c5f;}
+.tab.on{color:#9d2c5f;border-bottom-color:#9d2c5f;}
+.bib-h{background:linear-gradient(135deg,#4a0a24,#9d2c5f);}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:#9d2c5f;cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🌺</div>
+    <div>
+      <div class="hdr-eye">Ginecología · Endocrinología · Metabólico</div>
+      <div class="hdr-title">Síndrome ovárico metabólico poliendocrino</div>
+      <div class="hdr-sub">SOMP — antes síndrome de ovario poliquístico (SOP) · Guía Internacional 2023</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Nuevo nombre 2026 (The Lancet · OMS)</span>
+    <span class="badge">Criterios de Rotterdam: 2 de 3</span>
+    <span class="badge">Estilo de vida, la base</span>
+    <span class="badge">Letrozol para la fertilidad</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">10-13%</div><div class="qs-l">prevalencia</div></div>
+  <div class="qs"><div class="qs-v">~70%</div><div class="qs-l">sin diagnóstico</div></div>
+  <div class="qs"><div class="qs-v">2 de 3</div><div class="qs-l">criterios</div></div>
+  <div class="qs"><div class="qs-v">Letrozol</div><div class="qs-l">1ª línea fertilidad</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Criterios y tamizaje</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tratamiento</button>
+  <button class="tab" onclick="showT('txh',this)">🤰 Fertilidad</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab ind" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('esce',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab bib" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y nuevo nombre</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Síndrome ovárico metabólico poliendocrino (SOMP)</strong> es el nuevo nombre del antiguo <strong>síndrome de ovario poliquístico (SOP)</strong>. El consenso internacional (The Lancet, 2026, con la OMS) lo renombró porque los "quistes" en realidad son folículos pequeños y porque no es solo reproductivo: es un trastorno <strong>endocrino y metabólico multisistémico</strong>.</p>
+    <p><strong>Idea clave:</strong> es un trío de <strong>hiperandrogenismo + disfunción ovulatoria + resistencia a la insulina</strong>. El cambio de nombre no cambia los criterios ni el tratamiento, pero recuerda buscar y tratar el riesgo metabólico, no solo lo menstrual.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="grid2">
+      <div class="stat-card"><div class="stat-num">10-13%</div><div class="stat-lbl">Mujeres en edad fértil</div></div>
+      <div class="stat-card"><div class="stat-num">~70%</div><div class="stat-lbl">Permanecen sin diagnóstico</div></div>
+      <div class="stat-card"><div class="stat-num">#1</div><div class="stat-lbl">Causa de infertilidad anovulatoria</div></div>
+      <div class="stat-card"><div class="stat-num">↑↑</div><div class="stat-lbl">Riesgo de diabetes tipo 2</div></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiopatología</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fp"><div class="fp-l"><div class="fp-d" style="background:#ef4444;"></div><div class="fp-li"></div></div><div class="fp-c">
+      <div class="fp-t">1. Resistencia a la insulina → hiperinsulinemia</div>
+      <div class="fp-x">Presente en muchas pacientes (con o sin obesidad). La insulina alta estimula al ovario y baja la SHBG hepática → más andrógenos libres.</div>
+    </div></div>
+    <div class="fp"><div class="fp-l"><div class="fp-d" style="background:#f97316;"></div><div class="fp-li"></div></div><div class="fp-c">
+      <div class="fp-t">2. Hiperandrogenismo y alteración LH/FSH</div>
+      <div class="fp-x">El exceso de andrógenos ováricos (y la relación LH/FSH alterada) produce hirsutismo, acné y altera la maduración folicular.</div>
+    </div></div>
+    <div class="fp"><div class="fp-l"><div class="fp-d" style="background:#8b5cf6;"></div><div class="fp-li" style="background:transparent;"></div></div><div class="fp-c">
+      <div class="fp-t">3. Disfunción ovulatoria y consecuencias</div>
+      <div class="fp-x">Folículos que no maduran → oligo/anovulación, ciclos irregulares e infertilidad; y, a largo plazo, riesgo metabólico, hiperplasia endometrial y repercusión emocional.</div>
+    </div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Comorbilidades (buscarlas)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Ámbito</th><th>Riesgo asociado</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Metabólico</td><td>Resistencia a la insulina, prediabetes y diabetes tipo 2, síndrome metabólico.</td></tr>
+        <tr><td class="dn">Cardiovascular</td><td>Dislipidemia, hipertensión, hígado graso.</td></tr>
+        <tr><td class="dn">Reproductivo</td><td>Infertilidad anovulatoria; en el embarazo: diabetes gestacional, preeclampsia.</td></tr>
+        <tr><td class="dn">Endometrio</td><td class="dm">Hiperplasia y cáncer de endometrio por amenorrea prolongada (sin oposición de progesterona).</td></tr>
+        <tr><td class="dn">Salud mental</td><td>Depresión y ansiedad (tamizar de rutina).</td></tr>
+        <tr><td class="dn">Sueño</td><td>Apnea obstructiva del sueño.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">6 errores frecuentes — no cometer</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Exigir "ovarios poliquísticos" en el ultrasonido para diagnosticar:</strong> si ya hay hiperandrogenismo + disfunción ovulatoria, NO se necesita ultrasonido ni AMH.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>No excluir otras causas:</strong> descartar tiroides, prolactina, hiperplasia suprarrenal no clásica (17-OH-progesterona) y, si hay datos, Cushing o tumor.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Usar criterios de adulta en adolescentes:</strong> en ellas NO se usa ultrasonido ni AMH; se requieren hiperandrogenismo + disfunción ovulatoria persistentes.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Olvidar el riesgo metabólico:</strong> tamizar glucosa/curva, lípidos, presión y peso; el nuevo nombre lo subraya.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Dejar amenorreica sin protección endometrial:</strong> la amenorrea prolongada eleva el riesgo de cáncer de endometrio; inducir sangrados (anticonceptivo o progestágeno).</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>Dar antiandrógenos sin anticoncepción:</strong> la espironolactona es teratógena; siempre con un método eficaz.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📐</span><span class="st">Criterios diagnósticos (Rotterdam: 2 de 3)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Criterio</th><th>Cómo se valora</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">1. Hiperandrogenismo</td><td>Clínico (hirsutismo, acné) o bioquímico (testosterona libre / índice de andrógenos libres elevado).</td></tr>
+        <tr><td class="dn">2. Disfunción ovulatoria</td><td>Ciclos irregulares: oligomenorrea o amenorrea.</td></tr>
+        <tr><td class="dn">3. Morfología ovárica</td><td>Ultrasonido (≥20 folículos por ovario o volumen ≥10 mL) <strong>o AMH elevada</strong> (novedad 2023, sustituye al ultrasonido en adultas).</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">✅</span><div><div class="at">Atajo diagnóstico</div>Si están presentes <strong>hiperandrogenismo + disfunción ovulatoria</strong>, el diagnóstico es directo: NO hace falta ultrasonido ni AMH.</div></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">🧒</span><div><div class="at">Adolescentes</div>NO usar ultrasonido ni AMH. Se requieren hiperandrogenismo + disfunción ovulatoria persistentes (varios años pospuberales); si hay solo uno, etiquetar "en riesgo" y reevaluar.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚫</span><span class="st">Excluir otras causas (obligatorio)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Descartar</th><th>Prueba</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Tiroides</td><td>TSH</td></tr>
+        <tr><td class="dn">Hiperprolactinemia</td><td>Prolactina</td></tr>
+        <tr><td class="dn">Hiperplasia suprarrenal no clásica</td><td>17-OH-progesterona</td></tr>
+        <tr><td class="dn">Cushing / tumor productor de andrógenos</td><td>Solo si hay datos (virilización rápida, estigmas)</td></tr>
+        <tr><td class="dn">Embarazo</td><td>βhCG ante amenorrea</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Evaluación una vez confirmado</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">📋</span><div>Tamizaje cardiometabólico: <strong>glucosa en ayuno o curva de tolerancia</strong> (especialmente con sobrepeso), <strong>perfil de lípidos</strong>, presión arterial y peso/IMC. Tamizar depresión y ansiedad. Valorar apnea del sueño si hay síntomas.</div></div>
+  </div></div>
+</div>
+
+<!-- CRITERIOS Y TAMIZAJE -->
+<div class="panel" id="tab-esc">
+  <div style="background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#4a0a24,#9d2c5f);color:#fff;padding:10px 14px;">
+      <div style="font-size:13px;font-weight:700;">📊 ¿Cumple criterios de SOMP?</div>
+      <div style="font-size:11px;opacity:0.85;margin-top:2px;">Marca lo presente; se requieren 2 de 3 (tras excluir otras causas)</div>
+    </div>
+    <div style="padding:14px;">
+      <div id="crit-items"></div>
+      <div id="crit-result" style="margin-top:10px;"></div>
+      <button onclick="resetCrit()" style="margin-top:10px;width:100%;padding:9px;background:#fff;color:#9d2c5f;border:1.5px solid #9d2c5f;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">↩ Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Tamizaje cardiometabólico recomendado</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Estudio</th><th>Frecuencia</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Glucosa en ayuno / curva (CTOG)</td><td>Al diagnóstico y cada 1-3 años (antes si hay riesgo o embarazo)</td></tr>
+        <tr><td class="dn">Perfil de lípidos</td><td>Al diagnóstico; repetir según riesgo</td></tr>
+        <tr><td class="dn">Presión arterial</td><td>En cada visita</td></tr>
+        <tr><td class="dn">Peso / IMC / cintura</td><td>Periódico (con respeto y sin estigma)</td></tr>
+        <tr><td class="dn">Ánimo (depresión/ansiedad)</td><td>Tamizaje de rutina</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div style="background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#4a0a24,#9d2c5f);color:#fff;padding:10px 14px;">
+      <div style="font-size:13px;font-weight:700;">🔀 Algoritmo por objetivo</div>
+      <div style="font-size:11px;opacity:0.85;margin-top:2px;">Menstrual/androgénico · metabólico/peso · fertilidad</div>
+    </div>
+    <div style="padding:14px;"><div id="obj-step"></div></div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧱</span><span class="st">La base para todas: estilo de vida</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">🥗</span><div><div class="at">Primera línea en todos los objetivos</div>Alimentación saludable y actividad física; prevención del aumento de peso y, si se requiere, manejo del peso. Ninguna dieta es superior a otra; minimizar el estigma por el peso.</div></div>
+  </div></div>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Tratamiento — fichas por objetivo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">⭐</span><div><div class="at">El estilo de vida es la base de todo</div>Sobre esa base se eligen fármacos según el objetivo. Toca cada ficha para la información completa.</div></div>
+    <div id="txc-meds"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Reglas de oro</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">Definir el objetivo</div><div class="step-x">Menstrual/androgénico, metabólico/peso o fertilidad. El tratamiento cambia según cuál predomine.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">Anticonceptivo combinado de 1ª línea</div><div class="step-x">Para ciclos irregulares e hiperandrogenismo (también protege el endometrio). Si no basta para el hirsutismo, añadir antiandrógeno.</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">Metformina para lo metabólico</div><div class="step-x">Más eficaz que el inositol; valorar agonistas de GLP-1/antiobesidad según guías generales.</div></div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-c"><div class="step-t">Si busca embarazo → pasar a Fertilidad</div><div class="step-x">Suspender anticonceptivo y antiandrógeno; inducir ovulación con letrozol (ver pestaña Fertilidad).</div></div></div>
+    <div class="nodar">
+      <div class="nodar-t">No hacer</div>
+      <div class="nodar-i">Antiandrógenos sin anticoncepción eficaz (teratógenos).</div>
+      <div class="nodar-i">Dejar amenorrea prolongada sin protección endometrial.</div>
+      <div class="nodar-i">Anticonceptivo o antiandrógeno si se busca embarazo.</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- FERTILIDAD -->
+<div class="panel" id="tab-txh">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤰</span><span class="st">Inducción de la ovulación — fichas por línea</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🧭</span><div><div class="at">Antes de inducir</div>Confirmar que la causa es anovulación y descartar otros factores (masculino, tubárico). Optimizar el peso y suspender anticonceptivo/antiandrógeno. Toca cada ficha para la información completa.</div></div>
+    <div id="fert-meds"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📝</span><span class="st">Notas de fertilidad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-w"><span class="ai">🍼</span><div>La metformina puede usarse como adyuvante o como opción de bajo umbral (no requiere monitoreo), pero el letrozol logra más nacidos vivos.</div></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">📈</span><div>Monitorear el crecimiento folicular (sobre todo en gonadotropinas) para reducir el riesgo de embarazo múltiple e hiperestimulación. Suspender el tratamiento al confirmar el embarazo.</div></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:0.5px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacos(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="ind-h">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.8;margin-bottom:4px;">Indicaciones para enfermería y paciente</div>
+    <div style="font-size:17px;font-weight:700;">Texto para enfermería y para el paciente</div>
+    <div style="font-size:12px;opacity:0.85;margin-top:4px;">Selecciona la dosis para generar el texto.</div>
+  </div>
+  <div id="ind-list"></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esce">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — selecciona el caso</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="esce-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="esce-content"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Calendario de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Momento</th><th>Qué hacer</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Cada visita</td><td>Presión arterial, peso/IMC/cintura, síntomas (ciclo, hirsutismo, acné), adherencia, ánimo y —si aplica— confirmar anticoncepción.</td></tr>
+        <tr><td class="dn">3 meses (al iniciar fármaco)</td><td>Eficacia y tolerancia; en anticonceptivo revaluar sangrado y presión; en espironolactona y metformina, laboratorio (ver abajo).</td></tr>
+        <tr><td class="dn">6-12 meses</td><td>Reevaluar hirsutismo (cambia lento), control del ciclo y metas de peso.</td></tr>
+        <tr><td class="dn">Cada 1-3 años</td><td>Glucosa en ayuno o curva de tolerancia (CTOG) y perfil de lípidos; antes si hay sobrepeso, antecedente de diabetes gestacional o se planea embarazo.</td></tr>
+        <tr><td class="dn">Anual</td><td>Revisión integral del riesgo cardiometabólico, salud mental y reproductiva.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Vigilancia por tratamiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Fármaco</th><th>Qué vigilar</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Anticonceptivo combinado</td><td>Presión arterial; datos de trombosis; migraña con aura; patrón de sangrado a los 3 meses.</td></tr>
+        <tr><td class="dn">Espironolactona</td><td>Potasio y función renal (basal y tras subir dosis); confirmar anticoncepción eficaz.</td></tr>
+        <tr><td class="dn">Metformina</td><td>Función renal; vitamina B12 en uso prolongado; tolerancia digestiva.</td></tr>
+        <tr><td class="dn">Agonista GLP-1</td><td>Peso y glucosa; descartar pancreatitis; suspender antes de buscar embarazo.</td></tr>
+        <tr><td class="dn">Letrozol / clomifeno</td><td>Ovulación (progesterona/ultrasonido) y número de folículos (embarazo múltiple); suspender al confirmar embarazo.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Protección del endometrio — cuándo estudiar</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🛡️</span><div><div class="at">Meta</div>Asegurar sangrados al menos cada 3-4 meses (con anticonceptivo o progestágeno cíclico) para reducir el riesgo de hiperplasia y cáncer de endometrio.</div></div>
+    <div class="al-b" style="margin-top:8px;">
+      <div class="al-t">Estudiar el endometrio (ultrasonido ± biopsia) si:</div>
+      <div class="al-i">Sangrado intermenstrual o abundante persistente.</div>
+      <div class="al-i">Amenorrea prolongada sin protección con progestágeno.</div>
+      <div class="al-i">Endometrio engrosado en ultrasonido o factores de riesgo (obesidad, diabetes).</div>
+      <div class="al-i">Cualquier sangrado posmenopáusico.</div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Comorbilidades a vigilar de por vida</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">🩸</div><div><div class="co-n">Diabetes tipo 2 / prediabetes</div><div class="co-d">Glucosa o CTOG cada 1-3 años; más seguido con obesidad o antecedente de diabetes gestacional.</div></div></div>
+    <div class="co-i"><div class="co-ico">❤️</div><div><div class="co-n">Riesgo cardiovascular</div><div class="co-d">Presión, lípidos, peso y tabaquismo; valorar el riesgo a lo largo de la vida.</div></div></div>
+    <div class="co-i"><div class="co-ico">🫀</div><div><div class="co-n">Hígado graso</div><div class="co-d">Sospecharlo con obesidad/resistencia a la insulina; valorar enzimas hepáticas.</div></div></div>
+    <div class="co-i"><div class="co-ico">😴</div><div><div class="co-n">Apnea del sueño</div><div class="co-d">Preguntar por ronquido y somnolencia diurna; estudiar si hay síntomas.</div></div></div>
+    <div class="co-i"><div class="co-ico">💚</div><div><div class="co-n">Salud mental</div><div class="co-d">Tamizar depresión y ansiedad de rutina; valorar imagen corporal, conducta alimentaria y aspectos psicosexuales.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Seguimiento por etapa de vida</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">Adolescencia</div><div class="fu-x">Reevaluar el diagnóstico (etiquetas provisionales 'en riesgo'); enfocar en ciclo, piel, peso y educación.</div></div>
+    <div class="fu-r"><div class="fu-t">Búsqueda de embarazo</div><div class="fu-x">CTOG preconcepcional; suspender fármacos no compatibles; inducir ovulación (ver Fertilidad).</div></div>
+    <div class="fu-r"><div class="fu-t">Embarazo</div><div class="fu-x">Tamizaje temprano de diabetes gestacional; vigilar presión y preeclampsia.</div></div>
+    <div class="fu-r"><div class="fu-t">Perimenopausia</div><div class="fu-x">Los ciclos pueden regularizarse, pero el riesgo metabólico y de endometrio persiste; seguir tamizando.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📤</span><span class="st">Cuándo referir</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="al-b">
+      <div class="al-t">Referir a especialista si:</div>
+      <div class="al-i">Infertilidad que no responde a inducción oral (~6 ciclos) → reproducción asistida.</div>
+      <div class="al-i">Sospecha de otra causa (virilización rápida, Cushing, tumor) → endocrinología.</div>
+      <div class="al-i">Sangrado anómalo persistente o endometrio engrosado → ginecología.</div>
+      <div class="al-i">Obesidad con comorbilidad que no mejora → clínica de obesidad / cirugía metabólica.</div>
+      <div class="al-i">Síntomas significativos de salud mental → salud mental.</div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📣</span><span class="st">Prevención y educación</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">🥗</div><div><div class="co-n">Estilo de vida</div><div class="co-d">Base del manejo: alimentación, actividad física y prevenir el aumento de peso.</div></div></div>
+    <div class="co-i"><div class="co-ico">🩸</div><div><div class="co-n">Proteger el endometrio</div><div class="co-d">Inducir sangrados regulares con anticonceptivo o progestágeno cíclico.</div></div></div>
+    <div class="co-i"><div class="co-ico">🍼</div><div><div class="co-n">Planeación reproductiva</div><div class="co-d">Aclarar que se puede embarazar; ajustar el tratamiento según el deseo de embarazo.</div></div></div>
+    <div class="co-i"><div class="co-ico">💚</div><div><div class="co-n">Apoyo emocional</div><div class="co-d">Reducir el estigma; abordar imagen corporal, ánimo y calidad de vida.</div></div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="bib-h">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.8;margin-bottom:4px;">Fuentes</div>
+    <div style="font-size:17px;font-weight:700;">Bibliografía y guías</div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">Guías de práctica clínica</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">GUÍA</span><span class="bib-y">2023</span><span class="lv lv-a">Internacional</span>
+        <div class="bib-r" style="margin-top:4px;">Teede HJ, et al. <strong>International Evidence-based Guideline for the Assessment and Management of PCOS/SOMP 2023</strong> (ASRM/ESHRE/Monash). Hum Reprod 2023;38(9):1655-1679.</div>
+        <div style="font-family:monospace;font-size:11px;color:#6b7280;margin-top:3px;">DOI: 10.1093/humrep/dead156</div>
+        <a class="bib-l" href="https://doi.org/10.1093/humrep/dead156" target="_blank" rel="noopener">doi.org/10.1093/humrep/dead156</a></div>
+      <div class="bib-i"><span class="bib-n">RESUMEN</span><span class="bib-y">2023</span><span class="lv lv-b">Monash</span>
+        <div class="bib-r" style="margin-top:4px;">Centre for Research Excellence (Monash). <strong>PCOS Guideline 2023 — Summary.</strong></div>
+        <a class="bib-l" href="https://www.monash.edu/medicine/mchri/pcos" target="_blank" rel="noopener">monash.edu · PCOS</a></div>
+    </div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">Cambio de nombre</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">CONSENSO</span><span class="bib-y">2026</span><span class="lv lv-a">The Lancet</span>
+        <div class="bib-r" style="margin-top:4px;">Teede HJ, et al. <strong>Polyendocrine metabolic ovarian syndrome, the new name for polycystic ovary syndrome: a multistep global consensus process.</strong> Lancet 2026. Consenso internacional (con la OMS): renombrar el SOP a síndrome ovárico metabólico poliendocrino (SOMP / PMOS), con transición de 3 años.</div>
+        <div style="font-family:monospace;font-size:11px;color:#6b7280;margin-top:3px;">DOI: 10.1016/S0140-6736(26)00717-8</div>
+        <a class="bib-l" href="https://doi.org/10.1016/S0140-6736(26)00717-8" target="_blank" rel="noopener">doi.org/10.1016/S0140-6736(26)00717-8</a></div>
+      <div class="bib-i"><span class="bib-n">GUÍA</span><span class="bib-y">2026</span><span class="lv lv-b">ASRM (PMOS)</span>
+        <div class="bib-r" style="margin-top:4px;">ASRM. Recommendations from the 2023 Guideline for the Assessment and Management of <strong>Polyendocrine Metabolic Ovarian Syndrome (PMOS)</strong>.</div>
+        <a class="bib-l" href="https://www.asrm.org/practice-guidance/practice-committee-documents/" target="_blank" rel="noopener">asrm.org · práctica</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showT(id, el){
+  var panels=document.querySelectorAll('.panel');
+  for(var i=0;i<panels.length;i++){panels[i].classList.remove('on');}
+  var p=document.getElementById('tab-'+id);
+  if(p)p.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++){tabs[j].classList.remove('on');}
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling;
+  var sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+
+function renderFicha(f,idx){
+  var bc=f.co==="#0a5c45"?"rgba(10,92,69,0.06)":f.co==="#0c3b6e"?"rgba(12,59,110,0.06)":f.co==="#7a4a00"?"rgba(122,74,0,0.06)":f.co==="#7b1c1c"?"rgba(123,28,28,0.06)":f.co==="#0f7a5a"?"rgba(15,122,90,0.06)":f.co==="#9d2c5f"?"rgba(157,44,95,0.06)":"rgba(55,65,81,0.06)";
+  return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
+    +"<div onclick='toggleFicha("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='farr-"+idx+"'>&#8964;</span></div>"
+    +"<div id='fbody-"+idx+"' style='display:none;'>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Clase farmacologica</div><div style='font-size:12px;color:#374151;'>"+f.cl+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis</div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Inicio</span><span style='font-weight:600;text-align:right;'>"+f.ini+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Esquema</span><span style='font-weight:700;color:#c0392b;text-align:right;'>"+f.esq+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Via</span><span style='font-weight:600;text-align:right;'>"+f.iv+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Duracion</span><span style='font-weight:700;color:"+f.co+";text-align:right;'>"+(f.dur||"—")+"</span></div>"
+    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentacion MX:</strong> "+f.pr+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Indicaciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.ind+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Contraindicaciones</div><div style='font-size:12px;color:#c0392b;line-height:1.6;'>"+f.ci+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Precauciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.prec+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Titulacion</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.tit+"</div></div>"
+    +"<div style='padding:12px 14px;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Evidencia</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.ev+"</div></div>"
+    +"</div></div>";
+}
+function toggleFicha(idx){
+  var b=document.getElementById("fbody-"+idx),a=document.getElementById("farr-"+idx);
+  if(b.style.display==="none"){b.style.display="block";a.style.transform="rotate(180deg)";}
+  else{b.style.display="none";a.style.transform="rotate(0deg)";}
+}
+
+function filtrarFarmacos(q){
+  var list=document.getElementById("farm-list"),count=document.getElementById("farm-count");
+  if(!list)return;
+  var term=q.toLowerCase().trim();
+  var byName={};
+  for(var i=0;i<FARMACOS_ASMA.length;i++){byName[FARMACOS_ASMA[i].n]=i;}
+  var html="",found=0;
+  for(var g=0;g<FAMILIAS.length;g++){
+    var names=FAMILIAS[g][1],block="",cnt=0;
+    for(var k=0;k<names.length;k++){
+      var idx=byName[names[k]];if(idx===undefined)continue;
+      var f=FARMACOS_ASMA[idx];
+      var s=(f.n+" "+f.m+" "+f.cl+" "+f.pi+" "+f.ind).toLowerCase();
+      if(!term||s.indexOf(term)!==-1){block+=renderFicha(f,idx);cnt++;found++;}
+    }
+    if(cnt){html+="<div style='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#0c3b6e;margin:14px 0 6px;padding-left:2px;'>"+FAMILIAS[g][0]+"</div>"+block;}
+  }
+  list.innerHTML=html||"<div style='text-align:center;padding:20px;color:#9ca3af;font-size:13px;'>Sin resultados</div>";
+  if(count)count.textContent=found+(found===1?" farmaco":" farmacos");
+}
+
+function renderIndic(){
+  var list=document.getElementById("ind-list");
+  if(!list)return;
+  var html="";
+  for(var i=0;i<INDIC.length;i++){
+    var it=INDIC[i];
+    html+="<div class='ind-b'><div class='ind-bh'>"+it.nm+"</div><div class='ind-bb'>";
+    html+="<div style='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;' id='inddoses-"+i+"'>";
+    for(var j=0;j<it.doses.length;j++){
+      html+="<button class='pchip"+(j===0?" on":"")+"' onclick='selDosis("+i+","+j+")'>"+it.doses[j].d+"</button>";
+    }
+    html+="</div>";
+    html+="<div class='alert a-i'><span class='ai'>&#128105;&#8205;&#9877;&#65039;</span><div><div class='at'>Enfermeria</div><span id='indenf-tx-"+i+"'>"+it.doses[0].enf+"</span></div></div>";
+    html+="<div class='alert a-g'><span class='ai'>&#129489;</span><div><div class='at'>Paciente</div><span id='indpac-tx-"+i+"'>"+it.doses[0].pac+"</span></div></div>";
+    html+="</div></div>";
+  }
+  list.innerHTML=html;
+}
+function selDosis(i,j){
+  var it=INDIC[i];
+  document.getElementById("indenf-tx-"+i).textContent=it.doses[j].enf;
+  document.getElementById("indpac-tx-"+i).textContent=it.doses[j].pac;
+  var cont=document.getElementById("inddoses-"+i);
+  var chips=cont.getElementsByClassName("pchip");
+  for(var k=0;k<chips.length;k++){chips[k].classList.remove("on");}
+  chips[j].classList.add("on");
+}
+
+function renderEscen(){
+  var chips=document.getElementById("esce-chips");
+  if(!chips)return;
+  var html="";
+  for(var i=0;i<ESCEN.length;i++){
+    html+="<button class='pchip"+(i===0?" on":"")+"' onclick='selEscen("+i+")'>"+ESCEN[i].ic+" "+ESCEN[i].t+"</button>";
+  }
+  chips.innerHTML=html;
+  document.getElementById("esce-content").innerHTML=ESCEN[0].html;
+}
+function selEscen(i){
+  document.getElementById("esce-content").innerHTML=ESCEN[i].html;
+  var chips=document.getElementById("esce-chips").getElementsByClassName("pchip");
+  for(var k=0;k<chips.length;k++){chips[k].classList.remove("on");}
+  chips[i].classList.add("on");
+}
+
+/* ===== FÁRMACOS (molde .med) ===== */
+var FARMACOS_ASMA=[
+  {n:"Anticonceptivo oral combinado",m:"Estrógeno + progestina · 1ª línea",cl:"Etinilestradiol (dosis baja) + progestágeno: suprime LH y andrógenos ováricos y sube la SHBG",pi:"PRIMERA línea para irregularidad menstrual e hiperandrogenismo",co:"#9d2c5f",
+   ini:"1 tableta diaria; preferir baja dosis de etinilestradiol",esq:"Continuo o cíclico, a largo plazo",iv:"Oral",
+   pr:"EE/ciproterona 35 µg/2 mg · EE/drospirenona 30 o 20 µg/3 mg · EE/dienogest 30 µg/2 mg · EE/clormadinona 30 µg/2 mg · EE/levonorgestrel (opción neutra)",dur:"De mantenimiento mientras se busquen sus efectos; reevaluar periódicamente.",
+   ind:"Oligo/amenorrea, sangrado irregular, hirsutismo y acné · protección del endometrio",
+   ci:"Migraña con aura · trombosis · tabaquismo en mayores de 35 años · hepatopatía · cáncer de mama · hipertensión no controlada",
+   prec:"NO usar si se busca embarazo · valorar riesgo cardiovascular · imprescindible para proteger el endometrio en oligomenorrea",
+   tit:"Elegir baja dosis con menos efectos adversos.",
+   ev:"Primera línea para los síntomas menstruales e hiperandrogenismo (Guía Internacional 2023); no hay una preparación específica preferida."},
+  {n:"Espironolactona",m:"Antiandrógeno",cl:"Antagonista de la aldosterona con efecto antiandrogénico (bloquea el receptor de andrógenos)",pi:"COADYUVANTE del hirsutismo cuando el anticonceptivo no basta",co:"#7a4a00",
+   ini:"50-100 mg/día (hasta 200)",esq:"Continuo; el efecto en el hirsutismo aparece a partir de los 6 meses",iv:"Oral",
+   pr:"Tabletas 25 y 100 mg",dur:"Largo plazo; evaluar el hirsutismo a partir de los 6 meses.",
+   ind:"Hirsutismo cuando el anticonceptivo es inefectivo (más de 6 meses), está contraindicado o se tolera mal",
+   ci:"Embarazo (teratógeno: feminiza al feto masculino) · insuficiencia renal · hiperpotasemia",
+   prec:"SIEMPRE con anticoncepción eficaz · vigilar el potasio · suele combinarse con el anticonceptivo",
+   tit:"Subir según respuesta y tolerancia.",
+   ev:"Los antiandrógenos tienen un papel limitado: hirsutismo cuando otras opciones fallan (Guía Internacional 2023)."},
+  {n:"Metformina",m:"Sensibilizador a la insulina",cl:"Biguanida: reduce la producción hepática de glucosa y mejora la sensibilidad a la insulina",pi:"Para las características METABÓLICAS (peso, glucosa, ciclo)",co:"#0a5c45",
+   ini:"500 mg/día y subir gradual hasta 1500-2000 mg/día",esq:"Continuo, con alimentos (subir lento por tolerancia)",iv:"Oral",
+   pr:"Tabletas 500, 850 y 1000 mg · liberación prolongada 500/750/1000 mg",dur:"Largo plazo según objetivos metabólicos.",
+   ind:"Características metabólicas, sobrepeso e intolerancia a la glucosa; puede regularizar ciclos · adyuvante en la inducción de ovulación",
+   ci:"Insuficiencia renal grave · acidosis",
+   prec:"Mayor eficacia que el inositol · efectos digestivos (subir lento) · no se usa de rutina en el embarazo",
+   tit:"Titular de forma ascendente para minimizar las molestias digestivas.",
+   ev:"Recomendada sobre todo para lo metabólico, con mayor eficacia que el inositol (Guía Internacional 2023)."},
+  {n:"Inositol",m:"Mio-inositol / D-quiro-inositol",cl:"Sensibilizador a la insulina (suplemento)",pi:"COADYUVANTE de beneficio limitado",co:"#374151",
+   ini:"Mio-inositol 2 g dos veces al día (4 g/día)",esq:"Continuo",iv:"Oral",
+   pr:"Sobres o cápsulas de mio-inositol ~2 g (a veces con D-quiro-inositol y ácido fólico)",dur:"Según preferencia; evidencia limitada.",
+   ind:"Opción metabólica si se prefiere por su mejor tolerancia, con decisión compartida",
+   ci:"Ninguna relevante",
+   prec:"Evidencia limitada e inconcluyente · menos efectos digestivos que la metformina pero menor eficacia",
+   tit:"Dosis fija.",
+   ev:"Beneficio clínico limitado; la metformina es superior (Guía Internacional 2023)."},
+  {n:"Letrozol",m:"Inhibidor de aromatasa · 1ª línea de fertilidad",cl:"Inhibidor de la aromatasa: baja el estrógeno → sube la FSH → estimula el desarrollo folicular",pi:"PRIMERA línea para inducir la ovulación (anovulación)",co:"#9d2c5f",
+   ini:"2.5 mg/día por 5 días (días 3-7 o 5-9); subir a 5-7.5 mg si no ovula",esq:"Por ciclos, con monitoreo",iv:"Oral",
+   pr:"Tabletas 2.5 mg",dur:"Por ciclos de inducción (habitualmente hasta 6 ciclos ovulatorios).",
+   ind:"Infertilidad por anovulación tras excluir otras causas (factor masculino, tubárico)",
+   ci:"Embarazo ya establecido",
+   prec:"Más nacidos vivos que el clomifeno en SOMP · monitoreo ecográfico al menos el primer ciclo · bajo riesgo de embarazo múltiple",
+   tit:"Subir la dosis si no hay ovulación.",
+   ev:"Tratamiento de elección para inducir la ovulación en SOMP (Guía Internacional 2023)."},
+  {n:"Citrato de clomifeno",m:"Modulador del receptor de estrógeno",cl:"SERM que bloquea el receptor estrogénico hipotalámico → sube la FSH",pi:"Alternativa de fertilidad (± metformina)",co:"#7a4a00",
+   ini:"50 mg/día por 5 días (subir a 100-150 si no ovula)",esq:"Por ciclos, con monitoreo",iv:"Oral",
+   pr:"Tabletas 50 mg",dur:"Por ciclos de inducción.",
+   ind:"Inducción de ovulación cuando no hay letrozol, o combinado con metformina",
+   ci:"Embarazo · quistes ováricos · hepatopatía",
+   prec:"Mayor riesgo de embarazo múltiple y de efecto antiestrogénico en el endometrio que el letrozol",
+   tit:"Subir según respuesta.",
+   ev:"Eficaz, pero el letrozol logra más nacidos vivos; clomifeno + metformina es una alternativa."},
+  {n:"Semaglutida (agonista GLP-1)",m:"Antiobesidad / metabólico",cl:"Agonista del receptor de GLP-1: reduce el apetito y el peso y mejora la glucemia",pi:"Para el control de peso y lo metabólico",co:"#0a5c45",
+   ini:"Escalado subcutáneo semanal según el producto",esq:"Continuo (semanal)",iv:"Subcutánea (también oral en algún producto)",
+   pr:"Pluma subcutánea semanal (0.25/0.5/1/1.7/2.4 mg) · semaglutida oral 3/7/14 mg · liraglutida pluma diaria (hasta 3.0 mg)",dur:"Largo plazo; el peso tiende a recuperarse al suspender.",
+   ind:"Sobrepeso/obesidad y riesgo metabólico (según las guías de población general)",
+   ci:"Embarazo (suspender antes de buscarlo) · antecedente de pancreatitis · carcinoma medular de tiroides / MEN2",
+   prec:"Suspender al planear el embarazo · náusea y efectos digestivos · NO es un tratamiento de fertilidad",
+   tit:"Escalar la dosis para mejorar la tolerancia.",
+   ev:"Los agonistas de GLP-1 y los agentes antiobesidad pueden considerarse según las guías generales (Guía Internacional 2023)."},
+  {n:"Eflornitina tópica",m:"Crema facial · cosmético",cl:"Inhibe la ornitina-descarboxilasa del folículo piloso (enlentece el vello facial)",pi:"COADYUVANTE cosmético del hirsutismo facial",co:"#374151",
+   ini:"Aplicar 2 veces al día en la cara",esq:"Continuo; el vello regresa al suspender",iv:"Tópica",
+   pr:"Crema al 11.5% (tubo)",dur:"Mantenimiento; efecto reversible al suspender.",
+   ind:"Hirsutismo facial, sola o junto con depilación láser",
+   ci:"Hipersensibilidad",
+   prec:"Solo enlentece el crecimiento (no lo elimina) · combinar con láser para mejor resultado",
+   tit:"Uso constante.",
+   ev:"Coadyuvante del hirsutismo facial; la depilación láser es eficaz para reducir el vello."}
+];
+var FAMILIAS=[
+  ["Menstrual e hiperandrogenismo",["Anticonceptivo oral combinado","Espironolactona"]],
+  ["Metabólico / peso",["Metformina","Inositol","Semaglutida (agonista GLP-1)"]],
+  ["Fertilidad (inducción de ovulación)",["Letrozol","Citrato de clomifeno"]],
+  ["Cosmético (hirsutismo)",["Eflornitina tópica"]]
+];
+
+/* ===== INDICACIONES ===== */
+var INDIC=[
+  {id:"coc",nm:"Anticonceptivo oral combinado",doses:[
+    {d:"1 tableta diaria",enf:"Anticonceptivo combinado, 1 tableta diaria a la misma hora. Verificar ausencia de contraindicaciones (migraña con aura, trombosis, tabaquismo). Explica que regulariza el ciclo y mejora acné/hirsutismo y protege el endometrio. No usar si busca embarazo.",pac:"Tome una pastilla cada día a la misma hora. Le ayudará a regular su regla y a mejorar el acné y el vello. Avise si tiene dolor de cabeza intenso con aura, dolor en una pierna o en el pecho. No la use si desea embarazarse."}
+  ]},
+  {id:"espironolactona",nm:"Espironolactona",doses:[
+    {d:"50-100 mg/día",enf:"Espironolactona 50-100 mg/día para el hirsutismo, SIEMPRE con anticoncepción eficaz (es teratógena). Vigilar potasio. El efecto sobre el vello tarda meses.",pac:"Tome la espironolactona como se le indicó, junto con un método anticonceptivo seguro (no debe embarazarse con este medicamento). La mejoría del vello tarda varios meses. Avise si tiene mareo o palpitaciones."}
+  ]},
+  {id:"metformina",nm:"Metformina",doses:[
+    {d:"Subir hasta 1500-2000 mg/día",enf:"Metformina: iniciar 500 mg/día con alimentos y subir gradualmente para minimizar molestias digestivas. Es para lo metabólico y puede ayudar al ciclo. Vigilar función renal.",pac:"Empiece con una dosis baja con la comida y vaya subiendo como le indiquen, para evitar malestar de estómago. Tómela todos los días. Avise si tiene diarrea persistente."}
+  ]},
+  {id:"letrozol",nm:"Letrozol (fertilidad)",doses:[
+    {d:"2.5 mg/día por 5 días",enf:"Letrozol 2.5 mg/día durante 5 días del ciclo para inducir ovulación; programar monitoreo ecográfico (al menos el primer ciclo). Subir la dosis si no ovula.",pac:"Tome el letrozol los días indicados de su ciclo. Acuda a su ultrasonido de control. Tendremos relaciones programadas según le indiquen. Avise si tiene dolor abdominal intenso o distensión."}
+  ]},
+  {id:"edu",nm:"Educación general",doses:[
+    {d:"Mensaje a la paciente",enf:"Reforzar: el estilo de vida es la base; el tratamiento depende del objetivo; proteger el endometrio con sangrados regulares; tamizaje metabólico periódico; apoyo emocional y reducción del estigma.",pac:"El SOMP es una condición hormonal y metabólica frecuente y tratable. El estilo de vida es la base. Hay tratamiento para sus reglas, el vello, el peso y la fertilidad. Acuda a sus controles de azúcar y colesterol y cuide su bienestar emocional."}
+  ]}
+];
+
+/* ===== ESCENARIOS ===== */
+var ESCEN=[
+  {ic:"&#129489;",t:"Deseo de embarazo",html:"<div class='alert a-i'><span class='ai'>&#129489;</span><div><div class='at'>Busca embarazo (anovulación)</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Suspender anticonceptivo y antiandrógeno; optimizar el peso.</div><div class='hosp-ctx-i'>Excluir otros factores (masculino, tubárico).</div><div class='hosp-ctx-i'><strong>Letrozol</strong> de primera línea; alternativa clomifeno ± metformina.</div><div class='hosp-ctx-i'>Si falla: gonadotropinas, drilling ovárico o FIV.</div></div>"},
+  {ic:"&#129764;",t:"Hirsutismo predominante",html:"<div class='alert a-w'><span class='ai'>&#129764;</span><div><div class='at'>Hirsutismo/acné como queja principal</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Anticonceptivo combinado de primera línea.</div><div class='hosp-ctx-i'>Si no basta a los 6 meses: añadir espironolactona (con anticoncepción).</div><div class='hosp-ctx-i'>Cosmético: depilación láser y eflornitina tópica.</div></div>"},
+  {ic:"&#9878;",t:"Riesgo metabólico / obesidad",html:"<div class='alert a-w'><span class='ai'>&#9878;</span><div><div class='at'>Predominio metabólico</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Estilo de vida como base.</div><div class='hosp-ctx-i'>Metformina (mejor que inositol).</div><div class='hosp-ctx-i'>Agonistas de GLP-1 / antiobesidad según guías generales; valorar cirugía metabólica.</div><div class='hosp-ctx-i'>Tamizar glucosa/curva, lípidos, presión e hígado graso.</div></div>"},
+  {ic:"&#128199;",t:"Oligomenorrea / endometrio",html:"<div class='alert a-r'><span class='ai'>&#128199;</span><div><div class='at'>Amenorrea prolongada</div>Riesgo de hiperplasia y cáncer de endometrio.</div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Inducir sangrados regulares: anticonceptivo combinado o progestágeno cíclico.</div><div class='hosp-ctx-i'>Estudiar todo sangrado anómalo (ultrasonido ± biopsia).</div></div>"},
+  {ic:"&#129529;",t:"Adolescente",html:"<div class='alert a-i'><span class='ai'>&#129529;</span><div><div class='at'>Diagnóstico en la adolescencia</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>NO usar ultrasonido ni AMH.</div><div class='hosp-ctx-i'>Requiere hiperandrogenismo + disfunción ovulatoria persistentes.</div><div class='hosp-ctx-i'>Si solo hay un criterio: etiquetar 'en riesgo' y reevaluar.</div><div class='hosp-ctx-i'>Anticonceptivo y/o metformina según síntomas.</div></div>"},
+  {ic:"&#129328;",t:"Embarazo",html:"<div class='alert a-w'><span class='ai'>&#129328;</span><div><div class='at'>Durante el embarazo</div>Mayor riesgo de diabetes gestacional y preeclampsia.</div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Suspender antiandrógenos y la mayoría de los fármacos al confirmar el embarazo.</div><div class='hosp-ctx-i'>Tamizaje temprano de diabetes gestacional.</div><div class='hosp-ctx-i'>Vigilar la presión arterial.</div></div>"}
+];
+
+/* ===== Criterios de SOMP (mini-escala) ===== */
+var CRIT_DEF=[
+  {g:'ha',label:'1. Hiperandrogenismo (hirsutismo/acné o andrógenos altos)'},
+  {g:'ov',label:'2. Disfunción ovulatoria (ciclos irregulares)'},
+  {g:'mo',label:'3. Morfología ovárica (ultrasonido) o AMH elevada'}
+];
+var CRIT_S={};
+function buildCrit(){
+  var el=document.getElementById('crit-items');if(!el)return;
+  var h='';
+  CRIT_DEF.forEach(function(d){
+    h+='<div style="margin-bottom:10px;"><div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:5px;">'+d.label+'</div><div style="display:flex;flex-wrap:wrap;gap:6px;" id="crit-row-'+d.g+'"><button class="pchip" onclick="critSel(\''+d.g+'\',1,this)">Presente</button><button class="pchip" onclick="critSel(\''+d.g+'\',0,this)">Ausente</button></div></div>';
+  });
+  el.innerHTML=h;
+}
+function critSel(g,val,btn){
+  CRIT_S[g]=val;
+  var row=document.getElementById('crit-row-'+g);var bs=row.getElementsByClassName('pchip');
+  for(var i=0;i<bs.length;i++){bs[i].classList.remove('on');}
+  btn.classList.add('on');
+  calcCrit();
+}
+function calcCrit(){
+  var n=0,answered=0;
+  for(var k in CRIT_S){answered++;if(CRIT_S[k])n++;}
+  if(answered<3)return;
+  var out=document.getElementById('crit-result');var cls,label,action;
+  if(n>=2){cls='res-ok';label='Cumple criterios ('+n+' de 3)';action='Compatible con SOMP tras EXCLUIR otras causas (tiroides, prolactina, 17-OH-progesterona, Cushing). Si hay hiperandrogenismo + disfunción ovulatoria, no se requiere ultrasonido ni AMH.';}
+  else{cls='res-mid';label='No cumple ('+n+' de 3)';action='Con menos de 2 criterios no se diagnostica SOMP. Buscar otras causas de los síntomas presentes.';}
+  out.className='calc-result '+cls;
+  out.innerHTML='<div class="res-label">'+label+'</div><div class="res-action">'+action+'</div>';
+}
+function resetCrit(){
+  CRIT_S={};
+  for(var i=0;i<CRIT_DEF.length;i++){var row=document.getElementById('crit-row-'+CRIT_DEF[i].g);if(row){var bs=row.getElementsByClassName('pchip');for(var j=0;j<bs.length;j++)bs[j].classList.remove('on');}}
+  var out=document.getElementById('crit-result');if(out){out.className='';out.innerHTML='';}
+}
+
+/* ===== Motor genérico de algoritmos ===== */
+var TOOLS={
+  obj:{cont:"obj-step",hist:[],def:{
+    start:{q:"¿Cuál es el OBJETIVO principal?",o:[
+      {t:"Ciclos / hirsutismo / acné",n:"rMenst"},{t:"Metabólico / peso",n:"rMetab"},{t:"Embarazo (fertilidad)",n:"rFert"}]},
+    rMenst:{r:1,t:"Menstrual e hiperandrogenismo",cls:"a-g",li:["Estilo de vida como base.","<b>Anticonceptivo combinado</b> de primera línea (regula ciclo, mejora hirsutismo/acné, protege endometrio).","Si el hirsutismo no mejora a los 6 meses: añadir <b>espironolactona</b> (con anticoncepción).","Cosmético: láser y eflornitina."]},
+    rMetab:{r:1,t:"Metabólico / peso",cls:"a-g",li:["Estilo de vida como base.","<b>Metformina</b> (más eficaz que el inositol).","<b>Agonistas de GLP-1</b> / antiobesidad según guías generales.","Tamizar glucosa/curva, lípidos, presión e hígado graso."]},
+    rFert:{r:1,t:"Fertilidad (anovulación)",cls:"a-i",li:["Suspender anticonceptivo y antiandrógeno; optimizar peso; excluir otros factores.","<b>Letrozol</b> de primera línea para inducir la ovulación.","Alternativa: clomifeno ± metformina.","Si falla: gonadotropinas, drilling ovárico o FIV."]}
+  }}
+};
+function atoolRender(key,sid){
+  var T=TOOLS[key];var s=T.def[sid];if(!s)return;
+  var el=document.getElementById(T.cont);if(!el)return;
+  if(s.r){
+    var h='<div class="alert '+s.cls+'"><span class="ai">&#9656;</span><div><div class="at">'+s.t+'</div></div></div>';
+    for(var i=0;i<s.li.length;i++){h+='<div class="atool-li">'+s.li[i]+'</div>';}
+    h+='<button class="atool-back" onclick="atoolReset(\''+key+'\')" style="margin-top:10px;">&#8635; Empezar de nuevo</button>';
+    el.innerHTML=h;return;
+  }
+  var h='<div class="atool-q">'+s.q+'</div>';
+  for(var i=0;i<s.o.length;i++){h+='<button class="atool-opt" onclick="atoolGo(\''+key+'\',\''+sid+'\','+i+')">'+s.o[i].t+'</button>';}
+  if(T.hist.length)h+='<button class="atool-back" onclick="atoolBack(\''+key+'\')">&larr; Volver</button>';
+  el.innerHTML=h;
+}
+function atoolGo(key,sid,i){TOOLS[key].hist.push(sid);atoolRender(key,TOOLS[key].def[sid].o[i].n);}
+function atoolBack(key){var h=TOOLS[key].hist;if(h.length)atoolRender(key,h.pop());}
+function atoolReset(key){TOOLS[key].hist=[];atoolRender(key,'start');}
+
+/* ===== Info profunda de tratamiento ===== */
+var DEEP={
+ "Anticonceptivo oral combinado":{
+   pq:"El etinilestradiol sube la SHBG (que atrapa los andrógenos libres) y la progestina frena la LH y la producción ovárica de andrógenos; además aporta el progestágeno que protege el endometrio. Por eso mejora a la vez el ciclo, el acné y el hirsutismo, y previene la hiperplasia endometrial.",
+   dosis:"Etinilestradiol 20-35 µg + progestágeno, 1 tableta/día. Para el hiperandrogenismo se prefieren combinaciones antiandrogénicas: EE + acetato de ciproterona 2 mg, EE + drospirenona 3 mg, EE + dienogest 2 mg o EE + acetato de clormadinona 2 mg.",
+   cc:"1 tableta cada día, a la misma hora",
+   como:"Oral. Régimen 21/7 o continuo. Iniciar idealmente el 1.er día de la regla (o 'quick start' con respaldo 7 días). No usar si busca embarazo.",
+   tit:"No se titula por dosis: se elige una preparación de baja dosis y se evalúa a los 3 meses. Si hay efectos adversos, cambiar de progestina o de dosis. Para el hirsutismo, esperar al menos 6 meses antes de juzgar la eficacia.",
+   dur:"Largo plazo mientras se busquen sus efectos y no haya contraindicación; reevaluar cada año. Suspender al planear embarazo.",
+   mon:"Presión arterial al inicio y en cada control · datos de trombosis (pierna/tórax) · migraña con aura · revaluar sangrado y tolerancia a los 3 meses."},
+ "Espironolactona":{
+   pq:"Bloquea el receptor de andrógenos en la unidad pilosebácea y reduce su síntesis; por eso mejora el hirsutismo y el acné cuando el anticonceptivo por sí solo no basta.",
+   dosis:"50-100 mg/día; puede subirse hasta 200 mg/día según respuesta y tolerancia.",
+   cc:"Una o dos tomas al día",
+   como:"Oral, con alimentos. Casi siempre combinada con un anticonceptivo (controla el ciclo y aporta la anticoncepción obligatoria).",
+   tit:"Empezar 50-100 mg/día; revaluar el hirsutismo a los 6 meses (el ciclo del pelo es lento). Si es insuficiente y se tolera, subir hacia 150-200 mg/día. Medir potasio basal y tras cada aumento.",
+   dur:"Largo plazo mientras se requiera el control del hirsutismo; el efecto se pierde al suspender. Suspender si se busca embarazo.",
+   mon:"Potasio y función renal (basal y tras escalar) · presión arterial · ciclo (puede dar manchados, se mitigan con el anticonceptivo) · confirmar anticoncepción eficaz en cada visita."},
+ "Metformina":{
+   pq:"Reduce la producción hepática de glucosa y mejora la sensibilidad a la insulina; al bajar la hiperinsulinemia, disminuye el estímulo androgénico ovárico, puede regularizar ciclos y ayudar con el peso. Es el fármaco metabólico de elección.",
+   dosis:"Objetivo 1500-2000 mg/día (dosis eficaz habitual). Usar liberación prolongada si hay intolerancia digestiva.",
+   cc:"Dividida en 2-3 tomas (o 1 toma al día la de liberación prolongada)",
+   como:"Oral, SIEMPRE con alimentos para reducir las molestias digestivas.",
+   tit:"Empezar 500 mg/día con la cena; subir 500 mg cada 1-2 semanas según tolerancia hasta 1500-2000 mg/día. Si hay diarrea o náusea, bajar al escalón previo o cambiar a liberación prolongada.",
+   dur:"Largo plazo mientras persistan los objetivos metabólicos; reevaluar el beneficio de forma periódica. No se recomienda de rutina durante el embarazo.",
+   mon:"Glucosa/HbA1c y peso · función renal (no usar con filtrado muy bajo) · vitamina B12 en uso prolongado · tolerancia digestiva durante el escalado."},
+ "Inositol":{
+   pq:"Actúa como segundo mensajero de la insulina (sensibilizador). Puede mejorar algunas medidas metabólicas, pero su beneficio clínico es limitado; se ofrece sobre todo por su buena tolerancia.",
+   dosis:"Mio-inositol 2 g dos veces al día (4 g/día); algunas fórmulas combinan mio + D-quiro-inositol 40:1, con ácido fólico.",
+   cc:"Dos veces al día",
+   como:"Oral (polvo disuelto o cápsulas).",
+   tit:"Dosis fija; no requiere titulación. Valorar la respuesta metabólica/menstrual en 3-6 meses; si no hay beneficio, preferir metformina.",
+   dur:"Según preferencia y respuesta; evidencia limitada, sin un tiempo definido.",
+   mon:"Respuesta clínica (ciclo, síntomas); efectos adversos digestivos leves e infrecuentes."},
+ "Letrozol":{
+   pq:"Inhibe la aromatasa → cae el estrógeno → el hipotálamo libera más FSH → crece un folículo dominante y se induce la ovulación. Logra más nacidos vivos que el clomifeno en SOMP, por eso es de primera línea.",
+   dosis:"2.5 mg/día por 5 días; si no ovula, subir a 5 mg y luego a 7.5 mg en ciclos siguientes.",
+   cc:"Una vez al día durante 5 días por ciclo (días 3-7 o 5-9)",
+   como:"Oral. Confirmar la ovulación (progesterona en fase lútea o ultrasonido) y programar relaciones; monitoreo ecográfico al menos en el primer ciclo.",
+   tit:"Escalonar por ciclos: 2.5 → 5 → 7.5 mg/día según se logre ovulación. Si ovula pero no embaraza, mantener la dosis que ovuló hasta unos 6 ciclos ovulatorios.",
+   dur:"Por ciclos de inducción; reconsiderar o derivar tras ~6 ciclos ovulatorios sin embarazo, o si no responde.",
+   mon:"Ovulación (ultrasonido/progesterona) · número de folículos para evitar embarazo múltiple · suspender al confirmar embarazo."},
+ "Citrato de clomifeno":{
+   pq:"Bloquea el receptor de estrógeno en el hipotálamo → ↑FSH → estimula la ovulación. Alternativa cuando no hay letrozol; puede combinarse con metformina para mejorar la tasa de ovulación.",
+   dosis:"50 mg/día por 5 días; subir a 100 mg y hasta 150 mg/día si no ovula.",
+   cc:"Una vez al día durante 5 días por ciclo",
+   como:"Oral, con monitoreo. Considerar añadir metformina.",
+   tit:"Escalonar por ciclos: 50 → 100 → 150 mg/día según se logre ovulación.",
+   dur:"Por ciclos de inducción (habitualmente hasta ~6 ciclos ovulatorios).",
+   mon:"Ovulación y desarrollo folicular (más riesgo de embarazo múltiple que el letrozol) · efecto antiestrogénico sobre endometrio y moco cervical."},
+ "Semaglutida (agonista GLP-1)":{
+   pq:"Agonista del receptor de GLP-1: reduce el apetito y enlentece el vaciamiento gástrico → baja de peso y mejora la glucemia. El descenso de peso mejora de forma indirecta los ciclos, los andrógenos y el riesgo cardiometabólico.",
+   dosis:"Semaglutida subcutánea semanal: 0.25 mg/sem 4 semanas → 0.5 → 1.0 → 1.7 → 2.4 mg/sem (esquema para control de peso; en diabetes suele bastar 0.5-2.0 mg/sem). Oral: 3 mg/día 30 días → 7 → 14 mg/día. Alternativa de clase: liraglutida 0.6 mg/día subiendo semanalmente hasta 3.0 mg/día.",
+   cc:"Inyección subcutánea una vez por semana (existe presentación oral diaria)",
+   como:"Subcutánea (abdomen, muslo o brazo), el mismo día cada semana. Es coadyuvante metabólico, NO de fertilidad.",
+   tit:"Escalar la dosis de forma mensual para minimizar la náusea; mantener en la dosis tolerada y eficaz.",
+   dur:"Largo plazo según los objetivos de peso/metabólicos; SUSPENDER al planear embarazo (con la antelación que indique el producto). El peso tiende a recuperarse al suspender.",
+   mon:"Peso, glucosa y tolerancia digestiva · descartar pancreatitis · planeación reproductiva (suspender antes de buscar embarazo)."},
+ "Eflornitina tópica":{
+   pq:"Inhibe la ornitina-descarboxilasa del folículo piloso y enlentece el crecimiento del vello facial. No lo elimina: es un coadyuvante cosmético que potencia a la depilación láser.",
+   dosis:"Crema al 11.5%: aplicar una capa fina en el área facial afectada y frotar.",
+   cc:"Dos veces al día (separadas al menos 8 horas)",
+   como:"Tópica en la cara; no lavar la zona por al menos 4 horas. Puede usarse junto con depilación láser.",
+   tit:"Sin titulación; evaluar a las 8 semanas. Si no hay mejoría, suspender.",
+   dur:"Mantenimiento continuo; el vello regresa semanas después de suspender.",
+   mon:"Irritación cutánea local · respuesta cosmética a las 8 semanas."}
+};
+function fr_(l,v,st,c){return "<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:12px;'><span style='color:#6b7280;white-space:nowrap;'>"+l+"</span><span style='font-weight:"+(st?"700":"600")+";"+(c?"color:"+c+";":"")+"text-align:right;'>"+v+"</span></div>";}
+function fs_(l,v,c){return "<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>"+l+"</div><div style='font-size:12px;color:"+(c||"#374151")+";line-height:1.6;'>"+v+"</div></div>";}
+function fb_(l,v,bc){return "<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>"+l+"</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+v+"</div></div>";}
+function renderFicha(f,idx){
+  var bc=f.co==="#0a5c45"?"rgba(10,92,69,0.06)":f.co==="#0c3b6e"?"rgba(12,59,110,0.06)":f.co==="#7a4a00"?"rgba(122,74,0,0.06)":f.co==="#7b1c1c"?"rgba(123,28,28,0.06)":f.co==="#0f7a5a"?"rgba(15,122,90,0.06)":f.co==="#9d2c5f"?"rgba(157,44,95,0.06)":"rgba(55,65,81,0.06)";
+  var d=DEEP[f.n]||{};
+  var g=function(x,y){return (x===undefined||x===null||x==="")?(y||"—"):x;};
+  return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
+    +"<div onclick='toggleFicha("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='farr-"+idx+"'>&#8964;</span></div>"
+    +"<div id='fbody-"+idx+"' style='display:none;'>"
+    +fb_("Por qué se usa",g(d.pq,f.cl),bc)
+    +fs_("Clase farmacológica",f.cl)
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis y administración</div>"
+    +fr_("Dosis",g(d.dosis,f.ini),true,f.co)
+    +fr_("Cada cuánto",g(d.cc),false)
+    +fr_("Cómo se toma",g(d.como),false)
+    +fr_("Vía",g(f.iv),false)
+    +fr_("Esquema",g(f.esq),true,"#c0392b")
+    +fr_("Hasta cuándo",g(d.dur,f.dur),true,f.co)
+    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentación MX:</strong> "+f.pr+"</div></div>"
+    +fb_("Cómo titular",g(d.tit,f.tit),bc)
+    +fb_("Qué vigilar / metas",g(d.mon),bc)
+    +fs_("Indicaciones",f.ind)
+    +fs_("Contraindicaciones",f.ci,"#c0392b")
+    +fs_("Precauciones",f.prec)
+    +fb_("Evidencia",f.ev,bc)
+    +"</div></div>";
+}
+
+/* ===== Escalera de líneas de tratamiento ===== */
+function lineBadge(num,label,sub){
+  var roman=num===1?'1ª LÍNEA':num===2?'2ª LÍNEA':num===3?'3ª LÍNEA':num+'ª LÍNEA';
+  var star=num===1?'⭐ ':'';
+  var bg=num===1?'linear-gradient(135deg,#b8860b,#e0a91b)':num===2?'#9d2c5f':num===3?'#6b7280':'#374151';
+  return '<div style="display:flex;align-items:center;gap:8px;margin:16px 0 8px;flex-wrap:wrap;">'
+    +'<span style="background:'+bg+';color:#fff;font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.15);">'+star+roman+'</span>'
+    +'<span style="font-size:12.5px;font-weight:700;color:#374151;">'+label+'</span>'
+    +'<span style="font-size:11.5px;color:#6b7280;line-height:1.4;flex:1;min-width:150px;">'+(sub||'')+'</span></div>';
+}
+function objHdr(t){return '<div style="margin:22px 0 6px;font-size:13px;font-weight:800;color:#9d2c5f;border-bottom:2px solid var(--gl);padding-bottom:5px;">'+t+'</div>';}
+function baseBadge(label,sub){return '<div style="display:flex;align-items:center;gap:8px;margin:4px 0 8px;flex-wrap:wrap;"><span style="background:#0a5c45;color:#fff;font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;white-space:nowrap;">🧱 '+label+'</span><span style="font-size:11.5px;color:#6b7280;">'+sub+'</span></div>';}
+function nextStep(txt){return '<div style="display:flex;gap:8px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;border-left:3px solid #f59e0b;border-radius:8px;padding:9px 11px;margin:10px 0 6px;"><span style="font-size:15px;">↪</span><div style="font-size:12px;color:#7c2d12;line-height:1.55;"><strong>¿Qué sigue?</strong> '+txt+'</div></div>';}
+
+function renderTxcMeds(){
+  var el=document.getElementById('txc-meds');if(!el)return;
+  var h='';
+  h+=baseBadge('BASE · TODAS LAS PACIENTES','El fundamento del tratamiento');
+  h+='<div style="background:var(--gl);border-left:3px solid var(--gm);border-radius:var(--rs);padding:10px 12px;font-size:12.5px;color:#374151;line-height:1.65;"><strong>Estilo de vida:</strong> alimentación saludable, actividad física y prevención del aumento de peso (ninguna dieta es superior). Es la primera medida para TODOS los objetivos; minimizar el estigma por el peso.</div>';
+
+  h+=objHdr('🩸 Ciclo menstrual e hiperandrogenismo');
+  h+=lineBadge(1,'Anticonceptivo combinado','Regula el ciclo, mejora acné/hirsutismo y protege el endometrio');
+  h+=renderFicha(FARMACOS_ASMA[0],200);   /* COC */
+  h+=lineBadge(2,'Antiandrógeno (espironolactona)','Añadir si el hirsutismo no mejora a los 6 meses (siempre con anticoncepción)');
+  h+=renderFicha(FARMACOS_ASMA[1],201);   /* Espironolactona */
+  h+=lineBadge(3,'Cosmético (eflornitina + láser)','Reducción directa del vello');
+  h+=renderFicha(FARMACOS_ASMA[7],202);   /* Eflornitina */
+  h+=nextStep('Si el hirsutismo persiste pese a anticonceptivo + antiandrógeno por 6 meses o más: revisar adherencia y reconfirmar el diagnóstico, optimizar el peso, reforzar la depilación láser y derivar a dermatología o endocrinología.');
+
+  h+=objHdr('⚖️ Metabólico y peso');
+  h+='<div style="font-size:11.5px;color:#6b7280;margin:2px 0 6px;">(Siempre sobre la base del estilo de vida.)</div>';
+  h+=lineBadge(1,'Metformina','1ª opción farmacológica; más eficaz que el inositol');
+  h+=renderFicha(FARMACOS_ASMA[2],203);   /* Metformina */
+  h+=lineBadge(2,'Agonista GLP-1 / antiobesidad','Para el control de peso y el riesgo metabólico');
+  h+=renderFicha(FARMACOS_ASMA[6],204);   /* Semaglutida GLP-1 */
+  h+=lineBadge(3,'Inositol','Opción por su tolerancia; beneficio limitado');
+  h+=renderFicha(FARMACOS_ASMA[3],205);   /* Inositol */
+  h+=nextStep('Si el peso se mantiene alto con comorbilidad pese al estilo de vida y los fármacos: considerar cirugía bariátrica/metabólica según las guías de población general.');
+  el.innerHTML=h;
+}
+function renderFertMeds(){
+  var el=document.getElementById('fert-meds');if(!el)return;
+  var h='';
+  h+=lineBadge(1,'Letrozol','Inhibidor de aromatasa; logra más nacidos vivos en SOMP');
+  h+=renderFicha(FARMACOS_ASMA[4],300);   /* Letrozol */
+  h+=lineBadge(2,'Clomifeno ± metformina','Alternativa oral si no hay letrozol o no responde');
+  h+=renderFicha(FARMACOS_ASMA[5],301);   /* Clomifeno */
+  h+=renderFicha(FARMACOS_ASMA[2],302);   /* Metformina coadyuvante */
+  h+=lineBadge(3,'Gonadotropinas o drilling ovárico','Especializado, con monitoreo estrecho (referir)');
+  h+='<div class="hosp-ctx"><div class="hosp-ctx-t">Tercera línea — referir a reproducción</div><div class="hosp-ctx-i"><strong>Gonadotropinas</strong> a dosis baja con monitoreo ecográfico estrecho (riesgo de embarazo múltiple e hiperestimulación).</div><div class="hosp-ctx-i"><strong>Drilling ovárico</strong> laparoscópico en casos seleccionados.</div></div>';
+  h+=nextStep('Si fallan las líneas anteriores o hay otro factor de infertilidad (masculino, tubárico): fertilización in vitro (FIV).');
+  el.innerHTML=h;
+}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  filtrarFarmacos('');
+  renderIndic();
+  renderEscen();
+  renderTxcMeds();
+  renderFertMeds();
+  buildCrit();
+  atoolReset('obj');
+});
+
+</script>
+</body>
+</html>

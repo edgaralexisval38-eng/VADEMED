@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>STDA · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#c0392b;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--rl);border-left:3px solid var(--rm);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.optb{padding:5px 9px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;border-radius:14px;background:#fff;color:#374151;}
+.optb.on{background:var(--ac);color:#fff;border-color:var(--ac);}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#7b1c1c;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--rl);color:var(--r);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#7b1c1c,#c0392b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🩸</div>
+    <div>
+      <div class="hdr-eye">Urgencias · Gastroenterología · Medicina Interna</div>
+      <div class="hdr-title">Sangrado de Tubo Digestivo Alto</div>
+      <div class="hdr-sub">ACG 2021 · ASGE 2021 · AASLD/Baveno VII 2022 · GPC IMSS/EsSalud</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Úlcera péptica 40-50%</span>
+    <span class="badge">IBP 80 mg IV carga</span>
+    <span class="badge">EDA en 24 h</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Úlcera</div><div class="qs-l">causa #1 (40-50%)</div></div>
+  <div class="qs"><div class="qs-v">IBP 80 mg IV</div><div class="qs-l">dosis de carga</div></div>
+  <div class="qs"><div class="qs-v">EDA &lt;24h</div><div class="qs-l">estándar de oro</div></div>
+  <div class="qs"><div class="qs-v">10-15%</div><div class="qs-l">mortalidad global</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>STDA:</strong> sangrado proximal al ángulo de Treitz. Se manifiesta como <strong>hematemesis</strong> (sangre roja o en posos de café), <strong>melena</strong> (heces negras alquitranadas malolientes) o <strong>hematoquecia</strong> (solo si sangrado masivo &gt;1 L rápido).</p>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <thead><tr><th>Tipo</th><th>Causa principal</th><th>Manejo</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">No variceal</td><td>Úlcera péptica (40-50%) · esofagitis · Mallory-Weiss · cáncer</td><td>IBP IV + EDA &lt;24 h</td></tr>
+        <tr><td class="dn">Variceal</td><td>Cirrosis con hipertensión portal</td><td>Vasoactivo IV + ATB + EDA &lt;12 h</td></tr>
+        <tr><td class="dn">Dieulafoy</td><td>Arteria submucosa aberrante (raro, masivo)</td><td>EDA urgente</td></tr>
+        <tr><td class="dn">Mallory-Weiss</td><td>Desgarro GE por vómito</td><td>EDA · suele ser autolimitado</td></tr>
+        <tr><td class="dn">Cáncer gástrico</td><td>Neoplasia (&gt;50 a, pérdida de peso)</td><td>EDA + biopsias · oncología</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><strong>Variceal vs no variceal = manejo completamente distinto.</strong> Variceal: vasoactivos INMEDIATOS + ATB + EDA &lt;12 h. No variceal: IBP IV + EDA &lt;24 h.</div></div>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Dato</th><th>Cifra</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Incidencia</td><td>50-150/100,000/año</td></tr>
+      <tr><td class="dn">Mortalidad global</td><td>10-15%</td></tr>
+      <tr><td class="dn">Mortalidad variceal</td><td>15-25% (hasta 40-50% en Child-C)</td></tr>
+      <tr><td class="dn">Causa #1</td><td>Úlcera péptica 40-50% (H. pylori + AINE)</td></tr>
+      <tr><td class="dn">Resangrado sin tratar</td><td>30-40% a 30 días (&lt;10% con hemostasia)</td></tr>
+      <tr><td class="dn">H. pylori en úlcera</td><td>60-80% (erradicar reduce recurrencia &gt;90%)</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="fp" style="background:var(--rl);color:var(--r);"><strong>No variceal (úlcera):</strong> la úlcera erosiona vasos submucosos; el pH ácido disuelve el coágulo. El IBP eleva el pH &gt;6 → permite agregación plaquetaria y estabilización del coágulo. H. pylori y AINE dañan la barrera mucosa.</div>
+    <div class="fp" style="background:var(--al);color:var(--a);"><strong>Variceal:</strong> la HT portal (GPVH &gt;12 mmHg) rompe las várices. Los vasoactivos (octreotida, terlipresina) reducen el flujo esplácnico y el GPVH → hemostasia. La translocación bacteriana empeora el resangrado → por eso la profilaxis ATB mejora la supervivencia.</div>
+    <div class="fp" style="background:var(--bl);color:var(--b);"><strong>Shock hemorrágico:</strong> pérdida ≥20% del volumen = clase III-IV. La sobre-resucitación con cristaloides causa coagulopatía dilucional. Objetivo: transfundir GRE para Hb ≥7-8 g/dL (restrictivo), no más.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Causas y factores de riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Causa</th><th>Frec.</th><th>Factores</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Úlcera péptica</td><td>40-50%</td><td>H. pylori · AINE · corticoides · tabaco · estrés (Curling/Cushing)</td></tr>
+      <tr><td class="dn">Várices</td><td>20-30%</td><td>Cirrosis · alcohol · hepatitis · trombosis portal</td></tr>
+      <tr><td class="dn">Esofagitis erosiva</td><td>10-15%</td><td>ERGE · corticoides · quimio/radiación</td></tr>
+      <tr><td class="dn">Mallory-Weiss</td><td>5-10%</td><td>Vómito · alcohol · bulimia</td></tr>
+      <tr><td class="dn">Angioectasia/Dieulafoy</td><td>5%</td><td>Edad · ERC · anticoagulantes</td></tr>
+      <tr><td class="dn">Cáncer</td><td>2-5%</td><td>&gt;50 a · H. pylori · tabaco · alcohol</td></tr>
+      <tr><td class="dn">Fístula aortoentérica</td><td>&lt;1%</td><td>Prótesis aórtica previa — pensar siempre si antecedente</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Clínica y gravedad hemodinámica</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Clase</th><th>FC</th><th>PAS</th><th>Estado</th><th>Pérdida</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">I</td><td>&lt;100</td><td>Normal</td><td>Normal</td><td>&lt;750 mL</td></tr>
+        <tr><td class="dn">II</td><td>100-120</td><td>Normal/↓ leve</td><td>Ansioso</td><td>750-1500</td></tr>
+        <tr><td class="dn">III</td><td>&gt;120</td><td>&lt;90</td><td>Confuso</td><td>1500-2000</td></tr>
+        <tr><td class="dn">IV</td><td>&gt;140</td><td>&lt;70</td><td>Letárgico</td><td>&gt;2000</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div>Hematoquecia + inestabilidad puede ser <strong>STDA masivo</strong> (no asumir colon). Síncope + hematemesis = pérdida &gt;20% → shock inminente.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — no cometer</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>No diferenciar variceal de no variceal.</strong> En variceal los vasoactivos van ANTES de la EDA y se mantienen 3-5 días; solo IBP en variceal aumenta la mortalidad.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>Transfundir hasta Hb normal.</strong> Objetivo restrictivo 7-8 g/dL (≤9 si cardiopatía). Transfundir de más sube la presión portal y el resangrado.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>No dar profilaxis ATB</strong> en variceal con cirrosis. Reduce infecciones y mortalidad — es estándar obligatorio (ceftriaxona/norfloxacina).</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Retrasar la EDA &gt;24 h</strong> (no variceal) o &gt;12 h (variceal). La EDA temprana es diagnóstica y terapéutica.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Reiniciar AINE sin protección</strong> tras sangrado ulceroso. Si son indispensables: agregar IBP; mejor sustituir por paracetamol.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>No erradicar H. pylori</strong> tras úlcera sangrante. Reduce la recurrencia del 70% a &lt;5%.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de ingreso y riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Criterio</th><th>Acción</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Hematemesis activa / inestable</td><td class="dm">UCI · EDA urgente &lt;6 h</td></tr>
+      <tr><td class="dn">Variceal con sangrado activo</td><td class="dm">Vasoactivos · EDA &lt;12 h · ATB</td></tr>
+      <tr><td class="dn">Shock (PAS&lt;90, FC&gt;100)</td><td class="dm">2 vías · SF 1-2 L · transfundir</td></tr>
+      <tr><td class="dn">Glasgow-Blatchford ≥7</td><td>Hospitalizar · EDA en 24 h</td></tr>
+      <tr><td class="dn">Glasgow-Blatchford 0</td><td>Ambulatorio · EDA electiva · IBP oral</td></tr>
+      <tr><td class="dn">STDA en cirrótico (cualquiera)</td><td class="dm">Siempre hospitalizar</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚑</span><span class="st">Evaluación inicial — ABC</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Vía aérea:</strong> riesgo de aspiración en hematemesis masiva (posición lateral; intubar si deterioro neurológico). <strong>Acceso:</strong> 2 venas periféricas ≥18G o vía central si shock. <strong>Circulación:</strong> FC, PA, SpO₂, diuresis, estado mental.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Variceal vs no variceal — orientación clínica</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Es la decisión más importante — cambia el tratamiento inmediato</div>Ante <strong>cualquier estigma de cirrosis + STDA, iniciar protocolo variceal empírico</strong> (octreotida + ceftriaxona) sin esperar la EDA. La endoscopia confirma el origen.</div></div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>Dato</th><th>Sugiere VARICEAL</th><th>Sugiere NO VARICEAL</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Antecedentes</td><td>Cirrosis · alcoholismo · hepatitis B/C · várices o sangrado variceal previo</td><td>AINE/aspirina · H. pylori · úlcera o ERGE previos · vómito intenso (Mallory-Weiss)</td></tr>
+        <tr><td class="dn">Hematemesis</td><td>Roja, abundante o masiva</td><td>Posos de café o roja escasa</td></tr>
+        <tr><td class="dn">Exploración</td><td>Estigmas de hepatopatía: ictericia, ascitis, arañas vasculares, eritema palmar, ginecomastia, circulación colateral, esplenomegalia, asterixis / fetor hepático (encefalopatía)</td><td>Sin estigmas hepáticos · epigastralgia · dolor que alivia con antiácidos</td></tr>
+        <tr><td class="dn">Laboratorio</td><td>Plaquetas bajas (hiperesplenismo) · INR alto · bilirrubina alta · albúmina baja · relación AST/ALT &gt;1</td><td>PFH y plaquetas normales</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div>Hasta <strong>~30% de los cirróticos</strong> con STDA sangran por causa NO variceal (úlcera). Por eso, en el cirrótico, el protocolo variceal empírico —que además incluye IBP— cubre ambos escenarios hasta que la EDA define el origen.</div></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">🔬</span><div>La <strong>EDA es el diagnóstico definitivo</strong>: distingue várices (cordones azulados ± signos rojos) de úlcera/erosión. La orientación clínica solo decide el tratamiento de las primeras horas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Laboratorio urgente</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Estudio</th><th>Interpretación</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">BHC</td><td>Hb &lt;7 → transfundir · plaquetas &lt;50,000 = riesgo</td></tr>
+      <tr><td class="dn">TP/INR · TTPa</td><td>INR &gt;1.5 → PFC o vitamina K (cirrótico)</td></tr>
+      <tr><td class="dn">Tipo y Rh · cruzada</td><td>Solicitar 2-4 paquetes de GRE</td></tr>
+      <tr><td class="dn">QS (BUN/Cr)</td><td><strong>BUN/Cr &gt;36</strong> sugiere STDA (sangre digerida)</td></tr>
+      <tr><td class="dn">PFH</td><td>Identificar cirrosis — cambia todo el manejo</td></tr>
+      <tr><td class="dn">Lactato</td><td>&gt;2 hipoperfusión · &gt;4 shock severo</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Endoscopia (EDA) y eritromicina</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="prose">
+    <p><strong>EDA = estándar de oro</strong> (diagnóstico + tratamiento). No variceal: &lt;24 h. Variceal/shock/sangrado activo: &lt;12 h. Contraindicada en IAM &lt;6 h, perforación o inestabilidad que no responde.</p>
+    <p><strong>Eritromicina 250 mg IV</strong> 30-120 min antes de la EDA vacía el estómago de sangre y mejora la visibilidad (NNT 7 para evitar una 2ª EDA).</p>
+  </div></div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Glasgow-Blatchford (GBS) — calculadora</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="display:flex;gap:6px;margin-bottom:10px;">
+      <button class="pchip on" onclick="setGbsSex('h',this)">Hombre</button>
+      <button class="pchip" onclick="setGbsSex('m',this)">Mujer</button>
+    </div>
+    <div id="gbs-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button onclick="calcGBS()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular</button>
+      <button onclick="resetGBS()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+    </div>
+    <div id="gbs-result" style="display:none;margin-top:10px;"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Rockall (pre + post-EDA) — calculadora</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div id="rock-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button onclick="calcRock()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular</button>
+      <button onclick="resetRock()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+    </div>
+    <div id="rock-result" style="display:none;margin-top:10px;"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩹</span><span class="st">Clasificación de Forrest (úlcera, post-EDA)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Clase</th><th>Hallazgo</th><th>Resangrado</th><th>Tx endoscópico</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Ia</td><td>Sangrado arterial en chorro</td><td class="dm">90%</td><td>✅ Siempre</td></tr>
+      <tr><td class="dn">Ib</td><td>Sangrado lento / babeo</td><td class="dm">50-70%</td><td>✅ Siempre</td></tr>
+      <tr><td class="dn">IIa</td><td>Vaso visible sin sangrado</td><td>40-50%</td><td>✅ Sí</td></tr>
+      <tr><td class="dn">IIb</td><td>Coágulo adherido</td><td>20-30%</td><td>✅ Retirar y tratar</td></tr>
+      <tr><td class="dn">IIc</td><td>Mancha pigmentada plana</td><td>5-10%</td><td>❌ IBP oral</td></tr>
+      <tr><td class="dn">III</td><td>Base limpia</td><td>&lt;2%</td><td>❌ Alta posible</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚑</span><div>En todos: si inestable → 2 vías IV, SF 500-1000 mL, transfundir si Hb &lt;7 (restrictivo).</div></div>
+    <div id="stda-step"></div>
+  </div></div>
+</div>
+
+<!-- TX CONSULTA -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Tratamiento por tipo — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="stda-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showStdaPop('novar',this)">💊 No variceal — IBP</button>
+      <button class="pchip" onclick="showStdaPop('variceal',this)">🩸 Variceal — Vasoactivos</button>
+      <button class="pchip" onclick="showStdaPop('transf',this)">💉 Transfusión</button>
+      <button class="pchip" onclick="showStdaPop('atb',this)">🦠 Profilaxis ATB</button>
+      <button class="pchip" onclick="showStdaPop('posteda',this)">💊 Post-EDA</button>
+    </div>
+    <div id="stda-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- TX HOSP -->
+<div class="panel" id="tab-txh">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛏️</span><span class="st">Protocolo hospitalario — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="hosp-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showHospPop('resuc',this)">🔴 Resucitación (60 min)</button>
+      <button class="pchip" onclick="showHospPop('novar',this)">💊 No variceal</button>
+      <button class="pchip" onclick="showHospPop('variceal',this)">🩸 Variceal</button>
+      <button class="pchip" onclick="showHospPop('transf',this)">💉 Transfusión</button>
+      <button class="pchip" onclick="showHospPop('falla',this)">🚨 Falla / Escalada</button>
+    </div>
+    <div id="hosp-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacosStda(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="ind-b"><div class="ind-bh">Indicaciones por fármaco — enfermería y paciente</div>
+    <div class="ind-bb" id="ind-list"></div>
+  </div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="escen-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="escen-out"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Calendario de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">72h post-hemostasia</div><div class="fu-x">¿Resangrado (Hb ↓&gt;2 g, nueva hematemesis)? Si sí: 2ª EDA · si falla: cirugía o TIPS.</div></div>
+    <div class="fu-r"><div class="fu-t">7 días</div><div class="fu-x">Estado general, tolerancia oral, sin melena. EDA de control si Forrest Ia-IIb.</div></div>
+    <div class="fu-r"><div class="fu-t">4-6 semanas</div><div class="fu-x">Confirmar erradicación de H. pylori (test respiratorio o antígeno en heces).</div></div>
+    <div class="fu-r"><div class="fu-t">8 semanas</div><div class="fu-x">EDA de control si úlcera gástrica, Forrest Ia o sospecha de cáncer.</div></div>
+    <div class="fu-r"><div class="fu-t">Variceal</div><div class="fu-x">Propranolol + programa de ligadura c/2-4 sem hasta erradicar várices.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Señales de alarma — consultar urgente</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="co-i"><div class="co-ico">🤮</div><div><div class="co-n">Nueva hematemesis o vómito oscuro</div><div class="co-d">Resangrado.</div></div></div>
+    <div class="co-i"><div class="co-ico">⬛</div><div><div class="co-n">Melena reciente</div><div class="co-d">Heces negras, pegajosas, malolientes.</div></div></div>
+    <div class="co-i"><div class="co-ico">😵</div><div><div class="co-n">Síncope / mareo intenso</div><div class="co-d">Pérdida de volumen.</div></div></div>
+    <div class="co-i"><div class="co-ico">🩸</div><div><div class="co-n">Hematoquecia</div><div class="co-d">Sangre roja por recto — posible STDA masivo.</div></div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Resumen de evidencia</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>IBP IV (no variceal) — nivel A:</strong> mantener pH &gt;6 estabiliza el coágulo. Bolo 80 mg + 8 mg/h × 72 h (Lau, NEJM 2000) reduce el resangrado del 22.5% al 6.7%. El bolo c/12 h es equivalente cuando no hay bomba (Sachar 2014; GPC EsSalud 2024).</p>
+    <p><strong>Octreotida/terlipresina (variceal) — nivel A:</strong> reducen el flujo esplácnico y el GPVH. La <strong>terlipresina</strong> es el único vasoactivo con reducción de mortalidad como monoterapia (Cochrane); la octreotida es alternativa válida y más segura cardiovascularmente (Baveno VII 2022).</p>
+    <p><strong>Profilaxis ATB en cirrótico — nivel A:</strong> reduce infecciones (45%→10%) y mortalidad (Bernard 1999; Cochrane 2011, NNT 22). Ceftriaxona &gt; norfloxacina en alto riesgo (Fernández 2006; EASL/AASLD 2022).</p>
+    <p><strong>Transfusión restrictiva — nivel A:</strong> Hb &lt;7 vs &lt;9 reduce mortalidad (5% vs 9%) y resangrado (Villanueva, NEJM 2013); en variceal evita el aumento del GPVH.</p>
+    <p><strong>Early-TIPS — nivel A:</strong> en Child-C &lt;14 o B con sangrado activo, TIPS a las 72 h reduce mortalidad (39%→14%) (García-Pagán, NEJM 2010; Baveno VII).</p>
+    <p><strong>Erradicar H. pylori — nivel A:</strong> reduce el resangrado a 1 año del 20-30% al &lt;2% (Sung 2003), superior al IBP de mantenimiento.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Guías y referencias</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2021</span></div><div class="bib-r">Laine L, Barkun AN et al. <strong>ACG Clinical Guideline: Upper GI and Ulcer Bleeding.</strong> Am J Gastroenterol 2021;116(5):899-917.</div></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2022</span></div><div class="bib-r">de Franchis R et al. <strong>Baveno VII — Portal hypertension consensus.</strong> J Hepatol 2022;76(4):959-974.</div></div>
+    <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2013</span></div><div class="bib-r">Villanueva C et al. <strong>Transfusion Strategies for Acute Upper GI Bleeding.</strong> NEJM 2013;368(1):11-21.</div></div>
+    <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2010</span></div><div class="bib-r">García-Pagán JC et al. <strong>Early TIPS in cirrhosis and variceal bleeding.</strong> NEJM 2010;362(23):2370-2379.</div></div>
+    <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">2000</span></div><div class="bib-r">Lau JYW et al. <strong>IV omeprazol tras hemostasia de úlcera sangrante.</strong> NEJM 2000;343:310-316.</div></div>
+    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">1999</span></div><div class="bib-r">Bernard B et al. <strong>Profilaxis ATB en cirróticos con sangrado GI.</strong> Hepatology 1999;29:1655-1661.</div></div>
+    <div class="bib-i"><div><span class="bib-n">7</span><span class="bib-y">2024</span></div><div class="bib-r"><strong>EsSalud GPC HDA 2024</strong> · <strong>GPC IMSS-087</strong> Várices Esofágicas en el Adulto.</div></div>
+  </div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ===== Escalas por opciones (botones) ===== */
+var SCALE_STATE={};
+function setOpt(prefix,i,oi,btn){
+  SCALE_STATE[prefix+'_'+i]=oi;
+  var row=btn.parentNode,bs=row.querySelectorAll('button');
+  for(var k=0;k<bs.length;k++)bs[k].className='optb';
+  btn.className='optb on';
+}
+function buildOptScale(cid,vars,prefix){
+  var el=document.getElementById(cid);if(!el)return;
+  var h='';
+  vars.forEach(function(v,i){
+    h+='<div style="background:#f9fafb;border-radius:var(--rs);padding:9px 11px;margin-bottom:8px;border-left:3px solid var(--ac);">';
+    h+='<div style="font-size:12.5px;font-weight:600;margin-bottom:7px;">'+(i+1)+'. '+v.label+'</div>';
+    h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    v.opts.forEach(function(o,oi){
+      var on=SCALE_STATE[prefix+'_'+i]===oi?' on':'';
+      h+='<button class="optb'+on+'" onclick="setOpt(\''+prefix+'\','+i+','+oi+',this)">'+o.t+'</button>';
+    });
+    h+='</div></div>';
+  });
+  el.innerHTML=h;
+}
+function sumScale(prefix,vars){
+  var total=0,answered=0;
+  for(var i=0;i<vars.length;i++){var oi=SCALE_STATE[prefix+'_'+i];if(oi!==undefined){total+=vars[i].opts[oi].p;answered++;}}
+  return {total:total,complete:answered===vars.length};
+}
+function showScaleRes(id,score,max,cat,color,bg,action){
+  var el=document.getElementById(id);
+  el.innerHTML='<div style="background:'+bg+';border-left:4px solid '+color+';border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:28px;font-weight:900;color:'+color+';">'+score+'/'+max+'</div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+color+';">'+cat+'</div>'
+    +'<div style="font-size:12.5px;color:#374151;margin-top:6px;line-height:1.6;">'+action+'</div></div>';
+  el.style.display='block';
+}
+/* GBS */
+var gbsSex='h';
+function gbsVars(){
+  var hb=gbsSex==='h'
+    ?{label:'Hemoglobina (g/dL)',opts:[{t:'≥13',p:0},{t:'12-12.9',p:1},{t:'10-11.9',p:3},{t:'<10',p:6}]}
+    :{label:'Hemoglobina (g/dL)',opts:[{t:'≥12',p:0},{t:'10-11.9',p:1},{t:'<10',p:6}]};
+  return [
+    {label:'BUN (mmol/L)',opts:[{t:'<6.5',p:0},{t:'6.5-7.9',p:2},{t:'8-9.9',p:3},{t:'10-24.9',p:4},{t:'≥25',p:6}]},
+    hb,
+    {label:'PAS (mmHg)',opts:[{t:'≥110',p:0},{t:'100-109',p:1},{t:'90-99',p:2},{t:'<90',p:3}]},
+    {label:'FC ≥100 lpm',opts:[{t:'No',p:0},{t:'Sí',p:1}]},
+    {label:'Melena',opts:[{t:'No',p:0},{t:'Sí',p:1}]},
+    {label:'Síncope',opts:[{t:'No',p:0},{t:'Sí',p:2}]},
+    {label:'Hepatopatía',opts:[{t:'No',p:0},{t:'Sí',p:2}]},
+    {label:'Insuficiencia cardíaca',opts:[{t:'No',p:0},{t:'Sí',p:2}]}
+  ];
+}
+function buildGBS(){buildOptScale('gbs-items',gbsVars(),'gbs');}
+function setGbsSex(s,btn){gbsSex=s;var ch=btn.parentNode.querySelectorAll('.pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');btn.classList.add('on');delete SCALE_STATE['gbs_1'];buildGBS();}
+function calcGBS(){
+  var v=gbsVars(),s=sumScale('gbs',v);
+  if(!s.complete){alert('Completa todas las variables del GBS.');return;}
+  var max=gbsSex==='h'?23:20,cat,color,bg,act;
+  if(s.total===0){cat='Riesgo muy bajo';color='#166534';bg='#dcfce7';act='Alta ambulatoria + EDA electiva + IBP oral.';}
+  else if(s.total<=6){cat='Riesgo bajo-moderado';color='#92400e';bg='#fef3c7';act='Hospitalización + EDA en 24 h (decisión individualizada en 1-6).';}
+  else if(s.total<12){cat='Riesgo alto';color='#c0392b';bg='#fdeaea';act='Hospitalización urgente + EDA urgente.';}
+  else{cat='Riesgo muy alto';color='#7b1c1c';bg='#fdeaea';act='UCI + EDA urgente + probable intervención.';}
+  showScaleRes('gbs-result',s.total,max,cat,color,bg,act);
+}
+function resetGBS(){for(var k in SCALE_STATE){if(k.indexOf('gbs_')===0)delete SCALE_STATE[k];}buildGBS();var el=document.getElementById('gbs-result');if(el){el.style.display='none';el.innerHTML='';}}
+/* Rockall */
+var ROCK_VARS=[
+  {label:'Edad',opts:[{t:'<60',p:0},{t:'60-79',p:1},{t:'≥80',p:2}]},
+  {label:'Shock',opts:[{t:'Sin shock',p:0},{t:'Taquicardia (FC≥100)',p:1},{t:'Hipotensión (PAS<100)',p:2}]},
+  {label:'Comorbilidad',opts:[{t:'Sin',p:0},{t:'ICC/coronaria/renal',p:2},{t:'Hepática/cáncer metastásico',p:3}]},
+  {label:'Diagnóstico (post-EDA)',opts:[{t:'Mallory-Weiss/sin hallazgo',p:0},{t:'Úlcera/esofagitis',p:1},{t:'Cáncer/variceal',p:2}]},
+  {label:'Estigmas (post-EDA)',opts:[{t:'Sin/mancha',p:0},{t:'Coágulo/vaso/sangrado activo',p:2}]}
+];
+function buildRock(){buildOptScale('rock-items',ROCK_VARS,'rock');}
+function calcRock(){
+  var s=sumScale('rock',ROCK_VARS);
+  if(!s.complete){alert('Completa las variables (pre y post-EDA).');return;}
+  var cat,color,bg,act;
+  if(s.total<=2){cat='Bajo riesgo';color='#166534';bg='#dcfce7';act='Mortalidad <5%.';}
+  else if(s.total<=4){cat='Riesgo intermedio';color='#92400e';bg='#fef3c7';act='Mortalidad 10-15%.';}
+  else{cat='Riesgo alto';color='#7b1c1c';bg='#fdeaea';act='Mortalidad >25%.';}
+  showScaleRes('rock-result',s.total,11,cat,color,bg,act);
+}
+function resetRock(){for(var k in SCALE_STATE){if(k.indexOf('rock_')===0)delete SCALE_STATE[k];}buildRock();var el=document.getElementById('rock-result');if(el){el.style.display='none';el.innerHTML='';}}
+
+/* ===== Fichas de fármaco (chips) ===== */
+function stdaFpToggle(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:58%;">'+v+'</span></div>';}
+function buildStdaCards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='sc-'+i+'-'+Math.random().toString(36).substr(2,4);
+    var col=f.pri?color:'#374151';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="stdaFpToggle(\''+fid+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-arr" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.bolo)h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';">Carga/Bolo</div><div style="font-size:13.5px;font-weight:800;color:'+col+';">'+f.bolo+'</div>';
+    if(f.mant)h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';margin-top:4px;">Mantenimiento</div><div style="font-size:13.5px;font-weight:700;color:'+col+';">'+f.mant+'</div>';
+    if(f.da)h+='<div style="font-size:14px;font-weight:800;color:'+col+';">'+f.da+'</div>';
+    h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.dil)h+=poprow('Dilución/velocidad',f.dil,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('FDA / Lactancia',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+var IBP_CARDS=[
+  {n:'Omeprazol IV',pri:true,linea:'⭐ Primera línea',
+   bolo:'80 mg IV en 100 mL SSN, 20-30 min',mant:'8 mg/h IV (160 mg en 200 mL a 10 mL/h × 72 h) · alternativa 40 mg IV c/12h',
+   dil:'Reconstituir 40 mg con 10 mL agua → 100 mL SSN',pres:'Fco amp 40 mg liofilizado · caps 20/40 mg (VO) · IMSS',
+   fda:'C · evitar lactancia',ci:'Hipersensibilidad a benzimidazoles',ea:'Tromboflebitis · hipomagnesemia · cefalea',
+   nota:'Lau NEJM 2000: reduce resangrado 22.5%→6.7%. Forrest Ia-IIb: 72 h de infusión, luego VO 40 mg c/24h × 8 sem. Forrest IIc-III: pasar a VO directo.'},
+  {n:'Pantoprazol IV',pri:false,linea:'Menos interacciones (preferir con clopidogrel)',
+   bolo:'80 mg IV en 100 mL SSN, 20-30 min',mant:'8 mg/h o 40 mg IV c/12h',
+   dil:'Reconstituir 40 mg con 10 mL SSN → 100 mL SSN',pres:'Polvo liofilizado 40 mg · Protonix IV · genérico · IMSS',
+   fda:'B · evitar lactancia',ci:'Hipersensibilidad a benzimidazoles',ea:'Tromboflebitis · hipomagnesemia',
+   nota:'No inhibe CYP2C19 de forma significativa: preferible en polimedicados (clopidogrel, warfarina). Eficacia equivalente al omeprazol.'}
+];
+var STDA_POP={
+  novar:function(){
+    return '<div class="alert a-i"><span class="ai">💡</span><div>El IBP antes de la EDA no baja mortalidad, pero reduce la necesidad de hemostasia endoscópica (eleva el pH y estabiliza el coágulo). Iniciar si la EDA no es inmediata.</div></div>'
+    +buildStdaCards('#c0392b',IBP_CARDS);
+  },
+  variceal:function(){
+    return '<div class="alert a-r"><span class="ai">🚨</span><div>Iniciar vasoactivos INMEDIATAMENTE ante sospecha variceal — no esperar la EDA. Continuar 3-5 días.</div></div>'
+    +buildStdaCards('#7b1c1c',[
+      {n:'Octreotida IV',pri:true,linea:'⭐ 1ª línea en México (análogo de somatostatina)',
+       bolo:'50 mcg IV lento (3-5 min)',mant:'50 mcg/h IV × 3-5 días (600 mcg en 44 mL SSN a 4.2 mL/h)',
+       dil:'Preparar en SSN 0.9% (NO en glucosa 5%)',pres:'Amp 0.05 mg/0.5 mL · 0.1 mg/mL · 0.5 mg/mL · Sandostatin · IMSS',
+       fda:'B · evitar lactancia',ci:'Precaución en DM',ea:'Hiperglucemia · cólico · bradicardia',
+       nota:'Reduce flujo esplácnico y presión portal 15-20%. Combinada con ligadura endoscópica es superior a cualquiera sola (Corley 2001).'},
+      {n:'Terlipresina IV',pri:false,linea:'Análogo de vasopresina — único con ↓mortalidad como monoterapia',
+       bolo:'2 mg IV lento (2 min) c/4h × 48 h (sangrado activo)',mant:'1 mg IV c/4h × 3-5 días tras control',
+       dil:'Reconstituir 1 mg + 5 mL SSN',pres:'Fco amp 1 mg · Glypressin · limitado en MX',
+       fda:'No clasificada · contraindicada en lactancia',ci:'Cardiopatía isquémica · arritmias · vasculopatía periférica · hiponatremia · embarazo',ea:'Hiponatremia · isquemia cardíaca/digital · arritmias',
+       nota:'Único vasoactivo con reducción de mortalidad (Cochrane). Monitorear Na c/12 h; suspender si isquemia en extremidades.'}
+    ]);
+  },
+  transf:function(){
+    return '<div class="alert a-w"><span class="ai">💉</span><div>Estrategia restrictiva (Villanueva NEJM 2013): transfundir si Hb &lt;7 (o &lt;9 si cardiopatía). En variceal no transfundir si Hb ≥8.</div></div>'
+    +buildStdaCards('#c0392b',[
+      {n:'Glóbulos rojos empaquetados',pri:true,linea:'⭐ Umbral restrictivo',
+       da:'Transfundir si Hb <7 g/dL (objetivo 7-9, no normalizar)',
+       dil:'1 unidad en 1-2 h · 1 U sube Hb ~1 g/dL',pres:'Unidad de GRE',fda:'—',ci:'—',
+       nota:'En cirrótico mantener 7-8 g/dL: transfundir de más sube el GPVH y el riesgo de resangrado.'},
+      {n:'Plasma fresco congelado',pri:false,linea:'Coagulopatía con sangrado activo',
+       da:'10-15 mL/kg IV si INR >1.5',dil:'Bolsa 200-250 mL/U',pres:'PFC',fda:'—',ci:'—',
+       nota:'No transfundir solo para corregir INR en cirrótico sin sangrado activo.'},
+      {n:'Concentrado de plaquetas',pri:false,linea:'Trombocitopenia con sangrado',
+       da:'1 pool (5-6 U) si plaquetas <50,000 (o <80,000 pre-EDA)',dil:'—',pres:'Pool plaquetario',fda:'—',ci:'—',
+       nota:'Verificar disponibilidad en banco de sangre.'},
+      {n:'Vitamina K IV',pri:false,linea:'INR alto por warfarina o hepatopatía',
+       da:'10 mg IV lento (en 30 min)',dil:'10 mg en 49 mL SSN · 30 min',pres:'Amp 10 mg/mL · Konakion · IMSS',fda:'C',ci:'—',ea:'Anafilaxia si infusión rápida',
+       nota:'Infundir lento por riesgo de reacción anafiláctica. Inicio 1-4 h, efecto máximo 12-24 h.'}
+    ]);
+  },
+  atb:function(){
+    return '<div class="alert a-r"><span class="ai">🦠</span><div>OBLIGATORIO en todo cirrótico con STDA variceal — reduce infecciones y mortalidad (Bernard 1999).</div></div>'
+    +buildStdaCards('#7b1c1c',[
+      {n:'Ceftriaxona IV',pri:true,linea:'⭐ Primera línea (AASLD/EASL 2022)',
+       da:'1 g IV c/24h × 7 días',dil:'1 g en 100 mL SSN · 30 min',pres:'Fco amp 500 mg/1 g · Rocephin · IMSS',
+       fda:'B',ci:'Neonato con hiperbilirrubinemia · no mezclar con calcio IV',ea:'Diarrea',
+       nota:'Preferida sobre norfloxacina donde hay alta resistencia a FQ; cubre también PBE. Cambiar a oral al tolerar.'},
+      {n:'Norfloxacina VO',pri:false,linea:'Alternativa oral (si tolera VO y baja resistencia)',
+       da:'400 mg VO c/12h × 7 días',dil:'—',pres:'Tabs 400 mg · Noroxin · limitado en MX',fda:'C',ci:'Embarazo · tendinopatía',ea:'GI',
+       nota:'Clásico estándar; ceftriaxona la ha desplazado en alto riesgo por la resistencia a quinolonas.'},
+      {n:'Ciprofloxacino IV',pri:false,linea:'Alternativa si no hay ceftriaxona',
+       da:'400 mg IV c/12h × 7 días',dil:'400 mg en 200 mL SSN · 60 min',pres:'Fco 400 mg/200 mL · IMSS',fda:'C',ci:'Embarazo · QT',ea:'Tendinitis, QT',
+       nota:'Opción IV cuando no se dispone de ceftriaxona.'}
+    ]);
+  },
+  posteda:function(){
+    return '<div class="alert a-i"><span class="ai">💊</span><div>Tras la EDA: continuar IBP, erradicar H. pylori (no variceal) y profilaxis secundaria con betabloqueador + ligadura (variceal).</div></div>'
+    +buildStdaCards('#0a5c45',[
+      {n:'Omeprazol VO (continuación)',pri:true,linea:'Tras 72 h de IBP IV (no variceal)',
+       da:'Forrest Ia-IIb: 40 mg c/24h × 8 sem · Forrest IIc-III: 20 mg c/24h × 4-8 sem',
+       dil:'30-60 min antes del desayuno, en ayuno',pres:'Caps 20/40 mg · Omepra · Gastrozol · IMSS',fda:'C',ci:'—',
+       nota:'Mantener IBP oral hasta cicatrización; control endoscópico si úlcera gástrica.'},
+      {n:'Erradicación de H. pylori',pri:true,linea:'⭐ Cuádruple con bismuto × 14 días (1ª línea MX)',
+       da:'Omeprazol 40 mg c/12h + bismuto 120-140 mg c/6h + tetraciclina 500 mg c/6h + metronidazol 500 mg c/8h',
+       dil:'Con alimentos · evitar alcohol (metronidazol) · tetraciclina sin lácteos',pres:'Omeprazol · Bismutol · tetraciclina · metronidazol (genéricos · IMSS)',fda:'—',ci:'Alergia a los componentes',
+       nota:'Reduce el resangrado a 1 año del 20-30% al <2% (Sung 2003). Triple (omeprazol+claritromicina+amoxicilina) solo si resistencia a claritromicina <15%. Confirmar erradicación a las 4 sem.'},
+      {n:'Propranolol VO (profilaxis 2ª variceal)',pri:true,linea:'⭐ Betabloqueador no selectivo',
+       da:'20-40 mg c/12h, titular a FC 55-60 lpm (o ↓25%)',dil:'Iniciar tras controlar el episodio agudo',pres:'Tabs 10/40/80 mg · Inderal · IMSS',fda:'C',ci:'Asma · EPOC grave · BAV · bradicardia',ea:'Bradicardia, fatiga',
+       nota:'Reduce el resangrado del 40% al 15% a 2 años. Combinar SIEMPRE con ligadura endoscópica programada.'},
+      {n:'Carvedilol VO',pri:false,linea:'Mayor reducción del GPVH que propranolol',
+       da:'6.25 mg c/24h → 12.5 mg c/24h',dil:'No combinar con nitratos',pres:'Tabs 6.25/12.5/25 mg · Coreg · IMSS',fda:'C',ci:'Igual que propranolol',ea:'Hipotensión, bradicardia',
+       nota:'Alternativa si no tolera propranolol; reduce más la presión portal.'}
+    ]);
+  }
+};
+function showStdaPop(id,btn){var ch=document.querySelectorAll('#stda-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('stda-pop-out');if(out&&STDA_POP[id])out.innerHTML=STDA_POP[id]();}
+
+/* ===== Tx Hosp por escenario ===== */
+var HOSP_POP={
+  resuc:function(){
+    return '<div class="alert a-r"><span class="ai">🔴</span><div>Primeros 60 minutos: vía aérea, accesos, volumen, labs y decidir IBP vs vasoactivo + tiempo de EDA.</div></div>'
+    +'<div class="tw"><table class="t"><thead><tr><th>Paso</th><th>Acción</th></tr></thead><tbody>'
+    +'<tr><td class="dn">1-2</td><td>2 vías IV ≥18G · SF 0.9% 500-1000 mL si PAS <90</td></tr>'
+    +'<tr><td class="dn">3</td><td>O₂ (SpO₂ ≥95%) · intubar si Glasgow <8 o aspiración</td></tr>'
+    +'<tr><td class="dn">4-5</td><td>SNG (lavado/diagnóstico) · Foley (diuresis >0.5 mL/kg/h)</td></tr>'
+    +'<tr><td class="dn">6-7</td><td>Monitor FC/PA c/15 min · labs (BHC, INR, tipo/cruzada ×4, QS, lactato)</td></tr>'
+    +'<tr><td class="dn">8</td><td>Eritromicina 250 mg IV 30-120 min antes de la EDA</td></tr>'
+    +'<tr><td class="dn">9</td><td>IBP (no variceal) u octreotida (variceal) en <30 min</td></tr>'
+    +'<tr><td class="dn">10</td><td>EDA: variceal <12 h · no variceal <24 h</td></tr>'
+    +'</tbody></table></div>'
+    +buildStdaCards('#c0392b',[
+      {n:'Eritromicina IV (procinético pre-EDA)',pri:true,linea:'Vacía el estómago de sangre',
+       da:'250 mg IV dosis única, 30-120 min antes de la EDA',dil:'250 mg en 20 mL SSN · 20 min',pres:'Amp 500 mg/10 mL · Eritrocin IV · IMSS',fda:'B',ci:'QT prolongado · fármacos que prolongan QT',ea:'QT, náusea',
+       nota:'Agonista de motilina; NNT 7 para evitar una 2ª EDA (Barkun 2021). No repetir.'}
+    ]);
+  },
+  novar:function(){
+    return '<div class="alert a-i"><span class="ai">💊</span><div>No variceal: IBP IV de inmediato; ajustar según Forrest tras la EDA; erradicar H. pylori si se confirma.</div></div>'
+    +buildStdaCards('#c0392b',IBP_CARDS)
+    +buildStdaCards('#0a5c45',[
+      {n:'Erradicación de H. pylori (si biopsia +)',pri:true,linea:'OBLIGATORIO tras úlcera sangrante',
+       da:'Cuádruple con bismuto × 14 días (omeprazol 40 mg c/12h + bismuto 120-140 mg c/6h + tetraciclina 500 mg c/6h + metronidazol 500 mg c/8h)',
+       dil:'Con alimentos · sin alcohol · tetraciclina sin lácteos',pres:'Genéricos · IMSS',fda:'—',ci:'Alergia a los componentes',
+       nota:'Triple (omeprazol+claritromicina+amoxicilina) solo si resistencia a claritromicina <15%.'}
+    ]);
+  },
+  variceal:function(){
+    return '<div class="alert a-r"><span class="ai">🩸</span><div>Secuencia en los primeros 60 min: <strong>1) vasoactivo IV → 2) ATB IV → 3) EDA &lt;12 h</strong>. Early-TIPS si Child-C &lt;14 o B con sangrado activo.</div></div>'
+    +buildStdaCards('#7b1c1c',[
+      {n:'Octreotida IV',pri:true,linea:'⭐ Vasoactivo de 1ª línea (MX)',
+       bolo:'50 mcg IV lento (3-5 min)',mant:'50 mcg/h × 3-5 días (600 mcg en 44 mL SSN a 4.2 mL/h)',
+       dil:'SSN 0.9% o SG 5%',pres:'Amp 0.05/0.1/0.5 mg · Sandostatin · IMSS',fda:'B',ci:'Precaución en DM',ea:'Hiperglucemia, bradicardia',
+       nota:'Continuar aunque la EDA logre hemostasia.'},
+      {n:'Terlipresina IV',pri:false,linea:'Mayor evidencia en mortalidad',
+       bolo:'2 mg IV c/4h × 48 h',mant:'1 mg IV c/4h × 3-5 días',dil:'Reconstituir 1 mg + 5 mL SSN',pres:'Fco 1 mg · Glypressin',fda:'No clasificada',ci:'Cardiopatía · arritmias · hiponatremia · embarazo',ea:'Hiponatremia, isquemia',
+       nota:'Monitorear Na c/12 h y perfusión de extremidades.'},
+      {n:'Ceftriaxona IV (profilaxis)',pri:true,linea:'⭐ ATB OBLIGATORIO',
+       da:'1 g IV c/24h × 7 días',dil:'1 g en 100 mL SSN · 30 min',pres:'Fco 500 mg/1 g · Rocephin · IMSS',fda:'B',ci:'No mezclar con calcio IV',ea:'Diarrea',
+       nota:'Reduce mortalidad. 2ª línea: ciprofloxacino IV o norfloxacina VO.'},
+      {n:'Sengstaken-Blakemore / TIPS (rescate)',pri:false,linea:'Sangrado refractario',
+       da:'Balón ≤24-48 h (riesgo de necrosis) · Early-TIPS <72 h en candidatos',dil:'—',pres:'—',fda:'—',ci:'TIPS: MELD alto, ICC derecha, encefalopatía grave',
+       nota:'Balón solo como puente con equipo de EDA listo. Early-TIPS (Baveno VII) reduce mortalidad en Child-C <14.'}
+    ]);
+  },
+  transf:function(){return STDA_POP.transf()
+    +buildStdaCards('#7a4a00',[
+      {n:'Ácido tranexámico IV',pri:false,linea:'Uso selectivo — evidencia limitada',
+       da:'1 g IV en 10 min, repetible a 1 h',dil:'1 g en 10 mL SSN',pres:'Amp 500 mg/5 mL · Amchafibrin · IMSS',fda:'B',ci:'Trombosis · CID',ea:'Trombosis',
+       nota:'HALT-IT 2020: NO reduce mortalidad en sangrado GI y aumenta el riesgo de trombosis. Reservar a casos seleccionados, NO en variceal de rutina.'}
+    ]);
+  },
+  falla:function(){
+    return '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Falla del tratamiento</div>Resangrado en los primeros 5 días (hematemesis + Hb ↓≥3 g) o no lograr hemostasia en 2 intentos endoscópicos.</div></div>'
+    +'<div class="tw"><table class="t"><thead><tr><th>Escenario</th><th>Escalada</th></tr></thead><tbody>'
+    +'<tr><td class="dn">Variceal refractario · candidato TIPS</td><td>TIPS urgente <72 h</td></tr>'
+    +'<tr><td class="dn">Variceal · no candidato TIPS</td><td>Balón Sengstaken → shunt quirúrgico</td></tr>'
+    +'<tr><td class="dn">No variceal Forrest Ia refractario</td><td>2ª EDA → angioembolización → cirugía</td></tr>'
+    +'<tr><td class="dn">Úlcera duodenal (arteria gastroduodenal)</td><td>Angioembolización selectiva · cirugía urgente</td></tr>'
+    +'</tbody></table></div>';
+  }
+};
+function showHospPop(id,btn){var ch=document.querySelectorAll('#hosp-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('hosp-pop-out');if(out&&HOSP_POP[id])out.innerHTML=HOSP_POP[id]();}
+
+/* ===== Algoritmo ===== */
+var STDA_ALGO={
+  start:{p:'¿Cirrosis o datos de hepatopatía? (ictericia, ascitis, arañas vasculares)',o:[
+    {t:'SÍ — sospecha variceal',n:'rVar'},
+    {t:'NO — probable no variceal',n:'gbs'}
+  ]},
+  gbs:{p:'Glasgow-Blatchford (calcúlalo en la pestaña Escalas)',o:[
+    {t:'GBS ≥7 (alto)',n:'rNoVarHosp'},
+    {t:'GBS 1-6 (intermedio)',n:'rNoVarInd'},
+    {t:'GBS 0 (muy bajo)',n:'rNoVarAmb'}
+  ]},
+  rVar:{r:1,titulo:'STDA variceal probable',color:'#7b1c1c',
+    atb:'Octreotida 50 mcg IV bolo + 50 mcg/h × 3-5 d. ATB: Ceftriaxona 1 g IV c/24h × 7 d (OBLIGATORIO).',
+    plan:'EDA urgente <12 h (ligadura). Transfusión restrictiva (Hb objetivo 7-8). Valorar early-TIPS en Child-C <14.',
+    extra:'Profilaxis 2ª: propranolol + ligadura programada al alta.'},
+  rNoVarHosp:{r:1,titulo:'No variceal — alto riesgo (GBS ≥7)',color:'#c0392b',
+    atb:'Omeprazol 80 mg IV bolo → 8 mg/h (o 40 mg c/12h).',
+    plan:'Hospitalizar · EDA en 24 h. Transfundir si Hb <7. Eritromicina 250 mg IV pre-EDA si sangre residual.',
+    extra:'Ajustar según Forrest tras la EDA; erradicar H. pylori si se confirma.'},
+  rNoVarInd:{r:1,titulo:'No variceal — riesgo intermedio (GBS 1-6)',color:'#7a4a00',
+    atb:'Omeprazol IV (bolo + infusión o 40 mg c/12h).',
+    plan:'Hospitalizar y EDA en 24 h; individualizar según comorbilidad y estabilidad.',
+    extra:'Vigilar resangrado; control de Hb seriado.'},
+  rNoVarAmb:{r:1,titulo:'No variceal — muy bajo riesgo (GBS 0)',color:'#0a5c45',
+    atb:'Omeprazol VO 40 mg c/24h.',
+    plan:'Alta ambulatoria con EDA electiva precoz y seguimiento.',
+    extra:'Indicar señales de alarma para regresar (hematemesis, melena, síncope).'}
+};
+var stdaHist=[];
+function renderStdaStep(sid){
+  var s=STDA_ALGO[sid];if(!s)return;
+  if(s.r){renderStdaResult(s);return;}
+  var h='<div style="background:#fdeaea;border-left:4px solid var(--rm);border-radius:var(--rs);padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#7b1c1c;margin-bottom:10px;">'+s.p+'</div>';
+  s.o.forEach(function(o,i){h+='<button onclick="stdaSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;background:#fff;border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;">'+o.t+'</button>';});
+  if(stdaHist.length)h+='<button onclick="stdaBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';
+  h+='</div>';
+  document.getElementById('stda-step').innerHTML=h;
+}
+function stdaSel(sid,i){stdaHist.push(sid);renderStdaStep(STDA_ALGO[sid].o[i].n);}
+function stdaBack(){if(stdaHist.length)renderStdaStep(stdaHist.pop());}
+function resetStda(){stdaHist=[];renderStdaStep('start');}
+function renderStdaResult(s){
+  var h='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.titulo+'</div></div>';
+  h+='<div style="background:#fdeaea;border-left:3px solid #c0392b;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:3px;">Fármaco</div><div style="font-size:12.5px;color:#7b1c1c;line-height:1.6;">'+s.atb+'</div></div>';
+  h+='<div style="background:#e6f1fb;border-left:3px solid #1a6bbd;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">Plan / EDA / transfusión</div><div style="font-size:12.5px;color:#0c3b6e;line-height:1.6;">'+s.plan+'</div></div>';
+  h+='<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">Seguimiento</div><div style="font-size:12.5px;color:#064e3b;line-height:1.6;">'+s.extra+'</div></div>';
+  h+='<button onclick="resetStda()" style="margin-top:6px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>';
+  document.getElementById('stda-step').innerHTML=h;
+}
+
+/* ===== Fármacos (buscador) ===== */
+var FARMACOS_STDA=[
+  {familia:'IBP IV (no variceal)',color:'#c0392b',farmacos:[
+    {n:'Omeprazol IV',ini:'Bolo 80 mg → 8 mg/h × 72 h (o 40 mg c/12h)',obj:'pH gástrico >6',iv:'IV · bolo en 100 mL SSN 20-30 min',pr:'Fco amp 40 mg liofilizado · IMSS',ci:'Hipersensibilidad a benzimidazoles',ea:'Tromboflebitis, hipomagnesemia',nota:'⭐ 1ª línea. Lau NEJM 2000.'},
+    {n:'Pantoprazol IV',ini:'Bolo 80 mg → 8 mg/h o 40 mg c/12h',obj:'Igual',iv:'IV',pr:'Polvo 40 mg · Protonix IV · IMSS',ci:'Hipersensibilidad',ea:'Igual',nota:'Menos interacciones (preferir con clopidogrel).'},
+    {n:'Esomeprazol IV',ini:'Bolo 80 mg → 8 mg/h × 72 h',obj:'Igual',iv:'IV',pr:'Fco 40 mg · Nexium IV',ci:'Hipersensibilidad',ea:'Igual',nota:'Alternativa equivalente.'}
+  ]},
+  {familia:'Vasoactivos IV (variceal)',color:'#7b1c1c',farmacos:[
+    {n:'Octreotida IV',ini:'Bolo 50 mcg → 50 mcg/h × 3-5 d',obj:'↓presión portal',iv:'IV en SSN (no glucosa)',pr:'Amp 0.05/0.1/0.5 mg · Sandostatin · IMSS',ci:'Precaución DM',ea:'Hiperglucemia, bradicardia',nota:'⭐ 1ª línea en MX.'},
+    {n:'Terlipresina IV',ini:'2 mg c/4h × 48 h → 1 mg c/4h',obj:'↓mortalidad (único)',iv:'IV',pr:'Fco 1 mg · Glypressin',ci:'Cardiopatía · arritmias · hiponatremia',ea:'Hiponatremia, isquemia',nota:'Único con reducción de mortalidad como monoterapia.'},
+    {n:'Vasopresina IV',ini:'0.2-0.4 U/min (última línea)',obj:'↓flujo esplácnico',iv:'IV con nitroglicerina',pr:'Amp 20 U/mL',ci:'Cardiopatía isquémica',ea:'Isquemia cardíaca/mesentérica',nota:'Mayor toxicidad CV; desplazada por octreotida/terlipresina.'}
+  ]},
+  {familia:'ATB (profilaxis variceal)',color:'#0c3b6e',farmacos:[
+    {n:'Ceftriaxona IV',ini:'1 g c/24h × 7 d',obj:'Prevenir infección/PBE',iv:'IV en 100 mL SSN 30 min',pr:'Fco 500 mg/1 g · Rocephin · IMSS',ci:'No mezclar con calcio',ea:'Diarrea',nota:'⭐ 1ª línea en alto riesgo.'},
+    {n:'Norfloxacina VO',ini:'400 mg c/12h × 7 d',obj:'Profilaxis',iv:'VO',pr:'Tabs 400 mg · Noroxin',ci:'Embarazo',ea:'GI',nota:'Si tolera VO y baja resistencia a FQ.'},
+    {n:'Ciprofloxacino IV',ini:'400 mg c/12h × 7 d',obj:'Profilaxis',iv:'IV en 200 mL SSN 60 min',pr:'Fco 400 mg/200 mL · IMSS',ci:'Embarazo · QT',ea:'Tendinitis',nota:'Alternativa si no hay ceftriaxona.'}
+  ]},
+  {familia:'Hemostáticos / coagulación',color:'#7a4a00',farmacos:[
+    {n:'Vitamina K IV',ini:'10 mg IV lento (30 min)',obj:'INR alto',iv:'IV en 50 mL SSN',pr:'Amp 10 mg/mL · Konakion · IMSS',ci:'—',ea:'Anafilaxia si rápido',nota:'Warfarina o hepatopatía.'},
+    {n:'Ácido tranexámico IV',ini:'1 g en 10 min',obj:'Selectivo',iv:'IV',pr:'Amp 500 mg/5 mL · Amchafibrin · IMSS',ci:'Trombosis · CID',ea:'Trombosis',nota:'HALT-IT 2020: NO de rutina en sangrado GI.'},
+    {n:'PFC',ini:'10-15 mL/kg',obj:'INR >1.5 + sangrado',iv:'IV',pr:'Bolsa 200-250 mL/U',ci:'—',ea:'TRALI, sobrecarga',nota:'No solo para corregir INR sin sangrado activo.'}
+  ]},
+  {familia:'Profilaxis secundaria variceal',color:'#0a5c45',farmacos:[
+    {n:'Propranolol VO',ini:'20-40 mg c/12h, titular a FC 55-60',obj:'↓resangrado',iv:'VO',pr:'Tabs 10/40/80 mg · Inderal · IMSS',ci:'Asma · BAV · bradicardia',ea:'Bradicardia, fatiga',nota:'⭐ + ligadura programada.'},
+    {n:'Carvedilol VO',ini:'6.25 → 12.5 mg c/24h',obj:'↓GPVH (mayor)',iv:'VO',pr:'Tabs 6.25/12.5/25 mg · Coreg · IMSS',ci:'Igual que propranolol',ea:'Hipotensión',nota:'Alternativa si no tolera propranolol.'}
+  ]},
+  {familia:'Erradicación H. pylori',color:'#4a1d8a',farmacos:[
+    {n:'Cuádruple con bismuto × 14 d',ini:'Omeprazol 40 c/12h + bismuto 120-140 c/6h + tetraciclina 500 c/6h + metronidazol 500 c/8h',obj:'Erradicar H. pylori',iv:'VO',pr:'Genéricos · IMSS',ci:'Alergia a componentes · alcohol (metronidazol)',ea:'GI, sabor metálico, heces oscuras (bismuto)',nota:'⭐ 1ª línea en MX. Reduce resangrado a <2%.'},
+    {n:'Triple × 14 d',ini:'Omeprazol 40 + claritromicina 500 + amoxicilina 1 g (c/12h)',obj:'Erradicar',iv:'VO',pr:'Genéricos · IMSS',ci:'Alergia',ea:'GI, disgeusia',nota:'Solo si resistencia a claritromicina <15%.'}
+  ]}
+];
+function farmStdaTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display!=='none'&&el.style.display!=='';el.style.display=open?'none':'block';if(arr)arr.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function filtrarFarmacosStda(q){
+  var list=document.getElementById('farm-list');if(!list)return;
+  var term=(q||'').toLowerCase().trim(),h='',total=0;
+  FARMACOS_STDA.forEach(function(fam,fi){
+    var famH='';
+    fam.farmacos.forEach(function(f,fki){
+      if(!term||(f.n+' '+f.pr+' '+f.nota).toLowerCase().indexOf(term)!==-1){
+        var fkId='fstda-'+fi+'-'+fki;
+        famH+='<div style="border-bottom:1px solid #f3f4f6;">';
+        famH+='<div onclick="farmStdaTog(\''+fkId+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid '+fam.color+';">';
+        famH+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+        famH+='<span id="'+fkId+'-arr" style="font-size:11px;color:#6b7280;">&#9658; ver</span></div>';
+        famH+='<div id="'+fkId+'" style="display:none;padding:10px 12px;background:#fff;">';
+        [['Dosis',f.ini,'#374151'],['Objetivo',f.obj,'#c0392b'],['Vía/Dilución',f.iv,'#1a3a5c'],['Presentaciones MX',f.pr,'#374151'],['Contraindicaciones',f.ci,'#c0392b'],['Efectos adversos',f.ea,'#374151']].forEach(function(r){
+          famH+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+r[0]+'</span><span style="font-weight:600;color:'+r[2]+';text-align:right;max-width:58%;">'+r[1]+'</span></div>';
+        });
+        famH+='<div style="font-size:11px;color:#374151;background:#f0f9ff;border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">'+f.nota+'</div>';
+        famH+='</div></div>';total++;
+      }
+    });
+    if(famH){h+='<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;"><div style="background:'+fam.color+';color:#fff;padding:8px 12px;font-size:13px;font-weight:700;">'+fam.familia+'</div>'+famH+'</div>';}
+  });
+  list.innerHTML=h||'<div style="text-align:center;padding:20px;color:#9ca3af;">Sin resultados</div>';
+  var cnt=document.getElementById('farm-count');if(cnt)cnt.textContent=total+' fármaco(s)';
+}
+
+/* ===== Indicaciones ===== */
+var IND_STDA=[
+  {n:'Omeprazol IV (protocolo STDA)',enf:'Bolo: reconstituir 40 mg con 10 mL agua → agregar a 90 mL SSN (100 mL), pasar en 20-30 min. Infusión: 160 mg en 200 mL SSN a 10 mL/h (8 mg/h) × 72 h, proteger de la luz, cambiar bolsa c/12 h. Vigilar Mg²⁺ c/48 h y tromboflebitis.',pac:'Al alta tome la cápsula en ayuno, 30-60 min antes del desayuno, sin partirla. NO use AINE/aspirina sin avisar. Acuda si vomita sangre o tiene heces negras.'},
+  {n:'Octreotida IV (variceal)',enf:'Bolo: 0.5 mL de la ampolleta 0.1 mg/mL (50 mcg) + 4.5 mL SSN, IV lento 3-5 min. Infusión: 600 mcg en 44 mL SSN (50 mL) a 4.2 mL/h. Vigilar glucemia c/6 h, FC y cólico. Compatible con SSN/SG5%.',pac:'Es un medicamento por suero para frenar el sangrado de las venas del esófago; no existe en pastilla. Dura 3-5 días.'},
+  {n:'Terlipresina IV (variceal)',enf:'Reconstituir 1 mg + 5 mL SSN. Bolo 2 mg (2 frascos) IV lento 2 min c/4 h × 48 h, luego 1 mg c/4 h. Monitorear Na c/12 h, PA c/1 h y perfusión de extremidades; si están pálidas/frías o hay dolor torácico, SUSPENDER y avisar.',pac:'Igual que la octreotida: solo por vena. Avise de inmediato si siente dolor en el pecho o las manos/pies fríos.'},
+  {n:'Ceftriaxona IV (profilaxis variceal)',enf:'1 g en 100 mL SSN en 30 min, c/24 h × 7 días. NO mezclar con calcio IV ni aminoglucósidos. Vigilar reacción alérgica los primeros 30 min.',pac:'Antibiótico por suero para prevenir infecciones mientras sangra; se completa una semana.'},
+  {n:'Vitamina K IV',enf:'10 mg (1 mL) en 49 mL SSN, infundir en 30 min (NO en bolo — riesgo de anafilaxia). Tener adrenalina disponible.',pac:'Ayuda a que la sangre coagule mejor; puede continuarse en tabletas si el médico lo indica.'},
+  {n:'Propranolol VO (profilaxis 2ª variceal)',enf:'Medir FC antes de cada dosis: <55 no dar · 55-60 mantener · >80 aumentar. Objetivo FC 55-60 lpm o ↓25%.',pac:'Tome 20-40 mg dos veces al día a la misma hora; no la suspenda de golpe. Avise si el pulso baja de 50 o se marea al pararse. Protege las venas del esófago.'},
+  {n:'Erradicación de H. pylori (al alta)',enf:'Esquema cuádruple 14 días con las tomas según horario; reforzar adherencia.',pac:'Tome las 4 medicinas con la comida, 14 días completos. EVITE el alcohol (metronidazol). La tetraciclina sin leche ni antiácidos. A las 4 semanas se confirma la curación.'}
+];
+function buildIndStda(){
+  var el=document.getElementById('ind-list');if(!el)return;
+  var h='';
+  IND_STDA.forEach(function(it){
+    h+='<div style="background:#fff5f5;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--rm);">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:6px;">'+it.n+'</div>';
+    h+='<div style="font-size:12.5px;color:#374151;line-height:1.6;margin-bottom:4px;"><strong>Enfermería:</strong> '+it.enf+'</div>';
+    h+='<div style="font-size:12.5px;color:#374151;line-height:1.6;"><strong>Paciente:</strong> '+it.pac+'</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+/* ===== Escenarios ===== */
+var ESCEN_STDA={
+  ulcera:{t:'Úlcera péptica sangrante',col:'#c0392b',clin:'Hematemesis/melena + epigastralgia, AINE o H. pylori.',eda:'Úlcera (clasificar Forrest).',tx:'IBP 80 mg IV bolo → 8 mg/h. Hemostasia endoscópica si Forrest Ia-IIb. Erradicar H. pylori.',esc:'Forrest Ia refractario: 2ª EDA → angioembolización → cirugía.',compl:'Resangrado, perforación.'},
+  variceal:{t:'Variceal en cirrótico',col:'#7b1c1c',clin:'Hematemesis abundante + estigmas de hepatopatía.',eda:'Várices esofágicas/gástricas.',tx:'Octreotida + ceftriaxona INMEDIATOS + EDA <12 h con ligadura. Transfundir solo si Hb <7.',esc:'Refractario: balón → early-TIPS <72 h.',compl:'Resangrado, encefalopatía, PBE.'},
+  aine:{t:'Sangrado por AINE/aspirina',col:'#7a4a00',clin:'Úlcera o erosiones en consumidor de AINE/AAS, a veces sin dolor.',eda:'Erosiones/úlcera.',tx:'Suspender el AINE. IBP IV/VO. Si AAS es por stent reciente: NO suspender sin cardiología.',esc:'Igual que úlcera péptica.',compl:'Resangrado si se reinicia AINE sin IBP.'},
+  mw:{t:'Mallory-Weiss',col:'#0c3b6e',clin:'Hematemesis tras vómito/arcadas intensas (alcohol).',eda:'Desgarro lineal en unión GE.',tx:'Suele ser autolimitado; IBP. Hemostasia endoscópica solo si sangrado activo.',esc:'Raro: angioembolización si persiste.',compl:'Resangrado (poco frecuente).'},
+  resangrado:{t:'Resangrado post-hemostasia',col:'#7b1c1c',clin:'Nueva hematemesis + Hb ↓≥3 g en los primeros 5 días.',eda:'Estigma de alto riesgo persistente.',tx:'Segunda EDA con nuevo intento de hemostasia + IBP en infusión.',esc:'Si falla la 2ª EDA: angioembolización (no variceal) o TIPS (variceal).',compl:'Shock, mortalidad elevada.'},
+  anticoag:{t:'Anticoagulado con STDA',col:'#4a1d8a',clin:'Sangrado amplificado por anticoagulante.',eda:'Variable según causa.',tx:'Warfarina: vitamina K 10 mg IV + PFC 10-15 mL/kg si INR >1.5. ACOD: idarucizumab (dabigatrán) o andexanet (anti-Xa); si no hay, PFC. Suspender el anticoagulante temporalmente.',esc:'No suspender AAS con stent reciente (<12 m) sin cardiología.',compl:'Trombosis si se revierte de más.'}
+};
+function buildEscenChips(){
+  var el=document.getElementById('escen-chips');if(!el)return;
+  var L=[['ulcera','🩸 Úlcera péptica'],['variceal','🍷 Variceal'],['aine','💊 AINE/Aspirina'],['mw','⚗️ Mallory-Weiss'],['resangrado','🔄 Resangrado'],['anticoag','💊 Anticoagulado']];
+  var h='';
+  L.forEach(function(x,i){h+='<button class="pchip'+(i===0?' on':'')+'" onclick="showStdaEscen(\''+x[0]+'\',this)">'+x[1]+'</button>';});
+  el.innerHTML=h;
+}
+function showStdaEscen(id,btn){
+  var ch=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var s=ESCEN_STDA[id];if(!s)return;
+  function blk(t,v,c){return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+v+'</div></div>';}
+  var h='<div style="background:'+s.col+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.t+'</div></div>';
+  h+=blk('Presentación',s.clin,'#6b7280');
+  h+=blk('Hallazgo endoscópico',s.eda,'#6b7280');
+  h+=blk('Tratamiento',s.tx,'#c0392b');
+  h+=blk('Cuándo escalar',s.esc,'#7a4a00');
+  h+=blk('Complicaciones',s.compl,'#7b1c1c');
+  document.getElementById('escen-out').innerHTML=h;
+}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  buildGBS();
+  buildRock();
+  resetStda();
+  showStdaPop('novar',document.querySelector('#stda-pop-chips .pchip.on'));
+  showHospPop('resuc',document.querySelector('#hosp-pop-chips .pchip.on'));
+  filtrarFarmacosStda('');
+  buildIndStda();
+  buildEscenChips();
+  showStdaEscen('ulcera',document.querySelector('#escen-chips .pchip.on'));
+});
+</script>
+</body>
+</html>

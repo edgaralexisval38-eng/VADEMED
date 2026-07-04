@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>STDB · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#8b2222;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--rl);border-left:3px solid var(--rm);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.recb{background:#fff5f5;border:1px solid #f3d6d6;border-radius:var(--rs);padding:10px 12px;margin-top:10px;font-size:12px;color:var(--gray-700);line-height:1.6;}
+.recb b{color:var(--ac);}
+.optb{padding:5px 9px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;border-radius:14px;background:#fff;color:#374151;}
+.optb.on{background:var(--ac);color:#fff;border-color:var(--ac);}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#8b2222;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--rl);color:var(--r);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#5c1a1a,#8b2222);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🔴</div>
+    <div>
+      <div class="hdr-eye">Urgencias · Gastroenterología · Cirugía Colorrectal</div>
+      <div class="hdr-title">Sangrado de Tubo Digestivo Bajo</div>
+      <div class="hdr-sub">ACG 2023 · ESGE 2021 · ASCRS 2024 · GPC</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Diverticulosis 30-40%</span>
+    <span class="badge">Oakland ≤8 = alta segura</span>
+    <span class="badge">70-80% resuelve solo</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Diverticular</div><div class="qs-l">causa #1 (30-40%)</div></div>
+  <div class="qs"><div class="qs-v">Oakland ≤8</div><div class="qs-l">alta ambulatoria</div></div>
+  <div class="qs"><div class="qs-v">70-80%</div><div class="qs-l">resolución espontánea</div></div>
+  <div class="qs"><div class="qs-v">Colono</div><div class="qs-l">estándar diagnóstico</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>STDB:</strong> sangrado distal al ángulo de Treitz (intestino delgado distal, colon, recto, ano). Se manifiesta sobre todo como <strong>hematoquecia</strong> (sangre roja o marrón por el recto). El <strong>70-80% resuelve espontáneamente</strong>; la colonoscopia es el estándar de diagnóstico y tratamiento.</p>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <thead><tr><th>Tipo</th><th>Presentación</th><th>Manejo inicial</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Oculta/crónica</td><td>SOH+ · anemia ferropénica sin hematoquecia visible</td><td>Colonoscopia electiva · estudio de anemia</td></tr>
+        <tr><td class="dn">Leve-moderada</td><td>Hematoquecia autolimitada · estable</td><td>Oakland ≤8 → alta + colono ≤14 días</td></tr>
+        <tr><td class="dn">Severa</td><td>Abundante con coágulos + inestabilidad</td><td>Hospitalizar · colono urgente o angio-TC</td></tr>
+        <tr><td class="dn">Masiva</td><td>PAS &lt;90 · FC &gt;120 · Hb ↓&gt;4 g/24h</td><td>UCI · angioembolización o cirugía</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div>Ante <strong>hematoquecia + inestabilidad, descartar STDA masivo</strong> (un STDA &gt;1 L rápido se presenta como hematoquecia). Usar sonda nasogástrica o EDA.</div></div>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Dato</th><th>Cifra</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Incidencia</td><td>20-33/100,000/año (en aumento)</td></tr>
+      <tr><td class="dn">Edad pico</td><td>&gt;65 años</td></tr>
+      <tr><td class="dn">Resolución espontánea</td><td>70-80%</td></tr>
+      <tr><td class="dn">Resangrado diverticular</td><td>25-30% a 1 año</td></tr>
+      <tr><td class="dn">Mortalidad</td><td>2-4% (menor que STDA)</td></tr>
+      <tr><td class="dn">Causa #1</td><td>Diverticulosis (30-40%) + angiodisplasia (30%) = 70-80%</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología por etiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="fp" style="background:var(--rl);color:var(--r);"><strong>Diverticulosis:</strong> el vaso recto queda expuesto en el cuello del divertículo y se erosiona → sangrado <strong>arterial, indoloro, abundante</strong>. Igual de frecuente en colon derecho (vasa recta más grandes). Resuelve solo en 70-80%.</div>
+    <div class="fp" style="background:var(--al);color:var(--a);"><strong>Angiodisplasia:</strong> ectasias venosas submucosas (ciego/colon ascendente). Causa #1 en &gt;60 años, ERC, estenosis aórtica y von Willebrand. Sangrado venoso lento, crónico, recurrente; a menudo anemia ferropénica antes de hematoquecia visible. Resuelve solo en 40-45%.</div>
+    <div class="fp" style="background:var(--bl);color:var(--b);"><strong>Colitis isquémica:</strong> hipoperfusión de la "zona de watershed" (flexura esplénica, unión rectosigmoidea). <strong>Dolor cólico + hematoquecia simultáneos</strong>. La mayoría resuelve con soporte en 24-48 h; si necrosis transmural → cirugía urgente.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Causas y factores de riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Causa</th><th>Frec.</th><th>Claves / factores</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Diverticulosis</td><td>30-40%</td><td>Indolora, arterial, autolimitada · edad, AINE, baja fibra</td></tr>
+      <tr><td class="dn">Angiodisplasia</td><td>20-30%</td><td>Crónica, recurrente, ciego · ERC, estenosis aórtica, vWF</td></tr>
+      <tr><td class="dn">Hemorroides</td><td>10-15%</td><td>Sangre roja sobre las heces, sin dolor (internas)</td></tr>
+      <tr><td class="dn">Colitis isquémica</td><td>5-10%</td><td>Dolor + sangre · flexura esplénica · vasculopatía</td></tr>
+      <tr><td class="dn">EII (CU/Crohn)</td><td>5-10%</td><td>Diarrea sanguinolenta crónica, tenesmo</td></tr>
+      <tr><td class="dn">Cáncer colorrectal</td><td>5-10%</td><td>Cambio de hábito, pérdida de peso, &gt;50 a</td></tr>
+      <tr><td class="dn">Pospolipectomía</td><td>2-5%</td><td>Hasta 30 días post-colono · anticoagulantes</td></tr>
+      <tr><td class="dn">Fístula aortoentérica</td><td>&lt;1%</td><td>Prótesis aórtica previa — SIEMPRE descartar</td></tr>
+      <tr><td class="dn">Proctitis rádica</td><td>2-4%</td><td>RTX pélvica · telangiectasias tardías</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Diferencial por síntoma</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Síntoma</th><th>Causa probable</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Sangre roja sobre las heces/papel, sin dolor</td><td>Hemorroides internas · fisura</td></tr>
+        <tr><td class="dn">Sangre mezclada + tenesmo</td><td>CU · proctitis rádica</td></tr>
+        <tr><td class="dn">Hematoquecia abundante indolora</td><td>Diverticulosis · angiodisplasia (colon derecho)</td></tr>
+        <tr><td class="dn">Hematoquecia + dolor cólico simultáneos</td><td>Colitis isquémica</td></tr>
+        <tr><td class="dn">Diarrea sanguinolenta + fiebre</td><td>Colitis infecciosa · EII aguda</td></tr>
+        <tr><td class="dn">Pérdida de peso + cambio de hábito &gt;50 a</td><td>Cáncer colorrectal</td></tr>
+        <tr><td class="dn">SOH+ + anemia ferropénica asintomática</td><td>Cáncer · angiodisplasia · pólipos</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><strong>Hematoquecia + inestabilidad = STDA masivo hasta demostrar lo contrario.</strong> SNG: aspirado con sangre = STDA → manejo de STDA; aspirado limpio (bilis) = STDB → colonoscopia.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — no cometer</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Atribuir el sangrado a hemorroides sin diferencial.</strong> Todo &gt;45 años con hematoquecia sin colonoscopia reciente requiere colonoscopia para descartar cáncer.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>No descartar STDA</strong> en hematoquecia con inestabilidad (10-15% de STDA masivo se presenta así). SNG o EDA rápida.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Colonoscopia urgente (&lt;24h) en todos.</strong> ACG 2023: en estables no aporta beneficio; reservar la urgencia para inestabilidad persistente.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Transfundir para normalizar la Hb.</strong> Estrategia restrictiva (Hb &lt;7).</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Suspender la anticoagulación indefinidamente.</strong> Reanudar (multidisciplinario) suele ser a los 7-14 días.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>Ácido tranexámico en STDB.</strong> HALT-IT 2020: no reduce mortalidad y aumenta trombosis. ACG 2023 recomienda EN CONTRA.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de hospitalización y triaje</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Oakland</th><th>Acción</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">≤8 · sangrado detenido</td><td>Alta ambulatoria · colono electiva ≤14 días</td></tr>
+      <tr><td class="dn">9-14 · activo leve</td><td>Hospitalizar · colono en 24 h</td></tr>
+      <tr><td class="dn">≥15 · inestable</td><td class="dm">Hospitalizar urgente · reanimar · colono o angio-TC</td></tr>
+      <tr><td class="dn">Masiva (PAS&lt;90, FC&gt;120)</td><td class="dm">UCI · descartar STDA · angioembolización/cirugía</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚑</span><span class="st">Evaluación inicial</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>ABC:</strong> a diferencia del STDA, no se intuba de rutina (menor riesgo de aspiración). 2 vías IV ≥18G, monitor de FC/PA/SpO₂/diuresis. <strong>Tacto rectal OBLIGATORIO:</strong> sangre, melena vs roja, masa, hemorroides.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❓</span><span class="st">Anamnesis dirigida</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Pregunta</th><th>Orientación</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">¿Color de la sangre?</td><td>Roja = distal/rápido · marrón/negra = proximal/lento</td></tr>
+      <tr><td class="dn">¿Sobre o mezclada con las heces?</td><td>Sobre = anal/rectal · mezclada = colon</td></tr>
+      <tr><td class="dn">¿Dolor cólico simultáneo?</td><td>Sí = isquemia/EII · no = diverticulosis/angiodisplasia</td></tr>
+      <tr><td class="dn">¿AINE/AAS/anticoagulantes?</td><td>Precipitante y predisponente</td></tr>
+      <tr><td class="dn">¿Pérdida de peso + cambio de hábito?</td><td>Descartar cáncer</td></tr>
+      <tr><td class="dn">¿Colonoscopia &lt;30 días?</td><td>Pospolipectomía</td></tr>
+      <tr><td class="dn">¿Cirugía aórtica previa?</td><td>Fístula aortoentérica — emergencia</td></tr>
+      <tr><td class="dn">¿RTX pélvica?</td><td>Proctitis rádica</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios diagnósticos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Estudio</th><th>Cuándo / interpretación</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">⭐ Tacto rectal</td><td>Siempre primero · sangre, masa, hemorroides</td></tr>
+      <tr><td class="dn">BHC + TP/INR</td><td>Hb basal, plaquetas, coagulopatía</td></tr>
+      <tr><td class="dn">Tipo/Rh + cruzada</td><td>Moderado-grave · preparar transfusión</td></tr>
+      <tr><td class="dn">QS (BUN/Cr)</td><td>BUN/Cr &gt;36 sugiere STDA</td></tr>
+      <tr><td class="dn">SNG</td><td>Hematoquecia + inestabilidad · bilis = STDA poco probable</td></tr>
+      <tr><td class="dn">⭐ Colonoscopia</td><td>1ª línea dx + terapéutica (fuente en ~79%) · 24h si activo / ≤14 d si estable</td></tr>
+      <tr><td class="dn">⭐ Angio-TC</td><td>Inestable / sin colono · detecta ≥0.3-0.5 mL/min</td></tr>
+      <tr><td class="dn">Angiografía mesentérica</td><td>Detecta ≥1 mL/min · permite embolización</td></tr>
+      <tr><td class="dn">Gammagrafía GRE marcados</td><td>Sangrado lento/intermitente (≥0.1 mL/min) · no terapéutica</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Oakland Score (ACG 2023) — calculadora</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Decide si el paciente con STDB puede <strong>irse a casa con seguridad</strong> o necesita hospitalización. Estratifica el riesgo de desenlace adverso a 28 días (resangrado, transfusión, hemostasia, muerte o reingreso). ACG 2023 lo recomienda como herramienta de triaje.</div></div>
+    <div id="oak-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button onclick="calcOak()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular</button>
+      <button onclick="resetOak()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+    </div>
+    <div id="oak-result" style="display:none;margin-top:10px;"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📍</span><span class="st">Sangrado diverticular por colonoscopia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Clasifica los <strong>estigmas de sangrado del divertículo</strong> que se ven en la colonoscopia para decidir si requiere hemostasia endoscópica y predecir el riesgo de resangrado.</div></div><div class="tw"><table class="t">
+    <thead><tr><th>Hallazgo</th><th>Resangrado</th><th>Tx</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Sangrado activo</td><td class="dm">&gt;90%</td><td>✅ Hemostasia urgente</td></tr>
+      <tr><td class="dn">Vaso visible</td><td>50-60%</td><td>✅ Hemostasia</td></tr>
+      <tr><td class="dn">Coágulo adherido</td><td>25-35%</td><td>✅ Intentar</td></tr>
+      <tr><td class="dn">Sin estigmas</td><td>&lt;5%</td><td>❌ Observación</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩹</span><span class="st">Hemorroides — clasificación de Goligher</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Clasifica las <strong>hemorroides internas por grado de prolapso</strong> para elegir el tratamiento: médico (I), ligadura elástica (II-III) o cirugía (III-IV).</div></div><div class="tw"><table class="t">
+    <thead><tr><th>Grado</th><th>Descripción</th><th>Tratamiento</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">I</td><td>Sin prolapso</td><td>Fibra · flavonoides</td></tr>
+      <tr><td class="dn">II</td><td>Prolapso que reduce solo</td><td>Ligadura elástica · flavonoides</td></tr>
+      <tr><td class="dn">III</td><td>Prolapso que requiere reducción manual</td><td>Ligadura · hemorroidectomía</td></tr>
+      <tr><td class="dn">IV</td><td>Prolapso irreducible</td><td>Hemorroidectomía (urgente si trombosada)</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚨</span><div>Si hematoquecia + inestabilidad: primero descartar STDA (SNG/EDA) antes de seguir.</div></div>
+    <div id="stdb-step"></div>
+  </div></div>
+</div>
+
+<!-- TX CONSULTA -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Tratamiento por causa — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="stdb-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showStdbPop('severo',this)">🔴 Sangrado severo</button>
+      <button class="pchip" onclick="showStdbPop('hemorr',this)">🩹 Hemorroides</button>
+      <button class="pchip" onclick="showStdbPop('divert',this)">📍 Diverticulosis</button>
+      <button class="pchip" onclick="showStdbPop('angio',this)">🩸 Angiodisplasia</button>
+      <button class="pchip" onclick="showStdbPop('isq',this)">🔥 Colitis isquémica</button>
+      <button class="pchip" onclick="showStdbPop('eii',this)">💊 EII sangrante</button>
+      <button class="pchip" onclick="showStdbPop('pospol',this)">🔬 Pospolipectomía</button>
+      <button class="pchip" onclick="showStdbPop('anticoag',this)">💊 Anticoagulado</button>
+    </div>
+    <div id="stdb-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- TX HOSP -->
+<div class="panel" id="tab-txh">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛏️</span><span class="st">Protocolo hospitalario — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="hosp-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showHospPop('resuc',this)">🔴 Resucitación (60 min)</button>
+      <button class="pchip" onclick="showHospPop('colono',this)">🔬 Colonoscopia / hemostasia</button>
+      <button class="pchip" onclick="showHospPop('embo',this)">📡 Angioembolización</button>
+      <button class="pchip" onclick="showHospPop('transf',this)">💉 Transfusión</button>
+      <button class="pchip" onclick="showHospPop('cirugia',this)">🚨 Cirugía</button>
+    </div>
+    <div id="hosp-pop-out"></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacosStdb(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="ind-b"><div class="ind-bh">Indicaciones por fármaco — enfermería y paciente</div>
+    <div class="ind-bb" id="ind-list"></div>
+  </div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="escen-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="escen-out"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Post-episodio agudo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">24-48h</div><div class="fu-x">¿Resangrado? ¿Hb estable? ¿Tolera VO? Si nueva hematoquecia o síncope → urgencias.</div></div>
+    <div class="fu-r"><div class="fu-t">7-14 días</div><div class="fu-x">Colonoscopia electiva si Oakland ≤8 y no se hizo durante el ingreso.</div></div>
+    <div class="fu-r"><div class="fu-t">4 semanas</div><div class="fu-x">¿Anemia? BHC de control · ajustar hierro oral.</div></div>
+    <div class="fu-r"><div class="fu-t">3 meses</div><div class="fu-x">Ajustar tratamiento según causa.</div></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div>Alarma: nueva hematoquecia abundante/coágulos · síncope/palidez · dolor abdominal agudo · fiebre &gt;38.5° + hematoquecia · melena (posible STDA).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📍</span><span class="st">Diverticulosis</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><strong>Metas:</strong> fibra ≥25 g/día (principal modificable) · eliminar AINE (resangrado OR 2-3) · hidratación ≥1.5-2 L/día · IMC &lt;30.</p>
+    <p><strong>Cirugía preventiva (colectomía electiva):</strong> ≥2 episodios graves, sangrado masivo único en &lt;50 a sin respuesta endoscópica. Discutir con cirugía colorrectal.</p></div>
+    <div class="recb"><b>Recurrencia:</b> resangrado 25-30% al año sin tratamiento definitivo; con hemostasia endoscópica cae a 10-15%. Aumenta con AINE, anticoagulación, diverticulosis derecha extensa y primer episodio a menor edad.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Angiodisplasia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><strong>Metas:</strong> Hb ≥10 g/dL (hierro oral/IV) · ferritina &gt;30 · sin hematoquecia visible en 6 meses = buena respuesta.</p>
+    <p><strong>Hierro de la anemia ferropénica:</strong> sulfato ferroso 325 mg c/8-12h VO entre comidas; si intolerancia, hierro sacarosa IV 200 mg/sem × 5.</p></div>
+    <div class="recb"><b>Recurrencia:</b> la más alta del STDB (50-90% a 1-2 años sin tratar). APC: recurrencia 20-30% (lesiones múltiples). Octreotida LAR: reduce el resangrado del 78% al 24% a 2 años. Refractario → talidomida en centro especializado.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩹</span><span class="st">Hemorroides</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><strong>Metas (todos los grados):</strong> fibra 25-35 g/día (NNT 5) · hidratación · no pujar &gt;1-2 min · no sentarse en el inodoro &gt;5 min · evitar AINE prolongados · IMC &lt;30.</p></div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div>Nunca atribuir hematoquecia a hemorroides sin colonoscopia si: &gt;45 a sin colono reciente, cambio de calibre/hábito, AHF de cáncer/pólipos, pérdida de peso o anemia ferropénica.</div></div>
+    <div class="recb"><b>Recurrencia:</b> 30-50% a 5 años si no se corrigen los factores. La ligadura recurre menos que la escleroterapia y más que la hemorroidectomía. Sin cambio de dieta/hábitos, ningún procedimiento es definitivo.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Colitis isquémica</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><strong>Metas:</strong> control vascular (PA &lt;130/80, LDL &lt;100, HbA1c &lt;7%) · suspender vasoconstrictores (cocaína, ergotamina, triptanes, estrógenos) · evitar hipotensión. Colonoscopia de control a 2-4 sem; vigilar estenosis tardía (10-15%) a los 3 meses.</p></div>
+    <div class="recb"><b>Recurrencia:</b> 5-10%; suele indicar vasculopatía mesentérica subyacente. ≥2 episodios → angio-TC mesentérica + valoración cardiológica/hematológica (trombofilia).</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">EII (CU / Crohn)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><strong>Metas:</strong> calprotectina fecal &lt;250 µg/g (remisión endoscópica probable) · albúmina &gt;3.5 · ferritina &gt;30 · B12 &gt;200 (Crohn ileal) · sin corticoides de mantenimiento. Vigilancia de cáncer con colonoscopia + biopsias c/1-2 años desde los 8-10 años de EII.</p></div>
+    <div class="alert a-r"><span class="ai">🚨</span><div>Referencia urgente a gastro: CU grave (Truelove-Witts), falta de respuesta a esteroides IV en 72 h, megacolon tóxico (&gt;6 cm + toxicidad), displasia/cáncer, fístula/absceso (Crohn).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Tamizaje de cáncer colorrectal</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Riesgo</th><th>Inicio</th><th>Intervalo</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Promedio</td><td>45 años</td><td>Colono c/10 años</td></tr>
+        <tr><td class="dn">AHF 1er grado &lt;60 a</td><td>40 a o 10 antes</td><td>Colono c/5 años</td></tr>
+        <tr><td class="dn">PAF / Lynch</td><td>10-15 a o dx genético</td><td>Colono anual</td></tr>
+        <tr><td class="dn">EII &gt;8 años</td><td>8-10 a de EII</td><td>Colono c/1-2 años + biopsias</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-i" style="margin-top:10px;"><span class="ai">💡</span><div>El STDB es una <strong>oportunidad diagnóstica</strong>: verificar que el tamizaje de cáncer colorrectal esté al día; la colonoscopia del episodio puede servir de tamizaje si la preparación fue adecuada.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Referencia a especialista</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Causa</th><th>Criterio · especialidad</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Diverticulosis recurrente</td><td>≥2 graves · Cirugía colorrectal</td></tr>
+      <tr><td class="dn">Angiodisplasia refractaria</td><td>Fracaso APC+octreotida · Gastroenterología</td></tr>
+      <tr><td class="dn">Hemorroides III-IV</td><td>Sin respuesta a ligadura ×3 · Proctología</td></tr>
+      <tr><td class="dn">Colitis isquémica</td><td>≥2 episodios / estenosis · Gastro + Vascular</td></tr>
+      <tr><td class="dn">EII</td><td>1ª vez / grave / biológicos · Gastroenterología</td></tr>
+      <tr><td class="dn">Sospecha de cáncer</td><td>Hallazgos de alto riesgo · Gastro/Oncología</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Resumen de evidencia</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Oakland Score — nivel A (ACG 2023):</strong> validado en 2,336 pacientes (Oakland 2017); ≤8 identifica bajo riesgo apto para alta ambulatoria. &gt;50% de los STDB en urgencias son ≤8.</p>
+    <p><strong>Colonoscopia urgente vs electiva — nivel A:</strong> la colonoscopia &lt;24h NO mejora resangrado, mortalidad ni transfusiones en estables (CURE/Niikura 2020; Sengupta 2023). Urgencia solo si inestabilidad persistente.</p>
+    <p><strong>Transfusión restrictiva — nivel B:</strong> umbral Hb &lt;7 (Villanueva 2013, extrapolado) reduce hemoderivados sin afectar la mortalidad.</p>
+    <p><strong>Ácido tranexámico — EN CONTRA:</strong> HALT-IT 2020 (12,009 pacientes): no reduce mortalidad y aumenta trombosis. ACG 2023 lo desaconseja.</p>
+    <p><strong>Flavonoides y fibra (hemorroides) — nivel A:</strong> flavonoides reducen el sangrado (RR 0.50, NNT 5; Cochrane 2012); la fibra reduce sangrado/prolapso ~50% (Alonso-Coello 2006). ASCRS 2024: 1ª línea.</p>
+    <p><strong>Octreotida en angiodisplasia — nivel B:</strong> reduce el resangrado del 78% al 24% a 2 años (Bon 2012); talidomida 71% de respuesta en refractarios (Chen, NEJM 2011) con toxicidad importante.</p>
+    <p><strong>Corticoides IV en EII grave — nivel A:</strong> remisión 60-70% en 5-7 d; rescate con ciclosporina o infliximab si no responde en 72 h.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Guías y referencias</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2023</span></div><div class="bib-r">Sengupta N, Feuerstein JD et al. <strong>Management of Acute Lower GI Bleeding: Updated ACG Guideline.</strong> Am J Gastroenterol 2023;118(2):208-231.</div></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2017</span></div><div class="bib-r">Oakland K et al. <strong>Oakland Score — safe discharge after acute LGIB.</strong> Lancet Gastroenterol Hepatol 2017;2(9):635-643.</div></div>
+    <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2021</span></div><div class="bib-r">Triantafyllou K et al. <strong>ESGE Guideline: Acute Lower GI Bleeding.</strong> Endoscopy 2021;53(8):850-868.</div></div>
+    <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2024</span></div><div class="bib-r">Hawkins AT et al. <strong>ASCRS Clinical Practice Guidelines for Hemorrhoids.</strong> Dis Colon Rectum 2024.</div></div>
+    <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">2020</span></div><div class="bib-r">Roberts I et al. <strong>HALT-IT — Tranexamic acid in GI bleeding.</strong> NEJM 2020.</div></div>
+    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">2012</span></div><div class="bib-r">Perera N et al. <strong>Phlebotonics for haemorrhoids (Cochrane).</strong> 2012 · Bon C et al. <strong>Octreotide en angiodisplasia.</strong> APT 2012.</div></div>
+    <div class="bib-i"><div><span class="bib-n">7</span><span class="bib-y">2011</span></div><div class="bib-r">Chen WH et al. <strong>Thalidomide for recurrent GI bleeding from vascular malformations.</strong> NEJM 2011;365:1054-1055.</div></div>
+  </div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ===== Oakland (escala por opciones) ===== */
+var SCALE_STATE={};
+function setOpt(prefix,i,oi,btn){SCALE_STATE[prefix+'_'+i]=oi;var row=btn.parentNode,bs=row.querySelectorAll('button');for(var k=0;k<bs.length;k++)bs[k].className='optb';btn.className='optb on';}
+function buildOptScale(cid,vars,prefix){
+  var el=document.getElementById(cid);if(!el)return;
+  var h='';
+  vars.forEach(function(v,i){
+    h+='<div style="background:#f9fafb;border-radius:var(--rs);padding:9px 11px;margin-bottom:8px;border-left:3px solid var(--ac);">';
+    h+='<div style="font-size:12.5px;font-weight:600;margin-bottom:7px;">'+(i+1)+'. '+v.label+'</div><div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    v.opts.forEach(function(o,oi){var on=SCALE_STATE[prefix+'_'+i]===oi?' on':'';h+='<button class="optb'+on+'" onclick="setOpt(\''+prefix+'\','+i+','+oi+',this)">'+o.t+'</button>';});
+    h+='</div></div>';
+  });
+  el.innerHTML=h;
+}
+function sumScale(prefix,vars){var total=0,answered=0;for(var i=0;i<vars.length;i++){var oi=SCALE_STATE[prefix+'_'+i];if(oi!==undefined){total+=vars[i].opts[oi].p;answered++;}}return {total:total,complete:answered===vars.length};}
+var OAK_VARS=[
+  {label:'Edad',opts:[{t:'<40',p:0},{t:'40-69',p:1},{t:'≥70',p:2}]},
+  {label:'Sexo',opts:[{t:'Mujer',p:0},{t:'Hombre',p:1}]},
+  {label:'Antecedente de STDB',opts:[{t:'No',p:0},{t:'Sí',p:1}]},
+  {label:'Tacto rectal',opts:[{t:'Normal',p:0},{t:'Sangre coagulada',p:1},{t:'Sangre fresca',p:2}]},
+  {label:'FC (lpm)',opts:[{t:'<70',p:0},{t:'70-89',p:1},{t:'90-109',p:2},{t:'≥110',p:3}]},
+  {label:'PAS (mmHg)',opts:[{t:'≥160',p:0},{t:'130-159',p:1},{t:'100-129',p:2},{t:'70-99',p:3},{t:'<70',p:4}]},
+  {label:'Hemoglobina (g/dL)',opts:[{t:'≥16',p:0},{t:'13-15.9',p:1},{t:'11-12.9',p:2},{t:'9-10.9',p:3},{t:'7-8.9',p:4},{t:'<7',p:5}]}
+];
+function buildOak(){buildOptScale('oak-items',OAK_VARS,'oak');}
+function calcOak(){
+  var s=sumScale('oak',OAK_VARS);
+  if(!s.complete){alert('Completa las 7 variables del Oakland.');return;}
+  var cat,color,bg,act;
+  if(s.total<=8){cat='Bajo riesgo';color='#166534';bg='#dcfce7';act='Alta ambulatoria segura · colonoscopia electiva ≤14 días.';}
+  else if(s.total<=14){cat='Riesgo moderado';color='#92400e';bg='#fef3c7';act='Hospitalización · colonoscopia en 24 h.';}
+  else{cat='Riesgo alto';color='#7b1c1c';bg='#fdeaea';act='Hospitalización urgente · reanimación · colonoscopia urgente o angio-TC.';}
+  var el=document.getElementById('oak-result');
+  el.innerHTML='<div style="background:'+bg+';border-left:4px solid '+color+';border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:28px;font-weight:900;color:'+color+';">'+s.total+' pts</div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+color+';">'+cat+'</div>'
+    +'<div style="font-size:12.5px;color:#374151;margin-top:6px;line-height:1.6;">'+act+'</div></div>';
+  el.style.display='block';
+}
+function resetOak(){for(var k in SCALE_STATE){if(k.indexOf('oak_')===0)delete SCALE_STATE[k];}buildOak();var el=document.getElementById('oak-result');if(el){el.style.display='none';el.innerHTML='';}}
+
+/* ===== Fichas de fármaco (chips) ===== */
+function stdbFpToggle(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:58%;">'+v+'</span></div>';}
+function buildStdbCards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='sb-'+i+'-'+Math.random().toString(36).substr(2,4);
+    var col=f.pri?color:'#374151';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="stdbFpToggle(\''+fid+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-arr" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.da)h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';">Dosis</div><div style="font-size:14px;font-weight:800;color:'+col+';">'+f.da+'</div>';
+    if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">Duración: '+f.dur+'</div>';
+    h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía/Intervalo',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('FDA / Lactancia',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+var STDB_POP={
+  severo:function(){
+    return '<div class="alert a-r"><span class="ai">🔴</span><div>2 vías IV ≥18G · descartar STDA con SNG antes de la colonoscopia · reanimación dirigida por metas.</div></div>'
+    +buildStdbCards('#8b2222',[
+      {n:'Cristaloides IV',pri:true,linea:'⭐ Reanimación de volumen',
+       da:'SF 0.9% o Hartmann 500-1000 mL en bolo si PAS <90, repetir según respuesta',dur:'Hasta estabilizar (evitar sobre-reanimación)',
+       iv:'IV · bolo rápido en 15-30 min, luego mantenimiento',pres:'Bolsa SF 0.9% 500/1000 mL · Hartmann 500/1000 mL · genérico · IMSS',fda:'—',ci:'ICC / sobrecarga (titular)',ea:'Edema, hemodilución',
+       nota:'Restaurar la perfusión sin sobrecargar: la reanimación masiva con cristaloides causa coagulopatía dilucional.'},
+      {n:'Glóbulos rojos empaquetados',pri:true,linea:'⭐ Estrategia restrictiva',
+       da:'1 unidad si Hb <7 g/dL (o <9 si cardiopatía isquémica)',dur:'Reevaluar Hb 1 h post-transfusión',
+       iv:'IV · 1 unidad en 1-2 h',pres:'Unidad de GRE (banco de sangre) · solicitar tipo y cruzada ×2-4 U',fda:'—',ci:'—',ea:'Reacción transfusional, sobrecarga',
+       nota:'1 U sube la Hb ~1 g/dL. Objetivo 7-9 g/dL — NO normalizar (ACG 2023).'}
+    ])
+    +'<div class="alert a-w" style="margin-top:8px;"><span class="ai">⛔</span><div><strong>NO usar:</strong> ácido tranexámico (ACG 2023 en contra) · vitamina K de rutina (solo si INR &gt;1.5 con sangrado anticoagulado) · IBP (no indicado en STDB).</div></div>';
+  },
+  hemorr:function(){
+    return '<div class="alert a-i"><span class="ai">🩹</span><div>1ª línea en TODOS los grados: fibra + hidratación. Flavonoides para el sangrado activo. Procedimientos según grado.</div></div>'
+    +buildStdbCards('#0a5c45',[
+      {n:'Fibra (psyllium)',pri:true,linea:'⭐ Nivel A — reduce el sangrado',
+       da:'Psyllium 3.4 g (1 sobre) 1-2 veces/día · meta 25-35 g de fibra/día',iv:'VO · 1-2 veces/día, disuelto en un vaso de agua + agua extra',pres:'Psyllium polvo 3.4 g/sobre · Metamucil sobres/frasco · Mucilax · genérico',fda:'Segura',ci:'Estenosis/obstrucción GI',ea:'Distensión, flatulencia',
+       nota:'Único tratamiento nivel A para reducir el sangrado hemorroidal (ASCRS 2024). Beber abundante agua.'},
+      {n:'Flavonoides (diosmina+hesperidina)',pri:true,linea:'Daflon — sangrado activo',
+       da:'Mantenimiento 500 mg c/12h × 3-6 meses · Agudo: 1000 mg c/8h (2 tabs) × 4 d → 500 mg c/12h × 3 d',iv:'VO · c/8-12h con las comidas',pres:'Tabs Daflon 500 mg · Daflon 1000 mg · Venotónica · genérico',fda:'Compatible (consultar en embarazo)',ci:'Hipersensibilidad',ea:'GI leve',
+       nota:'Cochrane 2012: reducen sangrado (RR 0.50), episodios y prurito; NNT 5.'},
+      {n:'Tópicos (lidocaína/hidrocortisona)',pri:false,linea:'Alivio sintomático local',
+       da:'Crema/supositorio según producto',iv:'Tópico/rectal',pres:'Proctozone · Ultraproct · Procto-Glyvenol · genérico',fda:'—',ci:'Uso prolongado de corticoide local',ea:'Atrofia local',
+       nota:'Solo alivio sintomático — NO definitivo.'},
+      {n:'Procedimientos (Grado II-III)',pri:false,linea:'Ligadura elástica · escleroterapia · fotocoagulación',
+       da:'Ligadura elástica = 1ª línea II-III (ambulatoria)',iv:'Endoscópico/proctológico',pres:'—',fda:'—',ci:'Coagulopatía no corregida',ea:'Dolor, sangrado tardío',
+       nota:'Hemorroidectomía quirúrgica si Grado III-IV refractario o trombosada.'}
+    ]);
+  },
+  divert:function(){
+    return '<div class="alert a-i"><span class="ai">📍</span><div>Sangrado activo en colonoscopia: hemostasia (clip ± inyección de epinefrina, APC o ligadura). Post-episodio: fibra y suspender AINE.</div></div>'
+    +buildStdbCards('#8b2222',[
+      {n:'Hemostasia endoscópica',pri:true,linea:'⭐ Durante la colonoscopia',
+       da:'Clips metálicos (preferidos) · inyección epinefrina 1:10,000-1:20,000 · APC/bipolar',iv:'Endoscópica',pres:'—',fda:'—',ci:'—',ea:'Perforación (rara)',
+       nota:'La combinación inyección + clip es más eficaz que cualquiera sola.'},
+      {n:'Fibra (psyllium)',pri:false,linea:'Post-episodio · continuo',
+       da:'Psyllium 3.4 g c/12-24h, indefinido',iv:'VO · c/12-24h con un vaso de agua',pres:'Psyllium polvo 3.4 g/sobre · Metamucil · Mucilax · genérico',fda:'Segura',ci:'Obstrucción',ea:'Distensión',
+       nota:'Reduce recurrencia de diverticulitis (evidencia menos directa para el sangrado).'},
+      {n:'Suspender AINE',pri:true,linea:'Reduce el resangrado',
+       da:'Suspender AINE · sustituir por paracetamol 500-1000 mg c/6-8h (máx 3-4 g/día)',iv:'VO · c/6-8h',pres:'Paracetamol tabs 500 mg · 750 mg · gotas/jarabe · genérico · IMSS',fda:'B (paracetamol)',ci:'Hepatopatía grave (paracetamol)',ea:'Hepatotoxicidad por sobredosis',
+       nota:'Los AINE aumentan el resangrado diverticular (OR 2-3).'}
+    ]);
+  },
+  angio:function(){
+    return '<div class="alert a-i"><span class="ai">🩸</span><div>1ª línea: argón plasma (APC) endoscópico. Recurrente/difusa: octreotida. Refractario: talidomida (centro especializado).</div></div>'
+    +buildStdbCards('#7a4a00',[
+      {n:'Argón plasma (APC) endoscópico',pri:true,linea:'⭐ Primera línea',
+       da:'Coagulación de las lesiones accesibles (control inmediato >90%)',iv:'Endoscópica · sesiones repetidas',pres:'—',fda:'—',ci:'—',ea:'Perforación (rara)',
+       nota:'Resolución espontánea en 40-45%; recurrencia 20-30% por lesiones múltiples.'},
+      {n:'Octreotida SC / LAR',pri:false,linea:'Recurrente o difusa inaccesible',
+       da:'SC 50-100 mcg c/8h · LAR (depósito) 20-30 mg IM c/28 días',iv:'SC c/8h (rotar sitios) · LAR IM profundo c/28 días',pres:'Amp 0.05 mg/mL · 0.1 mg/mL · Sandostatin LAR 10/20/30 mg · genérico · IMSS',fda:'B',ci:'DM · litiasis biliar (crónico)',ea:'Hiperglucemia, cólico',
+       nota:'Bon 2012: reduce el resangrado del 78% al 24% a 2 años. LAR mejora la adherencia.'},
+      {n:'Talidomida VO',pri:false,linea:'Refractario (solo especialista)',
+       da:'100-300 mg/noche',iv:'VO',pres:'Caps 50/100 mg · acceso restringido (REMS)',fda:'X — TERATÓGENA',ci:'Embarazo (absoluta) · neuropatía',ea:'Neuropatía, somnolencia, trombosis',
+       nota:'Chen NEJM 2011: 71% de respuesta, pero toxicidad importante. Programa de control estricto.'}
+    ]);
+  },
+  isq:function(){
+    return '<div class="alert a-i"><span class="ai">🔥</span><div>La mayoría resuelve con soporte. Cirugía solo si necrosis transmural (peritonitis).</div></div>'
+    +buildStdbCards('#0c3b6e',[
+      {n:'Hidratación IV',pri:true,linea:'⭐ Primera línea (restaurar perfusión)',
+       da:'SF 0.9% o Hartmann 1-2 L según hemodinamia · meta diuresis >0.5 mL/kg/h',iv:'IV · bolo inicial, luego mantenimiento continuo',pres:'Bolsa SF 0.9% 500/1000 mL · Hartmann 500/1000 mL · IMSS',fda:'—',ci:'ICC / sobrecarga (titular)',ea:'Sobrecarga, edema',
+       nota:'Reposo intestinal (NPO/líquidos 24-48 h); reiniciar VO al mejorar.'},
+      {n:'Antibióticos (formas graves)',pri:false,linea:'Si inestabilidad / colitis grave',
+       da:'Ciprofloxacino IV 400 mg c/12h + Metronidazol IV 500 mg c/8h × 5-7 d · o pip-tazo 4.5 g c/6h si sepsis',iv:'IV',pres:'Ciprofloxacino · metronidazol · pip-tazo (IMSS)',fda:'—',ci:'Embarazo (cipro)',ea:'QT, neurotoxicidad',
+       nota:'Alta translocación bacteriana del intestino isquémico.'},
+      {n:'Suspender precipitantes',pri:true,linea:'Vasoconstrictores y desencadenantes',
+       da:'Retirar vasopresores, cocaína, estrógenos, triptanes',iv:'—',pres:'—',fda:'—',ci:'—',ea:'—',
+       nota:'Cirugía urgente (colectomía + Hartmann) si necrosis transmural; mortalidad alta.'}
+    ]);
+  },
+  eii:function(){
+    return '<div class="alert a-r"><span class="ai">💊</span><div>CU grave (Truelove-Witts): &gt;6 dep/día con sangre + 1 de FC&gt;90, fiebre&gt;37.8°, Hb&lt;10.5, VSG&gt;30. Esteroides IV; rescate si no responde en 72 h.</div></div>'
+    +buildStdbCards('#7b1c1c',[
+      {n:'Hidrocortisona IV',pri:true,linea:'⭐ Colitis grave',
+       da:'100 mg IV c/6h (o 300-400 mg/día en infusión)',dur:'5-7 días',iv:'IV en 100 mL SSN 20-30 min',pres:'Fco 100/500 mg · Solu-Cortef · IMSS',fda:'C',ci:'Infección no controlada',ea:'Hiperglucemia, hipokalemia',
+       nota:'Alternativa: metilprednisolona 60 mg/día IV. Si no responde en 72 h → ciclosporina o infliximab.'},
+      {n:'Mesalazina VO/rectal',pri:false,linea:'Leve-moderada ambulatoria',
+       da:'VO 2.4-4.8 g/día en 2-3 dosis × 8 sem · enema 1-4 g por la noche (colitis izquierda)',iv:'VO c/8-12h, tragar entera · enema rectal al acostarse (retener ≥1 h)',pres:'Tabs 400/800 mg · cáps 250 mg · SR 1.2 g · enema 1 g/2 g · supos 500 mg · Pentasa · Salofalk · genérico',fda:'B',ci:'Alergia a salicilatos',ea:'Cefalea, GI',
+       nota:'No útil en la fase grave hospitalaria (ahí son esteroides IV).'},
+      {n:'Rescate (sin respuesta a esteroides)',pri:false,linea:'Ciclosporina o infliximab',
+       da:'Ciclosporina IV 2 mg/kg/día en infusión · o infliximab 5 mg/kg IV dosis única',iv:'IV',pres:'Ciclosporina amp · infliximab fco 100 mg',fda:'—',ci:'Infección activa (infliximab)',ea:'Nefrotoxicidad / infecciones',
+       nota:'Reducen la colectomía urgente del 60% al 30-40%.'}
+    ]);
+  },
+  pospol:function(){
+    return '<div class="alert a-i"><span class="ai">🔬</span><div>Inmediato (&lt;24h): reendoscopia + clip/coagulación. Tardío (1-30 días): colonoscopia; la mayoría resuelve sola si estable.</div></div>'
+    +buildStdbCards('#1a3a5c',[
+      {n:'Hemostasia endoscópica',pri:true,linea:'Sangrado pospolipectomía',
+       da:'Epinefrina 1:10,000 en el sitio + clip · o coagulación',iv:'Endoscópica',pres:'—',fda:'—',ci:'—',ea:'Perforación (rara)',
+       nota:'Suspender temporalmente anticoagulación/antiagregantes (consultar al prescriptor); reanudar al detenerse (7-14 días).'}
+    ]);
+  },
+  anticoag:function(){
+    return '<div class="alert a-w"><span class="ai">💊</span><div>Revertir solo si sangrado grave. La decisión de reanudar es multidisciplinaria; en la mayoría a los 7-14 días.</div></div>'
+    +buildStdbCards('#4a1d8a',[
+      {n:'Warfarina + sangrado grave',pri:true,linea:'Reversión',
+       da:'Vitamina K 10 mg IV (30 min) + PFC 10-15 mL/kg',iv:'IV',pres:'Vitamina K amp 10 mg/mL · Konakion · IMSS · PFC',fda:'—',ci:'—',ea:'Anafilaxia (vit K rápida)',
+       nota:'Objetivo INR <1.5 antes de la colonoscopia.'},
+      {n:'ACOD + sangrado grave',pri:false,linea:'Antídotos específicos',
+       da:'Dabigatrán: idarucizumab 5 g IV · anti-Xa (apixabán/rivaroxabán): andexanet (limitado en MX)',iv:'IV',pres:'Praxbind 2.5 g ×2 · andexanet',fda:'—',ci:'—',ea:'Trombosis',
+       nota:'Si no hay antídoto: PFC ± tranexámico (uso muy selectivo).'}
+    ]);
+  }
+};
+function showStdbPop(id,btn){var ch=document.querySelectorAll('#stdb-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('stdb-pop-out');if(out&&STDB_POP[id])out.innerHTML=STDB_POP[id]();}
+
+/* ===== Tx Hosp ===== */
+var HOSP_POP={
+  resuc:function(){
+    return '<div class="tw"><table class="t"><thead><tr><th>Paso</th><th>Acción</th></tr></thead><tbody>'
+    +'<tr><td class="dn">1-2</td><td>2 vías IV ≥18G · SF 500-1000 mL si PAS <90 · monitor</td></tr>'
+    +'<tr><td class="dn">3-4</td><td>Tacto rectal · SNG si inestabilidad (descartar STDA)</td></tr>'
+    +'<tr><td class="dn">5-6</td><td>Labs (BHC, INR, tipo/cruzada, QS, lactato) · Oakland Score</td></tr>'
+    +'<tr><td class="dn">7-8</td><td>Transfundir si Hb <7 · Oakland ≤8 → alta · ≥9 → hospitalizar</td></tr>'
+    +'<tr><td class="dn">9-10</td><td>Angio-TC si inestable · colonoscopia (urgente si activo / ≤14 d si estable)</td></tr>'
+    +'</tbody></table></div>'
+    +'<div class="alert a-w" style="margin-top:8px;"><span class="ai">⛔</span><div><strong>NO de rutina:</strong> ácido tranexámico (en contra) · vitamina K (solo si INR &gt;1.5 anticoagulado) · IBP (no indicado en STDB).</div></div>';
+  },
+  colono:function(){
+    return '<div class="alert a-i"><span class="ai">🔬</span><div>Preparación urgente: PEG oral 4-6 L en 3-4 h (o por SNG si no tolera). Ninguna preparación es superior (ACG 2023).</div></div>'
+    +'<div class="tw"><table class="t"><thead><tr><th>Técnica</th><th>Indicación · efectividad</th></tr></thead><tbody>'
+    +'<tr><td class="dn">⭐ Clips metálicos</td><td>Divertículo/vaso visible · 85-95%</td></tr>'
+    +'<tr><td class="dn">Epinefrina 1:10,000</td><td>1er paso · temporal — combinar con 2ª técnica</td></tr>'
+    +'<tr><td class="dn">⭐ APC (argón)</td><td>Angiodisplasia / proctitis rádica · >90%</td></tr>'
+    +'<tr><td class="dn">Coagulación bipolar</td><td>Vaso visible · 80-90%</td></tr>'
+    +'<tr><td class="dn">Ligadura elástica</td><td>Diverticular / hemorroides · 85-90%</td></tr>'
+    +'</tbody></table></div>';
+  },
+  embo:function(){
+    return '<div class="alert a-i"><span class="ai">📡</span><div>Sangrado activo en angio-TC, inestabilidad que no permite preparación, o fracaso endoscópico.</div></div>'
+    +'<div class="prose"><p>Angio-TC → localizar → angiografía mesentérica → <strong>embolización superselectiva</strong> (microcoils/PVA). Control 98% si sangrado activo confirmado. Complicación principal: <strong>isquemia colónica 5-10%</strong> → vigilar. Mortalidad a 30 días 13% (por comorbilidad).</p></div>';
+  },
+  transf:function(){
+    return '<div class="alert a-w"><span class="ai">💉</span><div>Estrategia restrictiva: Hb &lt;7 (o &lt;9 si cardiopatía). 1 U sube ~1 g/dL. Objetivo 7-9, no normalizar.</div></div>'
+    +buildStdbCards('#8b2222',[
+      {n:'Glóbulos rojos empaquetados',pri:true,linea:'Umbral restrictivo',da:'Transfundir si Hb <7 g/dL',iv:'1 U en 1-2 h',pres:'Unidad de GRE',fda:'—',ci:'—',nota:'Equivalente a estrategia liberal en outcomes de STDB (ACG 2023).'},
+      {n:'PFC',pri:false,linea:'Coagulopatía con sangrado',da:'10-15 mL/kg si INR >1.5',iv:'IV',pres:'Bolsa 200-250 mL',fda:'—',ci:'—',nota:'No solo para corregir INR sin sangrado.'},
+      {n:'Plaquetas',pri:false,linea:'Trombocitopenia con sangrado',da:'1 pool si plaquetas <50,000',iv:'IV',pres:'Pool',fda:'—',ci:'—',nota:'—'},
+      {n:'Vitamina K IV',pri:false,linea:'Warfarina + INR alto',da:'10 mg IV en 30 min',iv:'IV en 50 mL SSN',pres:'Amp 10 mg/mL · Konakion · IMSS',fda:'C',ci:'—',ea:'Anafilaxia si rápida',nota:'Infundir lento.'}
+    ]);
+  },
+  cirugia:function(){
+    return '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Indicaciones de colectomía urgente</div>Shock persistente pese a reanimación y embolización · resangrado severo tras endoscopia + angioembolización · necrosis transmural (peritonitis) · &gt;6-8 U de GRE/24h sin control.</div></div>'
+    +'<div class="prose"><p><strong>Principios:</strong> colectomía segmentaria solo si la fuente está localizada preoperatoriamente; colectomía subtotal si no se localizó (mayor morbilidad); colonoscopia intraoperatoria como última opción de localización.</p></div>';
+  }
+};
+function showHospPop(id,btn){var ch=document.querySelectorAll('#hosp-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('hosp-pop-out');if(out&&HOSP_POP[id])out.innerHTML=HOSP_POP[id]();}
+
+/* ===== Algoritmo ===== */
+var STDB_ALGO={
+  start:{p:'¿Inestabilidad hemodinámica? (PAS <90 o FC >120)',o:[
+    {t:'SÍ — inestable',n:'inest'},
+    {t:'NO — estable',n:'oak'}
+  ]},
+  inest:{p:'Tras descartar STDA (SNG/EDA):',o:[
+    {t:'STDB confirmado · inestable',n:'rAngio'}
+  ]},
+  oak:{p:'Oakland Score (calcúlalo en Escalas)',o:[
+    {t:'≤8 y sin sangrado activo',n:'rAlta'},
+    {t:'≥9 (hospitalizar)',n:'activo'}
+  ]},
+  activo:{p:'¿Sangrado activo en este momento?',o:[
+    {t:'SÍ — activo',n:'rColonoUrg'},
+    {t:'NO — detenido',n:'rColono72'}
+  ]},
+  rAngio:{r:1,titulo:'STDB severo / inestable',color:'#7b1c1c',
+    plan:'Reanimar (2 vías, SF, GRE si Hb <7). Angio-TC urgente → si extravasación: angioembolización superselectiva. Cirugía si no se controla.',
+    tx:'NO ácido tranexámico. Vitamina K solo si INR >1.5 anticoagulado.',
+    extra:'Colonoscopia diferida una vez estabilizado.'},
+  rAlta:{r:1,titulo:'Bajo riesgo (Oakland ≤8)',color:'#0a5c45',
+    plan:'Alta ambulatoria segura.',tx:'Colonoscopia electiva en ≤14 días.',extra:'Indicar señales de alarma; ajustar AINE/anticoagulación.'},
+  rColonoUrg:{r:1,titulo:'Hospitalizado · sangrado activo',color:'#c0392b',
+    plan:'Hospitalizar · preparación rápida con PEG · colonoscopia en 24 h.',tx:'Hemostasia endoscópica si se halla lesión (clip ± epinefrina, APC). Transfundir si Hb <7.',extra:'Si no se controla: angio-TC/embolización.'},
+  rColono72:{r:1,titulo:'Hospitalizado · sangrado detenido',color:'#7a4a00',
+    plan:'Hidratación · colonoscopia en 24-72 h.',tx:'Transfundir si Hb <7. Sin urgencia endoscópica (ACG 2023).',extra:'Definir causa y tamizaje de cáncer.'}
+};
+var stdbHist=[];
+function renderStdbStep(sid){
+  var s=STDB_ALGO[sid];if(!s)return;
+  if(s.r){renderStdbResult(s);return;}
+  var h='<div style="background:#fff5f5;border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#7b1c1c;margin-bottom:10px;">'+s.p+'</div>';
+  s.o.forEach(function(o,i){h+='<button onclick="stdbSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;background:#fff;border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;">'+o.t+'</button>';});
+  if(stdbHist.length)h+='<button onclick="stdbBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';
+  h+='</div>';
+  document.getElementById('stdb-step').innerHTML=h;
+}
+function stdbSel(sid,i){stdbHist.push(sid);renderStdbStep(STDB_ALGO[sid].o[i].n);}
+function stdbBack(){if(stdbHist.length)renderStdbStep(stdbHist.pop());}
+function resetStdb(){stdbHist=[];renderStdbStep('start');}
+function renderStdbResult(s){
+  var h='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.titulo+'</div></div>';
+  h+='<div style="background:#e6f1fb;border-left:3px solid #1a6bbd;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">Plan</div><div style="font-size:12.5px;color:#0c3b6e;line-height:1.6;">'+s.plan+'</div></div>';
+  h+='<div style="background:#fdeaea;border-left:3px solid #c0392b;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:3px;">Tratamiento</div><div style="font-size:12.5px;color:#7b1c1c;line-height:1.6;">'+s.tx+'</div></div>';
+  h+='<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">Seguimiento</div><div style="font-size:12.5px;color:#064e3b;line-height:1.6;">'+s.extra+'</div></div>';
+  h+='<button onclick="resetStdb()" style="margin-top:6px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>';
+  document.getElementById('stdb-step').innerHTML=h;
+}
+
+/* ===== Fármacos (buscador) ===== */
+var FARMACOS_STDB=[
+  {familia:'Fibra y suplementos',color:'#0a5c45',farmacos:[
+    {n:'Psyllium',ini:'3.4 g 1-2×/día + agua',obj:'25-35 g fibra/día',iv:'VO',pr:'Polvo 3.4 g/sobre · Metamucil · Mucilax · genérico',ci:'Obstrucción GI',ea:'Distensión',nota:'1ª línea (nivel A) en hemorroides y diverticulosis.'},
+    {n:'Metilcelulosa',ini:'1-2 g/día',obj:'Fibra',iv:'VO',pr:'Tabs/polvo · genérico',ci:'Obstrucción',ea:'Distensión',nota:'Alternativa al psyllium.'}
+  ]},
+  {familia:'Flavonoides',color:'#7a4a00',farmacos:[
+    {n:'Diosmina+Hesperidina (Daflon)',ini:'500 mg c/12h',obj:'3-6 meses',iv:'VO',pr:'Tabs 500/1000 mg · Venotónica',ci:'Hipersensibilidad',ea:'GI leve',nota:'Cochrane 2012: reduce sangrado hemorroidal (NNT 5).'}
+  ]},
+  {familia:'Corticoides IV (EII grave)',color:'#7b1c1c',farmacos:[
+    {n:'Hidrocortisona IV',ini:'100 mg c/6h',obj:'5-7 días',iv:'IV en 100 mL SSN 20-30 min',pr:'Fco 100/500 mg · Solu-Cortef · IMSS',ci:'Infección no controlada',ea:'Hiperglucemia, hipokalemia',nota:'⭐ Colitis grave; protección gástrica con IBP.'},
+    {n:'Metilprednisolona IV',ini:'60 mg c/24h',obj:'5-7 días',iv:'IV',pr:'Fco 40/500 mg · Solu-Medrol · IMSS',ci:'Infección',ea:'Igual',nota:'Equivalente a hidrocortisona.'}
+  ]},
+  {familia:'Mesalazina (EII)',color:'#0c3b6e',farmacos:[
+    {n:'Mesalazina VO',ini:'2.4-4.8 g/día',obj:'8 semanas',iv:'VO',pr:'Tabs 400/800 mg · SR 1.2 g · Pentasa · Salofalk',ci:'Alergia a salicilatos',ea:'Cefalea, GI',nota:'Leve-moderada; tragar entera.'},
+    {n:'Mesalazina rectal',ini:'Enema 1-4 g/noche',obj:'6-8 semanas',iv:'Rectal',pr:'Enema 1-2 g · supos 500 mg · Pentasa rectal',ci:'Alergia a salicilatos',ea:'Irritación local',nota:'Colitis izquierda; retener toda la noche.'}
+  ]},
+  {familia:'Vasoactivos (angiodisplasia)',color:'#8b2222',farmacos:[
+    {n:'Octreotida SC',ini:'50-100 mcg c/8h SC',obj:'Recurrente',iv:'SC',pr:'Amp 0.05/0.1 mg · Sandostatin · IMSS',ci:'DM, litiasis biliar',ea:'Hiperglucemia',nota:'Bon 2012: reduce resangrado 78%→24%.'},
+    {n:'Octreotida LAR',ini:'20-30 mg IM c/28 días',obj:'Largo plazo',iv:'IM',pr:'Sandostatin LAR 10/20/30 mg',ci:'Igual',ea:'Igual',nota:'Mejor adherencia (depósito mensual).'},
+    {n:'Talidomida',ini:'100-300 mg/noche',obj:'Refractario',iv:'VO',pr:'Caps 50/100 mg · REMS',ci:'Embarazo (absoluta) · neuropatía',ea:'Neuropatía, trombosis',nota:'Chen NEJM 2011: 71% respuesta; solo especialista.'}
+  ]},
+  {familia:'Preparación intestinal',color:'#1a3a5c',farmacos:[
+    {n:'Polietilenglicol (PEG)',ini:'4-6 L en 3-4 h (o por SNG)',obj:'Limpieza pre-colono',iv:'VO/SNG',pr:'Nulytely · Fortrans · Moviprep · genérico',ci:'Obstrucción, megacolon',ea:'Náusea, distensión',nota:'Ninguna preparación es superior (ACG 2023).'}
+  ]},
+  {familia:'Hemostáticos / hierro',color:'#92400e',farmacos:[
+    {n:'Vitamina K IV',ini:'10 mg IV lento (30 min)',obj:'INR alto',iv:'IV',pr:'Amp 10 mg/mL · Konakion · IMSS',ci:'—',ea:'Anafilaxia si rápida',nota:'Solo si INR >1.5 + sangrado anticoagulado.'},
+    {n:'Sulfato ferroso',ini:'325 mg c/8-12h VO',obj:'Anemia ferropénica',iv:'VO entre comidas',pr:'Tabs 200/325 mg · Hierrofer · IMSS',ci:'Hemocromatosis',ea:'Estreñimiento, GI',nota:'Para la anemia de la angiodisplasia.'},
+    {n:'Hierro sacarosa IV',ini:'200 mg/sem × 5',obj:'Anemia grave/intolerancia oral',iv:'IV en 100 mL SSN 30 min',pr:'Venofer 20 mg/mL · genérico',ci:'Infección activa',ea:'Hipotensión, reacción',nota:'Si no tolera el hierro oral.'}
+  ]},
+  {familia:'ATB (colitis isquémica grave)',color:'#4a1d8a',farmacos:[
+    {n:'Ciprofloxacino IV',ini:'400 mg c/12h',obj:'5-7 días',iv:'IV en 200 mL SSN 60 min',pr:'Fco 400 mg/200 mL · IMSS',ci:'QT · embarazo',ea:'Tendinitis, QT',nota:'+ metronidazol en colitis isquémica grave.'},
+    {n:'Metronidazol IV',ini:'500 mg c/8h',obj:'5-7 días',iv:'IV en 100 mL 30-60 min',pr:'Fco 500 mg · IMSS',ci:'1er trimestre · alcohol',ea:'Neurotoxicidad',nota:'Cobertura de anaerobios.'},
+    {n:'Piperacilina-Tazobactam IV',ini:'4.5 g c/6h',obj:'Si sepsis',iv:'IV en 100 mL SSN 30 min',pr:'Fco 4.5 g · Tazocin',ci:'Alergia a penicilinas',ea:'Diarrea',nota:'Amplio espectro en sepsis.'}
+  ]}
+];
+function farmStdbTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display!=='none'&&el.style.display!=='';el.style.display=open?'none':'block';if(arr)arr.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function filtrarFarmacosStdb(q){
+  var list=document.getElementById('farm-list');if(!list)return;
+  var term=(q||'').toLowerCase().trim(),h='',total=0;
+  FARMACOS_STDB.forEach(function(fam,fi){
+    var famH='';
+    fam.farmacos.forEach(function(f,fki){
+      if(!term||(f.n+' '+f.pr+' '+f.nota).toLowerCase().indexOf(term)!==-1){
+        var fkId='fb-'+fi+'-'+fki;
+        famH+='<div style="border-bottom:1px solid #f3f4f6;">';
+        famH+='<div onclick="farmStdbTog(\''+fkId+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid '+fam.color+';">';
+        famH+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+        famH+='<span id="'+fkId+'-arr" style="font-size:11px;color:#6b7280;">&#9658; ver</span></div>';
+        famH+='<div id="'+fkId+'" style="display:none;padding:10px 12px;background:#fff;">';
+        [['Dosis',f.ini,'#374151'],['Objetivo',f.obj,'#c0392b'],['Vía/Intervalo',f.iv,'#1a3a5c'],['Presentaciones MX',f.pr,'#374151'],['Contraindicaciones',f.ci,'#c0392b'],['Efectos adversos',f.ea,'#374151']].forEach(function(r){
+          famH+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+r[0]+'</span><span style="font-weight:600;color:'+r[2]+';text-align:right;max-width:58%;">'+r[1]+'</span></div>';
+        });
+        famH+='<div style="font-size:11px;color:#374151;background:#f0f9ff;border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">'+f.nota+'</div>';
+        famH+='</div></div>';total++;
+      }
+    });
+    if(famH){h+='<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;"><div style="background:'+fam.color+';color:#fff;padding:8px 12px;font-size:13px;font-weight:700;">'+fam.familia+'</div>'+famH+'</div>';}
+  });
+  list.innerHTML=h||'<div style="text-align:center;padding:20px;color:#9ca3af;">Sin resultados</div>';
+  var cnt=document.getElementById('farm-count');if(cnt)cnt.textContent=total+' fármaco(s)';
+}
+
+/* ===== Indicaciones ===== */
+var IND_STDB=[
+  {n:'Psyllium (fibra)',enf:'Recordar tomar abundante agua con cada dosis; separar 2 h de otros fármacos.',pac:'Disuelva 1 sobre (3.4 g) en un vaso grande de agua o jugo y tómelo de inmediato; beba otro vaso después. 1-2 veces al día. El efecto completo se nota en 2-4 semanas. Acuda si hay dificultad para tragar o el sangrado aumenta.'},
+  {n:'Daflon (diosmina+hesperidina)',enf:'Oral, no requiere preparación; valorar respuesta a los 7-14 días.',pac:'Tome 1 tableta 2 veces al día con las comidas. En el episodio agudo: 2 tabletas 3 veces al día × 4 días, luego 2 tabletas 2 veces al día × 3 días.'},
+  {n:'Hidrocortisona IV (EII grave)',enf:'100 mg en 100 mL SSN en 20-30 min c/6 h. Vigilar glucemia c/6 h, PA y potasio. Agregar IBP de protección. Evaluar respuesta a las 72 h.',pac:'Reduce la inflamación del intestino; es temporal, no lo suspenda solo. Puede subir su azúcar.'},
+  {n:'Octreotida SC (angiodisplasia)',enf:'SC en abdomen/muslo, rotar sitios, no masajear. Vigilar glucemia c/8 h. Guardar en refrigeración (2-8°C).',pac:'Se aplica bajo la piel como la insulina. Sáquela del refrigerador 30 min antes; limpie con alcohol, pellizque e inyecte a 45°.'},
+  {n:'Polietilenglicol (preparación)',enf:'4-6 L en 3-4 h VO o por SNG si no tolera.',pac:'Tome 1 litro por hora durante 4 horas la tarde/noche previa. Puede mezclar con jugo de manzana o saborizante claro. Dieta líquida clara (sin rojo/morado). Si vomita, pause 30 min y siga más lento.'},
+  {n:'Vitamina K IV',enf:'10 mg en 49 mL SSN en 30 min (NUNCA en bolo). Tener adrenalina disponible.',pac:'Ayuda a coagular; puede continuarse en tabletas si el médico lo indica.'},
+  {n:'Ciprofloxacino + Metronidazol IV (colitis isquémica)',enf:'Ciprofloxacino 400 mg en 200 mL SSN en 60 min (lento). Metronidazol 500 mg en 100 mL SSN en 30-60 min c/8 h. No mezclar en la misma línea. Vigilar QT.',pac:'Antibióticos por suero; evite el alcohol con el metronidazol.'}
+];
+function buildIndStdb(){
+  var el=document.getElementById('ind-list');if(!el)return;
+  var h='';
+  IND_STDB.forEach(function(it){
+    h+='<div style="background:#fff5f5;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid var(--rm);">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:6px;">'+it.n+'</div>';
+    h+='<div style="font-size:12.5px;color:#374151;line-height:1.6;margin-bottom:4px;"><strong>Enfermería:</strong> '+it.enf+'</div>';
+    h+='<div style="font-size:12.5px;color:#374151;line-height:1.6;"><strong>Paciente:</strong> '+it.pac+'</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+/* ===== Escenarios ===== */
+var ESCEN_STDB={
+  divmas:{t:'Diverticular masivo',col:'#8b2222',clin:'Hematoquecia abundante indolora con coágulos + inestabilidad.',pat:'Vaso recto erosionado (colon derecho o izquierdo).',tx:'Reanimar · angio-TC → embolización si activo · colonoscopia con clip si estable.',esc:'≥2 episodios graves → colectomía segmentaria localizada.',compl:'Shock, resangrado 25-30%.'},
+  angiorec:{t:'Angiodisplasia recurrente',col:'#7a4a00',clin:'Anemia ferropénica + hematoquecia intermitente recurrente.',pat:'Ectasias venosas (ciego), a veces ERC/estenosis aórtica.',tx:'APC endoscópico; recurrente → octreotida LAR; refractario → talidomida.',esc:'Fracaso a APC+octreotida → talidomida (especialista) · corregir vWF/aórtico.',compl:'Anemia crónica, múltiples transfusiones.'},
+  mayoranti:{t:'Adulto mayor anticoagulado',col:'#4a1d8a',clin:'STDB amplificado por anticoagulante en paciente frágil.',pat:'Diverticular/angiodisplasia + anticoagulación.',tx:'Revertir solo si grave (vit K + PFC / antídoto ACOD). Estrategia restrictiva.',esc:'Decisión de reanudar anticoagulación: cardiología/hematología (7-14 días).',compl:'Trombosis si se revierte de más; stroke si no se reanuda.'},
+  isquemica:{t:'Colitis isquémica',col:'#0c3b6e',clin:'Dolor cólico + hematoquecia simultáneos; flexura esplénica.',pat:'Hipoperfusión de zona watershed.',tx:'Hidratación IV + reposo intestinal; ATB si grave; suspender vasoconstrictores.',esc:'Necrosis transmural (peritonitis) → colectomía urgente.',compl:'Estenosis tardía (10-15%), necrosis.'},
+  cugrave:{t:'CU grave hospitalizada',col:'#7b1c1c',clin:'Diarrea sanguinolenta >6/día + toxicidad (Truelove-Witts).',pat:'Colitis ulcerosa en brote grave.',tx:'Hidrocortisona 100 mg IV c/6h; rescate (ciclosporina/infliximab) si no responde en 72 h.',esc:'Megacolon tóxico o falla de rescate → colectomía.',compl:'Megacolon tóxico, perforación.'},
+  pospol:{t:'Pospolipectomía tardía',col:'#1a3a5c',clin:'Hematoquecia 1-30 días tras colonoscopia con polipectomía.',pat:'Lecho de polipectomía/vaso expuesto.',tx:'Colonoscopia + clip/coagulación; la mayoría resuelve sola si estable.',esc:'Sangrado abundante → reendoscopia urgente o angioembolización.',compl:'Resangrado, perforación.'}
+};
+function buildEscenChips(){
+  var el=document.getElementById('escen-chips');if(!el)return;
+  var L=[['divmas','🔍 Diverticular masivo'],['angiorec','🩸 Angiodisplasia recurrente'],['mayoranti','👴 Mayor anticoagulado'],['isquemica','🏃 Colitis isquémica'],['cugrave','🔥 CU grave'],['pospol','🔬 Pospolipectomía']];
+  var h='';
+  L.forEach(function(x,i){h+='<button class="pchip'+(i===0?' on':'')+'" onclick="showStdbEscen(\''+x[0]+'\',this)">'+x[1]+'</button>';});
+  el.innerHTML=h;
+}
+function showStdbEscen(id,btn){
+  var ch=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var s=ESCEN_STDB[id];if(!s)return;
+  function blk(t,v,c){return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+v+'</div></div>';}
+  var h='<div style="background:'+s.col+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.t+'</div></div>';
+  h+=blk('Presentación',s.clin,'#6b7280');
+  h+=blk('Mecanismo / patógeno',s.pat,'#6b7280');
+  h+=blk('Tratamiento',s.tx,'#c0392b');
+  h+=blk('Cuándo escalar',s.esc,'#7a4a00');
+  h+=blk('Complicaciones',s.compl,'#7b1c1c');
+  document.getElementById('escen-out').innerHTML=h;
+}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  buildOak();
+  resetStdb();
+  showStdbPop('severo',document.querySelector('#stdb-pop-chips .pchip.on'));
+  showHospPop('resuc',document.querySelector('#hosp-pop-chips .pchip.on'));
+  filtrarFarmacosStdb('');
+  buildIndStdb();
+  buildEscenChips();
+  showStdbEscen('divmas',document.querySelector('#escen-chips .pchip.on'));
+});
+</script>
+</body>
+</html>

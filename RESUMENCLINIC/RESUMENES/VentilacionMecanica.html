@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ventilación Mecánica · Clínica Rápida</title>
+<style>
+:root{--ac:#0891b2;--act:#e0f7fb;--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--bd:#e2e8f0;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;}*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#0e4f5c,#0891b2);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.78);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:13px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform .2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}.prose strong{color:var(--gray-900);}
+.esc-intro{background:var(--act);border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:#0e4f5c;margin-bottom:12px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}.kp:last-child{margin-bottom:0;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}.kt strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:4px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--rm);font-weight:600;}
+.phase-h{display:flex;align-items:center;gap:8px;margin:14px 0 6px;font-size:12px;font-weight:800;color:#fff;padding:7px 12px;border-radius:7px;}
+.phase-h .pn{background:rgba(255,255,255,.25);min-width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;padding:0 4px;}
+.calc-in{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;font-size:15px;font-family:inherit;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block;}
+.calc-res{margin-top:12px;}
+.obtn{padding:6px 12px;border:1.5px solid var(--bd);background:#fff;border-radius:6px;font-size:12px;font-weight:600;color:var(--gray-700);cursor:pointer;margin:0 6px 6px 0;font-family:inherit;}
+.obtn.on{background:var(--ac);color:#fff;border-color:var(--ac);}
+.btnrow{display:flex;flex-wrap:wrap;margin-top:2px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.chip{display:inline-block;padding:7px 12px;border-radius:18px;font-size:12px;font-weight:600;background:#fff;border:1.5px solid var(--bd);color:var(--gray-700);cursor:pointer;margin:0 6px 8px 0;}
+.chip.on{background:var(--ac);color:#fff;border-color:var(--ac);}
+.biblio-header{background:linear-gradient(135deg,#0e4f5c,#0891b2);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--act);padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--act);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:600;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫁</div>
+    <div>
+      <div class="hdr-eye">Urgencias / UCI · Ventilación</div>
+      <div class="hdr-title">Ventilación Mecánica</div>
+      <div class="hdr-sub">Desde cero y para guiarte a pie de cama</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Oxigenar ≠ ventilar</span>
+    <span class="badge">Pulmón protector</span>
+    <span class="badge">Meseta &lt;30 · DP &lt;15</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">6-8</div><div class="qs-l">mL/kg ideal</div></div>
+  <div class="qs"><div class="qs-v">PEEP 5</div><div class="qs-l">inicial</div></div>
+  <div class="qs"><div class="qs-v">&lt;30</div><div class="qs-l">meseta cmH₂O</div></div>
+  <div class="qs"><div class="qs-v">RSBI&lt;105</div><div class="qs-l">destete</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('fun',this)">📋 Fundamentos</button>
+  <button class="tab" onclick="showT('mod',this)">🎛️ Modos</button>
+  <button class="tab" onclick="showT('par',this)">📊 Parámetros</button>
+  <button class="tab" onclick="showT('aju',this)">🧮 Ajuste inicial</button>
+  <button class="tab" onclick="showT('pre',this)">📈 Presiones y curvas</button>
+  <button class="tab" onclick="showT('man',this)">🫁 Oxigenar vs ventilar</button>
+  <button class="tab" onclick="showT('gas',this)">🧪 Gasometría</button>
+  <button class="tab" onclick="showT('esce',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('ala',this)">🚨 Alarmas</button>
+  <button class="tab" onclick="showT('des',this)">🏁 Destete</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- FUNDAMENTOS -->
+<div class="panel on" id="tab-fun">
+  <div class="esc-intro"><b>Empieza aquí.</b> Tres ideas que ordenan todo lo demás.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">1️⃣</span><span class="st">¿Qué hace el ventilador?</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>Empuja aire a los pulmones con <strong>presión positiva</strong> (al revés que la respiración normal, que es por presión negativa). El médico decide cuánto aire (volumen), con cuánta presión, qué tan seguido y con cuánto oxígeno. Sirve para <strong>sostener la oxigenación y la ventilación</strong> mientras se trata la causa, y para <strong>descansar</strong> los músculos respiratorios.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">2️⃣</span><span class="st">Oxigenar NO es lo mismo que ventilar</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Son dos problemas distintos y se manejan con perillas distintas:</p></div>
+    <div class="tw"><table class="t"><thead><tr><th>Problema</th><th>Se mide con</th><th>Se ajusta con</th></tr></thead><tbody>
+      <tr><td class="dn">Oxigenación</td><td>SpO₂ · PaO₂</td><td><b>FiO₂</b> y <b>PEEP</b></td></tr>
+      <tr><td class="dn">Ventilación</td><td>EtCO₂ · PaCO₂ · pH</td><td><b>Volumen tidal</b> y <b>frecuencia</b> (ventilación minuto)</td></tr>
+    </tbody></table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>¿SpO₂ baja? piensa en FiO₂/PEEP. ¿CO₂ alto? piensa en VT/FR. Tenerlo claro evita el 80% de los errores.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">3️⃣</span><span class="st">La ecuación del movimiento (sin miedo)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>La presión que ves en el ventilador tiene dos fuentes: vencer la <strong>resistencia</strong> de la vía aérea (al mover el flujo) y <strong>distender</strong> el pulmón (al meter el volumen):</p>
+    <p style="text-align:center;background:var(--act);padding:8px;border-radius:6px;color:#0e4f5c;font-weight:700;">Presión = (Flujo × Resistencia) + (Volumen / Distensibilidad) + PEEP</p>
+    <p>De aquí salen la <strong>presión pico</strong> (resistencia + distensibilidad) y la <strong>presión meseta</strong> (solo distensibilidad). Entender esto permite leer las alarmas de presión alta (ver la pestaña Alarmas).</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Glosario rápido</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t"><tbody>
+      <tr><td class="dn">VT</td><td>Volumen tidal: aire por respiración</td></tr>
+      <tr><td class="dn">FR / f</td><td>Frecuencia respiratoria</td></tr>
+      <tr><td class="dn">Vol. minuto</td><td>VT × FR (lo que ventila por minuto)</td></tr>
+      <tr><td class="dn">PEEP</td><td>Presión positiva al final de la espiración</td></tr>
+      <tr><td class="dn">FiO₂</td><td>Fracción de O₂ inspirado (0.21-1.0)</td></tr>
+      <tr><td class="dn">Pmeseta</td><td>Presión de meseta (distensibilidad alveolar)</td></tr>
+      <tr><td class="dn">DP</td><td>Driving pressure = meseta − PEEP</td></tr>
+      <tr><td class="dn">I:E</td><td>Relación inspiración:espiración</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+
+<!-- MODOS -->
+<div class="panel" id="tab-mod">
+  <div class="esc-intro"><b>Modos.</b> Lo único que cambia es <b>qué fija el ventilador</b> (volumen o presión) y <b>quién dispara</b> la respiración.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📦</span><span class="st">Volumen control / Asistido-controlado (A/C-VC)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Fija el volumen tidal</strong>; la presión es lo que resulte de la mecánica del paciente. Garantiza la ventilación minuto. Es el modo <strong>inicial más usado</strong>. Riesgo: si baja la distensibilidad (SDRA), la presión sube → vigilar la meseta. Cada esfuerzo del paciente entrega el VT completo.</p>
+  </div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎚️</span><span class="st">Presión control (PC / A/C-PC)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>Fija una presión</strong> durante un tiempo inspiratorio; el <strong>volumen es variable</strong> (depende de la mecánica). <strong>Limita la presión</strong> (protege de barotrauma) y mejora la distribución del gas. Desventaja: el VT puede caer si empeora el pulmón → vigilar el volumen entregado. Útil en SDRA y fugas.</p>
+  </div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🫁</span><span class="st">Presión soporte (PSV)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>Modo <strong>espontáneo</strong>: el paciente dispara cada respiración y el ventilador la asiste con una presión fija; el paciente controla la frecuencia y el tiempo. Ideal para el <strong>destete</strong>. Requiere un <strong>estímulo respiratorio</strong> presente (no sirve en apnea/sedación profunda).</p>
+  </div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">SIMV y conceptos de modo</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>SIMV</strong>: mezcla respiraciones mandatorias sincronizadas + espontáneas (con o sin presión soporte); hoy se usa menos. Todo modo se define por su <strong>variable de control</strong> (volumen o presión), su <strong>disparo</strong> (por tiempo, flujo o presión), su <strong>límite</strong> y su <strong>ciclado</strong>. No te pierdas en nombres: pregunta siempre "¿qué está fijo, el volumen o la presión, y quién dispara?".</p>
+  </div></div></div>
+</div>
+
+<!-- PARÁMETROS -->
+<div class="panel" id="tab-par">
+  <div class="esc-intro"><b>Parámetros.</b> Qué es cada perilla, su valor inicial y qué pasa si la mueves.</div>
+  <div id="par-content"></div>
+</div>
+
+<!-- AJUSTE INICIAL -->
+<div class="panel" id="tab-aju">
+  <div class="esc-intro"><b>Ajuste inicial.</b> El volumen tidal se calcula con el <b>peso ideal</b> (depende de la talla). Escribe la talla y el sexo.</div>
+  <div class="sec"><div class="sb">
+    <label class="calc-lbl">Talla (cm)</label>
+    <input id="tallaV" class="calc-in" type="number" inputmode="decimal" oninput="calcVT()" placeholder="ej. 170">
+    <span class="calc-lbl" style="margin-top:10px;">Sexo</span>
+    <div class="btnrow"><button class="obtn on" onclick="setSexoV('h',this)">Hombre</button><button class="obtn" onclick="setSexoV('m',this)">Mujer</button></div>
+    <div id="vt-res" class="calc-res"><div class="prose" style="color:#6b7280;">Ingresa la talla…</div></div>
+  </div></div>
+</div>
+
+<!-- PRESIONES Y CURVAS -->
+<div class="panel" id="tab-pre">
+  <div class="esc-intro"><b>Presiones.</b> Distinguir <b>pico</b>, <b>meseta</b> y <b>driving pressure</b> es lo que más informa. Calcula la mecánica:</div>
+  <div class="sec"><div class="sb">
+    <div class="grid2">
+      <div><label class="calc-lbl">VT (mL)</label><input id="mVT" class="calc-in" type="number" inputmode="decimal" oninput="calcMec()" placeholder="500"></div>
+      <div><label class="calc-lbl">P. pico (cmH₂O)</label><input id="mPico" class="calc-in" type="number" inputmode="decimal" oninput="calcMec()" placeholder="30"></div>
+      <div><label class="calc-lbl">P. meseta (cmH₂O)</label><input id="mMes" class="calc-in" type="number" inputmode="decimal" oninput="calcMec()" placeholder="22"></div>
+      <div><label class="calc-lbl">PEEP (cmH₂O)</label><input id="mPeep" class="calc-in" type="number" inputmode="decimal" oninput="calcMec()" placeholder="5"></div>
+      <div><label class="calc-lbl">Flujo (L/min)</label><input id="mFlujo" class="calc-in" type="number" inputmode="decimal" oninput="calcMec()" placeholder="60"></div>
+    </div>
+    <div id="mec-res" class="calc-res"><div class="prose" style="color:#6b7280;">Llena los campos…</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Curvas básicas del ventilador</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Presión–tiempo (volumen control).</strong> La presión sube al <b>pico</b>; con una <b>pausa inspiratoria</b> cae a la <b>meseta</b> (distensibilidad). La línea base es la <b>PEEP</b>.</p></div>
+    <svg viewBox="0 0 340 170" style="width:100%;height:auto;background:#fafcfd;border:1px solid var(--bd);border-radius:6px;margin:6px 0;" xmlns="http://www.w3.org/2000/svg">
+      <line x1="34" y1="18" x2="34" y2="150" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="34" y1="150" x2="332" y2="150" stroke="#9ca3af" stroke-width="1"/>
+      <text x="12" y="92" font-size="9" fill="#6b7280" transform="rotate(-90 12,92)">Presión</text>
+      <text x="298" y="164" font-size="9" fill="#6b7280">tiempo</text>
+      <line x1="34" y1="130" x2="332" y2="130" stroke="#cbd5e1" stroke-dasharray="3 3"/>
+      <line x1="34" y1="70" x2="332" y2="70" stroke="#cbd5e1" stroke-dasharray="3 3"/>
+      <line x1="34" y1="45" x2="332" y2="45" stroke="#cbd5e1" stroke-dasharray="3 3"/>
+      <polyline points="34,130 120,45 123,70 168,70 171,130 332,130" fill="none" stroke="#0891b2" stroke-width="2.5"/>
+      <text x="126" y="42" font-size="9" fill="#c0392b" font-weight="700">pico</text>
+      <text x="174" y="66" font-size="9" fill="#0a5c45" font-weight="700">meseta</text>
+      <text x="250" y="126" font-size="9" fill="#374151" font-weight="700">PEEP</text>
+      <text x="120" y="92" font-size="8" fill="#6b7280">pausa insp.</text>
+    </svg>
+    <div class="prose" style="margin-top:8px;"><p><strong>Flujo–tiempo.</strong> En volumen control el flujo inspiratorio es cuadrado. Si el flujo espiratorio <b>no regresa a cero</b> antes de la siguiente respiración → <b>auto-PEEP</b> (atrapamiento).</p></div>
+    <svg viewBox="0 0 340 170" style="width:100%;height:auto;background:#fafcfd;border:1px solid var(--bd);border-radius:6px;margin:6px 0;" xmlns="http://www.w3.org/2000/svg">
+      <line x1="34" y1="18" x2="34" y2="155" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="34" y1="90" x2="332" y2="90" stroke="#9ca3af" stroke-width="1"/>
+      <text x="12" y="95" font-size="9" fill="#6b7280" transform="rotate(-90 12,95)">Flujo</text>
+      <text x="40" y="40" font-size="8" fill="#6b7280">insp +</text>
+      <text x="40" y="148" font-size="8" fill="#6b7280">esp −</text>
+      <polyline points="34,90 34,55 100,55 100,135" fill="none" stroke="#0891b2" stroke-width="2.5"/>
+      <path d="M100,135 Q160,100 210,106" fill="none" stroke="#0891b2" stroke-width="2.5"/>
+      <line x1="210" y1="55" x2="210" y2="120" stroke="#c0392b" stroke-dasharray="3 3" stroke-width="1.5"/>
+      <text x="150" y="148" font-size="8" fill="#c0392b" font-weight="700">no vuelve a 0 = auto-PEEP</text>
+    </svg>
+    <div class="prose" style="margin-top:8px;"><p><strong>Asa presión–volumen.</strong> El <b>"pico de pájaro"</b> arriba a la derecha sugiere <b>sobredistensión</b> (bajar VT/presión); el <b>punto de inflexión inferior</b> orienta la PEEP.</p></div>
+    <svg viewBox="0 0 340 170" style="width:100%;height:auto;background:#fafcfd;border:1px solid var(--bd);border-radius:6px;margin:6px 0;" xmlns="http://www.w3.org/2000/svg">
+      <line x1="40" y1="18" x2="40" y2="150" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="40" y1="150" x2="332" y2="150" stroke="#9ca3af" stroke-width="1"/>
+      <text x="16" y="92" font-size="9" fill="#6b7280" transform="rotate(-90 16,92)">Volumen</text>
+      <text x="290" y="164" font-size="9" fill="#6b7280">Presión</text>
+      <path d="M58,146 C95,120 135,72 215,55 C252,47 288,47 305,55" fill="none" stroke="#0891b2" stroke-width="2.2"/>
+      <path d="M305,55 C280,74 225,98 150,120 C108,132 78,142 58,146" fill="none" stroke="#0891b2" stroke-width="2.2" opacity="0.6"/>
+      <text x="232" y="44" font-size="8" fill="#c0392b" font-weight="700">pico de pájaro</text>
+      <text x="78" y="120" font-size="8" fill="#0a5c45" font-weight="700">inflexión inf.</text>
+    </svg>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Cómo medir la meseta</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Haz una <strong>pausa inspiratoria</strong> (botón de pausa ~0.5 s) en un paciente pasivo (sin esfuerzo): la presión cae de pico a una meseta estable, que refleja la <strong>distensibilidad alveolar</strong>. Mídela al menos cada 4 h y tras cada cambio. La diferencia <strong>pico − meseta</strong> es la parte de <strong>resistencia</strong>.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📉</span><span class="st">Auto-PEEP (atrapamiento)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Aire que no alcanza a salir (frecuente en asma/EPOC). Se detecta con una <strong>pausa espiratoria</strong> o viendo que el flujo espiratorio no regresa a cero antes de la siguiente respiración. Causa hipotensión y dificulta el disparo. Solución: <strong>más tiempo espiratorio</strong> (bajar FR, acortar inspiración, I:E 1:4-1:5) y tratar el broncoespasmo.</p></div></div></div>
+</div>
+
+<!-- OXIGENAR VS VENTILAR -->
+<div class="panel" id="tab-man">
+  <div class="esc-intro"><b>Manejo.</b> Identifica el problema y mueve la perilla correcta.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Hipoxemia (SpO₂/PaO₂ baja)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>Subir <strong>FiO₂</strong> y/o <strong>PEEP</strong> (recluta alvéolos colapsados). En SDRA, usar combinaciones FiO₂/PEEP de ARDSnet. Metas: <strong>SpO₂ 92-96%</strong> (88-95% y PaO₂ 55-80 en SDRA). Bajar la FiO₂ en cuanto se pueda (evitar toxicidad por O₂).</p></div>
+    <div class="tw"><table class="t"><thead><tr><th>FiO₂</th><th>PEEP sugerido (ARDSnet, bajo)</th></tr></thead><tbody>
+      <tr><td class="dn">0.3-0.4</td><td>5</td></tr>
+      <tr><td class="dn">0.4-0.5</td><td>8</td></tr>
+      <tr><td class="dn">0.5-0.7</td><td>10-14</td></tr>
+      <tr><td class="dn">0.7-0.9</td><td>14-18</td></tr>
+      <tr><td class="dn">1.0</td><td>18-24</td></tr>
+    </tbody></table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💨</span><span class="st">Hipercapnia (PaCO₂ alta / pH bajo)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>Subir la <strong>ventilación minuto</strong> = aumentar la <strong>FR</strong> y/o el <strong>VT</strong> (sin pasar meseta &lt;30). En obstructivos, cuidado: subir la FR puede empeorar el atrapamiento → a veces se tolera CO₂ alto (<strong>hipercapnia permisiva</strong>, pH &gt;7.20-7.25). El CO₂ se relaciona inversamente con la ventilación minuto.</p></div></div></div>
+</div>
+
+<!-- GASOMETRÍA -->
+<div class="panel" id="tab-gas">
+  <div class="esc-intro"><b>¿Qué le muevo según la gasometría?</b> Escribe los valores y te interpreta el estado ácido-base y la oxigenación, y sugiere qué ajustar. No sustituye el juicio clínico.</div>
+  <div class="sec"><div class="sb">
+    <div class="grid2">
+      <div><label class="calc-lbl">pH</label><input id="gPh" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="7.30"></div>
+      <div><label class="calc-lbl">PaCO₂ (mmHg)</label><input id="gCo2" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="55"></div>
+      <div><label class="calc-lbl">PaO₂ (mmHg)</label><input id="gPo2" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="70"></div>
+      <div><label class="calc-lbl">FiO₂ (%)</label><input id="gFio2" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="50"></div>
+      <div><label class="calc-lbl">HCO₃ (mEq/L) · opcional</label><input id="gHco3" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="24"></div>
+      <div><label class="calc-lbl">FR actual · opcional</label><input id="gRR" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="16"></div>
+    </div>
+    <label class="calc-lbl" style="margin-top:10px;">PaCO₂ meta (para calcular la nueva FR) · opcional</label>
+    <input id="gMeta" class="calc-in" type="number" inputmode="decimal" oninput="calcABG()" placeholder="40">
+    <div id="gas-res" class="calc-res"><div class="prose" style="color:#6b7280;">Ingresa al menos pH y PaCO₂…</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Cómo se interpreta (recordatorio)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>1.</strong> Mira el <strong>pH</strong>: &lt;7.35 acidosis, &gt;7.45 alcalosis. <strong>2.</strong> ¿Quién lo explica? <strong>PaCO₂</strong> (respiratorio: sube en acidosis) o <strong>HCO₃</strong> (metabólico: baja en acidosis). <strong>3.</strong> Oxigenación aparte: <strong>PaO₂/FiO₂</strong> (&lt;300 lesión, &lt;200 SDRA, &lt;100 grave). El CO₂ se controla con <strong>ventilación minuto</strong> (FR/VT); la oxigenación con <strong>FiO₂/PEEP</strong>.</p>
+  </div></div></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esce">
+  <div class="esc-intro"><b>Escenarios.</b> Toca uno para ver los ajustes.</div>
+  <div id="esce-chips"></div>
+  <div id="esce-content"></div>
+</div>
+
+<!-- ALARMAS -->
+<div class="panel" id="tab-ala">
+  <div class="esc-intro"><b>Alarmas.</b> La de <b>presión alta</b> es la más importante: separar resistencia de distensibilidad.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⬆️</span><span class="st">Presión alta — el árbol de decisión</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Patrón</th><th>Problema</th><th>Causas</th></tr></thead><tbody>
+      <tr><td class="dn">Pico ↑ · Meseta normal</td><td><b>Resistencia</b> (vía aérea)</td><td>Secreciones, broncoespasmo, mordida del tubo, tubo acodado/obstruido</td></tr>
+      <tr><td class="dn">Pico ↑ · Meseta ↑</td><td><b>Distensibilidad</b> (pulmón/tórax)</td><td>SDRA, neumotórax, atelectasia, edema, intubación selectiva, auto-PEEP, distensión abdominal</td></tr>
+    </tbody></table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🆘</span><div><b>Deterioro súbito — DOPES:</b> <b>D</b>esplazamiento del tubo · <b>O</b>bstrucción · <b>P</b>neumotórax · <b>E</b>quipo/ventilador · <b>S</b>tacking (auto-PEEP). Desconecta del ventilador, ventila con bolsa y ausculta.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⬇️</span><span class="st">Presión o volumen bajo</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p><strong>Fuga o desconexión</strong>: circuito desconectado, extubación, globo desinflado o roto. Revisar el circuito y la posición del tubo, comprobar el globo.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Asincronía paciente-ventilador</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><p>El paciente "pelea" con el ventilador (doble disparo, esfuerzos no asistidos, ciclado precoz/tardío). Ajustar la <strong>sensibilidad/trigger</strong>, el <strong>flujo</strong> y la <strong>presión soporte</strong> antes de subir la sedación. Descartar dolor, auto-PEEP y causas tratables.</p></div></div></div>
+</div>
+
+<!-- DESTETE -->
+<div class="panel" id="tab-des">
+  <div class="esc-intro"><b>Destete.</b> La <b>prueba de ventilación espontánea (SBT)</b> es el patrón de oro. Calcula el RSBI:</div>
+  <div class="sec"><div class="sb">
+    <div class="grid2">
+      <div><label class="calc-lbl">FR (resp/min)</label><input id="rFR" class="calc-in" type="number" inputmode="decimal" oninput="calcRSBI()" placeholder="20"></div>
+      <div><label class="calc-lbl">VT (mL)</label><input id="rVT" class="calc-in" type="number" inputmode="decimal" oninput="calcRSBI()" placeholder="400"></div>
+    </div>
+    <div id="rsbi-res" class="calc-res"><div class="prose" style="color:#6b7280;">Llena los campos…</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">¿Listo para la SBT? (criterios para iniciar)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>Causa de la falla en mejoría · oxigenación adecuada (<strong>PaO₂/FiO₂ &gt;150-200</strong>, FiO₂ ≤0.4-0.5, PEEP ≤5-8) · <strong>hemodinámicamente estable</strong> (sin o con poco vasopresor) · pH &gt;7.32 · sin fiebre/sepsis activa · Hb ≥7 · estímulo respiratorio y <strong>buen reflejo tusígeno</strong>.</p>
+  </div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Cómo se hace la SBT</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>Soporte mínimo durante <strong>30-120 min</strong> (30 min suele bastar; 60-120 en alto riesgo): <strong>presión soporte 5-8 cmH₂O con PEEP ≤5</strong> (recomendado por ACCP/ATS), o tubo en T / CPAP 5. Vigilar de cerca; la mayoría de los fracasos ocurren en los primeros 30 min.</p>
+  </div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Fracaso de la SBT (terminar y reconectar)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>FR &gt;35</strong>, SpO₂ &lt;90%, FC &gt;120-140 o +20%, TA sistólica &lt;90 o &gt;180, agitación/diaforesis, uso de músculos accesorios o respiración paradójica. Otros índices: <strong>RSBI &lt;105</strong> (favorable) y <strong>PImax &lt;−30 cmH₂O</strong>. Pasar la SBT no garantiza la extubación: valora vía aérea, secreciones y nivel de conciencia.</p>
+  </div></div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Ventilación Mecánica</h2><p>Protocolos y referencias de UCI</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Fuentes</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2000</span></div>
+        <div class="biblio-ref">ARDS Network. <em>Ventilation with lower tidal volumes…</em> N Engl J Med 2000;342:1301-1308 (protocolo ARDSnet).</div>
+        <a class="biblio-link" href="https://www.nejm.org/doi/full/10.1056/NEJM200005043421801" target="_blank">🔗 NEJM</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2015</span></div>
+        <div class="biblio-ref">Amato MBP, et al. <em>Driving pressure and survival in the ARDS.</em> N Engl J Med 2015;372:747-755.</div>
+        <a class="biblio-link" href="https://www.nejm.org/doi/full/10.1056/NEJMsa1410639" target="_blank">🔗 NEJM</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">1991</span></div>
+        <div class="biblio-ref">Yang KL, Tobin MJ. <em>A prospective study of indices predicting the outcome of trials of weaning (RSBI).</em> N Engl J Med 1991;324:1445-1450.</div></div>
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2024</span></div>
+        <div class="biblio-ref">AARC. <em>Clinical Practice Guideline: Spontaneous Breathing Trials for liberation from mechanical ventilation.</em></div>
+        <a class="biblio-link" href="https://www.aarc.org/wp-content/uploads/2023/11/CPG2024SpontaneousBreathingTrial.pdf" target="_blank">🔗 AARC</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">ref</span></div>
+        <div class="biblio-ref">Life in the Fast Lane (LITFL) · CCC Ventilation; StatPearls — Mechanical Ventilation.</div>
+        <a class="biblio-link" href="https://litfl.com/ardsnet-ventilation-strategy/" target="_blank">🔗 LITFL</a></div>
+      <div class="biblio-item" style="color:var(--gray-600);font-size:11px;">Última revisión: junio 2025. Ajustar a los protocolos locales, al ventilador disponible y a la condición del paciente.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+var ROJO='#7b1c1c',AZUL='#0c3b6e',VERDE='#0a5c45',AMBAR='#7a4a00',GRIS='#374151',VM='#0891b2';
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function poprow(label,val,color){if(!val)return '';return '<div style="display:flex;gap:8px;padding:4px 0;font-size:12px;line-height:1.5;"><span style="color:'+(color||'#374151')+';font-weight:700;min-width:120px;flex-shrink:0;">'+label+'</span><span style="color:#374151;">'+val+'</span></div>';}
+function cNum(id){var e=document.getElementById(id);if(!e)return NaN;var v=parseFloat(e.value);return isNaN(v)?NaN:v;}
+function cRes(id,html){var e=document.getElementById(id);if(e)e.innerHTML=html;}
+function pickBtn(el){var row=el.parentNode;if(!row)return;var bs=row.querySelectorAll('button');for(var i=0;i<bs.length;i++)bs[i].classList.remove('on');el.classList.add('on');}
+
+/* ===== PARÁMETROS (lista colapsable) ===== */
+var PARAMS=[
+  {n:'Volumen tidal (VT)',ini:'6-8 mL/kg de peso ideal (4-6 en SDRA)',efe:'Bajarlo protege el pulmón (menos volutrauma). Subirlo aumenta la ventilación pero también la presión.',nota:'Se calcula con el peso ideal, no el real (ver Ajuste inicial).'},
+  {n:'Frecuencia respiratoria (FR)',ini:'14-16/min (rango 12-22; no exceder 35)',efe:'Subir la FR baja la PaCO₂ (más ventilación minuto). En obstructivos, demasiada FR causa atrapamiento (auto-PEEP).',nota:'Ajustar a EtCO₂/pH.'},
+  {n:'FiO₂',ini:'Iniciar 100%, destetar pronto',efe:'Afecta la oxigenación. Meta SpO₂ 92-96% (88-95% en SDRA). FiO₂ alta y prolongada es tóxica.',nota:'Destetar antes que la PEEP.'},
+  {n:'PEEP',ini:'5 cmH₂O (más en SDRA, según tabla)',efe:'Recluta alvéolos y mejora la oxigenación. Excesiva: baja el gasto cardiaco y sobredistiende.',nota:'No bajar bruscamente en SDRA (desreclutamiento).'},
+  {n:'Flujo inspiratorio',ini:'60-80 L/min (en volumen control)',efe:'Mayor flujo → inspiración más corta y espiración más larga (útil en obstructivos para evitar atrapamiento).',nota:'—'},
+  {n:'Relación I:E',ini:'1:2 (normal)',efe:'Alargar la espiración (1:4-1:5) ayuda en asma/EPOC. Invertir (I>E) puede mejorar oxigenación pero requiere sedación.',nota:'—'},
+  {n:'Sensibilidad / trigger',ini:'Flujo 1-3 L/min o presión −1 a −2 cmH₂O',efe:'Define el esfuerzo para disparar una respiración. Muy insensible → trabajo respiratorio; muy sensible → autodisparo.',nota:'Causa frecuente de asincronía.'},
+  {n:'Presión soporte (PSV)',ini:'5-15 cmH₂O',efe:'Asiste las respiraciones espontáneas. Más alta = más volumen y menos trabajo del paciente. Base del destete.',nota:'—'},
+];
+function togP(id){var b=document.getElementById(id),a=document.getElementById(id+'-a');if(!b)return;var open=b.style.display!=='none';b.style.display=open?'none':'block';if(a)a.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function buildPar(){
+  var d=document.getElementById('par-content');if(!d)return;var h='';
+  PARAMS.forEach(function(p,i){var id='pa'+i;
+    h+='<div style="border-radius:10px;overflow:hidden;margin-bottom:10px;border:1px solid #e2e8f0;background:#fff;border-left:3px solid '+VM+';">';
+    h+='<div onclick="togP(\''+id+'\')" style="padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;"><span style="font-size:14px;font-weight:700;color:'+VM+';">'+p.n+'</span><span id="'+id+'-a" style="font-size:12px;color:#9ca3af;font-weight:600;white-space:nowrap;">&#9658; ver</span></div>';
+    h+='<div id="'+id+'" style="display:none;padding:4px 14px 12px;">'+poprow('Valor inicial',p.ini,VM)+poprow('Efecto',p.efe,'#374151')+poprow('Nota',p.nota,'#6b7280')+'</div>';
+    h+='</div>';
+  });
+  d.innerHTML=h;
+}
+
+/* ===== CALCULADORA VT (peso ideal) ===== */
+var SEXOV='h';
+function setSexoV(s,el){SEXOV=s;pickBtn(el);calcVT();}
+function calcVT(){
+  var t=cNum('tallaV');
+  if(isNaN(t)||t<=0){cRes('vt-res','<div class="prose" style="color:#6b7280;">Ingresa la talla…</div>');return;}
+  var base=(SEXOV==='m'?45.5:50), ibw=base+0.91*(t-152.4);if(ibw<30)ibw=30;
+  function vt(k){return Math.round(ibw*k);}
+  var h='<div class="tw"><table class="t"><thead><tr><th>Parámetro</th><th>Valor</th><th>Cálculo</th></tr></thead><tbody>';
+  h+='<tr><td class="dn">Peso ideal (Devine)</td><td><b>'+ibw.toFixed(1)+' kg</b></td><td style="color:#0a5c45;font-size:11px;">'+base+' + 0.91 × ('+t+'−152.4) = '+ibw.toFixed(1)+'</td></tr>';
+  h+='<tr><td class="dn">Volumen tidal (6-8)</td><td><b>'+vt(6)+'-'+vt(8)+' mL</b></td><td style="color:#0a5c45;font-size:11px;">6-8 × '+ibw.toFixed(1)+'</td></tr>';
+  h+='<tr><td class="dn">VT protector SDRA (4-6)</td><td>'+vt(4)+'-'+vt(6)+' mL</td><td style="color:#0a5c45;font-size:11px;">4-6 × '+ibw.toFixed(1)+'</td></tr>';
+  h+='<tr><td class="dn">FR inicial</td><td>14-16/min (máx 35)</td><td style="color:#9ca3af;font-size:11px;">ajustar a pH/EtCO₂</td></tr>';
+  h+='<tr><td class="dn">PEEP / FiO₂</td><td>PEEP 5 · FiO₂ 100% → destetar</td><td style="color:#9ca3af;font-size:11px;">SpO₂ 92-96%</td></tr>';
+  h+='<tr><td class="dn">Flujo · I:E</td><td>60-80 L/min · 1:2</td><td style="color:#9ca3af;font-size:11px;">1:4-1:5 en obstructivos</td></tr>';
+  h+='<tr><td class="dn">Metas de presión</td><td>Meseta &lt;30 · driving &lt;15</td><td style="color:#9ca3af;font-size:11px;">seguridad</td></tr>';
+  h+='</tbody></table></div>';
+  cRes('vt-res',h);
+}
+
+/* ===== CALCULADORA MECÁNICA ===== */
+function calcMec(){
+  var vt=cNum('mVT'),pi=cNum('mPico'),pm=cNum('mMes'),pe=cNum('mPeep'),fl=cNum('mFlujo');
+  if(isNaN(pm)||isNaN(pe)){cRes('mec-res','<div class="prose" style="color:#6b7280;">Ingresa al menos meseta y PEEP…</div>');return;}
+  var dp=pm-pe;
+  var h='<div class="tw"><table class="t"><thead><tr><th>Variable</th><th>Valor</th><th>Cálculo</th></tr></thead><tbody>';
+  var dpcol = dp<15?'#0a5c45':'#c0392b';
+  h+='<tr><td class="dn">Driving pressure</td><td style="color:'+dpcol+';font-weight:700;">'+dp.toFixed(1)+' cmH₂O '+(dp<15?'(meta &lt;15 ✓)':'(ALTA, meta &lt;15)')+'</td><td style="color:#0a5c45;font-size:11px;">meseta − PEEP = '+pm+' − '+pe+'</td></tr>';
+  if(!isNaN(vt)&&dp>0){var comp=vt/dp;var ccol=comp<40?'#c0392b':'#0a5c45';
+    h+='<tr><td class="dn">Distensibilidad estática</td><td style="color:'+ccol+';font-weight:700;">'+comp.toFixed(0)+' mL/cmH₂O '+(comp<40?'(baja)':'')+'</td><td style="color:#0a5c45;font-size:11px;">VT / DP = '+vt+' / '+dp.toFixed(1)+'</td></tr>';}
+  if(!isNaN(pi)&&!isNaN(fl)&&fl>0){var res=(pi-pm)/(fl/60);var rcol=res>15?'#c0392b':'#0a5c45';
+    h+='<tr><td class="dn">Resistencia vía aérea</td><td style="color:'+rcol+';font-weight:700;">'+res.toFixed(1)+' cmH₂O/(L/s) '+(res>15?'(alta)':'')+'</td><td style="color:#0a5c45;font-size:11px;">(pico − meseta) / (flujo/60) = ('+pi+'−'+pm+')/'+(fl/60).toFixed(2)+'</td></tr>';
+    h+='<tr><td class="dn">Pico − meseta</td><td>'+(pi-pm).toFixed(1)+' cmH₂O</td><td style="color:#9ca3af;font-size:11px;">componente de resistencia</td></tr>';}
+  h+='</tbody></table></div>';
+  h+='<div class="alert '+(dp<15&&pm<30?'a-g':'a-w')+'" style="margin-top:10px;"><span class="ai">'+(dp<15&&pm<30?'✅':'⚠️')+'</span><div>Metas: <b>meseta &lt;30</b> y <b>driving &lt;15</b>. Distensibilidad normal ~50-80; resistencia normal &lt;10-15. Pico alto con meseta normal = problema de resistencia (ver Alarmas).</div></div>';
+  cRes('mec-res',h);
+}
+
+/* ===== CALCULADORA RSBI ===== */
+function calcRSBI(){
+  var fr=cNum('rFR'),vt=cNum('rVT');
+  if(isNaN(fr)||isNaN(vt)||vt<=0){cRes('rsbi-res','<div class="prose" style="color:#6b7280;">Llena los campos…</div>');return;}
+  var rsbi=fr/(vt/1000);
+  var fav=rsbi<105, col=fav?'#0a5c45':'#c0392b';
+  var h='<div class="tw"><table class="t"><tbody>';
+  h+='<tr><td class="dn">RSBI (Yang-Tobin)</td><td style="color:'+col+';font-weight:700;font-size:15px;">'+rsbi.toFixed(0)+' resp/min/L</td></tr>';
+  h+='<tr><td class="dn">Cálculo</td><td style="color:#0a5c45;font-size:11px;">FR / (VT en L) = '+fr+' / '+(vt/1000).toFixed(2)+'</td></tr>';
+  h+='</tbody></table></div>';
+  h+='<div class="alert '+(fav?'a-g':'a-r')+'" style="margin-top:10px;"><span class="ai">'+(fav?'✅':'⛔')+'</span><div>'+(fav?'<b>&lt;105 favorable</b> (~80% de éxito). &lt;65 = aún mejor.':'<b>&gt;105 desfavorable</b> (alto riesgo de fracaso del destete).')+' Es un apoyo: la SBT clínica sigue siendo el patrón de oro.</div></div>';
+  cRes('rsbi-res',h);
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCE=[
+  {t:'SDRA',c:'Pulmón protector: VT 4-6 mL/kg ideal, meseta <30, driving pressure <15. PEEP alta según tabla FiO₂/PEEP. Tolerar hipercapnia (pH >7.20-7.25). Considerar prono si PaO₂/FiO₂ <150. Sedación/relajación si asincronía grave.'},
+  {t:'Asma / EPOC (obstructivo)',c:'Evitar el atrapamiento: FR baja, espiración prolongada (I:E 1:4-1:5), flujo alto. Vigilar auto-PEEP (pausa espiratoria) y meseta. Hipercapnia permisiva. Tratar el broncoespasmo; si hipotensión súbita, sospechar auto-PEEP o neumotórax (desconectar y dejar exhalar).'},
+  {t:'Acidosis metabólica',c:'El paciente compensa con taquipnea: NO infraventilar tras intubar. Igualar o superar la ventilación minuto previa (subir FR), vigilando meseta y auto-PEEP, hasta corregir la causa.'},
+  {t:'Neuro / PIC elevada',c:'Mantener normocapnia (PaCO₂ 35-40); evitar hipoxia e hipotensión. La hiperventilación profiláctica está contraindicada (vasoconstricción cerebral); reservarla como puente breve ante herniación.'},
+  {t:'Pulmón sano (postoperatorio)',c:'Igual usar pulmón protector: VT 6-8 mL/kg ideal, PEEP 5, FiO₂ a la mínima para SpO₂ 92-96%. La ventilación protectora beneficia a todos, no solo al SDRA.'},
+];
+function buildEsce(){
+  var ch=document.getElementById('esce-chips'),co=document.getElementById('esce-content');if(!ch||!co)return;
+  var hc='';ESCE.forEach(function(e,i){hc+='<span class="chip'+(i===0?' on':'')+'" onclick="selEsce('+i+',this)">'+e.t+'</span>';});
+  ch.innerHTML=hc;selEsce(0,null);
+}
+function selEsce(i,el){
+  var co=document.getElementById('esce-content');if(!co)return;
+  if(el){var chips=document.querySelectorAll('#esce-chips .chip');for(var k=0;k<chips.length;k++)chips[k].classList.remove('on');el.classList.add('on');}
+  co.innerHTML='<div class="sec"><div class="sb"><div class="prose"><p><strong>'+ESCE[i].t+'.</strong> '+ESCE[i].c+'</p></div></div></div>';
+}
+
+/* ===== CALCULADORA INTELIGENTE DE GASOMETRÍA ===== */
+function calcABG(){
+  var ph=cNum('gPh'),co2=cNum('gCo2'),po2=cNum('gPo2'),fio2=cNum('gFio2'),hco3=cNum('gHco3'),rr=cNum('gRR'),meta=cNum('gMeta');
+  if(isNaN(ph)||isNaN(co2)){cRes('gas-res','<div class="prose" style="color:#6b7280;">Ingresa al menos pH y PaCO₂…</div>');return;}
+  var acid=ph<7.35, alk=ph>7.45;
+  var co2high=co2>45, co2low=co2<35;
+  var hg=!isNaN(hco3), hlow=hg&&hco3<22, hhigh=hg&&hco3>26;
+  // interpretación
+  var dis=[];
+  if(acid){
+    if(co2high)dis.push('acidosis respiratoria');
+    if(hlow)dis.push('acidosis metabólica');
+    if(!co2high&&!hlow)dis.push('acidemia (revisar CO₂/HCO₃)');
+  }else if(alk){
+    if(co2low)dis.push('alcalosis respiratoria');
+    if(hhigh)dis.push('alcalosis metabólica');
+    if(!co2low&&!hhigh)dis.push('alcalemia (revisar CO₂/HCO₃)');
+  }else{
+    if(co2high||hhigh)dis.push('trastorno compensado (CO₂/HCO₃ altos)');
+    else if(co2low||hlow)dis.push('trastorno compensado (CO₂/HCO₃ bajos)');
+    else dis.push('equilibrio ácido-base normal');
+  }
+  var pf=(!isNaN(po2)&&!isNaN(fio2)&&fio2>0)?po2/(fio2/100):NaN;
+  var pfCat='';
+  if(!isNaN(pf)){pfCat = pf>=300?'normal/leve':(pf>=200?'SDRA leve':(pf>=100?'SDRA moderado':'SDRA grave'));}
+
+  // tabla resumen
+  var h='<div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Valor</th><th>Lectura</th></tr></thead><tbody>';
+  h+='<tr><td class="dn">pH</td><td>'+ph.toFixed(2)+'</td><td>'+(acid?'acidemia':(alk?'alcalemia':'normal'))+'</td></tr>';
+  h+='<tr><td class="dn">PaCO₂</td><td>'+co2.toFixed(0)+' mmHg</td><td>'+(co2high?'alta (hipoventila)':(co2low?'baja (hiperventila)':'normal'))+'</td></tr>';
+  if(hg)h+='<tr><td class="dn">HCO₃</td><td>'+hco3.toFixed(0)+' mEq/L</td><td>'+(hlow?'bajo (metab. ácido)':(hhigh?'alto (metab. álcali)':'normal'))+'</td></tr>';
+  if(!isNaN(po2))h+='<tr><td class="dn">PaO₂</td><td>'+po2.toFixed(0)+' mmHg</td><td>'+(po2<60?'hipoxemia':(po2>120?'alta':'aceptable'))+'</td></tr>';
+  if(!isNaN(pf))h+='<tr><td class="dn">PaO₂/FiO₂</td><td>'+pf.toFixed(0)+'</td><td>'+pfCat+'</td></tr>';
+  h+='</tbody></table></div>';
+  h+='<div class="alert a-i" style="margin-top:10px;"><span class="ai">🧪</span><div><b>Interpretación:</b> '+dis.join(' + ')+'.</div></div>';
+
+  // ===== RECOMENDACIONES =====
+  var recH='';
+  // Ventilación / CO2
+  if(acid&&co2high){
+    recH+='<div class="alert a-w"><span class="ai">💨</span><div><b>Ventilación:</b> acidosis respiratoria → <b>subir la ventilación minuto</b>: aumentar la <b>FR</b> (y/o el VT manteniendo meseta &lt;30). Buscar la causa (sedación excesiva, broncoespasmo, fatiga, auto-PEEP).</div></div>';
+  }else if(alk&&co2low){
+    recH+='<div class="alert a-w"><span class="ai">💨</span><div><b>Ventilación:</b> alcalosis respiratoria → <b>bajar la ventilación minuto</b>: reducir la <b>FR</b> y/o el VT. Descartar dolor, ansiedad, fiebre o sobreasistencia (el paciente dispara de más).</div></div>';
+  }
+  if(hlow){
+    var winter=1.5*hco3+8;
+    var comp = (co2>winter+2)?'CO₂ MÁS alto de lo esperado → acidosis respiratoria agregada (mejorar ventilación)':((co2<winter-2)?'CO₂ más bajo de lo esperado → alcalosis respiratoria agregada':'compensación respiratoria adecuada');
+    recH+='<div class="alert a-w"><span class="ai">🧬</span><div><b>Metabólico:</b> acidosis metabólica → <b>tratar la causa</b> (sepsis, cetoacidosis, etc.) y <b>mantener la ventilación minuto</b> que compensa (NO bajar la FR). Winter: PaCO₂ esperada ≈ 1.5×HCO₃+8 = <b>'+winter.toFixed(0)+'±2</b>; la medida ('+co2.toFixed(0)+') indica '+comp+'.</div></div>';
+  }
+  if(hhigh){
+    recH+='<div class="alert a-w"><span class="ai">🧬</span><div><b>Metabólico:</b> alcalosis metabólica → <b>tratar la causa</b> (vómito, diuréticos, hipopotasemia). Evitar hipoventilar para "compensar" (riesgo de hipoxemia).</div></div>';
+  }
+  // FR sugerida
+  if(((acid&&co2high)||(alk&&co2low))&&!isNaN(rr)){
+    var tgt=!isNaN(meta)?meta:40;
+    var newRR=rr*(co2/tgt);
+    recH+='<div class="alert a-i"><span class="ai">🔢</span><div><b>FR sugerida</b> (para llevar PaCO₂ '+co2.toFixed(0)+' → '+tgt.toFixed(0)+', VT constante): FR × (PaCO₂/meta) = '+rr.toFixed(0)+' × ('+co2.toFixed(0)+'/'+tgt.toFixed(0)+') = <b>'+newRR.toFixed(0)+'/min</b>'+(hlow?' · ⚠️ en acidosis metabólica NO apuntes a 40: usa la PaCO₂ compensadora':'')+'.</div></div>';
+  }
+  // Oxigenación
+  if(!isNaN(po2)){
+    if(po2<60||(!isNaN(pf)&&pf<150)){
+      recH+='<div class="alert a-r"><span class="ai">🩸</span><div><b>Oxigenación:</b> hipoxemia → <b>subir FiO₂ y/o PEEP</b>. Si la FiO₂ ya es &gt;60%, <b>priorizar PEEP</b> (reclutamiento, tabla FiO₂/PEEP). Si P/F &lt;150, manejar como SDRA (VT 4-6, meseta &lt;30, valorar prono).</div></div>';
+    }else if(!isNaN(pf)&&pf<300){
+      recH+='<div class="alert a-w"><span class="ai">🩸</span><div><b>Oxigenación:</b> alteración leve → subir <b>PEEP/FiO₂</b> de forma escalonada; vigilar metas (SpO₂ 92-96%).</div></div>';
+    }else if(po2>120&&!isNaN(fio2)&&fio2>40){
+      recH+='<div class="alert a-g"><span class="ai">🩸</span><div><b>Oxigenación:</b> PaO₂ alta con FiO₂ elevada → <b>bajar la FiO₂</b> (meta SpO₂ 92-96%; evitar hiperoxia).</div></div>';
+    }else{
+      recH+='<div class="alert a-g"><span class="ai">🩸</span><div><b>Oxigenación:</b> adecuada → destetar la <b>FiO₂</b> a la mínima para SpO₂ 92-96%.</div></div>';
+    }
+  }
+  if(!recH)recH='<div class="alert a-g"><span class="ai">✅</span><div>Sin cambios urgentes sugeridos; ajustar según la clínica y las metas.</div></div>';
+  h+='<div style="margin-top:6px;font-size:11px;font-weight:700;color:#0891b2;text-transform:uppercase;letter-spacing:.4px;">Qué ajustar</div>'+recH;
+  cRes('gas-res',h);
+}
+
+window.addEventListener('load',function(){
+  buildPar();
+  buildEsce();
+  calcVT();
+  calcMec();
+  calcRSBI();
+  calcABG();
+});
+</script>
+</body>
+</html>

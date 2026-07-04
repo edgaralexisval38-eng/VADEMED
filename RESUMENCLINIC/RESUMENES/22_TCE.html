@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>TCE · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#1a3060;--act:#e8eef7;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;display:flex;justify-content:space-between;}
+.biblio-header{background:linear-gradient(135deg,#0a1a3a,#1a3060);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:600;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0a1a3a,#1a3060);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧠</div>
+    <div>
+      <div class="hdr-eye">Urgencias · Neurocirugía · Cuidados Críticos</div>
+      <div class="hdr-title">Traumatismo Craneoencefálico</div>
+      <div class="hdr-sub">BTF 4ª ed. 2016 · ACS TQIP 2022 · NICE CG176 · NCS 2022 · GPC IMSS</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Glasgow</span>
+    <span class="badge">PPC 60-70 mmHg</span>
+    <span class="badge">Glucemia &lt;180</span>
+    <span class="badge">GOS a 6 meses</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Glasgow</div><div class="qs-l">escala universal</div></div>
+  <div class="qs"><div class="qs-v">70 mmHg</div><div class="qs-l">meta de PPC (grave)</div></div>
+  <div class="qs"><div class="qs-v">&lt;180 mg/dL</div><div class="qs-l">glucemia meta</div></div>
+  <div class="qs"><div class="qs-v">6 meses</div><div class="qs-l">evaluación pronóstica</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txh',this)">🏥 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p><strong>TCE:</strong> alteración de la función cerebral por una fuerza física externa. La lesión ocurre en 2 fases: la <strong>primaria</strong> (el golpe — irreversible) y la <strong>secundaria</strong> (hipoxia, hipotensión, hipertensión intracraneal — <strong>prevenible y tratable</strong>). Principal causa de muerte y discapacidad en &lt;45 años.</p>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <thead><tr><th>Gravedad</th><th>GCS</th><th>TAC</th><th>Manejo</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Leve</td><td>13-15</td><td>Normal o lesión menor</td><td>Observación · alta con criterios</td></tr>
+        <tr><td class="dn">Moderado</td><td>9-12</td><td>Anormal posible</td><td>Hospitalización · TAC obligatoria</td></tr>
+        <tr><td class="dn">Grave</td><td>≤8</td><td>Generalmente anormal</td><td class="dm">UCI · PIC · neuroprotección</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Lesión</th><th>TAC</th><th>Manejo</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Conmoción</td><td>Normal</td><td>Reposo cognitivo · retorno gradual</td></tr>
+        <tr><td class="dn">Contusión</td><td>Hiperdensidad heterogénea</td><td>Monitoreo · cirugía si expande</td></tr>
+        <tr><td class="dn">Epidural (HED)</td><td>Lente biconvexo</td><td class="dm">QUIRÚRGICO URGENTE — intervalo lúcido</td></tr>
+        <tr><td class="dn">Subdural agudo</td><td>Medialuna hiperdensa</td><td class="dm">Cirugía si &gt;10 mm o midline &gt;5 mm</td></tr>
+        <tr><td class="dn">Subdural crónico</td><td>Medialuna iso/hipodensa</td><td>Trepanación si sintomático</td></tr>
+        <tr><td class="dn">HSA traumática</td><td>Hiperdensidad en cisuras</td><td>No quirúrgica · vigilar vasoespasmo</td></tr>
+        <tr><td class="dn">Daño axonal difuso</td><td>TAC normal · RMN: petequias</td><td>Soporte · peor pronóstico</td></tr>
+        <tr><td class="dn">Penetrante</td><td>Trayecto + fragmentos</td><td class="dm">Cirugía · ATB · anticonvulsivante</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><strong>"Talk and Die":</strong> el intervalo lúcido del HED engaña — el paciente habla y luego hernia. Todo TCE con fractura temporal o PdC seguida de mejoría DEBE tener TAC urgente. <strong>Corticosteroides CONTRAINDICADOS</strong> en TCE (CRASH: ↑ mortalidad).</div></div>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Dato</th><th>Cifra</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Incidencia global</td><td>50-60 M/año · principal causa de muerte &lt;45 a</td></tr>
+      <tr><td class="dn">México</td><td>~900,000/año · 30,000 muertes</td></tr>
+      <tr><td class="dn">Distribución</td><td>Leve 80% · moderado 10% · grave 10%</td></tr>
+      <tr><td class="dn">Mortalidad TCE grave</td><td>30-40% sin manejo · 15-25% en centros especializados</td></tr>
+      <tr><td class="dn">Causas</td><td>Tránsito 50% · caídas 25% · violencia 20%</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — primaria vs secundaria</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="fp" style="background:var(--rl);color:var(--r);"><strong>Lesión primaria (irreversible):</strong> el impacto produce rotura axonal (DAD), laceración vascular (hematomas), fractura y contusión cortical. Ocurre en milisegundos; NO se revierte con ningún tratamiento.</div>
+    <div class="fp" style="background:var(--al);color:var(--a);"><strong>Lesión secundaria (la batalla se libra aquí):</strong> horas-días después: edema → ↑PIC → ↓PPC → isquemia → muerte neuronal. Agresores sistémicos: hipoxia (SpO₂&lt;90%), hipotensión (PAS&lt;90), hipo/hiperglucemia, fiebre, hiponatremia, hipercapnia. <strong>Cada episodio de hipotensión o hipoxia duplica la mortalidad.</strong></div>
+    <div class="fp" style="background:var(--bl);color:var(--b);"><strong>Cascada molecular:</strong> despolarización → glutamato → excitotoxicidad → entrada de Ca²⁺ → disfunción mitocondrial → apoptosis. Edema vasogénico (rotura BHE) y citotóxico (muerte celular). La osmoterapia actúa sobre el vasogénico.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo de lesión grave</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Factor</th><th>Impacto</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Anticoagulados (warfarina/DOAC/AAS)</td><td class="dm">×5-10 riesgo de hematoma intracraneal</td></tr>
+      <tr><td class="dn">&gt;65 años</td><td>Atrofia → venas puente tensas → HSDC</td></tr>
+      <tr><td class="dn">Alcohol/drogas</td><td>Alteran el GCS → dificultan la evaluación</td></tr>
+      <tr><td class="dn">Sin casco</td><td>×3-5 riesgo de TCE grave</td></tr>
+      <tr><td class="dn">GCS &lt;14 al llegar</td><td>Alto riesgo de lesión en TAC</td></tr>
+      <tr><td class="dn">Amnesia postraumática &gt;30 min</td><td>TCE moderado o más</td></tr>
+      <tr><td class="dn">Convulsión postraumática</td><td>Lesión cortical significativa</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — no cometer</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Dar corticosteroides.</strong> CRASH (Lancet 2004): la metilprednisolona AUMENTA la mortalidad. Absolutamente contraindicados.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>Hiperventilar de rutina.</strong> Produce vasoconstricción → isquemia. Solo brevemente como puente a cirugía urgente.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Permitir hipotensión.</strong> Un solo episodio de PAS &lt;90 duplica la mortalidad. Meta PAS ≥100-110 desde el primer momento.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>No verificar glucemia.</strong> Hipo e hiperglucemia empeoran el pronóstico. Meta 140-180 mg/dL.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>AINEs/ASA para el dolor.</strong> Aumentan el riesgo de sangrado intracraneal. Solo paracetamol.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>Alta sin instrucciones escritas.</strong> Los síntomas de retorno deben entregarse POR ESCRITO — la familia los olvidará.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de hospitalización / UCI</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Situación</th><th>Destino</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">GCS ≤8</td><td class="dm">UCI · intubación · monitoreo PIC</td></tr>
+      <tr><td class="dn">GCS 9-12 / TAC anormal</td><td>Hospitalización (UCI si deterioro)</td></tr>
+      <tr><td class="dn">Herniación (anisocoria/Cushing)</td><td class="dm">Código cerebral · neurocirugía urgente</td></tr>
+      <tr><td class="dn">HED / HSDA quirúrgico</td><td class="dm">Quirófano urgente</td></tr>
+      <tr><td class="dn">Anticoagulado con hematoma</td><td class="dm">Reversión + ingreso</td></tr>
+      <tr><td class="dn">TCE leve con TAC anormal</td><td>Observación hospitalaria + TAC control</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🆘</span><span class="st">Evaluación inicial ABCDE</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">A</div><div class="kt"><strong>Vía aérea:</strong> ¿protege la vía aérea? GCS ≤8 = intubar. SpO₂ ≥95%. Control cervical.</div></div>
+    <div class="kp"><div class="kn">B</div><div class="kt"><strong>Respiración:</strong> FR · SpO₂ · auscultar. PCO₂ meta 35-40 (EVITAR hiperventilación).</div></div>
+    <div class="kp"><div class="kn">C</div><div class="kt"><strong>Circulación:</strong> PA · FC · 2 accesos IV. PAS ≥100 mmHg. SSN/RL para volumen.</div></div>
+    <div class="kp"><div class="kn">D</div><div class="kt"><strong>Déficit:</strong> GCS · pupilas · simetría · fuerza. ¿Lateralización?</div></div>
+    <div class="kp"><div class="kn">E</div><div class="kt"><strong>Exposición:</strong> desvestir · otras lesiones · <strong>glucemia capilar inmediata</strong>.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Reglas de decisión para TAC</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">🇨🇦</span><div><div class="at">Regla Canadiense (GCS 13-15) — TAC si cualquiera:</div>GCS &lt;15 a las 2 h · sospecha de fractura abierta/deprimida · signos de base de cráneo (ojos de mapache, signo de Battle, hemotímpano, oto/rinorrea de LCR) · vómito ≥2 · edad ≥65 · amnesia retrógrada ≥30 min · mecanismo peligroso (atropello, caída &gt;1 m / 5 escalones).</div></div>
+    <div class="alert a-g"><span class="ai">🇺🇸</span><div><div class="at">Nueva Orleáns (GCS 15) — TAC si cualquiera:</div>cefalea · vómito · &gt;60 a · alcohol/drogas · amnesia · evidencia visual de lesión por encima de la clavícula.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios diagnósticos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Estudio</th><th>Indicación / hallazgos</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">TAC cráneo simple ⭐</td><td>Todo TCE mod-grave y leve con criterios · hematomas/fractura/midline/cisternas</td></tr>
+      <tr><td class="dn">RMN cráneo</td><td>Síntomas persistentes · DAD · TAC normal con clínica</td></tr>
+      <tr><td class="dn">TAC columna cervical</td><td>TCE grave · alta energía</td></tr>
+      <tr><td class="dn">BHC · TP/INR · TTPa · fibrinógeno</td><td>Todo TCE mod-grave · anticoagulados (coagulopatía frecuente)</td></tr>
+      <tr><td class="dn">Glucemia INMEDIATA</td><td>Todo TCE · meta 140-180 · hipoglucemia = emergencia</td></tr>
+      <tr><td class="dn">Gasometría arterial</td><td>TCE grave intubado</td></tr>
+      <tr><td class="dn">Monitoreo PIC</td><td>GCS ≤8 + TAC anormal · meta &lt;20-22 · PPC 60-70</td></tr>
+    </tbody>
+  </table></div></div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Glasgow Coma Scale (GCS)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Clasifica el TCE (leve/moderado/grave) y orienta la conducta inicial. GCS = E + V + M (3-15).</div></div>
+    <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:14px;">
+      <div id="gcs-q"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button onclick="calcGCS()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular GCS</button>
+        <button onclick="resetGCS()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+      </div>
+      <div id="gcs-result" style="display:none;margin-top:10px;"></div>
+    </div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">💡</span><div>Si está intubado, la V se marca "1T" → usar el <strong>FOUR Score</strong>.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Rotterdam (TAC) — pronóstico</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve?</div>Estima la <strong>mortalidad a 6 meses</strong> con hallazgos de la TAC (cisternas, midline, HED, sangre intraventricular/HSA).</div></div>
+    <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:14px;">
+      <div id="rot-q"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button onclick="calcRot()" style="flex:2;padding:9px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Calcular</button>
+        <button onclick="resetRot()" style="flex:1;padding:9px;background:#fff;color:var(--ac);border:1.5px solid var(--ac);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;">Reiniciar</button>
+      </div>
+      <div id="rot-result" style="display:none;margin-top:10px;"></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👁️</span><span class="st">FOUR Score (intubados)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="tw"><table class="t">
+    <thead><tr><th>Parámetro</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">Ocular</td><td>No abre</td><td>Al dolor</td><td>A voz</td><td>Espontáneo</td><td>Sigue/parpadea</td></tr>
+      <tr><td class="dn">Motor</td><td>Sin resp.</td><td>Extensión</td><td>Flexión</td><td>Localiza</td><td>Pulgar/puño</td></tr>
+      <tr><td class="dn">Tronco</td><td>Corneal+pupilar ausentes</td><td>Pupilas midriáticas</td><td>Pupila fija</td><td>Corneal ausente</td><td>Todos presentes</td></tr>
+      <tr><td class="dn">Respiración</td><td>Apnea</td><td>Disparo mínimo</td><td>Sobre el ventilador</td><td>FR irregular</td><td>FR regular</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">Marshall (TAC) y GOS-E (6 meses)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Marshall</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">I</td><td>Sin patología visible</td></tr>
+        <tr><td class="dn">II</td><td>Cisternas presentes · midline &lt;5 mm · sin lesión &gt;25 mL</td></tr>
+        <tr><td class="dn">III</td><td>Cisternas comprimidas · midline &lt;5 mm</td></tr>
+        <tr><td class="dn">IV</td><td>Midline &gt;5 mm sin lesión evacuable</td></tr>
+        <tr><td class="dn">V</td><td>Lesión evacuable &gt;25 mL</td></tr>
+        <tr><td class="dn">VI</td><td>Lesión no evacuable &gt;25 mL</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>GOS</th><th>Resultado a 6 meses</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">1</td><td>Muerte</td></tr>
+        <tr><td class="dn">2</td><td>Estado vegetativo persistente</td></tr>
+        <tr><td class="dn">3</td><td>Discapacidad grave (dependiente)</td></tr>
+        <tr><td class="dn">4</td><td>Discapacidad moderada (independiente, no trabaja)</td></tr>
+        <tr><td class="dn">5</td><td>Buena recuperación</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo de decisión interactivo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚨</span><div>En paralelo a todo: PAS ≥100-110 · SpO₂ ≥95% · glucemia 140-180 · evitar hiperventilación. NUNCA corticosteroides.</div></div>
+    <div id="tce-step"></div>
+  </div></div>
+</div>
+
+<!-- TRATAMIENTO (hospitalario, por gravedad) -->
+<div class="panel" id="tab-txh">
+
+  <div class="alert a-r" style="margin:0 0 12px;"><span class="ai">🏥</span><div><strong>Manejo hospitalario — médico de urgencias / internista / cuidados críticos.</strong> El traumatismo craneoencefálico no se maneja en consulta externa. Todo el tratamiento parte de la prevención de la lesión secundaria (la "lesión primaria" ya ocurrió). Las metas fisiológicas de abajo aplican <u>en paralelo</u> a cualquier gravedad.</div></div>
+
+  <!-- METAS NORMO-TODO -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas fisiológicas — "Normo-todo" (prevención de lesión secundaria)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Meta</th><th>Objetivo</th><th>Cómo lograrlo / evitar</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Normotensión</td><td>Presión arterial sistólica ≥110 mmHg (≥100 si 50-69 años, ≥110 si 15-49 o ≥70 años)</td><td>Cristaloide isotónico (solución salina 0.9%) → noradrenalina si persiste baja. <span class="dm">UNA sola hipotensión (sistólica &lt;90) duplica la mortalidad.</span></td></tr>
+        <tr><td class="dn">Normoxemia</td><td>Saturación ≥95% · presión arterial de oxígeno &gt;80 mmHg</td><td>Oxígeno suplementario, vía aérea definitiva si no se logra. Evitar saturación &lt;90%.</td></tr>
+        <tr><td class="dn">Normocapnia</td><td>Presión arterial de dióxido de carbono 35-40 mmHg</td><td>Ajustar frecuencia del ventilador. <span class="dm">NO hiperventilar de rutina</span> (&lt;35 causa isquemia). Hiperventilación 30-35 solo como puente 5-10 min ante herniación.</td></tr>
+        <tr><td class="dn">Normoglucemia</td><td>140-180 mg/dL</td><td>Insulina si &gt;200; glucosa al 50% 25 mL si hipoglucemia. Evitar &lt;80 y &gt;200.</td></tr>
+        <tr><td class="dn">Normotermia</td><td>36-37.5 °C</td><td>Paracetamol intravenoso + medios físicos. La fiebre amplía la lesión; tratarla de forma agresiva.</td></tr>
+        <tr><td class="dn">Normonatremia</td><td>135-145 mEq/L (permitir 145-155 si hipertensión intracraneal)</td><td>Evitar hiponatremia (&lt;135 empeora el edema). Vigilar sodio cada 4-6 h con osmoterapia.</td></tr>
+        <tr><td class="dn">Normovolemia</td><td>Euvolemia</td><td>Solución salina 0.9%. <span class="dm">Prohibidas las soluciones hipotónicas/glucosadas</span> (agravan el edema cerebral).</td></tr>
+        <tr><td class="dn">Normocoagulación</td><td>INR &lt;1.5 · plaquetas &gt;75-100 mil</td><td>Revertir anticoagulación urgente (chip Coagulopatía). Ácido tranexámico si &lt;3 h del trauma.</td></tr>
+        <tr><td class="dn">Presión intracraneal</td><td>&lt;20-22 mmHg</td><td>Cabecera 30°, cuello neutro, sedoanalgesia, osmoterapia (chip Presión intracraneal elevada).</td></tr>
+        <tr><td class="dn">Presión de perfusión cerebral</td><td>60-70 mmHg</td><td>Presión de perfusión = presión arterial media − presión intracraneal. Evitar &lt;60 (isquemia) y &gt;70 forzada (riesgo pulmonar).</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">⛔</span><div><strong>Corticosteroides (dexametasona): CONTRAINDICADOS en el traumatismo craneoencefálico.</strong> El estudio CRASH (2004) demostró <u>aumento de la mortalidad</u>. Única excepción: edema vasogénico <u>post-quirúrgico</u> o perilesional tumoral, no por el trauma en sí (chip Post-craniectomía).</div></div>
+  </div></div>
+
+  <!-- INDICACIONES PARA INTUBAR -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🫁</span><span class="st">Indicaciones para intubar + secuencia rápida</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🫁</span><div><strong>Intubar si hay cualquiera de:</strong></div></div>
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Glasgow ≤8</strong> — incapacidad para proteger la vía aérea (indicación clásica).</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>Deterioro neurológico rápido</strong> — caída ≥2 puntos de Glasgow.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>Pérdida de reflejos protectores</strong> de la vía aérea / riesgo de broncoaspiración.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Hipoxemia refractaria</strong> (saturación &lt;90% pese a oxígeno) o <strong>hipoventilación / patrón respiratorio inestable</strong>.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Agitación grave</strong> que impide la tomografía o la evaluación (intubar para control y neuroprotección).</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>Convulsión prolongada / estado epiléptico</strong> o <strong>herniación inminente</strong> (anisocoria, descerebración, tríada de Cushing).</div></div>
+    <div class="kp"><div class="kn">7</div><div class="kt"><strong>Traslado prolongado</strong> de paciente inestable o politrauma con compromiso de vía aérea.</div></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div><strong>Lo que MÁS daña en la intubación: la hipoxia y la hipotensión peri-intubación.</strong> Preoxigenar bien, tener vasopresor listo, y elegir el inductor que preserve la presión. Confirmar con capnografía. Cabecera a 30°.</div></div>
+    <div class="alert a-i"><span class="ai">💉</span><div><strong>Secuencia rápida en traumatismo craneoencefálico:</strong> Inductor <strong>etomidato 0.3 mg/kg</strong> (preserva presión) o <strong>ketamina 1-2 mg/kg</strong> (si hipotensión) · Relajante <strong>succinilcolina 1.5 mg/kg</strong> o <strong>rocuronio 1.2 mg/kg</strong> · considerar <strong>fentanilo 1-2 mcg/kg</strong> para atenuar la respuesta presora (con cuidado si la presión está baja). Las fichas completas están abajo en el chip "Grave" y en Fármacos.</div></div>
+  </div></div>
+
+  <!-- SOLUCIONES -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Soluciones intravenosas — cuál, cómo y cuándo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">💧</span><div><strong>Principio:</strong> mantener euvolemia y normotensión con líquidos <u>isotónicos</u>. El agua libre entra al cerebro y empeora el edema.</div></div>
+    <div class="tw"><table class="t">
+      <thead><tr><th>Solución</th><th>Uso</th><th>Cómo / cuándo</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Solución salina 0.9% (fisiológica)</td><td>⭐ De elección — reanimación y mantenimiento</td><td>Reanimación: bolos de 250-500 mL titulados a presión sistólica ≥110. Mantenimiento ~1-1.5 mL/kg/h. Isotónica (308 mOsm/L): no agrava el edema.</td></tr>
+        <tr><td class="dn">Salina hipertónica 3% / 7.5% / 23.4%</td><td>Fluido doble: volumen + control de presión intracraneal</td><td>Cuando se necesita volumen y bajar la presión intracraneal o evitar hiponatremia. Dosis en el chip "Presión intracraneal elevada".</td></tr>
+        <tr><td class="dm">Glucosada 5% · hipotónicas (salina 0.45%)</td><td>⛔ Prohibidas</td><td>Aportan agua libre → empeoran el edema cerebral y la hiperglucemia. No usar como mantenimiento.</td></tr>
+        <tr><td class="dm">Hartmann / Ringer lactato</td><td>Evitar como fluido principal</td><td>Relativamente hipotónica (~273 mOsm/L); puede bajar la osmolaridad. Aceptable con cautela en politrauma con reanimación balanceada.</td></tr>
+        <tr><td class="dm">Albúmina</td><td>⛔ Evitar</td><td>El estudio SAFE (2007) mostró mayor mortalidad con albúmina frente a salina en el traumatismo craneoencefálico.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">🩸</span><div><strong>Choque hemorrágico / politrauma:</strong> reanimar con <u>hemoderivados</u> (transfusión masiva equilibrada 1:1:1), no con cristaloide en grandes volúmenes. Ácido tranexámico si &lt;3 h del trauma. Mantener presión sistólica ≥110 — <u>no</u> hipotensión permisiva cuando hay traumatismo craneoencefálico.</div></div>
+    <div class="alert a-g" style="margin-top:4px;"><span class="ai">🎯</span><div><strong>Metas de líquidos:</strong> euvolemia · sodio 135-155 mEq/L · osmolaridad &lt;320 mOsm/L. Evitar tanto la hipovolemia (hipotensión) como la sobrecarga.</div></div>
+  </div></div>
+
+  <!-- ANTIHIPERTENSIVOS -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Antihipertensivos — cuándo bajar la presión y con qué</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">⚠️</span><div><strong>Antes de bajar la presión, piénsalo dos veces.</strong> La hipertensión suele ser <u>compensadora</u>: el cuerpo sube la presión para mantener la perfusión cerebral ante una presión intracraneal elevada. Bajarla a ciegas puede causar isquemia. Controla primero la presión intracraneal y conserva la presión de perfusión 60-70 mmHg.</div></div>
+    <div class="kp"><div class="kn">✓</div><div class="kt"><strong>Cuándo SÍ tratar la presión alta:</strong> cifras extremas (sistólica &gt;180-220 según el contexto), riesgo de expansión de hematoma, post-operatorio, o lesión asociada (p. ej. disección aórtica en politrauma).</div></div>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <thead><tr><th>Fármaco</th><th>Dosis</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Labetalol IV</td><td>Bolo 10-20 mg en 2 min; repetir/doblar c/10 min (máx ~300 mg) o infusión 0.5-2 mg/min</td><td>⭐ Titulable, no eleva la presión intracraneal. (verificar disponibilidad institucional)</td></tr>
+        <tr><td class="dn">Esmolol IV</td><td>Carga 500 mcg/kg en 1 min → 50-200 mcg/kg/min</td><td>Betabloqueador ultracorto, muy titulable.</td></tr>
+        <tr><td class="dn">Nicardipino IV</td><td>5 mg/h; subir 2.5 mg/h c/5-15 min (máx 15 mg/h)</td><td>Control suave; preferido en neurocríticos. (verificar disponibilidad)</td></tr>
+        <tr><td class="dm">Nitroprusiato · nitroglicerina</td><td>EVITAR</td><td>Vasodilatadores cerebrales → <u>elevan la presión intracraneal</u>.</td></tr>
+        <tr><td class="dm">Hidralazina</td><td>Evitar</td><td>Eleva la presión intracraneal y causa taquicardia refleja.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">ℹ️</span><div>En el medio institucional, si no hay labetalol ni nicardipino, el esmolol y el metoprolol intravenoso son alternativas disponibles. Confirmar contra el cuadro básico vigente.</div></div>
+  </div></div>
+
+  <!-- GLUCOSA -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Control de glucosa — insulina e hipoglucemia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-g"><span class="ai">🎯</span><div><strong>Meta: 140-180 mg/dL.</strong> No buscar control estricto (80-110): el estudio NICE-SUGAR mostró daño por hipoglucemia. En el cerebro lesionado, la hipoglucemia es especialmente peligrosa.</div></div>
+    <div class="kp"><div class="kn">↑</div><div class="kt"><strong>Hiperglucemia (&gt;180-200):</strong> insulina rápida. En cuidados críticos: infusión de insulina regular ~0.05-0.1 U/kg/h titulada a 140-180, con glucemia capilar cada 1-2 h. En piso: esquema subcutáneo. Evitar las soluciones glucosadas.</div></div>
+    <div class="kp"><div class="kn">↓</div><div class="kt"><strong>Hipoglucemia (&lt;70):</strong> tratar de inmediato. Si está consciente: glucosa por vía oral. Con acceso intravenoso: <strong>glucosa al 50%, 25-50 mL</strong> (una ampolleta de 50 mL = 25 g), revalorar en 15 min. Sin acceso intravenoso: <strong>glucagón 1 mg intramuscular</strong>.</div></div>
+    <div class="alert a-i" style="margin-top:4px;"><span class="ai">🔁</span><div><strong>Monitoreo:</strong> glucemia capilar cada 1-2 h con infusión de insulina; cada 4-6 h una vez estable.</div></div>
+  </div></div>
+
+  <!-- CHIPS POR GRAVEDAD Y SITUACIÓN -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Tratamiento por gravedad y situación — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="tx-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showTx('leve',this)">🟢 Leve (Glasgow 13-15)</button>
+      <button class="pchip" onclick="showTx('moderado',this)">🟡 Moderado (Glasgow 9-12)</button>
+      <button class="pchip" onclick="showTx('grave',this)">🔴 Grave (Glasgow ≤8)</button>
+      <button class="pchip" onclick="showTx('pic',this)">📈 Presión intracraneal elevada</button>
+      <button class="pchip" onclick="showTx('refrac',this)">🔴 Presión intracraneal refractaria</button>
+      <button class="pchip" onclick="showTx('sedo',this)">💊 Sedoanalgesia en cuidados críticos</button>
+      <button class="pchip" onclick="showTx('coag',this)">🩸 Coagulopatía</button>
+      <button class="pchip" onclick="showTx('anticoag',this)">🔄 Anticoagulados</button>
+      <button class="pchip" onclick="showTx('anticonv',this)">⚡ Anticonvulsivantes</button>
+      <button class="pchip" onclick="showTx('postcx',this)">🧠 Post-craniectomía</button>
+      <button class="pchip" onclick="showTx('rehab',this)">🔄 Rehabilitación precoz</button>
+    </div>
+    <div id="tx-out"></div>
+  </div></div>
+
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacosTce(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div id="ind-list"></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="escen-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="escen-out"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Seguimiento neurológico</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <thead><tr><th>Momento</th><th>Evaluación</th><th>Acción</th></tr></thead>
+    <tbody>
+      <tr><td class="dn">24-48 h</td><td>GCS seriado · TAC si mod-grave</td><td>Deterioro → neurocirugía urgente</td></tr>
+      <tr><td class="dn">7 días</td><td>GCS · convulsiones · fiebre</td><td>Ajustar anticonvulsivante · ATB si infección</td></tr>
+      <tr><td class="dn">1 mes</td><td>GOS · síntomas posconmocionales · neuropsico</td><td>Rehabilitación si déficit</td></tr>
+      <tr><td class="dn">3 meses</td><td>GOS · RMN si déficit · retorno laboral</td><td>Evaluación multidisciplinaria</td></tr>
+      <tr><td class="dn">6 meses</td><td>GOS final · neuropsicología formal</td><td>Pronóstico definitivo</td></tr>
+    </tbody>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦾</span><span class="st">Rehabilitación por fases</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="fu-r"><div class="fu-t">Fase 1 (1-14 d)</div><div class="fu-x">UCI/aguda: movilización pasiva c/2h · fisio respiratoria · profilaxis TVP (HNF 5000 UI sc c/8-12h desde 48-72 h + compresión neumática) · nutrición enteral &lt;48 h (25-30 kcal/kg/día).</div></div>
+    <div class="fu-r"><div class="fu-t">Fase 2 (14-60 d)</div><div class="fu-x">Sala: fisio motora (equilibrio/marcha) · TO (AVD) · logopedia (disfagia/afasia) · neuropsicología.</div></div>
+    <div class="fu-r"><div class="fu-t">Fase 3 (1-6 m)</div><div class="fu-x">Rehabilitación intensiva 3-6 h/día · hidroterapia · rehabilitación cognitiva.</div></div>
+    <div class="fu-r"><div class="fu-t">Fase 4 (&gt;6 m)</div><div class="fu-x">Ambulatoria: retorno gradual al trabajo/estudio · conducción tras evaluación neuropsicológica.</div></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💉</span><div><strong>Espasticidad focal:</strong> toxina botulínica 50-300 UI/músculo (máx 400-600 UI/sesión), repetir c/3 meses (especialista en medicina física).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Secuelas neuropsiquiátricas</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><div class="kn">😔</div><div class="kt"><strong>Depresión post-TCE:</strong> sertralina 50-200 mg/día VO (mejor evidencia; mejora la plasticidad). Tomar de mañana.</div></div>
+    <div class="kp"><div class="kn">🧠</div><div class="kt"><strong>Recuperación / agitación:</strong> amantadina 100 mg c/12h VO (Giacino 2012: acelera la recuperación en estado vegetativo/mínimamente consciente).</div></div>
+    <div class="kp"><div class="kn">🌙</div><div class="kt"><strong>Sueño:</strong> melatonina 3-10 mg o trazodona 50-100 mg al acostarse. <strong>Evitar benzodiacepinas</strong> (interfieren con la plasticidad).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Pronóstico</span><span class="sg">⌄</span></div>
+  <div class="sb hidden"><div class="prose"><p><strong>Buen pronóstico:</strong> edad joven · GCS &gt;6 a las 24 h · sin lesión bilateral del tronco · HED como única lesión (tratable) · sin hipotensión ni hipoxia inicial · rehabilitación precoz.</p></div></div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Traumatismo Craneoencefálico</h2>
+    <p>Guías internacionales y ensayos clínicos clave. Nivel de evidencia indicado.</p>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías internacionales</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2016</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Carney N et al. <em>Guidelines for the Management of Severe Traumatic Brain Injury, 4th edition (BTF).</em> Neurosurgery 2017;80(1):6-15. (Base de las metas fisiológicas, PIC y osmoterapia.)</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/27654000/" target="_blank" rel="noopener">🔗 PubMed: 27654000</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2004</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">CRASH Collaborators. <em>Effect of intravenous corticosteroids on death within 14 days in 10,008 adults with clinically significant head injury.</em> Lancet 2004;364(9442):1321-1328. (Contraindicación absoluta de corticosteroides.)</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/15474134/" target="_blank" rel="noopener">🔗 PubMed: 15474134</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Ensayos clínicos clave</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">CRASH-3 Collaborators. <em>Effects of tranexamic acid on death, disability, vascular occlusive events and other morbidities in patients with acute traumatic brain injury.</em> Lancet 2019;394(10210):1713-1723. (Ácido tranexámico &lt;3 h.)</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/31623894/" target="_blank" rel="noopener">🔗 PubMed: 31623894</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2016</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Hutchinson PJ et al. (RESCUEicp). <em>Trial of Decompressive Craniectomy for Traumatic Intracranial Hypertension.</em> N Engl J Med 2016;375(12):1119-1130. (Craniectomía en PIC refractaria.)</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/27602507/" target="_blank" rel="noopener">🔗 PubMed: 27602507</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2012</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Giacino JT et al. <em>Placebo-Controlled Trial of Amantadine for Severe Traumatic Brain Injury.</em> N Engl J Med 2012;366(9):819-826. (Amantadina para acelerar la recuperación.)</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/22375973/" target="_blank" rel="noopener">🔗 PubMed: 22375973</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2023</span><span class="biblio-level lv-b">Nivel B</span></div><div class="biblio-ref">World Health Organization. <em>Rehabilitation of patients with traumatic brain injury.</em> WHO 2023. (Protocolo de rehabilitación por fases.)</div><a class="biblio-link" href="https://www.who.int/teams/noncommunicable-diseases/sensory-functions-disability-and-rehabilitation" target="_blank" rel="noopener">🔗 who.int</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> ECA / metaanálisis</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Cohortes / observacionales</div>
+        <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto / opinión</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Guía elaborada con la evidencia disponible a 2024. Verificar actualizaciones de BTF y GPC IMSS. Última revisión: junio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ===== GCS ===== */
+var GCS_GROUPS=[
+  {k:'e',t:'Apertura ocular (E)',o:[['Espontánea',4],['A la voz',3],['Al dolor',2],['Sin respuesta',1]]},
+  {k:'v',t:'Respuesta verbal (V)',o:[['Orientado',5],['Confuso',4],['Palabras inapropiadas',3],['Sonidos',2],['Sin respuesta',1]]},
+  {k:'m',t:'Respuesta motora (M)',o:[['Obedece',6],['Localiza',5],['Retira',4],['Flexión anormal',3],['Extensión',2],['Sin respuesta',1]]}
+];
+var GCS_STATE={};
+function buildGCS(){
+  var el=document.getElementById('gcs-q');if(!el)return;
+  var h='';
+  GCS_GROUPS.forEach(function(g){
+    h+='<div style="margin-bottom:8px;"><div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:4px;">'+g.t+'</div><div style="display:flex;flex-wrap:wrap;gap:5px;" id="gcs-row-'+g.k+'">';
+    g.o.forEach(function(op){h+='<button onclick="gcsSel(\''+g.k+'\','+op[1]+',this)" style="flex:1;min-width:70px;padding:7px 4px;font-size:11px;border:1.5px solid #e2e8f0;border-radius:var(--rs);background:#fff;cursor:pointer;">'+op[0]+' <b>'+op[1]+'</b></button>';});
+    h+='</div></div>';
+  });
+  el.innerHTML=h;
+}
+function gcsSel(k,v,btn){GCS_STATE[k]=v;var row=document.getElementById('gcs-row-'+k);var bs=row.querySelectorAll('button');for(var i=0;i<bs.length;i++){bs[i].style.background='#fff';bs[i].style.color='#111827';bs[i].style.borderColor='#e2e8f0';}btn.style.background='#1a3060';btn.style.color='#fff';btn.style.borderColor='#1a3060';}
+function calcGCS(){
+  var out=document.getElementById('gcs-result');
+  if(GCS_STATE.e===undefined||GCS_STATE.v===undefined||GCS_STATE.m===undefined){out.style.display='block';out.innerHTML='<div style="color:#c0392b;font-size:12px;">Selecciona E, V y M.</div>';return;}
+  var t=GCS_STATE.e+GCS_STATE.v+GCS_STATE.m;
+  var cat,color,bg,act;
+  if(t>=13){cat='TCE Leve';color='#166534';bg='#dcfce7';act='Observación 4-6 h. TAC si cumple regla canadiense/Nueva Orleáns. Alta con instrucciones escritas. Solo paracetamol.';}
+  else if(t>=9){cat='TCE Moderado';color='#7a4a00';bg='#fff8e1';act='Hospitalización + TAC obligatoria. Levetiracetam × 7 días. Monitoreo GCS/pupilas c/2h. UCI si deterioro.';}
+  else{cat='TCE Grave';color='#7b1c1c';bg='#fdeaea';act='UCI. Intubación (ISR etomidato + succinilcolina). Metas: PAS ≥100-110, SpO₂ ≥95%, PCO₂ 35-40, glucemia 140-180. Monitoreo PIC.';}
+  out.innerHTML='<div style="background:'+bg+';border-left:4px solid '+color+';border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:28px;font-weight:900;color:'+color+';">GCS '+t+'/15</div>'
+    +'<div style="font-size:12px;color:#6b7280;">E'+GCS_STATE.e+' V'+GCS_STATE.v+' M'+GCS_STATE.m+'</div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+color+';margin-top:2px;">'+cat+'</div>'
+    +'<div style="font-size:12.5px;color:#374151;margin-top:5px;line-height:1.6;">'+act+'</div></div>';
+  out.style.display='block';
+}
+function resetGCS(){GCS_STATE={};buildGCS();var el=document.getElementById('gcs-result');if(el){el.style.display='none';el.innerHTML='';}}
+
+/* ===== Rotterdam ===== */
+var ROT_GROUPS=[
+  {k:'cist',t:'Cisternas basales',o:[['Normales',0],['Comprimidas',1],['Ausentes',2]]},
+  {k:'mid',t:'Desviación de la línea media',o:[['No / ≤5 mm',0],['>5 mm',1]]},
+  {k:'edh',t:'Hematoma epidural',o:[['Presente',0],['Ausente',1]]},
+  {k:'ivh',t:'Sangre intraventricular o HSA traumática',o:[['Ausente',0],['Presente',1]]}
+];
+var ROT_STATE={};
+function buildRot(){
+  var el=document.getElementById('rot-q');if(!el)return;
+  var h='';
+  ROT_GROUPS.forEach(function(g){
+    h+='<div style="margin-bottom:8px;"><div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:4px;">'+g.t+'</div><div style="display:flex;gap:5px;" id="rot-row-'+g.k+'">';
+    g.o.forEach(function(op){h+='<button onclick="rotSel(\''+g.k+'\','+op[1]+',this)" style="flex:1;padding:7px 4px;font-size:11px;border:1.5px solid #e2e8f0;border-radius:var(--rs);background:#fff;cursor:pointer;">'+op[0]+'</button>';});
+    h+='</div></div>';
+  });
+  el.innerHTML=h;
+}
+function rotSel(k,v,btn){ROT_STATE[k]=v;var row=document.getElementById('rot-row-'+k);var bs=row.querySelectorAll('button');for(var i=0;i<bs.length;i++){bs[i].style.background='#fff';bs[i].style.color='#111827';bs[i].style.borderColor='#e2e8f0';}btn.style.background='#1a3060';btn.style.color='#fff';btn.style.borderColor='#1a3060';}
+function calcRot(){
+  var out=document.getElementById('rot-result');
+  if(ROT_STATE.cist===undefined||ROT_STATE.mid===undefined||ROT_STATE.edh===undefined||ROT_STATE.ivh===undefined){out.style.display='block';out.innerHTML='<div style="color:#c0392b;font-size:12px;">Selecciona las 4 categorías.</div>';return;}
+  var score=ROT_STATE.cist+ROT_STATE.mid+ROT_STATE.edh+ROT_STATE.ivh+1;
+  var mort={1:'0%',2:'7%',3:'16%',4:'26%',5:'53%',6:'61%'}[score];
+  var color=score<=2?'#166534':(score<=4?'#7a4a00':'#7b1c1c');
+  var bg=score<=2?'#dcfce7':(score<=4?'#fff8e1':'#fdeaea');
+  out.innerHTML='<div style="background:'+bg+';border-left:4px solid '+color+';border-radius:var(--rs);padding:12px 14px;">'
+    +'<div style="font-size:24px;font-weight:900;color:'+color+';">Rotterdam '+score+'/6</div>'
+    +'<div style="font-size:13px;font-weight:700;color:'+color+';">Mortalidad estimada a 6 meses: '+mort+'</div>'
+    +'<div style="font-size:11.5px;color:#6b7280;margin-top:5px;line-height:1.5;">Estimación pronóstica poblacional; no sustituye el juicio clínico. Optimizar metas fisiológicas y reevaluar con TAC seriada.</div></div>';
+  out.style.display='block';
+}
+function resetRot(){ROT_STATE={};buildRot();var el=document.getElementById('rot-result');if(el){el.style.display='none';el.innerHTML='';}}
+
+/* ===== Fichas + buildLinea ===== */
+function tceFpToggle(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:110px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildTceCards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='tc-'+i+'-'+Math.random().toString(36).substr(2,4);
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+    h+='<div onclick="tceFpToggle(\''+fid+'\')" style="background:'+color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+(f.linea||'')+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-arr" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    h+='<div style="background:'+color+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.da)h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+color+';">Dosis</div><div style="font-size:13.5px;font-weight:800;color:'+color+';">'+f.da+'</div>';
+    if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">Preparación: '+f.prep+'</div>';
+    h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía / administración',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:var(--act);"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1a3060;margin-bottom:4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){
+  var h='<div style="margin-top:12px;">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>';
+  h+=buildTceCards(cardColor||badgeColor,farmacos);
+  h+='</div>';
+  return h;
+}
+var L1='#1a3060',L2='#7a4a00',L3='#374151',LC='#0a5c45',LR='#7b1c1c';
+var F_PARA={n:'Paracetamol',linea:'⭐ Analgesia segura en TCE',da:'VO 500-1000 mg c/6-8h · IV 1 g c/6-8h (máx 4 g/día)',prep:'IV: bolsa 1 g/100 mL lista, infundir 15 min (no diluir más)',iv:'VO/IV',pres:'Tabs 500/1000 mg · Perfalgan 1 g/100 mL · IMSS',fda:'B ✅ · embarazo/lactancia compatibles',ci:'Hepatopatía grave · alcoholismo activo',ea:'Hepatotoxicidad &gt;4 g/día',nota:'<b>Mecanismo:</b> inhibe prostaglandinas en el SNC sin afectar COX plaquetaria → NO altera la hemostasia (seguro en TCE). <b>NUNCA</b> AINEs/ASA: antiagregan → riesgo de expansión de hematoma.'};
+var F_LEV={n:'Levetiracetam',linea:'⭐ Profilaxis anticonvulsivante (BTF 2016)',da:'500-1500 mg c/12h IV/VO × 7 días',prep:'IV: 500-1500 mg en 100 mL SSN/SG5%, infundir 15 min',iv:'IV/VO',pres:'Tabs 250/500/1000 mg · sol 100 mg/mL · fco IV 500 mg/100 mL · Keppra · IMSS',fda:'C · ajustar si TFG &lt;50',ci:'IR grave sin ajuste',ea:'Somnolencia · irritabilidad (no confundir con daño) · cefalea',nota:'<b>Mecanismo:</b> se une a SV2A → modula la liberación de neurotransmisores. Sin interacciones (no CYP). <b>7 días</b> reduce convulsiones tempranas (BTF 2016); no continuar sin convulsiones establecidas. <b>Evidencia:</b> Chang 2003 no inferior a fenitoína con menos EA.'};
+var F_OME={n:'Omeprazol',linea:'Profilaxis de úlcera de estrés',da:'40 mg IV c/24h → 20-40 mg VO al tolerar',prep:'IV: 40 mg en 100 mL SSN, 30 min',iv:'IV/VO',pres:'Fco amp 40 mg · caps 20/40 mg · IMSS',fda:'C',ci:'Hipersensibilidad',ea:'Hipomagnesemia (uso prolongado) · cefalea',nota:'IBP; protección gástrica en el TCE hospitalizado.'};
+var TCE_POP={
+  leve:function(){
+    return '<div class="alert a-i"><span class="ai">🟢</span><div><strong>Manejo en urgencias del traumatismo craneoencefálico leve (Glasgow 13-15).</strong> Decisión del médico de urgencias: observar, ingresar o egresar. No se maneja en consulta externa — el punto crítico es no pasar por alto una lesión que se expande.</div></div>'
+    +'<div class="tw" style="margin-bottom:4px;"><table class="t"><thead><tr><th>Disposición</th><th>Cuándo</th></tr></thead><tbody>'
+    +'<tr><td class="dn">Egreso con vigilancia domiciliaria</td><td>Glasgow 15 · tomografía normal o no indicada por criterios · sin vómito repetido · sin anticoagulación · adulto responsable 24 h · instrucciones escritas de retorno.</td></tr>'
+    +'<tr><td class="dn">Observación 6-24 h en urgencias</td><td>Tomografía normal pero con factores de riesgo, anticoagulado, o síntomas persistentes.</td></tr>'
+    +'<tr><td class="dn">Ingreso</td><td>Cualquier lesión en la tomografía, Glasgow &lt;15 sostenido, déficit focal, o deterioro.</td></tr>'
+    +'</tbody></table></div>'
+    +'<div class="alert a-w"><span class="ai">🎯</span><div><strong>Metas también en el leve:</strong> evitar hipotensión, hipoxia, fiebre e hiperglucemia; cabecera a 30° para dormir. La lesión secundaria también daña al leve.</div></div>'
+    +buildLinea('Analgesia','SOLO paracetamol — nunca antiinflamatorios ni ácido acetilsalicílico',L1,[F_PARA])
+    +buildLinea('Coadyuvantes','Síntomas y medidas generales',LC,[
+      {n:'Metoclopramida',linea:'Náusea (máx 48 h)',da:'10 mg VO/IV c/8h × 48 h máx',prep:'—',iv:'VO/IV',pres:'Tabs 10 mg · amp 10 mg · Plasil · IMSS',fda:'B',ci:'Obstrucción intestinal · &lt;1 año',ea:'Somnolencia · discinesia si prolongado (suspender)',nota:'Antagonista D2 central. Máx 48 h por riesgo de discinesia tardía.'},
+      {n:'Reposo + cabecera 30° + instrucciones escritas',linea:'⭐ Medidas',da:'Reposo cognitivo 24-48 h · reposo físico 24 h · sin alcohol/conducir · cabecera 30° para dormir',prep:'Reintroducir actividad gradual al mejorar',iv:'—',pres:'—',fda:'—',ci:'—',ea:'—',nota:'<b>Instrucciones de retorno URGENTE por escrito:</b> cefalea progresiva · vómito &gt;2 · confusión/somnolencia creciente · no despierta · debilidad/entumecimiento · habla incoherente · convulsión · pupila más grande de un lado.'}
+    ]);
+  },
+  moderado:function(){
+    return '<div class="alert a-w"><span class="ai">🟡</span><div>Hospitalización + TAC. Monitoreo GCS/pupilas c/2h. TAC control 6-12 h o si deterioro. UCI si el GCS cae.</div></div>'
+    +buildLinea('1ª Línea','Analgesia hospitalaria segura',L1,[
+      F_PARA,
+      {n:'Ketorolaco IV/IM',linea:'Solo si dolor intenso, ≤5 días',da:'15-30 mg IV c/6-8h (máx 5 días)',prep:'30 mg en 50 mL SSN, 15-30 min',iv:'IV/IM',pres:'Amp 30 mg/mL · Toradol · IMSS',fda:'C',ci:'Anticoagulados · coagulopatía · GCS inestable · IR · úlcera',ea:'Sangrado GI · nefrotoxicidad · antiagregación',nota:'AINE: usar con MUCHA precaución en TCE (riesgo de sangrado). Preferir paracetamol.'}
+    ])
+    +buildLinea('1ª Línea','Profilaxis anticonvulsivante × 7 días',L1,[
+      F_LEV,
+      {n:'Fenitoína IV',linea:'Alternativa si no hay levetiracetam',da:'Carga 20 mg/kg IV → 5-7 mg/kg/día',prep:'En SSN (NUNCA en glucosa, precipita) · &lt;50 mg/min',iv:'IV',pres:'Amp 250 mg/5 mL · Epamin · IMSS',fda:'D',ci:'Arritmias · bloqueo AV · hipotensión',ea:'Arritmia si rápido · hipotensión · nistagmo · ataxia',nota:'Preferir levetiracetam (menos EA, sin interacciones).'}
+    ])
+    +buildLinea('Coadyuvantes','Neuroprotección sistémica — metas',LC,[
+      F_OME,
+      {n:'Control de T° / glucemia',linea:'Metas',da:'T° &lt;38°C (paracetamol IV, mantas) · glucemia 140-180 (insulina si &gt;200; glucosa 50% 25 mL si hipoglucemia)',prep:'Glucemia c/4-6h',iv:'—',pres:'—',fda:'—',ci:'—',ea:'—',nota:'Fiebre e hiper/hipoglucemia amplifican la lesión secundaria.'}
+    ]);
+  },
+  grave:function(){
+    return '<div class="alert a-r"><span class="ai">🔴</span><div><strong>Metas UCI:</strong> PAS ≥100-110 · SpO₂ ≥95% · PCO₂ 35-40 · PIC &lt;20-22 · PPC 60-70 · T° 36-37.5 · glucemia 140-180 · Na 135-155 · Hb ≥7-8.</div></div>'
+    +buildLinea('1ª Línea','Intubación de secuencia rápida (ISR)',L1,[
+      {n:'Etomidato IV',linea:'⭐ Inductor de elección en TCE',da:'0.3 mg/kg IV bolo (70 kg ≈ 21 mg)',prep:'Listo 2 mg/mL · no diluir',iv:'IV',pres:'Amp 20 mg/10 mL · Amidate',fda:'C',ci:'Insuficiencia suprarrenal conocida',ea:'Mioclonías (benignas) · supresión adrenocortical transitoria',nota:'<b>Único inductor que mantiene la PA</b> → preserva la PPC. ↓ CMRO₂ y PIC. Onset 30-60 s.'},
+      {n:'Ketamina IV',linea:'Alternativa si hipotensión',da:'1-2 mg/kg IV bolo',prep:'—',iv:'IV',pres:'Amp 500 mg/10 mL · Ketalar · IMSS',fda:'B',ci:'HTA no controlada · psicosis activa',ea:'Sialorrea · emergencia',nota:'Mito derribado: con ventilación adecuada NO aumenta la PIC de forma significativa. Mantiene/↑ la PA.'},
+      {n:'Succinilcolina IV',linea:'⭐ Relajante ISR',da:'1.5 mg/kg IV bolo',prep:'—',iv:'IV',pres:'Amp 200 mg/10 mL · IMSS',fda:'C',ci:'Quemados &gt;24h · lesión medular establecida · miopatías · hipertermia maligna',ea:'Hipercalemia · fasciculaciones',nota:'Onset 45-60 s, duración 10-15 min.'},
+      {n:'Rocuronio IV',linea:'Alternativa a succinilcolina',da:'1.2 mg/kg IV (onset 60-90 s)',prep:'Reversor: sugammadex 16 mg/kg IV',iv:'IV',pres:'Amp 50 mg/5 mL · Esmeron · IMSS',fda:'C',ci:'—',ea:'—',nota:'Útil cuando la succinilcolina está contraindicada.'}
+    ])
+    +buildLinea('1ª Línea','Analgosedación UCI',L1,[
+      {n:'Propofol IV',linea:'⭐ Sedante preferido',da:'5-50 mcg/kg/min (titular a RASS −2 a −3) · máx 4 mg/kg/h',prep:'1% sin diluir en bomba de jeringa · cambiar c/12h',iv:'IV continua',pres:'Fco 200 mg/20 mL · 500 mg/50 mL · Diprivan',fda:'B',ci:'&lt;16 a · hipertrigliceridemia grave',ea:'Hipotensión · SIPP (acidosis + rabdomiólisis + FA, raro/fatal)',nota:'Vida media ultracorta → se suspende para evaluación neurológica en minutos. ↓ CMRO₂/PIC. Monitorear triglicéridos c/48h.'},
+      {n:'Fentanilo IV',linea:'Analgesia',da:'25-100 mcg/h · bolo 1-2 mcg/kg',prep:'500 mcg en 50 mL SSN (10 mcg/mL)',iv:'IV continua',pres:'Amp 150 mcg/3 mL · 500 mcg/10 mL · IMSS',fda:'C',ci:'Sin vía aérea asegurada',ea:'Depresión respiratoria · rigidez torácica',nota:'Opioide μ sin liberación de histamina → hemodinámicamente estable.'}
+    ])
+    +buildLinea('Coadyuvantes','Soporte sistémico',LC,[
+      {n:'Noradrenalina IV',linea:'Vasopresor 1ª línea si PAS &lt;100',da:'0.1-0.5 mcg/kg/min (titular a PAS ≥100-110)',prep:'4 mg en 46 mL SSN (80 mcg/mL) · SIEMPRE por CVC',iv:'IV continua',pres:'Amp 4 mg/4 mL · Levophed · IMSS',fda:'C',ci:'Hipovolemia no corregida (volumen primero)',ea:'Isquemia periférica · extravasación → necrosis',nota:'α1 → ↑PAM → ↑PPC. Corregir volumen antes del vasopresor.'},
+      F_LEV,F_OME,
+      {n:'Profilaxis TVP + nutrición',linea:'Soporte',da:'HNF 5000 UI sc c/8h desde 48-72 h (sin sangrado) · nutrición enteral &lt;48 h (25-30 kcal/kg/día)',prep:'+ compresión neumática intermitente',iv:'sc/enteral',pres:'Heparina · IMSS',fda:'—',ci:'Sangrado activo',ea:'—',nota:'Iniciar la profilaxis de TVP cuando la TAC sea estable.'}
+    ]);
+  },
+  pic:function(){
+    return '<div class="alert a-r"><span class="ai">💊</span><div>PIC &gt;20-22 mmHg: escalera de tratamiento por niveles.</div></div>'
+    +buildLinea('Nivel 1','Medidas básicas SIEMPRE primero',L1,[
+      {n:'Medidas generales',linea:'Antes de osmoterapia',da:'Cabecera 30° · cuello neutro (sin compresión yugular) · T° &lt;37.5° · glucemia 140-180 · Na 140-155 · sedoanalgesia (RASS −2 a −3) · PEEP ≤10-12 · tratar convulsiones',prep:'Corregir causas reversibles',iv:'—',pres:'—',fda:'—',ci:'—',ea:'—',nota:'Optimizar la fisiología antes de escalar a osmoterapia.'}
+    ])
+    +buildLinea('Nivel 2','Osmoterapia',L2,[
+      {n:'Manitol 20% IV',linea:'⭐ Osmoterapia estándar',da:'0.25-1 g/kg IV BOLO en 15-20 min (ej. 70 kg × 0.5 = 35 g = 175 mL) · repetir c/4-6h · máx 4 g/kg/día',prep:'Bolsa lista; si cristaliza (&lt;20°C) calentar en agua tibia y verificar disolución',iv:'IV bolo',pres:'Bolsa 500 mL 20% · IMSS',fda:'C',ci:'IR anúrica · osmolaridad &gt;320 mOsm/L · deshidratación severa',ea:'Hipotensión por diuresis · hiperosmolaridad',nota:'<b>Mecanismo:</b> gradiente osmótico extrae agua del cerebro sano + ↓viscosidad → ↑flujo. Bolo rápido (la rapidez es parte del mecanismo). Osmolaridad c/6h: suspender si &gt;320.'},
+      {n:'Solución salina hipertónica (SSH)',linea:'Alternativa/complemento (si hipovolemia o IR)',da:'SSH 3%: 150-250 mL IV en 20 min · SSH 7.5%: 2 mL/kg · SSH 23.4%: 30 mL por CVC (herniación)',prep:'SSH 23.4% SOLO por CVC en emergencia',iv:'IV',pres:'SSH 3% magistral · 7.5% amp · UCI',fda:'—',ci:'Na &gt;155 mEq/L (suspender)',ea:'Hipernatremia · sobrecarga',nota:'Sin efecto diurético (preferida si hipovolemia). Na sérico c/4h (meta 145-155 en grave).'}
+    ])
+    +buildLinea('Nivel 3','PIC refractaria (&gt;20 mmHg &gt;30 min)',L3,[
+      {n:'Craniectomía descompresiva',linea:'Neurocirugía urgente',da:'Quirúrgica',prep:'—',iv:'—',pres:'—',fda:'—',ci:'—',ea:'↑ estado vegetativo',nota:'RESCUEicp (NEJM 2016): mortalidad 27% vs 49% pero más discapacidad grave.'},
+      {n:'Barbitúricos (pentobarbital/tiopental)',linea:'UCI especializada',da:'Pentobarbital 10 mg/kg IV carga → 1-3 mg/kg/h',prep:'EEG continuo (supresión de ráfagas) · vasopresor de soporte',iv:'IV',pres:'UCI',fda:'—',ci:'Hipotensión refractaria',ea:'Hipotensión grave · inmunosupresión',nota:'Coma barbitúrico para PIC refractaria. Hipotermia 33-35°C controvertida (puente a cirugía).'}
+    ]);
+  },
+  coag:function(){
+    return '<div class="alert a-r"><span class="ai">🩸</span><div>Sangrado intracraneal + anticoagulación/coagulopatía: revertir URGENTE antes de cirugía.</div></div>'
+    +buildLinea('1ª Línea','Reversión de warfarina (INR &gt;1.5)',L1,[
+      {n:'Vitamina K + CCP 4-factor',linea:'⭐ Warfarina + sangrado',da:'Vitamina K 10 mg IV lento (30 min) + CCP 4-factor 25-50 UI/kg IV',prep:'CCP normaliza el INR en ~30 min; la vit K en 6-12 h (no basta sola)',iv:'IV',pres:'Vit K amp 10 mg · CCP 500 UI fco · IMSS/especializada',fda:'—',ci:'—',ea:'Trombosis (CCP)',nota:'Meta INR &lt;1.5 antes de cirugía.'}
+    ])
+    +buildLinea('2ª Línea','Reversión de DOACs',LR,[
+      {n:'Idarucizumab / Andexanet / CCP',linea:'DOAC + sangrado',da:'Idarucizumab 5 g IV (dabigatrán) · andexanet 400-800 mg IV (apix/rivaroxabán) · CCP 50 UI/kg si no hay antídoto',prep:'Antídotos de disponibilidad limitada en MX',iv:'IV',pres:'Praxbind · Ondexxya · CCP',fda:'—',ci:'—',ea:'Trombosis',nota:'Idarucizumab específico de dabigatrán; andexanet para anti-Xa.'}
+    ])
+    +buildLinea('Coadyuvantes','Antifibrinolítico',LC,[
+      {n:'Ácido tranexámico IV',linea:'TCE con sangrado, &lt;3 h del trauma',da:'1 g IV en 10 min → 1 g IV en 8 h (CRASH-3)',prep:'—',iv:'IV',pres:'Amp 500 mg/5 mL · Transamin · IMSS',fda:'B',ci:'&gt;3 h del trauma · TVP/EP activa · hematuria',ea:'Náusea · raramente trombosis',nota:'<b>CRASH-3 (Lancet 2019):</b> reduce la mortalidad por sangrado en TCE leve-moderado si se da &lt;3 h. Sin efecto si &gt;3 h.'}
+    ]);
+  },
+  anticonv:function(){
+    return '<div class="alert a-i"><span class="ai">💊</span><div>Profilaxis 7 días en TCE con riesgo (contusión, fractura deprimida, penetrante, HSDA, GCS &lt;10). Tratar el status si aparece.</div></div>'
+    +buildLinea('1ª Línea — profilaxis','Levetiracetam × 7 días (BTF 2016)',L1,[F_LEV])
+    +buildLinea('Status epiléptico post-TCE','Benzodiacepina + carga',LR,[
+      {n:'Lorazepam IV + carga',linea:'⭐ Status',da:'Lorazepam 0.1 mg/kg IV (≈4 mg) · si no: diazepam 5-10 mg IV o midazolam 10 mg IM. Después: levetiracetam 60 mg/kg IV (máx 4500) o valproato 40 mg/kg o fenitoína 20 mg/kg',prep:'—',iv:'IV',pres:'Lorazepam · diazepam · midazolam · IMSS',fda:'D',ci:'Depresión respiratoria sin vía aérea',ea:'Sedación · depresión respiratoria',nota:'Benzodiacepina primero, luego carga de anticonvulsivante de mantenimiento.'}
+    ]);
+  },
+  anticoag:function(){
+    return '<div class="alert a-w"><span class="ai">🔄</span><div>El anticoagulado tiene riesgo ×5-10 de hematoma. <strong>TAC siempre</strong>, sin importar el mecanismo (una caída desde su propia altura puede ser fatal).</div></div>'
+    +buildLinea('1ª Línea','Conducta según la TAC',L1,[
+      {n:'TAC con hematoma → revertir YA',linea:'⭐ Hematoma + anticoagulado',da:'Warfarina: vit K 10 mg IV + CCP 25-50 UI/kg · DOAC: antídoto específico o CCP 50 UI/kg · valorar ácido tranexámico si &lt;3 h',prep:'Suspender el anticoagulante; meta INR &lt;1.5',iv:'IV',pres:'Ver chip Coagulopatía',fda:'—',ci:'—',ea:'Trombosis',nota:'No esperar para revertir; el hematoma puede expandirse rápido.'},
+      {n:'TAC normal pero anticoagulado',linea:'Observación',da:'Observación 12-24 h + repetir TAC',prep:'El hematoma puede no verse inicialmente',iv:'—',pres:'—',fda:'—',ci:'—',ea:'—',nota:'Vigilancia neurológica seriada; reiniciar la anticoagulación se decide con neurocirugía según el riesgo trombótico.'}
+    ]);
+  }
+};
+
+/* ===== Contenido de cuidados críticos ===== */
+var HOSP_POP={
+  refrac:function(){
+    return '<div class="alert a-r"><span class="ai">🔴</span><div>Tablero de metas de cuidados críticos y escalera de presión intracraneal (ver el chip "Presión intracraneal elevada" para las fichas completas de osmoterapia).</div></div>'
+    +'<div class="tw"><table class="t"><thead><tr><th>Parámetro</th><th>Meta</th><th>Si no se cumple</th></tr></thead><tbody>'
+    +'<tr><td class="dn">PAS</td><td>≥100-110</td><td>Noradrenalina 0.1-0.5 mcg/kg/min</td></tr>'
+    +'<tr><td class="dn">SpO₂ / PaO₂</td><td>≥95% / &gt;80</td><td>↑FiO₂ · PEEP</td></tr>'
+    +'<tr><td class="dn">PCO₂</td><td>35-40</td><td>Ajustar FR ventilador</td></tr>'
+    +'<tr><td class="dn">PIC / PPC</td><td>&lt;20-22 / 60-70</td><td>Osmoterapia · ↑PAM</td></tr>'
+    +'<tr><td class="dn">Temperatura</td><td>36-37.5°</td><td>Paracetamol IV · mantas</td></tr>'
+    +'<tr><td class="dn">Glucemia / Na</td><td>140-180 / 135-155</td><td>Insulina · SSH</td></tr>'
+    +'</tbody></table></div>'
+    +buildLinea('PIC refractaria','Nivel 3 — neurocirugía + barbitúricos',L1,[
+      {n:'Craniectomía descompresiva ± barbitúricos',linea:'Refractaria &gt;30 min',da:'Craniectomía urgente · pentobarbital 10 mg/kg IV carga → 1-3 mg/kg/h con EEG',prep:'Vasopresor de soporte; hipotermia 33-35° opcional como puente',iv:'Quirúrgico/IV',pres:'UCI',fda:'—',ci:'—',ea:'Estado vegetativo · hipotensión',nota:'RESCUEicp 2016: ↓ mortalidad a costa de más discapacidad.'}
+    ]);
+  },
+  postcx:function(){
+    return '<div class="alert a-i"><span class="ai">🧠</span><div>Primeras 24-48 h post-craniectomía/craniotomía.</div></div>'
+    +buildLinea('Manejo post-operatorio','Estándar',L1,[
+      {n:'Cefazolina IV',linea:'Profilaxis quirúrgica',da:'1-2 g IV c/8h × 24 h',prep:'—',iv:'IV',pres:'Fco · IMSS',fda:'B',ci:'Alergia a cefalosporinas',ea:'—',nota:'Profilaxis perioperatoria; suspender a las 24 h salvo infección.'},
+      {n:'Levetiracetam IV',linea:'Continuar profilaxis',da:'1000 mg c/12h IV',prep:'En 100 mL SSN, 15 min',iv:'IV',pres:'Keppra · IMSS',fda:'C',ci:'IR sin ajuste',ea:'Irritabilidad',nota:'Continuar la profilaxis anticonvulsivante.'},
+      {n:'Dexametasona IV (solo post-cirugía)',linea:'Edema perilesional post-quirúrgico',da:'4-8 mg IV c/6-8h si edema',prep:'—',iv:'IV',pres:'Amp 4/8 mg · IMSS',fda:'C',ci:'—',ea:'Hiperglucemia',nota:'<b>SOLO post-quirúrgico</b> (edema vasogénico tumoral/perilesional) — CONTRAINDICADA en el TCE sin cirugía (CRASH). Monitoreo PIC + TAC control 6-12 h.'}
+    ]);
+  },
+  sedo:function(){
+    return '<div class="alert a-i"><span class="ai">💊</span><div>Sedoanalgesia del TCE intubado (fichas completas en el chip "Grave").</div></div>'
+    +buildLinea('1ª Línea','Propofol + fentanilo',L1,[
+      {n:'Propofol + fentanilo',linea:'⭐ Estándar',da:'Propofol 5-50 mcg/kg/min (RASS −2/−3) + fentanilo 25-100 mcg/h',prep:'Bombas; propofol cambiar c/12h',iv:'IV continua',pres:'Diprivan · Fentanest · IMSS',fda:'B/C',ci:'Hipertrigliceridemia (propofol)',ea:'Hipotensión · SIPP',nota:'Vida media corta → ventana de evaluación neurológica. Vigilar SIPP (triglicéridos c/48h).'},
+      {n:'Dexmedetomidina IV',linea:'Sedación ligera / destete',da:'0.2-1.4 mcg/kg/h (sin bolo en TCE)',prep:'4 mcg/mL',iv:'IV continua',pres:'Precedex · genérico',fda:'C',ci:'Bloqueo AV avanzado',ea:'Bradicardia · hipotensión',nota:'Permite paciente despertable; útil en el destete del ventilador.'}
+    ]);
+  },
+  rehab:function(){
+    return '<div class="alert a-i"><span class="ai">🔄</span><div>Rehabilitación precoz desde la UCI mejora el pronóstico funcional.</div></div>'
+    +buildLinea('Fase aguda (UCI)','Movilización + profilaxis + nutrición',L1,[
+      {n:'Protocolo de rehabilitación precoz',linea:'Días 1-14',da:'Movilización pasiva c/2h · fisio respiratoria · estimulación sensorial · HNF 5000 UI sc c/8-12h (desde 48-72 h) + compresión neumática · nutrición enteral &lt;48 h (25-30 kcal/kg/día)',prep:'—',iv:'—',pres:'—',fda:'—',ci:'Sangrado activo (profilaxis TVP)',ea:'—',nota:'Coordinar con medicina física. Amantadina 100 mg c/12h si recuperación lenta de la conciencia (Giacino 2012).'}
+    ]);
+  }
+};
+function showHospPop(){}
+function showTx(id,btn){var ch=document.querySelectorAll('#tx-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('tx-out');if(!out)return;var fn=(typeof TCE_POP!=='undefined'&&TCE_POP[id])?TCE_POP[id]:((typeof HOSP_POP!=='undefined'&&HOSP_POP[id])?HOSP_POP[id]:null);if(fn)out.innerHTML=fn();}
+
+/* ===== Algoritmo ===== */
+var TCE_ALGO={
+  start:{p:'¿GCS del paciente en este momento?',o:[
+    {t:'GCS 13-15 (leve)',n:'leveEval'},
+    {t:'GCS 9-12 (moderado)',n:'moderado'},
+    {t:'GCS ≤8 (grave)',n:'grave'},
+    {t:'No evaluable (intubado/sedado)',n:'noGcs'}
+  ]},
+  leveEval:{p:'TCE leve — ¿algún criterio de TAC? (GCS<15 a 2h · vómito ≥2 · ≥65 a · amnesia ≥30 min · mecanismo peligroso · sospecha de fractura · base de cráneo)',o:[
+    {t:'Sí — ≥1 criterio',n:'leveTac'},
+    {t:'No — ningún criterio',n:'rLEVE_ALTA'}
+  ]},
+  leveTac:{p:'Se hizo TAC — ¿resultado?',o:[
+    {t:'Normal',n:'rLEVE_OBS'},
+    {t:'Epidural (lente biconvexo)',n:'rHED'},
+    {t:'Subdural (medialuna)',n:'hsdEval'},
+    {t:'Contusión / hemorragia menor',n:'rCONTUSION'},
+    {t:'Fractura deprimida / penetrante',n:'rFRACTURA'}
+  ]},
+  hsdEval:{p:'Subdural — ¿criterios quirúrgicos? (&gt;10 mm o midline &gt;5 mm o deterioro)',o:[
+    {t:'Sí',n:'rHSDA_Q'},
+    {t:'No — pequeño sin criterios',n:'rHSDA_C'}
+  ]},
+  moderado:{p:'TCE moderado — ¿deterioro neurológico desde el accidente?',o:[
+    {t:'Sí — GCS bajó o lateralización nueva',n:'rMOD_UCI'},
+    {t:'No — GCS estable',n:'rMOD_PISO'}
+  ]},
+  grave:{p:'TCE grave — ¿signos de herniación? (anisocoria · descerebración · tríada de Cushing)',o:[
+    {t:'Sí — herniación inminente',n:'rHERNIA'},
+    {t:'No',n:'rGRAVE_UCI'}
+  ]},
+  noGcs:{p:'GCS no evaluable — ¿causa más probable?',o:[
+    {t:'Intubado prehospitalario con GCS previo ≤8',n:'rGRAVE_UCI'},
+    {t:'Sedado con GCS previo &gt;8',n:'rMOD_UCI'},
+    {t:'GCS previo desconocido',n:'rGRAVE_UCI'}
+  ]},
+  rLEVE_ALTA:{r:1,titulo:'TCE leve sin criterios — alta con instrucciones',color:'#166534',dx:'TCE leve, bajo riesgo de lesión intracraneal.',est:'No requiere TAC si no cumple criterios. Observar 4-6 h.',tx:'Paracetamol 500-1000 mg c/6-8h (NO AINEs/ASA). Metoclopramida si náusea.',extra:'Alta si GCS 15, sin vómito repetido, con adulto responsable. Instrucciones de retorno POR ESCRITO. Control en 48-72 h.'},
+  rLEVE_OBS:{r:1,titulo:'TCE leve con TAC normal — observación',color:'#166534',dx:'TAC sin lesión aguda.',est:'Observar 4-6 h adicionales.',tx:'Paracetamol. Alta si GCS 15 y asintomático.',extra:'Mismas instrucciones escritas de retorno urgente.'},
+  rHED:{r:1,titulo:'Hematoma epidural — EMERGENCIA NEUROQUIRÚRGICA',color:'#7b1c1c',dx:'HED (arteria meníngea media). El intervalo lúcido es una trampa.',est:'TAC: lente biconvexo. Avisar a neurocirugía YA.',tx:'Craneotomía + evacuación URGENTE. Mientras: cabecera 30°, SpO₂ ≥95%, PAS ≥100, manitol 1 g/kg IV si deterioro. Cefazolina 2 g IV preoperatoria.',extra:'Pronóstico excelente si se opera antes del deterioro; catastrófico si se retrasa.'},
+  rHSDA_Q:{r:1,titulo:'HSDA con criterios quirúrgicos',color:'#7b1c1c',dx:'HSDA &gt;10 mm o midline &gt;5 mm o deterioro.',est:'Coagulación; si anticoagulado, revertir ANTES de cirugía.',tx:'Craneotomía urgente. PPC meta 60-70 post-op.',extra:'Monitoreo PIC post-operatorio.'},
+  rHSDA_C:{r:1,titulo:'HSDA pequeño sin criterios — conservador',color:'#7a4a00',dx:'HSDA pequeño sin criterios quirúrgicos.',est:'GCS c/2h; repetir TAC en 6-12 h o si deterioro.',tx:'Hospitalización + vigilancia. Si anticoagulado: revertir igual (riesgo de expansión).',extra:'Quirúrgico si crece o deteriora.'},
+  rCONTUSION:{r:1,titulo:'Contusión / HSA traumática menor',color:'#7a4a00',dx:'Contusión cerebral o HSA traumática.',est:'Hospitalización en neuro/neurocirugía. TAC control 6-12 h.',tx:'Levetiracetam 500 mg c/12h × 7 días. Paracetamol para cefalea.',extra:'Alta si sin expansión y GCS estable &gt;24 h.'},
+  rFRACTURA:{r:1,titulo:'Fractura deprimida / lesión penetrante',color:'#7b1c1c',dx:'Fractura deprimida o herida penetrante.',est:'TAC con ventana ósea. Neurocirugía urgente.',tx:'Cefazolina 2 g IV (+ metronidazol 500 mg IV si penetrante). Levetiracetam profiláctico.',extra:'Cirugía para elevación/desbridamiento.'},
+  rMOD_PISO:{r:1,titulo:'TCE moderado estable — piso',color:'#7a4a00',dx:'TCE moderado sin deterioro.',est:'TAC · BHC · TP/INR · glucemia · tox screen.',tx:'Paracetamol IV 1 g c/8h · levetiracetam 500 mg c/12h IV × 7 d · omeprazol 40 mg IV.',extra:'GCS/pupilas c/2h · glucemia c/4-6h · TAC control 6-12 h.'},
+  rMOD_UCI:{r:1,titulo:'TCE moderado con deterioro — UCI',color:'#7b1c1c',dx:'GCS en descenso o lateralización nueva.',est:'TAC urgente; neurocirugía.',tx:'Traslado a UCI. Si GCS ≤8: intubar (etomidato 0.3 mg/kg + succinilcolina 1.5 mg/kg).',extra:'Monitoreo PIC si disponible.'},
+  rGRAVE_UCI:{r:1,titulo:'TCE grave — UCI + neuroprotección',color:'#7b1c1c',dx:'TCE grave (GCS ≤8) sin herniación.',est:'TAC + monitoreo PIC (GCS ≤8 + TAC anormal).',tx:'ISR (etomidato + succinilcolina). Propofol + fentanilo. Metas: PAS ≥100-110, SpO₂ ≥95%, PCO₂ 35-40, glucemia 140-180. Si PIC &gt;20: manitol 0.5-1 g/kg o SSH 3% 150-250 mL.',extra:'Neurocirugía disponible para PIC/cirugía. Profilaxis TVP desde 48-72 h.'},
+  rHERNIA:{r:1,titulo:'Herniación transtentorial — CÓDIGO CEREBRAL',color:'#7b1c1c',dx:'Tríada de Cushing (HTA + bradicardia + respiración irregular) o anisocoria = herniación inminente.',est:'En paralelo al tratamiento; TAC y neurocirugía YA.',tx:'1) Intubar (etomidato + succinilcolina). 2) Manitol 20% 1 g/kg IV en 15 min (o SSH 23.4% 30 mL por CVC). 3) Hiperventilación temporal PCO₂ 30-35 SOLO 5-10 min como puente. 4) Cabecera 30°, cuello neutro.',extra:'Craniectomía descompresiva URGENTE. La hiperventilación es solo puente — no sostenida.'}
+};
+var tceHist=[];
+function renderTceStep(sid){
+  var s=TCE_ALGO[sid];if(!s)return;
+  if(s.r){renderTceResult(s);return;}
+  var h='<div style="background:var(--act);border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;"><div style="font-size:13px;font-weight:700;color:#13234a;margin-bottom:10px;">'+s.p+'</div>';
+  s.o.forEach(function(o,i){h+='<button onclick="tceSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;background:#fff;border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;">'+o.t+'</button>';});
+  if(tceHist.length)h+='<button onclick="tceBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';
+  h+='</div>';
+  document.getElementById('tce-step').innerHTML=h;
+}
+function tceSel(sid,i){tceHist.push(sid);renderTceStep(TCE_ALGO[sid].o[i].n);}
+function tceBack(){if(tceHist.length)renderTceStep(tceHist.pop());}
+function resetTce(){tceHist=[];renderTceStep('start');}
+function renderTceResult(s){
+  var h='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.titulo+'</div></div>';
+  h+='<div style="background:#e6f1fb;border-left:3px solid #1a6bbd;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">Diagnóstico</div><div style="font-size:12.5px;color:#0c3b6e;line-height:1.6;">'+s.dx+'</div></div>';
+  h+='<div style="background:#fff8e1;border-left:3px solid #d97706;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7a4a00;margin-bottom:3px;">Estudios</div><div style="font-size:12px;color:#7a4a00;line-height:1.6;">'+s.est+'</div></div>';
+  h+='<div style="background:var(--act);border-left:3px solid var(--ac);border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#13234a;margin-bottom:3px;">Tratamiento</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+s.tx+'</div></div>';
+  h+='<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">Disposición / seguimiento</div><div style="font-size:12px;color:#0a5c45;line-height:1.6;">'+s.extra+'</div></div>';
+  h+='<button onclick="resetTce()" style="margin-top:4px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>';
+  document.getElementById('tce-step').innerHTML=h;
+}
+
+/* ===== Fármacos (buscador) ===== */
+var FARMACOS_TCE=[
+  {familia:'Analgesia en TCE',color:'#1a3060',farmacos:[
+    {n:'Paracetamol IV/VO',ini:'1 g IV c/6-8h · 500-1000 mg VO',obj:'⭐ Analgesia segura',iv:'VO/IV',pr:'Perfalgan 1 g/100 mL · tabs · IMSS',ci:'Hepatopatía grave',ea:'Hepatotoxicidad &gt;4 g',nota:'No afecta la hemostasia. Único analgésico de elección en TCE.'},
+    {n:'Ketorolaco IV',ini:'15-30 mg c/6-8h (≤5 d)',obj:'Dolor intenso (precaución)',iv:'IV/IM',pr:'Amp 30 mg/mL · IMSS',ci:'Anticoagulado · coagulopatía',ea:'Sangrado · nefro',nota:'AINE: riesgo de sangrado, usar con cautela.'}
+  ]},
+  {familia:'Anticonvulsivantes',color:'#1a3060',farmacos:[
+    {n:'Levetiracetam IV/VO',ini:'500-1500 mg c/12h × 7 d',obj:'⭐ Profilaxis',iv:'IV/VO',pr:'Keppra · IMSS',ci:'IR sin ajuste',ea:'Irritabilidad',nota:'SV2A; sin interacciones (BTF 2016).'},
+    {n:'Fenitoína IV',ini:'Carga 20 mg/kg → 5-7 mg/kg/d',obj:'Alternativa',iv:'IV en SSN <50 mg/min',pr:'Epamin · IMSS',ci:'Arritmias',ea:'Hipotensión · ataxia',nota:'En SSN, nunca en glucosa.'},
+    {n:'Valproato IV',ini:'40 mg/kg en status',obj:'Status epiléptico',iv:'IV',pr:'Depakene IV',ci:'Hepatopatía',ea:'Hiperamonemia',nota:'Opción de carga en status.'},
+    {n:'Lorazepam IV',ini:'0.1 mg/kg (≈4 mg)',obj:'⭐ Status (1ª)',iv:'IV',pr:'Amp · IMSS',ci:'Depresión respiratoria',ea:'Sedación',nota:'Benzodiacepina de elección en status.'}
+  ]},
+  {familia:'Inductores ISR',color:'#7b1c1c',farmacos:[
+    {n:'Etomidato IV',ini:'0.3 mg/kg',obj:'⭐ Inductor en TCE',iv:'IV',pr:'Amp 20 mg/10 mL · Amidate',ci:'Insuf. suprarrenal',ea:'Mioclonías',nota:'Mantiene la PA → preserva PPC.'},
+    {n:'Ketamina IV',ini:'1-2 mg/kg',obj:'Si hipotensión',iv:'IV',pr:'Amp 500 mg/10 mL · IMSS',ci:'HTA no controlada',ea:'Emergencia',nota:'No aumenta la PIC con ventilación adecuada.'}
+  ]},
+  {familia:'Relajantes musculares',color:'#7b1c1c',farmacos:[
+    {n:'Succinilcolina IV',ini:'1.5 mg/kg',obj:'⭐ ISR',iv:'IV',pr:'Amp 200 mg/10 mL · IMSS',ci:'Quemados/lesión medular · hiperK',ea:'Hipercalemia',nota:'Onset rápido, duración corta.'},
+    {n:'Rocuronio IV',ini:'1.2 mg/kg',obj:'Alternativa',iv:'IV',pr:'Esmeron · IMSS',ci:'—',ea:'—',nota:'Reversor: sugammadex 16 mg/kg.'}
+  ]},
+  {familia:'Analgosedación UCI',color:'#0c3b6e',farmacos:[
+    {n:'Propofol IV',ini:'5-50 mcg/kg/min',obj:'⭐ Sedante',iv:'IV continua',pr:'Diprivan · genérico',ci:'Hipertrigliceridemia',ea:'Hipotensión · SIPP',nota:'Vida media corta; ventana neurológica.'},
+    {n:'Fentanilo IV',ini:'25-100 mcg/h',obj:'Analgesia',iv:'IV continua',pr:'Amp 500 mcg/10 mL · IMSS',ci:'Sin vía aérea',ea:'Depresión respiratoria',nota:'Hemodinámicamente estable.'},
+    {n:'Dexmedetomidina IV',ini:'0.2-1.4 mcg/kg/h',obj:'Sedación ligera / destete',iv:'IV continua',pr:'Precedex',ci:'Bloqueo AV',ea:'Bradicardia',nota:'Paciente despertable.'},
+    {n:'Midazolam IV',ini:'0.05-0.1 mg/kg bolo',obj:'Sedación alternativa',iv:'IV',pr:'Amp 5/15 mg · IMSS',ci:'—',ea:'Acumulación',nota:'Evitar uso prolongado (acumula).'}
+  ]},
+  {familia:'Osmoterapia',color:'#7a4a00',farmacos:[
+    {n:'Manitol 20% IV',ini:'0.25-1 g/kg bolo 15-20 min',obj:'⭐ PIC elevada',iv:'IV bolo',pr:'Bolsa 500 mL 20% · IMSS',ci:'IR anúrica · osm >320',ea:'Hipotensión · hiperosm',nota:'Osmolaridad c/6h.'},
+    {n:'SSH 3% / 7.5% / 23.4%',ini:'3%: 150-250 mL · 23.4%: 30 mL CVC',obj:'PIC (si hipovolemia/IR)',iv:'IV',pr:'Magistral / amp · UCI',ci:'Na >155',ea:'Hipernatremia',nota:'23.4% solo por CVC en herniación.'}
+  ]},
+  {familia:'Vasopresores',color:'#7b1c1c',farmacos:[
+    {n:'Noradrenalina IV',ini:'0.1-0.5 mcg/kg/min',obj:'⭐ PAS <100',iv:'IV continua CVC',pr:'Amp 4 mg/4 mL · Levophed · IMSS',ci:'Hipovolemia no corregida',ea:'Isquemia periférica',nota:'α1 → ↑PAM → ↑PPC.'},
+    {n:'Vasopresina IV',ini:'0.01-0.04 U/min',obj:'Adyuvante',iv:'IV continua',pr:'Amp · UCI',ci:'—',ea:'Isquemia',nota:'Ahorrador de catecolaminas.'}
+  ]},
+  {familia:'Reversión de anticoagulación',color:'#7b1c1c',farmacos:[
+    {n:'Vitamina K IV',ini:'10 mg IV lento',obj:'Warfarina',iv:'IV',pr:'Amp 10 mg · IMSS',ci:'—',ea:'Anafilaxia (rara)',nota:'Normaliza INR en 6-12 h.'},
+    {n:'CCP 4-factor',ini:'25-50 UI/kg',obj:'Warfarina/DOAC',iv:'IV',pr:'Octaplex · Beriplex',ci:'CID',ea:'Trombosis',nota:'Normaliza INR en ~30 min.'},
+    {n:'Idarucizumab',ini:'5 g IV',obj:'Dabigatrán',iv:'IV',pr:'Praxbind (3er nivel)',ci:'—',ea:'—',nota:'Reversor específico.'},
+    {n:'Ácido tranexámico',ini:'1 g IV 10 min → 1 g/8h',obj:'TCE con sangrado <3 h',iv:'IV',pr:'Transamin · IMSS',ci:'>3 h · TVP/EP',ea:'Trombosis (rara)',nota:'CRASH-3: solo <3 h del trauma.'}
+  ]},
+  {familia:'Coadyuvantes / neuroprotección',color:'#0a5c45',farmacos:[
+    {n:'Omeprazol IV',ini:'40 mg c/24h',obj:'Úlcera de estrés',iv:'IV/VO',pr:'Fco amp 40 mg · IMSS',ci:'—',ea:'HipoMg',nota:'Profilaxis gástrica.'},
+    {n:'Heparina no fraccionada sc',ini:'5000 UI c/8-12h',obj:'Profilaxis TVP',iv:'sc',pr:'IMSS',ci:'Sangrado activo',ea:'Trombocitopenia',nota:'Desde 48-72 h si TAC estable.'},
+    {n:'Sertralina VO',ini:'50-200 mg/día',obj:'Depresión post-TCE',iv:'VO',pr:'Zoloft · IMSS',ci:'IMAO',ea:'Náusea · insomnio',nota:'Mejor evidencia; mejora plasticidad.'},
+    {n:'Amantadina VO',ini:'100 mg c/12h',obj:'Recuperación post-TCE grave',iv:'VO',pr:'PK-Merz',ci:'Epilepsia no controlada',ea:'Insomnio · livedo',nota:'Giacino 2012: acelera la recuperación.'},
+    {n:'Melatonina VO',ini:'3-10 mg al acostarse',obj:'Sueño post-TCE',iv:'VO',pr:'Genérico',ci:'—',ea:'Somnolencia',nota:'Evitar benzodiacepinas (plasticidad).'}
+  ]}
+];
+function farmTceTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display!=='none'&&el.style.display!=='';el.style.display=open?'none':'block';if(arr)arr.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function filtrarFarmacosTce(q){
+  var list=document.getElementById('farm-list');if(!list)return;
+  var term=(q||'').toLowerCase().trim(),h='',total=0;
+  FARMACOS_TCE.forEach(function(fam,fi){
+    var famH='';
+    fam.farmacos.forEach(function(f,fki){
+      if(!term||(f.n+' '+f.pr+' '+f.nota+' '+f.obj).toLowerCase().indexOf(term)!==-1){
+        var fkId='ft-'+fi+'-'+fki;
+        famH+='<div style="border-bottom:1px solid #f3f4f6;">';
+        famH+='<div onclick="farmTceTog(\''+fkId+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid '+fam.color+';">';
+        famH+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+        famH+='<span id="'+fkId+'-arr" style="font-size:11px;color:#6b7280;">&#9658; ver</span></div>';
+        famH+='<div id="'+fkId+'" style="display:none;padding:10px 12px;background:#fff;">';
+        [['Dosis',f.ini,'#374151'],['Indicación',f.obj,'#c0392b'],['Vía',f.iv,'#1a3a5c'],['Presentaciones',f.pr,'#374151'],['Contraindicaciones',f.ci,'#c0392b'],['Efectos adversos',f.ea,'#374151']].forEach(function(r){
+          famH+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:110px;flex-shrink:0;">'+r[0]+'</span><span style="font-weight:600;color:'+r[2]+';text-align:right;max-width:62%;">'+r[1]+'</span></div>';
+        });
+        famH+='<div style="font-size:11px;color:#374151;background:var(--act);border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">'+f.nota+'</div>';
+        famH+='</div></div>';total++;
+      }
+    });
+    if(famH){h+='<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;"><div style="background:'+fam.color+';color:#fff;padding:8px 12px;font-size:13px;font-weight:700;">'+fam.familia+'</div>'+famH+'</div>';}
+  });
+  list.innerHTML=h||'<div style="text-align:center;padding:20px;color:#9ca3af;">Sin resultados</div>';
+  var cnt=document.getElementById('farm-count');if(cnt)cnt.textContent=total+' fármaco(s)';
+}
+
+/* ===== Indicaciones ===== */
+var IND_TCE=[
+  {familia:'Analgesia',color:'#1a3060',farmacos:[
+    {n:'Paracetamol IV/VO',dosis:[{label:'IV: 1 g c/6-8h · infundir 15 min'},{label:'VO: 500-1000 mg c/6-8h (máx 4 g/día)'}],via:'IV (bolsa 1 g/100 mL lista) o VO',enfermeria:'No diluir más la bolsa IV. Infundir en 15 min. No mezclar en la misma línea. Al tolerar VO, cambiar a la misma dosis. Verificar que no tome otros productos con paracetamol (antigripales).',paciente:'Es para el dolor de cabeza, es seguro y no afecta la coagulación. Tómelo a sus horas aunque el dolor no sea intenso. No tome alcohol.',nota:'Único analgésico de elección en TCE (no afecta plaquetas).',alarma:'No usar si hepatopatía grave o alcoholismo activo · no exceder 4 g/día.'}
+  ]},
+  {familia:'Anticonvulsivantes',color:'#1a3060',farmacos:[
+    {n:'Levetiracetam IV/VO',dosis:[{label:'500 mg c/12h IV × 7 días (TCE leve-moderado)'},{label:'1000-1500 mg c/12h IV (TCE grave)'}],via:'IV: 500-1500 mg en 100 mL SSN, 15 min, c/12h · VO al tolerar',enfermeria:'Diluir en SSN o SG5%. Compatible con la mayoría de fármacos IV. Monitorear el estado neurológico — la irritabilidad es un EA frecuente, no es daño cerebral. Si aparecen movimientos involuntarios durante la infusión, reducir la velocidad.',paciente:'Protege su cerebro de convulsiones los primeros días tras el golpe. Tómelo 2 veces al día. Puede sentirse más irritable o de mal humor (efecto conocido) — avise al médico. NO lo suspenda sin indicación.',nota:'SV2A; sin interacciones. Profilaxis 7 días (BTF 2016).',alarma:'Irritabilidad intensa · rash · ajustar si insuficiencia renal.'}
+  ]},
+  {familia:'Sedoanalgesia UCI',color:'#7b1c1c',farmacos:[
+    {n:'Propofol IV',dosis:[{label:'Iniciar 5 mcg/kg/min → titular a RASS −2 a −3 · máx 4 mg/kg/h'}],via:'IV continua en bomba de jeringa',enfermeria:'Bomba de jeringa obligatoria. NO diluir. Cambiar la jeringa c/12h (emulsión lipídica, riesgo de contaminación). Vigilar que la emulsión sea blanca uniforme. Triglicéridos c/48h. Si hay acidosis inexplicada + arritmia: suspender (SIPP).',paciente:'(Paciente sedado) — se explica a la familia: lo mantenemos dormido para proteger su cerebro; podemos despertarlo en minutos para evaluarlo.',nota:'Vida media corta → ventana de evaluación neurológica.',alarma:'SIPP: acidosis metabólica + rabdomiólisis + FA + hipotensión → suspender de inmediato.'},
+    {n:'Fentanilo IV',dosis:[{label:'25-100 mcg/h infusión · bolo 1-2 mcg/kg para procedimientos'}],via:'IV continua',enfermeria:'Dilución estándar: 500 mcg en 50 mL SSN (10 mcg/mL). Bomba obligatoria. Si hay rigidez torácica, reducir la velocidad. Tener naloxona disponible.',paciente:'(Sedado) — analgésico potente por la vena para que no sienta dolor durante la ventilación.',nota:'Opioide μ estable hemodinámicamente.',alarma:'Depresión respiratoria · rigidez torácica con bolos rápidos.'}
+  ]},
+  {familia:'Osmoterapia',color:'#7a4a00',farmacos:[
+    {n:'Manitol 20% IV',dosis:[{label:'0.25-1 g/kg IV BOLO en 15-20 min · repetir c/4-6h si la PIC persiste'}],via:'IV en bolo (filtro recomendado)',enfermeria:'BOLO rápido en 15-20 min — la rapidez ES parte del mecanismo, NO es un error. Si hay cristales blancos (el manitol cristaliza a <20°C): calentar en agua tibia, agitar y verificar que se disuelvan antes de usar. Medir diuresis horaria tras el bolo. PA c/15 min durante la infusión. Osmolaridad c/6h: suspender si >320 mOsm/L.',paciente:'Le damos un medicamento por la vena para bajar la presión dentro de la cabeza. Notará que orina mucho — es el efecto esperado.',nota:'Gradiente osmótico extrae agua del cerebro sano.',alarma:'Osmolaridad >320 · hipotensión · insuficiencia renal oligúrica.'}
+  ]},
+  {familia:'Alta de TCE leve',color:'#0a5c45',farmacos:[
+    {n:'Hoja de alta — instrucciones escritas',dosis:[{label:'Entregar SIEMPRE por escrito a un adulto responsable'}],via:'Documento impreso',enfermeria:'Confirmar que hay un adulto responsable 24h. Repasar verbalmente la hoja y pedir que la peguen en un lugar visible. Confirmar comprensión.',paciente:'REGRESE A URGENCIAS DE INMEDIATO si: cefalea que empeora · vómito más de 2 veces · confusión o sueño excesivo · no se puede despertar · debilidad o entumecimiento · habla rara · convulsión · una pupila más grande que la otra. Reposo 24-48h, sin pantallas intensas, sin alcohol, sin conducir.',nota:'La familia olvidará los síntomas si no se entregan por escrito.',alarma:'Cualquiera de los signos de la lista = retorno urgente.'}
+  ]}
+];
+function indTceTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display!=='none'&&el.style.display!=='';el.style.display=open?'none':'block';if(arr)arr.innerHTML=open?'&#9658; ver':'&#9660; ocultar';}
+function buildIndTCE(){
+  var el=document.getElementById('ind-list');if(!el)return;
+  var h='';
+  IND_TCE.forEach(function(fam,fi){
+    h+='<div class="ind-b"><div class="ind-bh"><span>'+fam.familia+'</span><span style="opacity:0.8;">'+fam.farmacos.length+' fármaco(s)</span></div><div style="padding:8px 10px;">';
+    fam.farmacos.forEach(function(f,fki){
+      var id='itce-'+fi+'-'+fki;
+      h+='<div style="border:1px solid #e2e8f0;border-radius:var(--rs);overflow:hidden;margin-bottom:8px;">';
+      h+='<div onclick="indTceTog(\''+id+'\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid '+fam.color+';">';
+      h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+      h+='<span id="'+id+'-arr" style="font-size:11px;color:#6b7280;">&#9658; ver</span></div>';
+      h+='<div id="'+id+'" style="display:none;padding:10px 12px;background:#fff;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+fam.color+';margin-bottom:4px;">Dosis</div>';
+      f.dosis.forEach(function(d){h+='<div style="font-size:12.5px;color:#374151;background:var(--act);border-radius:4px;padding:6px 8px;margin-bottom:4px;line-height:1.5;">'+d.label+'</div>';});
+      h+='<div style="background:#fff8e1;border-radius:4px;padding:7px 9px;margin:6px 0;font-size:12px;color:#7a4a00;line-height:1.55;"><b>Vía:</b> '+f.via+'</div>';
+      h+='<div style="background:#e6f1fb;border-radius:4px;padding:7px 9px;margin-bottom:6px;font-size:12px;color:#0c3b6e;line-height:1.55;"><b>Enfermería:</b> '+f.enfermeria+'</div>';
+      h+='<div style="background:#dcfce7;border-radius:4px;padding:7px 9px;margin-bottom:6px;font-size:12px;color:#166534;line-height:1.55;"><b>Paciente:</b> '+f.paciente+'</div>';
+      h+='<div style="background:var(--act);border-radius:4px;padding:7px 9px;margin-bottom:6px;font-size:11.5px;color:#374151;line-height:1.55;"><b>Nota:</b> '+f.nota+'</div>';
+      h+='<div style="background:#fdeaea;border-radius:4px;padding:7px 9px;font-size:12px;color:#7b1c1c;line-height:1.55;"><b>Alarma:</b> '+f.alarma+'</div>';
+      h+='</div></div>';
+    });
+    h+='</div></div>';
+  });
+  el.innerHTML=h;
+}
+
+/* ===== Escenarios ===== */
+var ESCEN_TCE={
+  hed:{t:'Hematoma epidural — intervalo lúcido',col:'#7b1c1c',clin:'Golpe temporal → PdC inicial → intervalo lúcido (min-horas) → deterioro brusco (cefalea + vómito) → anisocoria → descerebración.',dx:'TAC: hiperdensidad biconvexa (lente) temporo-parietal, no cruza suturas. Fractura escamosa.',tx:'Craneotomía URGENTE. Mientras: manitol 1 g/kg IV bolo + cabecera 30° + SpO₂ ≥95% + PAS ≥100. Cefazolina 2 g IV preoperatoria.',esc:'Siempre quirúrgico urgente.',compl:'Herniación uncal · muerte si se retrasa.'},
+  hsda:{t:'HSDA — criterios quirúrgicos',col:'#7b1c1c',clin:'Aceleración-desaceleración (venas puente); deterioro de conciencia.',dx:'TAC: medialuna hiperdensa. Criterios quirúrgicos: &gt;10 mm, midline &gt;5 mm o deterioro.',tx:'Craneotomía urgente si cumple criterios; revertir anticoagulación antes. Conservador + TAC seriada si pequeño.',esc:'Quirúrgico si criterios; piso con vigilancia si no.',compl:'Edema, expansión, PIC elevada.'},
+  deportista:{t:'TCE en deportista (retorno al juego)',col:'#0a5c45',clin:'Conmoción sin lesión estructural; cefalea, mareo, "niebla mental".',dx:'TAC normal; valoración con herramientas de conmoción (SCAT).',tx:'Reposo cognitivo y físico → progresión por fases (aeróbico leve → específico sin contacto → con contacto → juego). Cada fase ≥24 h.',esc:'Síntomas que regresan → volver a la fase previa.',compl:'Síndrome del segundo impacto si retorna antes de curar.'},
+  anticoag:{t:'TCE en adulto mayor anticoagulado',col:'#7b1c1c',clin:'Caída desde su propia altura; puede deteriorar horas después.',dx:'TAC SIEMPRE (sin importar el mecanismo). La atrofia hace vulnerables las venas puente.',tx:'TAC con hematoma → revertir YA (vit K 10 mg + CCP 25-50 UI/kg). TAC normal → observar 12-24 h + repetir TAC.',esc:'Hematoma → ingreso/cirugía.',compl:'Hematoma diferido (puede no verse al inicio).'},
+  pediatrico:{t:'TCE pediátrico',col:'#7a4a00',clin:'Vómito, irritabilidad, somnolencia; los signos son más sutiles.',dx:'Usar reglas PECARN para minimizar radiación. GCS pediátrico.',tx:'Observación si bajo riesgo; TAC si criterios. Evitar TAC innecesaria (radiación).',esc:'Signos de alarma o mecanismo grave → TAC/ingreso.',compl:'Maltrato (descartar si la historia no concuerda).'},
+  transito:{t:'TCE por accidente de tránsito',col:'#1a3060',clin:'Politrauma; mecanismo de alta energía.',dx:'TAC cráneo + columna cervical + evaluación de politrauma (FAST, tórax/pelvis).',tx:'ABCDE; PAS ≥100, SpO₂ ≥95%; ácido tranexámico &lt;3 h si sangrado; ISR si GCS ≤8.',esc:'UCI/quirófano según hallazgos.',compl:'Lesiones asociadas (tórax, abdomen, columna).'}
+};
+function buildEscenChips(){
+  var el=document.getElementById('escen-chips');if(!el)return;
+  var L=[['hed','🔴 Hematoma epidural'],['hsda','🩸 HSDA quirúrgico'],['deportista','🏊 Deportista'],['anticoag','👵 Anticoagulado'],['pediatrico','🧒 Pediátrico'],['transito','🏍️ Tránsito']];
+  var h='';
+  L.forEach(function(x,i){h+='<button class="pchip'+(i===0?' on':'')+'" onclick="showTceEscen(\''+x[0]+'\',this)">'+x[1]+'</button>';});
+  el.innerHTML=h;
+}
+function showTceEscen(id,btn){
+  var ch=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var s=ESCEN_TCE[id];if(!s)return;
+  function blk(t,v,c){return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+v+'</div></div>';}
+  var h='<div style="background:'+s.col+';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;"><div style="font-size:14px;font-weight:700;">'+s.t+'</div></div>';
+  h+=blk('Presentación',s.clin,'#6b7280');
+  h+=blk('Hallazgos / diagnóstico',s.dx,'#6b7280');
+  h+=blk('Tratamiento inmediato',s.tx,'#c0392b');
+  h+=blk('Criterio quirúrgico / disposición',s.esc,'#7a4a00');
+  h+=blk('Complicaciones a vigilar',s.compl,'#7b1c1c');
+  document.getElementById('escen-out').innerHTML=h;
+}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  buildGCS();
+  buildRot();
+  resetTce();
+  showTx('leve',document.querySelector('#tx-chips .pchip.on'));
+  filtrarFarmacosTce('');
+  buildIndTCE();
+  buildEscenChips();
+  showTceEscen('hed',document.querySelector('#escen-chips .pchip.on'));
+});
+</script>
+</body>
+</html>

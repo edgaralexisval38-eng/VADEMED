@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Gonorrea · Clínica Rápida</title>
+<style>
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--gp:#f0faf6;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--p:#4a1d8a;--pl:#ede9fe;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--bd:#e2e8f0;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--g);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.tab.ind.on{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tab.bib.on{color:var(--bm);border-bottom-color:var(--bm);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform 0.2s;flex-shrink:0;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--gray-900);}
+.prose ul{padding-left:18px;margin-bottom:8px;}.prose li{margin-bottom:3px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kp:last-child{margin-bottom:0;}
+.kn{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.kt strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-gr{background:var(--gray-100);color:var(--gray-700);border-left:3px solid #6b7280;}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.t tr:hover td{background:var(--gray-50);}
+.dn{font-weight:700;color:var(--g);}
+.dm{color:var(--r);font-weight:600;}
+.dn2{color:var(--gray-600);font-size:11px;}
+.lb{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.l1{background:var(--g);color:#fff;}.l2{background:var(--gm);color:#fff;}.l3{background:#6b7280;color:#fff;}.lc{background:var(--gl);color:var(--g);}
+.dname{font-weight:700;color:var(--g);display:block;margin-bottom:1px;}
+.dnote{color:var(--gray-600);font-size:11px;margin-top:2px;display:block;line-height:1.4;}
+.nodar{background:var(--rl);border:1.5px solid var(--rm);border-radius:var(--rs);padding:12px 14px;margin-top:12px;}
+.nodar-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.nodar-i{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;color:var(--r);border-bottom:1px solid rgba(192,57,43,0.15);}
+.nodar-i:last-child{border-bottom:none;}
+.nodar-i::before{content:'X';font-size:12px;flex-shrink:0;margin-top:1px;font-weight:700;}
+.pres-box{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-top:12px;}
+.pres-t{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.pres-row{display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.pres-row:last-child{border-bottom:none;}
+.pres-drug{font-weight:600;color:var(--g);min-width:110px;flex-shrink:0;}
+.pres-detail{color:var(--gray-700);flex:1;}
+.fp{display:flex;align-items:flex-start;}
+.fp-l{width:40px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fp-d{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.fp-li{width:2px;background:var(--gray-200);flex:1;min-height:20px;}
+.fp-c{flex:1;padding:0 0 14px 12px;}
+.fp-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.fp-x{font-size:12px;color:var(--gray-600);line-height:1.55;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-start{background:var(--g);color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.a-end{background:var(--gl);color:var(--g);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--gm);}
+.a-act{background:#fff;border:1.5px solid var(--bd);color:var(--gray-900);}
+.a-dec{background:var(--al);border:1.5px solid var(--am);color:var(--a);font-weight:600;}
+.a-arr{text-align:center;font-size:18px;color:var(--gray-400);margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--rl);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--r);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--gray-50);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--gray-900);}
+.lab-a{font-size:11px;color:var(--r);margin-top:3px;font-weight:600;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:90px;font-size:11px;font-weight:700;color:var(--g);text-transform:uppercase;padding-top:2px;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ab{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab-ok{background:var(--gl);border-color:var(--gm);}
+.ab-no{background:var(--rl);border-color:var(--rm);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--g);}.ab-no .ab-t{color:var(--r);}
+.ab-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.ab-i::before{content:'o';position:absolute;left:0;opacity:0.6;}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--gray-900);padding:5px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--rl);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--r);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'!';position:absolute;left:0;font-size:11px;font-weight:700;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.lp{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10.5px;font-weight:600;margin-left:4px;}
+.lp-r{background:var(--rl);color:var(--r);}.lp-a{background:var(--al);color:var(--a);}.lp-g{background:var(--gl);color:var(--g);}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);transition:all 0.15s;}
+.pchip.on{background:var(--g);border-color:var(--g);color:#fff;}
+.pchip.pchip-w.on{background:var(--am);border-color:var(--am);color:#fff;}
+.p-drug-card{background:#fff;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;overflow:hidden;}
+.p-result-hdr{background:var(--g);color:#fff;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.p-dose-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.p-dose-row:last-child{border-bottom:none;}
+.p-dose-lbl{color:var(--gray-600);}
+.p-dose-val{font-weight:600;color:var(--gray-900);}
+.p-pres{background:var(--gray-50);border-radius:var(--rs);padding:6px 10px;margin-top:6px;font-size:11px;color:var(--gray-600);}
+.p-nota{background:var(--gl);border-radius:var(--rs);padding:7px 10px;margin-top:6px;font-size:11px;color:var(--g);line-height:1.5;}
+.ind-h{background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.ind-o{background:var(--pl);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.ind-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--p);margin-bottom:6px;}
+.ind-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.ind-oi::before{content:'>';position:absolute;left:0;color:#7c3aed;font-weight:700;}
+.ind-c{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);}
+.ind-c:last-child{border-bottom:none;}
+.ind-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ind-cb.on{background:#7c3aed;border-color:#7c3aed;}
+.ind-cb.on::after{content:'v';color:#fff;font-size:10px;font-weight:700;}
+.ind-f{font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.ind-al{background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--r);}
+.ind-al strong{font-weight:700;display:block;margin-bottom:2px;}
+.pbtn{background:#4c1d95;color:#fff;border:none;padding:10px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-h{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.bib-s{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.bib-sh{background:var(--gl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--g);border-bottom:1px solid var(--bd);}
+.bib-sb{padding:10px 14px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+.lv{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-e{background:var(--pl);color:var(--p);}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--g);text-decoration:none;font-weight:500;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-card{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;text-align:center;}
+.stat-num{font-size:22px;font-weight:700;color:var(--g);}
+.stat-lbl{font-size:11px;color:var(--gray-600);margin-top:2px;}
+.epi-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;}
+.epi-r:last-child{border-bottom:none;}
+.epi-k{font-weight:600;color:var(--gray-900);min-width:110px;flex-shrink:0;}
+.epi-v{color:var(--gray-700);flex:1;}
+.hosp-ctx{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:10px;}
+.hosp-ctx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px;}
+.hosp-ctx-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.hosp-ctx-i::before{content:'>';position:absolute;left:0;color:var(--g);font-weight:700;}
+.sc{border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;margin-bottom:10px;}
+.sc-h{background:var(--gl);padding:8px 12px;font-size:12px;font-weight:700;color:var(--g);}
+.sc-b{padding:10px 12px;}
+.sc-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.sc-r:last-child{border-bottom:none;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-t{font-size:12px;font-weight:700;color:var(--gray-900);margin-bottom:8px;}
+.calc-r{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.calc-l{font-size:12px;color:var(--gray-700);min-width:70px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.calc-in:focus{border-color:var(--g);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:12px;text-align:center;}
+.res-ok{background:var(--gl);color:var(--g);}
+.res-mid{background:var(--al);color:var(--a);}
+.res-high{background:var(--rl);color:var(--r);}
+.res-score{font-size:26px;font-weight:700;}
+.res-label{font-size:13px;font-weight:600;margin-top:4px;}
+.res-action{font-size:12px;margin-top:6px;line-height:1.5;opacity:0.9;}
+@media(max-width:480px){.epi-k{min-width:85px;}.grid2{grid-template-columns:1fr;}.lab-g{grid-template-columns:1fr;}}
+@media print{.tabbar,.pbtn{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+/* Tema azul Asma */
+.hdr{background:linear-gradient(135deg,#0c3b6e,#1a6bbd)!important;}
+.qs-v{color:var(--b);}
+.tab.on{color:var(--b);border-bottom-color:var(--b);}
+/* Tarjetas de medicamento (ricas, color por clase) */
+.med{background:#fff;border:1px solid var(--bd);border-left:5px solid #6b7280;border-radius:var(--rad);margin-bottom:12px;overflow:hidden;}
+.med-h{padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.med-ic{font-size:22px;flex-shrink:0;line-height:1;}
+.med-nm{font-size:14px;font-weight:700;color:var(--gray-900);}
+.med-cls{font-size:11px;color:var(--gray-600);margin-top:1px;}
+.med-line{font-size:10px;font-weight:700;color:#fff;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;background:#6b7280;}
+.med-b{padding:4px 12px 10px;}
+.med-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--gray-100);}
+.med-row:last-child{border-bottom:none;}
+.med-k{min-width:88px;flex-shrink:0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--gray-400);padding-top:1px;}
+.med-v{font-size:12.5px;color:var(--gray-700);line-height:1.5;flex:1;}
+.med-v strong{color:var(--gray-900);}
+.med-dose{font-size:13px;font-weight:700;color:var(--gray-900);}
+.med-warn{font-size:12px;color:var(--r);font-weight:600;}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--gray-100);}
+.step:last-child{border-bottom:none;}
+.step-n{width:30px;height:30px;border-radius:8px;background:var(--bl);color:var(--b);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-c{flex:1;}
+.step-t{font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:3px;}
+.step-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.step-x b{color:var(--b);}
+/* Selector interactivo */
+.atool-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:12px;line-height:1.4;}
+.atool-opt{display:block;width:100%;text-align:left;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:11px 13px;font-size:13px;font-weight:600;color:var(--gray-900);cursor:pointer;margin-bottom:8px;font-family:inherit;transition:all 0.15s;}
+.atool-opt:hover{border-color:var(--bm);background:var(--bl);}
+.atool-opt .sub{display:block;font-size:11px;font-weight:500;color:var(--gray-600);margin-top:2px;}
+.atool-back{background:none;border:none;color:var(--bm);font-size:12px;font-weight:700;cursor:pointer;padding:0;margin-bottom:12px;font-family:inherit;}
+.atool-res{border-radius:10px;padding:14px;border:1.5px solid;}
+.atool-res-t{font-size:15px;font-weight:700;margin-bottom:4px;}
+.atool-res-s{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:8px;}
+.atool-li{font-size:12.5px;line-height:1.6;padding:4px 0 4px 16px;position:relative;color:var(--gray-700);}
+.atool-li::before{content:'▸';position:absolute;left:0;color:var(--gray-400);}
+.atool-li b{color:var(--gray-900);}
+/* Guía GEMA interactiva */
+.g-h{color:#fff;font-weight:700;font-size:15px;padding:10px 14px;border-radius:8px;margin-bottom:10px;}
+.g-blk{border-radius:8px;padding:9px 12px;margin-bottom:7px;}
+.g-blk .bt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
+.g-blk .bx{font-size:12.5px;line-height:1.55;color:var(--gray-900);}
+.g-lad{display:flex;align-items:flex-end;gap:4px;margin-bottom:12px;}
+.g-lad .s{flex:1;border-radius:4px 4px 0 0;}
+.g-base{background:linear-gradient(90deg,#0c3b6e,#1a6bbd);color:#fff;border-radius:8px;padding:9px 12px;font-size:11px;line-height:1.5;margin-top:10px;}
+
+/* ===== Tema Infectología (verde azulado) ===== */
+:root{--g:#0f7a5a;--gm:#14a07a;--gl:#e1f5ee;--gp:#f0fbf7;}
+.hdr{background:linear-gradient(135deg,#06382a,#0f7a5a)!important;}
+.qs-v{color:#0f7a5a;}
+.tab.on{color:#0f7a5a;border-bottom-color:#0f7a5a;}
+.bib-h{background:linear-gradient(135deg,#06382a,#0f7a5a);}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:#0f7a5a;cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦠</div>
+    <div>
+      <div class="hdr-eye">Infecciones de transmisión sexual</div>
+      <div class="hdr-title">Gonorrea</div>
+      <div class="hdr-sub"><em>Neisseria gonorrhoeae</em> · CDC 2021 · OMS · NOM-039</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Ceftriaxona 500 mg IM (1ª línea)</span>
+    <span class="badge">Cotratar clamidia si no se descartó</span>
+    <span class="badge">Muchas veces asintomática</span>
+    <span class="badge">Tratar a las parejas</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">500 mg</div><div class="qs-l">ceftriaxona IM única</div></div>
+  <div class="qs"><div class="qs-v">NAAT</div><div class="qs-l">prueba de elección</div></div>
+  <div class="qs"><div class="qs-v">60 días</div><div class="qs-l">tratar parejas previas</div></div>
+  <div class="qs"><div class="qs-v">3 meses</div><div class="qs-l">retamizaje</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('formas',this)">🦠 Formas clínicas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Qué esquema</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tratamiento</button>
+  <button class="tab" onclick="showT('comp',this)">🧩 Complicaciones</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab ind" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('esce',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab bib" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose">
+    <p>La <strong>gonorrea</strong> es una infección de transmisión sexual causada por <strong><em>Neisseria gonorrhoeae</em></strong> (diplococo gramnegativo intracelular). Infecta las mucosas: uretra, cuello uterino, recto, faringe y conjuntiva.</p>
+    <p><strong>Idea clave:</strong> con frecuencia es <strong>asintomática</strong> (sobre todo en la mujer y en las formas faríngea y rectal), por eso son esenciales el <strong>tamizaje</strong> y el <strong>tratamiento de las parejas</strong>. Por la <strong>resistencia antimicrobiana</strong> creciente, hoy la única primera línea es la <strong>ceftriaxona</strong>.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="grid2">
+      <div class="stat-card"><div class="stat-num">2.ª</div><div class="stat-lbl">ITS bacteriana más reportada</div></div>
+      <div class="stat-card"><div class="stat-num">2-7 días</div><div class="stat-lbl">Periodo de incubación</div></div>
+      <div class="stat-card"><div class="stat-num">Frecuente</div><div class="stat-lbl">Coinfección por clamidia</div></div>
+      <div class="stat-card"><div class="stat-num">Notificable</div><div class="stat-lbl">Enfermedad de notificación obligatoria</div></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Transmisión e historia natural</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fp"><div class="fp-l"><div class="fp-d" style="background:#ef4444;"></div><div class="fp-li"></div></div><div class="fp-c">
+      <div class="fp-t">1. Contagio</div>
+      <div class="fp-x">Contacto sexual sin protección (vaginal, anal u oral) con persona infectada; también de madre a hijo en el parto (oftalmía neonatal).</div>
+    </div></div>
+    <div class="fp"><div class="fp-l"><div class="fp-d" style="background:#f97316;"></div><div class="fp-li"></div></div><div class="fp-c">
+      <div class="fp-t">2. Infección de la mucosa</div>
+      <div class="fp-x">Tras 2-7 días puede aparecer secreción/disuria, o quedar asintomática (lo más frecuente en mujer, faringe y recto).</div>
+    </div></div>
+    <div class="fp"><div class="fp-l"><div class="fp-d" style="background:#8b5cf6;"></div><div class="fp-li" style="background:transparent;"></div></div><div class="fp-c">
+      <div class="fp-t">3. Complicaciones si no se trata</div>
+      <div class="fp-x">Enfermedad pélvica inflamatoria, embarazo ectópico, infertilidad, epididimitis, infección diseminada; facilita la transmisión del VIH.</div>
+    </div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">6 errores frecuentes — no cometer</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Usar quinolonas o azitromicina sola:</strong> hay resistencia; la primera línea es ceftriaxona IM.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>No cotratar clamidia:</strong> si no se descartó, agregar doxiciclina (o azitromicina en embarazo).</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>No tamizar sitios extragenitales:</strong> faringe y recto suelen ser asintomáticos pero contagian.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>No tratar a las parejas:</strong> tratar a las de los últimos 60 días y dar abstinencia 7 días.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>Olvidar la prueba de curación en gonorrea faríngea:</strong> es más difícil de erradicar.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>No retamizar a los 3 meses:</strong> la reinfección es muy frecuente.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Cuándo sospechar — banderas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="al-b">
+      <div class="al-t">Síntomas que orientan</div>
+      <div class="al-i"><strong>Hombre:</strong> secreción uretral purulenta y disuria (uretritis); dolor testicular (epididimitis).</div>
+      <div class="al-i"><strong>Mujer:</strong> a menudo asintomática; flujo, disuria, sangrado intermenstrual o poscoital, dolor pélvico (cervicitis/EPI).</div>
+      <div class="al-i"><strong>Extragenital:</strong> faríngea y rectal casi siempre asintomáticas; proctitis (dolor, secreción) en algunos casos.</div>
+      <div class="al-i"><strong>Diseminada:</strong> fiebre, artritis/poliartralgias y lesiones cutáneas pustulosas.</div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Cómo se diagnostica</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-c"><div class="step-t">NAAT (prueba de elección)</div><div class="step-x">Amplificación de ácidos nucleicos en orina o hisopado del sitio expuesto (uretral, endocervical/vaginal, faríngeo, rectal). Detecta gonococo y clamidia.</div></div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-c"><div class="step-t">Cultivo</div><div class="step-x">Cuando se necesita <strong>sensibilidad antibiótica</strong> (falla terapéutica, vigilancia de resistencia).</div></div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-c"><div class="step-t">Tinción de Gram</div><div class="step-x">Útil en <strong>uretritis sintomática del hombre</strong>: diplococos gramnegativos intracelulares. Poco sensible en mujer/extragenital.</div></div></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">🧫</span><div>Tomar la muestra del <strong>sitio de exposición</strong> (incluir faringe y recto según la práctica sexual) y <strong>buscar coinfección por clamidia</strong> en el mismo estudio.</div></div>
+  </div></div>
+</div>
+
+<!-- FORMAS CLÍNICAS -->
+<div class="panel" id="tab-formas">
+  <div style="background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#06382a,#0f7a5a);color:#fff;padding:10px 14px;">
+      <div style="font-size:13px;font-weight:700;">🔎 ¿A quién tamizar?</div>
+      <div style="font-size:11px;opacity:0.85;margin-top:2px;">Selecciona el perfil</div>
+    </div>
+    <div style="padding:14px;"><div id="tam-step"></div></div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Formas clínicas por sitio</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Sitio</th><th>Cuadro</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Uretra (hombre)</td><td>Uretritis: secreción purulenta y disuria; puede ser asintomática.</td></tr>
+        <tr><td class="dn">Cuello uterino</td><td>Cervicitis: flujo, sangrado poscoital/intermenstrual; con frecuencia asintomática.</td></tr>
+        <tr><td class="dn">Recto</td><td>Casi siempre asintomática; a veces proctitis (dolor, secreción, tenesmo).</td></tr>
+        <tr><td class="dn">Faringe</td><td>Casi siempre asintomática; más difícil de erradicar (requiere prueba de curación).</td></tr>
+        <tr><td class="dn">Conjuntiva</td><td>Conjuntivitis purulenta intensa (adulto por autoinoculación; recién nacido: oftalmía neonatal).</td></tr>
+        <tr><td class="dn">Diseminada</td><td>Artritis-dermatitis (fiebre, poliartralgias, lesiones cutáneas) o artritis séptica.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- QUÉ ESQUEMA -->
+<div class="panel" id="tab-algo">
+  <div style="background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#06382a,#0f7a5a);color:#fff;padding:10px 14px;">
+      <div style="font-size:13px;font-weight:700;">🔀 ¿Qué esquema le toca?</div>
+      <div style="font-size:11px;opacity:0.85;margin-top:2px;">Selecciona la situación</div>
+    </div>
+    <div style="padding:14px;"><div id="trat-step"></div></div>
+  </div>
+  <div class="alert a-i"><span class="ai">💡</span><div>En toda gonorrea, <strong>cotratar clamidia</strong> si no se ha descartado y <strong>tratar a las parejas</strong>; dar <strong>abstinencia 7 días</strong> tras el tratamiento.</div></div>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Tratamiento — escalera</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">⭐</span><div><div class="at">Regla de oro</div>Gonorrea no complicada = <strong>ceftriaxona 500 mg IM en dosis única</strong> (1 g si ≥150 kg) + <strong>doxiciclina</strong> si no se descartó clamidia. Tratar a las parejas.</div></div>
+    <div id="txc-meds"></div>
+  </div></div>
+</div>
+
+<!-- COMPLICACIONES -->
+<div class="panel" id="tab-comp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Complicaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">♀️</div><div><div class="co-n">Enfermedad pélvica inflamatoria (EPI)</div><div class="co-d">Ascenso de la infección; dolor pélvico, fiebre. Riesgo de embarazo ectópico e infertilidad. Tratar con esquema de EPI (incluye ceftriaxona + doxiciclina ± metronidazol).</div></div></div>
+    <div class="co-i"><div class="co-ico">♂️</div><div><div class="co-n">Epididimitis / orquitis</div><div class="co-d">Dolor e inflamación testicular; ceftriaxona + doxiciclina.</div></div></div>
+    <div class="co-i"><div class="co-ico">🚨</div><div><div class="co-n">Infección gonocócica diseminada</div><div class="co-d">Artritis-dermatitis o artritis séptica; hospitalizar y dar ceftriaxona 1 g cada 24 h.</div></div></div>
+    <div class="co-i"><div class="co-ico">👁️</div><div><div class="co-n">Conjuntivitis / oftalmía neonatal</div><div class="co-d">Conjuntivitis purulenta intensa; el recién nacido requiere tratamiento y profilaxis ocular.</div></div></div>
+    <div class="co-i"><div class="co-ico">🧬</div><div><div class="co-n">Secuelas reproductivas</div><div class="co-d">Infertilidad, dolor pélvico crónico y embarazo ectópico; facilita la transmisión del VIH.</div></div></div>
+  </div></div>
+</div>
+
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:0.5px solid var(--bd);padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--gray-50);border:1.5px solid var(--bd);border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">&#128269;</span>
+      <input id="farm-search" type="text" placeholder="Buscar fármaco..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarFarmacos(this.value)">
+    </div>
+    <div id="farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="ind-h">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.8;margin-bottom:4px;">Indicaciones para enfermería y paciente</div>
+    <div style="font-size:17px;font-weight:700;">Texto para enfermería y para el paciente</div>
+    <div style="font-size:12px;opacity:0.85;margin-top:4px;">Selecciona la dosis para generar el texto.</div>
+  </div>
+  <div id="ind-list"></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esce">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Escenarios clínicos — selecciona el caso</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="esce-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
+    <div id="esce-content"></div>
+  </div></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Después de tratar</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="fu-r"><div class="fu-t">Abstinencia 7 días</div><div class="fu-x">Sin relaciones durante 7 días tras el tratamiento y hasta que las parejas estén tratadas y asintomáticas.</div></div>
+    <div class="fu-r"><div class="fu-t">Prueba de curación</div><div class="fu-x">NO de rutina en urogenital/rectal. <strong>SÍ en gonorrea faríngea</strong> (a las 1-2 semanas) y ante falla o persistencia de síntomas.</div></div>
+    <div class="fu-r"><div class="fu-t">Retamizaje a los 3 meses</div><div class="fu-x">Repetir la prueba a los 3 meses por la alta tasa de reinfección.</div></div>
+    <div class="fu-r"><div class="fu-t">Falla terapéutica</div><div class="fu-x">Cultivo con antibiograma y consultar/referir; reportar (vigilancia de resistencia).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👥</span><span class="st">Parejas y prevención</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="co-i"><div class="co-ico">👫</div><div><div class="co-n">Tratar a las parejas</div><div class="co-d">A las de los últimos <strong>60 días</strong> (o la última si fue antes). Donde se permita, terapia acelerada de pareja.</div></div></div>
+    <div class="co-i"><div class="co-ico">🧪</div><div><div class="co-n">Estudiar otras ITS</div><div class="co-d">Ofrecer pruebas de VIH, sífilis y clamidia.</div></div></div>
+    <div class="co-i"><div class="co-ico">🛡️</div><div><div class="co-n">Prevención</div><div class="co-d">Uso correcto del condón, consejería y tamizaje periódico en personas con riesgo.</div></div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📤</span><span class="st">Cuándo referir</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="al-b">
+      <div class="al-t">Referir / hospitalizar si:</div>
+      <div class="al-i">Infección gonocócica diseminada (artritis, lesiones cutáneas, fiebre).</div>
+      <div class="al-i">Enfermedad pélvica inflamatoria con datos de gravedad o embarazo.</div>
+      <div class="al-i">Falla terapéutica o sospecha de resistencia.</div>
+      <div class="al-i">Oftalmía neonatal.</div>
+    </div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="bib-h">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:0.8;margin-bottom:4px;">Fuentes</div>
+    <div style="font-size:17px;font-weight:700;">Bibliografía y guías</div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">Internacional</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">CDC</span><span class="bib-y">2021</span><span class="lv lv-a">STI Guidelines</span>
+        <div class="bib-r" style="margin-top:4px;">CDC. <strong>Sexually Transmitted Infections Treatment Guidelines</strong> — Gonococcal Infections (ceftriaxona 500 mg IM; doxiciclina si no se descarta clamidia).</div>
+        <a class="bib-l" href="https://www.cdc.gov/std/treatment-guidelines/gonorrhea-adults.htm" target="_blank" rel="noopener">cdc.gov · gonorrhea</a></div>
+      <div class="bib-i"><span class="bib-n">MMWR</span><span class="bib-y">2020</span><span class="lv lv-a">Update</span>
+        <div class="bib-r" style="margin-top:4px;">St. Cyr S, et al. <strong>Update to CDC's Treatment Guidelines for Gonococcal Infection, 2020.</strong> MMWR 2020;69(50):1911-1916.</div>
+        <a class="bib-l" href="https://www.cdc.gov/mmwr/volumes/69/wr/mm6950a6.htm" target="_blank" rel="noopener">MMWR 2020</a></div>
+      <div class="bib-i"><span class="bib-n">OMS</span><span class="bib-y">vigente</span><span class="lv lv-b">Treatment</span>
+        <div class="bib-r" style="margin-top:4px;">OMS. <strong>Guidelines for the treatment of <em>Neisseria gonorrhoeae</em></strong> (ceftriaxona; alternativas según resistencia local).</div></div>
+    </div>
+  </div>
+  <div class="bib-s">
+    <div class="bib-sh">México</div>
+    <div class="bib-sb">
+      <div class="bib-i"><span class="bib-n">NOM</span><span class="bib-y">vigente</span><span class="lv lv-e">SSA</span>
+        <div class="bib-r" style="margin-top:4px;"><strong>NOM-039-SSA2</strong> — Prevención y control de las infecciones de transmisión sexual (notificación y manejo).</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showT(id, el){
+  var panels=document.querySelectorAll('.panel');
+  for(var i=0;i<panels.length;i++){panels[i].classList.remove('on');}
+  var p=document.getElementById('tab-'+id);
+  if(p)p.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++){tabs[j].classList.remove('on');}
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling;
+  var sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+
+function renderFicha(f,idx){
+  var bc=f.co==="#0a5c45"?"rgba(10,92,69,0.06)":f.co==="#0c3b6e"?"rgba(12,59,110,0.06)":f.co==="#7a4a00"?"rgba(122,74,0,0.06)":f.co==="#7b1c1c"?"rgba(123,28,28,0.06)":f.co==="#0f7a5a"?"rgba(15,122,90,0.06)":f.co==="#9d2c5f"?"rgba(157,44,95,0.06)":"rgba(55,65,81,0.06)";
+  return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
+    +"<div onclick='toggleFicha("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='farr-"+idx+"'>&#8964;</span></div>"
+    +"<div id='fbody-"+idx+"' style='display:none;'>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Clase farmacologica</div><div style='font-size:12px;color:#374151;'>"+f.cl+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis</div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Inicio</span><span style='font-weight:600;text-align:right;'>"+f.ini+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Esquema</span><span style='font-weight:700;color:#c0392b;text-align:right;'>"+f.esq+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Via</span><span style='font-weight:600;text-align:right;'>"+f.iv+"</span></div>"
+    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:10px;'><span style='color:#6b7280;'>Duracion</span><span style='font-weight:700;color:"+f.co+";text-align:right;'>"+(f.dur||"—")+"</span></div>"
+    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentacion MX:</strong> "+f.pr+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Indicaciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.ind+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Contraindicaciones</div><div style='font-size:12px;color:#c0392b;line-height:1.6;'>"+f.ci+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Precauciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.prec+"</div></div>"
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Titulacion</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.tit+"</div></div>"
+    +"<div style='padding:12px 14px;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Evidencia</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.ev+"</div></div>"
+    +"</div></div>";
+}
+function toggleFicha(idx){
+  var b=document.getElementById("fbody-"+idx),a=document.getElementById("farr-"+idx);
+  if(b.style.display==="none"){b.style.display="block";a.style.transform="rotate(180deg)";}
+  else{b.style.display="none";a.style.transform="rotate(0deg)";}
+}
+
+function filtrarFarmacos(q){
+  var list=document.getElementById("farm-list"),count=document.getElementById("farm-count");
+  if(!list)return;
+  var term=q.toLowerCase().trim();
+  var byName={};
+  for(var i=0;i<FARMACOS_ASMA.length;i++){byName[FARMACOS_ASMA[i].n]=i;}
+  var html="",found=0;
+  for(var g=0;g<FAMILIAS.length;g++){
+    var names=FAMILIAS[g][1],block="",cnt=0;
+    for(var k=0;k<names.length;k++){
+      var idx=byName[names[k]];if(idx===undefined)continue;
+      var f=FARMACOS_ASMA[idx];
+      var s=(f.n+" "+f.m+" "+f.cl+" "+f.pi+" "+f.ind).toLowerCase();
+      if(!term||s.indexOf(term)!==-1){block+=renderFicha(f,idx);cnt++;found++;}
+    }
+    if(cnt){html+="<div style='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#0c3b6e;margin:14px 0 6px;padding-left:2px;'>"+FAMILIAS[g][0]+"</div>"+block;}
+  }
+  list.innerHTML=html||"<div style='text-align:center;padding:20px;color:#9ca3af;font-size:13px;'>Sin resultados</div>";
+  if(count)count.textContent=found+(found===1?" farmaco":" farmacos");
+}
+
+function renderIndic(){
+  var list=document.getElementById("ind-list");
+  if(!list)return;
+  var html="";
+  for(var i=0;i<INDIC.length;i++){
+    var it=INDIC[i];
+    html+="<div class='ind-b'><div class='ind-bh'>"+it.nm+"</div><div class='ind-bb'>";
+    html+="<div style='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;' id='inddoses-"+i+"'>";
+    for(var j=0;j<it.doses.length;j++){
+      html+="<button class='pchip"+(j===0?" on":"")+"' onclick='selDosis("+i+","+j+")'>"+it.doses[j].d+"</button>";
+    }
+    html+="</div>";
+    html+="<div class='alert a-i'><span class='ai'>&#128105;&#8205;&#9877;&#65039;</span><div><div class='at'>Enfermeria</div><span id='indenf-tx-"+i+"'>"+it.doses[0].enf+"</span></div></div>";
+    html+="<div class='alert a-g'><span class='ai'>&#129489;</span><div><div class='at'>Paciente</div><span id='indpac-tx-"+i+"'>"+it.doses[0].pac+"</span></div></div>";
+    html+="</div></div>";
+  }
+  list.innerHTML=html;
+}
+function selDosis(i,j){
+  var it=INDIC[i];
+  document.getElementById("indenf-tx-"+i).textContent=it.doses[j].enf;
+  document.getElementById("indpac-tx-"+i).textContent=it.doses[j].pac;
+  var cont=document.getElementById("inddoses-"+i);
+  var chips=cont.getElementsByClassName("pchip");
+  for(var k=0;k<chips.length;k++){chips[k].classList.remove("on");}
+  chips[j].classList.add("on");
+}
+
+function renderEscen(){
+  var chips=document.getElementById("esce-chips");
+  if(!chips)return;
+  var html="";
+  for(var i=0;i<ESCEN.length;i++){
+    html+="<button class='pchip"+(i===0?" on":"")+"' onclick='selEscen("+i+")'>"+ESCEN[i].ic+" "+ESCEN[i].t+"</button>";
+  }
+  chips.innerHTML=html;
+  document.getElementById("esce-content").innerHTML=ESCEN[0].html;
+}
+function selEscen(i){
+  document.getElementById("esce-content").innerHTML=ESCEN[i].html;
+  var chips=document.getElementById("esce-chips").getElementsByClassName("pchip");
+  for(var k=0;k<chips.length;k++){chips[k].classList.remove("on");}
+  chips[i].classList.add("on");
+}
+
+/* ===== FÁRMACOS (molde .med) ===== */
+var FARMACOS_ASMA=[
+  {n:"Ceftriaxona",m:"Cefalosporina 3.ª gen · IM",cl:"Cefalosporina de tercera generación; bactericida",pi:"1ª línea ÚNICA para gonorrea (IM, dosis única)",co:"#0f7a5a",
+   ini:"500 mg IM dosis única (1 g si ≥150 kg)",esq:"Dosis única",iv:"Intramuscular (IV en diseminada)",pr:"Vial 500 mg / 1 g",dur:"Única (7 días en diseminada).",
+   ind:"Gonorrea de cualquier sitio; diseminada; conjuntivitis; oftalmía neonatal",
+   ci:"Alergia grave (anafilaxia) a cefalosporinas o penicilinas",
+   prec:"Precaución si hay alergia a betalactámicos; reconstituir con lidocaína reduce el dolor",
+   tit:"No se titula.",
+   ev:"Primera línea CDC 2020/2021 y OMS."},
+  {n:"Doxiciclina",m:"Tetraciclina · clamidia",cl:"Tetraciclina; cubre Chlamydia trachomatis",pi:"Cotratamiento de clamidia si no se descartó (NO en embarazo)",co:"#0c3b6e",
+   ini:"100 mg VO cada 12 h por 7 días",esq:"7 días",iv:"Oral",pr:"Cápsulas/tabletas 100 mg",dur:"7 días.",
+   ind:"Cotratamiento de clamidia cuando no se ha descartado",
+   ci:"Embarazo y lactancia · niños pequeños · alergia a tetraciclinas",
+   prec:"Fotosensibilidad; tomar con agua y sin acostarse de inmediato (esofagitis)",
+   tit:"No se titula.",
+   ev:"Sustituyó a la azitromicina como tratamiento de clamidia (CDC)."},
+  {n:"Azitromicina",m:"Macrólido",cl:"Macrólido; clamidia en embarazo o esquema alterno",pi:"Clamidia en embarazo (1 g) o régimen alterno de gonorrea (2 g)",co:"#0f7a5a",
+   ini:"Clamidia en embarazo: 1 g VO única · gonorrea (alterno): 2 g VO única",esq:"Dosis única",iv:"Oral",pr:"Tabletas 500 mg / suspensión",dur:"Única.",
+   ind:"Clamidia en el embarazo; régimen alterno de gonorrea (con gentamicina)",
+   ci:"Alergia a macrólidos",
+   prec:"Resistencia creciente del gonococo: ya no se usa de rutina; náusea con 2 g",
+   tit:"No se titula.",
+   ev:"Uso selectivo (resistencia); ya no es de rutina."},
+  {n:"Cefixima",m:"Cefalosporina oral",cl:"Cefalosporina de 3.ª generación oral",pi:"Alternativa ORAL si no hay ceftriaxona (no en faríngea)",co:"#7a4a00",
+   ini:"800 mg VO dosis única",esq:"Dosis única",iv:"Oral",pr:"Tabletas/suspensión",dur:"Única.",
+   ind:"Gonorrea no complicada cuando no se dispone de ceftriaxona",
+   ci:"Alergia a cefalosporinas",
+   prec:"Menor eficacia; NO usar en gonorrea faríngea; resistencia creciente",
+   tit:"No se titula.",
+   ev:"Alternativa (no preferida) por resistencia a cefalosporinas orales."},
+  {n:"Gentamicina",m:"Aminoglucósido · IM",cl:"Aminoglucósido; esquema alterno con azitromicina",pi:"Alternativa si alergia a cefalosporinas o sin ceftriaxona",co:"#7b1c1c",
+   ini:"240 mg IM dosis única (+ azitromicina 2 g VO)",esq:"Dosis única",iv:"Intramuscular",pr:"Ampolletas",dur:"Única.",
+   ind:"Esquema alterno de gonorrea (con azitromicina)",
+   ci:"Alergia a aminoglucósidos",
+   prec:"Nefro/ototoxicidad (mínima en dosis única)",
+   tit:"No se titula.",
+   ev:"Alternativa CDC cuando no se puede usar ceftriaxona."}
+];
+var FAMILIAS=[
+  ["Primera línea",["Ceftriaxona"]],
+  ["Cotratamiento de clamidia",["Doxiciclina","Azitromicina"]],
+  ["Alternativas",["Cefixima","Gentamicina"]]
+];
+
+/* ===== Info profunda ===== */
+var DEEP={
+ "Ceftriaxona":{
+   pq:"Es el único fármaco de primera línea que conserva alta eficacia frente al gonococo pese a la resistencia creciente; por eso se reserva y se usa correctamente.",
+   dosis:"500 mg IM dosis única (&lt;150 kg); 1 g IM si ≥150 kg. Diseminada o conjuntivitis del adulto: 1 g IM/IV cada 24 h.",
+   cc:"Dosis única (cada 24 h en la diseminada).",
+   como:"Intramuscular profunda (reconstituir con lidocaína reduce el dolor); intravenosa y hospitalizada en la forma diseminada.",
+   tit:"No se titula.",
+   dur:"Única en no complicada; 7 días en diseminada.",
+   mon:"Reacción alérgica; respuesta clínica de los síntomas."},
+ "Doxiciclina":{
+   pq:"La coinfección por clamidia es muy frecuente; si no se descartó, se trata junto con la gonorrea. La doxiciclina es de elección para clamidia.",
+   dosis:"100 mg por vía oral cada 12 horas durante 7 días.",
+   cc:"Cada 12 horas, 7 días.",
+   como:"Oral, con abundante agua y sin acostarse de inmediato (evita esofagitis); con alimentos si hay molestias.",
+   tit:"No se titula.",
+   dur:"7 días.",
+   mon:"Fotosensibilidad y molestias digestivas."},
+ "Azitromicina":{
+   pq:"Útil para clamidia en el embarazo (donde la doxiciclina está contraindicada) y como parte de esquemas alternos de gonorrea cuando no hay ceftriaxona.",
+   dosis:"Clamidia en embarazo: 1 g VO dosis única. Esquema alterno de gonorrea: 2 g VO dosis única (con gentamicina).",
+   cc:"Dosis única.",
+   como:"Oral.",
+   tit:"No se titula.",
+   dur:"Única.",
+   mon:"Molestias digestivas; náusea con la dosis de 2 g."},
+ "Cefixima":{
+   pq:"Opción oral cuando no se dispone de ceftriaxona inyectable; es menos eficaz, sobre todo en la infección faríngea.",
+   dosis:"800 mg por vía oral en dosis única.",
+   cc:"Dosis única.",
+   como:"Oral.",
+   tit:"No se titula.",
+   dur:"Única.",
+   mon:"Respuesta clínica; considerar prueba de curación."},
+ "Gentamicina":{
+   pq:"Combinada con azitromicina es la opción cuando no se puede usar ceftriaxona (alergia grave a betalactámicos o no disponible).",
+   dosis:"240 mg IM dosis única, junto con azitromicina 2 g VO.",
+   cc:"Dosis única.",
+   como:"Intramuscular.",
+   tit:"No se titula.",
+   dur:"Única.",
+   mon:"Respuesta clínica; función renal/auditiva solo si se usa de forma prolongada."}
+};
+function fr_(l,v,st,c){return "<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;gap:12px;'><span style='color:#6b7280;white-space:nowrap;'>"+l+"</span><span style='font-weight:"+(st?"700":"600")+";"+(c?"color:"+c+";":"")+"text-align:right;'>"+v+"</span></div>";}
+function fs_(l,v,c){return "<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>"+l+"</div><div style='font-size:12px;color:"+(c||"#374151")+";line-height:1.6;'>"+v+"</div></div>";}
+function fb_(l,v,bc){return "<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>"+l+"</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+v+"</div></div>";}
+function renderFicha(f,idx){
+  var bc=f.co==="#0a5c45"?"rgba(10,92,69,0.06)":f.co==="#0c3b6e"?"rgba(12,59,110,0.06)":f.co==="#7a4a00"?"rgba(122,74,0,0.06)":f.co==="#7b1c1c"?"rgba(123,28,28,0.06)":f.co==="#0f7a5a"?"rgba(15,122,90,0.06)":f.co==="#9d2c5f"?"rgba(157,44,95,0.06)":"rgba(55,65,81,0.06)";
+  var d=DEEP[f.n]||{};
+  var g=function(x,y){return (x===undefined||x===null||x==="")?(y||"—"):x;};
+  return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
+    +"<div onclick='toggleFicha("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='farr-"+idx+"'>&#8964;</span></div>"
+    +"<div id='fbody-"+idx+"' style='display:none;'>"
+    +fb_("Por qué se usa",g(d.pq,f.cl),bc)
+    +fs_("Clase",f.cl)
+    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis y administración</div>"
+    +fr_("Dosis",g(d.dosis,f.ini),true,f.co)
+    +fr_("Cada cuánto",g(d.cc),false)
+    +fr_("Cómo se da",g(d.como),false)
+    +fr_("Vía",g(f.iv),false)
+    +fr_("Esquema",g(f.esq),true,"#c0392b")
+    +fr_("Hasta cuándo",g(d.dur,f.dur),true,f.co)
+    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentación:</strong> "+f.pr+"</div></div>"
+    +fb_("Qué vigilar",g(d.mon),bc)
+    +fs_("Indicaciones",f.ind)
+    +fs_("Contraindicaciones",f.ci,"#c0392b")
+    +fs_("Precauciones",f.prec)
+    +fb_("Evidencia",f.ev,bc)
+    +"</div></div>";
+}
+
+/* ===== Escalera ===== */
+function lineBadge(num,label,sub){
+  var roman=num===1?'1ª LÍNEA':num===2?'2ª LÍNEA':num===3?'3ª LÍNEA':num+'ª LÍNEA';
+  var star=num===1?'⭐ ':'';
+  var bg=num===1?'linear-gradient(135deg,#b8860b,#e0a91b)':num===2?'#0f7a5a':num===3?'#6b7280':'#374151';
+  return '<div style="display:flex;align-items:center;gap:8px;margin:14px 0 8px;flex-wrap:wrap;">'
+    +'<span style="background:'+bg+';color:#fff;font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.15);">'+star+roman+'</span>'
+    +'<span style="font-size:12.5px;font-weight:700;color:#374151;">'+label+'</span>'
+    +'<span style="font-size:11.5px;color:#6b7280;line-height:1.4;flex:1;min-width:150px;">'+(sub||'')+'</span></div>';
+}
+function objHdr(t){return '<div style="margin:22px 0 6px;font-size:13px;font-weight:800;color:#0f7a5a;border-bottom:2px solid var(--gl);padding-bottom:5px;">'+t+'</div>';}
+function nextStep(txt){return '<div style="display:flex;gap:8px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;border-left:3px solid #f59e0b;border-radius:8px;padding:9px 11px;margin:10px 0 6px;"><span style="font-size:15px;">↪</span><div style="font-size:12px;color:#7c2d12;line-height:1.55;"><strong>¿Qué sigue?</strong> '+txt+'</div></div>';}
+function procCard(color,name,role,pq,cuando,como,seg){
+  function row(l,v){return '<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;"><strong style="color:'+color+';">'+l+':</strong> '+v+'</div>';}
+  return '<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;border-left:4px solid '+color+';margin-bottom:8px;padding:12px 14px;">'
+    +'<div style="font-size:14px;font-weight:700;color:'+color+';">'+name+'</div>'
+    +'<div style="font-size:11px;color:#6b7280;margin-top:2px;">'+role+'</div>'
+    +row('Por qué',pq)+row('Cuándo',cuando)+row('Cómo',como)+row('Seguimiento',seg)+'</div>';
+}
+
+function renderTxcMeds(){
+  var el=document.getElementById('txc-meds');if(!el)return;
+  var h='';
+  h+=objHdr('🎯 Gonorrea no complicada (urogenital, rectal, faríngea)');
+  h+=lineBadge(1,'Ceftriaxona IM','dosis única');
+  h+=renderFicha(FARMACOS_ASMA[0],0);
+  h+='<div class="alert a-w" style="margin:4px 0 6px;"><span class="ai">➕</span><div>Si NO se ha descartado <strong>clamidia</strong>: añadir <strong>doxiciclina</strong> 100 mg cada 12 h por 7 días (azitromicina 1 g si embarazo).</div></div>';
+  h+=renderFicha(FARMACOS_ASMA[1],1);
+  h+=lineBadge(2,'Alternativas','sin ceftriaxona o alergia');
+  h+='<div style="font-size:12px;color:#374151;line-height:1.6;margin:0 0 6px;padding-left:4px;">• <strong>Gentamicina</strong> 240 mg IM + <strong>azitromicina</strong> 2 g VO &nbsp;|&nbsp; • <strong>Cefixima</strong> 800 mg VO (NO en faríngea).</div>';
+  h+=renderFicha(FARMACOS_ASMA[4],204);
+  h+=renderFicha(FARMACOS_ASMA[3],203);
+  h+=nextStep('Falla terapéutica o persistencia: cultivo con antibiograma, consultar/referir y reportar. Prueba de curación obligatoria en gonorrea faríngea.');
+
+  h+=objHdr('🤰 Embarazo');
+  h+=procCard('#9d2c5f','Gonorrea en el embarazo','Esquema seguro en la gestación',
+    'La gonorrea no tratada causa complicaciones obstétricas y oftalmía neonatal.',
+    'Cualquier trimestre, al confirmarse.',
+    'Ceftriaxona 500 mg IM dosis única + (para clamidia) azitromicina 1 g VO. NO usar doxiciclina.',
+    'Prueba de curación y retamizaje; tratar parejas.');
+
+  h+=objHdr('🚨 Infección gonocócica diseminada');
+  h+=procCard('#7b1c1c','Forma diseminada (artritis-dermatitis)','Requiere hospitalización',
+    'La diseminación causa artritis séptica y lesiones cutáneas; necesita tratamiento parenteral.',
+    'Fiebre, poliartralgias/artritis y lesiones cutáneas pustulosas.',
+    'Ceftriaxona 1 g IM/IV cada 24 h, al menos 7 días (+ doxiciclina si no se descartó clamidia).',
+    'Vigilancia hospitalaria; ajustar por sensibilidad.');
+
+  h+=objHdr('👁️ Conjuntivitis / oftalmía neonatal');
+  h+=procCard('#0c3b6e','Conjuntivitis gonocócica','Adulto y recién nacido',
+    'La conjuntivitis gonocócica es intensa y puede dañar la córnea.',
+    'Secreción purulenta ocular abundante.',
+    'Adulto: ceftriaxona 1 g IM dosis única + lavado ocular con solución salina. Recién nacido: ceftriaxona 25-50 mg/kg (máx 250 mg) IM/IV dosis única.',
+    'Tratar a la madre y a las parejas; profilaxis ocular neonatal.');
+  el.innerHTML=h;
+}
+
+/* ===== INDICACIONES ===== */
+var INDIC=[
+  {id:"ceft",nm:"Aplicación de ceftriaxona",doses:[
+    {d:"500 mg IM dosis única",enf:"Ceftriaxona 500 mg intramuscular profunda, dosis única (1 g si pesa ≥150 kg). Reconstituir con lidocaína al 1% para disminuir el dolor. Verificar alergia a penicilinas/cefalosporinas y observar 15-30 min. Indicar abstinencia sexual 7 días.",pac:"Es una sola inyección que cura la infección. Después no tenga relaciones por 7 días y hasta que su pareja también se trate. Si le da ronchas, dificultad para respirar o hinchazón, avise de inmediato."}
+  ]},
+  {id:"doxi",nm:"Doxiciclina (clamidia)",doses:[
+    {d:"100 mg cada 12 h por 7 días",enf:"Doxiciclina 100 mg vía oral cada 12 horas por 7 días para cubrir clamidia. Tomar con un vaso de agua, sin acostarse 30 min, evitar sol intenso. No usar en embarazo (sustituir por azitromicina 1 g).",pac:"Tome una pastilla cada 12 horas durante 7 días, completas. Tómela con bastante agua y no se acueste enseguida. Evite el sol fuerte. Termine todo el tratamiento aunque se sienta bien."}
+  ]},
+  {id:"parejas",nm:"Manejo de parejas",doses:[
+    {d:"Últimos 60 días",enf:"Indicar que las parejas sexuales de los últimos 60 días deben evaluarse y tratarse, aunque estén asintomáticas. Donde se permita, ofrecer terapia acelerada de pareja. Abstinencia 7 días tras el tratamiento de ambos.",pac:"Avise a sus parejas de los últimos 2 meses para que se traten, aunque no tengan síntomas; si no, puede reinfectarse. No tengan relaciones hasta 7 días después de que ambos se traten."}
+  ]},
+  {id:"edu",nm:"Educación y prevención",doses:[
+    {d:"Mensaje a la persona",enf:"Reforzar: tomar/recibir todo el tratamiento, tratar parejas, abstinencia 7 días, usar condón, retamizaje a los 3 meses y ofrecer pruebas de VIH, sífilis y clamidia.",pac:"Use condón siempre, complete el tratamiento y avise a sus parejas. Conviene repetir la prueba a los 3 meses y hacerse también las de VIH y sífilis."}
+  ]}
+];
+
+/* ===== ESCENARIOS ===== */
+var ESCEN=[
+  {ic:"&#129656;",t:"Faríngea",html:"<div class='alert a-w'><span class='ai'>&#129656;</span><div><div class='at'>Gonorrea faríngea</div>Casi siempre asintomática; más difícil de erradicar.</div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Ceftriaxona 500 mg IM dosis única.</div><div class='hosp-ctx-i'>NO usar cefixima (menos eficaz en faringe).</div><div class='hosp-ctx-i'><strong>Prueba de curación</strong> a las 1-2 semanas.</div></div>"},
+  {ic:"&#129329;",t:"Embarazo",html:"<div class='alert a-i'><span class='ai'>&#129329;</span><div><div class='at'>Embarazada</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Ceftriaxona 500 mg IM dosis única.</div><div class='hosp-ctx-i'>Clamidia: azitromicina 1 g VO (NO doxiciclina).</div><div class='hosp-ctx-i'>Prueba de curación y tratar parejas; profilaxis ocular al recién nacido.</div></div>"},
+  {ic:"&#128137;",t:"Alergia a cefalosporina",html:"<div class='alert a-r'><span class='ai'>&#128137;</span><div><div class='at'>Alergia grave a betalactámicos</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Gentamicina 240 mg IM + azitromicina 2 g VO.</div><div class='hosp-ctx-i'>Valorar interconsulta/alergología si la reacción fue dudosa.</div></div>"},
+  {ic:"&#128104;",t:"Diseminada",html:"<div class='alert a-r'><span class='ai'>&#128104;</span><div><div class='at'>Infección diseminada</div>Artritis y lesiones cutáneas.</div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Hospitalizar; ceftriaxona 1 g IM/IV cada 24 h por ≥7 días.</div><div class='hosp-ctx-i'>Cotratar clamidia si no se descartó.</div></div>"},
+  {ic:"&#128118;",t:"Recién nacido",html:"<div class='alert a-r'><span class='ai'>&#128118;</span><div><div class='at'>Oftalmía neonatal</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Ceftriaxona 25-50 mg/kg (máx 250 mg) IM/IV dosis única.</div><div class='hosp-ctx-i'>Lavado ocular; tratar a la madre y parejas.</div><div class='hosp-ctx-i'>Profilaxis ocular a todo recién nacido.</div></div>"},
+  {ic:"&#128260;",t:"Reinfección",html:"<div class='alert a-w'><span class='ai'>&#128260;</span><div><div class='at'>Síntomas tras el tratamiento</div></div></div><div class='hosp-ctx'><div class='hosp-ctx-t'>Plan</div><div class='hosp-ctx-i'>Lo más frecuente es <strong>reinfección</strong> (pareja no tratada), no falla.</div><div class='hosp-ctx-i'>Repetir tratamiento, tratar parejas y reforzar condón.</div><div class='hosp-ctx-i'>Si fue verdadera falla: cultivo con antibiograma y referir.</div></div>"}
+];
+
+/* ===== Motor de algoritmos ===== */
+var TOOLS={
+  tam:{cont:"tam-step",hist:[],def:{
+    start:{q:"¿Qué perfil tiene la persona?",o:[
+      {t:"Mujer sexualmente activa <25 años",n:"rSi"},
+      {t:"Mujer ≥25 con factores de riesgo",n:"rSi"},
+      {t:"Hombre que tiene sexo con hombres",n:"rHSH"},
+      {t:"Embarazada",n:"rEmb"}]},
+    rSi:{r:1,t:"Tamizar anualmente",cls:"a-g",li:["Prueba de VPH/gonorrea-clamidia anual (NAAT).","Factores de riesgo: nueva o múltiples parejas, ITS previa, pareja con ITS, sexo sin condón."]},
+    rHSH:{r:1,t:"Tamizar (al menos anual)",cls:"a-g",li:["Al menos una vez al año en TODOS los sitios expuestos (uretra/orina, recto, faringe).","Cada 3-6 meses si hay mayor riesgo o VIH."]},
+    rEmb:{r:1,t:"Tamizar en el embarazo",cls:"a-i",li:["Tamizar si es <25 años o tiene factores de riesgo, en la primera consulta.","Repetir en el 3.er trimestre si persiste el riesgo."]}
+  }},
+  trat:{cont:"trat-step",hist:[],def:{
+    start:{q:"¿Cuál es la situación?",o:[
+      {t:"No complicada (genital/rectal/faríngea)",n:"rNC"},
+      {t:"Embarazo",n:"rEmb"},
+      {t:"Sin ceftriaxona o alergia",n:"rAlt"},
+      {t:"Diseminada",n:"rDis"},
+      {t:"Conjuntivitis / recién nacido",n:"rConj"}]},
+    rNC:{r:1,t:"No complicada",cls:"a-g",li:["<b>Ceftriaxona 500 mg IM</b> dosis única (1 g si ≥150 kg).","+ doxiciclina 100 mg c/12 h × 7 días si no se descartó clamidia.","Faríngea: prueba de curación a las 1-2 semanas."]},
+    rEmb:{r:1,t:"Embarazo",cls:"a-i",li:["Ceftriaxona 500 mg IM dosis única.","Clamidia: <b>azitromicina 1 g VO</b> (no doxiciclina)."]},
+    rAlt:{r:1,t:"Alternativa",cls:"a-w",li:["<b>Gentamicina 240 mg IM + azitromicina 2 g VO.</b>","O cefixima 800 mg VO (NO en faríngea)."]},
+    rDis:{r:1,t:"Diseminada",cls:"a-r",li:["Hospitalizar; <b>ceftriaxona 1 g IM/IV c/24 h</b> ≥7 días.","Cotratar clamidia si no se descartó."]},
+    rConj:{r:1,t:"Conjuntivitis / RN",cls:"a-r",li:["Adulto: ceftriaxona 1 g IM dosis única + lavado ocular.","Recién nacido: ceftriaxona 25-50 mg/kg (máx 250 mg) dosis única."]}
+  }}
+};
+function atoolRender(key,sid){
+  var T=TOOLS[key];var s=T.def[sid];if(!s)return;
+  var el=document.getElementById(T.cont);if(!el)return;
+  if(s.r){
+    var h='<div class="alert '+s.cls+'"><span class="ai">&#9656;</span><div><div class="at">'+s.t+'</div></div></div>';
+    for(var i=0;i<s.li.length;i++){h+='<div class="atool-li">'+s.li[i]+'</div>';}
+    h+='<button class="atool-back" onclick="atoolReset(\''+key+'\')" style="margin-top:10px;">&#8635; Empezar de nuevo</button>';
+    el.innerHTML=h;return;
+  }
+  var h='<div class="atool-q">'+s.q+'</div>';
+  for(var i=0;i<s.o.length;i++){h+='<button class="atool-opt" onclick="atoolGo(\''+key+'\',\''+sid+'\','+i+')">'+s.o[i].t+'</button>';}
+  if(T.hist.length)h+='<button class="atool-back" onclick="atoolBack(\''+key+'\')">&larr; Volver</button>';
+  el.innerHTML=h;
+}
+function atoolGo(key,sid,i){TOOLS[key].hist.push(sid);atoolRender(key,TOOLS[key].def[sid].o[i].n);}
+function atoolBack(key){var h=TOOLS[key].hist;if(h.length)atoolRender(key,h.pop());}
+function atoolReset(key){TOOLS[key].hist=[];atoolRender(key,'start');}
+
+/* ===== Init ===== */
+window.addEventListener('load',function(){
+  filtrarFarmacos('');
+  renderIndic();
+  renderEscen();
+  renderTxcMeds();
+  atoolReset('tam');
+  atoolReset('trat');
+});
+
+</script>
+</body>
+</html>

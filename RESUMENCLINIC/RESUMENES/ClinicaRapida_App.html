@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>HAS — Hipertensión Arterial Sistémica · Clínica Rápida</title>
+<style>
+:root{
+  --bg0:#0d1117;--bg1:#161b22;--bg2:#21262d;--bg3:#30363d;
+  --t1:#e6edf3;--t2:#c9d1d9;--t3:#8b949e;--t4:#6e7681;--t5:#484f58;
+  --bd:#21262d;--bd2:#30363d;
+  --green:#5ee8b8;--greend:#0a5c45;--greenm:#0f7a5a;
+  --blue:#58a6ff;--blued:#1158c7;
+  --red:#f85149;--redd:#da3633;--redl:rgba(248,81,73,0.12);
+  --amber:#e3b341;--amberl:rgba(227,179,65,0.12);
+  --purple:#a78bfa;--purplel:rgba(167,139,250,0.12);
+  --sidebar:210px;--topnav:44px;
+  --rad:8px;--rs:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg0);color:var(--t1);font-size:13px;}
+
+/* ── TOP BAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topnav);background:var(--bg0);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;padding:0 14px;z-index:200;}
+.tb-logo{color:var(--green);font-size:15px;font-weight:700;letter-spacing:-0.3px;white-space:nowrap;flex-shrink:0;}
+.tb-logo span{color:var(--t1);}
+.tb-sw{position:relative;flex:1;max-width:440px;}
+.tb-si{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t4);font-size:13px;pointer-events:none;}
+.tb-s{width:100%;background:var(--bg2);border:1px solid var(--bd2);border-radius:20px;padding:6px 12px 6px 30px;font-size:12px;color:var(--t1);outline:none;transition:border-color 0.2s;}
+.tb-s::placeholder{color:var(--t4);}
+.tb-s:focus{border-color:var(--green);}
+.tb-right{margin-left:auto;display:flex;gap:6px;align-items:center;}
+.tb-tag{background:var(--bg2);color:var(--t3);font-size:10px;padding:3px 9px;border-radius:10px;border:1px solid var(--bd2);}
+.menu-btn{display:none;background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:4px;flex-shrink:0;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;height:100vh;padding-top:var(--topnav);}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--bg1);border-right:1px solid var(--bd);overflow-y:auto;transition:transform 0.25s;}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bg3);}
+.sov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;}
+
+.sg{border-bottom:1px solid var(--bd);}
+.sg-h{display:flex;align-items:center;gap:7px;padding:8px 10px;cursor:pointer;font-size:10px;font-weight:600;color:var(--t4);text-transform:uppercase;letter-spacing:0.6px;user-select:none;transition:color 0.1s;}
+.sg-h:hover{color:var(--t2);}
+.sg-ico{font-size:13px;}
+.sg-name{flex:1;}
+.sg-arr{font-size:10px;color:var(--t5);transition:transform 0.2s;}
+.sg-arr.open{transform:rotate(90deg);}
+.tlist{display:none;padding:2px 0 4px;}
+.tlist.open{display:flex;flex-direction:column;}
+.ti{padding:5px 10px 5px 26px;font-size:12px;color:var(--t3);cursor:pointer;border-left:2px solid transparent;transition:all 0.1s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ti:hover{color:var(--t1);background:rgba(255,255,255,0.03);}
+.ti.on{color:var(--green);border-left-color:var(--green);background:rgba(94,232,184,0.07);font-weight:500;}
+.ti-badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:4px;margin-left:4px;flex-shrink:0;}
+.tbu{background:rgba(248,81,73,0.2);color:#ff7b72;}
+.tbc{background:rgba(94,232,184,0.15);color:#5ee8b8;}
+.tbch{background:rgba(88,166,255,0.15);color:#79c0ff;}
+
+/* ── CONTENT ── */
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+
+/* ── TOPIC ── */
+.topic-hdr{background:linear-gradient(135deg,var(--greend),var(--greenm));padding:16px 18px;flex-shrink:0;}
+.t-back{display:none;background:none;border:none;color:rgba(255,255,255,0.7);font-size:12px;cursor:pointer;margin-bottom:8px;padding:0;align-items:center;gap:4px;}
+.t-eye{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-bottom:4px;}
+.t-title{font-size:18px;font-weight:700;color:#fff;line-height:1.2;}
+.t-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;}
+.t-badges{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;}
+.t-badge{background:rgba(255,255,255,0.15);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;}
+
+/* ── POP SELECTOR ── */
+.pop-bar{background:var(--bg1);border-bottom:1px solid var(--bd);flex-shrink:0;}
+.pop-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:var(--t4);padding:6px 12px 2px;}
+.pop-grid{display:grid;grid-template-columns:repeat(4,1fr);}
+.pop-btn{padding:7px 4px;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-bottom:2px solid transparent;transition:all 0.12s;}
+.pop-btn .pi{font-size:16px;}
+.pop-btn .pl{font-size:9px;font-weight:600;color:var(--t4);text-transform:uppercase;letter-spacing:0.3px;}
+.pop-btn.on-a{border-bottom-color:var(--blue);background:rgba(88,166,255,0.07);}
+.pop-btn.on-a .pl{color:var(--blue);}
+.pop-btn.on-p{border-bottom-color:#f59e0b;background:rgba(245,158,11,0.07);}
+.pop-btn.on-p .pl{color:#f59e0b;}
+.pop-btn.on-g{border-bottom-color:#ec4899;background:rgba(236,72,153,0.07);}
+.pop-btn.on-g .pl{color:#ec4899;}
+.pop-btn.on-n{border-bottom-color:var(--purple);background:var(--purplel);}
+.pop-btn.on-n .pl{color:var(--purple);}
+
+/* ── CTX ── */
+.ctx-bar{display:flex;background:var(--bg1);border-bottom:1px solid var(--bd);flex-shrink:0;}
+.ctx-btn{flex:1;padding:8px;border:none;background:none;cursor:pointer;font-size:11px;font-weight:600;color:var(--t4);border-bottom:2px solid transparent;transition:all 0.12s;}
+.ctx-btn.on{color:var(--green);border-bottom-color:var(--green);background:rgba(94,232,184,0.06);}
+
+/* ── QSTATS ── */
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg1);border-bottom:1px solid var(--bd);flex-shrink:0;}
+.qs{padding:9px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:13px;font-weight:700;color:var(--green);}
+.qs-l{font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
+
+/* ── INNER TABS ── */
+.itabs{display:flex;background:var(--bg1);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:50;flex-shrink:0;}
+.itabs::-webkit-scrollbar{display:none;}
+.itab{padding:9px 12px;font-size:11px;font-weight:500;color:var(--t4);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.12s;flex-shrink:0;}
+.itab.on{color:var(--green);border-bottom-color:var(--green);}
+.itab.enf{}.itab.enf.on{color:var(--purple);border-bottom-color:var(--purple);}
+.itab.bib.on{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* ── PANELS ── */
+.panels{flex:1;overflow-y:auto;background:var(--bg0);}
+.panels::-webkit-scrollbar{width:4px;}
+.panels::-webkit-scrollbar-thumb{background:var(--bg2);}
+.panel{display:none;padding:14px 16px 60px;}
+.panel.on{display:block;}
+
+/* ── SECTIONS ── */
+.sec{background:var(--bg1);border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.sh{padding:10px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);cursor:pointer;user-select:none;}
+.si{font-size:15px;flex-shrink:0;}
+.st{font-size:12px;font-weight:600;color:var(--t1);flex:1;}
+.sg2{font-size:16px;color:var(--t5);transition:transform 0.2s;flex-shrink:0;}
+.sg2.open{transform:rotate(180deg);}
+.sb{padding:13px;}
+.sb.hidden{display:none;}
+
+/* ── PROSE ── */
+.prose{font-size:12px;line-height:1.7;color:var(--t2);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--t1);font-weight:600;}
+.prose ul{padding-left:18px;margin-bottom:8px;}.prose li{margin-bottom:3px;}
+
+/* ── KEY POINTS ── */
+.kp{display:flex;gap:9px;align-items:flex-start;padding:7px 9px;background:rgba(94,232,184,0.06);border-left:2px solid var(--green);border-radius:0 var(--rs) var(--rs) 0;margin-bottom:5px;}
+.kp:last-child{margin-bottom:0;}
+.kn{background:var(--green);color:var(--bg0);width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12px;color:var(--t2);line-height:1.5;}
+.kt strong{color:var(--t1);}
+
+/* ── ALERTS ── */
+.alert{border-radius:var(--rs);padding:8px 11px;font-size:12px;line-height:1.55;margin-bottom:7px;display:flex;gap:8px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.ai{font-size:15px;flex-shrink:0;margin-top:1px;}
+.at{font-weight:600;margin-bottom:2px;}
+.a-r{background:var(--redl);color:#ff7b72;border-left:2px solid var(--red);}
+.a-w{background:var(--amberl);color:var(--amber);border-left:2px solid var(--amber);}
+.a-i{background:rgba(88,166,255,0.1);color:#79c0ff;border-left:2px solid var(--blue);}
+.a-g{background:rgba(94,232,184,0.08);color:var(--green);border-left:2px solid var(--green);}
+.a-gr{background:rgba(255,255,255,0.04);color:var(--t2);border-left:2px solid var(--t5);}
+
+/* ── TABLES ── */
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:11.5px;}
+.t th{background:var(--bg2);color:var(--t4);font-size:9.5px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:600;border-bottom:1px solid var(--bd);}
+.t td{padding:7px 10px;border-bottom:1px solid var(--bd);vertical-align:top;color:var(--t2);}
+.t tr:last-child td{border-bottom:none;}
+.t tr:hover td{background:rgba(255,255,255,0.02);}
+.dn{font-weight:600;color:#79c0ff;}
+.dm{color:#ff7b72;font-weight:600;}
+.dn2{color:var(--t4);font-size:10.5px;}
+
+/* ── DRUG LINES ── */
+.lb{display:inline-block;padding:2px 7px;border-radius:8px;font-size:9.5px;font-weight:700;white-space:nowrap;}
+.l1{background:rgba(94,232,184,0.2);color:var(--green);}
+.l2{background:rgba(88,166,255,0.2);color:#79c0ff;}
+.l3{background:rgba(255,255,255,0.08);color:var(--t3);}
+.lc{background:rgba(167,139,250,0.15);color:var(--purple);}
+.dname{font-weight:600;color:#79c0ff;display:block;margin-bottom:2px;}
+.dnote{color:var(--t4);font-size:10.5px;margin-top:2px;display:block;}
+
+/* ── NO DAR ── */
+.nodar{background:var(--redl);border:1px solid rgba(248,81,73,0.3);border-radius:var(--rs);padding:11px 13px;margin-top:10px;}
+.nodar-t{font-size:10px;font-weight:700;text-transform:uppercase;color:#ff7b72;margin-bottom:7px;}
+.nodar-i{display:flex;align-items:flex-start;gap:7px;padding:4px 0;font-size:12px;color:#ffa198;border-bottom:1px solid rgba(248,81,73,0.15);}
+.nodar-i:last-child{border-bottom:none;}
+.nodar-i::before{content:'✕';font-size:11px;flex-shrink:0;margin-top:1px;}
+
+/* ── INTERACTIONS ── */
+.inter-i{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px;}
+.inter-i:last-child{border-bottom:none;}
+.inter-d{font-weight:600;color:var(--t1);min-width:160px;flex-shrink:0;}
+.inter-e{color:var(--t3);flex:1;}
+.sev{font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;flex-shrink:0;}
+.s-a{background:var(--redl);color:#ff7b72;}
+.s-m{background:var(--amberl);color:var(--amber);}
+
+/* ── LAB GRID ── */
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.lab-c{background:var(--bg2);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:9.5px;font-weight:700;text-transform:uppercase;color:var(--t4);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--t2);line-height:1.4;}
+.lab-a{font-size:10.5px;color:#ff7b72;margin-top:3px;font-weight:600;}
+
+/* ── FISIO ── */
+.fp{display:flex;align-items:flex-start;}
+.fp-l{width:36px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fp-d{width:13px;height:13px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.fp-li{width:2px;background:var(--bg3);flex:1;min-height:20px;}
+.fp-c{flex:1;padding:0 0 13px 11px;}
+.fp-t{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px;}
+.fp-x{font-size:11.5px;color:var(--t3);line-height:1.55;}
+
+/* ── ALGO ── */
+.an{border-radius:var(--rs);padding:9px 11px;margin-bottom:4px;font-size:12px;line-height:1.5;}
+.a-start{background:var(--greend);color:#fff;text-align:center;font-weight:700;border-radius:20px;}
+.a-end{background:rgba(94,232,184,0.1);color:var(--green);text-align:center;font-weight:700;border-radius:20px;border:1px solid rgba(94,232,184,0.3);}
+.a-act{background:var(--bg2);border:1px solid var(--bd2);color:var(--t2);}
+.a-dec{background:var(--amberl);border:1px solid rgba(227,179,65,0.3);color:var(--amber);font-weight:600;}
+.a-dan{background:var(--redl);border:1px solid rgba(248,81,73,0.3);color:#ff7b72;font-weight:600;}
+.a-arr{text-align:center;font-size:16px;color:var(--t5);line-height:1;margin:2px 0;}
+.a-br{display:flex;gap:7px;margin-bottom:4px;}
+.a-yes{flex:1;background:rgba(94,232,184,0.08);border:1px solid rgba(94,232,184,0.25);border-radius:var(--rs);padding:8px 10px;font-size:11.5px;color:var(--green);font-weight:600;}
+.a-no{flex:1;background:var(--redl);border:1px solid rgba(248,81,73,0.25);border-radius:var(--rs);padding:8px 10px;font-size:11.5px;color:#ff7b72;font-weight:600;}
+.br-l{font-size:9.5px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;margin-bottom:3px;opacity:0.7;}
+
+/* ── SCALES ── */
+.sc{border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;margin-bottom:9px;}
+.sc-h{background:var(--bg2);padding:7px 11px;font-size:11px;font-weight:600;color:var(--blue);}
+.sc-b{padding:9px 11px;}
+.sc-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);font-size:11.5px;color:var(--t2);}
+.sc-r:last-child{border-bottom:none;}
+
+/* ── CALC ── */
+.calc-w{background:var(--bg2);border-radius:var(--rs);padding:12px 13px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-t{font-size:11.5px;font-weight:600;color:var(--t1);margin-bottom:8px;}
+.calc-r{display:flex;align-items:center;gap:10px;margin-bottom:7px;flex-wrap:wrap;}
+.calc-l{font-size:11.5px;color:var(--t3);min-width:80px;}
+.calc-in{background:var(--bg0);border:1px solid var(--bd2);border-radius:var(--rs);padding:6px 10px;font-size:13px;font-weight:700;width:85px;text-align:center;outline:none;color:var(--t1);}
+.calc-in:focus{border-color:var(--green);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:12px;text-align:center;}
+.res-ok{background:rgba(94,232,184,0.1);color:var(--green);border:1px solid rgba(94,232,184,0.2);}
+.res-mid{background:var(--amberl);color:var(--amber);border:1px solid rgba(227,179,65,0.2);}
+.res-high{background:var(--redl);color:#ff7b72;border:1px solid rgba(248,81,73,0.2);}
+.res-score{font-size:26px;font-weight:700;}
+.res-label{font-size:12px;font-weight:600;margin-top:4px;}
+.res-action{font-size:11.5px;margin-top:6px;line-height:1.5;opacity:0.85;}
+
+/* ── SEMA ── */
+.sm-r{display:flex;gap:5px;margin-bottom:10px;}
+.sm-i{flex:1;border-radius:var(--rs);padding:7px 4px;text-align:center;}
+.sm-l{font-size:17px;font-weight:800;display:block;}
+.sm-t{font-size:8.5px;display:block;margin-top:2px;font-weight:500;}
+.sA{background:rgba(94,232,184,0.12);color:var(--green);}
+.sB{background:rgba(88,166,255,0.12);color:#79c0ff;}
+.sC{background:var(--amberl);color:var(--amber);}
+.sD{background:var(--redl);color:#ff7b72;}
+.s-on{box-shadow:0 0 0 2px var(--t1);transform:scale(1.05);}
+.s-off{opacity:0.3;}
+
+/* ── FU ── */
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:85px;font-size:10.5px;font-weight:700;color:var(--green);text-transform:uppercase;padding-top:2px;}
+.fu-x{font-size:12px;color:var(--t3);line-height:1.55;}
+
+/* ── ALTA ── */
+.ab{border-radius:var(--rs);padding:11px 13px;margin-bottom:9px;border-left:3px solid;}
+.ab:last-child{margin-bottom:0;}
+.ab-ok{background:rgba(94,232,184,0.07);border-color:var(--green);}
+.ab-no{background:var(--redl);border-color:var(--red);}
+.ab-t{font-size:11.5px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--green);}.ab-no .ab-t{color:#ff7b72;}
+.ab-i{font-size:12px;color:var(--t3);padding:3px 0 3px 12px;position:relative;line-height:1.5;}
+.ab-i::before{content:'•';position:absolute;left:0;opacity:0.5;}
+.rx{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rs);padding:11px 13px;margin-top:9px;}
+.rx-t{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--t4);margin-bottom:7px;}
+.rx-i{font-size:12.5px;color:var(--t2);padding:5px 0;border-bottom:1px solid var(--bd);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--redl);border-radius:var(--rs);padding:11px 13px;margin-top:9px;border:1px solid rgba(248,81,73,0.2);}
+.al-t{font-size:10px;font-weight:700;text-transform:uppercase;color:#ff7b72;margin-bottom:7px;}
+.al-i{font-size:12px;color:#ffa198;padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'⚠️';position:absolute;left:0;font-size:10px;}
+
+/* ── COMPLIC ── */
+.co-i{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:15px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--t1);margin-bottom:2px;font-size:12.5px;}
+.co-d{font-size:11.5px;color:var(--t3);line-height:1.5;}
+.lp{display:inline-block;padding:1px 6px;border-radius:8px;font-size:10px;font-weight:600;margin-left:4px;}
+.lp-r{background:var(--redl);color:#ff7b72;}
+.lp-a{background:var(--amberl);color:var(--amber);}
+.lp-b{background:rgba(88,166,255,0.15);color:#79c0ff;}
+
+/* ── ENF ── */
+.enf-h{background:linear-gradient(135deg,#3b0764,#5b21b6);border-radius:var(--rad);padding:13px 15px;margin-bottom:10px;}
+.enf-b{background:var(--bg1);border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:9px;overflow:hidden;}
+.enf-bh{background:#3b0764;color:#d8b4fe;padding:7px 13px;font-size:11px;font-weight:600;}
+.enf-bb{padding:11px 13px;}
+.enf-o{background:var(--purplel);border-radius:var(--rs);padding:9px 11px;margin-bottom:7px;border-left:2px solid var(--purple);}
+.enf-ot{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--purple);margin-bottom:5px;}
+.enf-oi{font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:3px;padding-left:12px;position:relative;}
+.enf-oi::before{content:'▸';position:absolute;left:0;color:var(--purple);}
+.enf-c{display:flex;align-items:flex-start;gap:9px;padding:6px 0;border-bottom:1px solid var(--bd);}
+.enf-c:last-child{border-bottom:none;}
+.enf-cb{width:15px;height:15px;border:1.5px solid var(--purple);border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.enf-cb.on{background:var(--purple);border-color:var(--purple);}
+.enf-cb.on::after{content:'✓';color:#fff;font-size:9px;font-weight:700;}
+.enf-f{font-size:9.5px;font-weight:700;color:var(--purple);text-transform:uppercase;flex-shrink:0;padding-top:2px;}
+.enf-al{background:var(--redl);border-left:2px solid var(--red);border-radius:var(--rs);padding:8px 11px;margin-bottom:5px;font-size:11.5px;color:#ffa198;}
+.enf-al strong{font-weight:700;display:block;margin-bottom:2px;color:#ff7b72;}
+.pbtn{background:#5b21b6;color:#fff;border:none;padding:9px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;margin-top:7px;}
+
+/* ── BIB ── */
+.bib-h{background:linear-gradient(135deg,#0c2461,#1a6bbd);border-radius:var(--rad);padding:13px 15px;margin-bottom:10px;}
+.bib-s{background:var(--bg1);border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:9px;overflow:hidden;}
+.bib-sh{background:var(--bg2);padding:7px 13px;font-size:11px;font-weight:600;color:#79c0ff;border-bottom:1px solid var(--bd);}
+.bib-sb{padding:9px 13px;}
+.bib-i{padding:9px 0;border-bottom:1px solid var(--bd);font-size:11.5px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:rgba(88,166,255,0.15);color:#79c0ff;font-weight:700;font-size:9.5px;padding:1px 6px;border-radius:4px;margin-bottom:3px;}
+.bib-y{display:inline-block;background:rgba(94,232,184,0.15);color:var(--green);font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--t3);line-height:1.6;}
+.bib-r em{color:#79c0ff;font-style:italic;}
+.lv{display:inline-block;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:rgba(94,232,184,0.15);color:var(--green);}
+.lv-b{background:rgba(88,166,255,0.15);color:#79c0ff;}
+.lv-e{background:var(--purplel);color:var(--purple);}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:10.5px;color:#79c0ff;text-decoration:none;font-weight:500;}
+
+/* ── GRID STATS ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--rs);padding:9px 11px;text-align:center;}
+.stat-num{font-size:20px;font-weight:700;color:var(--green);}
+.stat-lbl{font-size:10.5px;color:var(--t4);margin-top:2px;}
+.epi-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px;}
+.epi-row:last-child{border-bottom:none;}
+.epi-key{font-weight:600;color:var(--t1);min-width:130px;flex-shrink:0;}
+.epi-val{color:var(--t3);flex:1;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  :root{--sidebar:0px;}
+  .sidebar{position:fixed;top:var(--topnav);bottom:0;left:0;width:240px;transform:translateX(-240px);z-index:100;}
+  .sidebar.open{transform:translateX(0);}
+  .sov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;top:var(--topnav);}
+  .sov.on{display:block;}
+  .content{width:100%;}
+  .menu-btn{display:block;}
+  .t-back{display:flex!important;}
+  .tb-tag{display:none;}
+}
+@media print{
+  .topbar,.sidebar,.itabs,.pop-bar,.ctx-bar,.pbtn{display:none!important;}
+  .content{overflow:visible;}
+  .panels{overflow:visible;}
+  .panel{display:block!important;padding:10px 0!important;}
+  .sb.hidden{display:block!important;}
+  body,html{overflow:visible;height:auto;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menú">☰</button>
+  <div class="tb-logo">Clínica<span>Rápida</span></div>
+  <div class="tb-sw">
+    <span class="tb-si">🔍</span>
+    <input type="text" class="tb-s" placeholder="Buscar diagnóstico, medicamento, escala..." id="searchInput" oninput="doSearch(this.value)">
+  </div>
+  <div class="tb-right">
+    <div class="tb-tag">126 temas</div>
+    <div class="tb-tag">AHA/ACC 2025</div>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sov" id="sov" onclick="toggleSidebar()"></div>
+
+<!-- LAYOUT -->
+<div class="layout" style="display:flex;height:calc(100vh - var(--topnav));margin-top:var(--topnav);">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🚨</span><span class="sg-name">Urgencias</span><span class="sg-arr open">›</span></div>
+      <div class="tlist open">
+        <div class="ti" onclick="goTopic('sepsis')">🦠 Sepsis y choque séptico <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="goTopic('cad')">🩸 Cetoacidosis diabética <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="goTopic('sca')">❤️‍🔥 SCA — IAMCEST <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="goTopic('apendicitis')">🔪 Apendicitis aguda <span class="ti-badge tbu">U</span></div>
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">📋</span><span class="sg-name">Consulta General</span><span class="sg-arr open">›</span></div>
+      <div class="tlist open">
+        <div class="ti on" id="ti-has" onclick="goTopic('has')">🫀 Hipertensión arterial <span class="ti-badge tbch">Cr</span></div>
+        <div class="ti" onclick="comingSoon()">💉 Diabetes mellitus 2 <span class="ti-badge tbch">Cr</span></div>
+        <div class="ti" onclick="comingSoon()">🧪 Dislipidemia <span class="ti-badge tbch">Cr</span></div>
+        <div class="ti" onclick="comingSoon()">⚖️ Obesidad y S. metabólico <span class="ti-badge tbch">Cr</span></div>
+        <div class="ti" onclick="comingSoon()">🦋 Hipotiroidismo <span class="ti-badge tbch">Cr</span></div>
+        <div class="ti" onclick="goTopic('ivu')">🧫 ITU / Cistitis <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">🤧 Faringitis viral <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">🦠 Faringitis bacteriana <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">😤 Sinusitis viral <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">😷 Sinusitis bacteriana <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">🫁 Bronquitis aguda <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">🤢 Gastroenteritis aguda <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">🤕 Cefalea tensional <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">💆 Migraña <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">🦴 Dolor lumbar agudo <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">😔 Depresión <span class="ti-badge tbch">Cr</span></div>
+        <div class="ti" onclick="comingSoon()">😰 Ansiedad <span class="ti-badge tbch">Cr</span></div>
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">❤️</span><span class="sg-name">Cardiología</span><span class="sg-arr">›</span></div>
+      <div class="tlist">
+        <div class="ti" onclick="goTopic('sca')">❤️‍🔥 SCA — IAMCEST <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="comingSoon()">🫀 IC descompensada <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="comingSoon()">⚡ Fibrilación auricular <span class="ti-badge tbu">U</span></div>
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🩺</span><span class="sg-name">Medicina Interna</span><span class="sg-arr">›</span></div>
+      <div class="tlist">
+        <div class="ti" onclick="goTopic('sepsis')">🦠 Sepsis / Choque séptico <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="goTopic('ivu')">🧫 ITU / Pielonefritis <span class="ti-badge tbc">C</span></div>
+        <div class="ti" onclick="comingSoon()">💨 EPOC exacerbación <span class="ti-badge tbu">U</span></div>
+        <div class="ti" onclick="comingSoon()">🌊 Pancreatitis aguda <span class="ti-badge tbu">U</span></div>
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🧒</span><span class="sg-name">Pediatría</span><span class="sg-arr">›</span></div>
+      <div class="tlist"><div class="ti" style="opacity:0.4;cursor:default;font-style:italic;">Próximamente...</div></div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🌸</span><span class="sg-name">Ginecología</span><span class="sg-arr">›</span></div>
+      <div class="tlist"><div class="ti" style="opacity:0.4;cursor:default;font-style:italic;">Próximamente...</div></div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🔪</span><span class="sg-name">Cirugía</span><span class="sg-arr">›</span></div>
+      <div class="tlist">
+        <div class="ti" onclick="goTopic('apendicitis')">🔪 Apendicitis aguda <span class="ti-badge tbu">U</span></div>
+      </div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">💨</span><span class="sg-name">Neumología</span><span class="sg-arr">›</span></div>
+      <div class="tlist"><div class="ti" style="opacity:0.4;cursor:default;font-style:italic;">Próximamente...</div></div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🫘</span><span class="sg-name">Urología</span><span class="sg-arr">›</span></div>
+      <div class="tlist"><div class="ti" style="opacity:0.4;cursor:default;font-style:italic;">Próximamente...</div></div>
+    </div>
+    <div class="sg">
+      <div class="sg-h" onclick="toggleSpec(this)"><span class="sg-ico">🫁</span><span class="sg-name">Nefrología</span><span class="sg-arr">›</span></div>
+      <div class="tlist"><div class="ti" style="opacity:0.4;cursor:default;font-style:italic;">Próximamente...</div></div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="mainContent">
+
+    <!-- HOME -->
+    <div id="homeView" style="flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:14px;">
+      <div style="background:linear-gradient(135deg,var(--greend),var(--greenm));border-radius:var(--rad);padding:24px;">
+        <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;">Clínica Rápida</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:18px;">Referencia clínica basada en evidencia actual. Para el médico general, internista y residente. Sin internet, sin cuenta.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+          <div style="background:rgba(255,255,255,0.15);border-radius:var(--rs);padding:10px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#fff;">126</div><div style="font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px;">Temas</div></div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:var(--rs);padding:10px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#fff;">10</div><div style="font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px;">Especialidades</div></div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:var(--rs);padding:10px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#fff;">4</div><div style="font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px;">Poblaciones</div></div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:var(--rs);padding:10px;text-align:center;"><div style="font-size:22px;font-weight:700;color:#fff;">2025</div><div style="font-size:10px;color:rgba(255,255,255,0.7);margin-top:2px;">Evidencia</div></div>
+        </div>
+      </div>
+      <div style="background:var(--bg1);border-radius:var(--rad);border:1px solid var(--bd);padding:16px;">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--t4);margin-bottom:12px;">⚡ Temas disponibles ahora</div>
+        <div id="homeTopics"></div>
+      </div>
+    </div>
+
+    <!-- TOPIC VIEW (iframe approach) -->
+    <div id="topicView" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+      <button class="t-back" id="backBtn" onclick="goHome()" style="margin:10px 16px;display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;">‹ Inicio</button>
+      <iframe id="topicFrame" style="flex:1;border:none;width:100%;height:100%;" src="about:blank"></iframe>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const TOPICS = [
+  {id:'has', name:'Hipertensión Arterial Sistémica', icon:'🫀', spec:'Consulta General', type:'ch', file:'01_HAS_HipertensionArterial.html'},
+  {id:'ivu', name:'Infección del Tracto Urinario', icon:'🧫', spec:'Consulta General', type:'c', file:'ITU_InfeccionTractoUrinario_4Poblaciones.html'},
+  {id:'sepsis', name:'Sepsis y Choque Séptico', icon:'🦠', spec:'Urgencias', type:'u', file:'Sepsis_ChoqueSeptico_Completa.html'},
+  {id:'sca', name:'Síndrome Coronario Agudo', icon:'❤️‍🔥', spec:'Cardiología', type:'u', file:'SCA_SindromeCoronarioAgudo_Completa.html'},
+  {id:'cad', name:'Cetoacidosis Diabética', icon:'🩸', spec:'Urgencias', type:'u', file:'CAD_CetoacidosisDiabetica_COMPLETA_v2.html'},
+  {id:'apendicitis', name:'Apendicitis Aguda', icon:'🔪', spec:'Cirugía', type:'u', file:'Apendicitis_Aguda_Completa.html'},
+];
+
+// Build home topics
+const ht = document.getElementById('homeTopics');
+TOPICS.forEach(t => {
+  const bc = t.type==='u'?'tbu':t.type==='ch'?'tbch':'tbc';
+  const bt = t.type==='u'?'Urgente':t.type==='ch'?'Crónico':'Consulta';
+  const d = document.createElement('div');
+  d.style.cssText = 'display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd);cursor:pointer;';
+  d.innerHTML = `<span style="font-size:20px;">${t.icon}</span><div style="flex:1;"><div style="font-size:13px;color:var(--t1);">${t.name}</div><div style="font-size:11px;color:var(--t4);margin-top:1px;">${t.spec}</div></div><span class="ti-badge ${bc}">${bt}</span>`;
+  d.addEventListener('mouseenter', () => d.style.background='rgba(255,255,255,0.03)');
+  d.addEventListener('mouseleave', () => d.style.background='');
+  d.onclick = () => goTopic(t.id);
+  ht.appendChild(d);
+});
+// Remove last border
+if(ht.lastChild) ht.lastChild.style.borderBottom='none';
+
+function toggleSpec(hdr) {
+  const list = hdr.nextElementSibling;
+  const arr = hdr.querySelector('.sg-arr');
+  list.classList.toggle('open');
+  arr.classList.toggle('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sov').classList.toggle('on');
+}
+
+function goTopic(id) {
+  const t = TOPICS.find(x => x.id===id);
+  if (!t) return;
+  // Mark active
+  document.querySelectorAll('.ti').forEach(el => el.classList.remove('on'));
+  const ti = document.getElementById('ti-'+id);
+  if(ti) ti.classList.add('on');
+  // Close sidebar on mobile
+  if(window.innerWidth<=768) {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sov').classList.remove('on');
+  }
+  // Load in iframe
+  document.getElementById('homeView').style.display='none';
+  const tv = document.getElementById('topicView');
+  tv.style.display='flex';
+  document.getElementById('topicFrame').src = t.file;
+}
+
+function goHome() {
+  document.getElementById('homeView').style.display='flex';
+  document.getElementById('topicView').style.display='none';
+  document.getElementById('topicFrame').src='about:blank';
+  document.querySelectorAll('.ti').forEach(el=>el.classList.remove('on'));
+}
+
+function comingSoon() {
+  alert('Este tema está en construcción. Próximamente disponible.');
+}
+
+function doSearch(q) {
+  if(!q) return;
+  const matches = TOPICS.filter(t =>
+    t.name.toLowerCase().includes(q.toLowerCase()) ||
+    t.spec.toLowerCase().includes(q.toLowerCase())
+  );
+  if(matches.length===1) goTopic(matches[0].id);
+}
+
+// Load HAS by default on desktop
+if(window.innerWidth > 768) goTopic('has');
+</script>
+</body>
+</html>

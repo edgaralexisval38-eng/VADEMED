@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Enfermedades exantemáticas · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#4a1060;--act:#f1e6f7;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,#2a0a3a,#4a1060);}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}.prose strong{color:var(--gray-900);}
+.prose ul{margin:4px 0 8px 18px;}.prose li{margin-bottom:4px;line-height:1.55;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.pct{display:inline-block;background:var(--act);color:var(--ac);font-weight:700;font-size:11px;padding:1px 7px;border-radius:10px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;padding:0 4px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.biblio-header{background:linear-gradient(135deg,#2a0a3a,#4a1060);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#efe4f6;color:#4a1060;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:600;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.scoreres{margin-top:10px;padding:11px;border-radius:8px;background:#fff;border:1px solid var(--bd);}
+.scoretot{font-size:18px;font-weight:800;color:var(--ac);}
+.atlas-cap{font-size:11px;color:var(--gray-600);margin-top:6px;line-height:1.5;}
+.pilar-banner{background:linear-gradient(135deg,#2a0a3a,#4a1060);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px;}
+.pilar-icon{font-size:28px;flex-shrink:0;}
+.pilar-title{font-size:14px;font-weight:800;margin-bottom:3px;}
+.pilar-sub{font-size:12px;opacity:0.9;line-height:1.5;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🤒</div>
+    <div>
+      <div class="hdr-eye">Infectología · Pediatría</div>
+      <div class="hdr-title">Enfermedades exantemáticas</div>
+      <div class="hdr-sub">Las 6 clásicas + varicela · diferenciar por el exantema y los signos clave</div>
+    </div>
+  </div>
+  <div class="hdr-badges"><span class="badge">6 clásicas</span><span class="badge">Brote sarampión 2025-26</span><span class="badge">SRP</span></div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">6</div><div class="qs-l">enfermedades clásicas</div></div>
+  <div class="qs"><div class="qs-v">90-100%</div><div class="qs-l">contagio sarampión</div></div>
+  <div class="qs"><div class="qs-v">SRP ×2</div><div class="qs-l">12 y 18 meses</div></div>
+  <div class="qs"><div class="qs-v">Activo</div><div class="qs-l">brote sarampión MX</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('comp',this)">🔢 Comparativa</button>
+  <button class="tab" onclick="showT('atlas',this)">🖼️ Atlas</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diferencial</button>
+  <button class="tab" onclick="showT('escal',this)">📊 Identifica</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('tto',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('vac',this)">💉 Vacunación</button>
+  <button class="tab" onclick="showT('esc2',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Complicaciones</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="alert a-i"><span class="ai">🤒</span><div><div class="at">¿Qué son?</div>Enfermedades febriles con <strong>exantema</strong> (erupción en la piel). Hace más de 100 años se numeraron las "seis enfermedades de la infancia": <strong>1ª sarampión, 2ª escarlatina, 3ª rubéola, 4ª de Filatov-Dukes (histórica), 5ª eritema infeccioso, 6ª exantema súbito</strong>. Se diferencian por el tipo de exantema, su distribución y los <strong>signos clave</strong>.</div></div>
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Alerta: brote de sarampión en México (2025-2026)</div>Brote activo iniciado en <strong>Chihuahua</strong> (comunidad con baja cobertura); &gt;<span class="pct">11,000</span> casos confirmados acumulados, con defunciones, <strong>ninguna en personas con esquema documentado</strong>. Ante fiebre + exantema, <strong>pensar en sarampión, aislar (vía aérea) y notificar</strong>.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Las clásicas y otras frecuentes</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Virales:</strong> sarampión (1ª), rubéola (3ª), eritema infeccioso (5ª, parvovirus B19), exantema súbito/roséola (6ª, VHH-6), <strong>varicela</strong> (VVZ).</li>
+    <li><strong>Bacteriana:</strong> escarlatina (2ª, <em>Streptococcus pyogenes</em>) — la <strong>única que requiere antibiótico</strong>.</li>
+    <li><strong>4ª (Filatov-Dukes):</strong> entidad histórica/controvertida, ya no reconocida (probablemente piel escaldada estafilocócica o variantes de escarlatina/rubéola).</li>
+    <li><strong>Otras a considerar:</strong> mano-pie-boca (Coxsackie), mononucleosis (VEB), enfermedad de Kawasaki (no infecciosa), dengue, exantemas por fármacos.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Cómo abordarlas (las 5 preguntas)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Pródromo:</strong> ¿fiebre alta con las 3 C (sarampión)? ¿faringitis (escarlatina)? ¿fiebre alta que cede antes del exantema (roséola)?</li>
+    <li><strong>Morfología:</strong> maculopapular (sarampión, rubéola), áspero como lija (escarlatina), reticular/encaje (eritema infeccioso), vesicular (varicela).</li>
+    <li><strong>Distribución:</strong> cefalocaudal desde la cara (sarampión, rubéola) vs tronco → periferia (roséola) vs brotes/estadios (varicela).</li>
+    <li><strong>Signo clave:</strong> Koplik, lengua aframbuesada, adenopatía retroauricular, mejilla abofeteada.</li>
+    <li><strong>Contexto:</strong> estado de vacunación, contactos, embarazo, edad.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li>No reconocer el <strong>sarampión</strong> (subir el umbral de sospecha en el brote) ni aislarlo a tiempo.</li>
+    <li>No tratar la <strong>escarlatina</strong> con antibiótico (riesgo de fiebre reumática).</li>
+    <li>Olvidar el riesgo de <strong>rubéola y parvovirus B19 en el embarazo</strong>.</li>
+    <li>Dar <strong>ácido acetilsalicílico</strong> en varicela/influenza (síndrome de Reye).</li>
+    <li>Dar <strong>amoxicilina</strong> en una "faringitis" que es mononucleosis (exantema por el fármaco).</li>
+  </ul></div></div></div>
+</div>
+
+<!-- COMPARATIVA -->
+<div class="panel" id="tab-comp">
+  <div class="alert a-i"><span class="ai">🔢</span><div>Tabla rápida y, abajo, una ficha desplegable por enfermedad con el detalle. Toca cada tarjeta para ver agente, incubación, pródromo, exantema, signo clave, contagio, complicaciones, tratamiento y vacuna.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Tabla comparativa</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Enfermedad</th><th>Agente</th><th>Incub.</th><th>Signo clave</th><th>Tx</th></tr></thead><tbody>
+    <tr><td><strong>Sarampión</strong> (1ª)</td><td>Paramyxovirus</td><td>7-14 d</td><td>Koplik + 3 C; cefalocaudal</td><td>Soporte + Vit A</td></tr>
+    <tr><td><strong>Escarlatina</strong> (2ª)</td><td><em>S. pyogenes</em></td><td>1-4 d</td><td>Lengua aframbuesada; "lija"; Pastia</td><td class="dn">Penicilina</td></tr>
+    <tr><td><strong>Rubéola</strong> (3ª)</td><td>Virus rubéola</td><td>14-21 d</td><td>Adenopatía retroauricular</td><td>Soporte</td></tr>
+    <tr><td><strong>Eritema infeccioso</strong> (5ª)</td><td>Parvovirus B19</td><td>4-14 d</td><td>Mejilla abofeteada; encaje</td><td>Soporte</td></tr>
+    <tr><td><strong>Exantema súbito</strong> (6ª)</td><td>VHH-6/7</td><td>5-15 d</td><td>Fiebre alta → exantema al ceder</td><td>Soporte</td></tr>
+    <tr><td><strong>Varicela</strong></td><td>Virus varicela-zóster</td><td>10-21 d</td><td>Vesículas en brotes/estadios</td><td>Soporte ± aciclovir</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">📝</span><div>La <strong>4ª (Filatov-Dukes)</strong> ya no se reconoce como entidad propia.</div></div></div></div>
+  <div id="comp-content"></div>
+</div>
+<!-- ATLAS -->
+<div class="panel" id="tab-atlas">
+  <div class="alert a-i"><span class="ai">🖼️</span><div>Signos clave y patrones del exantema (esquemas, no fotografías) para reconocer cada enfermedad de un vistazo.</div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Signos clave</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="overflow-x:auto;border:1px solid var(--bd);border-radius:8px;background:#fbf7fd;">
+      <svg viewBox="0 0 640 230" style="width:100%;min-width:480px;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+        <!-- A: Koplik -->
+        <ellipse cx="110" cy="108" rx="72" ry="44" fill="#c0392b"/>
+        <ellipse cx="110" cy="100" rx="46" ry="24" fill="#d35452"/>
+        <g><circle cx="86" cy="96" r="6" fill="#a02020"/><circle cx="86" cy="96" r="3.4" fill="#eef4ff"/>
+           <circle cx="112" cy="90" r="6" fill="#a02020"/><circle cx="112" cy="90" r="3.4" fill="#eef4ff"/>
+           <circle cx="134" cy="100" r="6" fill="#a02020"/><circle cx="134" cy="100" r="3.4" fill="#eef4ff"/>
+           <circle cx="96" cy="118" r="6" fill="#a02020"/><circle cx="96" cy="118" r="3.4" fill="#eef4ff"/>
+           <circle cx="124" cy="120" r="6" fill="#a02020"/><circle cx="124" cy="120" r="3.4" fill="#eef4ff"/></g>
+        <text x="110" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#4a1060" font-family="sans-serif">Manchas de Koplik</text>
+        <text x="110" y="204" text-anchor="middle" font-size="11" fill="#6b7280" font-family="sans-serif">enantema · SARAMPIÓN</text>
+        <!-- B: Mejilla abofeteada -->
+        <circle cx="320" cy="106" r="48" fill="#f0d2b6" stroke="#c89b76" stroke-width="2"/>
+        <ellipse cx="299" cy="118" rx="17" ry="13" fill="#e0594f" opacity="0.62"/>
+        <ellipse cx="341" cy="118" rx="17" ry="13" fill="#e0594f" opacity="0.62"/>
+        <circle cx="305" cy="96" r="3.2" fill="#4a2f1a"/><circle cx="335" cy="96" r="3.2" fill="#4a2f1a"/>
+        <path d="M308 130 Q320 138 332 130" fill="none" stroke="#9a6a4a" stroke-width="2"/>
+        <text x="320" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#4a1060" font-family="sans-serif">Mejilla abofeteada</text>
+        <text x="320" y="204" text-anchor="middle" font-size="11" fill="#6b7280" font-family="sans-serif">ERITEMA INFECCIOSO · parvovirus B19</text>
+        <!-- C: Lengua aframbuesada -->
+        <ellipse cx="530" cy="106" rx="32" ry="46" fill="#c0392b" stroke="#9a2a2a" stroke-width="2"/>
+        <line x1="530" y1="70" x2="530" y2="140" stroke="#9a2a2a" stroke-width="1.5"/>
+        <g fill="#ec9a95"><circle cx="520" cy="86" r="3.2"/><circle cx="540" cy="86" r="3.2"/><circle cx="516" cy="104" r="3.2"/><circle cx="544" cy="104" r="3.2"/><circle cx="522" cy="122" r="3.2"/><circle cx="538" cy="122" r="3.2"/><circle cx="530" cy="112" r="3.2"/></g>
+        <text x="530" y="188" text-anchor="middle" font-size="12" font-weight="700" fill="#4a1060" font-family="sans-serif">Lengua aframbuesada</text>
+        <text x="530" y="204" text-anchor="middle" font-size="11" fill="#6b7280" font-family="sans-serif">ESCARLATINA · "fresa"</text>
+      </svg>
+    </div>
+    <div class="atlas-cap">Otros signos: <strong>3 C</strong> (coriza, conjuntivitis, tos) en sarampión; <strong>adenopatía retroauricular/suboccipital</strong> en rubéola; <strong>líneas de Pastia</strong> (pliegues) y palidez peribucal en escarlatina.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Patrones de diseminación del exantema</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="overflow-x:auto;border:1px solid var(--bd);border-radius:8px;background:#fbf7fd;">
+      <svg viewBox="0 0 640 250" style="width:100%;min-width:520px;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ad" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="#4a1060"/></marker></defs>
+        <!-- Body A: cefalocaudal -->
+        <g stroke="#c89b76" stroke-width="1.5">
+          <g stroke="#f0d2b6" stroke-width="11" stroke-linecap="round"><path d="M96 92 L74 138"/><path d="M124 92 L146 138"/><path d="M104 150 L96 200"/><path d="M116 150 L124 200"/></g>
+          <circle cx="110" cy="64" r="15" fill="#f0d2b6"/><rect x="94" y="80" width="32" height="74" rx="13" fill="#f0d2b6"/>
+        </g>
+        <g fill="#b3243a"><circle cx="104" cy="60" r="2.2"/><circle cx="116" cy="62" r="2.2"/><circle cx="110" cy="70" r="2.2"/><circle cx="103" cy="90" r="2.2"/><circle cx="117" cy="92" r="2.2"/><circle cx="110" cy="100" r="2.2"/><circle cx="105" cy="112" r="2.2"/><circle cx="116" cy="118" r="2.2"/></g>
+        <line x1="162" y1="60" x2="162" y2="180" stroke="#4a1060" stroke-width="1.6" marker-end="url(#ad)"/>
+        <text x="110" y="222" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4a1060" font-family="sans-serif">Cefalocaudal</text>
+        <text x="110" y="238" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">cara→pies · sarampión, rubéola</text>
+        <!-- Body B: tronco→periferia -->
+        <g stroke="#c89b76" stroke-width="1.5">
+          <g stroke="#f0d2b6" stroke-width="11" stroke-linecap="round"><path d="M306 92 L284 138"/><path d="M334 92 L356 138"/><path d="M314 150 L306 200"/><path d="M326 150 L334 200"/></g>
+          <circle cx="320" cy="64" r="15" fill="#f0d2b6"/><rect x="304" y="80" width="32" height="74" rx="13" fill="#f0d2b6"/>
+        </g>
+        <g fill="#b3243a"><circle cx="314" cy="98" r="2.4"/><circle cx="326" cy="100" r="2.4"/><circle cx="320" cy="110" r="2.4"/><circle cx="312" cy="120" r="2.4"/><circle cx="328" cy="122" r="2.4"/><circle cx="320" cy="132" r="2.4"/></g>
+        <g stroke="#4a1060" stroke-width="1.4" fill="none" marker-end="url(#ad)"><path d="M300 112 L280 104"/><path d="M340 112 L360 104"/><path d="M320 150 L320 172"/></g>
+        <text x="320" y="222" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4a1060" font-family="sans-serif">Tronco → periferia</text>
+        <text x="320" y="238" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">roséola · al ceder la fiebre</text>
+        <!-- Body C: vesículas en brotes -->
+        <g stroke="#c89b76" stroke-width="1.5">
+          <g stroke="#f0d2b6" stroke-width="11" stroke-linecap="round"><path d="M516 92 L494 138"/><path d="M544 92 L566 138"/><path d="M524 150 L516 200"/><path d="M536 150 L544 200"/></g>
+          <circle cx="530" cy="64" r="15" fill="#f0d2b6"/><rect x="514" y="80" width="32" height="74" rx="13" fill="#f0d2b6"/>
+        </g>
+        <g><circle cx="524" cy="60" r="3" fill="#fff" stroke="#b3243a" stroke-width="1.4"/><circle cx="535" cy="92" r="3" fill="#b3243a"/><circle cx="520" cy="104" r="3" fill="#fff" stroke="#b3243a" stroke-width="1.4"/><circle cx="532" cy="116" r="3" fill="#7a4a2a"/><circle cx="516" cy="120" r="3" fill="#b3243a"/><circle cx="540" cy="106" r="3" fill="#fff" stroke="#b3243a" stroke-width="1.4"/><circle cx="528" cy="132" r="3" fill="#7a4a2a"/></g>
+        <text x="530" y="222" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4a1060" font-family="sans-serif">Vesículas en estadios</text>
+        <text x="530" y="238" text-anchor="middle" font-size="10" fill="#6b7280" font-family="sans-serif">varicela · "cielo estrellado"</text>
+      </svg>
+    </div>
+    <div class="atlas-cap">En la <strong>varicela</strong> coexisten lesiones en distintos estadios (mácula, vesícula "gota de rocío", costra) — el aspecto de "cielo estrellado". En el <strong>sarampión</strong> el exantema es confluente y desciende; en la <strong>roséola</strong> aparece cuando ya cedió la fiebre.</div>
+  </div></div>
+</div>
+<!-- DIFERENCIAL -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Diferenciación rápida</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Enfermedad</th><th>Pródromo</th><th>Exantema</th><th>Pista que la delata</th></tr></thead><tbody>
+    <tr><td><strong>Sarampión</strong></td><td>Fiebre alta + 3 C (3-4 d)</td><td>Maculopapular confluente, cefalocaudal, se "mancha"</td><td>Koplik; aspecto tóxico</td></tr>
+    <tr><td><strong>Escarlatina</strong></td><td>Faringitis + fiebre</td><td>Áspero "lija", pliegues, palidez peribucal</td><td>Lengua aframbuesada; descamación</td></tr>
+    <tr><td><strong>Rubéola</strong></td><td>Leve, fiebre baja</td><td>Rosado tenue, cefalocaudal, desaparece &lt;3 d</td><td>Adenopatía retroauricular</td></tr>
+    <tr><td><strong>Eritema infeccioso</strong></td><td>Mínimo (5-15% síntomas)</td><td>Mejilla abofeteada → encaje reticular, recidiva</td><td>Buen estado; ya no contagia al aparecer</td></tr>
+    <tr><td><strong>Exantema súbito</strong></td><td>Fiebre alta 3-5 d</td><td>Aparece CUANDO CEDE la fiebre; tronco→periferia</td><td>Lactante que luce bien; crisis febril</td></tr>
+    <tr><td><strong>Varicela</strong></td><td>Leve</td><td>Vesículas pruriginosas en brotes/estadios</td><td>"Cielo estrellado"; cuero cabelludo</td></tr>
+  </tbody></table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🟥</span><span class="st">Cuándo sospechar SARAMPIÓN (brote activo)</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">!</span><span class="kt">Fiebre alta + <strong>3 C</strong> (coriza, conjuntivitis, tos) seguidas de exantema que <strong>baja desde la cara</strong>.</span></div>
+    <div class="kp"><span class="kn">!</span><span class="kt"><strong>Sin esquema de vacunación</strong> o contacto con caso. Buscar <strong>Koplik</strong>.</span></div>
+    <div class="kp"><span class="kn">!</span><span class="kt">Acción inmediata: <strong>aislamiento aéreo (N95)</strong>, <strong>notificación</strong> y toma de muestra (IgM/PCR). Profilaxis a contactos.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Otros diferenciales (no exantemáticos clásicos)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Mano-pie-boca</strong> (Coxsackie): vesículas en manos, pies y boca.</li>
+    <li><strong>Mononucleosis</strong> (VEB): exantema al dar amoxicilina; faringitis, adenopatías, esplenomegalia.</li>
+    <li><strong>Kawasaki</strong> (no infecciosa): fiebre ≥5 días + conjuntivitis, labios/lengua, exantema, manos/pies, adenopatía — urgente por aneurismas coronarios.</li>
+    <li><strong>Dengue, rickettsiosis, escarlatina estafilocócica, exantemas por fármacos</strong>.</li>
+  </ul></div></div></div>
+</div>
+
+<!-- IDENTIFICA -->
+<div class="panel" id="tab-escal">
+  <div class="alert a-i"><span class="ai">📊</span><div>Marca los hallazgos presentes y la herramienta sugiere la enfermedad más probable. Es orientativa, no sustituye el juicio clínico.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Identifica el exantema</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="calc-w" id="id-box">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="pchip" data-dx="sara" onclick="idTog(this)">Manchas de Koplik</button>
+      <button class="pchip" data-dx="sara" onclick="idTog(this)">3 C + fiebre alta, aspecto tóxico</button>
+      <button class="pchip" data-dx="sara" onclick="idTog(this)">Exantema cefalocaudal confluente</button>
+      <button class="pchip" data-dx="escar" onclick="idTog(this)">Faringitis + exantema "lija"</button>
+      <button class="pchip" data-dx="escar" onclick="idTog(this)">Lengua aframbuesada / Pastia</button>
+      <button class="pchip" data-dx="rube" onclick="idTog(this)">Adenopatía retroauricular</button>
+      <button class="pchip" data-dx="rube" onclick="idTog(this)">Exantema rosado tenue, fugaz</button>
+      <button class="pchip" data-dx="erit" onclick="idTog(this)">Mejilla abofeteada / encaje</button>
+      <button class="pchip" data-dx="rose" onclick="idTog(this)">Fiebre alta que CEDE y luego exantema</button>
+      <button class="pchip" data-dx="rose" onclick="idTog(this)">Lactante que luce bien</button>
+      <button class="pchip" data-dx="vari" onclick="idTog(this)">Vesículas en distintos estadios</button>
+      <button class="pchip" data-dx="vari" onclick="idTog(this)">Prurito + cuero cabelludo</button>
+    </div>
+    <div class="scoreres" id="id-res"></div></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Escarlatina: criterios de Centor (faringitis)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="calc-w" id="ce-box">
+    <div style="font-size:12px;color:#6b7280;margin-bottom:6px;">Apoyo para faringitis estreptocócica (escarlatina):</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="pchip" data-v="1" onclick="ceTog(this)">Exudado amigdalino</button>
+      <button class="pchip" data-v="1" onclick="ceTog(this)">Adenopatía cervical anterior dolorosa</button>
+      <button class="pchip" data-v="1" onclick="ceTog(this)">Fiebre &gt;38°C</button>
+      <button class="pchip" data-v="1" onclick="ceTog(this)">Ausencia de tos</button>
+      <button class="pchip" data-v="1" onclick="ceTog(this)">Edad 3-14 años</button>
+    </div>
+    <div class="scoreres" id="ce-res"></div></div></div></div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-alg">
+  <div class="alert a-i"><span class="ai">🔀</span><div>Niño con fiebre + exantema: primero la morfología (vesicular vs maculopapular), luego el signo dominante.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌳</span><span class="st">Algoritmo de orientación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="ra-step"></div></div></div>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-tto">
+  <div class="pilar-banner">
+    <div class="pilar-icon">💊</div>
+    <div>
+      <div class="pilar-title">Casi todas son de soporte; ojo con las excepciones</div>
+      <div class="pilar-sub">Escarlatina = antibiótico (penicilina). Sarampión = vitamina A + aislamiento. Varicela grave/adulto = aciclovir. Nunca ácido acetilsalicílico en niños (síndrome de Reye).</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="tto-chips"></div>
+  <div id="tto-content"></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esc2">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="esc2-chips"></div>
+  <div id="esc2-content"></div>
+</div>
+<!-- VACUNACIÓN -->
+<div class="panel" id="tab-vac">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Esquema en México (SRP / triple viral)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>1ª dosis SRP a los 12 meses</strong> (sarampión, rubéola, parotiditis).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><strong>2ª dosis SRP a los 18 meses</strong> (esquema vigente; históricamente la 2ª se aplicaba a los 6 años).</span></div>
+    <div class="kp"><span class="kn">+</span><span class="kt"><strong>SR (doble viral: sarampión-rubéola)</strong> para adolescentes y adultos sin esquema o con estado desconocido. <strong>Varicela:</strong> vacuna disponible, no siempre en el esquema público.</span></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">⚠️</span><div>Vacunas de <strong>virus vivos atenuados</strong>: NO aplicar en embarazo ni en inmunocompromiso grave. No reiniciar esquemas: solo completar dosis faltantes. Gratuitas en el sector público.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Profilaxis posexposición de sarampión</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">💉</span><span class="kt"><strong>Vacuna SRP en las primeras 72 h</strong> del contacto, en susceptibles ≥6 meses.</span></div>
+    <div class="kp"><span class="kn">🧪</span><span class="kt"><strong>Inmunoglobulina</strong> si han pasado hasta 4-6 días o si está contraindicada la vacuna: lactantes &lt;6-12 meses, embarazadas susceptibles, inmunocomprometidos.</span></div>
+    <div class="kp"><span class="kn">🅰️</span><span class="kt"><strong>Vitamina A</strong> reduce la mortalidad en niños con sarampión (dosis por edad, 2 días).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚪</span><span class="st">Aislamiento y periodo de contagio</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Enfermedad</th><th>Aislamiento</th><th>Contagio</th></tr></thead><tbody>
+    <tr><td><strong>Sarampión</strong></td><td>Aéreo (N95)</td><td>−4 a +4 días del exantema</td></tr>
+    <tr><td><strong>Varicela</strong></td><td>Aéreo + contacto</td><td>Hasta que TODAS las lesiones sean costra</td></tr>
+    <tr><td><strong>Rubéola</strong></td><td>Gotas</td><td>~7 días antes a 7 días después del exantema</td></tr>
+    <tr><td><strong>Escarlatina</strong></td><td>Gotas</td><td>Hasta 24 h de antibiótico eficaz</td></tr>
+    <tr><td><strong>Eritema infeccioso</strong></td><td>Estándar</td><td>YA NO contagia cuando aparece el exantema</td></tr>
+    <tr><td><strong>Exantema súbito</strong></td><td>Estándar</td><td>Durante la fase febril</td></tr>
+  </tbody></table></div>
+  <div class="alert a-r" style="margin-top:8px;"><span class="ai">📣</span><div><strong>Notificación obligatoria</strong> de sarampión y rubéola (enfermedades en eliminación). Notificar de inmediato ante la sospecha.</div></div></div></div>
+</div>
+
+<!-- COMPLICACIONES / SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones por enfermedad</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Enfermedad</th><th>Complicaciones</th></tr></thead><tbody>
+    <tr><td><strong>Sarampión</strong></td><td>Neumonía (causa más común de muerte), otitis, diarrea; <strong>encefalitis ~<span class="pct">1/1000</span></strong>; panencefalitis esclerosante subaguda (tardía, rara); "inmunoamnesia"</td></tr>
+    <tr><td><strong>Escarlatina</strong></td><td>Fiebre reumática, glomerulonefritis posestreptocócica, abscesos (el antibiótico previene la fiebre reumática)</td></tr>
+    <tr><td><strong>Rubéola</strong></td><td><strong>Síndrome de rubéola congénita</strong> (embarazo); artralgias en adultos ~<span class="pct">25%</span>; rara trombocitopenia/encefalitis</td></tr>
+    <tr><td><strong>Eritema infeccioso</strong></td><td><strong>Crisis aplásica</strong> (anemias hemolíticas), artropatía en adultos, <strong>hidrops fetal</strong> (embarazo)</td></tr>
+    <tr><td><strong>Exantema súbito</strong></td><td><strong>Crisis febriles</strong>; rara encefalitis (inmunocomprometidos)</td></tr>
+    <tr><td><strong>Varicela</strong></td><td>Sobreinfección bacteriana, neumonía (adultos), encefalitis/ataxia cerebelosa, varicela congénita/neonatal; reactivación = <strong>herpes zóster</strong></td></tr>
+  </tbody></table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Datos de alarma / cuándo referir</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li>Dificultad respiratoria, neumonía, deshidratación, mal estado general.</li>
+    <li>Alteración neurológica (somnolencia, crisis, rigidez de nuca) → posible encefalitis.</li>
+    <li>Palidez intensa/anemia súbita (crisis aplásica por parvovirus en anemia hemolítica).</li>
+    <li>Inmunocomprometido, embarazada o lactante pequeño con sarampión/varicela.</li>
+    <li>Fiebre ≥5 días con criterios de <strong>Kawasaki</strong>.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">✓</span><span class="kt">La mayoría son <strong>autolimitadas</strong>: vigilar hidratación, fiebre y datos de alarma.</span></div>
+    <div class="kp"><span class="kn">💉</span><span class="kt">Aprovechar para <strong>revisar y completar el esquema de vacunación</strong> del paciente y sus convivientes.</span></div>
+    <div class="kp"><span class="kn">🤰</span><span class="kt">Si hubo contacto en el <strong>embarazo</strong> (rubéola, parvovirus, varicela): serología y referencia.</span></div>
+  </div></div>
+</div>
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Enfermedades exantemáticas</h2><p>AAP Red Book · CDC · Secretaría de Salud (México) · revisiones</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Referencias principales</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A — Referencia pediátrica</span></div>
+        <div class="biblio-ref">American Academy of Pediatrics. <em>Red Book: Report of the Committee on Infectious Diseases</em> (sarampión, rubéola, parvovirus B19, VHH-6, estreptococo grupo A, varicela). 33.ª ed., 2024.</div>
+        <a class="biblio-link" href="https://publications.aap.org/redbook" target="_blank">🔗 AAP Red Book</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A — Epidemiología y vacunas</span></div>
+        <div class="biblio-ref">Centers for Disease Control and Prevention. <em>Epidemiology and Prevention of Vaccine-Preventable Diseases (Pink Book)</em> — Measles, Rubella, Varicella.</div>
+        <a class="biblio-link" href="https://www.cdc.gov/pinkbook/" target="_blank">🔗 CDC Pink Book</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2025</span><span class="biblio-level lv-c">Nivel C — Guía nacional / brote</span></div>
+        <div class="biblio-ref">Secretaría de Salud (México). <em>Esquema Nacional de Vacunación y Plan de respuesta rápida para la interrupción del brote de sarampión, 2025.</em></div>
+        <a class="biblio-link" href="https://www.gob.mx/salud" target="_blank">🔗 gob.mx/salud</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Revisiones</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2008</span><span class="biblio-level lv-c">Nivel C — Exantemas clásicos</span></div>
+        <div class="biblio-ref">Fölster-Holst R, Kreth HW. <em>Viral exanthems in childhood — classic exanthems.</em> J Dtsch Dermatol Ges 2009;7(4):309-316.</div>
+        <a class="biblio-link" href="https://onlinelibrary.wiley.com/doi/10.1111/j.1610-0387.2008.06868.x" target="_blank">🔗 DOI: 10.1111/j.1610-0387.2008.06868.x</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Nivel B — Roséola</span></div>
+        <div class="biblio-ref">Pippin M, Laws G. <em>A classic presentation of roseola infantum.</em> Cureus 2024;16(1):e52504.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/38371016/" target="_blank">🔗 PubMed: 38371016</a></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Referencia / guía mayor</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Estudio / serie</div>
+    <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / revisión</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Opinión de expertos</div>
+  </div>
+  <div class="alert a-i" style="margin-top:10px;"><span class="ai">📅</span><div>Dosis y esquemas según guías; confirma el esquema vigente y la disponibilidad en el cuadro básico (IMSS). Última revisión: junio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+  var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  if(el)el.classList.add('on');window.scrollTo(0,0);
+}
+function tog(h){var b=h.querySelector('.sg'),s=h.nextElementSibling;if(!s)return;s.classList.toggle('hidden');if(b)b.classList.toggle('open');}
+function poprow(l,v,c){return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f3f4f6;gap:10px;"><span style="font-size:12px;color:#6b7280;flex-shrink:0;">'+l+'</span><span style="font-size:12px;font-weight:600;color:'+c+';text-align:right;">'+v+'</span></div>';}
+var L1='#4a1060',L2='#7a4a00',L3='#374151',LC='#0a5c45';
+function buildRACards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='rac'+i+Math.random().toString(36).substr(2,4);
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="raT(\''+fid+'\')" style="background:'+color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px;">'+(f.linea||'')+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-a" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    if(f.da){
+      h+='<div style="background:'+color+'15;border-bottom:2px solid '+color+'33;padding:12px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:6px;">💊 Dosis</div>';
+      var doses=f.da.split(' · ');
+      if(doses.length>1){doses.forEach(function(d){if(d.trim())h+='<div style="font-size:13px;font-weight:700;color:'+color+';padding:3px 0 3px 10px;border-left:3px solid '+color+';margin-bottom:4px;">'+d.trim()+'</div>';});}
+      else{h+='<div style="font-size:13.5px;font-weight:800;color:'+color+';">'+f.da+'</div>';}
+      h+='</div>';
+    }
+    if(f.prep&&f.prep!=='—'){
+      h+='<div style="background:#f1e6f7;border-bottom:1px solid #ddc4ec;padding:11px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#4a1060;margin-bottom:5px;">⚠️ Cómo administrar / Precauciones</div>';
+      h+='<div style="font-size:12.5px;color:#3a0c52;line-height:1.65;">'+f.prep.replace(/\n/g,'<br>')+'</div></div>';
+    }
+    h+='<div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#f7f1fb;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:4px;">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.75;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+function raT(id){var d=document.getElementById(id),a=document.getElementById(id+'-a');if(!d)return;var v=d.style.display!=='none';d.style.display=v?'none':'block';if(a)a.innerHTML=v?'&#8964;':'&#8963;';}
+function buildLinea(label,sub,color,farmacos){return '<div style="background:'+color+';color:#fff;border-radius:6px;padding:6px 12px;margin-bottom:8px;font-size:11px;font-weight:700;">'+label+'</div>'+buildRACards(color,farmacos);}
+
+/* ===== DATOS DE LAS ENFERMEDADES ===== */
+var DISEASES=[
+  {key:'sara',n:'Sarampión (1ª)',color:'#7b1c1c',agente:'Paramyxovirus (Morbillivirus)',incub:'7-14 días (~10)',prod:'Fiebre alta + 3 C (coriza, conjuntivitis, tos), 3-4 días',exan:'Maculopapular confluente; inicia retroauricular/línea del pelo y desciende cefalocaudal; se "mancha" al resolver',signo:'Manchas de Koplik (patognomónicas)',cont:'90-100% en susceptibles; −4 a +4 d del exantema; aéreo',compl:'Neumonía (muerte), otitis; encefalitis ~1/1000; PEES (tardía); inmunoamnesia',tx:'Soporte + Vitamina A; aislamiento aéreo; notificar',vac:'SRP (triple viral) ×2'},
+  {key:'escar',n:'Escarlatina (2ª)',color:'#0a5c45',agente:'Streptococcus pyogenes (grupo A), toxina eritrogénica',incub:'1-4 días',prod:'Faringoamigdalitis + fiebre',exan:'Áspero "lija"; inicia en tronco/pliegues; palidez peribucal; líneas de Pastia; descamación tardía',signo:'Lengua aframbuesada ("fresa")',cont:'Gotas; hasta 24 h de antibiótico eficaz',compl:'Fiebre reumática, glomerulonefritis posestreptocócica',tx:'PENICILINA o amoxicilina (macrólido si alergia)',vac:'No hay'},
+  {key:'rube',n:'Rubéola (3ª)',color:'#4a1060',agente:'Virus de la rubéola (Togaviridae)',incub:'14-21 días',prod:'Leve; fiebre baja',exan:'Rosado tenue, cefalocaudal, se desvanece rápido (<3 d); manchas de Forchheimer',signo:'Adenopatía retroauricular/suboccipital/cervical posterior',cont:'Gotas; ~7 d antes a 7 d después del exantema',compl:'Síndrome de rubéola congénita (embarazo); artralgias adultos ~25%',tx:'Soporte',vac:'SRP'},
+  {key:'erit',n:'Eritema infeccioso (5ª)',color:'#1a6bbd',agente:'Parvovirus B19',incub:'4-14 días',prod:'Mínimo (síntomas constitucionales 5-15%)',exan:'Mejilla abofeteada → exantema reticular/"encaje" en extremidades; recidiva con calor/sol',signo:'Mejilla abofeteada; buen estado general',cont:'YA NO contagia cuando aparece el exantema (fase inmune)',compl:'Crisis aplásica (anemias hemolíticas), artropatía adultos, hidrops fetal',tx:'Soporte',vac:'No hay'},
+  {key:'rose',n:'Exantema súbito / roséola (6ª)',color:'#d97706',agente:'Virus herpes humano 6 (y 7)',incub:'5-15 días',prod:'Fiebre alta 3-5 días, con buen estado general',exan:'Aparece CUANDO CEDE la fiebre; maculopapular rosado, tronco→periferia, no pruriginoso, 1-2 días',signo:'Fiebre alta que cede y luego brota el exantema; lactante <3 años',cont:'Durante la fase febril',compl:'Crisis febriles; rara encefalitis (inmunocomprometidos)',tx:'Soporte',vac:'No hay'},
+  {key:'vari',n:'Varicela',color:'#6a1a5a',agente:'Virus varicela-zóster (VVZ)',incub:'10-21 días',prod:'Leve',exan:'Vesículas pruriginosas en brotes; lesiones en distintos estadios (mácula→vesícula→costra), "cielo estrellado"; cuero cabelludo y mucosas',signo:'Lesiones en distintos estadios a la vez',cont:'Aéreo + contacto; hasta que TODAS sean costra',compl:'Sobreinfección, neumonía (adultos), encefalitis/ataxia; reactivación = herpes zóster',tx:'Soporte ± aciclovir (adultos, inmunocomprometidos, graves)',vac:'Vacuna de varicela'}
+];
+function compT(id){var d=document.getElementById(id),a=document.getElementById(id+'-a');if(!d)return;var v=d.style.display!=='none';d.style.display=v?'none':'block';if(a)a.innerHTML=v?'&#9658;':'&#9660;';}
+function buildComp(){var d=document.getElementById('comp-content');if(!d)return;var h='';DISEASES.forEach(function(e,i){var cid='cmp'+i,open=(i===0);h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="compT(\''+cid+'\')" style="background:'+e.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;"><span style="font-size:14px;font-weight:800;">'+e.n+'</span><span id="'+cid+'-a" style="font-size:13px;color:rgba(255,255,255,0.8);">'+(open?'&#9660;':'&#9658;')+'</span></div>';h+='<div id="'+cid+'" style="display:'+(open?'block':'none')+';padding:8px 14px 12px;">';h+=poprow('Agente',e.agente,e.color);h+=poprow('Incubación',e.incub,'#374151');h+=poprow('Pródromo',e.prod,'#374151');h+=poprow('Exantema',e.exan,'#374151');h+=poprow('Signo clave',e.signo,e.color);h+=poprow('Contagio',e.cont,'#374151');h+=poprow('Complicaciones',e.compl,'#c0392b');h+=poprow('Tratamiento',e.tx,'#166534');h+=poprow('Vacuna',e.vac,'#1a3a5c');h+='</div></div>';});d.innerHTML=h;}
+
+/* ===== IDENTIFICA + CENTOR ===== */
+var DXNAME={sara:'Sarampión',escar:'Escarlatina',rube:'Rubéola',erit:'Eritema infeccioso',rose:'Exantema súbito (roséola)',vari:'Varicela'};
+function idTog(el){el.classList.toggle('on');calcIdent();}
+function calcIdent(){var r=document.getElementById('id-res');if(!r)return;var sc={};document.querySelectorAll('#id-box .pchip.on').forEach(function(b){var k=b.getAttribute('data-dx');sc[k]=(sc[k]||0)+1;});var keys=Object.keys(sc);if(!keys.length){r.innerHTML='<div style="color:#6b7280;font-size:12px;">Marca los hallazgos presentes…</div>';return;}keys.sort(function(a,b){return sc[b]-sc[a];});var top=keys[0];var h='<div class="scoretot">'+DXNAME[top]+'</div><div style="font-size:12px;color:#374151;margin-top:4px;">Orientación más probable según los hallazgos marcados.</div>';if(keys.length>1){h+='<div style="font-size:11px;color:#6b7280;margin-top:6px;">Otras posibilidades: '+keys.slice(1).map(function(k){return DXNAME[k]+' ('+sc[k]+')';}).join(' · ')+'</div>';}r.innerHTML=h;}
+function ceTog(el){el.classList.toggle('on');calcCentor();}
+function calcCentor(){var r=document.getElementById('ce-res');if(!r)return;var t=document.querySelectorAll('#ce-box .pchip.on').length;var txt;if(t<=1)txt='Baja probabilidad de estreptococo: no suele requerir prueba ni antibiótico.';else if(t<=3)txt='Probabilidad intermedia: hacer prueba rápida de antígeno / cultivo; tratar si es positiva.';else txt='Alta probabilidad de faringitis estreptocócica: confirmar y tratar con penicilina/amoxicilina.';r.innerHTML='<div class="scoretot">'+t+' / 5</div><div style="font-size:12.5px;color:#374151;margin-top:4px;">'+txt+'</div>';}
+</script>
+<script>
+/* ===== TRATAMIENTO ===== */
+/* ===== TRATAMIENTO POR ENFERMEDAD ===== */
+var TTO_DIS={
+  sara:{t:'Sarampión',col:'#7b1c1c',
+    gold:[
+      {n:'Vitamina A',d:'&lt;6 m: 50,000 UI · 6-11 m: 100,000 UI · ≥12 m: 200,000 UI · 1 vez/día por 2 días (repetir a las 4 semanas si hay signos oculares de deficiencia)',nota:'Reduce la mortalidad. Indicada en TODO niño con sarampión.'},
+      {n:'Soporte + aislamiento aéreo + notificación',d:'Hidratación y antipirético; aislamiento aéreo (N95); notificación obligatoria; toma de IgM/PCR.',nota:''}
+    ],
+    seg:[
+      {n:'No hay antiviral de rutina',d:'Manejo de complicaciones; antibiótico SOLO si hay sobreinfección bacteriana (neumonía, otitis media).',nota:'La ribavirina se reserva a casos graves/inmunocomprometidos (no es estándar).'}
+    ],
+    coad:[
+      {n:'Profilaxis posexposición a contactos',d:'SRP en las primeras 72 h (susceptibles ≥6 m) o inmunoglobulina hasta 4-6 días / si la vacuna está contraindicada.',nota:''},
+      {n:'Antipirético e hidratación',d:'Paracetamol 10-15 mg/kg/dosis c/6-8h; líquidos abundantes.',nota:''}
+    ]},
+  escar:{t:'Escarlatina',col:'#0a5c45',
+    gold:[
+      {n:'Penicilina',d:'Penicilina V VO ×10 días · o penicilina benzatínica IM dosis única (&lt;27 kg: 600,000 U; ≥27 kg: 1,200,000 U) · alternativa práctica: amoxicilina 50 mg/kg/día (máx 1 g) ×10 días.',nota:'Completar el curso aunque mejore. Previene la fiebre reumática y acorta el contagio (24 h).'}
+    ],
+    seg:[
+      {n:'Alergia a penicilina',d:'Macrólido (azitromicina 12 mg/kg/día ×5 d o claritromicina) · o cefalosporina de 1ª generación (cefalexina) si NO hubo anafilaxia.',nota:'Considerar la resistencia local a macrólidos.'}
+    ],
+    coad:[
+      {n:'Sintomático',d:'Antipirético/analgésico (paracetamol), hidratación y reposo.',nota:'Vigilar datos de fiebre reumática y glomerulonefritis posestreptocócica.'}
+    ]},
+  rube:{t:'Rubéola',col:'#4a1060',
+    gold:[
+      {n:'Soporte',d:'No hay tratamiento específico; enfermedad leve y autolimitada. Notificación obligatoria.',nota:''}
+    ],
+    seg:[
+      {n:'No aplica',d:'Sin antiviral específico disponible.',nota:''}
+    ],
+    coad:[
+      {n:'Sintomático',d:'Antipirético; AINE para las artralgias en adultos.',nota:'Embarazada expuesta: serología (IgG/IgM) y referencia — riesgo de síndrome de rubéola congénita.'}
+    ]},
+  erit:{t:'Eritema infeccioso',col:'#1a6bbd',
+    gold:[
+      {n:'Soporte',d:'Autolimitada; el niño suele estar en buen estado. Sin tratamiento específico.',nota:'Al aparecer el exantema ya no contagia.'}
+    ],
+    seg:[
+      {n:'Según la complicación',d:'Crisis aplásica → transfusión y soporte hematológico · inmunocomprometido con anemia crónica por B19 → inmunoglobulina IV.',nota:''}
+    ],
+    coad:[
+      {n:'Sintomático',d:'Antipirético; AINE para la artropatía del adulto.',nota:'Embarazo expuesto: vigilancia de hidrops fetal (ecografía) y referencia.'}
+    ]},
+  rose:{t:'Exantema súbito (roséola)',col:'#d97706',
+    gold:[
+      {n:'Soporte',d:'Autolimitada; hidratación y antipirético durante la fase febril. Tranquilizar a la familia.',nota:''}
+    ],
+    seg:[
+      {n:'Solo en inmunocomprometidos',d:'Enfermedad grave por VHH-6: ganciclovir o foscarnet (NO en el niño sano).',nota:''}
+    ],
+    coad:[
+      {n:'Manejo de la fiebre y crisis febriles',d:'Antipirético; medidas ante una crisis febril simple.',nota:'Causa frecuente de crisis febriles en lactantes.'}
+    ]},
+  vari:{t:'Varicela',col:'#6a1a5a',
+    gold:[
+      {n:'Niño sano: soporte + control del prurito',d:'Antihistamínico (clorfenamina/hidroxizina), calamina/baños de avena, uñas cortas e higiene; antipirético con PARACETAMOL.',nota:'En el niño inmunocompetente el estándar NO incluye antiviral. NUNCA ácido acetilsalicílico (síndrome de Reye).'}
+    ],
+    seg:[
+      {n:'Aciclovir (casos seleccionados)',d:'VO 20 mg/kg/dosis (máx 800 mg) 4 veces/día ×5 días — adolescentes/adultos o enfermedad moderada-grave · IV 10 mg/kg c/8h en inmunocomprometidos/graves · valaciclovir como alternativa oral.',nota:'Máximo beneficio si se inicia en las primeras 24 h del exantema.'}
+    ],
+    coad:[
+      {n:'Profilaxis posexposición',d:'Inmunoglobulina varicela-zóster en susceptibles de alto riesgo expuestos (inmunocomprometidos, embarazadas, neonatos).',nota:'Vacuna de varicela para prevención.'}
+    ]}
+};
+var TTO_CHIPS=[['sara','Sarampión'],['escar','Escarlatina'],['rube','Rubéola'],['erit','Eritema inf.'],['rose','Exantema súbito'],['vari','Varicela']];
+function initTto(){var c=document.getElementById('tto-chips');if(!c)return;c.innerHTML='';TTO_CHIPS.forEach(function(ch,i){var b=document.createElement('button');b.className='pchip'+(i===0?' on':'');b.textContent=ch[1];b.onclick=(function(k,el){return function(){document.querySelectorAll('#tto-chips .pchip').forEach(function(x){x.classList.remove('on');});el.classList.add('on');showTto(k);};})(ch[0],b);c.appendChild(b);});showTto('sara');}
+function showTto(k){var s=TTO_DIS[k],d=document.getElementById('tto-content');if(!s||!d)return;
+  function block(icon,title,items,bg,bd,fg){var h='<div style="background:'+bg+';border-left:4px solid '+bd+';border-radius:var(--rs);padding:11px 13px;margin-bottom:10px;">';h+='<div style="font-size:12px;font-weight:800;color:'+fg+';margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;">'+icon+' '+title+'</div>';items.forEach(function(it){h+='<div style="background:#fff;border-radius:var(--rs);border:1px solid var(--bd);padding:9px 11px;margin-bottom:6px;">';h+='<div style="font-size:13px;font-weight:700;color:'+fg+';margin-bottom:3px;">'+it.n+'</div>';h+='<div style="font-size:12.5px;color:#374151;line-height:1.65;">'+it.d+'</div>';if(it.nota)h+='<div style="font-size:11.5px;color:#6b7280;margin-top:5px;border-top:1px dashed #e5e7eb;padding-top:5px;">📋 '+it.nota+'</div>';h+='</div>';});return h+'</div>';}
+  var head='<div style="background:'+s.col+';color:#fff;border-radius:var(--rad);padding:11px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.t+'</div></div>';
+  d.innerHTML=head+block('🥇','Gold estándar — 1ª línea',s.gold,'#fff8e1','#d97706','#7a4a00')+block('🥈','Segunda línea',s.seg,'#e6f1fb','#1a6bbd','#0c3b6e')+block('➕','Coadyuvante',s.coad,'#e1f5ee','#0f7a5a','#0a5c45');
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO_EX={
+  start:{p:'Niño con fiebre y exantema: ¿el exantema es vesicular (ampollas) o maculopapular?',hint:'La morfología es el primer filtro.',o:[
+    {t:'💧 Vesicular (ampollas en brotes)',n:'rVaricela',c:'#f1e6f7'},
+    {t:'🔴 Maculopapular / otro',n:'qSigno',c:'#e6f1fb'}
+  ]},
+  qSigno:{p:'¿Cuál es el signo o contexto dominante?',hint:'Busca la pista que delata cada enfermedad.',o:[
+    {t:'Koplik / 3 C / aspecto tóxico',n:'rSara',c:'#fdeaea'},
+    {t:'Faringitis + "lija" + lengua aframbuesada',n:'rEscar',c:'#e1f5ee'},
+    {t:'Fiebre alta que CEDIÓ y ahora exantema (lactante)',n:'rRose',c:'#fff8e1'},
+    {t:'Adenopatía retroauricular + exantema tenue',n:'rRube',c:'#f1e6f7'},
+    {t:'Mejilla abofeteada / encaje, buen estado',n:'rErit',c:'#e6f1fb'}
+  ]},
+  rVaricela:{r:1,titulo:'Varicela',color:'#6a1a5a',dx:'Vesículas pruriginosas en distintos estadios ("cielo estrellado"), cuero cabelludo y mucosas.',tx:'Soporte + manejo del prurito; aciclovir en adolescentes/adultos, inmunocomprometidos o enfermedad grave. Aislamiento aéreo+contacto hasta que todas sean costra.',alarma:'Dificultad respiratoria (neumonía), alteración neurológica o sobreinfección → hospital.'},
+  rSara:{r:1,titulo:'Sarampión',color:'#7b1c1c',dx:'Fiebre alta + 3 C + Koplik; exantema confluente cefalocaudal.',tx:'Soporte + VITAMINA A; aislamiento AÉREO; NOTIFICAR; toma de IgM/PCR; profilaxis a contactos.',alarma:'Neumonía o encefalitis. En el brote actual, umbral bajo de sospecha.'},
+  rEscar:{r:1,titulo:'Escarlatina',color:'#0a5c45',dx:'Faringitis + exantema "lija" + lengua aframbuesada.',tx:'PENICILINA o amoxicilina (macrólido si alergia) para prevenir fiebre reumática. Confirmar con prueba rápida/cultivo si hay duda.',alarma:'Vigilar fiebre reumática y glomerulonefritis posestreptocócica.'},
+  rRose:{r:1,titulo:'Exantema súbito (roséola)',color:'#d97706',dx:'Lactante con fiebre alta 3-5 días que cede y luego brota el exantema; buen estado.',tx:'Soporte. Tranquilizar a la familia. Vigilar crisis febriles.',alarma:'Crisis febril prolongada o focal → evaluar.'},
+  rRube:{r:1,titulo:'Rubéola',color:'#4a1060',dx:'Exantema rosado tenue cefalocaudal + adenopatía retroauricular.',tx:'Soporte. NOTIFICAR. Indagar contacto con embarazadas (riesgo de síndrome de rubéola congénita).',alarma:'Embarazada expuesta → serología y referencia urgente.'},
+  rErit:{r:1,titulo:'Eritema infeccioso',color:'#1a6bbd',dx:'Mejilla abofeteada → exantema en encaje; buen estado; ya no contagia.',tx:'Soporte. Vigilar grupos de riesgo (anemias hemolíticas, embarazo, inmunocomprometidos).',alarma:'Palidez/anemia súbita (crisis aplásica) o embarazo expuesto → referir.'}
+};
+
+/* ===== ESCENARIOS ===== */
+var ESC_EX={
+  embarazo:{t:'Embarazo',col:'#6a1a5a',
+    clin:'Tres riesgos clave: RUBÉOLA (síndrome de rubéola congénita), PARVOVIRUS B19 (hidrops fetal/anemia fetal) y VARICELA (varicela congénita o neonatal grave).',
+    tx:'• Ante exposición: serología (IgG/IgM) para definir susceptibilidad. • NO aplicar vacunas de virus vivos (SRP, varicela) en el embarazo. • Varicela: inmunoglobulina varicela-zóster a la embarazada susceptible expuesta; aciclovir si enferma. • Referencia a obstetricia.',
+    compl:'Malformaciones, hidrops, pérdida fetal o varicela neonatal.'},
+  inmuno:{t:'Inmunocomprometido',col:'#7b1c1c',
+    clin:'Sarampión y varicela pueden ser graves (neumonía, encefalitis, diseminación).',
+    tx:'• Varicela/zóster: ACICLOVIR (IV en grave). • Profilaxis posexposición con inmunoglobulina (varicela o sarampión) según el caso. • Evitar vacunas de virus vivos. • Manejo conjunto con infectología.',
+    compl:'Enfermedad diseminada y mortalidad elevada.'},
+  contacto_sara:{t:'Contacto de sarampión',col:'#7b1c1c',
+    clin:'Conviviente o contacto de un caso confirmado, sin esquema o susceptible.',
+    tx:'• VACUNA SRP en las primeras 72 h (susceptibles ≥6 meses). • INMUNOGLOBULINA si pasaron hasta 4-6 días o si la vacuna está contraindicada (lactante <6 m, embarazada, inmunocomprometido). • Vigilancia 21 días.',
+    compl:'Propagación en la comunidad si no se actúa rápido.'},
+  crisis_aplasica:{t:'Crisis aplásica (parvovirus B19)',col:'#1a6bbd',
+    clin:'En anemias hemolíticas (drepanocitosis, esferocitosis): caída brusca de la hemoglobina y reticulocitos por el parvovirus B19.',
+    tx:'• Soporte hematológico, transfusión si es necesaria. • En inmunocomprometidos puede causar anemia crónica (valorar inmunoglobulina). • Aislar de embarazadas y pacientes de riesgo.',
+    compl:'Anemia grave; en estos pacientes el parvovirus SÍ es contagioso en la fase aplásica.'},
+  crisis_febril:{t:'Crisis febril (roséola)',col:'#d97706',
+    clin:'La roséola (VHH-6) es una causa frecuente de crisis febriles en lactantes.',
+    tx:'• Manejar la crisis y la fiebre; tranquilizar. • Descartar otras causas si la crisis es prolongada, focal o repetida. • La mayoría son crisis febriles simples y benignas.',
+    compl:'Crisis febril compleja → evaluación adicional.'},
+  postestrep:{t:'Escarlatina y secuelas posestreptocócicas',col:'#0a5c45',
+    clin:'Sin tratamiento, el estreptococo grupo A puede dejar fiebre reumática o glomerulonefritis.',
+    tx:'• Antibiótico completo (penicilina/amoxicilina) previene la fiebre reumática. • Vigilar datos de glomerulonefritis (edema, hipertensión, hematuria) semanas después.',
+    compl:'Fiebre reumática (cardiopatía) y glomerulonefritis.'}
+};
+var ESC_CHIPS2=[['embarazo','🤰 Embarazo'],['inmuno','🛡️ Inmunocomprometido'],['contacto_sara','🟥 Contacto de sarampión'],['crisis_aplasica','🩸 Crisis aplásica'],['crisis_febril','⚡ Crisis febril'],['postestrep','🦠 Secuelas posestreptocócicas']];
+
+/* ===== RENDER: Escenarios ===== */
+function initEsc2(){var c=document.getElementById('esc2-chips'),d=document.getElementById('esc2-content');if(!c||!d)return;ESC_CHIPS2.forEach(function(ch,i){var b=document.createElement('button');b.className='pchip'+(i===0?' on':'');b.textContent=ch[1];b.onclick=(function(k,el){return function(){document.querySelectorAll('#esc2-chips .pchip').forEach(function(x){x.classList.remove('on');});el.classList.add('on');showEsc2(k);};})(ch[0],b);c.appendChild(b);});showEsc2('embarazo');}
+function showEsc2(k){var s=ESC_EX[k],d=document.getElementById('esc2-content');if(!s||!d)return;d.innerHTML='<div style="background:'+s.col+';color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.t+'</div></div>'+'<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">🩺 Contexto</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.clin+'</div></div>'+'<div style="background:var(--act);border-radius:var(--rs);border:1px solid var(--bd);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:4px;">💊 Manejo</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.tx+'</div></div>'+'<div style="background:#fdeaea;border-radius:var(--rs);border:1px solid #f3c0c0;padding:10px 12px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:4px;">⚠️ Riesgo</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.compl+'</div></div>';}
+
+/* ===== RENDER: Algoritmo ===== */
+var raHist=[],raLabels=[];
+function renderRaBread(){var h='<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:10px;font-size:10px;color:#6b7280;">';h+='<span style="background:var(--act);color:var(--ac);padding:2px 8px;border-radius:10px;font-weight:700;">Inicio</span>';raLabels.forEach(function(l,i){h+='<span style="color:#9ca3af;">›</span><span style="background:#f3f4f6;padding:2px 8px;border-radius:10px;">'+l+'</span>';});return h+'</div>';}
+function renderRaStep(sid){var s=ALGO_EX[sid];if(!s)return;if(s.r){renderRaResult(s);return;}var h=renderRaBread();h+='<div style="background:var(--act);border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;">';h+='<div style="font-size:13px;font-weight:700;color:#3a0c52;margin-bottom:6px;">'+s.p+'</div>';if(s.hint)h+='<div style="font-size:11.5px;color:#6b7280;background:#fff;border-radius:var(--rs);padding:7px 10px;margin-bottom:10px;border-left:2px solid #d1d5db;">💡 '+s.hint+'</div>';s.o.forEach(function(o,i){h+='<button onclick="raSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;background:'+(o.c||'#fff')+';border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;font-weight:500;font-family:inherit;">'+o.t+'</button>';});if(raHist.length)h+='<button onclick="raBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;font-family:inherit;">← Volver</button>';h+='</div>';var el=document.getElementById('ra-step');if(el)el.innerHTML=h;}
+function raSel(sid,i){var o=ALGO_EX[sid].o[i];var lbl=o.t.replace(/^[^A-Za-z0-9]+/,'');raLabels.push(lbl.substring(0,24)+(lbl.length>24?'…':''));raHist.push(sid);renderRaStep(o.n);}
+function raBack(){if(raHist.length){raLabels.pop();renderRaStep(raHist.pop());}}
+function resetRa(){raHist=[];raLabels=[];renderRaStep('start');}
+function renderRaResult(s){function blk(t,v,c,bg){return '<div style="background:'+bg+';border-left:3px solid '+c+';border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+v.replace(/\n/g,'<br>')+'</div></div>';}var h=renderRaBread();h+='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.titulo+'</div></div>';h+=blk('🔍 Diagnóstico',s.dx,'#6b7280','#fff');h+=blk('💊 Manejo',s.tx,L1,'var(--act)');h+=blk('🚨 Alarma / clave',s.alarma,'#7b1c1c','#fdeaea');h+='<button onclick="resetRa()" style="margin-top:4px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;">↩ Empezar de nuevo</button>';var el=document.getElementById('ra-step');if(el)el.innerHTML=h;}
+
+window.addEventListener('load',function(){
+  var t=document.getElementById('tab-res');if(t)t.classList.add('on');
+  buildComp();
+  initTto();
+  initEsc2();renderRaStep('start');calcIdent();calcCentor();
+});
+</script>
+</body>
+</html>

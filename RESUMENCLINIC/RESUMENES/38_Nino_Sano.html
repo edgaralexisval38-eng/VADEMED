@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Control del Ni&ntilde;o Sano</title>
+<style>
+:root{--g:#0e6f8e;--gm:#0e9ac0;--gl:#e2f4fb;--gp:#f1fbfe;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--p:#4a1d8a;--pl:#ede9fe;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-400:#9ca3af;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--bd:#e2e8f0;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.back{display:flex;align-items:center;gap:6px;padding:8px 14px;background:#fff;border:none;border-bottom:1px solid #e2e8f0;font-size:13px;color:var(--bm);cursor:pointer;width:100%;font-family:inherit;}
+.hdr{background:linear-gradient(135deg,#0a4f6b,#0e9ac0);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;letter-spacing:-0.3px;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--g);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;line-height:1.2;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.tab.al.on{color:var(--rm);border-bottom-color:var(--rm);}
+.tab.bib.on{color:var(--bm);border-bottom-color:var(--bm);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-400);transition:transform 0.2s;flex-shrink:0;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}
+.prose strong{color:var(--gray-900);}
+.prose ul{padding-left:18px;margin-bottom:8px;}.prose li{margin-bottom:3px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kp:last-child{margin-bottom:0;}
+.kn{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.kt strong{color:var(--gray-900);}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.alert:last-child{margin-bottom:0;}
+.ai{font-size:16px;flex-shrink:0;margin-top:1px;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.t tr:hover td{background:var(--gray-50);}
+.age{font-weight:700;color:var(--g);white-space:nowrap;}
+.lb{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.l-im{background:var(--bl);color:var(--b);}
+.l-g{background:var(--gl);color:var(--g);}
+.l-r{background:var(--rl);color:var(--r);}
+.l-a{background:var(--al);color:var(--a);}
+.vname{font-weight:700;color:var(--g);display:block;}
+.vnote{color:var(--gray-600);font-size:11px;display:block;line-height:1.4;margin-top:1px;}
+.nodar{background:var(--rl);border:1.5px solid var(--rm);border-radius:var(--rs);padding:12px 14px;margin-top:4px;}
+.nodar-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.nodar-i{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;color:var(--r);border-bottom:1px solid rgba(192,57,43,0.15);}
+.nodar-i:last-child{border-bottom:none;}
+.nodar-i::before{content:'\26A0';font-size:12px;flex-shrink:0;margin-top:1px;font-weight:700;}
+.okbox{background:var(--gl);border:1.5px solid var(--gm);border-radius:var(--rs);padding:12px 14px;margin-top:8px;}
+.okbox-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:8px;}
+.okbox-i{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;color:var(--gray-700);border-bottom:1px solid rgba(14,154,192,0.15);}
+.okbox-i:last-child{border-bottom:none;}
+.okbox-i::before{content:'\2713';color:var(--gm);font-size:12px;flex-shrink:0;margin-top:1px;font-weight:700;}
+.fp{display:flex;align-items:flex-start;}
+.fp-l{width:34px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.fp-d{width:13px;height:13px;border-radius:50%;flex-shrink:0;margin-top:3px;background:var(--gm);border:2px solid var(--gl);}
+.fp-li{width:2px;background:var(--gray-200);flex:1;min-height:18px;}
+.fp-c{flex:1;padding:0 0 14px 10px;}
+.fp-t{font-size:12.5px;font-weight:700;color:var(--g);margin-bottom:3px;}
+.fp-x{font-size:12.5px;color:var(--gray-700);line-height:1.6;}
+.fp-x b{color:var(--gray-900);}
+.note{font-size:11.5px;color:var(--gray-600);line-height:1.55;background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:9px 11px;margin-top:8px;}
+.note strong{color:var(--gray-900);}
+.footbar{margin-top:18px;background:var(--bl);border:1px solid #cfe0f7;border-radius:12px;padding:13px 16px;display:flex;gap:10px;align-items:flex-start;}
+.footbar .i{font-size:18px;}
+.footbar .t{font-size:12px;color:var(--gray-700);line-height:1.55;}
+.footbar .t b{color:var(--gray-900);}
+.bib-i{padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.bib-i:last-child{border-bottom:none;}
+.bib-i b{color:var(--gray-900);}
+.bib-src{color:var(--bm);font-size:11px;word-break:break-all;text-decoration:underline;display:inline-block;margin-top:3px;}
+a.bib-src:active{opacity:.65;}
+.ed-form{background:var(--gp);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;}
+.ed-q{font-size:12.5px;color:var(--gray-700);margin-bottom:10px;line-height:1.5;}
+.ed-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.ed-inp{width:74px;padding:9px 10px;border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-family:inherit;}
+.ed-sel{flex:1;min-width:110px;padding:9px 10px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;background:#fff;}
+.ed-btn{padding:10px 16px;background:var(--g);color:#fff;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.ed-btn2{padding:10px 16px;background:#fff;color:var(--gray-700);border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.ed-btn2:active{background:var(--gray-100);}
+.ed-head{font-size:14px;font-weight:700;color:var(--gray-900);margin:14px 0 8px;}
+.ed-box{border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid;}
+.ed-box-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.ed-it{font-size:12.5px;padding:3px 0;line-height:1.45;color:var(--gray-700);}
+.ed-it b{color:var(--gray-900);}
+.ed-g{background:var(--gl);border-color:var(--gm);} .ed-g .ed-box-t{color:var(--g);}
+.ed-w{background:var(--al);border-color:var(--am);} .ed-w .ed-box-t{color:var(--a);}
+.ed-i{background:var(--bl);border-color:var(--bm);} .ed-i .ed-box-t{color:var(--b);}
+.ed-r{background:var(--rl);border-color:var(--rm);} .ed-r .ed-box-t{color:var(--r);}
+.sm-u{font-size:12px;color:var(--gray-600);}
+.sm-chart{margin:9px 0 1px;border:1px solid var(--bd);border-radius:var(--rs);padding:6px 6px 3px;background:#fff;}
+.sm-cap{font-size:10px;font-weight:700;color:var(--gray-700);text-align:center;margin-bottom:3px;letter-spacing:.2px;}
+.hrow{border-bottom:1px solid var(--gray-100);}
+.hrow:last-child{border-bottom:none;}
+.hlink{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:none;padding:10px 0;font-family:inherit;cursor:pointer;}
+.hdot{width:11px;height:11px;border-radius:50%;background:var(--gm);border:2px solid var(--gl);flex-shrink:0;}
+.hage{font-size:13px;font-weight:700;color:var(--g);flex-shrink:0;}
+.hsum{font-size:11.5px;color:var(--gray-600);flex:1;line-height:1.35;}
+.hchev{font-size:11px;color:var(--gray-400);transition:transform .2s;flex-shrink:0;}
+.hlink.on .hchev{transform:rotate(180deg);}
+.hlink.on .hage{color:var(--gm);}
+.hdet{display:none;padding:0 0 11px 19px;}
+.hdet.open{display:block;}
+.hdom{font-size:12.5px;line-height:1.5;color:var(--gray-700);margin-bottom:6px;}
+.hlab{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:1px 6px;border-radius:8px;margin-right:6px;vertical-align:1px;}
+.hlab.mg{background:var(--bl);color:var(--b);}
+.hlab.mf{background:var(--gl);color:var(--g);}
+.hlab.le{background:var(--pl);color:var(--p);}
+.hlab.so{background:var(--al);color:var(--a);}
+.halarm{font-size:12px;color:var(--r);background:var(--rl);border-radius:var(--rs);padding:6px 9px;margin-top:2px;line-height:1.45;}
+.halarm b{color:var(--r);}
+.sm-leg{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;font-size:9.5px;color:var(--gray-600);margin-top:1px;}
+.sm-leg span{display:flex;align-items:center;gap:3px;}
+.sm-leg i{width:11px;height:3px;display:inline-block;border-radius:1px;}
+.sm-cnote{font-size:9.5px;color:var(--rm);text-align:center;margin-top:1px;}
+.sem{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:var(--rs);margin-bottom:9px;border:1.5px solid;}
+.sem-d{width:22px;height:22px;border-radius:50%;flex-shrink:0;margin-top:1px;}
+.sem-t{font-size:13px;font-weight:700;margin-bottom:3px;}
+.sem-x{font-size:12px;line-height:1.5;color:var(--gray-700);}
+.sem-g{background:#ecfdf5;border-color:#10b981;} .sem-g .sem-d{background:#10b981;} .sem-g .sem-t{color:#047857;}
+.sem-y{background:#fffbeb;border-color:#f59e0b;} .sem-y .sem-d{background:#f59e0b;} .sem-y .sem-t{color:#b45309;}
+.sem-r{background:#fef2f2;border-color:#ef4444;} .sem-r .sem-d{background:#ef4444;} .sem-r .sem-t{color:#b91c1c;}
+.vrow{margin-bottom:0;}
+.vlink{display:block;width:100%;text-align:left;background:none;border:none;padding:3px 0;font-size:12.5px;color:var(--gray-700);cursor:pointer;font-family:inherit;line-height:1.55;}
+.vlink b{color:var(--gray-900);}
+.vlink .vmeta{color:var(--gray-600);}
+.vlink .vchev{color:var(--gray-400);font-size:10px;margin-left:4px;display:inline-block;transition:transform .2s;}
+.vlink:active b,.vlink.on b{color:var(--g);}
+.vlink.on .vchev{transform:rotate(180deg);}
+.vdetail{display:none;padding:4px 0 8px 12px;border-left:2px solid var(--gl);margin:2px 0 8px 3px;}
+.vdetail.open{display:block;}
+</style>
+</head>
+<body>
+
+<button class="back" onclick="history.back()">&#8592; Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">&#128118;</div>
+    <div>
+      <div class="hdr-eye">Pediatr&iacute;a &middot; Primer nivel</div>
+      <div class="hdr-title">Control del Ni&ntilde;o Sano</div>
+      <div class="hdr-sub">México &middot; NOM-031 &middot; GPC IMSS-029-08 &middot; menores de 5 a&ntilde;os</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Vigilancia del crecimiento</span>
+    <span class="badge">Desarrollo (EDI)</span>
+    <span class="badge">Prevenci&oacute;n</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">6</div><div class="qs-l">Consultas &lt;1 a&ntilde;o</div></div>
+  <div class="qs"><div class="qs-v">6 m</div><div class="qs-l">Lactancia exclusiva</div></div>
+  <div class="qs"><div class="qs-v">1&ndash;59 m</div><div class="qs-l">Tamiz EDI</div></div>
+  <div class="qs"><div class="qs-v">OMS</div><div class="qs-l">Curvas de crecimiento</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">&#128203; Resumen</button>
+  <button class="tab" onclick="showT('edad',this)">&#128269; Por edad</button>
+  <button class="tab" onclick="showT('soma',this)">&#128207; Somatometr&iacute;a</button>
+  <button class="tab" onclick="showT('edi',this)">&#129504; Desarrollo / EDI</button>
+  <button class="tab" onclick="showT('alim',this)">&#127820; Alimentaci&oacute;n</button>
+  <button class="tab" onclick="showT('supl',this)">&#128138; Suplementos</button>
+  <button class="tab" onclick="showT('tam',this)">&#129514; Tamiz neonatal</button>
+  <button class="tab al" onclick="showT('alar',this)">&#9888; Alarma</button>
+  <button class="tab bib" onclick="showT('bib',this)">&#128218; Fuentes</button>
+</div>
+
+<!-- ===================== RESUMEN ===================== -->
+<div class="panel on" id="tab-res">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128118;</span><span class="st">&iquest;Qu&eacute; es el control del ni&ntilde;o sano?</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>Es la atenci&oacute;n peri&oacute;dica y preventiva del ni&ntilde;o aparentemente sano, para <strong>vigilar su crecimiento, nutrici&oacute;n y desarrollo</strong>, completar la vacunaci&oacute;n y detectar de forma temprana cualquier desviaci&oacute;n antes de que cause da&ntilde;o.</p>
+        <p>Se rige por la <strong>NOM-031-SSA2</strong> (atenci&oacute;n a la salud de la infancia, menores de 10 a&ntilde;os) y la <strong>GPC IMSS-029-08</strong> (control y seguimiento de nutrici&oacute;n, crecimiento y desarrollo del menor de 5 a&ntilde;os).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128197;</span><span class="st">Calendario de consultas</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt"><strong>Menor de 1 a&ntilde;o:</strong> al menos <strong>6 consultas</strong> (una cada ~2 meses): reci&eacute;n nacido, y a los 2, 4, 6, 9 y 12 meses.</span></div>
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt"><strong>1 a 4 a&ntilde;os:</strong> consulta a los <strong>18 y 24 meses</strong> y despu&eacute;s al menos <strong>una vez al a&ntilde;o</strong>.</span></div>
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt">Citar a <strong>intervalos m&aacute;s cortos</strong> (cada 30 d&iacute;as en &lt;5 a&ntilde;os) si hay desnutrici&oacute;n, sobrepeso o alteraci&oacute;n del crecimiento.</span></div>
+      <div class="note">Usa la pesta&ntilde;a <strong>Por edad</strong> para ver qu&eacute; evaluar y aplicar en la consulta de cada edad.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#9989;</span><span class="st">Qu&eacute; incluye cada consulta</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="okbox">
+        <div class="okbox-t">Componentes b&aacute;sicos</div>
+        <div class="okbox-i"><b>Somatometr&iacute;a:</b> peso, talla/longitud, per&iacute;metro cef&aacute;lico (hasta 2 a) e IMC (&gt;2 a).</div>
+        <div class="okbox-i"><b>Estado nutricional:</b> comparar con curvas OMS (peso/edad, talla/edad, peso/talla, IMC).</div>
+        <div class="okbox-i"><b>Desarrollo psicomotor:</b> aplicar <b>EDI</b> y revisar hitos.</div>
+        <div class="okbox-i"><b>Vacunaci&oacute;n:</b> revisar y completar el esquema.</div>
+        <div class="okbox-i"><b>Alimentaci&oacute;n:</b> lactancia, alimentaci&oacute;n complementaria, orientaci&oacute;n.</div>
+        <div class="okbox-i"><b>Suplementaci&oacute;n:</b> hierro, vitamina A y D, desparasitaci&oacute;n.</div>
+        <div class="okbox-i"><b>Tamiz neonatal</b> y detecciones (cadera, visi&oacute;n, audici&oacute;n, salud bucal).</div>
+        <div class="okbox-i"><b>Prevenci&oacute;n:</b> accidentes, estimulaci&oacute;n temprana y orientaci&oacute;n a la familia.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================== POR EDAD ===================== -->
+<div class="panel" id="tab-edad">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128269;</span><span class="st">&iquest;Qu&eacute; hacer en la consulta de esta edad?</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="ed-form">
+        <div class="ed-q">Escribe la edad del ni&ntilde;o para ver la somatometr&iacute;a, los hitos esperados, la alimentaci&oacute;n, los suplementos y los tamizajes que corresponden.</div>
+        <div class="ed-row">
+          <input class="ed-inp" id="edN" type="number" inputmode="numeric" placeholder="6" min="0">
+          <select class="ed-sel" id="edU">
+            <option value="d">d&iacute;as</option>
+            <option value="m" selected>meses</option>
+            <option value="a">a&ntilde;os</option>
+          </select>
+          <button class="ed-btn" onclick="computeEdad()">Calcular</button>
+        </div>
+      </div>
+      <div id="edOut"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SOMATOMETRIA ===================== -->
+<div class="panel" id="tab-soma">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128202;</span><span class="st">Calculadora de percentiles (OMS)</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="ed-form">
+        <div class="ed-q">Est&aacute;ndar OMS 0&ndash;5 a&ntilde;os. Elige sexo y edad, e ingresa las medidas que tengas; calcula el <b>percentil</b> y el <b>puntaje Z</b> de cada una.</div>
+        <div class="ed-row" style="margin-bottom:8px;">
+          <select class="ed-sel" id="smSex"><option value="b">Ni&ntilde;o</option><option value="g">Ni&ntilde;a</option></select>
+        </div>
+        <div class="ed-row" style="margin-bottom:8px;">
+          <input class="ed-inp" id="smAge" type="number" inputmode="decimal" placeholder="edad">
+          <select class="ed-sel" id="smAgeU"><option value="m" selected>meses</option><option value="d">d&iacute;as</option><option value="a">a&ntilde;os</option></select>
+        </div>
+        <div class="ed-row" style="margin-bottom:8px;">
+          <input class="ed-inp" id="smW" type="number" inputmode="decimal" placeholder="peso"><span class="sm-u">kg &middot; peso</span>
+        </div>
+        <div class="ed-row" style="margin-bottom:8px;">
+          <input class="ed-inp" id="smH" type="number" inputmode="decimal" placeholder="talla"><span class="sm-u">cm &middot; talla / longitud</span>
+        </div>
+        <div class="ed-row" style="margin-bottom:10px;">
+          <input class="ed-inp" id="smHC" type="number" inputmode="decimal" placeholder="PC"><span class="sm-u">cm &middot; per&iacute;metro cef&aacute;lico</span>
+        </div>
+        <div class="ed-row"><button class="ed-btn" onclick="computeSoma()">Calcular percentiles</button><button class="ed-btn2" onclick="resetSoma()">Reiniciar</button></div>
+      </div>
+      <div id="smOut"></div>
+      <div class="note">Datos: <b>OMS Child Growth Standards</b> (tablas simplificadas por puntaje Z). El puntaje Z se obtiene por interpolaci&oacute;n entre las l&iacute;neas de DE; es apoyo, no sustituye la gr&aacute;fica ni el juicio cl&iacute;nico. Per&iacute;metro cef&aacute;lico clinicamente &uacute;til hasta los 2 a&ntilde;os.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128207;</span><span class="st">C&oacute;mo medir</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt"><strong>Peso:</strong> b&aacute;scula calibrada, sin ropa ni objetos; lectura con el ni&ntilde;o quieto.</span></div>
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt"><strong>Longitud / talla:</strong> <b>acostado</b> (longitud) en menores de 2 a&ntilde;os; <b>de pie</b> (talla) a partir de los 2 a&ntilde;os.</span></div>
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt"><strong>Per&iacute;metro cef&aacute;lico:</strong> cinta met&aacute;lica flexible; se mide <b>hasta los 2 a&ntilde;os</b>.</span></div>
+      <div class="kp"><span class="kn">&#9679;</span><span class="kt"><strong>IMC:</strong> se calcula y grafica <b>a partir de los 2 a&ntilde;os</b>.</span></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128202;</span><span class="st">&Iacute;ndices y curvas OMS</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>&Iacute;ndice</th><th>Qu&eacute; eval&uacute;a</th></tr>
+        <tr><td><span class="vname">Peso / edad</span></td><td>Peso global; sensible pero poco espec&iacute;fico.</td></tr>
+        <tr><td><span class="vname">Talla / edad</span></td><td>Crecimiento lineal; talla baja = desnutrici&oacute;n <b>cr&oacute;nica</b>.</td></tr>
+        <tr><td><span class="vname">Peso / talla</span></td><td>Desnutrici&oacute;n <b>aguda</b> (emaciaci&oacute;n) o sobrepeso.</td></tr>
+        <tr><td><span class="vname">IMC / edad</span><span class="vnote">&gt;2 a&ntilde;os</span></td><td>Sobrepeso y obesidad.</td></tr>
+        <tr><td><span class="vname">PC / edad</span><span class="vnote">&lt;2 a&ntilde;os</span></td><td>Crecimiento cerebral (micro/macrocefalia).</td></tr>
+      </table></div>
+      <div class="note">Graficar en las <strong>curvas de la OMS</strong> e interpretar por <strong>desviaciones est&aacute;ndar (DE)</strong> o percentiles. Lo importante es la <strong>tendencia</strong> en el tiempo, no un solo punto.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128300;</span><span class="st">Interpretaci&oacute;n (DE)</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">&#9888;</span><span><span class="at">Peso/talla &lt; &minus;2 DE</span>Desnutrici&oacute;n aguda (&lt; &minus;3 DE = grave).</span></div>
+      <div class="alert a-w"><span class="ai">&#128137;</span><span><span class="at">Talla/edad &lt; &minus;2 DE</span>Talla baja (desnutrici&oacute;n cr&oacute;nica); investigar causa.</span></div>
+      <div class="alert a-w"><span class="ai">&#128137;</span><span><span class="at">IMC &gt; +2 DE</span>Sobrepeso; &gt; +3 DE = obesidad (en menores de 5 a&ntilde;os).</span></div>
+      <div class="alert a-i"><span class="ai">&#128137;</span><span><span class="at">PC fuera de &minus;2 / +2 DE</span>Micro o macrocefalia; referir.</span></div>
+      <div class="note">Ante cualquier desviaci&oacute;n: citar <strong>cada 30 d&iacute;as</strong>, investigar la causa (enfermedad o t&eacute;cnica de alimentaci&oacute;n) y <strong>referir</strong> si no mejora con el tratamiento.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EDI ===================== -->
+<div class="panel" id="tab-edi">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#129504;</span><span class="st">Qu&eacute; es la prueba EDI</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="prose"><p>La <strong>Evaluaci&oacute;n del Desarrollo Infantil (EDI)</strong> es un tamiz dise&ntilde;ado y validado en México para detectar de forma oportuna problemas del desarrollo. Se aplica de <strong>1 a 59 meses</strong> en la consulta.</p></div>
+      <div class="kp"><span class="kn">1</span><span class="kt"><strong>Factores de riesgo biol&oacute;gico</strong> (prematurez, bajo peso, etc.).</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt"><strong>Se&ntilde;ales de alerta</strong> propias de cada edad.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt"><strong>&Aacute;reas del desarrollo:</strong> motriz gruesa, motriz fina, lenguaje, social y conocimiento.</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt"><strong>Se&ntilde;ales de alarma</strong> (sugerentes de trastorno del desarrollo).</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt"><strong>Exploraci&oacute;n neurol&oacute;gica.</strong></span></div>
+      <div class="note">En <strong>prematuros (&lt;37 SDG)</strong> se usa la <strong>edad corregida</strong> hasta los 2 a&ntilde;os.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128680;</span><span class="st">Sem&aacute;foro EDI</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="sem sem-g"><div class="sem-d"></div><div><div class="sem-t">Verde &middot; Desarrollo normal</div><div class="sem-x">Cumple los hitos de su edad, sin se&ntilde;ales de alarma ni alteraci&oacute;n neurol&oacute;gica. &rarr; <b>Vigilancia rutinaria</b> en la unidad.</div></div></div>
+      <div class="sem sem-y"><div class="sem-d"></div><div><div class="sem-t">Amarillo &middot; Rezago en el desarrollo</div><div class="sem-x">No cumple los hitos de su edad, pero <b>s&iacute;</b> los de la edad anterior; sin se&ntilde;ales de alarma y neurol&oacute;gico normal. &rarr; <b>Estimulaci&oacute;n temprana</b> dirigida y reevaluar.</div></div></div>
+      <div class="sem sem-r"><div class="sem-d"></div><div><div class="sem-t">Rojo &middot; Riesgo de retraso</div><div class="sem-x">No cumple los hitos de su edad <b>ni</b> los de la edad anterior, <b>o</b> tiene &ge;1 se&ntilde;al de alarma, <b>o</b> alteraci&oacute;n neurol&oacute;gica. &rarr; <b>Referir</b> a evaluaci&oacute;n especializada.</div></div></div>
+      <div class="note">Una sola <strong>se&ntilde;al de alarma</strong> o una <strong>alteraci&oacute;n neurol&oacute;gica</strong> clasifican automáticamente en <strong>rojo</strong>, sin importar el resto.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128099;</span><span class="st">Hitos del desarrollo por edad</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">1 mes</span><span class="hsum">fija la mirada, reacciona a sonidos</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>En posici&oacute;n boca abajo levanta la cabeza moment&aacute;neamente; postura en flexi&oacute;n.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Manos empu&ntilde;adas la mayor parte del tiempo; reflejo de prensi&oacute;n presente.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Se alerta o sobresalta ante sonidos; llanto como forma de comunicaci&oacute;n.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Fija la mirada en el rostro; sigue un objeto hasta la l&iacute;nea media.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No reacciona a sonidos fuertes; succi&oacute;n d&eacute;bil; no fija la mirada.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">2 meses</span><span class="hsum">sost&eacute;n cef&aacute;lico breve, sonrisa social</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Boca abajo levanta la cabeza unos 45&deg;; menor flexi&oacute;n de extremidades.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Empieza a abrir las manos; retiene un objeto colocado en su mano unos segundos.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Emite sonidos guturales (gorjeo); se tranquiliza con la voz del cuidador.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Sonrisa social; sigue objetos y personas con la mirada; contacto visual.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No sonr&iacute;e a personas (2&ndash;3 m); no fija ni sigue con la mirada.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">4 meses</span><span class="hsum">sost&eacute;n cef&aacute;lico firme, r&iacute;e y balbucea</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Sost&eacute;n cef&aacute;lico firme; boca abajo se apoya en antebrazos; inicia volteo (rola).</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Lleva las manos a la l&iacute;nea media y a la boca; intenta alcanzar objetos.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>R&iacute;e a carcajadas; balbucea y vocaliza cuando le hablan.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Reconoce a sus padres; observa sus propias manos; se interesa por el entorno.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No sostiene la cabeza; no se r&iacute;e; manos siempre empu&ntilde;adas.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">6 meses</span><span class="hsum">se sienta con apoyo, rola, balbucea</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Se sienta con apoyo; rola en ambos sentidos; de pie sostenido soporta peso (rebota).</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Toma objetos con toda la mano; los pasa de una mano a otra; se los lleva a la boca.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Balbuceo con consonantes (ba, ga, da); voltea hacia la voz y los sonidos.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Distingue caras conocidas de extra&ntilde;as; explora objetos; empieza a responder a su nombre.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No rola; no sostiene bien la cabeza al sentarlo; no balbucea ni sonr&iacute;e.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">9 meses</span><span class="hsum">se sienta solo, gatea, s&iacute;labas</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Se sienta sin apoyo y estable; gatea o se arrastra; se pone de pie sujet&aacute;ndose.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Pinza inferior (&iacute;ndice-pulgar); golpea objetos entre s&iacute;; suelta objetos a voluntad.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Balbuceo reduplicado (mamama, dadada); imita sonidos; empieza a entender “no”.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Angustia ante extra&ntilde;os; busca un objeto que se esconde; juega a “tortillitas”.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No se sienta sin apoyo; no balbucea; no responde a su nombre; no hace pinza.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">12 meses</span><span class="hsum">primeros pasos, 1&ndash;2 palabras, se&ntilde;ala</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Se pone de pie solo; camina con apoyo o da sus primeros pasos; se agacha y se levanta.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Pinza fina (&iacute;ndice-pulgar); mete y saca objetos de un recipiente; se&ntilde;ala con el &iacute;ndice.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>1&ndash;3 palabras con significado (mam&aacute;, pap&aacute;); entiende &oacute;rdenes simples con gesto; dice “adi&oacute;s”.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Imita gestos; da y pide objetos; juega a “toma y dame”.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No se sostiene de pie; no se&ntilde;ala; no dice ninguna palabra; no responde a su nombre.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">15 meses</span><span class="hsum">camina solo, garabatea, jerga</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Camina solo; se pone en cuclillas y se levanta; sube escaleras gateando.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Hace torre de 2 cubos; garabatea; usa la cuchara (derrama).</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>3&ndash;5 palabras adem&aacute;s de mam&aacute; y pap&aacute;; usa jerga; se&ntilde;ala lo que quiere.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Pide se&ntilde;alando; imita tareas; bebe de taza con ayuda.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No camina; no dice palabras; no se interesa por su entorno.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">18 meses</span><span class="hsum">corre, 6&ndash;10 palabras, juego simb&oacute;lico</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Camina con seguridad y corre con rigidez; sube escaleras de la mano; patea pelota (inicia).</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Torre de 3&ndash;4 cubos; garabateo espont&aacute;neo; pasa varias p&aacute;ginas a la vez.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>6&ndash;10 palabras; se&ntilde;ala partes del cuerpo e im&aacute;genes; obedece &oacute;rdenes simples sin gesto.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Juego simb&oacute;lico inicial (da de comer a un mu&ntilde;eco); imita tareas del hogar; come solo con cuchara.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No camina solo; menos de 6 palabras; no se&ntilde;ala para mostrar inter&eacute;s; no imita.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">2 a&ntilde;os</span><span class="hsum">frases de 2 palabras, sube escaleras</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Corre bien; sube y baja escaleras con los dos pies por escal&oacute;n; patea y lanza pelota; salta en su lugar.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Torre de 6 cubos; imita un trazo vertical; pasa p&aacute;ginas de una en una.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Frases de 2 palabras; unas 50 palabras; entiende &oacute;rdenes de 2 pasos; se nombra a s&iacute; mismo.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Juego simb&oacute;lico y juego paralelo; se quita prendas; inicia control de esf&iacute;nteres diurno.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No une 2 palabras; no corre; no imita acciones; pierde habilidades ya logradas.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">3 a&ntilde;os</span><span class="hsum">triciclo, copia c&iacute;rculo, frases</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Sube escaleras alternando los pies; pedalea triciclo; salta con ambos pies; se para en un pie un instante.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Torre de 8&ndash;9 cubos; copia un c&iacute;rculo; imita un puente con cubos.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Frases de 3 o m&aacute;s palabras; comprensible para extra&ntilde;os (~75%); dice su nombre y edad; usa plurales.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Inicia juego cooperativo; se viste con ayuda; control de esf&iacute;nteres diurno; empieza a nombrar colores.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No forma frases; lenguaje ininteligible; no juega con otros ni&ntilde;os; no control de esf&iacute;nteres.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">4 a&ntilde;os</span><span class="hsum">brinca en un pie, dibuja persona</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Brinca en un pie; salta; lanza la pelota por encima del hombro; baja escaleras alternando pies.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Copia una cruz (y el cuadrado, inicia); dibuja una persona de 3 partes; usa tijeras.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Lenguaje 100% inteligible; cuenta historias; usa tiempo pasado; pregunta “&iquest;por qu&eacute;?”.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Juego cooperativo y de roles; se viste solo (salvo botones dif&iacute;ciles); cuenta hasta 4.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No brinca en un pie; lenguaje dif&iacute;cil de entender; no juega de forma interactiva.</div>
+        </div>
+      </div>
+      <div class="hrow">
+        <button class="hlink" onclick="togH(this)"><span class="hdot"></span><span class="hage">5 a&ntilde;os</span><span class="hsum">salta alterno, copia cuadrado</span><span class="hchev">&#8964;</span></button>
+        <div class="hdet">
+          <div class="hdom"><span class="hlab mg">Motriz gruesa</span>Salta alternando los pies; intenta brincar la cuerda; buen equilibrio.</div>
+          <div class="hdom"><span class="hlab mf">Motriz fina</span>Copia un cuadrado (y el tri&aacute;ngulo, inicia); dibuja una persona de 6 partes; escribe su nombre o algunas letras.</div>
+          <div class="hdom"><span class="hlab le">Lenguaje</span>Usa oraciones completas; define palabras; cuenta hasta 10; pregunta el significado de las palabras.</div>
+          <div class="hdom"><span class="hlab so">Social / cognitivo</span>Se viste y desviste solo; sigue reglas en los juegos; empieza a distinguir fantas&iacute;a de realidad.</div>
+          <div class="halarm"><b>&#9888; Alarma:</b> No salta alternando pies; no se viste solo; lenguaje inmaduro para su edad.</div>
+        </div>
+      </div>
+      <div class="note">Referencia r&aacute;pida de hitos; la calificaci&oacute;n formal se hace con el <strong>formato EDI</strong> de la edad correspondiente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ALIMENTACION ===================== -->
+<div class="panel" id="tab-alim">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#129385;</span><span class="st">Lactancia materna</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="prose"><p><strong>Lactancia materna exclusiva</strong> los primeros <strong>6 meses</strong>, a libre demanda (sin agua, t&eacute;s ni f&oacute;rmula salvo indicaci&oacute;n). Continuar la lactancia, junto con otros alimentos, <strong>hasta los 2 a&ntilde;os</strong>.</p></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#127828;</span><span class="st">Alimentaci&oacute;n complementaria (desde 6 m)</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div><div class="fp-li"></div></div><div class="fp-c"><div class="fp-t">6 meses</div><div class="fp-x">Iniciar <b>verduras y frutas</b> en papilla. Mantener la lactancia. Probar un alimento nuevo cada 2&ndash;3 d&iacute;as.</div></div></div>
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div><div class="fp-li"></div></div><div class="fp-c"><div class="fp-t">7&ndash;8 meses</div><div class="fp-x">Agregar <b>cereales, leguminosas y carnes</b>; consistencia <b>machacada/picada</b>.</div></div></div>
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div><div class="fp-li"></div></div><div class="fp-c"><div class="fp-t">9&ndash;11 meses</div><div class="fp-x">Picado fino y alimentos que pueda tomar con la mano; introducir <b>huevo y pescado</b>.</div></div></div>
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div></div><div class="fp-c"><div class="fp-t">12 meses</div><div class="fp-x">Integrar a la <b>dieta familiar</b> (variada, suficiente, inocua y equilibrada).</div></div></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#9888;</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+    <div class="sb">
+      <div class="nodar">
+        <div class="nodar-t">Evitar</div>
+        <div class="nodar-i"><span>Iniciar s&oacute;lidos antes de los 6 meses o demasiado tarde.</span></div>
+        <div class="nodar-i"><span><b>Miel</b> antes del a&ntilde;o (riesgo de botulismo).</span></div>
+        <div class="nodar-i"><span>Az&uacute;car, sal, jugos y ultraprocesados.</span></div>
+        <div class="nodar-i"><span>Bibero&oacute;n prolongado (suspender hacia los 12&ndash;18 meses).</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SUPLEMENTOS ===================== -->
+<div class="panel" id="tab-supl">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128138;</span><span class="st">Suplementaci&oacute;n</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Suplemento</th><th>Cu&aacute;ndo / dosis</th></tr>
+        <tr><td><span class="vname">Vitamina D</span></td><td><b>400 UI/d&iacute;a</b> en lactantes alimentados al seno, desde los primeros d&iacute;as.</td></tr>
+        <tr><td><span class="vname">Hierro</span></td><td>Profil&aacute;ctico: t&eacute;rmino desde <b>4&ndash;6 meses</b>; prematuro o bajo peso desde el <b>1.er mes</b> (2&ndash;4 mg/kg/d&iacute;a). Anemia: dosis terap&eacute;utica.</td></tr>
+        <tr><td><span class="vname">Vitamina A</span><span class="vnote">megadosis</span></td><td>En <b>Semanas Nacionales de Salud</b>: 100,000 UI (6&ndash;11 m) y 200,000 UI (12&ndash;59 m).</td></tr>
+        <tr><td><span class="vname">Desparasitaci&oacute;n</span><span class="vnote">albendazol</span></td><td>A partir de los <b>2 a&ntilde;os</b>, en Semanas Nacionales de Salud.</td></tr>
+      </table></div>
+      <div class="note"><strong>SNS</strong> = Semanas Nacionales de Salud. Individualizar seg&uacute;n riesgo (prematurez, bajo peso, anemia, alimentaci&oacute;n).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TAMIZ ===================== -->
+<div class="panel" id="tab-tam">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#129514;</span><span class="st">Tamiz neonatal</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div><div class="fp-li"></div></div><div class="fp-c"><div class="fp-t">Metab&oacute;lico &middot; tal&oacute;n 3&ndash;5 d&iacute;as</div><div class="fp-x">Gota de sangre del tal&oacute;n (hasta los 28 d&iacute;as). Detecta <b>hipotiroidismo congénito</b> (b&aacute;sico) y, en el ampliado, fenilcetonuria, hiperplasia suprarrenal, galactosemia, fibrosis qu&iacute;stica y otras. Previene discapacidad intelectual.</div></div></div>
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div><div class="fp-li"></div></div><div class="fp-c"><div class="fp-t">Auditivo &middot; antes del mes</div><div class="fp-x">Emisiones otoac&uacute;sticas o potenciales evocados. Detecta <b>hipoacusia</b> para intervenir temprano (lenguaje).</div></div></div>
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div><div class="fp-li"></div></div><div class="fp-c"><div class="fp-t">Cardiaco &middot; antes del egreso</div><div class="fp-x"><b>Oximetr&iacute;a de pulso</b> pre y postductal (24&ndash;48 h). Detecta <b>cardiopat&iacute;as congénitas cr&iacute;ticas</b>.</div></div></div>
+      <div class="fp"><div class="fp-l"><div class="fp-d"></div></div><div class="fp-c"><div class="fp-t">Visual &middot; reflejo rojo</div><div class="fp-x">Oftalmoscopia. Descarta <b>catarata congénita</b> y <b>retinoblastoma</b>.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ALARMA ===================== -->
+<div class="panel" id="tab-alar">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#9888;</span><span class="st">Se&ntilde;ales de alarma del desarrollo</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">&#9888;</span><span><span class="at">Motor</span>No sost&eacute;n cef&aacute;lico a los <b>4 meses</b> &middot; no se sienta a los <b>9 meses</b> &middot; no camina a los <b>18 meses</b>.</span></div>
+      <div class="alert a-r"><span class="ai">&#9888;</span><span><span class="at">Lenguaje</span>No dice palabras a los <b>16&ndash;18 meses</b> &middot; no frases de 2 palabras a los <b>24 meses</b>.</span></div>
+      <div class="alert a-r"><span class="ai">&#9888;</span><span><span class="at">Social</span>No contacto visual ni sonrisa social &middot; no se&ntilde;ala ni comparte intereses.</span></div>
+      <div class="alert a-r"><span class="ai">&#9888;</span><span><span class="at">Banderas mayores</span><b>Regresi&oacute;n</b> (pierde habilidades ya logradas) &middot; asimetr&iacute;a o preferencia de una mano <b>antes del a&ntilde;o</b> &middot; persistencia de reflejos primitivos.</span></div>
+      <div class="note">Cualquiera de estas obliga a <strong>referir</strong>; en EDI clasifican en <strong>rojo</strong>.</div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#127973;</span><span class="st">Cu&aacute;ndo referir a 2.&ordm; nivel</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="nodar">
+        <div class="nodar-t">Referir a pediatr&iacute;a</div>
+        <div class="nodar-i"><span>EDI en <b>rojo</b> o se&ntilde;al de alarma del desarrollo.</span></div>
+        <div class="nodar-i"><span>Desnutrici&oacute;n moderada o grave, o sin mejor&iacute;a con tratamiento.</span></div>
+        <div class="nodar-i"><span>Talla baja; sobrepeso/obesidad que no mejora.</span></div>
+        <div class="nodar-i"><span>Sospecha de displasia de cadera, criptorquidia o cardiopat&iacute;a.</span></div>
+        <div class="nodar-i"><span>Tamiz auditivo, visual, cardiaco o metab&oacute;lico alterado.</span></div>
+        <div class="nodar-i"><span>Micro o macrocefalia.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FUENTES ===================== -->
+<div class="panel" id="tab-bib">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">&#128218;</span><span class="st">Fuentes oficiales</span><span class="sg open">&#8964;</span></div>
+    <div class="sb">
+      <div class="bib-i"><b>NOM-031-SSA2, Para la atenci&oacute;n a la salud de la infancia.</b> Secretar&iacute;a de Salud.<br><a class="bib-src" href="https://www.dof.gob.mx/nota_detalle.php?codigo=5417151&fecha=25/11/2015" target="_blank" rel="noopener noreferrer">dof.gob.mx &mdash; NOM-031 (proyecto/actualizaci&oacute;n) &#8599;</a></div>
+      <div class="bib-i"><b>GPC IMSS-029-08. Control y seguimiento de la nutrici&oacute;n, el crecimiento y el desarrollo del ni&ntilde;o menor de 5 a&ntilde;os.</b> IMSS.<br><a class="bib-src" href="https://www.imss.gob.mx/sites/all/statics/guiasclinicas/029GRR.pdf" target="_blank" rel="noopener noreferrer">imss.gob.mx/.../029GRR.pdf &#8599;</a></div>
+      <div class="bib-i"><b>Manual para la aplicaci&oacute;n de la prueba EDI.</b> CENSIA, Secretar&iacute;a de Salud.<br><a class="bib-src" href="https://www.gob.mx/salud/censia/articulos/manual-para-la-aplicacion-de-la-prueba-edi" target="_blank" rel="noopener noreferrer">gob.mx/salud/censia &mdash; Manual EDI &#8599;</a></div>
+      <div class="bib-i"><b>Manual EDI (versi&oacute;n completa).</b> Hospital Infantil de México Federico G&oacute;mez / UNICEF.<br><a class="bib-src" href="http://himfg.com.mx/descargas/documentos/EDI/ManualparalaPruebadeEvaluaciondelDesarrolloInfantil-EDI.pdf" target="_blank" rel="noopener noreferrer">himfg.com.mx/.../Manual-EDI.pdf &#8599;</a></div>
+      <div class="note">Gu&iacute;a de referencia r&aacute;pida 2025&ndash;2026. La vacunaci&oacute;n se detalla en la gu&iacute;a <strong>Esquema Nacional de Vacunaci&oacute;n</strong>. Confirma siempre con la NOM y la GPC vigentes.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footbar">
+  <span class="i">&#128221;</span>
+  <div class="t"><b>Importante:</b> gu&iacute;a de referencia r&aacute;pida; no sustituye la NOM-031, la GPC del ni&ntilde;o sano ni el juicio cl&iacute;nico. Individualiza seg&uacute;n cada paciente y la situaci&oacute;n local.</div>
+</div>
+
+<script>
+function showT(id,el){
+  var ps=document.querySelectorAll('.panel'); for(var i=0;i<ps.length;i++)ps[i].classList.remove('on');
+  var ts=document.querySelectorAll('.tab'); for(var j=0;j<ts.length;j++)ts[j].classList.remove('on');
+  var p=document.getElementById('tab-'+id); if(p)p.classList.add('on');
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(el){
+  var b=el.nextElementSibling; var g=el.querySelector('.sg');
+  if(b){b.classList.toggle('hidden'); if(g)g.classList.toggle('open');}
+}
+function togH(el){var d=el.nextElementSibling;el.classList.toggle("on");if(d)d.classList.toggle("open");}
+var CONSULTAS=[
+ {a:0,lab:"Reci&eacute;n nacido (0&ndash;28 d&iacute;as)",soma:"Peso, longitud y per&iacute;metro cef&aacute;lico. Verificar recuperaci&oacute;n del peso al nacer hacia los 10&ndash;14 d&iacute;as.",hit:["Fija la mirada y reacciona a la luz","Reacciona a sonidos","Reflejos primitivos presentes (succi&oacute;n, Moro, prensi&oacute;n)"],alim:"Lactancia materna exclusiva a libre demanda.",supl:"Vitamina D 400 UI/d&iacute;a si recibe leche materna. Hierro desde el 1.er mes si es prematuro o de bajo peso.",otros:["Tamiz neonatal: metab&oacute;lico (tal&oacute;n 3&ndash;5 d&iacute;as), auditivo y cardiaco antes del egreso.","Reflejo rojo y maniobras de cadera (Ortolani/Barlow).","Vacunas: BCG y Hepatitis B al nacer."]},
+ {a:2,lab:"2 meses",soma:"Peso, longitud y per&iacute;metro cef&aacute;lico; graficar en curvas OMS.",hit:["Sostiene la cabeza unos segundos boca abajo","Sigue objetos con la mirada","Sonrisa social"],alim:"Lactancia materna exclusiva.",supl:"Vitamina D 400 UI/d&iacute;a.",otros:["Vacunas (2 m): hexavalente, neumoc&oacute;cica conjugada y rotavirus.","Estimulaci&oacute;n temprana acorde a la edad."]},
+ {a:4,lab:"4 meses",soma:"Peso, longitud y per&iacute;metro cef&aacute;lico.",hit:["Sost&eacute;n cef&aacute;lico firme","Manos a la l&iacute;nea media","Se r&iacute;e a carcajadas; balbucea"],alim:"Lactancia materna exclusiva (a&uacute;n no iniciar otros alimentos).",supl:"Vitamina D. Valorar hierro profil&aacute;ctico desde los 4 meses en lactados al seno.",otros:["Vacunas (4 m): 2.&ordf; de hexavalente, neumoc&oacute;cica y rotavirus."]},
+ {a:6,lab:"6 meses",soma:"Peso, longitud y PC; valorar velocidad de crecimiento.",hit:["Rueda y se sienta con apoyo","Toma y transfiere objetos","Balbucea s&iacute;labas; voltea a sonidos"],alim:"Iniciar alimentaci&oacute;n complementaria (verduras y frutas en papilla) manteniendo la lactancia.",supl:"Hierro profil&aacute;ctico. Vitamina A en Semanas Nacionales de Salud (desde 6 meses).",otros:["Vacunas (6 m): 3.&ordf; de hexavalente e influenza (1.&ordf;).","Higiene bucal al brotar el primer diente."]},
+ {a:9,lab:"9 meses",soma:"Peso, longitud y PC.",hit:["Se sienta sin apoyo; gatea","Pinza gruesa","Dice s&iacute;labas; reconoce extra&ntilde;os"],alim:"Alimentaci&oacute;n complementaria con m&aacute;s textura (picado fino); leguminosas y carnes.",supl:"Hierro; vitamina A (SNS).",otros:["Influenza 2.&ordf; dosis (1 mes despu&eacute;s de la 1.&ordf;).","Aplicar EDI."]},
+ {a:12,lab:"12 meses",soma:"Peso, talla y PC; iniciar registro de IMC.",hit:["Se pone de pie; primeros pasos","Pinza fina","1&ndash;2 palabras; se&ntilde;ala"],alim:"Integrar a la dieta familiar. Suspender bibero&oacute;n hacia los 12&ndash;18 meses.",supl:"Hierro; vitamina A (SNS).",otros:["Vacunas (12 m): SRP (1.&ordf;) y neumoc&oacute;cica (refuerzo).","Detecci&oacute;n de displasia de cadera (hasta 2 a)."]},
+ {a:18,lab:"18 meses",soma:"Peso, talla y PC (hasta los 2 a&ntilde;os).",hit:["Camina solo","Garabatea","6&ndash;10 palabras; imita"],alim:"Dieta familiar variada; evitar az&uacute;cares y ultraprocesados.",supl:"Hierro; vitamina A y desparasitaci&oacute;n (albendazol &ge;2 a, SNS).",otros:["Vacunas (18 m): refuerzo de hexavalente y SRP (2.&ordf;, nacidos &ge;jul 2020).","Aplicar EDI."]},
+ {a:24,lab:"2 a&ntilde;os (24 meses)",soma:"Peso y talla; comenzar IMC (curvas OMS &gt;2 a). Ya no se mide PC de rutina.",hit:["Corre; sube escaleras","Frases de 2 palabras","Torre de 4&ndash;6 cubos; juego simb&oacute;lico"],alim:"Dieta familiar; destete recomendado hacia los 2 a&ntilde;os.",supl:"Vitamina A y desparasitaci&oacute;n (SNS).",otros:["Salud bucal: primera consulta odontol&oacute;gica.","Control de esf&iacute;nteres en proceso."]},
+ {a:36,lab:"3 a&ntilde;os",soma:"Peso, talla e IMC.",hit:["Salta; triciclo","Copia un c&iacute;rculo","Frases completas; dice su nombre"],alim:"Dieta correcta; vigilar sobrepeso.",supl:"Vitamina A y desparasitaci&oacute;n (SNS).",otros:["Tamiz visual y de lenguaje.","EDI hasta los 59 meses."]},
+ {a:48,lab:"4 a&ntilde;os",soma:"Peso, talla e IMC.",hit:["Brinca en un pie","Dibuja una persona","Cuenta; lenguaje fluido"],alim:"Dieta correcta; actividad f&iacute;sica.",supl:"Desparasitaci&oacute;n (SNS).",otros:["Agudeza visual; salud bucal.","Vacunas (4 a): refuerzo de DPT."]},
+ {a:60,lab:"5 a&ntilde;os",soma:"Peso, talla e IMC.",hit:["Salta alternando pies","Copia un cuadrado","Cuenta hasta 10; se viste solo"],alim:"Dieta correcta; prevenci&oacute;n de obesidad.",supl:"Desparasitaci&oacute;n (SNS).",otros:["Valoraci&oacute;n previa al ingreso escolar.","Vacunas: SRP 2.&ordf; (nacidos antes de jul 2020) y Sabin en SNS."]}
+];
+function box(cls,title,items){
+  var h='<div class="ed-box '+cls+'"><div class="ed-box-t">'+title+'</div>';
+  for(var i=0;i<items.length;i++){ h+='<div class="ed-it">'+items[i]+'</div>'; }
+  return h+'</div>';
+}
+function computeEdad(){
+  var out=document.getElementById('edOut');
+  var v=document.getElementById('edN').value;
+  var u=document.getElementById('edU').value;
+  if(v===''||isNaN(parseFloat(v))||parseFloat(v)<0){
+    out.innerHTML='<div class="note">Escribe una edad v&aacute;lida y toca <b>Calcular</b>.</div>'; return;
+  }
+  var n=parseFloat(v);
+  var m = u==='d'? n/30.4 : (u==='a'? n*12 : n);
+  var c=CONSULTAS[0], idx=0;
+  for(var i=0;i<CONSULTAS.length;i++){ if(m>=CONSULTAS[i].a){ c=CONSULTAS[i]; idx=i; } }
+  var html='<div class="ed-head">Consulta: '+c.lab+'</div>';
+  html+=box('ed-i','Somatometr&iacute;a',[c.soma]);
+  html+=box('ed-g','Hitos esperados',c.hit.map(function(x){return '&middot; '+x;}));
+  html+=box('ed-w','Alimentaci&oacute;n',[c.alim]);
+  html+=box('ed-i','Suplementaci&oacute;n',[c.supl]);
+  html+=box('ed-g','Tamiz / detecciones / vacunas',c.otros.map(function(x){return '&middot; '+x;}));
+  if(idx<CONSULTAS.length-1){
+    html+='<div class="note">Pr&oacute;xima consulta de control: <b>'+CONSULTAS[idx+1].lab+'</b>. Revisa siempre la pesta&ntilde;a <b>Alarma</b> para descartar se&ntilde;ales de alerta.</div>';
+  } else {
+    html+='<div class="note">Mayor de 5 a&ntilde;os: contin&uacute;a la vigilancia con consulta anual y revisi&oacute;n del esquema de vacunaci&oacute;n.</div>';
+  }
+  out.innerHTML=html;
+}
+var WHO_SD={wfa:{b:[[2.1,2.5,2.9,3.3,3.9,4.4,5.0],[2.9,3.4,3.9,4.5,5.1,5.8,6.6],[3.8,4.3,4.9,5.6,6.3,7.1,8.0],[4.4,5.0,5.7,6.4,7.2,8.0,9.0],[4.9,5.6,6.2,7.0,7.8,8.7,9.7],[5.3,6.0,6.7,7.5,8.4,9.3,10.4],[5.7,6.4,7.1,7.9,8.8,9.8,10.9],[5.9,6.7,7.4,8.3,9.2,10.3,11.4],[6.2,6.9,7.7,8.6,9.6,10.7,11.9],[6.4,7.1,8.0,8.9,9.9,11.0,12.3],[6.6,7.4,8.2,9.2,10.2,11.4,12.7],[6.8,7.6,8.4,9.4,10.5,11.7,13.0],[6.9,7.7,8.6,9.6,10.8,12.0,13.3],[7.1,7.9,8.8,9.9,11.0,12.3,13.7],[7.2,8.1,9.0,10.1,11.3,12.6,14.0],[7.4,8.3,9.2,10.3,11.5,12.8,14.3],[7.5,8.4,9.4,10.5,11.7,13.1,14.6],[7.7,8.6,9.6,10.7,12.0,13.4,14.9],[7.8,8.8,9.8,10.9,12.2,13.7,15.3],[8.0,8.9,10.0,11.1,12.5,13.9,15.6],[8.1,9.1,10.1,11.3,12.7,14.2,15.9],[8.2,9.2,10.3,11.5,12.9,14.5,16.2],[8.4,9.4,10.5,11.8,13.2,14.7,16.5],[8.5,9.5,10.7,12.0,13.4,15.0,16.8],[8.6,9.7,10.8,12.2,13.6,15.3,17.1],[8.8,9.8,11.0,12.4,13.9,15.5,17.5],[8.9,10.0,11.2,12.5,14.1,15.8,17.8],[9.0,10.1,11.3,12.7,14.3,16.1,18.1],[9.1,10.2,11.5,12.9,14.5,16.3,18.4],[9.2,10.4,11.7,13.1,14.8,16.6,18.7],[9.4,10.5,11.8,13.3,15.0,16.9,19.0],[9.5,10.7,12.0,13.5,15.2,17.1,19.3],[9.6,10.8,12.1,13.7,15.4,17.4,19.6],[9.7,10.9,12.3,13.8,15.6,17.6,19.9],[9.8,11.0,12.4,14.0,15.8,17.8,20.2],[9.9,11.2,12.6,14.2,16.0,18.1,20.4],[10.0,11.3,12.7,14.3,16.2,18.3,20.7],[10.1,11.4,12.9,14.5,16.4,18.6,21.0],[10.2,11.5,13.0,14.7,16.6,18.8,21.3],[10.3,11.6,13.1,14.8,16.8,19.0,21.6],[10.4,11.8,13.3,15.0,17.0,19.3,21.9],[10.5,11.9,13.4,15.2,17.2,19.5,22.1],[10.6,12.0,13.6,15.3,17.4,19.7,22.4],[10.7,12.1,13.7,15.5,17.6,20.0,22.7],[10.8,12.2,13.8,15.7,17.8,20.2,23.0],[10.9,12.4,14.0,15.8,18.0,20.5,23.3],[11.0,12.5,14.1,16.0,18.2,20.7,23.6],[11.1,12.6,14.3,16.2,18.4,20.9,23.9],[11.2,12.7,14.4,16.3,18.6,21.2,24.2],[11.3,12.8,14.5,16.5,18.8,21.4,24.5],[11.4,12.9,14.7,16.7,19.0,21.7,24.8],[11.5,13.1,14.8,16.8,19.2,21.9,25.1],[11.6,13.2,15.0,17.0,19.4,22.2,25.4],[11.7,13.3,15.1,17.2,19.6,22.4,25.7],[11.8,13.4,15.2,17.3,19.8,22.7,26.0],[11.9,13.5,15.4,17.5,20.0,22.9,26.3],[12.0,13.6,15.5,17.7,20.2,23.2,26.6],[12.1,13.7,15.6,17.8,20.4,23.4,26.9],[12.2,13.8,15.8,18.0,20.6,23.7,27.2],[12.3,14.0,15.9,18.2,20.8,23.9,27.6],[12.4,14.1,16.0,18.3,21.0,24.2,27.9]],g:[[2.0,2.4,2.8,3.2,3.7,4.2,4.8],[2.7,3.2,3.6,4.2,4.8,5.5,6.2],[3.4,3.9,4.5,5.1,5.8,6.6,7.5],[4.0,4.5,5.2,5.8,6.6,7.5,8.5],[4.4,5.0,5.7,6.4,7.3,8.2,9.3],[4.8,5.4,6.1,6.9,7.8,8.8,10.0],[5.1,5.7,6.5,7.3,8.2,9.3,10.6],[5.3,6.0,6.8,7.6,8.6,9.8,11.1],[5.6,6.3,7.0,7.9,9.0,10.2,11.6],[5.8,6.5,7.3,8.2,9.3,10.5,12.0],[5.9,6.7,7.5,8.5,9.6,10.9,12.4],[6.1,6.9,7.7,8.7,9.9,11.2,12.8],[6.3,7.0,7.9,8.9,10.1,11.5,13.1],[6.4,7.2,8.1,9.2,10.4,11.8,13.5],[6.6,7.4,8.3,9.4,10.6,12.1,13.8],[6.7,7.6,8.5,9.6,10.9,12.4,14.1],[6.9,7.7,8.7,9.8,11.1,12.6,14.5],[7.0,7.9,8.9,10.0,11.4,12.9,14.8],[7.2,8.1,9.1,10.2,11.6,13.2,15.1],[7.3,8.2,9.2,10.4,11.8,13.5,15.4],[7.5,8.4,9.4,10.6,12.1,13.7,15.7],[7.6,8.6,9.6,10.9,12.3,14.0,16.0],[7.8,8.7,9.8,11.1,12.5,14.3,16.4],[7.9,8.9,10.0,11.3,12.8,14.6,16.7],[8.1,9.0,10.2,11.5,13.0,14.8,17.0],[8.2,9.2,10.3,11.7,13.3,15.1,17.3],[8.4,9.4,10.5,11.9,13.5,15.4,17.7],[8.5,9.5,10.7,12.1,13.7,15.7,18.0],[8.6,9.7,10.9,12.3,14.0,16.0,18.3],[8.8,9.8,11.1,12.5,14.2,16.2,18.7],[8.9,10.0,11.2,12.7,14.4,16.5,19.0],[9.0,10.1,11.4,12.9,14.7,16.8,19.3],[9.1,10.3,11.6,13.1,14.9,17.1,19.6],[9.3,10.4,11.7,13.3,15.1,17.3,20.0],[9.4,10.5,11.9,13.5,15.4,17.6,20.3],[9.5,10.7,12.0,13.7,15.6,17.9,20.6],[9.6,10.8,12.2,13.9,15.8,18.1,20.9],[9.7,10.9,12.4,14.0,16.0,18.4,21.3],[9.8,11.1,12.5,14.2,16.3,18.7,21.6],[9.9,11.2,12.7,14.4,16.5,19.0,22.0],[10.1,11.3,12.8,14.6,16.7,19.2,22.3],[10.2,11.5,13.0,14.8,16.9,19.5,22.7],[10.3,11.6,13.1,15.0,17.2,19.8,23.0],[10.4,11.7,13.3,15.2,17.4,20.1,23.4],[10.5,11.8,13.4,15.3,17.6,20.4,23.7],[10.6,12.0,13.6,15.5,17.8,20.7,24.1],[10.7,12.1,13.7,15.7,18.1,20.9,24.5],[10.8,12.2,13.9,15.9,18.3,21.2,24.8],[10.9,12.3,14.0,16.1,18.5,21.5,25.2],[11.0,12.4,14.2,16.3,18.8,21.8,25.5],[11.1,12.6,14.3,16.4,19.0,22.1,25.9],[11.2,12.7,14.5,16.6,19.2,22.4,26.3],[11.3,12.8,14.6,16.8,19.4,22.6,26.6],[11.4,12.9,14.8,17.0,19.7,22.9,27.0],[11.5,13.0,14.9,17.2,19.9,23.2,27.4],[11.6,13.2,15.1,17.3,20.1,23.5,27.7],[11.7,13.3,15.2,17.5,20.3,23.8,28.1],[11.8,13.4,15.3,17.7,20.6,24.1,28.5],[11.9,13.5,15.5,17.9,20.8,24.4,28.8],[12.0,13.6,15.6,18.0,21.0,24.6,29.2],[12.1,13.7,15.8,18.2,21.2,24.9,29.5]]},hfa:{b:[[44.2,46.1,48.0,49.9,51.8,53.7,55.6],[48.9,50.8,52.8,54.7,56.7,58.6,60.6],[52.4,54.4,56.4,58.4,60.4,62.4,64.4],[55.3,57.3,59.4,61.4,63.5,65.5,67.6],[57.6,59.7,61.8,63.9,66.0,68.0,70.1],[59.6,61.7,63.8,65.9,68.0,70.1,72.2],[61.2,63.3,65.5,67.6,69.8,71.9,74.0],[62.7,64.8,67.0,69.2,71.3,73.5,75.7],[64.0,66.2,68.4,70.6,72.8,75.0,77.2],[65.2,67.5,69.7,72.0,74.2,76.5,78.7],[66.4,68.7,71.0,73.3,75.6,77.9,80.1],[67.6,69.9,72.2,74.5,76.9,79.2,81.5],[68.6,71.0,73.4,75.7,78.1,80.5,82.9],[69.6,72.1,74.5,76.9,79.3,81.8,84.2],[70.6,73.1,75.6,78.0,80.5,83.0,85.5],[71.6,74.1,76.6,79.1,81.7,84.2,86.7],[72.5,75.0,77.6,80.2,82.8,85.4,88.0],[73.3,76.0,78.6,81.2,83.9,86.5,89.2],[74.2,76.9,79.6,82.3,85.0,87.7,90.4],[75.0,77.7,80.5,83.2,86.0,88.8,91.5],[75.8,78.6,81.4,84.2,87.0,89.8,92.6],[76.5,79.4,82.3,85.1,88.0,90.9,93.8],[77.2,80.2,83.1,86.0,89.0,91.9,94.9],[78.0,81.0,83.9,86.9,89.9,92.9,95.9],[78.7,81.7,84.8,87.8,90.9,93.9,97.0],[78.6,81.7,84.9,88.0,91.1,94.2,97.3],[79.3,82.5,85.6,88.8,92.0,95.2,98.3],[79.9,83.1,86.4,89.6,92.9,96.1,99.3],[80.5,83.8,87.1,90.4,93.7,97.0,100.3],[81.1,84.5,87.8,91.2,94.5,97.9,101.2],[81.7,85.1,88.5,91.9,95.3,98.7,102.1],[82.3,85.7,89.2,92.7,96.1,99.6,103.0],[82.8,86.4,89.9,93.4,96.9,100.4,103.9],[83.4,86.9,90.5,94.1,97.6,101.2,104.8],[83.9,87.5,91.1,94.8,98.4,102.0,105.6],[84.4,88.1,91.8,95.4,99.1,102.7,106.4],[85.0,88.7,92.4,96.1,99.8,103.5,107.2],[85.5,89.2,93.0,96.7,100.5,104.2,108.0],[86.0,89.8,93.6,97.4,101.2,105.0,108.8],[86.5,90.3,94.2,98.0,101.8,105.7,109.5],[87.0,90.9,94.7,98.6,102.5,106.4,110.3],[87.5,91.4,95.3,99.2,103.2,107.1,111.0],[88.0,91.9,95.9,99.9,103.8,107.8,111.7],[88.4,92.4,96.4,100.4,104.5,108.5,112.5],[88.9,93.0,97.0,101.0,105.1,109.1,113.2],[89.4,93.5,97.5,101.6,105.7,109.8,113.9],[89.8,94.0,98.1,102.2,106.3,110.4,114.6],[90.3,94.4,98.6,102.8,106.9,111.1,115.2],[90.7,94.9,99.1,103.3,107.5,111.7,115.9],[91.2,95.4,99.7,103.9,108.1,112.4,116.6],[91.6,95.9,100.2,104.4,108.7,113.0,117.3],[92.1,96.4,100.7,105.0,109.3,113.6,117.9],[92.5,96.9,101.2,105.6,109.9,114.2,118.6],[93.0,97.4,101.7,106.1,110.5,114.9,119.2],[93.4,97.8,102.3,106.7,111.1,115.5,119.9],[93.9,98.3,102.8,107.2,111.7,116.1,120.6],[94.3,98.8,103.3,107.8,112.3,116.7,121.2],[94.7,99.3,103.8,108.3,112.8,117.4,121.9],[95.2,99.7,104.3,108.9,113.4,118.0,122.6],[95.6,100.2,104.8,109.4,114.0,118.6,123.2],[96.1,100.7,105.3,110.0,114.6,119.2,123.9]],g:[[43.6,45.4,47.3,49.1,51.0,52.9,54.7],[47.8,49.8,51.7,53.7,55.6,57.6,59.5],[51.0,53.0,55.0,57.1,59.1,61.1,63.2],[53.5,55.6,57.7,59.8,61.9,64.0,66.1],[55.6,57.8,59.9,62.1,64.3,66.4,68.6],[57.4,59.6,61.8,64.0,66.2,68.5,70.7],[58.9,61.2,63.5,65.7,68.0,70.3,72.5],[60.3,62.7,65.0,67.3,69.6,71.9,74.2],[61.7,64.0,66.4,68.7,71.1,73.5,75.8],[62.9,65.3,67.7,70.1,72.6,75.0,77.4],[64.1,66.5,69.0,71.5,73.9,76.4,78.9],[65.2,67.7,70.3,72.8,75.3,77.8,80.3],[66.3,68.9,71.4,74.0,76.6,79.2,81.7],[67.3,70.0,72.6,75.2,77.8,80.5,83.1],[68.3,71.0,73.7,76.4,79.1,81.7,84.4],[69.3,72.0,74.8,77.5,80.2,83.0,85.7],[70.2,73.0,75.8,78.6,81.4,84.2,87.0],[71.1,74.0,76.8,79.7,82.5,85.4,88.2],[72.0,74.9,77.8,80.7,83.6,86.5,89.4],[72.8,75.8,78.8,81.7,84.7,87.6,90.6],[73.7,76.7,79.7,82.7,85.7,88.7,91.7],[74.5,77.5,80.6,83.7,86.7,89.8,92.9],[75.2,78.4,81.5,84.6,87.7,90.8,94.0],[76.0,79.2,82.3,85.5,88.7,91.9,95.0],[76.7,80.0,83.2,86.4,89.6,92.9,96.1],[76.8,80.0,83.3,86.6,89.9,93.1,96.4],[77.5,80.8,84.1,87.4,90.8,94.1,97.4],[78.1,81.5,84.9,88.3,91.7,95.0,98.4],[78.8,82.2,85.7,89.1,92.5,96.0,99.4],[79.5,82.9,86.4,89.9,93.4,96.9,100.3],[80.1,83.6,87.1,90.7,94.2,97.7,101.3],[80.7,84.3,87.9,91.4,95.0,98.6,102.2],[81.3,84.9,88.6,92.2,95.8,99.4,103.1],[81.9,85.6,89.3,92.9,96.6,100.3,103.9],[82.5,86.2,89.9,93.6,97.4,101.1,104.8],[83.1,86.8,90.6,94.4,98.1,101.9,105.6],[83.6,87.4,91.2,95.1,98.9,102.7,106.5],[84.2,88.0,91.9,95.7,99.6,103.4,107.3],[84.7,88.6,92.5,96.4,100.3,104.2,108.1],[85.3,89.2,93.1,97.1,101.0,105.0,108.9],[85.8,89.8,93.8,97.7,101.7,105.7,109.7],[86.3,90.4,94.4,98.4,102.4,106.4,110.5],[86.8,90.9,95.0,99.0,103.1,107.2,111.2],[87.4,91.5,95.6,99.7,103.8,107.9,112.0],[87.9,92.0,96.2,100.3,104.5,108.6,112.7],[88.4,92.5,96.7,100.9,105.1,109.3,113.5],[88.9,93.1,97.3,101.5,105.8,110.0,114.2],[89.3,93.6,97.9,102.1,106.4,110.7,114.9],[89.8,94.1,98.4,102.7,107.0,111.3,115.7],[90.3,94.6,99.0,103.3,107.7,112.0,116.4],[90.7,95.1,99.5,103.9,108.3,112.7,117.1],[91.2,95.6,100.1,104.5,108.9,113.3,117.7],[91.7,96.1,100.6,105.0,109.5,114.0,118.4],[92.1,96.6,101.1,105.6,110.1,114.6,119.1],[92.6,97.1,101.6,106.2,110.7,115.2,119.8],[93.0,97.6,102.2,106.7,111.3,115.9,120.4],[93.4,98.1,102.7,107.3,111.9,116.5,121.1],[93.9,98.5,103.2,107.8,112.5,117.1,121.8],[94.3,99.0,103.7,108.4,113.0,117.7,122.4],[94.7,99.5,104.2,108.9,113.6,118.3,123.1],[95.2,99.9,104.7,109.4,114.2,118.9,123.7]]},hc:{b:[[30.7,31.9,33.2,34.5,35.7,37.0,38.3],[33.8,34.9,36.1,37.3,38.4,39.6,40.8],[35.6,36.8,38.0,39.1,40.3,41.5,42.6],[37.0,38.1,39.3,40.5,41.7,42.9,44.1],[38.0,39.2,40.4,41.6,42.8,44.0,45.2],[38.9,40.1,41.4,42.6,43.8,45.0,46.2],[39.7,40.9,42.1,43.3,44.6,45.8,47.0],[40.3,41.5,42.7,44.0,45.2,46.4,47.7],[40.8,42.0,43.3,44.5,45.8,47.0,48.3],[41.2,42.5,43.7,45.0,46.3,47.5,48.8],[41.6,42.9,44.1,45.4,46.7,47.9,49.2],[41.9,43.2,44.5,45.8,47.0,48.3,49.6],[42.2,43.5,44.8,46.1,47.4,48.6,49.9],[42.5,43.8,45.0,46.3,47.6,48.9,50.2],[42.7,44.0,45.3,46.6,47.9,49.2,50.5],[42.9,44.2,45.5,46.8,48.1,49.4,50.7],[43.1,44.4,45.7,47.0,48.3,49.6,51.0],[43.2,44.6,45.9,47.2,48.5,49.8,51.2],[43.4,44.7,46.0,47.4,48.7,50.0,51.4],[43.5,44.9,46.2,47.5,48.9,50.2,51.5],[43.7,45.0,46.4,47.7,49.0,50.4,51.7],[43.8,45.2,46.5,47.8,49.2,50.5,51.9],[43.9,45.3,46.6,48.0,49.3,50.7,52.0],[44.1,45.4,46.8,48.1,49.5,50.8,52.2],[44.2,45.5,46.9,48.3,49.6,51.0,52.3],[44.3,45.6,47.0,48.4,49.7,51.1,52.5],[44.4,45.8,47.1,48.5,49.9,51.2,52.6],[44.5,45.9,47.2,48.6,50.0,51.4,52.7],[44.6,46.0,47.3,48.7,50.1,51.5,52.9],[44.7,46.1,47.4,48.8,50.2,51.6,53.0],[44.8,46.1,47.5,48.9,50.3,51.7,53.1],[44.8,46.2,47.6,49.0,50.4,51.8,53.2],[44.9,46.3,47.7,49.1,50.5,51.9,53.3],[45.0,46.4,47.8,49.2,50.6,52.0,53.4],[45.1,46.5,47.9,49.3,50.7,52.1,53.5],[45.1,46.6,48.0,49.4,50.8,52.2,53.6],[45.2,46.6,48.0,49.5,50.9,52.3,53.7],[45.3,46.7,48.1,49.5,51.0,52.4,53.8],[45.3,46.8,48.2,49.6,51.0,52.5,53.9],[45.4,46.8,48.2,49.7,51.1,52.5,54.0],[45.4,46.9,48.3,49.7,51.2,52.6,54.1],[45.5,46.9,48.4,49.8,51.3,52.7,54.1],[45.5,47.0,48.4,49.9,51.3,52.8,54.2],[45.6,47.0,48.5,49.9,51.4,52.8,54.3],[45.6,47.1,48.5,50.0,51.4,52.9,54.3],[45.7,47.1,48.6,50.1,51.5,53.0,54.4],[45.7,47.2,48.7,50.1,51.6,53.0,54.5],[45.8,47.2,48.7,50.2,51.6,53.1,54.5],[45.8,47.3,48.7,50.2,51.7,53.1,54.6],[45.9,47.3,48.8,50.3,51.7,53.2,54.7],[45.9,47.4,48.8,50.3,51.8,53.2,54.7],[45.9,47.4,48.9,50.4,51.8,53.3,54.8],[46.0,47.5,48.9,50.4,51.9,53.4,54.8],[46.0,47.5,49.0,50.4,51.9,53.4,54.9],[46.1,47.5,49.0,50.5,52.0,53.5,54.9],[46.1,47.6,49.1,50.5,52.0,53.5,55.0],[46.1,47.6,49.1,50.6,52.1,53.5,55.0],[46.2,47.6,49.1,50.6,52.1,53.6,55.1],[46.2,47.7,49.2,50.7,52.1,53.6,55.1],[46.2,47.7,49.2,50.7,52.2,53.7,55.2],[46.3,47.7,49.2,50.7,52.2,53.7,55.2]],g:[[30.3,31.5,32.7,33.9,35.1,36.2,37.4],[33.0,34.2,35.4,36.5,37.7,38.9,40.1],[34.6,35.8,37.0,38.3,39.5,40.7,41.9],[35.8,37.1,38.3,39.5,40.8,42.0,43.3],[36.8,38.1,39.3,40.6,41.8,43.1,44.4],[37.6,38.9,40.2,41.5,42.7,44.0,45.3],[38.3,39.6,40.9,42.2,43.5,44.8,46.1],[38.9,40.2,41.5,42.8,44.1,45.5,46.8],[39.4,40.7,42.0,43.4,44.7,46.0,47.4],[39.8,41.2,42.5,43.8,45.2,46.5,47.8],[40.2,41.5,42.9,44.2,45.6,46.9,48.3],[40.5,41.9,43.2,44.6,45.9,47.3,48.6],[40.8,42.2,43.5,44.9,46.3,47.6,49.0],[41.1,42.4,43.8,45.2,46.5,47.9,49.3],[41.3,42.7,44.1,45.4,46.8,48.2,49.5],[41.5,42.9,44.3,45.7,47.0,48.4,49.8],[41.7,43.1,44.5,45.9,47.2,48.6,50.0],[41.9,43.3,44.7,46.1,47.4,48.8,50.2],[42.1,43.5,44.9,46.2,47.6,49.0,50.4],[42.3,43.6,45.0,46.4,47.8,49.2,50.6],[42.4,43.8,45.2,46.6,48.0,49.4,50.7],[42.6,44.0,45.3,46.7,48.1,49.5,50.9],[42.7,44.1,45.5,46.9,48.3,49.7,51.1],[42.9,44.3,45.6,47.0,48.4,49.8,51.2],[43.0,44.4,45.8,47.2,48.6,50.0,51.4],[43.1,44.5,45.9,47.3,48.7,50.1,51.5],[43.3,44.7,46.1,47.5,48.9,50.3,51.7],[43.4,44.8,46.2,47.6,49.0,50.4,51.8],[43.5,44.9,46.3,47.7,49.1,50.5,51.9],[43.6,45.0,46.4,47.8,49.2,50.6,52.0],[43.7,45.1,46.5,47.9,49.3,50.7,52.2],[43.8,45.2,46.6,48.0,49.4,50.9,52.3],[43.9,45.3,46.7,48.1,49.6,51.0,52.4],[44.0,45.4,46.8,48.2,49.7,51.1,52.5],[44.1,45.5,46.9,48.3,49.7,51.2,52.6],[44.2,45.6,47.0,48.4,49.8,51.2,52.7],[44.3,45.7,47.1,48.5,49.9,51.3,52.7],[44.4,45.8,47.2,48.6,50.0,51.4,52.8],[44.4,45.8,47.3,48.7,50.1,51.5,52.9],[44.5,45.9,47.3,48.7,50.2,51.6,53.0],[44.6,46.0,47.4,48.8,50.2,51.7,53.1],[44.6,46.1,47.5,48.9,50.3,51.7,53.1],[44.7,46.1,47.5,49.0,50.4,51.8,53.2],[44.8,46.2,47.6,49.0,50.4,51.9,53.3],[44.8,46.3,47.7,49.1,50.5,51.9,53.3],[44.9,46.3,47.7,49.2,50.6,52.0,53.4],[45.0,46.4,47.8,49.2,50.6,52.1,53.5],[45.0,46.4,47.9,49.3,50.7,52.1,53.5],[45.1,46.5,47.9,49.3,50.8,52.2,53.6],[45.1,46.5,48.0,49.4,50.8,52.2,53.6],[45.2,46.6,48.0,49.4,50.9,52.3,53.7],[45.2,46.7,48.1,49.5,50.9,52.3,53.8],[45.3,46.7,48.1,49.5,51.0,52.4,53.8],[45.3,46.8,48.2,49.6,51.0,52.4,53.9],[45.4,46.8,48.2,49.6,51.1,52.5,53.9],[45.4,46.9,48.3,49.7,51.1,52.5,54.0],[45.5,46.9,48.3,49.7,51.2,52.6,54.0],[45.5,46.9,48.4,49.8,51.2,52.6,54.1],[45.6,47.0,48.4,49.8,51.3,52.7,54.1],[45.6,47.0,48.5,49.9,51.3,52.7,54.1],[45.7,47.1,48.5,49.9,51.3,52.8,54.2]]}};
+function normCdf(z){var b1=0.319381530,b2=-0.356563782,b3=1.781477937,b4=-1.821255978,b5=1.330274429,p=0.2316419,c=0.39894228040143;var az=Math.abs(z);var t=1/(1+p*az);var poly=t*(b1+t*(b2+t*(b3+t*(b4+t*b5))));var nd=c*Math.exp(-az*az/2);var prob=nd*poly;return z>=0?1-prob:prob;}
+function sdAt(ind,sex,m){var T=WHO_SD[ind][sex];if(m<=0)return T[0];if(m>=60)return T[60];var lo=Math.floor(m),hi=lo+1,f=m-lo,a=T[lo],b=T[hi],r=[];for(var i=0;i<7;i++)r.push(a[i]+(b[i]-a[i])*f);return r;}
+function zfromSD(x,sd){var zs=[-3,-2,-1,0,1,2,3],s;if(x<=sd[0]){s=sd[1]-sd[0];return s>0?-3+(x-sd[0])/s:-3;}if(x>=sd[6]){s=sd[6]-sd[5];return s>0?3+(x-sd[6])/s:3;}for(var i=0;i<6;i++){if(x<=sd[i+1]){s=sd[i+1]-sd[i];return zs[i]+(x-sd[i])/(s?s:1e-9);}}return 0;}
+function fz(z){return (z>=0?'+':'')+z.toFixed(2);}
+function fp(p){if(p<1)return '&lt;1';if(p>99)return '&gt;99';return Math.round(p).toString();}
+function classifySoma(ind,z){
+ if(ind==='wfa'){if(z<-3)return['Bajo peso severo','ed-r'];if(z<-2)return['Bajo peso','ed-r'];if(z<=1)return['Peso adecuado para la edad','ed-g'];if(z<=2)return['Peso elevado para la edad &middot; valore IMC o peso/talla','ed-w'];return['Peso muy elevado &middot; valore IMC o peso/talla','ed-w'];}
+ if(ind==='hfa'){if(z<-3)return['Talla baja severa (desnutrici&oacute;n cr&oacute;nica)','ed-r'];if(z<-2)return['Talla baja','ed-r'];if(z<=3)return['Talla adecuada para la edad','ed-g'];return['Talla alta','ed-i'];}
+ if(ind==='hc'){if(z<-2)return['Microcefalia &middot; referir','ed-r'];if(z<=2)return['Per&iacute;metro cef&aacute;lico normal','ed-g'];return['Macrocefalia &middot; referir','ed-r'];}
+ return['',''];
+}
+function chartSoma(ind,sex,x,m){
+ var caps={wfa:"Peso (kg) seg&uacute;n edad (meses)",hfa:"Talla / longitud (cm) seg&uacute;n edad (meses)",hc:"Per&iacute;metro cef&aacute;lico (cm) seg&uacute;n edad (meses)"};
+ var T=WHO_SD[ind][sex];var W=320,H=176,ml=30,mr=8,mt=10,mb=20,pw=W-ml-mr,ph=H-mt-mb;
+ var yMin=1e9,yMax=-1e9,i;for(i=0;i<=60;i++){if(T[i][0]<yMin)yMin=T[i][0];if(T[i][6]>yMax)yMax=T[i][6];}
+ var pd=(yMax-yMin)*0.05;yMin-=pd;yMax+=pd;
+ function X(mo){return ml+pw*(mo/60);}function Y(v){return mt+ph*(1-(v-yMin)/(yMax-yMin));}
+ function L(k){var p='',j;for(j=0;j<=60;j++)p+=(j?'L':'M')+X(j).toFixed(1)+' '+Y(T[j][k]).toFixed(1);return p;}
+ var band='';for(i=0;i<=60;i++)band+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(T[i][5]).toFixed(1);
+ for(i=60;i>=0;i--)band+='L'+X(i).toFixed(1)+' '+Y(T[i][1]).toFixed(1);band+='Z';
+ var xt='';[0,12,24,36,48,60].forEach(function(mo){var xx=X(mo).toFixed(1);xt+='<line x1="'+xx+'" y1="'+(mt+ph)+'" x2="'+xx+'" y2="'+(mt+ph+3)+'" stroke="#cbd5e1"/><text x="'+xx+'" y="'+(mt+ph+13)+'" font-size="8" fill="#6b7280" text-anchor="middle">'+mo+'</text>';});
+ var dec=ind==='wfa'?1:0,yt='';for(var jj=0;jj<=3;jj++){var v=yMin+(yMax-yMin)*jj/3,yy=Y(v).toFixed(1);yt+='<line x1="'+ml+'" y1="'+yy+'" x2="'+(ml+pw)+'" y2="'+yy+'" stroke="#f1f5f9"/><text x="'+(ml-3)+'" y="'+(parseFloat(yy)+3).toFixed(1)+'" font-size="8" fill="#6b7280" text-anchor="end">'+v.toFixed(dec)+'</text>';}
+ var px=X(Math.max(0,Math.min(60,m))).toFixed(1),outside=(x<yMin||x>yMax),pv=Math.max(yMin,Math.min(yMax,x)),py=Y(pv).toFixed(1);
+ var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block">';
+ s+='<rect x="'+ml+'" y="'+mt+'" width="'+pw+'" height="'+ph+'" fill="#fff"/>'+yt;
+ s+='<path d="'+band+'" fill="#ecfdf5"/>';
+ s+='<path d="'+L(6)+'" fill="none" stroke="#fca5a5" stroke-width="1" stroke-dasharray="3 2"/>';
+ s+='<path d="'+L(0)+'" fill="none" stroke="#fca5a5" stroke-width="1" stroke-dasharray="3 2"/>';
+ s+='<path d="'+L(5)+'" fill="none" stroke="#f59e0b" stroke-width="1"/>';
+ s+='<path d="'+L(1)+'" fill="none" stroke="#f59e0b" stroke-width="1"/>';
+ s+='<path d="'+L(3)+'" fill="none" stroke="#0e7490" stroke-width="1.6"/>'+xt;
+ s+='<circle cx="'+px+'" cy="'+py+'" r="4.5" fill="#0a4f6b" stroke="#fff" stroke-width="1.5"/></svg>';
+ var leg='<div class="sm-leg"><span><i style="background:#0e7490"></i>mediana</span><span><i style="background:#f59e0b"></i>&plusmn;2 DE</span><span><i style="background:#fca5a5"></i>&plusmn;3 DE</span><span><i style="background:#0a4f6b;border-radius:50%;width:8px;height:8px"></i>paciente</span></div>';
+ return '<div class="sm-chart"><div class="sm-cap">'+caps[ind]+'</div>'+s+leg+(outside?'<div class="sm-cnote">El valor queda fuera del rango graficado (eje 0&ndash;60 meses).</div>':'')+'</div>';
+}
+function rowSoma(ind,title,x,m,sex){
+ var sd=sdAt(ind,sex,m),z=zfromSD(x,sd),p=normCdf(z)*100,c=classifySoma(ind,z);
+ return '<div class="ed-box '+c[1]+'"><div class="ed-box-t">'+title+'</div><div class="ed-it"><b>z = '+fz(z)+'</b> &middot; percentil <b>'+fp(p)+'</b> &middot; mediana '+sd[3].toFixed(1)+'</div><div class="ed-it">'+c[0]+'</div>'+chartSoma(ind,sex,x,m)+'</div>';
+}
+function resetSoma(){
+ document.getElementById('smSex').value='b';
+ document.getElementById('smAge').value='';
+ document.getElementById('smAgeU').value='m';
+ document.getElementById('smW').value='';
+ document.getElementById('smH').value='';
+ document.getElementById('smHC').value='';
+ document.getElementById('smOut').innerHTML='';
+}
+function computeSoma(){
+ var out=document.getElementById('smOut');
+ var sex=document.getElementById('smSex').value;
+ var av=document.getElementById('smAge').value,au=document.getElementById('smAgeU').value;
+ if(av===''||isNaN(parseFloat(av))||parseFloat(av)<0){out.innerHTML='<div class="note">Escribe una edad v&aacute;lida.</div>';return;}
+ var m=parseFloat(av); m = au==='d'? m/30.4375 : (au==='a'? m*12 : m);
+ var html='';
+ if(m>60){html+='<div class="alert a-w"><span class="ai">&#9888;</span><span><span class="at">Fuera de rango</span>La calculadora cubre <b>0&ndash;5 a&ntilde;os</b> (0&ndash;60 meses). Se usa el l&iacute;mite de 60 meses.</span></div>';}
+ var mm=Math.min(Math.max(m,0),60),any=false;
+ var w=document.getElementById('smW').value,t=document.getElementById('smH').value,hc=document.getElementById('smHC').value;
+ if(w!==''&&!isNaN(parseFloat(w))){html+=rowSoma('wfa','Peso para la edad',parseFloat(w),mm,sex);any=true;}
+ if(t!==''&&!isNaN(parseFloat(t))){html+=rowSoma('hfa','Talla / longitud para la edad',parseFloat(t),mm,sex);any=true;}
+ if(hc!==''&&!isNaN(parseFloat(hc))){html+=rowSoma('hc','Per&iacute;metro cef&aacute;lico para la edad',parseFloat(hc),mm,sex);any=true;}
+ if(!any){html+='<div class="note">Ingresa al menos una medici&oacute;n (peso, talla o PC).</div>';}
+ out.innerHTML=html;
+}
+window.addEventListener('load',function(){ document.getElementById('edN').value='6'; computeEdad(); });
+</script>
+
+</body>
+</html>

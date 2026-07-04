@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sepsis y Choque Séptico · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{background:linear-gradient(135deg,#064e3b,#0f7a5a);color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:14px;font-weight:700;color:var(--g);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--g);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--g);border-color:var(--g);color:#fff;}
+.pchip.pw.on{background:var(--am);border-color:var(--am);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--gl);border-left:3px solid var(--gm);margin-bottom:6px;}
+.kn{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:80px;font-size:11px;font-weight:700;color:var(--g);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.co-i{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.co-i:last-child{border-bottom:none;}
+.co-ico{font-size:16px;flex-shrink:0;}
+.co-n{font-weight:600;color:var(--gray-900);margin-bottom:2px;font-size:13px;}
+.co-d{font-size:12px;color:var(--gray-600);line-height:1.5;}
+.ab{border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;border-left:4px solid;}
+.ab-ok{background:var(--gl);border-color:var(--gm);}
+.ab-no{background:var(--rl);border-color:var(--rm);}
+.ab-t{font-size:12px;font-weight:700;margin-bottom:6px;}
+.ab-ok .ab-t{color:var(--g);}
+.ab-no .ab-t{color:var(--r);}
+.ab-i{font-size:12.5px;color:var(--gray-700);padding:3px 0 3px 14px;position:relative;line-height:1.5;}
+.ab-i::before{content:'o';position:absolute;left:0;opacity:0.6;}
+.rx{background:#fff;border:1.5px solid var(--bd);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.rx-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:8px;}
+.rx-i{font-size:13px;color:var(--gray-900);padding:5px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
+.rx-i:last-child{border-bottom:none;}
+.al-b{background:var(--rl);border-radius:var(--rs);padding:12px 14px;margin-top:10px;}
+.al-t{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--r);margin-bottom:8px;}
+.al-i{font-size:12.5px;color:var(--r);padding:4px 0 4px 18px;position:relative;line-height:1.5;}
+.al-i::before{content:'!';position:absolute;left:0;font-size:11px;font-weight:700;}
+.an{border-radius:8px;padding:10px 12px;margin-bottom:4px;font-size:12.5px;line-height:1.5;}
+.a-start{background:var(--g);color:#fff;text-align:center;font-weight:700;border-radius:24px;}
+.a-end{background:var(--gl);color:var(--g);text-align:center;font-weight:700;border-radius:24px;border:2px solid var(--gm);}
+.a-act{background:#fff;border:1.5px solid var(--bd);color:var(--gray-900);}
+.a-dec{background:var(--al);border:1.5px solid var(--am);color:var(--a);font-weight:600;}
+.a-arr{text-align:center;font-size:18px;color:var(--gray-600);margin:2px 0;}
+.a-br{display:flex;gap:8px;margin-bottom:4px;}
+.a-yes{flex:1;background:#d1fae5;border:1.5px solid #34d399;border-radius:8px;padding:8px 10px;font-size:12px;color:#065f46;font-weight:600;}
+.a-no{flex:1;background:var(--rl);border:1.5px solid #f87171;border-radius:8px;padding:8px 10px;font-size:12px;color:var(--r);font-weight:600;}
+.br-l{font-size:10px;text-transform:uppercase;font-weight:700;margin-bottom:3px;opacity:0.8;}
+.lab-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.lab-c{background:var(--gray-50);border-radius:var(--rs);padding:8px 10px;border:1px solid var(--bd);}
+.lab-n{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:3px;}
+.lab-v{font-size:12px;color:var(--gray-900);}
+.lab-a{font-size:11px;color:var(--r);margin-top:3px;font-weight:600;}
+.sc{border:1px solid var(--bd);border-radius:var(--rs);overflow:hidden;margin-bottom:10px;}
+.sc-h{background:var(--gl);padding:8px 12px;font-size:12px;font-weight:700;color:var(--g);}
+.sc-b{padding:10px 12px;}
+.sc-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.sc-r:last-child{border-bottom:none;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-in{border:1.5px solid var(--bd);border-radius:var(--rs);padding:6px 10px;font-size:14px;font-weight:700;width:85px;text-align:center;outline:none;}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:12px;text-align:center;}
+.res-ok{background:var(--gl);color:var(--g);}
+.res-mid{background:var(--al);color:var(--a);}
+.res-high{background:var(--rl);color:var(--r);}
+.res-score{font-size:26px;font-weight:700;}
+.res-label{font-size:13px;font-weight:600;margin-top:4px;}
+.res-action{font-size:12px;margin-top:6px;line-height:1.5;opacity:0.9;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:#4c1d95;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.ind-o{background:#ede9fe;border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;border-left:3px solid #7c3aed;}
+.ind-ot{font-size:11px;font-weight:700;text-transform:uppercase;color:#4a1d8a;margin-bottom:6px;}
+.ind-oi{font-size:12.5px;color:var(--gray-700);line-height:1.6;margin-bottom:4px;padding-left:12px;position:relative;}
+.ind-oi::before{content:'>';position:absolute;left:0;color:#7c3aed;font-weight:700;}
+.ind-cb{width:16px;height:16px;border:2px solid #7c3aed;border-radius:3px;flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ind-cb.on::after{content:'v';color:#7c3aed;font-size:10px;font-weight:700;}
+.ind-al{background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:9px 12px;margin-bottom:6px;font-size:12px;color:var(--r);}
+.pbtn{background:#4c1d95;color:#fff;border:none;padding:10px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+.bib-i{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.bib-i:last-child{border-bottom:none;}
+.bib-n{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.bib-y{display:inline-block;background:var(--bl);color:var(--b);font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.bib-r{color:var(--gray-700);line-height:1.65;}
+.bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--g);text-decoration:none;font-weight:500;}
+@media(max-width:480px){.lab-g{grid-template-columns:1fr;}}
+</style>
+
+
+</head>
+<body>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1a1a2e,#c0392b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦠</div>
+    <div>
+      <div class="hdr-eye">Urgencias · UCI · Medicina Interna</div>
+      <div class="hdr-title">Sepsis y Choque Séptico</div>
+      <div class="hdr-sub">Surviving Sepsis Campaign 2021 · Sepsis-3 · SSC Bundle</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Hour-1 Bundle</span>
+    <span class="badge">Sepsis-3 · SOFA</span>
+    <span class="badge">Mortalidad 25-50%</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">49 M</div><div class="qs-l">Casos/año mundial</div></div>
+  <div class="qs"><div class="qs-v">11 M</div><div class="qs-l">Muertes/año</div></div>
+  <div class="qs"><div class="qs-v">25-50%</div><div class="qs-l">Mortalidad choque</div></div>
+  <div class="qs"><div class="qs-v">+7%</div><div class="qs-l">Mortalidad por hora de retraso en ATB</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="sepShowTab('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="sepShowTab('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="sepShowTab('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="sepShowTab('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="sepShowTab('txu',this)">⚡ Hour-1 Bundle</button>
+  <button class="tab" onclick="sepShowTab('txh',this)">🏥 Tx Hospitalario</button>
+  <button class="tab" onclick="sepShowTab('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="sepShowTab('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="sepShowTab('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="sepShowTab('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="sepShowTab('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definiciones Sepsis-3 — 2016</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Término</th><th>Definición</th><th>Criterio</th></tr></thead>
+      <tbody>
+        <tr><td class="dn" style="color:var(--a);font-weight:700;">Sepsis</td><td>Disfunción orgánica amenazante para la vida causada por respuesta desregulada del huésped a la infección</td><td>Infección + aumento de SOFA ≥ 2 puntos (sobre el basal)</td></tr>
+        <tr><td class="dn" style="color:var(--r);font-weight:700;">Choque séptico</td><td>Sepsis con hipotensión persistente que requiere vasopresores a pesar de reanimación adecuada con fluidos + lactato mayor de 2 mmol/L</td><td>Vasopresores para PAM ≥ 65 mmHg + Lactato mayor de 2 mmol/L (18 mg/dL) a pesar de volumen adecuado</td></tr>
+        <tr><td class="dn" style="color:var(--a);">Disfunción orgánica</td><td>Fallo agudo de uno o más órganos como consecuencia de la sepsis</td><td>SOFA ≥ 2 en algún órgano: respiratorio · renal · hepático · coagulación · neurológico · cardiovascular</td></tr>
+        <tr><td class="dn">qSOFA (screening)</td><td>Herramienta de tamizaje rápido — NO diagnóstica</td><td>FR ≥ 22/min + Alteración mental + PAS ≤ 100 mmHg · Positivo: ≥ 2/3</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">⚠️</span><div><div class="at">El término SIRS ya no define sepsis — Sepsis-3 lo eliminó</div>SIRS (fiebre, taquicardia, leucocitosis, taquipnea) es inespecífico y puede ocurrir sin infección. Sepsis-3 requiere disfunción orgánica (SOFA) como criterio definitorio. Un paciente con infección y SIRS sin disfunción orgánica NO es sepsis según Sepsis-3.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — La respuesta desregulada</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="background:var(--rl);border-left:4px solid var(--r);border-radius:var(--rs);padding:10px 13px;">
+        <div style="font-size:12px;font-weight:700;color:var(--r);margin-bottom:4px;">Activación inmune desregulada — el mecanismo central</div>
+        <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">Los PAMPs (patrones moleculares de patógenos) activan receptores TLR → liberación masiva de citocinas (TNF-α, IL-1, IL-6) → respuesta inflamatoria sistémica desregulada. La respuesta busca eliminar el patógeno pero daña tejidos propios. La magnitud de la respuesta depende más del huésped que del patógeno.</div>
+      </div>
+      <div style="background:var(--al);border-left:4px solid var(--a);border-radius:var(--rs);padding:10px 13px;">
+        <div style="font-size:12px;font-weight:700;color:var(--a);margin-bottom:4px;">Disfunción microcirculatoria — el daño a los órganos</div>
+        <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">Las citocinas proinflamatorias causan: vasodilatación periférica (hipotensión), aumento de permeabilidad vascular (fuga capilar → edema intersticial), disfunción mitocondrial (incapacidad de utilizar O2 a pesar de buena perfusión), activación de la coagulación (CID) y disfunción endotelial. El resultado: entrega inadecuada de O2 a los tejidos a pesar de un GC inicialmente elevado.</div>
+      </div>
+      <div style="background:var(--bl);border-left:4px solid var(--bm);border-radius:var(--rs);padding:10px 13px;">
+        <div style="font-size:12px;font-weight:700;color:var(--b);margin-bottom:4px;">Choque distributivo → cardiogénico → obstructivo</div>
+        <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">Inicialmente: choque distributivo (GC alto, RVS bajas). Con el tiempo: depresión miocárdica séptica (TNF-α + IL-1 → disfunción sistólica y diastólica). La elevación del lactato refleja metabolismo anaeróbico por hipoperfusión tisular — es el marcador pronóstico más importante. Lactato mayor de 4: mortalidad mayor del 40%.</div>
+      </div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Focos más frecuentes y gérmenes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Foco</th><th>Frecuencia</th><th>Gérmenes más frecuentes</th><th>Pista clínica</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">🫁 Pulmonar (NAC/NAVM)</td><td class="dm">35-40%</td><td>S. pneumoniae · H. influenzae · Klebsiella · Pseudomonas · S. aureus</td><td>Infiltrado en Rx/TC · Expectoración · Hipoxemia</td></tr>
+        <tr><td class="dn">🫘 Urinario (PNA/Catéter)</td><td class="dm">25-30%</td><td>E. coli · Klebsiella · Proteus · Enterococcus · Pseudomonas (catéter)</td><td>Disuria · Piuria · Bacteriuria · Dolor costovertebral</td></tr>
+        <tr><td class="dn">🫙 Abdominal</td><td class="dm">15-20%</td><td>E. coli · Klebsiella · Anaerobios · Enterococcus · Candida</td><td>Dolor abdominal · Peritonismo · Cirugía previa</td></tr>
+        <tr><td class="dn">🩸 Primaria/Bacteriemia</td><td class="dm">10-15%</td><td>S. aureus · Estafilococos coagulasa neg · Gram negativos (catéter)</td><td>Catéter venoso central · Sin foco evidente</td></tr>
+        <tr><td class="dn">🧠 SNC</td><td class="dm">5%</td><td>N. meningitidis · S. pneumoniae · L. monocytogenes (anciano/inmunocomp.)</td><td>Meningismo · Fotofobia · Petequias</td></tr>
+        <tr><td class="dn">🦴 Piel/tejidos blandos</td><td class="dm">5%</td><td>S. aureus · SARM · Streptococcus grupo A · Clostridium · Polimicrobiano</td><td>Celulitis · Fascitis necrotizante · Crepitación</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — no cometer</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><div class="kn">1</div><div class="kt"><strong>Retrasar el antibiótico esperando los cultivos.</strong> Tomar hemocultivos ANTES del antibiótico pero no retrasar el antibiótico para esperar resultados. La meta es antibiótico EN LA PRIMERA HORA. Cada hora de retraso aumenta la mortalidad 7%.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dar fluidos sin evaluar la respuesta.</strong> No dar fluidos a ciegas — evaluar la responsividad con PLR (passive leg raising) o VPP (variación de presión de pulso). El exceso de fluidos (más de 3 L en primeras 24h) aumenta la mortalidad en la mayoría de los pacientes.</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><strong>No iniciar norepinefrina precozmente.</strong> Si PAM menor de 65 mmHg a pesar de fluidos iniciales: iniciar norepinefrina sin demora. La hipotensión prolongada daña irreversiblemente corazón, riñón y cerebro. No esperar "más fluidos" si hay hipotensión refractaria.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><strong>Usar dopamina como vasopresor de primera línea.</strong> SSC 2021: norepinefrina es el vasopresor de elección. La dopamina tiene mayor riesgo de arritmias y mayor mortalidad que norepinefrina en choque séptico (SOAP II trial).</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><strong>No buscar y controlar el foco de infección.</strong> El control del foco es TAN IMPORTANTE como el antibiótico. Drenaje de abscesos, colecistectomía, nefrolitotomía, retiro de catéter — sin control del foco el antibiótico no es suficiente.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><strong>No usar corticoides en choque séptico refractario.</strong> Si el paciente requiere norepinefrina mayor de 0.25 mcg/kg/min para mantener PAM ≥ 65: hidrocortisona 200 mg/día IV reduce el tiempo en vasopresores y la mortalidad (APROCCHSS trial).</div></div>
+    <div class="kp"><div class="kn">7</div><div class="kt"><strong>No desescalar el antibiótico a las 48-72h.</strong> El desescalamiento guiado por cultivos (cambiar de empírico amplio a específico) reduce la resistencia antibiótica, los costos y los efectos adversos. No mantener carbapenémicos si el cultivo muestra un germen sensible a cefalosporinas.</div></div>
+    <div class="kp"><div class="kn">8</div><div class="kt"><strong>Hiperglucemia no tratada en sepsis.</strong> La hiperglucemia en sepsis empeora la inmunidad y la disfunción orgánica. Meta: glucosa 140-180 mg/dL con infusión de insulina. Evitar hipoglucemia (meta más estricta de menor de 110 aumentó mortalidad en NICE-SUGAR).</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Estudios iniciales obligatorios — primeros 30 minutos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Estudio</th><th>Hallazgo en sepsis</th><th>Importancia</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Lactato sérico</td><td>Mayor de 2 mmol/L = disfunción tisular · Mayor de 4 = choque criptogénico o choque séptico</td><td style="color:var(--r);font-weight:700;">CRÍTICO — define choque séptico aunque PA sea normal · Repetir a las 2h para evaluar depuración</td></tr>
+        <tr><td class="dn">Hemocultivos × 2</td><td>Positivos 30-50% en sepsis · Tomar ANTES del antibiótico · No retrasar ATB más de 45 min para tomarlos</td><td style="color:var(--r);font-weight:700;">CRÍTICO — guían el desescalamiento a las 48-72h</td></tr>
+        <tr><td class="dn">BHC completa</td><td>Leucocitosis o leucopenia · Neutrofilia o neutropenia · Trombocitopenia (CID)</td><td>Severidad · CID · Inmunosupresión</td></tr>
+        <tr><td class="dn">Procalcitonina (PCT)</td><td>Mayor de 0.5 ng/mL sugiere infección bacteriana · Mayor de 2: sepsis probable · Mayor de 10: choque séptico</td><td>Guía el inicio y la duración del antibiótico · PCT negativa apoya suspensión del ATB</td></tr>
+        <tr><td class="dn">PCR</td><td>Elevada pero inespecífica — sube más lento que PCT</td><td>Seguimiento de la respuesta — menos útil que PCT para guiar ATB</td></tr>
+        <tr><td class="dn">Creatinina + BUN</td><td>Elevadas en lesión renal aguda séptica</td><td>Componente renal del SOFA · Guía dosis de fármacos</td></tr>
+        <tr><td class="dn">Bilirrubinas + AST/ALT</td><td>Elevadas en disfunción hepática séptica</td><td>Componente hepático del SOFA · Falla multiorgánica</td></tr>
+        <tr><td class="dn">Coagulación (TP/TTPa/fibrinógeno/dímero D)</td><td>TP prolongado · TTPa prolongado · Fibrinógeno bajo · Dímero D alto = CID</td><td>CID es complicación grave — plasma fresco + crioprecipitados si CID activa</td></tr>
+        <tr><td class="dn">Gasometría arterial</td><td>Acidosis metabólica (pH bajo, HCO3 bajo, lactato alto) · Hipoxemia</td><td>Severidad · Necesidad de VMI · Guía la reanimación</td></tr>
+        <tr><td class="dn">Electrolitos (Na, K, Mg, Ca)</td><td>Hiponatremia · Hipopotasemia o hiperpotasemia · Hipocalcemia</td><td>Guía la reposición · Hipocalcemia grave empeora la contractilidad cardíaca</td></tr>
+        <tr><td class="dn">Urocultivo + EGO</td><td>Piuria · Bacteriuria · Cilindros leucocitarios</td><td>Confirmar foco urinario · Guiar ATB específico</td></tr>
+        <tr><td class="dn">Rx tórax / TC tórax</td><td>Infiltrados · Derrame pleural · Consolidación</td><td>Confirmar foco pulmonar · Descartar derrame complicado</td></tr>
+        <tr><td class="dn">Eco POCUS (FAST extendido)</td><td>Función ventricular · Volumen intravascular · Derrame pericárdico · Foco abdominal</td><td>Guía la reanimación · Descarta taponamiento · Evalúa respuesta a fluidos</td></tr>
+        <tr><td class="dn">Troponina</td><td>Elevada en depresión miocárdica séptica (sin IAM) · Alta: peor pronóstico</td><td>Depresión miocárdica séptica · Pronóstico · Si muy elevada: descartar SCA</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Criterios de disfunción orgánica — SOFA</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">💡</span><div><div class="at">SOFA ≥ 2 sobre el basal = Sepsis · Calculadora interactiva en pestaña Escalas</div></div></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Órgano</th><th>Variable</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Respiratorio</td><td>PaO2/FiO2</td><td>≥400</td><td>300-399</td><td>200-299</td><td>100-199 + VMI</td><td>&lt;100 + VMI</td></tr>
+        <tr><td class="dn">Coagulación</td><td>Plaquetas ×10³/μL</td><td>≥150</td><td>100-149</td><td>50-99</td><td>20-49</td><td>&lt;20</td></tr>
+        <tr><td class="dn">Hepático</td><td>Bilirrubina mg/dL</td><td>&lt;1.2</td><td>1.2-1.9</td><td>2.0-5.9</td><td>6.0-11.9</td><td>≥12</td></tr>
+        <tr><td class="dn">Cardiovascular</td><td>PAM / Vasopresores</td><td>PAM≥70</td><td>PAM&lt;70</td><td>Dopa≤5 o Dobu</td><td>Dopa&gt;5 o NE≤0.1</td><td>Dopa&gt;15 o NE&gt;0.1</td></tr>
+        <tr><td class="dn">Neurológico</td><td>Glasgow</td><td>15</td><td>13-14</td><td>10-12</td><td>6-9</td><td>&lt;6</td></tr>
+        <tr><td class="dn">Renal</td><td>Creatinina mg/dL</td><td>&lt;1.2</td><td>1.2-1.9</td><td>2.0-3.4</td><td>3.5-4.9</td><td>≥5</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Diagnóstico diferencial del choque</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Tipo de choque</th><th>GC</th><th>RVS</th><th>PVC</th><th>Pista clínica</th></tr></thead>
+      <tbody>
+        <tr><td class="dn" style="color:var(--r);">Distributivo (séptico)</td><td style="color:var(--g);">↑ Alto</td><td style="color:var(--r);">↓ Bajo</td><td>Variable</td><td>Fiebre · Foco infeccioso · Piel caliente y vasodilatada · PCT alta</td></tr>
+        <tr><td class="dn">Hipovolémico</td><td style="color:var(--r);">↓ Bajo</td><td style="color:var(--a);">↑ Alto</td><td style="color:var(--r);">↓ Bajo</td><td>Sangrado · Deshidratación · Mucosas secas · Hemoconcentración</td></tr>
+        <tr><td class="dn">Cardiogénico</td><td style="color:var(--r);">↓ Bajo</td><td style="color:var(--a);">↑ Alto</td><td style="color:var(--a);">↑ Alto</td><td>IC · SCA · Arritmia · R3 · Crepitantes · Troponina alta</td></tr>
+        <tr><td class="dn">Obstructivo</td><td style="color:var(--r);">↓ Bajo</td><td style="color:var(--a);">↑ Alto</td><td style="color:var(--a);">↑ Alto</td><td>TEP · Taponamiento · Neumotórax · Ingurgitación yugular</td></tr>
+        <tr><td class="dn">Neurogénico</td><td>Variable</td><td style="color:var(--r);">↓ Bajo</td><td style="color:var(--r);">↓ Bajo</td><td>Trauma medular · Bradicardia paradójica · Sin fiebre · Sin infección</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">qSOFA — screening rápido</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">💡</span><div><div class="at">qSOFA ≥ 2 en paciente con sospecha de infección = alto riesgo de mal pronóstico · No es diagnóstico de sepsis</div>Sensibilidad 70% · Especificidad 79%. Un qSOFA positivo debe motivar calcular el SOFA completo y buscar disfunción orgánica. NO descarta sepsis si es negativo.</div></div>
+    <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:12px 14px;margin-top:10px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;">Calculadora qSOFA</div>
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="qs-fr" onchange="calcSOFA()" style="width:18px;height:18px;">
+        <span>Frecuencia respiratoria ≥ 22/min</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="qs-ec" onchange="calcSOFA()" style="width:18px;height:18px;">
+        <span>Alteración del estado de conciencia (Glasgow &lt; 15)</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="qs-pa" onchange="calcSOFA()" style="width:18px;height:18px;">
+        <span>Presión arterial sistólica ≤ 100 mmHg</span>
+      </label>
+      <div id="qsofa-result" style="display:none;margin-top:12px;"></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Calculadora SOFA completo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="sofa-calc" style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:12px 14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;">SOFA — Sequential Organ Failure Assessment</div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">Respiratorio — PaO2/FiO2 (mmHg)</div>
+        <select id="sofa-resp" onchange="calcSOFAFull()" style="width:100%;padding:6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;">
+          <option value="0">≥ 400 (normal) — 0 pts</option>
+          <option value="1">300-399 — 1 pt</option>
+          <option value="2">200-299 — 2 pts</option>
+          <option value="3">100-199 + ventilación mecánica — 3 pts</option>
+          <option value="4">&lt; 100 + ventilación mecánica — 4 pts</option>
+        </select>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">Coagulación — Plaquetas (×10³/μL)</div>
+        <select id="sofa-coag" onchange="calcSOFAFull()" style="width:100%;padding:6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;">
+          <option value="0">≥ 150 — 0 pts</option>
+          <option value="1">100-149 — 1 pt</option>
+          <option value="2">50-99 — 2 pts</option>
+          <option value="3">20-49 — 3 pts</option>
+          <option value="4">&lt; 20 — 4 pts</option>
+        </select>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">Hepático — Bilirrubina total (mg/dL)</div>
+        <select id="sofa-bili" onchange="calcSOFAFull()" style="width:100%;padding:6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;">
+          <option value="0">&lt; 1.2 — 0 pts</option>
+          <option value="1">1.2-1.9 — 1 pt</option>
+          <option value="2">2.0-5.9 — 2 pts</option>
+          <option value="3">6.0-11.9 — 3 pts</option>
+          <option value="4">≥ 12 — 4 pts</option>
+        </select>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">Cardiovascular — PAM / Vasopresores</div>
+        <select id="sofa-cv" onchange="calcSOFAFull()" style="width:100%;padding:6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;">
+          <option value="0">PAM ≥ 70 sin vasopresores — 0 pts</option>
+          <option value="1">PAM &lt; 70 sin vasopresores — 1 pt</option>
+          <option value="2">Dopamina ≤ 5 o Dobutamina — 2 pts</option>
+          <option value="3">Dopamina &gt; 5 o Norepinefrina ≤ 0.1 mcg/kg/min — 3 pts</option>
+          <option value="4">Dopamina &gt; 15 o Norepinefrina &gt; 0.1 mcg/kg/min — 4 pts</option>
+        </select>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">Neurológico — Glasgow</div>
+        <select id="sofa-neuro" onchange="calcSOFAFull()" style="width:100%;padding:6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;">
+          <option value="0">15 — 0 pts</option>
+          <option value="1">13-14 — 1 pt</option>
+          <option value="2">10-12 — 2 pts</option>
+          <option value="3">6-9 — 3 pts</option>
+          <option value="4">&lt; 6 — 4 pts</option>
+        </select>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">Renal — Creatinina (mg/dL) o Diuresis</div>
+        <select id="sofa-renal" onchange="calcSOFAFull()" style="width:100%;padding:6px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;">
+          <option value="0">&lt; 1.2 — 0 pts</option>
+          <option value="1">1.2-1.9 — 1 pt</option>
+          <option value="2">2.0-3.4 — 2 pts</option>
+          <option value="3">3.5-4.9 o diuresis &lt; 500 mL/día — 3 pts</option>
+          <option value="4">≥ 5.0 o diuresis &lt; 200 mL/día — 4 pts</option>
+        </select>
+      </div>
+      <div id="sofa-result" style="background:#f3f4f6;border-radius:var(--rs);padding:10px 12px;"></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Marcadores pronósticos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Marcador</th><th>Valor</th><th>Interpretación</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Lactato</td><td>&gt; 2 mmol/L</td><td>Hipoperfusión tisular · Define choque séptico criptogénico</td></tr>
+        <tr><td class="dn">Lactato</td><td>&gt; 4 mmol/L</td><td>Mortalidad mayor de 40% · UCI obligatoria · Reanimación agresiva</td></tr>
+        <tr><td class="dn">Depuración de lactato</td><td>&lt; 10% en 2h</td><td>Predictor de mal pronóstico · Evaluar reanimación</td></tr>
+        <tr><td class="dn">SOFA total</td><td>0-6: baja mortalidad · 7-9: 33% · ≥11: 95%</td><td>Mortalidad predecida · Guía ingreso a UCI</td></tr>
+        <tr><td class="dn">PCT</td><td>&gt; 10 ng/mL</td><td>Alta especificidad para bacteriemia · Choque séptico probable</td></tr>
+        <tr><td class="dn">PCT en descenso</td><td>Reducción &gt; 80% del pico</td><td>Guía el alta de la UCI y la suspensión del antibiótico</td></tr>
+        <tr><td class="dn">Presión de pulso</td><td>Estrecha (&lt; 25 mmHg)</td><td>Bajo gasto cardíaco · Peor pronóstico en choque</td></tr>
+        <tr><td class="dn">Disfunción orgánica</td><td>Número de órganos fallando</td><td>1 órgano: 20% mortalidad · 3 órganos: 70% · 4+ órganos: 90%+</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div style="background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1a1a2e,#c0392b);color:#fff;padding:10px 14px;">
+      <div style="font-size:13px;font-weight:700;">🔀 Algoritmo interactivo — Sepsis y Choque Séptico</div>
+      <div style="font-size:11px;opacity:0.75;margin-top:2px;">Responde las preguntas para el manejo con dosis exactas</div>
+    </div>
+    <div style="padding:14px;">
+      <div id="sep-algo-step"></div>
+      <div id="sep-algo-result" style="display:none;"></div>
+      <button id="sep-algo-reset" onclick="resetSepAlgo()" style="display:none;margin-top:12px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;cursor:pointer;width:100%;">↩ Empezar de nuevo</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOUR-1 BUNDLE -->
+<div class="panel" id="tab-txu">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🚨</span><div><div class="at">Hour-1 Bundle — SSC 2021 · Las 5 acciones en los primeros 60 minutos</div>Cada hora de retraso en el antibiótico aumenta la mortalidad 7% en choque séptico. El bundle NO es secuencial — todo en paralelo.</div></div>
+
+  <!-- PASO 1 -->
+  <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">
+    <div style="background:#1a1a2e;color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px;">
+      <div style="background:#c0392b;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;">1</div>
+      <div><div style="font-size:13px;font-weight:700;">Lactato sérico — Minuto 0</div><div style="font-size:11px;opacity:0.8;">Si lactato mayor de 2 mmol/L → protocolo de reanimación · Repetir a las 2h</div></div>
+    </div>
+    <div style="padding:10px 14px;">
+      <div class="tw"><table class="t">
+        <tbody>
+          <tr><td class="dn">Lactato menor de 2</td><td>Sepsis sin choque criptogénico · Monitoreo cada 2-4h · Reanimación según clínica</td></tr>
+          <tr><td class="dn">Lactato 2-4</td><td>Hipoperfusión tisular · Reanimación con fluidos IV · Repetir en 2h · Meta: depuración mayor de 10%</td></tr>
+          <tr><td class="dn" style="color:var(--r);">Lactato mayor de 4</td><td style="color:var(--r);font-weight:600;">Choque séptico criptogénico aunque PA sea normal · Reanimación agresiva · UCI · Vasopresores si hipotensión</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- PASO 2 -->
+  <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">
+    <div style="background:#1a1a2e;color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px;">
+      <div style="background:#c0392b;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;">2</div>
+      <div><div style="font-size:13px;font-weight:700;">Hemocultivos × 2 — ANTES del antibiótico · Máximo 45 min de retraso</div><div style="font-size:11px;opacity:0.8;">2 sets de hemocultivos de sitios diferentes · 10 mL en cada frasco aerobio + anaerobio</div></div>
+    </div>
+    <div style="padding:10px 14px;">
+      <div class="alert a-i"><span class="ai">💡</span><div>Tomar hemocultivos ANTES del antibiótico pero NO retrasar el antibiótico más de 45 min para tomarlos. Si el paciente está en choque séptico refractario o inestable: iniciar antibiótico inmediatamente y tomar cultivos después.</div></div>
+      <div style="font-size:12px;color:#374151;margin-top:8px;line-height:1.7;">
+        • 2 sets (4 frascos): 2 aerobios + 2 anaerobios<br>
+        • 10 mL de sangre en cada frasco<br>
+        • De 2 sitios de venopunción diferentes (no del mismo sitio)<br>
+        • Antes de administrar el antibiótico<br>
+        • También: Urocultivo · Cultivo de foco si evidente (esputo, líquido pleural, LCR según clínica)
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 3 -->
+  <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">
+    <div style="background:#c0392b;color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px;">
+      <div style="background:#fff;color:#c0392b;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;">3</div>
+      <div><div style="font-size:13px;font-weight:700;">⭐ ANTIBIÓTICO DE AMPLIO ESPECTRO — En la PRIMERA HORA · El más urgente</div><div style="font-size:11px;opacity:0.9;">Cada hora de retraso: +7% de mortalidad en choque séptico</div></div>
+    </div>
+    <div style="padding:10px 14px;">
+      <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">El antibiótico es la intervención que más reduce la mortalidad en sepsis</div>La meta es antibiótico en los primeros 60 minutos. Si hay duda sobre el diagnóstico: no retrasar en choque séptico — el riesgo de no tratar supera ampliamente el de tratar innecesariamente.</div></div>
+      <div style="background:#fff3e0;border-left:3px solid #f57c00;border-radius:var(--rs);padding:10px 12px;margin-top:10px;font-size:12px;">
+        <div style="font-weight:700;color:#e65100;margin-bottom:6px;">Esquemas empíricos iniciales según foco — ver pestaña Tx Hospitalario para detalle completo</div>
+        <div style="color:#374151;line-height:1.8;">
+          🫁 Pulmonar: Piperacilina-tazobactam 4.5g IV c/6h + Azitromicina 500 mg IV c/24h<br>
+          🫘 Urinario: Ceftriaxona 2g IV c/24h (o ciprofloxacino 400 mg IV c/12h si resistencia)<br>
+          🫙 Abdominal: Piperacilina-tazobactam 4.5g IV c/6h + Metronidazol 500 mg IV c/8h<br>
+          🩸 Sin foco (bacteriemia): Vancomicina + Piperacilina-tazobactam o Meropenem<br>
+          🧠 SNC: Ceftriaxona 2g IV c/12h + Ampicilina 2g IV c/4h + Dexametasona<br>
+          ⚠️ Inmunocomprometido/Neutropénico: Meropenem 1g IV c/8h + Vancomicina
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 4 -->
+  <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">
+    <div style="background:#1a1a2e;color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px;">
+      <div style="background:#c0392b;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;">4</div>
+      <div><div style="font-size:13px;font-weight:700;">Fluidos IV — 30 mL/kg de cristaloide en la primera 1-3h</div><div style="font-size:11px;opacity:0.8;">SSN o Ringer lactato · Evaluar respuesta con POCUS o PLR</div></div>
+    </div>
+    <div style="padding:10px 14px;">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Fluido</th><th>Dosis inicial</th><th>Ventaja/Desventaja</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td class="dn">⭐ Ringer Lactato</td><td>30 mL/kg IV en 1-3h · Máximo 1 L en 30 min si choque</td><td>Menor acidosis hiperclorémica · Mejor en sepsis abdominal</td><td>Primera elección SSC 2021 · SMART trial: mejor outcomes que SSN</td></tr>
+          <tr><td class="dn">SSN 0.9%</td><td>30 mL/kg IV en 1-3h</td><td>Disponible en todo lado · Riesgo de acidosis hiperclorémica con volúmenes altos</td><td>Alternativa válida · Evitar en acidosis metabólica preexistente</td></tr>
+          <tr><td class="dn">Albúmina 5%</td><td>1-2 L IV adicional si sin respuesta a cristaloides</td><td>Mantiene presión oncótica · No demostró superioridad en mortalidad (ALBIOS)</td><td>Solo si sin respuesta a cristaloides · Muy costosa</td></tr>
+          <tr><td class="dn" style="color:var(--r);">Coloides sintéticos (Dextrán, Almidones)</td><td style="color:var(--r);">CONTRAINDICADOS en sepsis</td><td style="color:var(--r);">Aumentan LRA y mortalidad en sepsis</td><td style="color:var(--r);">SSC 2021: no usar en sepsis</td></tr>
+        </tbody>
+      </table></div>
+      <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div><div class="at">Evaluar respuesta a fluidos antes de continuar</div>Passive Leg Raising (PLR): elevar piernas 45° × 1 min → si PA sube mayor de 10%: respondedor. Variación de Presión de Pulso (VPP) mayor de 13% en VMI: respondedor. POCUS: variabilidad de VCI. No dar más fluidos si no hay respuesta — el exceso de fluidos empeora outcomes.</div></div>
+    </div>
+  </div>
+
+  <!-- PASO 5 -->
+  <div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">
+    <div style="background:#c0392b;color:#fff;padding:9px 14px;display:flex;align-items:center;gap:10px;">
+      <div style="background:#fff;color:#c0392b;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;">5</div>
+      <div><div style="font-size:13px;font-weight:700;">⭐ Vasopresores — Si PAM &lt; 65 mmHg a pesar de fluidos</div><div style="font-size:11px;opacity:0.9;">Norepinefrina: vasopresor de primera línea · VÍA CENTRAL OBLIGATORIA</div></div>
+    </div>
+    <div style="padding:10px 14px;">
+      <div class="tw"><table class="t">
+        <thead><tr><th>Vasopresor</th><th>Dosis</th><th>Dilución</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td class="dn" style="color:var(--g);font-weight:700;">⭐ Norepinefrina (1ª línea)</td><td>0.01-3 mcg/kg/min IV · Iniciar 0.05-0.1 mcg/kg/min · Titular por PAM</td><td>4-8 mg en 250 mL SSN o Dext 5% = 16-32 mcg/mL · VÍA CENTRAL</td><td>SOAP II: superior a dopamina en sobrevida y arritmias. Meta PAM ≥ 65 mmHg.</td></tr>
+          <tr><td class="dn">Vasopresina (2ª línea)</td><td>0.03 U/min IV fija (no titular)</td><td>20 U en 100 mL SSN = 0.2 U/mL · VÍA CENTRAL</td><td>Agregar si NE mayor de 0.25 mcg/kg/min · Permite reducir la dosis de NE · No superar 0.03-0.04 U/min</td></tr>
+          <tr><td class="dn">Adrenalina (3ª línea)</td><td>0.01-0.3 mcg/kg/min IV</td><td>1 mg en 250 mL SSN = 4 mcg/mL · VÍA CENTRAL</td><td>Si falla NE + vasopresina · Puede elevar el lactato (efecto metabólico directo)</td></tr>
+          <tr><td class="dn" style="color:var(--r);">Dopamina (NO recomendada)</td><td style="color:var(--r);">Evitar como primera línea</td><td>No recomendada en SSC 2021</td><td style="color:var(--r);">SOAP II: mayor mortalidad y arritmias vs norepinefrina</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- METAS -->
+  <div class="sec" style="margin-top:4px;"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas de reanimación — 1, 6 y 24 horas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Tiempo</th><th>Meta</th><th>Cómo evaluar</th></tr></thead>
+      <tbody>
+        <tr><td class="dn" style="color:var(--r);">Primera hora</td><td>Lactato medido · Hemocultivos tomados · ATB administrado · Fluidos iniciados · Vasopresores si PAM menor de 65</td><td>Checklist Hour-1 Bundle completo</td></tr>
+        <tr><td class="dn" style="color:var(--a);">3-6 horas</td><td>PAM ≥ 65 mmHg · Diuresis mayor de 0.5 mL/kg/h · Lactato en descenso · SpO2 mayor de 94%</td><td>Repetir lactato a las 2h · POCUS · Diuresis horaria</td></tr>
+        <tr><td class="dn" style="color:var(--g);">6-24 horas</td><td>Depuración de lactato mayor de 10% · Normalización del lactato si era mayor de 4 · Cultura positiva: ajustar ATB</td><td>Lactato a las 6h · Cultivos · Considerar reducción de fluidos (fase de desescalamiento)</td></tr>
+        <tr><td class="dn">24-72 horas</td><td>Desescalamiento de ATB según cultivos · Inicio de desescalamiento de vasopresores · Control del foco</td><td>Cultivos · PCT · Función orgánica diaria</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- TX HOSPITALARIO -->
+<div class="panel" id="tab-txh">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">💡</span><div><div class="at">Selecciona el foco de infección para ver el esquema antibiótico empírico específico</div>Ajustar SIEMPRE a las 48-72h según cultivos. Desescalar de amplio espectro a específico cuando el cultivo está disponible.</div></div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;" id="sep-foco-chips">
+    <button class="pchip on" onclick="showSepFoco('pulmonar',this)">🫁 Pulmonar</button>
+    <button class="pchip" onclick="showSepFoco('urinario',this)">🫘 Urinario</button>
+    <button class="pchip" onclick="showSepFoco('abdominal',this)">🫙 Abdominal</button>
+    <button class="pchip" onclick="showSepFoco('bacteriemia',this)">🩸 Bacteriemia / Sin foco</button>
+    <button class="pchip" onclick="showSepFoco('snc',this)">🧠 SNC</button>
+    <button class="pchip" onclick="showSepFoco('piel',this)">🦴 Piel / Tejidos blandos</button>
+    <button class="pchip" onclick="showSepFoco('inmunocomp',this)">🛡️ Inmunocomprometido</button>
+    <button class="pchip" onclick="showSepFoco('hongos',this)">🍄 Candidemia / Sepsis por hongos</button>
+  </div>
+  <div id="sep-foco-out"></div>
+
+  <!-- VASOPRESORES -->
+  <div class="sec" style="margin-top:12px;"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Vasopresores y drogas vasoactivas — dosis exactas de infusión</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="sep-vaso-out"></div>
+  </div></div>
+
+  <!-- CORTICOIDES -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Corticoides en choque séptico refractario</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">💡</span><div><div class="at">Indicación: choque séptico refractario — NE mayor de 0.25 mcg/kg/min para PAM ≥ 65</div>SSC 2021: Hidrocortisona 200 mg/día IV en infusión continua. APROCCHSS trial: redujo mortalidad y tiempo en vasopresores. No usar en sepsis sin choque.</div></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Fármaco</th><th>Dosis</th><th>Dilución</th><th>Duración</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td class="dn" style="color:var(--g);font-weight:700;">⭐ Hidrocortisona IV</td><td>200 mg/día en infusión continua · O 50 mg IV c/6h en bolos</td><td>200 mg en 50 mL SSN · Infusión continua a 2 mL/h · O bolo directo 50 mg c/6h</td><td>Hasta retirar vasopresores · Luego reducir gradualmente</td><td>APROCCHSS: redujo mortalidad 28d en choque refractario. Preferir infusión continua sobre bolos (menores picos de glucemia). Monitorear glucosa c/6h.</td></tr>
+        <tr><td class="dn">Fludrocortisona VO</td><td>50 mcg c/24h VO</td><td>Tableta VO</td><td>7 días junto con hidrocortisona</td><td>Agregar hidrocortisona + fludrocortisona según APROCCHSS. La fludrocortisona tiene efecto mineralocorticoide adicional.</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <!-- CONTROL DE GLUCOSA -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Control glucémico · Insulina en UCI · NICE-SUGAR</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Meta glucosa 140-180 mg/dL · NICE-SUGAR demostró que metas más estrictas (menor de 110) aumentan la mortalidad por hipoglucemia</div></div></div>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <thead><tr><th>Situación</th><th>Acción</th><th>Meta</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Glucosa mayor de 180 mg/dL × 2 mediciones</td><td>Iniciar infusión de insulina regular IV</td><td>140-180 mg/dL · NICE-SUGAR</td></tr>
+        <tr><td class="dn">Glucosa 140-180 mg/dL</td><td>Monitoreo c/1-2h · Ajustar infusión</td><td>Mantener en rango</td></tr>
+        <tr><td class="dn">Glucosa menor de 140 mg/dL con insulina</td><td>Reducir infusión de insulina</td><td>Evitar hipoglucemia menor de 70</td></tr>
+        <tr><td class="dn">Hipoglucemia menor de 70 mg/dL</td><td>Suspender insulina · Dextrosa 50% 25 mL IV · Repetir glucosa en 15 min</td><td>Glucosa mayor de 100 antes de reiniciar insulina</td></tr>
+      </tbody>
+    </table></div>
+    <div style="background:#f9fafb;border-radius:var(--rs);padding:10px 12px;margin-top:10px;font-size:12px;color:#374151;">
+      <strong>Protocolo insulina IV:</strong> Insulina regular 50 U en 50 mL SSN = 1 U/mL. Iniciar a 1-2 U/h. Ajustar cada hora según glucemia. Monitorear glucosa c/1h en fase de ajuste, c/2h cuando estable.
+    </div>
+  </div></div>
+
+  <!-- OTRAS MEDIDAS -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Otras medidas de soporte — nivel especialista</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Medida</th><th>Indicación</th><th>Detalle</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Ventilación mecánica invasiva</td><td>Glasgow menor de 8 · SpO2 menor de 88% con O2 · FR mayor de 35 · Fatiga respiratoria</td><td>TV 6 mL/kg de peso ideal · Presión meseta menor de 30 cmH2O · PEEP según tabla ARDSnet · Meta SpO2 92-96%</td></tr>
+        <tr><td class="dn">Terapia de reemplazo renal (TRR)</td><td>LRA con: K+ mayor de 6.5 · Acidosis pH menor de 7.1 · Sobrecarga de volumen refractaria · Uremia sintomática</td><td>HDFVVC preferida en choque séptico (mejor tolerancia hemodinámica). Hemodiálisis intermitente si hemodinámicamente estable.</td></tr>
+        <tr><td class="dn">Transfusión de GR</td><td>Hb menor de 7 g/dL en adultos estables · Hb menor de 8 g/dL si SCA, hipoxia severa o mal tolerado</td><td>TRISS trial: umbral 7 g/dL igual de seguro que 9 g/dL en sepsis. No transfundir por encima de 7-8 sin indicación específica.</td></tr>
+        <tr><td class="dn">Plasma fresco congelado (PFC)</td><td>Solo si CID activa con sangrado O procedimiento invasivo urgente con INR mayor de 1.5</td><td>No para "corregir" el INR sin sangrado ni procedimiento. 10-15 mL/kg IV.</td></tr>
+        <tr><td class="dn">Nutrición enteral</td><td>Iniciar en las primeras 24-48h si tolera · Vía oral o SNG</td><td>Nutrición enteral temprana reduce infecciones nosocomiales y acorta la estancia. No ayuno prolongado. Nutrición parenteral solo si enteral no posible tras 7 días.</td></tr>
+        <tr><td class="dn">Profilaxis de TVP</td><td>Todos los pacientes sin contraindicación</td><td>Enoxaparina 40 mg SC c/24h · O HNF 5000 U SC c/8-12h · + Medias de compresión si anticoagulación contraindicada</td></tr>
+        <tr><td class="dn">Profilaxis de úlcera de estrés</td><td>Ventilación mecánica · Coagulopatía · Antecedente de úlcera</td><td>Pantoprazol 40 mg IV c/24h · O Ranitidina 50 mg IV c/8h (menos efectiva)</td></tr>
+        <tr><td class="dn">Control del foco infeccioso</td><td>TODO paciente con sepsis · Siempre buscar y controlar el foco</td><td>Drenaje de abscesos (guiado por imagen) · Desbridamiento de fascitis · Retiro de catéter infectado · Colecistectomía · Nefrolitotomía</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+</div>
+<!-- FÁRMACOS -->
+<div class="panel" id="tab-farm">
+  <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:12px 14px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:8px;background:#f9fafb;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 12px;">
+      <span style="font-size:16px;">🔍</span>
+      <input type="text" placeholder="Buscar fármaco en sepsis..." style="border:none;background:transparent;font-size:13px;width:100%;outline:none;" oninput="filtrarSepFarm(this.value)">
+    </div>
+    <div id="sep-farm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+  </div>
+  <div id="sep-farm-list"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">💡</span><div>Selecciona el fármaco y la dosis para ver la indicación a enfermería y al paciente con dilución exacta.</div></div>
+  <div id="sep-ind-list"></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+    <button class="pchip on" onclick="showSepEscen('criterios',this)">🔍 Sepsis vs Choque</button>
+    <button class="pchip" onclick="showSepEscen('bundle',this)">⏱️ Bundle en urgencias</button>
+    <button class="pchip" onclick="showSepEscen('resistencia',this)">🦠 Gérmenes resistentes</button>
+    <button class="pchip" onclick="showSepEscen('deescalamiento',this)">📉 Desescalamiento ATB</button>
+    <button class="pchip" onclick="showSepEscen('inmunocomp',this)">🛡️ Inmunocomprometido</button>
+    <button class="pchip" onclick="showSepEscen('postbundle',this)">📋 Sepsis post-alta</button>
+  </div>
+  <div id="sep-escen-out"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Plan de seguimiento hospitalario</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Momento</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td class="dn" style="color:var(--r);">Hora 0-1</td><td>Lactato · Hemocultivos · ATB · Fluidos · Vasopresores si PAM menor de 65 — Hour-1 Bundle completo</td></tr>
+        <tr><td class="dn" style="color:var(--r);">Hora 2</td><td>Repetir lactato — ¿depuración mayor de 10%? · Evaluar respuesta a fluidos · Ajustar vasopresores · SOFA</td></tr>
+        <tr><td class="dn" style="color:var(--a);">Hora 6</td><td>Lactato normalizado? · Diuresis adecuada? · PAM ≥ 65 con vasopresores mínimos · Evaluar ventilación</td></tr>
+        <tr><td class="dn" style="color:var(--a);">24 horas</td><td>Resultado de hemocultivos preliminar · Ajustar o desescalar ATB · Control de glucosa · BHC · Función renal</td></tr>
+        <tr><td class="dn" style="color:var(--g);">48-72 horas</td><td>Cultivos con resultado definitivo → DESESCALAR ATB · Iniciar retiro de vasopresores si estable · PCT</td></tr>
+        <tr><td class="dn">Diario en UCI</td><td>SOFA diario · Función renal · Electrolitos · BHC · Lactato si persiste elevado · Revisión del ATB</td></tr>
+        <tr><td class="dn">Alta de UCI</td><td>PCT en descenso mayor de 80% del pico · Sin vasopresores · Función orgánica recuperada · ATB oral si foco controlado</td></tr>
+      </tbody>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Duración del antibiótico — guiado por PCT</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Foco</th><th>Duración estándar</th><th>Con guía de PCT</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">NAC (Neumonía)</td><td>5-7 días si respuesta clínica adecuada</td><td>Suspender si PCT menor de 0.25 ng/mL o reducción mayor de 80% del pico</td></tr>
+        <tr><td class="dn">ITU (Pielonefritis)</td><td>7-14 días (7 días si no complicada)</td><td>5-7 días si PCT en descenso rápido y respuesta clínica</td></tr>
+        <tr><td class="dn">Bacteriemia por S. aureus</td><td>14 días mínimo (sin foco metastásico)</td><td>28 días si endocarditis · No reducir con PCT en bacteriemia por S. aureus</td></tr>
+        <tr><td class="dn">Bacteriemia por gram negativo</td><td>7-14 días</td><td>7 días si respuesta clínica y PCT en descenso</td></tr>
+        <tr><td class="dn">Peritonitis / Abdominal</td><td>5-7 días si foco controlado</td><td>Suspender precozmente si PCT menor de 0.5 y foco controlado</td></tr>
+        <tr><td class="dn">Meningitis bacteriana</td><td>7-21 días según germen</td><td>No guiar por PCT en meningitis — seguir esquemas establecidos</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-i" style="margin-top:10px;"><span class="ai">💡</span><div><div class="at">Desescalamiento a las 48-72h — siempre que sea posible</div>Cambiar de antibiótico empírico amplio a específico según cultivo reduce: resistencia bacteriana · costos · efectos adversos (nefrotoxicidad, diarrea por C. difficile). El desescalamiento es una medida de calidad asistencial.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Guías vigentes</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="bib-i"><div><span class="bib-n">1</span><span class="bib-y">2021</span></div><div class="bib-r">Evans L et al. Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021. Critical Care Medicine 2021;49(11):e1063-e1143.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/34605781/" target="_blank">PubMed: 34605781</a></div>
+    <div class="bib-i"><div><span class="bib-n">2</span><span class="bib-y">2016</span></div><div class="bib-r">Singer M et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA 2016;315(8):801-810.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/26903338/" target="_blank">PubMed: 26903338</a></div>
+    <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2018</span></div><div class="bib-r">Annane D et al. Hydrocortisone plus Fludrocortisone for Adults with Septic Shock (APROCCHSS). NEJM 2018;378:809-818.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/29490185/" target="_blank">PubMed: 29490185</a></div>
+    <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2010</span></div><div class="bib-r">De Backer D et al. Comparison of Dopamine and Norepinephrine in the Treatment of Shock (SOAP II). NEJM 2010;362:779-789.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/20200382/" target="_blank">PubMed: 20200382</a></div>
+    <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">2009</span></div><div class="bib-r">NICE-SUGAR Study Investigators. Intensive versus Conventional Glucose Control in Critically Ill Patients. NEJM 2009;360:1283-1297.</div><a class="bib-l" href="https://pubmed.ncbi.nlm.nih.gov/19318384/" target="_blank">PubMed: 19318384</a></div>
+  </div>
+  </div>
+</div>
+
+<script>
+function sepShowTab(id, btn) {
+  var panels = document.querySelectorAll('.panel');
+  for (var i = 0; i < panels.length; i++) panels[i].classList.remove('on');
+  var tabs = document.querySelectorAll('.tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('on');
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+function tog(h) {
+  var b = h.nextElementSibling;
+  var g = h.querySelector('.sg');
+  if (b.classList.contains('hidden')) {
+    b.classList.remove('hidden');
+    if (g) { g.classList.add('open'); }
+  } else {
+    b.classList.add('hidden');
+    if (g) { g.classList.remove('open'); }
+  }
+}
+
+// ========== CALCULADORAS ==========
+function calcSOFA() {
+  var score = 0;
+  if (document.getElementById('qs-fr').checked) score++;
+  if (document.getElementById('qs-ec').checked) score++;
+  if (document.getElementById('qs-pa').checked) score++;
+  var el = document.getElementById('qsofa-result');
+  el.style.display = 'block';
+  var color, titulo, msg;
+  if (score >= 2) {
+    color = '#7b1c1c'; titulo = 'qSOFA POSITIVO (' + score + '/3)';
+    msg = 'Alto riesgo de mal pronóstico. Calcular SOFA completo. Iniciar protocolo de sepsis. Evaluar ingreso a UCI.';
+  } else {
+    color = '#0a5c45'; titulo = 'qSOFA negativo (' + score + '/3)';
+    msg = 'Bajo riesgo según qSOFA. No descarta sepsis si hay alta sospecha clínica. Monitoreo estrecho.';
+  }
+  el.innerHTML = '<div style="background:' + color + '22;border-left:4px solid ' + color + ';border-radius:var(--rs);padding:10px 12px;">'
+    + '<div style="font-size:14px;font-weight:700;color:' + color + ';">' + titulo + '</div>'
+    + '<div style="font-size:12px;color:#374151;margin-top:4px;">' + msg + '</div></div>';
+}
+
+function calcSOFAFull() {
+  var r = parseInt(document.getElementById('sofa-resp').value);
+  var c = parseInt(document.getElementById('sofa-coag').value);
+  var b = parseInt(document.getElementById('sofa-bili').value);
+  var cv = parseInt(document.getElementById('sofa-cv').value);
+  var n = parseInt(document.getElementById('sofa-neuro').value);
+  var re = parseInt(document.getElementById('sofa-renal').value);
+  var total = r + c + b + cv + n + re;
+  var color, titulo, mortalidad;
+  if (total >= 11) { color = '#7b1c1c'; titulo = 'SOFA crítico'; mortalidad = 'Mortalidad estimada mayor de 95%'; }
+  else if (total >= 9) { color = '#7b1c1c'; titulo = 'SOFA muy alto'; mortalidad = 'Mortalidad estimada 50-95%'; }
+  else if (total >= 7) { color = '#c0392b'; titulo = 'SOFA alto'; mortalidad = 'Mortalidad estimada 33-50%'; }
+  else if (total >= 4) { color = '#f57c00'; titulo = 'SOFA moderado'; mortalidad = 'Mortalidad estimada 10-33%'; }
+  else if (total >= 2) { color = '#f57c00'; titulo = 'SOFA leve — SEPSIS'; mortalidad = 'Sepsis confirmada (SOFA ≥ 2). Mortalidad estimada menor de 10%.'; }
+  else { color = '#0a5c45'; titulo = 'SOFA normal'; mortalidad = 'Sin disfunción orgánica significativa.'; }
+  document.getElementById('sofa-result').innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:space-between;">'
+    + '<div><div style="font-size:22px;font-weight:800;color:' + color + ';">' + total + ' puntos</div>'
+    + '<div style="font-size:12px;font-weight:700;color:' + color + ';">' + titulo + '</div></div>'
+    + '<div style="font-size:11px;color:#374151;text-align:right;max-width:55%;">' + mortalidad + '</div></div>';
+}
+
+// ========== ALGORITMO SEPSIS ==========
+var sepAlgoHist = [];
+var SEP_ALGO = {
+  start: {p:'¿Cuál es la situación clínica?', o:[
+    {t:'Paciente con sospecha de infección y deterioro agudo — ¿es sepsis?', n:'screening'},
+    {t:'Sepsis confirmada — ¿hay choque séptico?', n:'choque_eval'},
+    {t:'Choque séptico — ¿cómo manejo los vasopresores?', n:'vasopresores'},
+    {t:'Sepsis sin respuesta al tratamiento — ¿qué sigue?', n:'refractario'},
+    {t:'Alta de UCI — ¿cuándo y cómo desescalar?', n:'deescalamiento'}
+  ]},
+  screening: {p:'¿Cuántos criterios de qSOFA tiene el paciente?', o:[
+    {t:'qSOFA 0-1 — Sin criterios o solo 1', n:'qsofa_neg'},
+    {t:'qSOFA ≥ 2 — Frecuencia respiratoria alta + alteración mental + hipotensión', n:'qsofa_pos'}
+  ]},
+  qsofa_neg: {r:1, titulo:'qSOFA negativo — Bajo riesgo pero vigilar', badge:'Monitoreo · No descarta sepsis', color:'#0a5c45',
+    pasos:[{l:'ACCIÓN',f:'Monitoreo estrecho',d:'Repetir evaluación en 1-2h · Si empeora: calcular SOFA completo · Buscar foco infeccioso',o:'Detectar deterioro precoz',n:'qSOFA negativo NO descarta sepsis — si la sospecha clínica es alta: calcular SOFA completo.'}],
+    meta:'Vigilancia estrecha · SOFA si deteriora · Cultivos si sospecha alta',alerta:'Un qSOFA negativo con alta sospecha clínica NO descarta sepsis. Calcular SOFA completo.',control:'Reevaluar en 1-2h. Si SOFA ≥ 2: protocolo de sepsis.',combos:['qSOFA: herramienta de tamizaje rápido — no diagnóstico','SOFA ≥ 2: diagnóstico de sepsis']},
+  qsofa_pos: {r:1, titulo:'qSOFA positivo ≥ 2 — Iniciar protocolo de sepsis', badge:'Hour-1 Bundle · Urgente', color:'#7b1c1c',
+    pasos:[
+      {l:'PASO 1 — Inmediato',f:'Lactato + Hemocultivos × 2',d:'Lactato arterial o venoso · 2 sets hemocultivos (4 frascos) de 2 sitios distintos · No retrasar ATB más de 45 min',o:'Clasificar severidad · Guiar desescalamiento',n:'Lactato mayor de 4 = choque séptico aunque PA sea normal.'},
+      {l:'PASO 2 — En los primeros 60 min',f:'Antibiótico empírico de amplio espectro',d:'Según foco — ver Tx Hospitalario para dosis exactas. Si sin foco: Piperacilina-tazobactam 4.5g IV + Vancomicina 25-30 mg/kg IV',o:'Cubrir gérmenes más probables según foco',n:'Cada hora de retraso: +7% mortalidad en choque séptico.'},
+      {l:'PASO 3 — Fluidos',f:'30 mL/kg Ringer Lactato o SSN IV en 1-3h',d:'Si PAM menor de 65 o hipoperfusión: 30 mL/kg IV · Evaluar respuesta con PLR o POCUS',o:'PAM ≥ 65 mmHg · Diuresis mayor de 0.5 mL/kg/h',n:'Evaluar respuesta antes de continuar. Exceso de fluidos empeora outcomes.'}
+    ],
+    meta:'Lactato en descenso · PAM ≥ 65 · ATB en la primera hora',alerta:'Si PAM menor de 65 a pesar de fluidos: iniciar norepinefrina SIN DEMORA.',control:'Repetir lactato a las 2h. Evaluar SOFA completo. Si no responde: UCI.',combos:['Lactato + Hemocultivos primero','ATB en primera hora — no esperar cultivos','30 mL/kg Ringer Lactato','Norepinefrina si PAM menor de 65 a pesar de fluidos']},
+  choque_eval: {p:'¿Cuál es el lactato y la respuesta a fluidos?', o:[
+    {t:'Lactato mayor de 2 + requiere vasopresores para PAM ≥ 65 = Choque séptico confirmado', n:'choque_confirmado'},
+    {t:'Lactato 2-4 pero PA responde a fluidos — Sepsis sin choque', n:'sepsis_sin_choque'},
+    {t:'Lactato mayor de 4 pero PA normal — Choque criptogénico', n:'criptogenico'}
+  ]},
+  choque_confirmado: {r:1, titulo:'Choque séptico confirmado — Manejo UCI', badge:'Vasopresores · UCI · Hour-1 Bundle completo', color:'#7b1c1c',
+    pasos:[
+      {l:'VASOPRESOR 1ª LÍNEA',f:'Norepinefrina IV — VÍA CENTRAL OBLIGATORIA',d:'Iniciar 0.05-0.1 mcg/kg/min IV · Titular para PAM ≥ 65 mmHg · Dilución: 4-8 mg en 250 mL SSN',o:'PAM ≥ 65 mmHg · Diuresis mayor de 0.5 mL/kg/h',n:'SOAP II: norepinefrina superior a dopamina en sobrevida y arritmias. VÍA CENTRAL OBLIGATORIA.'},
+      {l:'SI NE MAYOR DE 0.25 mcg/kg/min',f:'Agregar Vasopresina 0.03 U/min IV',d:'20 U en 100 mL SSN = 0.2 U/mL · Dosis fija — no titular · Permite reducir NE',o:'Reducir dosis de norepinefrina · Mantener PAM ≥ 65',n:'No superar 0.03-0.04 U/min — riesgo de isquemia coronaria y mesentérica.'},
+      {l:'CORTICOIDES si refractario',f:'Hidrocortisona 200 mg/día IV si NE mayor de 0.25 mcg/kg/min',d:'200 mg en 50 mL SSN en infusión continua a 2 mL/h · O 50 mg IV c/6h en bolos',o:'Reducir tiempo en vasopresores · Menor mortalidad',n:'APROCCHSS: hidrocortisona redujo mortalidad y acortó el tiempo en vasopresores.'}
+    ],
+    meta:'PAM ≥ 65 · Lactato en descenso · Diuresis mayor de 0.5 mL/kg/h · SOFA mejorando',alerta:'Monitoreo arterial invasivo obligatorio. Repetir lactato cada 2h. SOFA diario.',control:'UCI. Revisión de cultivos a las 48-72h para desescalamiento.',combos:['Norepinefrina 0.05-0.1 mcg/kg/min — vía central','+ Vasopresina 0.03 U/min si NE mayor de 0.25','+ Hidrocortisona 200 mg/día si refractario','Repetir lactato a las 2h']},
+  vasopresores: {r:1, titulo:'Manejo de vasopresores en choque séptico', badge:'Escalar y desescalar según PAM', color:'#7b1c1c',
+    pasos:[
+      {l:'1ª LÍNEA',f:'Norepinefrina IV',d:'0.01-3 mcg/kg/min · Inicio: 0.05-0.1 · Titular para PAM ≥ 65 · Dilución: 8 mg en 250 mL SSN = 32 mcg/mL',o:'PAM ≥ 65 mmHg como primera meta',n:'Iniciar con vía periférica SOLO si no hay central disponible y el paciente está en colapso — cambiar a central lo antes posible.'},
+      {l:'2ª LÍNEA — Si NE mayor de 0.25',f:'Vasopresina 0.03 U/min fija + Hidrocortisona 200 mg/día',d:'Vasopresina: 20 U en 100 mL SSN a 9 mL/h · Hidrocortisona: infusión continua',o:'Reducir NE · PAM ≥ 65 con menos vasopresores',n:'Vasopresina + hidrocortisona = "steroid-sparing vasopressor" — permite reducir NE.'},
+      {l:'3ª LÍNEA — Choque refractario',f:'Adrenalina 0.01-0.3 mcg/kg/min',d:'1 mg en 250 mL SSN = 4 mcg/mL · Vía central · UCI',o:'PAM ≥ 65 cuando NE + vasopresina insuficientes',n:'La adrenalina puede elevar el lactato por efecto metabólico directo (glucogenólisis) — no confundir con empeoramiento de la hipoperfusión.'}
+    ],
+    meta:'PAM ≥ 65 mmHg · Retirar vasopresores en cuanto PAM se mantenga ≥ 65 sin ellos',alerta:'Desescalar vasopresores cuando PAM ≥ 65 sin necesitarlos por más de 2h. Iniciar con NE primero.',control:'Retiro gradual: reducir NE 25% cada 30-60 min si PAM estable.',combos:['Orden: NE primero → vasopresina → hidrocortisona → adrenalina','Meta PAM: 65-70 mmHg (no superar — mayor PAM no mejora outcomes)','Retiro gradual de vasopresores cuando PAM estable']},
+  refractario: {r:1, titulo:'Sepsis refractaria — evaluar causas y escalar', badge:'Foco no controlado · Germen resistente · Inmunosupresión', color:'#374151',
+    pasos:[
+      {l:'PASO 1 — Buscar causa',f:'¿Está controlado el foco?',d:'TC abdominal si foco abdominal · Ecocardiograma si bacteriemia por S. aureus · Revisión de catéteres · Cultivos de control',o:'Identificar foco no drenado o nuevo foco',n:'El foco no controlado es la causa más frecuente de falla al tratamiento. Nunca asumir que el foco está controlado sin confirmación.'},
+      {l:'PASO 2 — Evaluar antibiótico',f:'¿Cubre el germen probablemente resistente?',d:'Si sin mejoría en 72h: ampliar a meropenem · Agregar vancomicina si no se inició · Considerar antifúngico si factores de riesgo',o:'Cobertura adecuada del germen probable',n:'Escalamiento antibiótico solo si hay evidencia de falla — no escalar empíricamente sin criterio.'},
+      {l:'PASO 3 — ECMO venoarterial',f:'Si choque cardiogénico refractario a inotrópicos',d:'ECMO-VA en centros especializados · Puente a recuperación o trasplante',o:'Soporte hemodinámico mientras se trata la causa',n:'Solo en centros con programa de ECMO. Decisión con equipo multidisciplinario.'}
+    ],
+    meta:'Identificar causa de falla · Escalar cobertura · Controlar foco',alerta:'Sepsis refractaria tiene mortalidad mayor del 50%. Revisión diaria exhaustiva.',control:'Cultivos de control. TC de búsqueda de foco. Evaluación por infectología.',combos:['Buscar foco no controlado primero','Ampliar cobertura a meropenem si sin mejoría en 72h','Considerar antifúngico (candidiasis)','ECMO si choque cardiogénico refractario']},
+  deescalamiento: {r:1, titulo:'Desescalamiento antibiótico — a las 48-72h', badge:'Guiado por cultivos · SSC 2021 recomienda siempre', color:'#0a5c45',
+    pasos:[
+      {l:'A LAS 48-72H',f:'Revisar resultado de cultivos y ajustar',d:'Si cultivo negativo + mejoría clínica + PCT en descenso: considerar suspender ATB · Si cultivo positivo: ajustar a ATB específico de menor espectro',o:'ATB mínimo necesario para tratar el germen identificado',n:'SIEMPRE desescalar si el cultivo permite. Mantener carbapenem cuando hay cefalosporina sensible es un error.'},
+      {l:'DURACIÓN ÓPTIMA',f:'Guiada por PCT y respuesta clínica',d:'Sepsis NAC: 5-7 días si mejoría · ITU: 7 días · Bacteriemia gram neg: 7-14 días · S. aureus bacteriemia: ≥ 14 días',o:'Menor duración posible que sea efectiva',n:'PCT menor de 0.25 o reducción mayor de 80% del pico = señal para suspender ATB.'}
+    ],
+    meta:'ATB específico de menor espectro · Duración mínima efectiva · PCT guiada',alerta:'No desescalar en bacteriemia por S. aureus antes de 14 días — riesgo de focos metastásicos (endocarditis, osteomielitis).',control:'Cultivos definitivos a las 72h. PCT seriada. Infectología si gérmenes resistentes.',combos:['Desescalar siempre que el cultivo lo permita','PCT menor de 0.25: señal de suspensión','Bacteriemia S. aureus: mínimo 14 días (28 si endocarditis)','No mantener carbapenémico si cefalosporina es sensible']},
+  sepsis_sin_choque: {r:1, titulo:'Sepsis sin choque — Manejo hospitalario', badge:'Hospitalización · ATB IV · Monitoreo', color:'#f57c00',
+    pasos:[
+      {l:'HOSPITALIZAR',f:'ATB IV según foco + fluidos + monitoreo',d:'ATB según foco (ver Tx Hospitalario) · Fluidos IV según necesidad · PA cada hora · Lactato a las 2h',o:'Evitar progresión a choque séptico',n:'El 20-30% de las sepsis sin choque progresan a choque en las primeras 6h.'}
+    ],
+    meta:'Lactato en descenso · PAM ≥ 65 · Diuresis normal · Mejoría clínica',alerta:'Monitoreo horario de PA y diuresis. Si PAM cae menor de 65: iniciar vasopresores.',control:'Repetir lactato a las 2-6h. SOFA a las 24h. Cultivos a las 48-72h.',combos:['ATB IV en primera hora','Fluidos IV 10-20 mL/kg si hipoperfusión','Monitoreo horario de PA','Repetir lactato a las 2h']},
+  criptogenico: {r:1, titulo:'Choque séptico criptogénico — Lactato mayor de 4 con PA normal', badge:'Tratar como choque séptico · No esperar hipotensión', color:'#7b1c1c',
+    pasos:[
+      {l:'TRATAR COMO CHOQUE SÉPTICO',f:'Hour-1 Bundle completo + UCI',d:'ATB empírico + Fluidos 30 mL/kg + Lactato seriado · UCI aunque PA sea normal',o:'Depuración de lactato mayor de 10% a las 2h',n:'Lactato mayor de 4 con PA normal = choque criptogénico = misma mortalidad que choque con hipotensión. No minimizar.'}
+    ],
+    meta:'Lactato menor de 2 mmol/L · Depuración mayor de 10% en 2h',alerta:'UCI obligatoria. Si lactato no depura en 2h: vasopresores aunque PA sea normal.',control:'Lactato cada 2h hasta normalización. SOFA. Cultivos.',combos:['UCI aunque PA sea normal','ATB + fluidos como choque séptico','Vasopresores si lactato no depura','Repetir lactato cada 2h']}
+};
+
+function renderSepAlgoStep(sid) {
+  var st = SEP_ALGO[sid]; if (!st) return;
+  if (st.r) { renderSepAlgoResult(st); return; }
+  var h = '<div style="background:#fdeaea;border-left:4px solid #c0392b;border-radius:var(--rs);padding:12px 14px;">'
+    + '<div style="font-size:13px;font-weight:700;color:#7b1c1c;margin-bottom:10px;">' + st.p + '</div>';
+  st.o.forEach(function(o, i) {
+    h += '<button onclick="sepAlgoSel(\'' + sid + '\',' + i + ')" style="display:block;width:100%;text-align:left;padding:9px 12px;margin-bottom:6px;background:#fff;border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;">' + o.t + '</button>';
+  });
+  if (sepAlgoHist.length) h += '<button onclick="sepAlgoBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;">← Volver</button>';
+  h += '</div>';
+  document.getElementById('sep-algo-step').innerHTML = h;
+  document.getElementById('sep-algo-result').style.display = 'none';
+  document.getElementById('sep-algo-reset').style.display = 'none';
+}
+function sepAlgoSel(sid, i) { sepAlgoHist.push(sid); renderSepAlgoStep(SEP_ALGO[sid].o[i].n); }
+function sepAlgoBack() { if (sepAlgoHist.length) renderSepAlgoStep(sepAlgoHist.pop()); }
+function resetSepAlgo() { sepAlgoHist = []; renderSepAlgoStep('start'); }
+function renderSepAlgoResult(s) {
+  var h = '<div style="background:' + s.color + ';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;">'
+    + '<div style="font-size:11px;opacity:0.8;margin-bottom:2px;">' + s.badge + '</div>'
+    + '<div style="font-size:14px;font-weight:700;">' + s.titulo + '</div></div>';
+  s.pasos.forEach(function(p) {
+    h += '<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;margin-bottom:8px;overflow:hidden;">'
+      + '<div style="background:' + s.color + '22;padding:8px 12px;border-bottom:1px solid #e2e8f0;">'
+      + '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:' + s.color + ';">' + p.l + '</div>'
+      + '<div style="font-size:13px;font-weight:700;color:#111827;margin-top:2px;">' + p.f + '</div></div>'
+      + '<div style="padding:10px 12px;">'
+      + '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Dosis / Acción</span><span style="font-weight:700;color:#c0392b;text-align:right;max-width:65%;">' + p.d + '</span></div>'
+      + '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Objetivo</span><span style="font-weight:600;text-align:right;max-width:65%;">' + p.o + '</span></div>'
+      + '<div style="font-size:11px;color:#6b7280;margin-top:6px;background:#f9fafb;border-radius:4px;padding:5px 8px;">' + p.n + '</div>'
+      + '</div></div>';
+  });
+  h += '<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">Meta</div><div style="font-size:12.5px;color:#064e3b;font-weight:600;">' + s.meta + '</div></div>';
+  h += '<div style="background:#fdeaea;border-left:3px solid #c0392b;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:3px;">⚠️ Atención</div><div style="font-size:12px;color:#7b1c1c;">' + s.alerta + '</div></div>';
+  h += '<div style="background:#e6f1fb;border-left:3px solid #1a6bbd;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">📅 Control</div><div style="font-size:12px;color:#0c3b6e;">' + s.control + '</div></div>';
+  if (s.combos && s.combos.length) {
+    h += '<div style="background:#fff3e0;border-left:3px solid #f57c00;border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#e65100;margin-bottom:6px;">💊 Puntos clave</div>';
+    s.combos.forEach(function(x) { h += '<div style="font-size:12px;color:#374151;padding:3px 0;border-bottom:1px solid #ffe0b2;"><span style="color:#f57c00;font-weight:700;margin-right:4px;">→</span>' + x + '</div>'; });
+    h += '</div>';
+  }
+  h += '<button onclick="sepAlgoBack()" style="margin-top:10px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;">← Volver</button>';
+  document.getElementById('sep-algo-step').innerHTML = '';
+  document.getElementById('sep-algo-result').innerHTML = h;
+  document.getElementById('sep-algo-result').style.display = 'block';
+  document.getElementById('sep-algo-reset').style.display = 'block';
+}
+
+// ========== FOCO ANTIBIÓTICO ==========
+var SEP_FOCO = {
+  pulmonar: {
+    titulo:'🫁 Sepsis de origen pulmonar — NAC grave / NAVM', color:'#1a1a2e',
+    alerta:'NAVM (neumonía asociada a ventilación mecánica): siempre cubrir Pseudomonas aeruginosa y SARM. NAC grave: cubrir atípicos (Legionella, Mycoplasma) con macrólido.',
+    esquemas:[
+      {nombre:'NAC grave sin factores de riesgo', estrella:true,
+       atb:'Ceftriaxona 2g IV c/24h + Azitromicina 500 mg IV c/24h',
+       alt:'Ampicilina-sulbactam 3g IV c/6h + Azitromicina · O Levofloxacino 750 mg IV c/24h monoterapia',
+       duracion:'5-7 días si mejoría clínica',
+       nota:'La combinación betalactámico + macrólido tiene menor mortalidad que monoterapia con quinolona en NAC grave. Cubrir siempre atípicos (Legionella) en UCI.'},
+      {nombre:'NAC grave con riesgo de Pseudomonas', estrella:false,
+       atb:'Piperacilina-tazobactam 4.5g IV c/6h + Levofloxacino 750 mg IV c/24h',
+       alt:'Cefepima 2g IV c/8h + Azitromicina · O Meropenem 1g IV c/8h si sospecha de BLEE',
+       duracion:'7-14 días según respuesta',
+       nota:'Factores de riesgo para Pseudomonas: EPOC grave, bronquiectasias, uso previo de antibióticos, hospitalización reciente, corticoides crónicos.'},
+      {nombre:'NAVM (Neumonía asociada a VM)', estrella:false,
+       atb:'Piperacilina-tazobactam 4.5g IV c/6h + Vancomicina 25-30 mg/kg IV c/12h',
+       alt:'Meropenem 2g IV c/8h + Vancomicina · O Ceftazidima 2g IV c/8h si sin BLEE',
+       duracion:'8 días (IMPACT trial) · 14-21 días si Pseudomonas o Acinetobacter',
+       nota:'NAVM: siempre cubrir Pseudomonas + SARM. Desescalar a las 48-72h según cultivo de BAL o aspirado traqueal.'}
+    ]
+  },
+  urinario: {
+    titulo:'🫘 Sepsis de origen urinario — PNA grave / ITU complicada', color:'#0c3b6e',
+    alerta:'E. coli es el germen más frecuente. Si hay uso previo de quinolonas, hospitalización reciente o sospecha de BLEE: escalar a carbapenémico. La bacteriemia por gram negativo de origen urinario responde bien a 7-14 días de tratamiento.',
+    esquemas:[
+      {nombre:'PNA grave / ITU complicada sin BLEE', estrella:true,
+       atb:'Ceftriaxona 2g IV c/24h',
+       alt:'Ciprofloxacino 400 mg IV c/12h (si sensibilidad conocida) · Ampicilina-sulbactam 3g IV c/6h',
+       duracion:'7-14 días · 7 días si respuesta rápida y sin bacteriemia',
+       nota:'Ceftriaxona es la primera elección en ITU grave por gram negativos. Desescalar a cefixima VO cuando tolere y sea sensible.'},
+      {nombre:'PNA con sospecha de BLEE o uso previo de quinolonas', estrella:false,
+       atb:'Meropenem 1g IV c/8h · O Ertapenem 1g IV c/24h (fuera de UCI)',
+       alt:'Piperacilina-tazobactam 4.5g IV c/6h si BLEE leve',
+       duracion:'10-14 días',
+       nota:'BLEE: betalactamasas de espectro extendido — resistentes a cefalosporinas. Factores de riesgo: hospitalización previa, sondas urinarias, antibióticos previos, India/Asia.'},
+      {nombre:'ITU asociada a catéter (CAUTI)', estrella:false,
+       atb:'Retirar o cambiar el catéter PRIMERO · Ceftriaxona 2g IV c/24h',
+       alt:'Vancomicina si sospecha de Enterococcus o SARM',
+       duracion:'7-14 días · 5-7 días si respuesta rápida y catéter retirado',
+       nota:'El retiro o cambio del catéter es parte del tratamiento. Sin retiro, el biofilm actúa como reservorio y el antibiótico no alcanza concentraciones adecuadas.'}
+    ]
+  },
+  abdominal: {
+    titulo:'🫙 Sepsis de origen abdominal — Peritonitis / Colangitis / Diverticulitis', color:'#7a4a00',
+    alerta:'El control del foco es TAN IMPORTANTE como el antibiótico en sepsis abdominal. Sin drenaje de absceso, colecistectomía o cirugía del foco, el antibiótico no es suficiente. Cubrir SIEMPRE anaerobios.',
+    esquemas:[
+      {nombre:'Peritonitis / Infección intraabdominal moderada-grave', estrella:true,
+       atb:'Piperacilina-tazobactam 4.5g IV c/6h · Cubre gram negativos y anaerobios',
+       alt:'Ceftriaxona 2g IV c/24h + Metronidazol 500 mg IV c/8h · O Ertapenem 1g IV c/24h',
+       duracion:'4-7 días si foco controlado quirúrgicamente',
+       nota:'Con foco controlado: 4-7 días es suficiente. Sin control del foco: el antibiótico solo no resuelve la infección.'},
+      {nombre:'Colangitis / Colecistitis grave', estrella:false,
+       atb:'Piperacilina-tazobactam 4.5g IV c/6h · O Ampicilina-sulbactam 3g IV c/6h + Metronidazol',
+       alt:'Meropenem 1g IV c/8h si hospitalización previa o manipulación biliar · + Vancomicina si Enterococcus probable',
+       duracion:'4-7 días si colecistectomía o drenaje biliar realizado',
+       nota:'Cubrir Enterococcus en colangitis asociada a manipulación biliar previa (ampicilina o vancomicina). CPRE o drenaje biliar urgente en colangitis con choque séptico.'},
+      {nombre:'Peritonitis con riesgo de Candida', estrella:false,
+       atb:'Piperacilina-tazobactam 4.5g IV c/6h + Micafungina 100 mg IV c/24h',
+       alt:'Fluconazol 800 mg IV dosis de carga → 400 mg IV c/24h si sin azol previo',
+       duracion:'14 días mínimo para la candidiasis · 4-7 días para la cobertura bacteriana',
+       nota:'Factores de riesgo para candidiasis intraabdominal: cirugía abdominal previa, nutrición parenteral, antibióticos prolongados, inmunosupresión, diabetes.'}
+    ]
+  },
+  bacteriemia: {
+    titulo:'🩸 Bacteriemia primaria / Sepsis sin foco evidente', color:'#374151',
+    alerta:'Cubrir SARM y gram negativos. Si hay catéter venoso central: considerar retiro. La bacteriemia por S. aureus requiere ecocardiograma para descartar endocarditis (positivo en 15-25% de los casos).',
+    esquemas:[
+      {nombre:'Bacteriemia adquirida en comunidad sin foco', estrella:true,
+       atb:'Ceftriaxona 2g IV c/24h + Vancomicina 25-30 mg/kg IV c/12h (carga) → 15-20 mg/kg c/8-12h mantenimiento',
+       alt:'Piperacilina-tazobactam 4.5g IV c/6h + Vancomicina · Si sospecha de BLEE: Meropenem + Vancomicina',
+       duracion:'7-14 días para gram negativos · ≥ 14 días para S. aureus',
+       nota:'Vancomicina: monitorear AUC/MIC (meta 400-600). Niveles valle mayor de 15-20 mcg/mL para SARM. Ecocardiograma si bacteriemia por S. aureus.'},
+      {nombre:'Bacteriemia nosocomial / Relacionada a catéter', estrella:false,
+       atb:'Vancomicina 25-30 mg/kg IV c/12h + Piperacilina-tazobactam 4.5g IV c/6h · RETIRAR el catéter',
+       alt:'Daptomicina 6-10 mg/kg IV c/24h si SARM con CMI mayor de 1 · + Meropenem si gram neg resistente',
+       duracion:'7-14 días si catéter retirado · 4-6 semanas si endocarditis',
+       nota:'Retiro del catéter es parte del tratamiento. Hemocultivos de control a las 72h para confirmar depuración. Si bacteriemia persiste con catéter retirado: buscar foco metastásico.'},
+      {nombre:'Neutropenia febril (sepsis en neutropénico)', estrella:false,
+       atb:'Meropenem 1g IV c/8h · O Cefepima 2g IV c/8h (si bajo riesgo de Pseudomonas)',
+       alt:'+ Vancomicina si: mucositis severa, catéter, sospecha de SARM · + Micafungina si fiebre persiste más de 72h',
+       duracion:'Hasta recuperación de neutropenia (PMN mayor de 500) + 48-72h afebril',
+       nota:'No retrasar antibiótico ni 30 min en neutropenia febril — la mortalidad aumenta dramáticamente con el retraso. Antifúngico empírico si fiebre persiste más de 72h sin respuesta.'}
+    ]
+  },
+  snc: {
+    titulo:'🧠 Sepsis de origen en SNC — Meningitis bacteriana', color:'#7b1c1c',
+    alerta:'Dexametasona ANTES o SIMULTÁNEO al antibiótico — no después. Reduce la inflamación y las secuelas neurológicas (especialmente en meningitis neumocócica). Una punción lumbar NO debe retrasar el antibiótico si hay sospecha clínica fuerte.',
+    esquemas:[
+      {nombre:'Meningitis bacteriana adquirida en comunidad', estrella:true,
+       atb:'Ceftriaxona 2g IV c/12h + Dexametasona 0.15 mg/kg IV c/6h × 4 días',
+       alt:'+ Ampicilina 2g IV c/4h si: mayor de 50 años, embarazo, inmunosuprimido (cubrir Listeria)',
+       duracion:'7-14 días: N. meningitidis 7 días · S. pneumoniae 10-14 días · Listeria 21 días',
+       nota:'Dexametasona: iniciar ANTES o con la primera dosis de antibiótico. No tiene beneficio si se da después. Reduce la mortalidad y las secuelas neurológicas en meningitis neumocócica.'},
+      {nombre:'Meningitis nosocomial / Post-neurocirugía', estrella:false,
+       atb:'Meropenem 2g IV c/8h + Vancomicina 15-20 mg/kg IV c/8-12h',
+       alt:'+ Rifampicina 600 mg IV c/24h para mejor penetración en SNC si SARM',
+       duracion:'14-21 días según germen',
+       nota:'Sin dexametasona en meningitis nosocomial — no tiene evidencia de beneficio. Cubrir gram negativos resistentes (Acinetobacter, Pseudomonas) en post-neurocirugía.'}
+    ]
+  },
+  piel: {
+    titulo:'🦴 Sepsis de origen en piel / Tejidos blandos', color:'#374151',
+    alerta:'Fascitis necrotizante: EMERGENCIA QUIRÚRGICA. El antibiótico es coadyuvante — el desbridamiento quirúrgico urgente es el tratamiento definitivo. No demorar por "exploración para confirmar el diagnóstico" si la clínica es clara.',
+    esquemas:[
+      {nombre:'Celulitis grave / SSTI no necrotizante', estrella:true,
+       atb:'Cefazolina 2g IV c/8h (Streptococcus, S. aureus SASM)',
+       alt:'+ Vancomicina 25-30 mg/kg IV c/12h si sospecha de SARM · O TMP-SMX IV si SARM ambulatorio',
+       duracion:'5-7 días · Pasar a VO cuando mejore y tolere',
+       nota:'SARM ambulatorio: clindamicina o TMP-SMX VO si no grave. Si progresión rápida de la celulitis a pesar de antibiótico: buscar fascitis necrotizante.'},
+      {nombre:'Fascitis necrotizante tipo I (polimicrobiana)', estrella:false,
+       atb:'Piperacilina-tazobactam 4.5g IV c/6h + Clindamicina 900 mg IV c/8h + Vancomicina',
+       alt:'Meropenem 1g IV c/8h + Clindamicina + Vancomicina',
+       duracion:'Hasta que el desbridamiento esté completo y el paciente esté estable · Luego pasar a VO',
+       nota:'Clindamicina: inhibe la síntesis de toxinas (efecto antitoxina) — útil para Streptococcus grupo A y Clostridium además de su acción antibacteriana. DESBRIDAMIENTO URGENTE — mortalidad 70-80% sin cirugía.'},
+      {nombre:'Fascitis necrotizante tipo II (Streptococcus grupo A)', estrella:false,
+       atb:'Penicilina G 4 millones U IV c/4h + Clindamicina 900 mg IV c/8h',
+       alt:'+ Inmunoglobulina IV 1-2 g/kg si choque tóxico estreptocócico',
+       duracion:'10-14 días',
+       nota:'La clindamicina inhibe la producción de toxinas del Streptococcus grupo A (efecto eagle-eagle). La inmunoglobulina IV neutraliza las toxinas circulantes en el síndrome de choque tóxico estreptocócico.'}
+    ]
+  },
+  inmunocomp: {
+    titulo:'🛡️ Sepsis en inmunocomprometido / Neutropénico', color:'#4a1d8a',
+    alerta:'Cobertura antibiótica más amplia desde el inicio. Antifúngico empírico si fiebre persiste más de 72-96h sin respuesta. No demorar el antibiótico ni 30 minutos en neutropenia febril — es una emergencia oncológica.',
+    esquemas:[
+      {nombre:'Neutropenia febril de alto riesgo (PMN menor de 100 o duración mayor de 7 días)', estrella:true,
+       atb:'Meropenem 1g IV c/8h · O Piperacilina-tazobactam 4.5g IV c/6h + Amikacina 15-20 mg/kg IV c/24h',
+       alt:'+ Vancomicina si: mucositis severa, catéter, hemocultivo positivo para gram positivo',
+       duracion:'Hasta PMN mayor de 500 + 48-72h afebril',
+       nota:'No routinariamente agregar vancomicina sin criterios específicos. Amikacina: monitorear niveles (valle menor de 5 mcg/mL, pico 20-30 mcg/mL). Antifúngico si fiebre más de 72-96h sin respuesta.'},
+      {nombre:'Paciente con trasplante de órgano sólido', estrella:false,
+       atb:'Meropenem 1g IV c/8h + Vancomicina 25-30 mg/kg IV c/12h',
+       alt:'+ Micafungina 100 mg IV c/24h si factores de riesgo de candidiasis · + Ganciclovir si sospecha CMV',
+       duracion:'Según germen identificado · Mínimo 14 días en bacteriemia',
+       nota:'Considerar siempre infecciones oportunistas: Pneumocystis jirovecii (cotrimoxazol), CMV (ganciclovir), Toxoplasma (pirimetamina), Aspergillus (voriconazol). La inmunosupresión altera la presentación clínica.'},
+      {nombre:'VIH/SIDA con CD4 menor de 200', estrella:false,
+       atb:'Cobertura empírica según foco + buscar infecciones oportunistas',
+       alt:'Si neumonía: ceftriaxona + azitromicina + TMP-SMX si PCP probable (LDH alta, patrón intersticial)',
+       duracion:'Según diagnóstico definitivo',
+       nota:'PCP (Pneumocystis jirovecii pneumonia): TMP-SMX 15-20 mg/kg/día IV dividido c/6-8h por 21 días + prednisona si PaO2 menor de 70 mmHg. Diagnóstico: LDH alta, patrón vidrio esmerilado en TC.'}
+    ]
+  },
+  hongos: {
+    titulo:'🍄 Candidemia / Sepsis por hongos', color:'#4a1d8a',
+    alerta:'La candidemia es la 4ª causa de bacteriemia nosocomial con mortalidad del 30-40%. Factores de riesgo: UCI prolongada · Nutrición parenteral · Antibióticos de amplio espectro mayor de 7 días · Cirugía abdominal · Catéter venoso central · Inmunosupresión · Diálisis. La equinocandina es la primera línea — NO fluconazol empírico.',
+    esquemas:[
+      {nombre:'Candidemia / Candidiasis invasiva — sin neutropenia', estrella:true,
+       atb:'⭐ Micafungina 100 mg IV c/24h · O Caspofungina 70 mg IV carga → 50 mg IV c/24h',
+       alt:'Fluconazol 800 mg IV carga → 400 mg IV c/24h SOLO si: no exposición previa a azoles + no C. krusei/glabrata + paciente estable',
+       duracion:'14 días desde el PRIMER hemocultivo negativo · Retirar todos los catéteres si posible',
+       nota:'Hemocultivos de control c/24-48h hasta negativizar. Fondo de ojo obligatorio para descartar endoftalmitis candidiásica (presente en 10-15%). Ecocardiograma si candidemia persistente más de 5 días. Desescalar a fluconazol VO cuando: estable, tolerando VO, cultivo sensible.'},
+      {nombre:'Candidemia en neutropénico febril', estrella:false,
+       atb:'Caspofungina 70 mg IV carga → 50 mg IV c/24h · O Micafungina 100 mg IV c/24h',
+       alt:'Anfotericina B liposomal 3-5 mg/kg IV c/24h si sospecha de Aspergillus concomitante',
+       duracion:'14 días desde hemocultivo negativo + recuperación de neutropenia (PMN mayor de 500)',
+       nota:'En neutropénico: descartar Aspergillus (TC tórax con signo del halo). Si sospecha de Aspergillus: cambiar a voriconazol 6 mg/kg IV c/12h × 2 dosis → 4 mg/kg IV c/12h. No usar fluconazol en neutropénico con candidemia.'},
+      {nombre:'Candidosis intraabdominal / Peritonitis por Candida', estrella:false,
+       atb:'Micafungina 100 mg IV c/24h + Control quirúrgico del foco',
+       alt:'Caspofungina 70/50 mg IV c/24h · Anfotericina B liposomal si equinocandina no disponible',
+       duracion:'14 días si foco controlado · Mayor duración si foco no controlado',
+       nota:'Factores de riesgo para Candida intraabdominal: cirugía abdominal previa, anastomosis perforada, NPT prolongada, antibióticos de amplio espectro. El control quirúrgico del foco es tan importante como el antifúngico.'}
+    ]
+  },
+  cdiff: {
+    titulo:'💊 Colitis grave por C. difficile — Sepsis abdominal', color:'#7a4a00',
+    alerta:'Colitis por C. difficile grave o fulminante puede causar sepsis abdominal con megacolon tóxico y perforación. Criterios de gravedad: leucocitos mayor de 15,000 + Cr mayor de 1.5 del basal + albúmina menor de 3. Criterios de fulminante: hipotensión + íleo + megacolon tóxico.',
+    esquemas:[
+      {nombre:'C. difficile grave (sin íleo ni megacolon)', estrella:true,
+       atb:'⭐ Vancomicina 125 mg VO c/6h × 10 días · O Fidaxomicina 200 mg VO c/12h × 10 días',
+       alt:'Metronidazol 500 mg IV c/8h SOLO si no tolera VO — menor eficacia que vancomicina en grave',
+       duracion:'10 días estándar · 6 semanas si recurrencia frecuente (régimen pulsado)',
+       nota:'IDSA 2021: vancomicina oral es superior a metronidazol en C. difficile grave. Fidaxomicina tiene menor tasa de recurrencia. SUSPENDER el antibiótico causante si es posible. Probióticos no recomendados de rutina.'},
+      {nombre:'C. difficile fulminante (hipotensión + íleo + megacolon)', estrella:false,
+       atb:'Vancomicina 500 mg VO o por SNG c/6h + Metronidazol 500 mg IV c/8h',
+       alt:'+ Vancomicina enemas 500 mg en 100 mL SSN c/6h si hay íleo completo · Consulta cirugía urgente',
+       duracion:'Hasta mejoría clínica · Colectomía si megacolon o perforación',
+       nota:'En íleo: la vancomicina oral no llega al colon — usar enemas de vancomicina. Metronidazol IV tiene cierta penetración colónica. Cirugía urgente si: peritonitis, perforación, megacolon tóxico, deterioro a pesar de tratamiento médico óptimo. Mortalidad quirúrgica 35-50% pero es la única opción en fulminante.'}
+    ]
+  },
+  absceso: {
+    titulo:'🧠 Absceso cerebral — Sepsis de origen en SNC', color:'#1a1a2e',
+    alerta:'El absceso cerebral puede causar sepsis aunque la bacteriemia franca es menos frecuente que en meningitis. Siempre requiere TC/RM urgente. Drenaje quirúrgico o estereotáxico en la mayoría. NO hacer PL si hay absceso — riesgo de herniación.',
+    esquemas:[
+      {nombre:'Absceso cerebral — origen dentario/sinusal/otogénico', estrella:true,
+       atb:'Ceftriaxona 2g IV c/12h + Metronidazol 500 mg IV c/8h',
+       alt:'Ampicilina-sulbactam 3g IV c/6h + Metronidazol · Agregar vancomicina si sospecha de SARM (post-neurocirugía)',
+       duracion:'6-8 semanas IV · Luego VO según antibiograma si disponible',
+       nota:'Gérmenes más frecuentes: Streptococcus anginosus grupo, anaerobios, Bacteroides. El metronidazol es ESENCIAL para cubrir anaerobios. Drenaje quirúrgico si: mayor de 2.5 cm, deterioro neurológico, no responde a ATB en 2 semanas.'},
+      {nombre:'Absceso cerebral post-neurocirugía o trauma', estrella:false,
+       atb:'Vancomicina 25-30 mg/kg IV c/12h + Cefepima 2g IV c/8h + Metronidazol 500 mg IV c/8h',
+       alt:'Meropenem 2g IV c/8h + Vancomicina (si sospecha de gram negativos resistentes)',
+       duracion:'6-8 semanas · Ajustar según cultivo del material drenado',
+       nota:'Post-neurocirugía: cubrir SARM (vancomicina) y gram negativos hospitalarios incluyendo Pseudomonas (cefepima o meropenem). El cultivo del material drenado es fundamental para guiar el tratamiento específico.'}
+    ]
+  }
+};
+
+function showSepFoco(id, btn) {
+  document.querySelectorAll('#sep-foco-chips .pchip').forEach(function(c) { c.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  var foco = SEP_FOCO[id];
+  if (!foco) return;
+  var out = document.getElementById('sep-foco-out');
+  if (!out) return;
+  var h = '<div style="background:' + foco.color + ';color:#fff;border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;">';
+  h += '<div style="font-size:14px;font-weight:700;">' + foco.titulo + '</div></div>';
+  h += '<div class="alert a-r" style="margin-bottom:10px;"><span class="ai">⚠️</span><div>' + foco.alerta + '</div></div>';
+  foco.esquemas.forEach(function(e, i) {
+    var eid = 'sep-esq-' + id + '-' + i;
+    var eColor = e.estrella ? foco.color : '#374151';
+    h += '<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+    h += '<div onclick="sepToggle(\'' + eid + '\')" style="background:' + eColor + ';color:#fff;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;">';
+    h += '<span id="' + eid + '-arr" style="font-size:16px;transition:transform 0.2s;">⌄</span>';
+    h += '<div style="font-size:13px;font-weight:700;">' + (e.estrella ? '⭐ ' : '') + e.nombre + '</div></div>';
+    h += '<div id="' + eid + '" style="display:none;padding:10px 14px;">';
+    var rows = [
+      ['Antibiótico de elección', e.atb, '#0a5c45'],
+      ['Alternativa', e.alt, '#374151'],
+      ['Duración', e.duracion, '#0c3b6e']
+    ];
+    rows.forEach(function(r) {
+      h += '<div style="display:flex;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;">';
+      h += '<span style="color:#6b7280;min-width:130px;flex-shrink:0;">' + r[0] + '</span>';
+      h += '<span style="font-weight:700;color:' + r[2] + ';flex:1;">' + r[1] + '</span></div>';
+    });
+    h += '<div style="font-size:11px;color:#374151;background:#f0f9ff;border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">' + e.nota + '</div>';
+    h += '</div></div>';
+  });
+  out.innerHTML = h;
+}
+
+function sepToggle(id) {
+  var el = document.getElementById(id);
+  var arr = document.getElementById(id + '-arr');
+  if (!el) return;
+  var open = el.style.display === 'none' || el.style.display === '';
+  el.style.display = open ? 'block' : 'none';
+  if (arr) arr.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+// ========== VASOPRESORES ==========
+var SEP_VASO = [
+  {n:'Norepinefrina IV', pri:true, clase:'Vasopresor alfa-1 + beta-1 · Primera línea absoluta · VÍA CENTRAL OBLIGATORIA',
+   ind:'Primera línea en choque séptico · PAM menor de 65 a pesar de fluidos · SOAP II: superior a dopamina',
+   ini:'0.01-0.05 mcg/kg/min IV', esc:'Aumentar 0.05 mcg/kg/min cada 5-15 min · Máximo 3 mcg/kg/min',
+   meta:'PAM ≥ 65 mmHg · Diuresis mayor de 0.5 mL/kg/h · Lactato en descenso',
+   dil:'4 mg en 250 mL SSN = 16 mcg/mL · O 8 mg en 250 mL = 32 mcg/mL · VÍA CENTRAL OBLIGATORIA',
+   ia:'Segundos · Efecto inmediato',
+   ci:'Hipovolemia no corregida · Sin monitoreo invasivo · Sin vía central disponible (usar periférica SOLO si emergencia)',
+   ea:'Vasoconstricción periférica · Isquemia de MMII · Necrosis por extravasación periférica · Bradicardia refleja',
+   nota:'VÍA CENTRAL OBLIGATORIA — necrosis grave por extravasación. Si no hay central: vía periférica de gran calibre temporalmente hasta obtener central. SOAP II: norepinefrina tiene menor mortalidad y menos arritmias que dopamina. Retirar gradualmente reduciendo 25% cada 30-60 min cuando PAM ≥ 65 sin vasopresores.'},
+  {n:'Vasopresina IV', pri:false, clase:'Vasopresor V1 + V2 · Segunda línea · Dosis fija — no titular',
+   ind:'Agregar a norepinefrina si NE mayor de 0.25 mcg/kg/min · Permite reducir la dosis de NE · Choque séptico refractario',
+   ini:'0.03 U/min IV (dosis fija siempre)', esc:'No aumentar más de 0.03-0.04 U/min — riesgo de isquemia coronaria y mesentérica',
+   meta:'Reducir dosis de norepinefrina · PAM ≥ 65 con menor dosis total de vasopresores',
+   dil:'20 U en 100 mL SSN = 0.2 U/mL · VÍA CENTRAL OBLIGATORIA · Velocidad: 9 mL/h para 0.03 U/min',
+   ia:'Minutos',
+   ci:'Sin monitoreo invasivo · Isquemia coronaria activa · Hiponatremia severa',
+   ea:'Vasoconstricción coronaria a dosis altas · Isquemia mesentérica · Necrosis cutánea por extravasación · Hiponatremia',
+   nota:'Dosis fija 0.03 U/min — no titular. Aumentar la dosis de vasopresina NO mejora la respuesta y sí aumenta los efectos adversos (isquemia coronaria y mesentérica). Usar como ahorrador de norepinefrina. VÍA CENTRAL OBLIGATORIA.'},
+  {n:'Adrenalina (Epinefrina) IV', pri:false, clase:'Catecolamina alfa + beta · Tercera línea · Si NE + vasopresina insuficientes',
+   ind:'Choque séptico refractario a NE + vasopresina · Última línea de vasopresores · Choque anafiláctico (primera línea)',
+   ini:'0.01-0.05 mcg/kg/min IV', esc:'Aumentar 0.05 mcg/kg/min cada 5-10 min · Máximo 0.3-1 mcg/kg/min',
+   meta:'PAM ≥ 65 mmHg · Mantener hasta recuperación hemodinámica',
+   dil:'1 mg en 250 mL SSN = 4 mcg/mL · O 2 mg en 250 mL = 8 mcg/mL · VÍA CENTRAL · UCI',
+   ia:'Segundos',
+   ci:'Sin UCI ni monitoreo invasivo · Taquiarritmias severas',
+   ea:'Taquicardia severa · Arritmias ventriculares · Elevación del lactato (efecto metabólico directo — no confundir con empeoramiento) · Hiperglucemia',
+   nota:'La adrenalina puede elevar el lactato por efecto metabólico directo (estimulación beta-2: glucogenólisis) — no confundir con empeoramiento de la hipoperfusión. Si el lactato sube con adrenalina: evaluar clínicamente si hay mejoría hemodinámica. VÍA CENTRAL y UCI obligatorios.'},
+  {n:'Dobutamina IV', pri:false, clase:'Inotrópico beta-1 · Si bajo gasto cardíaco concomitante',
+   ind:'Choque séptico + depresión miocárdica séptica · Bajo gasto a pesar de PAM ≥ 65 con vasopresores · GC bajo documentado',
+   ini:'2-5 mcg/kg/min IV', esc:'Aumentar 2.5 mcg/kg/min cada 15 min · Máximo 20 mcg/kg/min',
+   meta:'Índice cardíaco mayor de 2.2 L/min/m² · Mejoría de la perfusión tisular · Lactato en descenso',
+   dil:'250 mg en 250 mL SSN = 1 mg/mL · Bomba de jeringa · VÍA CENTRAL preferida',
+   ia:'1-2 min · Duración 5-10 min al suspender',
+   ci:'Taquicardia mayor de 130 · Obstrucción del tracto de salida · MCHO · Hipovolemia no corregida',
+   ea:'Taquicardia · Arritmias · Hipotensión a dosis bajas (efecto vasodilatador) · Taquifilaxia en 72h',
+   nota:'SSC 2021: usar dobutamina SOLO si hay evidencia de hipoperfusión (lactato alto) a pesar de PAM ≥ 65 con vasopresores. No usar rutinariamente para "normalizar" el GC. Depresión miocárdica séptica es reversible — el corazón generalmente se recupera cuando se controla la infección.'},
+  {n:'Hidrocortisona IV', pri:false, clase:'Corticoide · Para choque refractario a vasopresores · No es vasopresor',
+   ind:'NE mayor de 0.25 mcg/kg/min para mantener PAM ≥ 65 mmHg · Choque séptico refractario · APROCCHSS trial',
+   ini:'200 mg/día IV en infusión continua', esc:'Mantener hasta retirada de vasopresores · Luego reducir gradualmente en 3-7 días',
+   meta:'Reducir tiempo en vasopresores · Menor mortalidad a 90 días',
+   dil:'200 mg en 50 mL SSN = 4 mg/mL · Infusión continua a 2 mL/h (= 200 mg/día) · O bolos 50 mg IV c/6h',
+   ia:'30-60 min para efecto vasopresor · Efecto anti-inflamatorio en horas',
+   ci:'Sin choque séptico (sepsis sin hipotensión) · Inmunosupresión severa preexistente (precaución)',
+   ea:'Hiperglucemia (monitorear c/6h) · Hipernatremia · Psicosis · Debilidad muscular prolongada · Supresión adrenal',
+   nota:'APROCCHSS (2018): hidrocortisona + fludrocortisona redujo mortalidad a 90 días en choque séptico refractario. Preferir infusión continua sobre bolos — menores picos de glucemia. Fludrocortisona 50 mcg VO c/24h puede agregarse (protocolo APROCCHSS). Monitorear glucosa cada 6h — meta 140-180 mg/dL.'},
+  {n:'Milrinona IV', pri:false, clase:'Inhibidor de PDE3 · Inodilatador · Para depresión miocárdica séptica con HAP',
+   ind:'Depresión miocárdica séptica + resistencias vasculares pulmonares elevadas · IC derecha en choque séptico · Alternativa si dobutamina mal tolerada por taquicardia',
+   ini:'Bolo opcional 25-50 mcg/kg en 10 min + infusión 0.375-0.5 mcg/kg/min IV', esc:'Titular por respuesta · Máximo 0.75 mcg/kg/min · Reducir en IR',
+   meta:'IC mayor de 2.2 L/min/m² · Reducción de RVP · PAM ≥ 65 (combinar con norepinefrina si hipotensión)',
+   dil:'20 mg en 80 mL SSN = 200 mcg/mL · Bomba de jeringa · VÍA CENTRAL preferida · UCI',
+   ia:'5-15 min · Duración 4-6h al suspender',
+   ci:'Hipotensión sistémica severa sin norepinefrina · IR severa sin ajuste · Estenosis aórtica severa',
+   ea:'Hipotensión (más que dobutamina por vasodilatación sistémica) · Taquicardia · Arritmias · Trombocitopenia con uso prolongado',
+   nota:'Ventaja sobre dobutamina: reduce también las RVP — útil cuando hay IC derecha o HAP en el contexto de choque séptico. Desventaja: más hipotensión que dobutamina — combinar con norepinefrina. Ajustar dosis en IR (acumulación). Monitorear plaquetas si uso prolongado.'}
+];
+
+function renderSepVaso() {
+  var out = document.getElementById('sep-vaso-out');
+  if (!out) return;
+  var h = '';
+  SEP_VASO.forEach(function(f, i) {
+    var vid = 'sep-vaso-' + i;
+    var fColor = f.pri ? '#7b1c1c' : '#374151';
+    h += '<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+    h += '<div onclick="sepToggle(\'' + vid + '\')" style="background:' + fColor + ';color:#fff;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;">';
+    h += '<span id="' + vid + '-arr" style="font-size:16px;transition:transform 0.2s;">⌄</span>';
+    h += '<div><div style="font-size:13px;font-weight:700;">' + (f.pri ? '⭐ ' : '') + f.n + '</div>';
+    h += '<div style="font-size:11px;opacity:0.8;">' + f.clase + '</div></div></div>';
+    h += '<div id="' + vid + '" style="display:none;">';
+    h += '<div style="padding:8px 12px;background:#fef9f0;border-bottom:1px solid #f3f4f6;font-size:12px;"><strong>Indicación:</strong> ' + f.ind + '</div>';
+    var rows = [
+      ['Dosis inicio', f.ini, '#374151'],
+      ['Escalada', f.esc, '#374151'],
+      ['Meta', f.meta, '#c0392b'],
+      ['Dilución', f.dil, '#0c3b6e'],
+      ['Inicio acción', f.ia, '#374151'],
+      ['CI', f.ci, '#c0392b'],
+      ['Efectos adversos', f.ea, '#374151']
+    ];
+    h += '<div style="padding:10px 12px;border-bottom:1px solid #f3f4f6;">';
+    rows.forEach(function(r) {
+      h += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;">';
+      h += '<span style="color:#6b7280;min-width:110px;flex-shrink:0;">' + r[0] + '</span>';
+      h += '<span style="font-weight:600;color:' + r[2] + ';text-align:right;max-width:60%;">' + r[1] + '</span>';
+      h += '</div>';
+    });
+    h += '</div>';
+    h += '<div style="padding:8px 12px;background:#f0f9ff;font-size:11px;color:#374151;line-height:1.6;">' + f.nota + '</div>';
+    h += '</div></div>';
+  });
+  out.innerHTML = h;
+}
+
+// ========== FÁRMACOS CON BUSCADOR ==========
+var SEP_FARM_FAMILIAS = [
+  {
+    nombre:'Antibióticos — Betalactámicos de amplio espectro', color:'#0a5c45', estrella:true,
+    cuando:'Primera línea en sepsis grave · Ajustar a las 48-72h según cultivos',
+    farmacos:[
+      {n:'Piperacilina-Tazobactam',iv:'c/6h IV · Infusión extendida 4h si resistente',ini:'4.5g IV c/6h (bolo 30 min)',meta:'4.5g IV c/6h · Infusión extendida: 4.5g en 4h c/6h para mayor eficacia farmacodinámica',ci:'Alergia a penicilina · Ajustar en TFG menor de 20',ea:'Hipersensibilidad · Colitis por C. difficile · Neurotoxicidad a dosis altas · Hipokalemia',mx:'Frasco 4.5g',nota:'Infusión extendida de 4h (en lugar de 30 min) aumenta el tiempo de concentración sobre la CMI — mejora la eficacia farmacodinámica especialmente para Pseudomonas con CMI mayor de 16.'},
+      {n:'Meropenem',iv:'c/8h IV · Infusión extendida 3h para MDR',ini:'1g IV c/8h (bolo 30 min)',meta:'2g IV c/8h para infecciones graves o MDR · Meningitis: 2g IV c/8h',ci:'Alergia a carbapenémicos · Precaución en epilepsia (reducción del umbral)',ea:'Hipersensibilidad cruzada con penicilinas 1-2% · Convulsiones · Colitis por C. difficile',mx:'Frasco 500 mg / 1g',nota:'Carbapenémico de elección para gérmenes BLEE o MDR. Infusión extendida de 3h mejora la eficacia para Pseudomonas con CMI mayor de 2. Para SNC: 2g IV c/8h (buena penetración). Evitar imipenem en SNC (más convulsivante).'},
+      {n:'Ceftriaxona',iv:'c/12-24h IV · c/12h en meningitis',ini:'2g IV c/24h',meta:'2g IV c/12h en meningitis · c/24h en sepsis urinaria o pulmonar',ci:'Alergia a cefalosporinas · Neonatos hiperbilirrubinémicos (precipitación de calcio)',ea:'Hipersensibilidad · Barro biliar (uso prolongado) · Colitis por C. difficile (raro)',mx:'Frasco 1g / 2g',nota:'Cefalosporina de tercera generación. Vida media larga — c/24h es suficiente para la mayoría de indicaciones (excepto meningitis: c/12h). No cubre Pseudomonas ni Enterococcus.'},
+      {n:'Cefepima',iv:'c/8h IV',ini:'2g IV c/8h',meta:'2g IV c/8h · c/6h para infecciones graves por Pseudomonas',ci:'Alergia a cefalosporinas · Ajustar en insuficiencia renal',ea:'Encefalopatía (especialmente en IR — ajustar dosis) · Hipersensibilidad · Colitis por C. difficile',mx:'Frasco 1g / 2g',nota:'Cefalosporina de cuarta generación — cubre Pseudomonas. Encefalopatía en IR: ajustar siempre la dosis según TFG. Alternativa a piperacilina-tazobactam para neutropenia febril.'},
+      {n:'Ampicilina-Sulbactam',iv:'c/6h IV',ini:'3g IV c/6h',meta:'3g IV c/6h · Acinetobacter: 12g/día por componente sulbactam',ci:'Alergia a penicilina · No cubre Pseudomonas',ea:'Hipersensibilidad · Diarrea · Colitis por C. difficile',mx:'Frasco 3g (2g ampicilina + 1g sulbactam)',nota:'Útil en Acinetobacter baumannii (el sulbactam tiene actividad intrínseca). No cubre Pseudomonas. Para infecciones abdominales y colangitis.'}
+    ]
+  },
+  {
+    nombre:'Antibióticos — Glucopéptidos y anti-SARM', color:'#7b1c1c', estrella:true,
+    cuando:'Cubrir SARM · Bacteriemia nosocomial · Gram positivos resistentes',
+    farmacos:[
+      {n:'Vancomicina',iv:'c/8-12h IV · Monitorear AUC/MIC',ini:'25-30 mg/kg IV dosis de carga → 15-20 mg/kg c/8-12h mantenimiento',meta:'AUC/MIC 400-600 mg·h/L · Valle 15-20 mcg/mL para SARM · 10-15 mcg/mL para otros',ci:'Alergia a vancomicina · Precaución en IR severa',ea:'Síndrome de hombre rojo (infusión rápida) · Nefrotoxicidad (especialmente con aminoglucósidos) · Ototoxicidad',mx:'Frasco 500 mg / 1g',nota:'Infundir siempre lento (al menos 60 min por cada 1g) para evitar el síndrome del hombre rojo. Monitorear función renal diariamente. AUC/MIC guiada es superior al monitoreo de niveles valle para predecir eficacia y toxicidad.'},
+      {n:'Daptomicina',iv:'c/24h IV',ini:'6 mg/kg IV c/24h · Bacteriemia grave o endocarditis: 8-10 mg/kg c/24h',meta:'6-10 mg/kg c/24h según indicación',ci:'Neumonía (inactivada por surfactante) · Rabdomiolisis',ea:'Miopatía/Rabdomiolisis (monitorear CK semanal) · Neuropatía periférica',mx:'Frasco 500 mg',nota:'NO usar en neumonía — el surfactante pulmonar inactiva la daptomicina. Alternativa a vancomicina cuando CMI mayor de 1 para SARM. Monitorear CK cada semana — suspender si CK mayor de 5× el límite superior.'}
+    ]
+  },
+  {
+    nombre:'Antibióticos — Aminoglucósidos', color:'#374151', estrella:false,
+    cuando:'Sinergismo en bacteriemia grave · Gram negativos resistentes · Dosis única diaria',
+    farmacos:[
+      {n:'Amikacina',iv:'c/24h IV · Dosis única diaria',ini:'15-20 mg/kg IV c/24h',meta:'Pico 56-64 mcg/mL (dosis de 15 mg/kg) · Valle menor de 5 mcg/mL',ci:'Miastenia gravis · Embarazo · IR severa (ajustar por TFG)',ea:'Nefrotoxicidad · Ototoxicidad (coclear y vestibular) · Bloqueo neuromuscular',mx:'Ampolleta 500 mg/2 mL',nota:'Dosis única diaria (en lugar de c/8h) tiene igual eficacia y menor nefrotoxicidad — preferida. Monitorear niveles: valle menor de 5 mcg/mL antes de la siguiente dosis. Ajustar intervalo en insuficiencia renal. Mínimo tiempo posible de uso.'},
+      {n:'Gentamicina',iv:'c/24h IV · Dosis única diaria',ini:'5-7 mg/kg IV c/24h',meta:'Pico 16-24 mcg/mL · Valle menor de 1 mcg/mL',ci:'IR severa · Embarazo · Miastenia gravis',ea:'Nefrotoxicidad · Ototoxicidad · Bloqueo neuromuscular',mx:'Ampolleta 80 mg/2 mL',nota:'Similar a amikacina pero mayor resistencia en gram negativos. Dosis única diaria preferida. Monitorear niveles y función renal.'}
+    ]
+  },
+  {
+    nombre:'Antibióticos — Macrólidos y quinolonas', color:'#374151', estrella:false,
+    cuando:'Cobertura de gérmenes atípicos en NAC · Desescalamiento a VO',
+    farmacos:[
+      {n:'Azitromicina',iv:'c/24h IV u oral',ini:'500 mg IV c/24h · O 500 mg VO c/24h',meta:'500 mg c/24h × 3-5 días IV · Luego VO si tolera',ci:'Prolongación del QT · Hepatopatía grave · Miastenia gravis',ea:'QT prolongado · Diarrea · Hepatotoxicidad · Sordera (dosis altas)',mx:'Frasco 500 mg IV · Tab 500 mg',nota:'Para cobertura de atípicos en NAC (Legionella, Mycoplasma, Chlamydophila). Siempre combinar con betalactámico en NAC grave — no como monoterapia. IV en pacientes que no toleran oral.'},
+      {n:'Levofloxacino',iv:'c/24h IV u oral',ini:'750 mg IV c/24h · O 750 mg VO c/24h',meta:'750 mg c/24h × 5-7 días',ci:'Prolongación del QT · Epilepsia · Miastenia gravis · Tendencia a tendinopatía · Embarazo',ea:'QT prolongado · Tendinitis/ruptura tendinosa · Hepatotoxicidad · Convulsiones · Hipoglucemia',mx:'Frasco 750 mg IV · Tab 500/750 mg',nota:'Alta biodisponibilidad oral (99%) — pasar a VO en cuanto el paciente tolere. Excelente para VO en desescalamiento. QT: revisar otros medicamentos que prolongan el QT antes de usar.'},
+      {n:'Ciprofloxacino',iv:'c/8-12h IV',ini:'400 mg IV c/8-12h',meta:'400 mg IV c/12h (infección moderada) · c/8h (Pseudomonas o grave)',ci:'Prolongación del QT · Embarazo · Miastenia gravis',ea:'QT prolongado · Tendinitis · Convulsiones · C. difficile',mx:'Frasco 400 mg IV · Tab 250/500/750 mg',nota:'El quinolona con mayor actividad anti-Pseudomonas. Para ITU complicada y bacteriemia urinaria sensible. Resistencia creciente en E. coli — verificar sensibilidad local antes de usar empíricamente.'}
+    ]
+  },
+  {
+    nombre:'Antifúngicos — Candidiasis invasiva', color:'#374151', estrella:false,
+    cuando:'Candidemia · Candidosis intraabdominal · Neutropenia febril sin respuesta · Factores de riesgo de Candida',
+    farmacos:[
+      {n:'Micafungina',iv:'c/24h IV',ini:'100 mg IV c/24h',meta:'100 mg c/24h · 150 mg c/24h si mayor de 80 kg',ci:'Alergia a equinocandinas',ea:'Hepatotoxicidad (monitorear PFH) · Flebitis · Náusea',mx:'Frasco 50 mg / 100 mg',nota:'Equinocandina — primera línea en candidiasis invasiva por SSC 2021. Superior a fluconazol en candidemia (MICAFUNGIN trial). No requiere ajuste en IR. Cambiar a fluconazol VO cuando estable y si sensible.'},
+      {n:'Caspofungina',iv:'c/24h IV',ini:'70 mg IV carga → 50 mg IV c/24h mantenimiento',meta:'70 mg dosis única de carga → 50 mg c/24h',ci:'Alergia a equinocandinas · Hepatopatía grave (reducir a 35 mg)',ea:'Hepatotoxicidad · Flebitis · Fiebre',mx:'Frasco 50 mg / 70 mg',nota:'Equinocandina alternativa a micafungina. Dosis de carga de 70 mg el primer día — importante para alcanzar niveles terapéuticos rápidamente. Ajustar en hepatopatía moderada.'},
+      {n:'Fluconazol',iv:'c/24h IV u oral',ini:'800 mg IV dosis de carga → 400 mg IV c/24h mantenimiento',meta:'800 mg carga → 400 mg c/24h',ci:'Interacciones con anticoagulantes · QT prolongado · Candida krusei o glabrata (resistente)',ea:'Hepatotoxicidad · QT prolongado · Interacciones farmacológicas múltiples · Náusea',mx:'Frasco 400 mg IV · Cáps 150/200 mg',nota:'No usar empíricamente si uso previo de azoles en los últimos 3 meses (riesgo de resistencia). Excelente para desescalamiento oral desde equinocandina. Candida krusei es resistente intrínsecamente. Candida glabrata: frecuentemente resistente — preferir equinocandina.'}
+    ]
+  },
+  {
+    nombre:'Vasopresores — Ver sección específica en Tx Hospitalario', color:'#7b1c1c', estrella:true,
+    cuando:'Choque séptico con PAM menor de 65 a pesar de fluidos · Orden: Norepinefrina → Vasopresina → Adrenalina',
+    farmacos:[
+      {n:'Norepinefrina',iv:'Infusión continua IV · VÍA CENTRAL OBLIGATORIA',ini:'0.01-0.05 mcg/kg/min',meta:'PAM ≥ 65 mmHg',ci:'Hipovolemia no corregida · Necrosis por extravasación',ea:'Vasoconstricción periférica · Isquemia de MMII · Bradicardia refleja',mx:'Ampolleta 4 mg/4 mL · O 8 mg/4 mL',nota:'Primera línea absoluta. Dilución: 4-8 mg en 250 mL SSN. SOAP II: menor mortalidad y arritmias que dopamina.'},
+      {n:'Vasopresina',iv:'Infusión continua IV · Dosis fija 0.03 U/min',ini:'0.03 U/min IV fija',meta:'Reducir dosis de norepinefrina · PAM ≥ 65',ci:'Isquemia coronaria activa · Hiponatremia',ea:'Isquemia mesentérica a dosis altas · Necrosis cutánea por extravasación',mx:'Ampolleta 20 U/mL',nota:'Dosis fija — no titular. Dilución: 20 U en 100 mL SSN = 0.2 U/mL a 9 mL/h.'},
+      {n:'Adrenalina',iv:'Infusión continua IV · Tercera línea',ini:'0.01-0.05 mcg/kg/min',meta:'PAM ≥ 65 cuando NE + vasopresina insuficientes',ci:'Taquiarritmias · Sin UCI',ea:'Taquicardia · Elevación de lactato metabólica · Hiperglucemia',mx:'Ampolleta 1 mg/mL',nota:'Eleva el lactato por efecto metabólico directo (glucogenólisis) — no confundir con empeoramiento de hipoperfusión.'}
+    ]
+  }
+];
+
+function filtrarSepFarm(q) {
+  var list = document.getElementById('sep-farm-list');
+  var cnt = document.getElementById('sep-farm-count');
+  if (!list) return;
+  var term = (q || '').toLowerCase().trim();
+  var h = '', total = 0;
+  SEP_FARM_FAMILIAS.forEach(function(fam, fi) {
+    var famH = '';
+    fam.farmacos.forEach(function(f, fki) {
+      if (!term || fam.nombre.toLowerCase().indexOf(term) !== -1 || (f.n + ' ' + f.mx + ' ' + f.nota).toLowerCase().indexOf(term) !== -1) {
+        var fkId = 'sfarm-' + fi + '-' + fki;
+        famH += '<div style="border-bottom:1px solid #f3f4f6;">';
+        famH += '<div onclick="sepToggle(\'' + fkId + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:#f9fafb;border-left:3px solid ' + fam.color + ';">';
+        famH += '<div><span style="font-size:13px;font-weight:700;color:' + fam.color + ';">' + f.n + '</span>';
+        famH += '<span style="font-size:11px;color:#6b7280;margin-left:8px;">' + f.iv.split(' ·')[0] + '</span></div>';
+        famH += '<span id="' + fkId + '-arr" style="font-size:11px;color:#6b7280;font-weight:600;">▶ ver</span></div>';
+        famH += '<div id="' + fkId + '" style="display:none;padding:10px 12px;background:#fff;">';
+        var rows = [
+          ['Dosis inicio', f.ini, '#374151'],
+          ['Meta', f.meta, '#c0392b'],
+          ['Intervalo/Vía', f.iv, '#0c3b6e'],
+          ['CI', f.ci, '#c0392b'],
+          ['Efectos adversos', f.ea, '#374151'],
+          ['Presentación MX', f.mx, '#374151']
+        ];
+        rows.forEach(function(r) {
+          famH += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f9fafb;font-size:12px;">';
+          famH += '<span style="color:#6b7280;min-width:100px;flex-shrink:0;">' + r[0] + '</span>';
+          famH += '<span style="font-weight:600;color:' + r[2] + ';text-align:right;max-width:65%;">' + r[1] + '</span></div>';
+        });
+        famH += '<div style="font-size:11px;color:#374151;background:#f0f9ff;border-radius:4px;padding:6px 8px;margin-top:6px;line-height:1.6;">' + f.nota + '</div>';
+        famH += '</div></div>';
+        total++;
+      }
+    });
+    if (famH) {
+      var famId = 'sfam-' + fi;
+      h += '<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+      h += '<div onclick="sepToggle(\'' + famId + '\')" style="background:' + fam.color + ';color:#fff;padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;">';
+      h += '<span id="' + famId + '-arr" style="font-size:16px;transition:transform 0.2s;">⌄</span>';
+      h += '<div><div style="font-size:13px;font-weight:700;">' + (fam.estrella ? '⭐ ' : '') + fam.nombre + '</div>';
+      h += '<div style="font-size:11px;opacity:0.8;">' + fam.cuando + '</div></div></div>';
+      h += '<div id="' + famId + '">' + famH + '</div></div>';
+    }
+  });
+  list.innerHTML = h || '<div style="text-align:center;padding:20px;color:#9ca3af;">Sin resultados</div>';
+  if (cnt) cnt.textContent = total + (total === 1 ? ' fármaco' : ' fármacos');
+}
+
+// ========== INDICACIONES ==========
+var SEP_IND = [
+  {n:'Norepinefrina IV', co:'#7b1c1c', familia:'Vasopresores',
+   dosis:['0.05-0.1 mcg/kg/min (inicio)','0.1-0.5 mcg/kg/min (titulación)','0.5-1 mcg/kg/min (choque refractario)'],
+   dil:['4 mg en 250 mL SSN = 16 mcg/mL · VÍA CENTRAL OBLIGATORIA · Bomba de jeringa',
+        '8 mg en 250 mL SSN = 32 mcg/mL · VÍA CENTRAL · Monitoreo arterial invasivo',
+        '16 mg en 250 mL SSN = 64 mcg/mL · VÍA CENTRAL · UCI + línea arterial'],
+   enf:['Norepinefrina 0.05-0.1 mcg/kg/min IV en bomba de jeringa. VÍA CENTRAL OBLIGATORIA — necrosis grave por extravasación periférica. Monitorear PA continuo (preferir línea arterial). Meta PAM ≥ 65 mmHg.',
+        'Norepinefrina 0.1-0.5 mcg/kg/min. UCI. Línea arterial obligatoria. Vigilar isquemia de extremidades. K+ c/12h. PA continua.',
+        'Norepinefrina 0.5-1 mcg/kg/min. Choque refractario. UCI + monitoreo invasivo completo. Evaluar agregar vasopresina y/o adrenalina.'],
+   pac:['Le pondremos un medicamento por suero para mantener su presión arterial. Estará en monitoreo continuo.',
+        'Aumentaremos la dosis del medicamento para su presión.',
+        'Estamos usando dosis altas para mantener su presión — el equipo lo monitorea constantemente.'],
+   ae:'VÍA CENTRAL OBLIGATORIA. Vigilar isquemia de MMII. PA cada 15-30 min. Si necrosis en sitio de extravasación: detener inmediatamente.',
+   ap:'Está recibiendo un medicamento para mantener su presión. Es normal estar conectado a muchos monitores.',
+   nota:'SOAP II: norepinefrina tiene menor mortalidad y menos arritmias que dopamina en choque séptico. Retirar gradualmente reduciendo 25% cada 30-60 min cuando PAM estable ≥ 65 mmHg sin vasopresores por 2h consecutivas. VÍA CENTRAL OBLIGATORIA — la extravasación causa necrosis tisular grave.'},
+  {n:'Vasopresina IV', co:'#7b1c1c', familia:'Vasopresores',
+   dosis:['0.03 U/min IV (dosis fija siempre)'],
+   dil:['20 U en 100 mL SSN = 0.2 U/mL · Velocidad: 9 mL/h para 0.03 U/min · VÍA CENTRAL OBLIGATORIA'],
+   enf:['Vasopresina 0.03 U/min IV en bomba. VÍA CENTRAL OBLIGATORIA. Dosis FIJA — no aumentar. Monitorear PA continua, Na+ c/12h y signos de isquemia mesentérica (dolor abdominal, íleo).'],
+   pac:['Le pondremos un medicamento adicional por suero para ayudar a mantener su presión arterial.'],
+   ae:'Dosis fija 0.03 U/min — NUNCA aumentar. Vigilar isquemia mesentérica (dolor abdominal, íleo). Na+ c/12h. No para bradiacardia.',
+   ap:'Este medicamento ayuda a mantener su presión. Es un complemento del otro medicamento que ya está recibiendo.',
+   nota:'Dosis fija — no titular. Aumentar la dosis de vasopresina NO mejora la respuesta y aumenta el riesgo de isquemia coronaria y mesentérica. VÍA CENTRAL OBLIGATORIA. Dilución exacta: 20 U en 100 mL SSN a 9 mL/h = 0.03 U/min.'},
+  {n:'Piperacilina-Tazobactam IV', co:'#0a5c45', familia:'Antibióticos',
+   dosis:['4.5g IV c/6h (infusión estándar 30 min)','4.5g IV c/6h infusión extendida 4h (para MDR/CMI alta)'],
+   dil:['4.5g en 100 mL SSN · Infundir en 30 min','4.5g en 250 mL SSN · Infundir en 4h · Temperatura ambiente máximo 12h'],
+   enf:['Piperacilina-tazobactam 4.5g IV en 100 mL SSN en 30 min c/6h. Vigilar hipersensibilidad. Monitorear función renal y K+.',
+        'Piperacilina-tazobactam 4.5g IV en 250 mL SSN en infusión extendida de 4h c/6h. Preparar fresco cada 12h a temperatura ambiente. Esta modalidad mejora la eficacia para gérmenes con CMI mayor de 16.'],
+   pac:['Le pondremos un antibiótico potente por suero para combatir la infección. Se pondrá cada 6 horas.',
+        'Le pondremos el antibiótico en infusión lenta de 4 horas para que actúe mejor contra la bacteria.'],
+   ae:'Vigilar signos de hipersensibilidad. Monitorear función renal c/48h. Hipokalemia frecuente con uso prolongado. C. difficile si uso mayor de 7-10 días.',
+   ap:'Es importante completar todos los días del antibiótico aunque se sienta mejor.',
+   nota:'Infusión extendida de 4h: aumenta el tiempo en que la concentración supera la CMI del patógeno (farmacodinamia de betalactámicos = tiempo-dependiente). ESPECIALMENTE útil para Pseudomonas con CMI mayor de 16. La solución es estable 12h a temperatura ambiente y 24h en refrigeración.'},
+  {n:'Meropenem IV', co:'#0a5c45', familia:'Antibióticos',
+   dosis:['1g IV c/8h (infección estándar)','2g IV c/8h (infección grave, MDR o SNC)','2g IV c/8h infusión extendida 3h (MDR con CMI alta)'],
+   dil:['1g en 100 mL SSN · Infundir en 30 min','2g en 100 mL SSN · Infundir en 30 min',
+        '2g en 250 mL SSN · Infundir en 3h · Estable 4h a temperatura ambiente'],
+   enf:['Meropenem 1g IV en 100 mL SSN en 30 min c/8h. Monitorear función renal y vigilar signos de convulsión.',
+        'Meropenem 2g IV en 100 mL SSN en 30 min c/8h. Dosis alta — monitorear función renal c/24h. Ajustar si TFG cae.',
+        'Meropenem 2g IV en 250 mL SSN en infusión extendida de 3h c/8h. Preparar fresco cada 4h a temperatura ambiente. Para gérmenes MDR.'],
+   pac:['Le pondremos un antibiótico muy fuerte por suero para combatir la infección resistente. Se administra cada 8 horas.',
+        'Le pondremos el antibiótico en infusión lenta de 3 horas para maximizar su efecto contra la bacteria resistente.',
+        'Le pondremos el antibiótico más potente disponible. Es importante para tratar la infección.'],
+   ae:'Convulsiones (menor riesgo que imipenem). Monitorear función renal c/24h. Diarrea y colitis por C. difficile. Hipersensibilidad cruzada con penicilinas 1-2%.',
+   ap:'Este es un antibiótico muy fuerte. Es importante completar el tratamiento completo.',
+   nota:'Infusión extendida de 3h mejora la eficacia farmacodinámica para Pseudomonas y Acinetobacter con CMI mayor de 2. Estable solo 4h a temperatura ambiente — preparar fresco. Preferir meropenem sobre imipenem en SNC (menos convulsivante).'},
+  {n:'Vancomicina IV', co:'#7b1c1c', familia:'Antibióticos — Anti-SARM',
+   dosis:['25-30 mg/kg IV dosis de carga (hasta 3g)','15-20 mg/kg IV c/8-12h mantenimiento'],
+   dil:['Dosis de carga: diluir en SSN para concentración máx 5 mg/mL · Infundir 60 min mínimo por cada 1g',
+        'Mantenimiento: diluir en 250-500 mL SSN · Infundir 60-90 min por cada 1g · Mínimo 60 min/g'],
+   enf:['Vancomicina dosis de carga 25-30 mg/kg IV (máximo 3g). Infundir LENTO — mínimo 60 min por cada 1g. Si aparece eritema en cuello/cara/pecho (síndrome del hombre rojo): detener y avisar — no es alergia, reducir velocidad.',
+        'Vancomicina 15-20 mg/kg IV c/8-12h. Infundir mínimo 60-90 min. Niveles: tomar valle 30 min antes de la 4ª dosis. Meta valle 15-20 mcg/mL para SARM. Monitorear función renal c/24h.'],
+   pac:['Le pondremos un antibiótico por suero para combatir la bacteria resistente (SARM). Se administra despacio para evitar efectos secundarios.',
+        'Le pondremos el antibiótico cada 8-12 horas. Es importante que le hagan análisis de sangre para revisar los niveles del medicamento.'],
+   ae:'Síndrome del hombre rojo (no es alergia — es por infusión rápida): eritema cuello/pecho. Nefrotoxicidad. Ototoxicidad. Monitorear función renal c/24h y niveles.',
+   ap:'Si siente que su cara o cuello se pone rojo mientras le ponen el suero: avise de inmediato — podemos ajustar la velocidad.',
+   nota:'Síndrome del hombre rojo: NO es alergia mediada por IgE — es liberación de histamina por infusión rápida. Tratamiento: detener la infusión, antihistamínico IV, reiniciar más lento. Monitorear AUC/MIC (meta 400-600 mg·h/L) es superior al monitoreo de niveles valle.'},
+  {n:'Hidrocortisona IV', co:'#374151', familia:'Corticoides',
+   dosis:['200 mg/día en infusión continua (preferida)','50 mg IV c/6h en bolos (alternativa)'],
+   dil:['200 mg en 50 mL SSN = 4 mg/mL · Infusión continua a 2 mL/h durante 24h · Cambiar cada 24h',
+        '50 mg IV directo en bolo lento en 3-5 min · Cada 6 horas'],
+   enf:['Hidrocortisona 200 mg en infusión continua IV (2 mL/h durante 24h). Monitorear glucosa c/6h — meta 140-180 mg/dL. Monitorear sodio diariamente. Preparar nueva mezcla cada 24h.',
+        'Hidrocortisona 50 mg IV en bolo lento c/6h. Monitorear glucosa c/6h y sodio diario. Preferir infusión continua si posible — menos picos de glucemia.'],
+   pac:['Le pondremos un medicamento (cortisona) para ayudar a que su presión arterial responda mejor a los otros medicamentos.',
+        'Le pondremos la cortisona cada 6 horas para ayudar al cuerpo a combatir el choque.'],
+   ae:'Hiperglucemia — monitorear glucosa c/6h, meta 140-180 mg/dL. Hipernatremia. No suspender bruscamente. Iniciar reducción gradual cuando retire vasopresores.',
+   ap:'Este medicamento ayuda a que la presión responda a los vasopresores. Es temporal.',
+   nota:'APROCCHSS (2018): hidrocortisona + fludrocortisona redujo mortalidad a 90 días y acortó el tiempo en vasopresores. Preferir infusión continua sobre bolos para menor variabilidad de glucemia. Reducir gradualmente al retirar vasopresores (no suspender bruscamente). Fludrocortisona 50 mcg VO c/24h puede agregarse según protocolo.'},
+  {n:'Micafungina IV', co:'#374151', familia:'Antifúngicos',
+   dosis:['100 mg IV c/24h (estándar)','150 mg IV c/24h (mayor de 80 kg)'],
+   dil:['100 mg en 100 mL SSN o glucosada 5% · Infundir en 60 min · Proteger de la luz directa',
+        '150 mg en 100 mL SSN o glucosada 5% · Infundir en 60 min'],
+   enf:['Micafungina 100 mg IV en 100 mL SSN o glucosada 5% en 60 min c/24h. Monitorear función hepática (PFH) semanal. Vigilar flebitis en el sitio de infusión.',
+        'Micafungina 150 mg IV en 100 mL en 60 min c/24h. Para pacientes mayores de 80 kg.'],
+   pac:['Le pondremos un medicamento por suero para combatir una infección por hongos. Se administra una vez al día.',
+        'Le pondremos el antimicótico en el suero una vez al día.'],
+   ae:'Hepatotoxicidad (monitorear PFH semanal). Flebitis. Náusea. Cambiar a fluconazol VO cuando estable y Candida sea sensible.',
+   ap:'Este medicamento es para tratar una infección por hongos. Es importante completar el tratamiento.',
+   nota:'Equinocandina de primera línea para candidiasis invasiva (SSC 2021). No requiere ajuste en insuficiencia renal. Desescalar a fluconazol VO cuando: paciente estable, tolera VO, cultivo sensible a fluconazol y sin especie resistente (C. krusei, C. glabrata resistente). Meta total: 14 días desde primer hemocultivo negativo.'},
+  {n:'Adrenalina IV', co:'#7b1c1c', familia:'Vasopresores',
+   dosis:['0.01-0.05 mcg/kg/min (inicio)','0.05-0.3 mcg/kg/min (titulación)'],
+   dil:['1 mg en 250 mL SSN = 4 mcg/mL · VÍA CENTRAL OBLIGATORIA · Bomba de jeringa · UCI',
+        '2 mg en 250 mL SSN = 8 mcg/mL · VÍA CENTRAL · Monitoreo invasivo continuo'],
+   enf:['Adrenalina 0.01-0.05 mcg/kg/min IV en bomba. VÍA CENTRAL OBLIGATORIA. Monitoreo continuo de PA (línea arterial) y FC. Vigilar arritmias. Si lactato sube: puede ser efecto metabólico directo, no necesariamente empeoramiento.',
+        'Adrenalina 0.05-0.3 mcg/kg/min. UCI + monitoreo invasivo completo. K+ y glucosa c/6h. Vigilar taquicardia y arritmias ventriculares.'],
+   pac:['Le pondremos un medicamento muy fuerte por suero para mantener su presión arterial. Estará en monitoreo constante en UCI.',
+        'Estamos usando la dosis más alta del medicamento para su presión. El equipo lo monitorea continuamente.'],
+   ae:'VÍA CENTRAL OBLIGATORIA. Arritmias frecuentes. El lactato puede subir por efecto metabólico — no confundir con empeoramiento. Glucosa cada 6h.',
+   ap:'Este medicamento es muy potente. Estará rodeado de monitores — es para mantenerlo seguro.',
+   nota:'Tercera línea después de norepinefrina + vasopresina. La elevación del lactato con adrenalina es por glucogenólisis (efecto beta-2 metabólico) — NO confundir con empeoramiento de la hipoperfusión. Evaluar clínicamente si hay mejoría hemodinámica antes de escalar. VÍA CENTRAL y UCI obligatorios.'},
+  {n:'Dobutamina IV', co:'#7b1c1c', familia:'Vasopresores',
+   dosis:['2-5 mcg/kg/min (inicio)','5-20 mcg/kg/min (titulación)'],
+   dil:['250 mg en 250 mL SSN = 1 mg/mL · Bomba de jeringa · VÍA CENTRAL preferida',
+        '500 mg en 250 mL SSN = 2 mg/mL · VÍA CENTRAL · UCI · Monitoreo continuo'],
+   enf:['Dobutamina 2-5 mcg/kg/min IV en bomba de jeringa. Monitorear PA y FC continuo. Meta IC mayor de 2.2 L/min/m². Si FC mayor de 130: reducir dosis.',
+        'Dobutamina 5-20 mcg/kg/min. UCI. Vigilar taquicardia y arritmias. Si FC mayor de 130: reducir dosis. Taquifilaxia posible en 72h.'],
+   pac:['Le pondremos un medicamento por suero para ayudar a que el corazón bombee mejor.',
+        'Aumentaremos la dosis del medicamento para el corazón. El equipo lo monitorea constantemente.'],
+   ae:'Taquicardia. Arritmias ventriculares. Hipotensión a dosis bajas por vasodilatación. Taquifilaxia en 72h. Solo uso temporal.',
+   ap:'Este medicamento ayuda al corazón a bombear con más fuerza. Es temporal.',
+   nota:'SSC 2021: usar SOLO si hay evidencia de hipoperfusión tisular (lactato alto) a pesar de PAM ≥ 65 con vasopresores. No usar rutinariamente para normalizar el GC. Depresión miocárdica séptica es reversible cuando se controla la infección. Taquifilaxia en 48-72h de uso continuo.'},
+  {n:'Ceftriaxona IV', co:'#0a5c45', familia:'Antibióticos',
+   dosis:['2g IV c/24h (sepsis urinaria o pulmonar)','2g IV c/12h (meningitis)'],
+   dil:['2g en 100 mL SSN · Infundir en 30 min · Estable 24h en refrigeración',
+        '2g en 100 mL SSN · Infundir en 30 min c/12h · No mezclar con calcio IV'],
+   enf:['Ceftriaxona 2g IV en 100 mL SSN en 30 min c/24h. No mezclar con calcio IV (precipitación). Vigilar hipersensibilidad. Monitorear función renal.',
+        'Ceftriaxona 2g IV en 100 mL SSN en 30 min c/12h. Para meningitis. NO mezclar con calcio IV en el mismo equipo. Vigilar hipersensibilidad.'],
+   pac:['Le pondremos un antibiótico por suero una vez al día para combatir la infección.',
+        'Le pondremos el antibiótico dos veces al día porque la infección es en el cerebro.'],
+   ae:'NO mezclar con calcio IV (precipitación de calcio-ceftriaxona). Hipersensibilidad. Barro biliar con uso prolongado. Diarrea/C. difficile raro.',
+   ap:'El antibiótico se pondrá una vez al día. Es importante completar todos los días del tratamiento.',
+   nota:'Cefalosporina de 3ª generación. Vida media larga — c/24h suficiente excepto meningitis (c/12h por mayor CMI objetivo). NO mezclar con calcio en la misma línea IV — precipitación visible. No cubre Pseudomonas ni Enterococcus. Desescalar desde esquemas más amplios cuando el cultivo permite.'},
+  {n:'Cefepima IV', co:'#0a5c45', familia:'Antibióticos',
+   dosis:['2g IV c/8h (estándar)','2g IV c/6h (Pseudomonas grave o neutropenia)'],
+   dil:['2g en 100 mL SSN · Infundir en 30 min · Estable 24h refrigerada',
+        '2g en 100 mL SSN · Infundir en 30 min c/6h · Ajustar en insuficiencia renal'],
+   enf:['Cefepima 2g IV en 100 mL SSN en 30 min c/8h. Monitorear función renal c/48h. Vigilar signos de encefalopatía especialmente en IR.',
+        'Cefepima 2g IV c/6h. Ajustar dosis si TFG menor de 30. Monitorear estado neurológico — riesgo de encefalopatía en IR.'],
+   pac:['Le pondremos un antibiótico por suero cada 8 horas para combatir la infección.',
+        'Le pondremos el antibiótico cada 6 horas porque la bacteria requiere dosis más frecuentes.'],
+   ae:'Encefalopatía (especialmente en IR — ajustar siempre por TFG). Hipersensibilidad. C. difficile. Convulsiones.',
+   ap:'Avise si nota confusión o comportamiento extraño durante el tratamiento.',
+   nota:'Cefalosporina de 4ª generación — cubre Pseudomonas. ENCEFALOPATÍA: efecto adverso serio especialmente en IR — siempre ajustar dosis por TFG. Si aparece confusión, mioclonías o convulsiones: suspender y evaluar. Alternativa a piperacilina-tazobactam en neutropenia febril.'},
+  {n:'Ampicilina-Sulbactam IV', co:'#0a5c45', familia:'Antibióticos',
+   dosis:['3g IV c/6h (estándar)','12g/día IV de sulbactam (para Acinetobacter)'],
+   dil:['3g en 100 mL SSN · Infundir en 30 min · Estable 8h a temperatura ambiente',
+        '3g IV c/6h (dosis alta) · Preparar fresco cada 8h · Infundir en 30 min'],
+   enf:['Ampicilina-sulbactam 3g IV en 100 mL SSN en 30 min c/6h. Vigilar hipersensibilidad (alergias a penicilina). Monitorear función renal y hepática.',
+        'Ampicilina-sulbactam 3g IV c/6h (dosis alta para Acinetobacter — el sulbactam tiene actividad intrínseca). Preparar fresco. Monitorear función renal.'],
+   pac:['Le pondremos un antibiótico por suero cada 6 horas para combatir la infección.',
+        'Le pondremos el antibiótico cada 6 horas. Es importante avisar si tiene alergia a la penicilina.'],
+   ae:'Hipersensibilidad (alergia a penicilina — preguntar siempre). Diarrea. C. difficile. No cubre Pseudomonas.',
+   ap:'Avise inmediatamente si nota urticaria, dificultad para respirar o hinchazón — puede ser alergia al antibiótico.',
+   nota:'El sulbactam tiene actividad intrínseca contra Acinetobacter baumannii — a diferencia de la ampicilina. Para Acinetobacter MDR: ampicilina-sulbactam a dosis alta (12g/día de sulbactam = 18g/día de ampicilina-sulbactam). No cubre Pseudomonas.'},
+  {n:'Daptomicina IV', co:'#7b1c1c', familia:'Antibióticos — Anti-SARM',
+   dosis:['6 mg/kg IV c/24h (bacteriemia simple)','8-10 mg/kg IV c/24h (bacteriemia grave o endocarditis)'],
+   dil:['Dosis en mg/kg en 50 mL SSN · Infundir en 30 min · Estable 48h refrigerada',
+        'Dosis en mg/kg en 50 mL SSN · Infundir en 30 min · Para endocarditis o bacteriemia complicada'],
+   enf:['Daptomicina 6 mg/kg IV en 50 mL SSN en 30 min c/24h. CK semanal obligatorio — suspender si CK mayor de 5x el límite. Monitorear función muscular.',
+        'Daptomicina 8-10 mg/kg IV en 50 mL SSN en 30 min c/24h. Dosis alta para endocarditis. CK semanal. No usar en neumonía.'],
+   pac:['Le pondremos un antibiótico por suero una vez al día para combatir la bacteria resistente.',
+        'Le pondremos el antibiótico en dosis más alta porque la infección es más grave.'],
+   ae:'Miopatía/Rabdomiolisis — CK semanal obligatorio, suspender si CK mayor de 5x. NO usar en neumonía (inactivada por surfactante). Neuropatía periférica rara.',
+   ap:'Es importante que le hagan análisis de sangre semanalmente para revisar un enzima muscular (CK). Avise si siente dolor o debilidad muscular.',
+   nota:'NO usar en neumonía — el surfactante pulmonar inactiva la daptomicina (estudio PROVEN). Alternativa a vancomicina cuando CMI mayor de 1 mcg/mL para SARM. Monitorear CK cada semana — suspender si CK mayor de 5x el límite superior o síntomas de miopatía.'},
+  {n:'Amikacina IV', co:'#374151', familia:'Antibióticos — Aminoglucósidos',
+   dosis:['15-20 mg/kg IV c/24h (dosis única diaria)'],
+   dil:['500-1500 mg en 200 mL SSN · Infundir en 60 min · VÍA PERIFÉRICA aceptable'],
+   enf:['Amikacina 15-20 mg/kg IV en 200 mL SSN en 60 min c/24h (dosis única diaria). Niveles: pico 30 min post-infusión (meta 56-64 mcg/mL) · Valle antes de siguiente dosis (meta menor de 5 mcg/mL). Monitorear función renal c/48h.'],
+   pac:['Le pondremos un antibiótico adicional por suero una vez al día para reforzar el tratamiento.'],
+   ae:'Nefrotoxicidad — Cr y BUN c/48h. Ototoxicidad (coclear y vestibular) — preguntar por acúfenos/vértigo. Valle mayor de 5: riesgo de toxicidad acumulada.',
+   ap:'Avise si nota zumbido en los oídos, mareo o dificultad para escuchar — son signos de que el medicamento puede estar afectando los oídos.',
+   nota:'Dosis única diaria (en lugar de c/8h) tiene igual eficacia y MENOR nefrotoxicidad — es la modalidad correcta. Valle menor de 5 mcg/mL antes de la siguiente dosis es crítico para evitar acumulación. Usar el mínimo tiempo posible (5-7 días de sinergismo). Ajustar intervalo en IR.'},
+  {n:'Azitromicina IV', co:'#374151', familia:'Antibióticos — Macrólidos',
+   dosis:['500 mg IV c/24h (NAC grave con atípicos)'],
+   dil:['500 mg en 250 mL SSN o glucosada 5% · Infundir en 60 min mínimo · NO en bolo · Puede causar flebitis en periférica — preferir central'],
+   enf:['Azitromicina 500 mg IV en 250 mL SSN o glucosada 5% en 60 min c/24h. Infundir LENTO — mínimo 60 min. Vigilar QT (ECG antes de iniciar y a las 24h). Monitorear función hepática.'],
+   pac:['Le pondremos un antibiótico adicional por suero una vez al día para cubrir un tipo especial de bacteria que causa neumonía.'],
+   ae:'QT prolongado — ECG antes de iniciar. Hepatotoxicidad. Diarrea. Ototoxicidad a dosis altas. Interacciones: warfarina, anticoagulantes, otros QT.',
+   ap:'Es importante que le hagan un electrocardiograma antes de iniciar este antibiótico.',
+   nota:'Para cobertura de gérmenes atípicos en NAC grave (Legionella pneumophila, Mycoplasma pneumoniae, Chlamydophila pneumoniae). SIEMPRE combinar con betalactámico en NAC grave — no como monoterapia. La combinación betalactámico + macrólido tiene menor mortalidad que monoterapia con quinolona en NAC grave (estudios observacionales). Pasar a VO en cuanto tolere.'},
+  {n:'Levofloxacino IV/VO', co:'#374151', familia:'Antibióticos — Quinolonas',
+   dosis:['750 mg IV c/24h (infección grave)','750 mg VO c/24h (desescalamiento a oral)'],
+   dil:['750 mg en 150 mL SSN o glucosada 5% · Infundir en 60-90 min · Proteger de la luz',
+        'Tableta VO · Biodisponibilidad 99% — igual eficacia que IV · Pasar a VO en cuanto tolere'],
+   enf:['Levofloxacino 750 mg IV en 150 mL SSN en 60-90 min c/24h. QT prolongado — ECG antes. No mezclar con cationes (Mg, Al, Ca). Monitorear función renal.',
+        'Levofloxacino 750 mg VO c/24h. Biodisponibilidad oral del 99% — misma eficacia que IV. Tomar 2h antes o 2h después de antiácidos o hierro.'],
+   pac:['Le pondremos un antibiótico por suero una vez al día. Cuando pueda tomar pastillas, le daremos la misma dosis en pastilla con igual efecto.',
+        'Tome 1 tableta de 750 mg al día. No tome antiácidos ni vitaminas con hierro en las 2 horas antes o después.'],
+   ae:'QT prolongado (revisar otros medicamentos). Tendinitis/ruptura tendinosa (especialmente con corticoides — avisar si dolor en tendón de Aquiles). Convulsiones. Hipoglucemia en diabéticos.',
+   ap:'Avise inmediatamente si siente dolor en el talón o en otro tendón — es un efecto raro pero importante de este antibiótico.',
+   nota:'Alta biodisponibilidad oral (99%) — pasar a VO en cuanto el paciente tolere; misma eficacia. Revisar QT antes de iniciar. Riesgo de tendinopatía aumenta con corticoides, anciano y IR. Resistencia creciente en E. coli — verificar sensibilidad local. Excelente opción de desescalamiento VO.'},
+  {n:'Ciprofloxacino IV/VO', co:'#374151', familia:'Antibióticos — Quinolonas',
+   dosis:['400 mg IV c/12h (infección moderada)','400 mg IV c/8h (Pseudomonas)','500-750 mg VO c/12h (desescalamiento)'],
+   dil:['400 mg en 200 mL SSN · Infundir en 60 min · No mezclar con cationes',
+        '400 mg en 200 mL SSN · Infundir en 60 min c/8h para Pseudomonas',
+        'Tableta VO · Biodisponibilidad 70-80% · Tomar 2h antes o después de antiácidos'],
+   enf:['Ciprofloxacino 400 mg IV en 200 mL SSN en 60 min c/12h. QT prolongado — ECG previo. Monitorear función renal.',
+        'Ciprofloxacino 400 mg IV en 60 min c/8h (para Pseudomonas). Monitorear función renal y QT.',
+        'Ciprofloxacino 500-750 mg VO c/12h. Tomar 2h antes o después de antiácidos, hierro, calcio.'],
+   pac:['Le pondremos un antibiótico por suero cada 8-12 horas para combatir la infección.',
+        'Tome 1 tableta de ciprofloxacino cada 12 horas. No tome antiácidos ni leche en las 2 horas antes o después.'],
+   ae:'QT prolongado. Tendinitis/ruptura. Convulsiones. C. difficile. Resistencia alta en E. coli.',
+   ap:'Avise si siente dolor en el talón o tendones durante el tratamiento.',
+   nota:'El quinolona con mayor actividad anti-Pseudomonas — usar c/8h si Pseudomonas. Resistencia alta y creciente en E. coli en México — NO usar empíricamente en ITU sin verificar sensibilidad local. Biodisponibilidad oral 70-80% — pasar a VO en desescalamiento.'},
+  {n:'Caspofungina IV', co:'#374151', familia:'Antifúngicos',
+   dosis:['70 mg IV dosis de carga (día 1)','50 mg IV c/24h (mantenimiento)'],
+   dil:['70 mg en 250 mL SSN · Infundir en 60 min · Estable 24h refrigerada',
+        '50 mg en 250 mL SSN · Infundir en 60 min · Ajustar a 35 mg en hepatopatía moderada'],
+   enf:['Caspofungina 70 mg IV en 250 mL SSN en 60 min (dosis de carga día 1). Monitorear función hepática (PFH) semanal. Vigilar flebitis.',
+        'Caspofungina 50 mg IV en 250 mL SSN en 60 min c/24h (mantenimiento desde día 2). PFH semanal. En hepatopatía moderada: reducir a 35 mg.'],
+   pac:['Le pondremos un medicamento por suero para combatir la infección por hongos. Se pondrá una vez al día.',
+        'Le pondremos el antimicótico una vez al día. Es normal que el tratamiento dure 2 semanas o más.'],
+   ae:'Hepatotoxicidad — PFH semanal. Flebitis en vena periférica (preferir vía central). Fiebre. Náusea.',
+   ap:'Le harán análisis de sangre semanalmente para revisar el hígado mientras recibe este medicamento.',
+   nota:'Equinocandina alternativa a micafungina. IMPORTANTE: dosis de carga de 70 mg el día 1 — sin carga, los niveles terapéuticos tardan más en alcanzarse. Ajustar a 35 mg en hepatopatía moderada. Desescalar a fluconazol VO cuando: estable, cultivo sensible, sin C. krusei ni C. glabrata resistente.'},
+  {n:'Fluconazol IV/VO', co:'#374151', familia:'Antifúngicos',
+   dosis:['800 mg IV dosis de carga → 400 mg IV c/24h','400 mg VO c/24h (desescalamiento oral)'],
+   dil:['800 mg (ya viene en 400 mL de solución lista) · Infundir en 60 min · O 400 mg en 200 mL SSN',
+        'Tableta VO 200 mg × 2 = 400 mg c/24h · Biodisponibilidad oral mayor de 90%'],
+   enf:['Fluconazol 800 mg IV dosis de carga (infundir en 60 min) → 400 mg IV c/24h. No usar si uso de azoles en últimos 3 meses. Vigilar QT (ECG previo). PFH semanal.',
+        'Fluconazol 400 mg VO c/24h (desescalamiento desde equinocandina IV). Biodisponibilidad mayor de 90% — misma eficacia que IV.'],
+   pac:['Le pondremos un medicamento por suero para los hongos. Cuando pueda tomar pastillas, le daremos la misma dosis en pastilla.',
+        'Tome 2 tabletas de 200 mg al día para completar el tratamiento de los hongos. Es importante no suspenderlo antes de tiempo.'],
+   ae:'QT prolongado (ECG previo). Hepatotoxicidad. Múltiples interacciones farmacológicas (warfarina, estatinas, benzodiazepinas). NO para C. krusei ni C. glabrata resistente.',
+   ap:'Es importante completar todo el tratamiento aunque se sienta bien. Avise si tiene náusea o ictericia (color amarillo en la piel o los ojos).',
+   nota:'NO usar si uso previo de azoles en los últimos 3 meses (riesgo de resistencia). Desescalamiento desde equinocandina: cuando paciente estable, tolerando VO, cultivo sensible. C. krusei: resistente SIEMPRE. C. glabrata: frecuentemente resistente — usar equinocandina. Dosis de carga de 800 mg es importante para alcanzar niveles terapéuticos rápido.'}
+
+];
+
+function buildSepInd() {
+  var el = document.getElementById('sep-ind-list');
+  if (!el) return;
+  var grupos = {}, orden = [];
+  SEP_IND.forEach(function(f) {
+    if (!grupos[f.familia]) { grupos[f.familia] = []; orden.push(f.familia); }
+    grupos[f.familia].push(f);
+  });
+  var h = '';
+  orden.forEach(function(fam, gi) {
+    var color = fam === 'Vasopresores' ? '#7b1c1c' : fam === 'Antibióticos' || fam === 'Antibióticos — Anti-SARM' ? '#0a5c45' : '#374151';
+    var gid = 'sig-' + gi;
+    h += '<div style="border-radius:var(--rs);border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h += '<div onclick="sepToggle(\'' + gid + '\')" style="background:' + color + ';color:#fff;padding:9px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;">';
+    h += '<span id="' + gid + '-arr" style="font-size:16px;transition:transform 0.2s;">⌄</span>';
+    h += '<span style="font-size:13px;font-weight:700;">' + fam + '</span>';
+    h += '<span style="margin-left:auto;font-size:11px;opacity:0.7;">' + grupos[fam].length + ' fármaco' + (grupos[fam].length > 1 ? 's' : '') + '</span>';
+    h += '</div>';
+    h += '<div id="' + gid + '" style="display:none;background:#f9fafb;">';
+    grupos[fam].forEach(function(f, i) {
+      var uid = 'si-' + gi + '-' + i;
+      h += '<div style="border-top:1px solid #e2e8f0;">';
+      h += '<div onclick="sepToggle(\'' + uid + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px 10px 20px;cursor:pointer;background:#f9fafb;border-left:4px solid ' + color + ';">';
+      h += '<div><div style="font-size:13px;font-weight:700;color:' + color + ';">' + f.n + '</div><div style="font-size:11px;color:#6b7280;">' + f.familia + '</div></div>';
+      h += '<span id="' + uid + '-arr" style="font-size:11px;color:#6b7280;font-weight:600;">▶ ver</span></div>';
+      h += '<div id="' + uid + '" style="display:none;background:#fff;border-left:4px solid ' + color + ';">';
+      h += '<div style="padding:10px 14px;border-top:1px solid #f3f4f6;">';
+      h += '<select id="' + uid + '-sel" onchange="updateSepInd(\'' + uid + '\',' + gi + ',' + i + ')" style="width:100%;padding:7px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;font-weight:600;">';
+      f.dosis.forEach(function(d, j) { h += '<option value="' + j + '">' + d + '</option>'; });
+      h += '</select></div>';
+      h += '<div style="padding:8px 14px;border-top:1px solid #f3f4f6;background:#fff8e1;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#f57c00;margin-bottom:3px;">💊 Dilución / Vía</div>';
+      h += '<div id="' + uid + '-dil" style="font-size:12px;color:#374151;font-weight:600;">' + f.dil[0] + '</div></div>';
+      h += '<div style="padding:8px 14px;border-top:1px solid #f3f4f6;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">🏥 Enfermería</div>';
+      h += '<div id="' + uid + '-enf" style="font-size:13px;line-height:1.6;padding:7px 10px;background:#e6f1fb;border-radius:6px;">' + f.enf[0] + '</div>';
+      h += '<div style="font-size:11px;color:#6b7280;margin-top:5px;font-style:italic;">' + f.ae + '</div></div>';
+      h += '<div style="padding:8px 14px;border-top:1px solid #f3f4f6;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:4px;">👤 Paciente</div>';
+      h += '<div id="' + uid + '-pac" style="font-size:13px;line-height:1.6;padding:7px 10px;background:#e1f5ee;border-radius:6px;">' + f.pac[0] + '</div>';
+      h += '<div style="font-size:11px;color:#6b7280;margin-top:5px;font-style:italic;">' + f.ap + '</div></div>';
+      h += '<div style="padding:8px 14px;border-top:1px solid #f3f4f6;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">📋 Nota clínica</div>';
+      h += '<div style="font-size:12px;color:#374151;line-height:1.6;">' + f.nota + '</div></div>';
+      h += '</div></div>';
+    });
+    h += '</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+function updateSepInd(uid, gi, i) {
+  var idx = parseInt(document.getElementById(uid + '-sel').value);
+  var orden = [];
+  var grupos = {};
+  SEP_IND.forEach(function(f) {
+    if (!grupos[f.familia]) { grupos[f.familia] = []; orden.push(f.familia); }
+    grupos[f.familia].push(f);
+  });
+  var f = grupos[orden[gi]][i];
+  if (!f) return;
+  var d = document.getElementById(uid + '-dil');
+  var e = document.getElementById(uid + '-enf');
+  var p = document.getElementById(uid + '-pac');
+  if (d) d.textContent = f.dil[idx] !== undefined ? f.dil[idx] : f.dil[0];
+  if (e) e.textContent = f.enf[idx] !== undefined ? f.enf[idx] : f.enf[0];
+  if (p) p.textContent = f.pac[idx] !== undefined ? f.pac[idx] : f.pac[0];
+}
+
+// ========== ESCENARIOS ==========
+var SEP_ESCEN = {
+  criterios: function() {
+    return '<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Sepsis vs Choque séptico — Sepsis-3</span><span class="sg open">⌄</span></div><div class="sb"><div class="tw"><table class="t"><thead><tr><th>Criterio</th><th>Sepsis</th><th>Choque séptico</th></tr></thead><tbody><tr><td class="dn">Infección</td><td>Sí</td><td>Sí</td></tr><tr><td class="dn">Disfunción orgánica (SOFA ≥ 2)</td><td>Sí</td><td>Sí</td></tr><tr><td class="dn">Hipotensión que requiere vasopresores</td><td>No</td><td style="color:var(--r);font-weight:700;">Sí — para PAM ≥ 65</td></tr><tr><td class="dn">Lactato mayor de 2 a pesar de volumen</td><td>Puede ser</td><td style="color:var(--r);font-weight:700;">Sí — define choque</td></tr><tr><td class="dn">Mortalidad</td><td>5-20%</td><td style="color:var(--r);font-weight:700;">25-50%</td></tr></tbody></table></div><div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><div class="at">Choque séptico criptogénico</div>Lactato mayor de 4 mmol/L con PA normal = choque séptico criptogénico. Misma mortalidad que choque con hipotensión. Tratar con el mismo protocolo de choque séptico incluyendo vasopresores si el lactato no depura.</div></div></div></div>';
+  },
+  bundle: function() {
+    return '<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Checklist Hour-1 Bundle</span><span class="sg open">⌄</span></div><div class="sb"><div class="tw"><table class="t"><thead><tr><th>Acción</th><th>Meta tiempo</th><th>Verificación</th></tr></thead><tbody><tr><td class="dn" style="color:var(--r);">1. Medir lactato</td><td>Minuto 0</td><td>Lactato arterial o venoso · Repetir a las 2h</td></tr><tr><td class="dn" style="color:var(--r);">2. Hemocultivos × 2</td><td>Antes del ATB (máx 45 min)</td><td>2 sets de 2 sitios distintos · 4 frascos</td></tr><tr><td class="dn" style="color:var(--r);">3. Antibiótico amplio espectro</td><td>Primera hora — PRIORITARIO</td><td>Según foco · Ver Tx Hospitalario</td></tr><tr><td class="dn" style="color:var(--a);">4. Fluidos IV 30 mL/kg</td><td>Primera 1-3 horas</td><td>Ringer Lactato o SSN · Evaluar respuesta</td></tr><tr><td class="dn" style="color:var(--a);">5. Vasopresores si PAM menor de 65</td><td>Primera hora si hay hipotensión</td><td>Norepinefrina vía central · Meta PAM ≥ 65</td></tr></tbody></table></div></div></div>';
+  },
+  resistencia: function() {
+    return '<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Gérmenes resistentes — cobertura específica</span><span class="sg open">⌄</span></div><div class="sb"><div class="tw"><table class="t"><thead><tr><th>Germen</th><th>Resistencia</th><th>Antibiótico de elección</th></tr></thead><tbody><tr><td class="dn">E. coli / Klebsiella BLEE</td><td>Resistente a cefalosporinas</td><td>Meropenem 1g IV c/8h · No piperacilina-tazobactam</td></tr><tr><td class="dn">Pseudomonas MDR</td><td>Resistente a carbapenémicos</td><td>Ceftazidima-avibactam · O Imipenem-cilastatina-relebactam · Consultar infectología</td></tr><tr><td class="dn">Acinetobacter MDR</td><td>XDR / PDR</td><td>Ampicilina-sulbactam (sulbactam activo) · Colistina · Tigecicllina</td></tr><tr><td class="dn">SARM</td><td>Resistente a meticilina</td><td>Vancomicina · Daptomicina (si CMI mayor de 1 para vancomicina)</td></tr><tr><td class="dn">Enterococcus vancomicina-resistente (VRE)</td><td>Resistente a vancomicina</td><td>Daptomicina 6-8 mg/kg IV c/24h · O Linezolid 600 mg IV c/12h</td></tr><tr><td class="dn">Candida fluconazol-resistente</td><td>C. krusei, C. glabrata</td><td>Micafungina 100 mg IV c/24h · O caspofungina 70/50 mg IV c/24h</td></tr></tbody></table></div></div></div>';
+  },
+  deescalamiento: function() {
+    return '<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📉</span><span class="st">Desescalamiento antibiótico — a las 48-72h</span><span class="sg open">⌄</span></div><div class="sb"><div class="alert a-i"><span class="ai">💡</span><div><div class="at">Desescalar siempre que el cultivo lo permita — es una medida de calidad</div></div></div><div class="tw" style="margin-top:10px;"><table class="t"><thead><tr><th>Si el cultivo muestra...</th><th>Desescalar a...</th></tr></thead><tbody><tr><td class="dn">E. coli sensible a ceftriaxona</td><td>Ceftriaxona 2g IV c/24h · O ciprofloxacino VO si tolera</td></tr><tr><td class="dn">S. pneumoniae sensible a penicilina</td><td>Ampicilina 2g IV c/6h · O amoxicilina VO</td></tr><tr><td class="dn">S. aureus SASM</td><td>Cefazolina 2g IV c/8h · Dejar de vancomicina</td></tr><tr><td class="dn">Klebsiella sensible a cefalosporinas</td><td>Ceftriaxona 2g IV c/24h · Dejar el carbapenémico</td></tr><tr><td class="dn">Cultivo negativo + mejoría clínica</td><td>Considerar suspender ATB si PCT en descenso y diagnóstico alternativo posible</td></tr></tbody></table></div></div></div>';
+  },
+  inmunocomp: function() {
+    return '<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Sepsis en inmunocomprometido</span><span class="sg open">⌄</span></div><div class="sb"><div class="tw"><table class="t"><thead><tr><th>Tipo de inmunosupresión</th><th>Gérmenes adicionales a cubrir</th><th>Cobertura extra</th></tr></thead><tbody><tr><td class="dn">Neutropenia (PMN menor de 500)</td><td>Pseudomonas · Hongos (si más de 7 días)</td><td>Meropenem o piperacilina-tazobactam + antifúngico empírico si más de 72h sin respuesta</td></tr><tr><td class="dn">Trasplante de órgano sólido</td><td>CMV · Pneumocystis · Aspergillus · Nocardia</td><td>Cotrimoxazol (PCP) · Ganciclovir (CMV) · Voriconazol (Aspergillus)</td></tr><tr><td class="dn">VIH/SIDA CD4 menor de 200</td><td>PCP · Toxoplasma · Criptococo · CMV</td><td>TMP-SMX 15 mg/kg/día si PCP · Anfotericina B si criptococo</td></tr><tr><td class="dn">Corticoides crónicos</td><td>PCP · Aspergillus · Nocardia</td><td>Cotrimoxazol si PCP · Voriconazol si Aspergillus</td></tr></tbody></table></div></div></div>';
+  },
+  postbundle: function() {
+    return '<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Seguimiento post-alta de UCI por sepsis</span><span class="sg open">⌄</span></div><div class="sb"><div class="alert a-i"><span class="ai">💡</span><div><div class="at">Síndrome post-sepsis — afecta al 50% de los sobrevivientes</div>Deterioro cognitivo · Debilidad muscular adquirida en UCI · TEPT · Depresión · Fatiga crónica. Reconocer y tratar activamente.</div></div><div class="tw" style="margin-top:10px;"><table class="t"><thead><tr><th>Problema</th><th>Prevalencia</th><th>Manejo</th></tr></thead><tbody><tr><td class="dn">Debilidad muscular adquirida en UCI</td><td>50-60%</td><td>Fisioterapia intensiva desde UCI · Movilización temprana · Nutrición adecuada</td></tr><tr><td class="dn">Deterioro cognitivo</td><td>30-40%</td><td>Evaluación neuropsicológica · Rehabilitación cognitiva · Descartar delirio residual</td></tr><tr><td class="dn">TEPT / Depresión</td><td>25-30%</td><td>Tamizaje con PCL-5 al alta · Psicoterapia · ISRS si indicado</td></tr><tr><td class="dn">Insuficiencia renal residual</td><td>30%</td><td>Seguimiento con nefrología · Monitoreo de Cr y TFG</td></tr></tbody></table></div></div></div>';
+  }
+};
+
+function showSepEscen(id, btn) {
+  document.querySelectorAll('#tab-escen .pchip').forEach(function(c) { c.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  var out = document.getElementById('sep-escen-out');
+  if (out && SEP_ESCEN[id]) out.innerHTML = SEP_ESCEN[id]();
+}
+
+window.addEventListener('load', function() {
+  calcSOFAFull();
+  renderSepAlgoStep('start');
+  showSepFoco('pulmonar', document.querySelector('#sep-foco-chips .pchip.on'));
+  renderSepVaso();
+  filtrarSepFarm('');
+  buildSepInd();
+  showSepEscen('criterios', document.querySelector('#tab-escen .pchip.on'));
+})
+</script>
+</body>
+</html>
