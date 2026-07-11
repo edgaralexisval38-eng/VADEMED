@@ -606,7 +606,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
           <button class="qi" onclick="soon('Favoritos')"><span class="qi-ic" style="background:var(--bg-fav);color:var(--c-fav)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19l1-5.8L3.5 9.1l5.9-.9L12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><span class="qi-l">Favoritos</span></button>
         </div>
       </div>
-      <div class="sec"><div class="tip"><span class="tip-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0012 3z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="tip-tx"><div class="tip-t">Consejo del d&iacute;a</div><div class="tip-s">Verifica siempre las alergias antes de prescribir cualquier medicamento.</div></div></div></div>
+      <div class="sec"><div class="tip"><span class="tip-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.7 1 1.2 1 2.5h6c0-1.3.3-1.8 1-2.5A6 6 0 0012 3z" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="tip-tx"><div class="tip-t">Consejo del d&iacute;a</div><div class="tip-s" id="iniTip">Verifica siempre las alergias antes de prescribir cualquier medicamento.</div></div></div></div>
       <div class="sec">
         <div class="sec-h"><span class="sec-t">Reciente</span><button class="sec-a" onclick="goGroups()">Ver todo</button></div>
         <div id="iniRecents"></div>
@@ -30420,7 +30420,44 @@ $('drugSearch').addEventListener('input',function(){renderList(this.value);});
 $('hubSearch').addEventListener('input',function(){renderHubSearch(this.value);});
 
 function exitInicio(){var iv=$('inicioView'); if(iv) iv.style.display='none'; var ap=document.querySelector('.app'); if(ap) ap.classList.remove('mode-inicio'); var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';}
-function goInicio(){var iv=$('inicioView'); if(!iv) return; hideExtras(); var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); iv.style.display='block'; $('hubView').style.display='none'; $('homeView').style.display='none'; $('detailView').style.display='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; var iqs=$('iniSearch'); if(iqs) iqs.value=''; var irr=$('iniResults'); if(irr){irr.style.display='none';irr.innerHTML='';} var icc=document.querySelector('#inicioView .ini-cols'); if(icc) icc.style.display=''; renderRecents(); window.scrollTo({top:0});}
+var TIPS=[
+  'Hemoglobina normal: hombres 13-17, mujeres 12-16 g/dL.',
+  'Ajusta la dosis de muchos farmacos segun la funcion renal (TFG).',
+  'Leucocitos normales: 4,000-11,000 /uL.',
+  'En pediatria, calcula siempre por el peso real (mg/kg).',
+  'Plaquetas normales: 150,000-450,000 /uL.',
+  'Completa el esquema antibiotico aunque haya mejoria clinica.',
+  'Sodio normal: 135-145 mEq/L. Corrige la hiponatremia despacio.',
+  'Vigila el intervalo QT al combinar farmacos que lo prolongan.',
+  'Potasio normal: 3.5-5.0 mEq/L. Revisa el ECG si esta alterado.',
+  'Cistitis no complicada: prefiere nitrofurantoina o fosfomicina.',
+  'Creatinina normal: hombres 0.7-1.3, mujeres 0.6-1.1 mg/dL.',
+  'Rickettsiosis: la doxiciclina es de eleccion a cualquier edad.',
+  'Glucosa en ayuno normal: 70-100 mg/dL.',
+  'Con metronidazol, evita el alcohol (reaccion tipo disulfiram).',
+  'HbA1c: normal < 5.7%; diabetes >= 6.5%.',
+  'Warfarina: vigila el INR; tiene muchas interacciones.',
+  'Calcio serico normal: 8.5-10.5 mg/dL (corrige por albumina).',
+  'Paracetamol: maximo 3-4 g/dia; reduce en hepatopatia.',
+  'TSH normal: 0.4-4.0 mUI/L.',
+  'Sepsis: hemocultivos y antibiotico en la primera hora.',
+  'Bilirrubina total normal: 0.3-1.2 mg/dL.',
+  'Confirma alergias reales antes de prescribir un antibiotico.',
+  'INR terapeutico en fibrilacion auricular o TVP: 2.0-3.0.',
+  'TMP-SMX eleva la creatinina y el potasio: vigilalos.',
+  'Gasometria arterial: pH 7.35-7.45, PaCO2 35-45, HCO3 22-26.',
+  'En el embarazo, revisa la categoria del farmaco antes de indicar.',
+  'Lactato normal < 2 mmol/L; > 2 sugiere hipoperfusion.',
+  'Magnesio normal 1.7-2.2 mg/dL: reponlo antes de corregir el potasio.',
+  'LDL optimo < 100 mg/dL; < 70 si el riesgo cardiovascular es alto.',
+  'Amoxicilina: primera eleccion en otitis media y faringitis por estreptococo.'
+];
+function setTip(){
+  var el=document.getElementById('iniTip'); if(!el||!TIPS.length) return;
+  var d=new Date(); var start=new Date(d.getFullYear(),0,0); var day=Math.floor((d-start)/86400000);
+  el.textContent=TIPS[((day%TIPS.length)+TIPS.length)%TIPS.length];
+}
+function goInicio(){var iv=$('inicioView'); if(!iv) return; hideExtras(); var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); iv.style.display='block'; $('hubView').style.display='none'; $('homeView').style.display='none'; $('detailView').style.display='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; var iqs=$('iniSearch'); if(iqs) iqs.value=''; var irr=$('iniResults'); if(irr){irr.style.display='none';irr.innerHTML='';} var icc=document.querySelector('#inicioView .ini-cols'); if(icc) icc.style.display=''; renderRecents(); setTip(); window.scrollTo({top:0});}
 function openSearch(){exitInicio(); goGroups(); var s=$('hubSearch'); if(s){try{s.focus();}catch(e){}}}
 function goMedsCalc(){exitInicio(); goGroups(); showToast('Elige un farmaco para ver su calculadora');}
 function openDrugByName(nm){exitInicio(); var t=(nm||'').toLowerCase(); for(var i=0;i<DRUGS.length;i++){if(DRUGS[i].name.toLowerCase().indexOf(t)>=0){openDrugFromHub(i); return;}} goGroups();}
