@@ -761,8 +761,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
           </svg>
         </div>
         <div class="cf-grid">
-          <div><div class="cf-l">Peso</div><div class="cf-box"><input id="weightInp" type="number" inputmode="decimal" value="8.5" step="0.1" min="3" max="40"><span class="cf-unit">kg</span></div></div>
-          <div><div class="cf-l">Edad</div><div class="cf-box"><input id="ageInp" type="number" inputmode="numeric" value="8" min="0" max="1200"><select class="cf-unitsel" id="ageUnit"><option>días</option><option selected>meses</option><option>años</option></select></div></div>
+          <div><div class="cf-l">Peso</div><div class="cf-box"><input id="weightInp" type="number" inputmode="decimal" placeholder="8.5" step="0.1" min="3" max="40"><span class="cf-unit">kg</span></div></div>
+          <div><div class="cf-l">Edad</div><div class="cf-box"><input id="ageInp" type="number" inputmode="numeric" placeholder="8" min="0" max="1200"><select class="cf-unitsel" id="ageUnit"><option>días</option><option selected>meses</option><option>años</option></select></div></div>
         </div>
         <input class="rng" id="weightRange" type="range" min="3" max="40" step="0.5" value="8.5">
         <div style="margin-top:11px;"><div class="cf-l">Vía</div><div class="cf-selwrap"><select class="cf-sel" id="viaSel"></select><span class="cf-cv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
@@ -30373,7 +30373,8 @@ function fillConcFromPres(){
   else { a.value=''; v.value=''; }
 }
 function recalc(){
-  var w=parseFloat($('weightInp').value)||0;
+  var w=parseFloat(($('weightInp')&&$('weightInp').value)||'')||0;
+  if(!w){ ['rTotal','rPer','rVol','rFreq'].forEach(function(id){var e=$(id); if(e) e.textContent='—';}); if($('rVolDay'))$('rVolDay').textContent='—'; if($('rDrops'))$('rDrops').textContent='—'; var _mx=$('rMax'); if(_mx)_mx.classList.remove('on'); var _rx=$('rxBody'); if(_rx)_rx.innerHTML='Introduce el peso del paciente para calcular la dosis.'; return; }
   var iv=$('indSel').value.split('|'),mgk=parseFloat(iv[0]),interval=parseInt(iv[1]);
   var dpd=24/interval;
   var _amt=parseFloat(($('presAmt')||{}).value)||0,_vol=parseFloat(($('presVol')||{}).value)||0,_u=($('presUnit')||{}).value||'mg';
@@ -30543,7 +30544,7 @@ var TOOLICON={
 };
 
 /* helpers de formulario */
-function tNum(id,unit,val,step){return '<div class="cf-box"><input id="'+id+'" type="number" inputmode="decimal"'+(val!=null?' value="'+val+'"':'')+(step?' step="'+step+'"':'')+'><span class="cf-unit">'+(unit||'')+'</span></div>';}
+function tNum(id,unit,val,step){return '<div class="cf-box"><input id="'+id+'" type="number" inputmode="decimal"'+(val!=null?' placeholder="'+val+'"':'')+(step?' step="'+step+'"':'')+'><span class="cf-unit">'+(unit||'')+'</span></div>';}
 function tField(label,ctrl){return '<div class="t-field"><div class="cf-l">'+label+'</div>'+ctrl+'</div>';}
 function tSel(id,opts,def){return '<div class="cf-selwrap"><select class="cf-sel" id="'+id+'">'+opts.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(def)?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select><span class="cf-cv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>';}
 function tTog(id,label){return '<button type="button" class="t-tog" id="'+id+'" onclick="this.classList.toggle(\'on\');toolRecalc();">'+label+'</button>';}
