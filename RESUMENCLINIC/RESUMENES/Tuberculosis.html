@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tuberculosis · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#be123c;--act:#fce7eb;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,#5c0a1e,#be123c);}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}.prose p:last-child{margin-bottom:0;}.prose strong{color:var(--gray-900);}
+.prose ul{margin:4px 0 8px 18px;}.prose li{margin-bottom:4px;line-height:1.55;}
+.esc-intro{background:var(--act);border-left:4px solid var(--ac);border-radius:var(--rs);padding:10px 12px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:12px;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.pct{display:inline-block;background:var(--act);color:var(--ac);font-weight:700;font-size:11px;padding:1px 7px;border-radius:10px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--act);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;padding:0 4px;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.calc-w{background:var(--gray-50);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--bd);margin-bottom:10px;}
+.calc-in{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-top:3px;}
+.scoreres{margin-top:10px;padding:11px;border-radius:8px;background:#fff;border:1px solid var(--bd);}
+.scoretot{font-size:18px;font-weight:800;color:var(--ac);}
+.biblio-header{background:linear-gradient(135deg,#5c0a1e,#be123c);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#fbd5de;color:#be123c;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:600;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.atlas-cap{font-size:11px;color:var(--gray-600);margin-top:6px;line-height:1.5;}
+.regimen{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.regimen-h{background:var(--ac);color:#fff;padding:9px 13px;font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;}
+.regimen-h .dur{font-size:11px;font-weight:600;background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;}
+.regimen-b{padding:11px 13px;}
+.phase{display:flex;gap:8px;margin-bottom:6px;}
+.phase-tag{flex-shrink:0;font-size:10px;font-weight:700;text-transform:uppercase;color:#fff;border-radius:4px;padding:2px 7px;height:fit-content;}
+.phase-txt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">Regresar</button>
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫁</div>
+    <div>
+      <div class="hdr-eye">Infectología · Neumología · Salud pública</div>
+      <div class="hdr-title">Tuberculosis</div>
+      <div class="hdr-sub">Diagnóstico molecular · tratamiento sensible y resistente · preventivo (OMS 2024-2025)</div>
+    </div>
+  </div>
+  <div class="hdr-badges"><span class="badge">Pulmonar / extrapulmonar</span><span class="badge">Sensible y resistente</span><span class="badge">Preventivo (TPT)</span></div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Tos &gt;2 sem</div><div class="qs-l">sospecha</div></div>
+  <div class="qs"><div class="qs-v">Xpert Ultra</div><div class="qs-l">prueba inicial</div></div>
+  <div class="qs"><div class="qs-v">6 o 4 meses</div><div class="qs-l">tx sensible</div></div>
+  <div class="qs"><div class="qs-v">BPaLM 6 m</div><div class="qs-l">resistente</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('clas',this)">📊 Clasificación</button>
+  <button class="tab" onclick="showT('atlas',this)">🖼️ Atlas</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txs',this)">💊 Tx sensible</button>
+  <button class="tab" onclick="showT('txr',this)">🦠 Tx resistente</button>
+  <button class="tab" onclick="showT('tpt',this)">🛡️ Preventivo</button>
+  <button class="tab" onclick="showT('esc',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📈 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="alert a-i"><span class="ai">🫁</span><div><div class="at">¿Qué es?</div>Enfermedad infecciosa por <strong>Mycobacterium tuberculosis</strong> (complejo). Afecta sobre todo al <strong>pulmón</strong>, pero también a otros órganos (extrapulmonar). Es <strong>prevenible y curable</strong>; sin tratamiento tiene alta letalidad.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Patogenia (infección vs enfermedad)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Exposición → infección:</strong> la mayoría queda como <strong>infección tuberculosa latente (ITBL)</strong>: asintomática, no contagiosa.</li>
+    <li><strong>Progresión a enfermedad:</strong> riesgo <span class="pct">~5-10% de por vida</span>; el mayor riesgo es en los <strong>primeros 2 años</strong>. Aumenta con VIH, niños &lt;5 años, desnutrición, DM, inmunosupresión (anti-TNF, esteroides), tabaquismo y silicosis.</li>
+    <li><strong>Reactivación</strong> (TB posprimaria): cavitación apical, alta carga bacilar y contagiosidad.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌬️</span><span class="st">Transmisión</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Por <strong>vía aérea</strong>: núcleos de gotas (aerosoles) que el enfermo bacilífero genera al toser, hablar o estornudar. El riesgo aumenta con el contacto <strong>prolongado y en espacios cerrados</strong>. La TB extrapulmonar (salvo laríngea) suele no ser contagiosa.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👀</span><span class="st">Clínica</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Pulmonar:</strong> tos <strong>&gt;2-3 semanas</strong>, expectoración, hemoptisis, dolor torácico.</li>
+    <li><strong>Sistémicos:</strong> fiebre, <strong>sudores nocturnos</strong>, pérdida de peso, astenia, hiporexia.</li>
+    <li><strong>Extrapulmonar:</strong> según el sitio (ganglionar, pleural, meníngea, ósea/Pott, genitourinaria, miliar/diseminada).</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>Cada año enferman <span class="pct">~10.8 millones</span> de personas; es de nuevo una de las <strong>principales causas infecciosas de muerte</strong>. En México la TB se concentra en estados del norte y se asocia con fuerza a la <strong>diabetes mellitus</strong> (importante comorbilidad local), VIH y desnutrición.</p></div></div></div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="alert a-g"><span class="ai">🧪</span><div><div class="at">Prueba inicial = molecular rápida (WRD)</div>En toda persona con signos/síntomas de TB, la prueba <strong>inicial</strong> debe ser una <strong>prueba molecular rápida</strong> (Xpert MTB/RIF Ultra o Truenat MTB Plus), <strong>no la baciloscopia</strong>. Detecta <em>M. tuberculosis</em> y la <strong>resistencia a rifampicina</strong> en &lt;2 horas.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Sospecha y tamizaje</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Sintomático respiratorio:</strong> tos &gt;2 semanas (en VIH, cualquier duración) ± fiebre, sudores nocturnos o pérdida de peso.</li>
+    <li><strong>Rx de tórax</strong> (± detección asistida por computadora, CAD) como tamizaje, sobre todo en grupos de riesgo.</li>
+    <li>En personas con VIH: cribado de los <strong>4 síntomas</strong> (tos, fiebre, pérdida de peso, sudores nocturnos).</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Pruebas y su papel</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g" style="margin-bottom:10px;"><span class="ai">🏆</span><div><div class="at">Estándar de oro = cultivo</div>El <strong>cultivo</strong> es la prueba de referencia: la más sensible y la única que permite la <strong>sensibilidad fenotípica (DST)</strong> completa. Tarda <strong>semanas</strong>, por lo que el <strong>inicio</strong> del tratamiento se apoya en la prueba molecular rápida.</div></div>
+    <div class="tw"><table class="t"><thead><tr><th>Prueba</th><th>Papel</th></tr></thead><tbody>
+    <tr><td class="dn">Xpert Ultra / Truenat</td><td><strong>Prueba inicial</strong>; detecta MTB + resistencia a rifampicina en &lt;2 h.</td></tr>
+    <tr><td class="dn">🏆 Cultivo</td><td><strong>Estándar de oro</strong>; confirma y permite DST fenotípico (semanas).</td></tr>
+    <tr><td class="dn">Baciloscopia (BAAR)</td><td>Carga bacilar y seguimiento; menos sensible, no detecta resistencia.</td></tr>
+    <tr><td class="dn">tNGS / LPA</td><td>Perfil <strong>ampliado de resistencia</strong> (molecular).</td></tr>
+    <tr><td class="dn">LF-LAM en orina</td><td>Apoyo en <strong>VIH avanzado</strong> (concurrente con la molecular).</td></tr>
+  </tbody></table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Cómo se interpreta el resultado (prueba molecular)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Resultado</th><th>Significado</th><th>Acción / régimen</th></tr></thead><tbody>
+    <tr><td class="dn">MTB detectado · Rif sensible</td><td>TB confirmada, <strong>sensible</strong> a rifampicina.</td><td>Iniciar <strong>1.ª línea</strong> (HRZE → pestaña Tx sensible).</td></tr>
+    <tr><td class="dn">MTB detectado · Rif resistente</td><td>TB <strong>resistente a rifampicina (RR)</strong> = tratar como MDR.</td><td>Iniciar <strong>BPaLM</strong>; pedir DST/secuenciación; equipo experto (Tx resistente).</td></tr>
+    <tr><td class="dn">MTB detectado · Rif indeterminada</td><td>No concluyente para resistencia.</td><td>Repetir / nueva muestra; no demorar el inicio según el juicio clínico.</td></tr>
+    <tr><td class="dn">MTB “trace” (Ultra)</td><td>Carga bacilar muy baja; resistencia no evaluable.</td><td>Frecuente en niños, VIH y extrapulmonar: tratar si la sospecha es alta; repetir/cultivo.</td></tr>
+    <tr><td class="dn">MTB no detectado</td><td><strong>No descarta</strong> TB.</td><td>Si la sospecha es alta: repetir, cultivo y otras causas; LF-LAM en VIH avanzado.</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">➡️</span><div>El resultado de <strong>rifampicina</strong> es el que <strong>bifurca el tratamiento</strong>: sensible → primera línea; resistente → BPaLM/BPaL.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖼️</span><span class="st">Imagen y extrapulmonar</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Rx de tórax:</strong> infiltrados/cavitación de lóbulos superiores; patrón <strong>miliar</strong> en diseminada.</li>
+    <li><strong>Extrapulmonar:</strong> tomar muestra del sitio (LCR, ganglio, líquido pleural/ascítico) para Xpert, cultivo y ADA (p. ej. pleural/meníngea).</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Pruebas de infección (ITBL)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>La <strong>prueba cutánea (PPD/TST)</strong> y los <strong>IGRA</strong> (y los nuevos TBST con antígenos) detectan <strong>infección</strong>, no enfermedad: <strong>no distinguen</strong> ITBL de TB activa y pueden ser negativos en inmunosupresión. Se usan para decidir <strong>tratamiento preventivo</strong> tras descartar enfermedad activa.</p></div></div></div>
+</div>
+<!-- CLASIFICACIÓN -->
+<div class="panel" id="tab-clas">
+  <div class="esc-intro"><b>La clasificación define el tratamiento.</b> Lo más importante en la práctica es separar <b>infección latente vs enfermedad activa</b>, <b>pulmonar vs extrapulmonar</b> y, sobre todo, el <b>perfil de resistencia</b>.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Ejes de clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Localización:</strong> pulmonar (la más frecuente y contagiosa) vs extrapulmonar.</li>
+    <li><strong>Antecedente:</strong> caso <strong>nuevo</strong> vs <strong>previamente tratado</strong> (recaída, fracaso, abandono).</li>
+    <li><strong>Bacteriología:</strong> confirmada (microbiológica) vs diagnosticada clínicamente.</li>
+    <li><strong>Estado de VIH</strong> y <strong>perfil de resistencia</strong> (ver tabla).</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Definiciones de resistencia (OMS)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Categoría</th><th>Definición</th></tr></thead><tbody>
+    <tr><td class="dn">Monorresistente</td><td>Resistencia a un solo fármaco de primera línea.</td></tr>
+    <tr><td class="dn">Polirresistente</td><td>Resistencia a &gt;1 fármaco de 1.ª línea, pero no a isoniazida + rifampicina juntas.</td></tr>
+    <tr><td class="dn">RR</td><td>Resistente a <strong>rifampicina</strong> (con o sin otra); se maneja como MDR.</td></tr>
+    <tr><td class="dn">MDR</td><td>Resistente al menos a <strong>isoniazida + rifampicina</strong>.</td></tr>
+    <tr><td class="dn">Pre-XDR</td><td>MDR/RR + resistencia a una <strong>fluoroquinolona</strong>.</td></tr>
+    <tr><td class="dn">XDR</td><td>MDR/RR + fluoroquinolona + resistencia a <strong>bedaquilina o linezolid</strong> (def. 2021).</td></tr>
+  </tbody></table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Infección latente (ITBL) vs enfermedad</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><p>La <strong>ITBL</strong> es asintomática, no contagiosa, con prueba de infección positiva (PPD/IGRA) y <strong>sin</strong> evidencia de enfermedad (clínica/Rx/microbiología). La <strong>enfermedad activa</strong> tiene síntomas y/o confirmación microbiológica. Antes de dar tratamiento preventivo <strong>siempre se descarta enfermedad activa</strong>.</p></div></div></div>
+</div>
+
+<!-- ATLAS -->
+<div class="panel" id="tab-atlas">
+  <div class="alert a-i"><span class="ai">🖼️</span><div>La historia natural justifica el tratamiento preventivo; el espectro de resistencia define qué régimen usar.</div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌱</span><span class="st">Historia natural (infección → enfermedad)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="overflow-x:auto;border:1px solid var(--bd);border-radius:8px;background:#fff;">
+      <svg viewBox="0 0 680 240" style="width:100%;min-width:600px;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+        <g font-family="sans-serif">
+        <rect x="20" y="95" width="110" height="50" rx="8" fill="#be123c"/>
+        <rect x="165" y="95" width="110" height="50" rx="8" fill="#9a1233"/>
+        <rect x="330" y="40" width="170" height="56" rx="8" fill="#64748b"/>
+        <rect x="330" y="150" width="170" height="56" rx="8" fill="#be123c"/>
+        <g text-anchor="middle" fill="#fff" font-weight="800" font-size="12">
+          <text x="75" y="124">EXPOSICIÓN</text>
+          <text x="220" y="124">INFECCIÓN</text>
+          <text x="415" y="64">ITBL (latente)</text>
+          <text x="415" y="174">TB ACTIVA</text>
+        </g>
+        <g text-anchor="middle" font-size="9.5">
+          <text x="415" y="80" fill="#e5e7eb">~90% · asintomática</text>
+          <text x="415" y="190" fill="#fde2e8">enferma y contagia</text>
+        </g>
+        <!-- arrows -->
+        <line x1="130" y1="120" x2="163" y2="120" stroke="#9ca3af" stroke-width="2"/><polygon points="163,120 153,115 153,125" fill="#9ca3af"/>
+        <line x1="275" y1="112" x2="328" y2="72" stroke="#9ca3af" stroke-width="2"/><polygon points="328,72 318,72 322,81" fill="#9ca3af"/>
+        <line x1="275" y1="130" x2="328" y2="172" stroke="#9ca3af" stroke-width="2"/><polygon points="328,172 318,164 318,174" fill="#9ca3af"/>
+        <line x1="415" y1="96" x2="415" y2="148" stroke="#be123c" stroke-width="2" stroke-dasharray="4 3"/><polygon points="415,150 410,140 420,140" fill="#be123c"/>
+        <text x="300" y="92" text-anchor="middle" font-size="9" fill="#6b7280">~90%</text>
+        <text x="298" y="150" text-anchor="middle" font-size="9" fill="#be123c">primaria ~5-10%</text>
+        <text x="525" y="118" font-size="9.5" fill="#be123c" font-weight="700">reactivación</text>
+        <text x="525" y="131" font-size="9" fill="#6b7280">5-10% de por vida</text>
+        <text x="20" y="228" font-size="10.5" fill="#0f7a5a" font-weight="700">El tratamiento preventivo (TPT) reduce el paso de ITBL a enfermedad.</text>
+        </g>
+      </svg>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📶</span><span class="st">Espectro de resistencia</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="overflow-x:auto;border:1px solid var(--bd);border-radius:8px;background:#fff;">
+      <svg viewBox="0 0 680 240" style="width:100%;min-width:600px;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+        <g font-family="sans-serif">
+        <rect x="25" y="160" width="140" height="55" rx="6" fill="#0f7a5a"/>
+        <rect x="180" y="125" width="145" height="90" rx="6" fill="#d97706"/>
+        <rect x="340" y="92" width="150" height="123" rx="6" fill="#c0392b"/>
+        <rect x="505" y="58" width="150" height="157" rx="6" fill="#7b1c1c"/>
+        <g text-anchor="middle" fill="#fff">
+          <text x="95" y="184" font-size="13" font-weight="800">Sensible</text>
+          <text x="95" y="200" font-size="9">responde a 1.ª línea</text>
+          <text x="252" y="150" font-size="13" font-weight="800">RR / MDR</text>
+          <text x="252" y="166" font-size="9">resistente a R (± H)</text>
+          <text x="415" y="117" font-size="13" font-weight="800">Pre-XDR</text>
+          <text x="415" y="133" font-size="9">MDR/RR + fluoroquinolona</text>
+          <text x="580" y="84" font-size="13" font-weight="800">XDR</text>
+          <text x="580" y="99" font-size="8.5">+ FQ + bedaquilina</text>
+          <text x="580" y="111" font-size="8.5">o linezolid</text>
+        </g>
+        <text x="340" y="232" text-anchor="middle" font-size="10.5" fill="#6b7280" font-weight="700">→ mayor resistencia, regímenes más largos y complejos →</text>
+        </g>
+      </svg>
+    </div>
+  </div></div>
+</div>
+<!-- ALGORITMO -->
+<div class="panel" id="tab-alg">
+  <div class="alert a-i"><span class="ai">🔀</span><div>La prueba molecular inicial define dos cosas a la vez: si hay TB y si hay resistencia a rifampicina, lo que dirige el régimen.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌳</span><span class="st">Del síntoma al régimen</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="ra-step"></div></div></div>
+</div>
+
+<!-- TX SENSIBLE -->
+<div class="panel" id="tab-txs">
+  <div class="esc-intro"><b>TB sensible a rifampicina</b> (resultado molecular Rif sensible). Hay un régimen <b>de referencia de 6 meses</b> y dos alternativas más cortas de <b>4 meses</b>. Siempre con piridoxina en riesgo y apoyo a la adherencia (TAES/DOT).</div>
+  <div class="alert a-i"><span class="ai">🧭</span><div><div class="at">¿Cuál elegir?</div><b>6 meses (HRZE):</b> sirve para todos y para enfermedad grave/SNC. · <b>4 m HPMZ:</b> ≥12 años con TB pulmonar (no embarazo). · <b>4 m pediátrico:</b> 3 m-16 años con enfermedad NO grave.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Regímenes</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="regimen"><div class="regimen-h"><span>🏆 Estándar de referencia · todas las edades</span><span class="dur">6 meses · 2HRZE/4HR</span></div>
+      <div class="regimen-b">
+        <div class="phase"><span class="phase-tag" style="background:#be123c;">Intensiva · 2 m</span><span class="phase-txt"><b>H + R + Z + E</b> (isoniazida, rifampicina, pirazinamida, etambutol) diario.</span></div>
+        <div class="phase"><span class="phase-tag" style="background:#9a1233;">Continuación · 4 m</span><span class="phase-txt"><b>H + R</b> diario.</span></div>
+      </div>
+    </div>
+    <div class="regimen"><div class="regimen-h"><span>Alternativa · 4 m HPMZ (≥12 años, pulmonar)</span><span class="dur">4 meses · 2HPMZ/2HPM</span></div>
+      <div class="regimen-b">
+        <div class="phase"><span class="phase-tag" style="background:#be123c;">Intensiva · 2 m</span><span class="phase-txt"><b>H + rifapentina (P) + moxifloxacino (M) + Z</b> diario.</span></div>
+        <div class="phase"><span class="phase-tag" style="background:#9a1233;">Continuación · 2 m</span><span class="phase-txt"><b>H + rifapentina + moxifloxacino</b> diario.</span></div>
+        <div class="alert a-i" style="margin:6px 0 0;"><span class="ai">ℹ️</span><div>Recomendación condicional OMS; usa <b>rifapentina diaria</b> (no la semanal del preventivo). No en embarazo ni resistencia conocida a sus componentes.</div></div>
+      </div>
+    </div>
+    <div class="regimen"><div class="regimen-h"><span>Alternativa · 4 m pediátrico (no grave)</span><span class="dur">4 meses · 2HRZ(E)/2HR</span></div>
+      <div class="regimen-b">
+        <div class="phase"><span class="phase-tag" style="background:#be123c;">Intensiva · 2 m</span><span class="phase-txt"><b>H + R + Z</b> (± E según riesgo) diario.</span></div>
+        <div class="phase"><span class="phase-tag" style="background:#9a1233;">Continuación · 2 m</span><span class="phase-txt"><b>H + R</b> diario.</span></div>
+        <div class="alert a-i" style="margin:6px 0 0;"><span class="ai">👶</span><div>Para TB <b>no grave</b> (ganglionar o pulmonar limitada, sin sospecha de MDR/RR). La enfermedad grave/diseminada o del SNC usa 6 meses o más.</div></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Dosis (adulto, diaria) y bandas de peso</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Fármaco</th><th>mg/kg/día (máx)</th></tr></thead><tbody>
+    <tr><td class="dn">Isoniazida (H)</td><td>5 mg/kg (máx 300 mg)</td></tr>
+    <tr><td class="dn">Rifampicina (R)</td><td>10 mg/kg (máx 600 mg)</td></tr>
+    <tr><td class="dn">Pirazinamida (Z)</td><td>25 mg/kg (máx 2000 mg)</td></tr>
+    <tr><td class="dn">Etambutol (E)</td><td>15 mg/kg (15-25)</td></tr>
+  </tbody></table></div>
+  <div class="prose" style="margin-top:8px;"><p><strong>Combinación a dosis fija (CDF) HRZE 75/150/400/275 — adulto:</strong> 30-37 kg = 2 tab · 38-54 kg = 3 tab · 55-70 kg = 4 tab · ≥71 kg = 5 tab. Continuación HR 75/150 con el mismo número de tabletas.</p></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Fármacos de primera línea (fichas)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div id="far-ds"></div>
+    <div class="alert a-w" style="margin-top:4px;"><span class="ai">🧠</span><div><b>Piridoxina (vitamina B6) 25-50 mg/día</b> con isoniazida en personas con riesgo de neuropatía (VIH, embarazo, diabetes, desnutrición, alcoholismo, ERC).</div></div>
+  </div></div>
+</div>
+<!-- TX RESISTENTE -->
+<div class="panel" id="tab-txr">
+  <div class="esc-intro"><b>TB resistente a rifampicina (RR) / multirresistente (MDR).</b> El régimen de elección es <b>BPaLM de 6 meses</b>, todo oral. Si hay resistencia a fluoroquinolonas (pre-XDR), se usa <b>BPaL</b> (sin moxifloxacino).</div>
+  <div class="alert a-r"><span class="ai">🚨</span><div>Manejo por un equipo con experiencia, con <b>DST/secuenciación</b> y monitoreo estrecho (QT, hemograma, visión). No demorar el inicio esperando la DST de fluoroquinolona.</div></div>
+  <div class="alert a-i"><span class="ai">🧭</span><div><div class="at">¿Cuál elegir?</div><b>BPaLM:</b> elección si Rif resistente y FQ sensible/desconocida. · <b>BPaL:</b> si resistencia a FQ (pre-XDR). · <b>9-18 m con grupos A/B/C:</b> si no es elegible a BPaLM (&lt;14 años, embarazo, SNC/osteoarticular/miliar o sin pretomanid).</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Regímenes</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="regimen"><div class="regimen-h"><span>🏆 BPaLM · elección en MDR/RR</span><span class="dur">6 meses</span></div>
+      <div class="regimen-b"><div class="phase"><span class="phase-tag" style="background:#be123c;">Todo oral</span><span class="phase-txt"><b>B</b>edaquilina + <b>Pa</b> pretomanid + <b>L</b>inezolid + <b>M</b>oxifloxacino, 26 semanas (puede extenderse a 9 meses).</span></div></div>
+    </div>
+    <div class="regimen"><div class="regimen-h"><span>BPaL (pre-XDR / resistencia a FQ)</span><span class="dur">6 meses</span></div>
+      <div class="regimen-b"><div class="phase"><span class="phase-tag" style="background:#9a1233;">Todo oral</span><span class="phase-txt">Igual al BPaLM pero <b>sin moxifloxacino</b>.</span></div></div>
+    </div>
+    <div class="regimen"><div class="regimen-h"><span>Alternativas si no elegible a BPaLM</span><span class="dur">9-18 meses</span></div>
+      <div class="regimen-b"><div class="phase"><span class="phase-tag" style="background:#64748b;">Individualizado</span><span class="phase-txt">Régimen <b>oral de 9 meses</b> o <b>largo (18 meses)</b> con fármacos de los grupos A/B/C; para &lt;14 años, embarazo/lactancia o sin acceso a pretomanid.</span></div></div>
+    </div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Elegibilidad de BPaLM/BPaL</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>≥14 años</strong>; TB pulmonar y extrapulmonar <strong>excepto SNC, osteoarticular y diseminada/miliar</strong>.</li>
+    <li>Exposición previa &lt;1 mes a bedaquilina, linezolid, pretomanid o delamanid.</li>
+    <li><strong>No</strong> en embarazo/lactancia (datos limitados de pretomanid).</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔠</span><span class="st">Grupos de fármacos (regímenes largos)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Grupo</th><th>Fármacos</th></tr></thead><tbody>
+    <tr><td class="dn">A (incluir los 3)</td><td>Levofloxacino/moxifloxacino · bedaquilina · linezolid</td></tr>
+    <tr><td class="dn">B (añadir 1-2)</td><td>Clofazimina · cicloserina/terizidona</td></tr>
+    <tr><td class="dn">C (completar)</td><td>Etambutol · delamanid · pirazinamida · carbapenémico (imipenem-cilastatina/meropenem) · amikacina · etionamida/protionamida · ácido p-aminosalicílico</td></tr>
+  </tbody></table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Fármacos clave (fichas)</span><span class="sg">⌄</span></div>
+  <div class="sb"><div id="far-dr"></div></div></div>
+</div>
+
+<!-- PREVENTIVO (TPT) -->
+<div class="panel" id="tab-tpt">
+  <div class="esc-intro"><b>Tratamiento preventivo (TPT) de la infección latente.</b> Reduce el paso de ITBL a enfermedad. <b>Siempre descartar TB activa antes de iniciar</b> (síntomas, Rx). Se prefieren los regímenes cortos con rifamicina.</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">¿A quién?</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Personas con VIH</strong> (tras descartar enfermedad activa).</li>
+    <li><strong>Contactos</strong> de un caso bacilífero, en especial <strong>niños &lt;5 años</strong> y contactos del hogar.</li>
+    <li>Inmunosupresión: pre-anti-TNF, trasplante, diálisis, silicosis; inicio de TARV.</li>
+  </ul></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Regímenes y dosis</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Régimen</th><th>Esquema (adulto)</th></tr></thead><tbody>
+    <tr><td class="dn">3HP (preferido)</td><td>Isoniazida + <strong>rifapentina semanal × 12</strong> (3 meses). Adulto ≥50 kg: H 900 mg + rifapentina 900 mg/semana (H 15 mg/kg).</td></tr>
+    <tr><td class="dn">1HP</td><td>Isoniazida 300 mg + rifapentina 600 mg <strong>diario × 1 mes</strong>.</td></tr>
+    <tr><td class="dn">3HR</td><td>Isoniazida + rifampicina diario × 3 meses.</td></tr>
+    <tr><td class="dn">4R</td><td>Rifampicina 10 mg/kg (máx 600) diario × 4 meses.</td></tr>
+    <tr><td class="dn">6H / 9H</td><td>Isoniazida 5 mg/kg (máx 300) diario × 6-9 meses (+ piridoxina).</td></tr>
+    <tr><td class="dn">6Lfx</td><td>Levofloxacino diario × 6 meses para <strong>contactos de MDR/RR</strong>.</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">💊</span><div>Las <strong>rifamicinas</strong> (rifampicina/rifapentina) tienen muchas interacciones (TARV, anticonceptivos, anticoagulantes). Añadir <strong>piridoxina</strong> a los esquemas con isoniazida en personas en riesgo.</div></div></div></div>
+</div>
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-esc">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="esc2-chips"></div>
+  <div id="esc2-content"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Monitoreo de la respuesta</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">2m</span><span class="kt"><b>Baciloscopia/cultivo al final del 2.º mes</b> (conversión) y al final del tratamiento; valoración clínica y de peso mensual.</span></div>
+    <div class="kp"><span class="kn">📉</span><span class="kt">Si persiste positiva, investigar <b>resistencia</b> (repetir prueba molecular/DST) y adherencia.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Efectos adversos (RAFA) y vigilancia</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t"><thead><tr><th>Fármaco</th><th>Vigilar</th></tr></thead><tbody>
+    <tr><td class="dn">H, R, Z</td><td><strong>Hepatotoxicidad</strong> → síntomas y PFH; suspender si transaminasas &gt;3× con síntomas o &gt;5×.</td></tr>
+    <tr><td class="dn">Isoniazida</td><td>Neuropatía periférica → <strong>piridoxina</strong>; lupus farmacológico.</td></tr>
+    <tr><td class="dn">Etambutol</td><td><strong>Neuritis óptica</strong> → agudeza visual y visión de colores.</td></tr>
+    <tr><td class="dn">Pirazinamida</td><td>Hiperuricemia/artralgias, hepatotoxicidad.</td></tr>
+    <tr><td class="dn">Rifampicina</td><td>Coloración naranja de fluidos, interacciones, hepatitis.</td></tr>
+    <tr><td class="dn">Bedaquilina, moxi, clofazimina</td><td><strong>Prolongación del QT</strong> → ECG.</td></tr>
+    <tr><td class="dn">Linezolid</td><td><strong>Mielosupresión</strong> y neuropatía óptica/periférica → hemograma y visión.</td></tr>
+  </tbody></table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤝</span><span class="st">Adherencia y resultados</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="prose"><ul>
+    <li><strong>Apoyo a la adherencia (TAES/DOT)</strong> y tecnologías (tratamiento observado por video); centrado en la persona.</li>
+    <li><strong>Resultados OMS:</strong> curado, tratamiento completo, fracaso, pérdida en el seguimiento, no evaluado, muerto. <strong>Éxito = curado + tratamiento completo.</strong></li>
+    <li>TB es de <strong>notificación obligatoria</strong>; realizar <strong>estudio de contactos</strong> y control de infección.</li>
+  </ul></div></div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Tuberculosis</h2><p>OMS guías consolidadas (módulos 1-4) · Global TB Report · NOM-006</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías OMS</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A — Tx sensible</span></div>
+        <div class="biblio-ref">WHO. <em>Consolidated guidelines on tuberculosis. Module 4: Treatment — Drug-susceptible TB treatment</em> (régimen de 4 meses HPMZ y pediátrico; consolidación 2025).</div>
+        <a class="biblio-link" href="https://www.who.int/publications/i/item/9789240048126" target="_blank">🔗 WHO Module 4 (DS-TB)</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A — Tx resistente</span></div>
+        <div class="biblio-ref">WHO. <em>Consolidated guidelines on tuberculosis. Module 4: Treatment — Drug-resistant TB treatment</em> (BPaLM/BPaL de 6 meses; grupos A/B/C).</div>
+        <a class="biblio-link" href="https://www.who.int/publications/i/item/9789240063129" target="_blank">🔗 WHO Module 4 (DR-TB)</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A — Preventivo</span></div>
+        <div class="biblio-ref">WHO. <em>Consolidated guidelines on tuberculosis. Module 1: Prevention — Tuberculosis preventive treatment</em> (2.ª ed., 2024).</div>
+        <a class="biblio-link" href="https://www.who.int/publications/i/item/9789240096196" target="_blank">🔗 WHO Module 1 (TPT)</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A — Diagnóstico</span></div>
+        <div class="biblio-ref">WHO. <em>Consolidated guidelines on tuberculosis. Module 3: Diagnosis — Rapid diagnostics for tuberculosis detection</em> (Xpert Ultra, Truenat, tNGS).</div>
+        <a class="biblio-link" href="https://www.who.int/publications/i/item/9789240089488" target="_blank">🔗 WHO Module 3 (Dx)</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Epidemiología y normativa</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2025</span><span class="biblio-level lv-c">Nivel C — Informe</span></div>
+        <div class="biblio-ref">WHO. <em>Global Tuberculosis Report 2025.</em></div>
+        <a class="biblio-link" href="https://www.who.int/teams/global-programme-on-tuberculosis-and-lung-health/tb-reports" target="_blank">🔗 Global TB Report</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2013</span><span class="biblio-level lv-c">Nivel C — México</span></div>
+        <div class="biblio-ref">Secretaría de Salud. <em>NOM-006-SSA2-2013, Para la prevención y control de la tuberculosis</em> (programa nacional; TAES).</div></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía mayor</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Ensayo</div>
+    <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Informe / normativa</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Opinión de expertos</div>
+  </div>
+  <div class="alert a-i" style="margin-top:10px;"><span class="ai">📅</span><div>Dosis y regímenes según guías OMS y fichas técnicas; confirmar disponibilidad y esquemas vigentes del programa nacional (IMSS/Secretaría de Salud). Última revisión: junio 2026.</div></div>
+</div>
+<script>
+function showT(id,el){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+  var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  if(el)el.classList.add('on');window.scrollTo(0,0);
+}
+function tog(h){var b=h.querySelector('.sg'),s=h.nextElementSibling;if(!s)return;s.classList.toggle('hidden');if(b)b.classList.toggle('open');}
+function poprow(l,v,c){return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f3f4f6;gap:10px;"><span style="font-size:12px;color:#6b7280;flex-shrink:0;">'+l+'</span><span style="font-size:12px;font-weight:600;color:'+c+';text-align:right;">'+v+'</span></div>';}
+function buildRACards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='rac'+i+Math.random().toString(36).substr(2,4);
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="raT(\''+fid+'\')" style="background:'+color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+    h+='<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px;">'+(f.linea||'')+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-a" style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    if(f.da){
+      h+='<div style="background:'+color+'15;border-bottom:2px solid '+color+'33;padding:12px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:6px;">💊 Dosis</div>';
+      var doses=f.da.split(' \u00b7 ');
+      if(doses.length>1){doses.forEach(function(d){if(d.trim())h+='<div style="font-size:13px;font-weight:700;color:'+color+';padding:3px 0 3px 10px;border-left:3px solid '+color+';margin-bottom:4px;">'+d.trim()+'</div>';});}
+      else{h+='<div style="font-size:13.5px;font-weight:800;color:'+color+';">'+f.da+'</div>';}
+      h+='</div>';
+    }
+    if(f.prep&&f.prep!=='\u2014'){
+      h+='<div style="background:#fbdde4;border-bottom:1px solid #f3b3c2;padding:11px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#be123c;margin-bottom:5px;">⚠️ Precauciones</div>';
+      h+='<div style="font-size:12.5px;color:#5c0a1e;line-height:1.65;">'+f.prep.replace(/\n/g,'<br>')+'</div></div>';
+    }
+    h+='<div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentación',f.pres,'#374151');
+    if(f.fda)h+=poprow('Embarazo / nota',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos / vigilar',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#fdf1f4;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:4px;">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.75;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+function raT(id){var d=document.getElementById(id),a=document.getElementById(id+'-a');if(!d)return;var v=d.style.display!=='none';d.style.display=v?'none':'block';if(a)a.innerHTML=v?'&#8964;':'&#8963;';}
+function buildLinea(label,sub,color,farmacos){return '<div style="background:'+color+';color:#fff;border-radius:6px;padding:6px 12px;margin-bottom:8px;font-size:11px;font-weight:700;">'+label+(sub?' \u00b7 <span style="font-weight:400;opacity:0.85;">'+sub+'</span>':'')+'</div>'+buildRACards(color,farmacos);}
+
+/* ===== ALGORITMO ===== */
+var ALGO_TB={
+  start:{p:'¿El paciente tiene enfermedad activa o solo infección latente (ITBL)?',hint:'La ITBL es asintomática con prueba de infección + (PPD/IGRA) y sin evidencia de enfermedad.',o:[
+    {t:'Enfermedad activa (síntomas/confirmación)',n:'qWRD',c:'#fce7eb'},
+    {t:'Infección latente (PPD/IGRA + sin enfermedad)',n:'rTPT',c:'#e1f5ee'}
+  ]},
+  qWRD:{p:'¿Resultado de la prueba molecular rápida (Xpert Ultra / Truenat)?',hint:'Es la prueba inicial; informa MTB y resistencia a rifampicina.',o:[
+    {t:'MTB detectado · rifampicina SENSIBLE',n:'rSensible',c:'#e1f5ee'},
+    {t:'MTB detectado · rifampicina RESISTENTE (RR)',n:'qResistente',c:'#fdeaea'},
+    {t:'MTB NO detectado',n:'rNoDetectado',c:'#fff8e1'}
+  ]},
+  qResistente:{p:'¿Hay resistencia conocida a fluoroquinolonas?',hint:'La DST de FQ no debe retrasar el inicio.',o:[
+    {t:'No / desconocida',n:'rBPaLM',c:'#fce7eb'},
+    {t:'Sí (pre-XDR)',n:'rBPaL',c:'#fdeaea'}
+  ]},
+  rTPT:{r:1,titulo:'Infección latente → tratamiento preventivo',color:'#0f7a5a',dx:'Infección por M. tuberculosis sin enfermedad activa.',tx:'Tras DESCARTAR enfermedad activa: ofrecer TPT (3HP, 1HP, 4R, 3HR o 6-9H; 6Lfx si es contacto de MDR/RR) + piridoxina con isoniazida.',alarma:'Nunca dar TPT sin descartar enfermedad activa (riesgo de monoterapia y resistencia).'},
+  rSensible:{r:1,titulo:'TB sensible a rifampicina',color:'#be123c',dx:'TB con rifampicina sensible en la prueba molecular.',tx:'Régimen estándar de 6 meses (2HRZE/4HR). Alternativas de 4 meses: HPMZ (≥12 años, pulmonar) o pediátrico (no grave). Piridoxina si hay riesgo; apoyo a la adherencia (TAES).',alarma:'Vigilar hepatotoxicidad, visión (etambutol) y adherencia.'},
+  rNoDetectado:{r:1,titulo:'Prueba molecular negativa',color:'#b45309',dx:'MTB no detectado por la prueba molecular.',tx:'Si la sospecha clínica/radiológica es alta: repetir muestra, solicitar cultivo y valorar otras causas; en VIH avanzado, LF-LAM; considerar inicio empírico según criterio clínico.',alarma:'Una prueba negativa NO descarta TB (formas paucibacilares y extrapulmonares).'},
+  rBPaLM:{r:1,titulo:'MDR/RR → BPaLM (6 meses)',color:'#9a1233',dx:'TB resistente a rifampicina sin resistencia conocida a FQ.',tx:'BPaLM 6 meses (bedaquilina + pretomanid + linezolid + moxifloxacino), todo oral. Equipo experto; monitoreo de QT (ECG), hemograma y visión.',alarma:'Confirmar elegibilidad (≥14 años, no embarazo, no SNC/osteoarticular/miliar).'},
+  rBPaL:{r:1,titulo:'Pre-XDR → BPaL (6 meses)',color:'#7b1c1c',dx:'MDR/RR con resistencia a fluoroquinolonas.',tx:'BPaL 6 meses (igual al BPaLM pero SIN moxifloxacino). Si no es elegible: régimen oral de 9 meses o largo con grupos A/B/C.',alarma:'Mismo monitoreo estricto (QT, hemograma, visión).'}
+};
+var raHist=[],raLabels=[];
+function renderRaBread(){var h='<div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:10px;font-size:10px;color:#6b7280;">';h+='<span style="background:var(--act);color:var(--ac);padding:2px 8px;border-radius:10px;font-weight:700;">Inicio</span>';raLabels.forEach(function(l){h+='<span style="color:#9ca3af;">›</span><span style="background:#f3f4f6;padding:2px 8px;border-radius:10px;">'+l+'</span>';});return h+'</div>';}
+function renderRaStep(sid){var s=ALGO_TB[sid];if(!s)return;if(s.r){renderRaResult(s);return;}var h=renderRaBread();h+='<div style="background:var(--act);border-left:4px solid var(--ac);border-radius:var(--rs);padding:12px 14px;">';h+='<div style="font-size:13px;font-weight:700;color:#5c0a1e;margin-bottom:6px;">'+s.p+'</div>';if(s.hint)h+='<div style="font-size:11.5px;color:#6b7280;background:#fff;border-radius:var(--rs);padding:7px 10px;margin-bottom:10px;border-left:2px solid #d1d5db;">💡 '+s.hint+'</div>';s.o.forEach(function(o,i){h+='<button onclick="raSel(\''+sid+'\','+i+')" style="display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:6px;background:'+(o.c||'#fff')+';border:1.5px solid #e2e8f0;border-radius:var(--rs);font-size:12.5px;cursor:pointer;font-weight:500;font-family:inherit;">'+o.t+'</button>';});if(raHist.length)h+='<button onclick="raBack()" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:7px 14px;border-radius:var(--rs);font-size:12px;cursor:pointer;margin-top:4px;font-family:inherit;">← Volver</button>';h+='</div>';var el=document.getElementById('ra-step');if(el)el.innerHTML=h;}
+function raSel(sid,i){var o=ALGO_TB[sid].o[i];var lbl=o.t.replace(/^[^A-Za-z0-9]+/,'');raLabels.push(lbl.substring(0,24)+(lbl.length>24?'…':''));raHist.push(sid);renderRaStep(o.n);}
+function raBack(){if(raHist.length){raLabels.pop();renderRaStep(raHist.pop());}}
+function resetRa(){raHist=[];raLabels=[];renderRaStep('start');}
+function renderRaResult(s){function blk(t,v,c,bg){return '<div style="background:'+bg+';border-left:3px solid '+c+';border-radius:var(--rs);padding:9px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+c+';margin-bottom:3px;">'+t+'</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+v.replace(/\n/g,'<br>')+'</div></div>';}var h=renderRaBread();h+='<div style="background:'+s.color+';color:#fff;border-radius:var(--rs);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.titulo+'</div></div>';h+=blk('🔍 Situación',s.dx,'#6b7280','#fff');h+=blk('💊 Conducta',s.tx,'#be123c','var(--act)');h+=blk('🚨 Clave',s.alarma,'#7b1c1c','#fdeaea');h+='<button onclick="resetRa()" style="margin-top:4px;background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;padding:8px 16px;border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;width:100%;font-family:inherit;">↩ Empezar de nuevo</button>';var el=document.getElementById('ra-step');if(el)el.innerHTML=h;}
+</script>
+
+<script>
+/* ===== FÁRMACOS DE PRIMERA LÍNEA (sensible) ===== */
+function DS_FARMACOS(){
+  return buildLinea('Primera línea (TB sensible)','HRZE + rifapentina/moxifloxacino (HPMZ)','#be123c',[
+    {n:'Isoniazida (H)',linea:'Bactericida',da:'5 mg/kg/día (máx 300 mg)',prep:'Añadir piridoxina (B6) en riesgo de neuropatía.',iv:'Oral',pres:'Tab 100/300 mg; en CDF',fda:'Segura en embarazo (+ B6)',ci:'Hepatopatía activa',ea:'Hepatitis, neuropatía periférica, lupus medicamentoso',nota:'Pilar bactericida del régimen.'},
+    {n:'Rifampicina (R)',linea:'Esterilizante',da:'10 mg/kg/día (máx 600 mg)',prep:'Tomar en ayuno. Inductor potente: muchas interacciones (TARV, anticonceptivos, anticoagulantes).',iv:'Oral',pres:'Cáps 150/300 mg; en CDF',fda:'Compatible',ci:'Hipersensibilidad a rifamicinas',ea:'Hepatitis, coloración naranja de fluidos, citopenias, interacciones',nota:'Permite acortar a 6 meses; su resistencia (RR) define el manejo MDR.'},
+    {n:'Pirazinamida (Z)',linea:'Esterilizante',da:'25 mg/kg/día (máx 2000 mg)',prep:'Solo en la fase intensiva (primeros 2 meses).',iv:'Oral',pres:'Tab 400/500 mg; en CDF',fda:'Se usa (datos limitados)',ci:'Hepatopatía grave, gota aguda',ea:'Hepatotoxicidad, hiperuricemia/artralgias',nota:'Clave para el régimen de 6 meses.'},
+    {n:'Etambutol (E)',linea:'Bacteriostático',da:'15 mg/kg/día (15-25)',prep:'Vigilar agudeza visual y visión de colores; cuidado en niños que no reportan visión.',iv:'Oral',pres:'Tab 400 mg; en CDF',fda:'Compatible',ci:'Neuritis óptica',ea:'Neuritis óptica dosis-dependiente (reversible)',nota:'Previene la resistencia en la fase intensiva.'},
+    {n:'Rifapentina (P)',linea:'Rifamicina',da:'HPMZ: 1200 mg/día \u00b7 TPT 3HP: 900 mg semanal (≥50 kg)',prep:'Inductor como la rifampicina.',iv:'Oral',pres:'Tab 150 mg',fda:'Evitar en embarazo (HPMZ)',ci:'Hipersensibilidad a rifamicinas',ea:'Similares a rifampicina',nota:'Habilita el régimen de 4 meses y los preventivos cortos (3HP/1HP).'},
+    {n:'Moxifloxacino (M)',linea:'Fluoroquinolona',da:'400 mg/día',prep:'Vigilar QT.',iv:'Oral / IV',pres:'Tab 400 mg',fda:'Evitar en embarazo',ci:'QT prolongado',ea:'QT, tendinopatía, disglucemia, GI',nota:'Componente del régimen de 4 meses (HPMZ) y grupo A en MDR.'}
+  ]);
+}
+/* ===== FÁRMACOS DE TB RESISTENTE ===== */
+function DR_FARMACOS(){
+  return buildLinea('BPaLM / BPaL y otros (MDR/RR)','grupos A-B-C','#9a1233',[
+    {n:'Bedaquilina',linea:'Grupo A',da:'400 mg/día × 2 semanas, luego 200 mg 3 veces/semana',prep:'ECG basal y seriado (QT); vigilar PFH.',iv:'Oral',pres:'Tab 100 mg',fda:'Evaluar riesgo/beneficio',ci:'QT prolongado',ea:'Prolongación del QT, hepatotoxicidad, náusea',nota:'Columna del régimen MDR.'},
+    {n:'Pretomanid',linea:'Nitroimidazol (BPaLM/BPaL)',da:'200 mg/día',prep:'Siempre en combinación; NO en embarazo/lactancia.',iv:'Oral',pres:'Tab 200 mg',fda:'No en embarazo/lactancia',ci:'Hipersensibilidad',ea:'Hepatotoxicidad, neuropatía, acné, QT',nota:'Parte fija de BPaLM y BPaL.'},
+    {n:'Linezolid',linea:'Grupo A',da:'600 mg/día',prep:'Hemograma periódico y valoración visual/neurológica; reducir/suspender por toxicidad.',iv:'Oral / IV',pres:'Tab 600 mg',fda:'Precaución',ci:'Hipersensibilidad',ea:'Mielosupresión, neuropatía óptica/periférica, acidosis láctica',nota:'600 mg/día es la dosis con mejor balance eficacia-toxicidad.'},
+    {n:'Levofloxacino / moxifloxacino',linea:'Grupo A',da:'Levofloxacino 750-1000 mg/día \u00b7 o moxifloxacino 400 mg/día',prep:'Vigilar QT.',iv:'Oral / IV',pres:'Tabletas',fda:'Evitar en embarazo',ci:'QT prolongado',ea:'QT, tendinopatía, disglucemia',nota:'El "M" de BPaLM; se omite en BPaL (resistencia a FQ).'},
+    {n:'Clofazimina',linea:'Grupo B',da:'100 mg/día (carga inicial según esquema)',prep:'Vigilar QT.',iv:'Oral',pres:'Cáps 50/100 mg',fda:'Precaución',ci:'QT prolongado',ea:'Pigmentación cutánea pardo-rojiza, QT, GI',nota:'Acompaña en regímenes largos.'},
+    {n:'Cicloserina / terizidona',linea:'Grupo B',da:'10-15 mg/kg/día (≈500-750 mg)',prep:'Añadir piridoxina; vigilar estado mental.',iv:'Oral',pres:'Cáps 250 mg',fda:'Precaución',ci:'Epilepsia, psicosis o depresión grave',ea:'Neuropsiquiátricos (depresión, psicosis, convulsiones)',nota:'Vigilancia neuropsiquiátrica estrecha.'},
+    {n:'Delamanid',linea:'Grupo C',da:'100 mg cada 12 h',prep:'Vigilar QT; cuidado con hipoalbuminemia.',iv:'Oral',pres:'Tab 50 mg',fda:'Precaución',ci:'QT prolongado',ea:'Prolongación del QT',nota:'Opción en niños o embarazo seleccionados.'}
+  ]);
+}
+/* ===== ESCENARIOS ===== */
+var ESC_TB={
+  vih:{t:'Coinfección TB-VIH',col:'#8b0000',
+    clin:'La TB es la principal causa de muerte en personas con VIH; presentación atípica/extrapulmonar. Cribar TB siempre.',
+    tx:'• Iniciar el tratamiento de TB primero y luego TARV: en &lt;2 semanas si CD4 &lt;50; ~8 semanas si CD4 ≥50. • Meningitis TB: diferir TARV ~4-8 semanas (riesgo de IRIS). • Piridoxina; cuidar interacciones rifampicina-TARV.',
+    compl:'IRIS e interacciones farmacológicas (ajustar dolutegravir, evitar algunos antirretrovirales con rifampicina).'},
+  embarazo:{t:'Embarazo',col:'#6a1a5a',
+    clin:'La TB no tratada es peligrosa para la madre y el feto; tratar siempre.',
+    tx:'• HRZE es seguro en el embarazo + piridoxina. • EVITAR estreptomicina (ototóxica). • En MDR, NO usar BPaLM (pretomanid): régimen individualizado.',
+    compl:'No retrasar el tratamiento por el embarazo.'},
+  ninos:{t:'Niños',col:'#0f7a5a',
+    clin:'Difícil de confirmar (paucibacilar). Usar Xpert Ultra en esputo inducido, aspirado gástrico o heces.',
+    tx:'• Dosis pediátricas (mayor mg/kg) con CDF dispersables. • Régimen de 4 meses si la TB es no grave. • Mayor riesgo de formas graves (meníngea, miliar) en &lt;5 años.',
+    compl:'Contactos &lt;5 años: dar TPT tras descartar enfermedad.'},
+  meningea:{t:'TB meníngea / SNC',col:'#7b1c1c',
+    clin:'Forma grave; urgencia diagnóstica y terapéutica.',
+    tx:'• Régimen prolongado (≈9-12 meses) + corticoide (dexametasona/prednisolona) en descenso. • NO usar BPaLM en enfermedad del SNC.',
+    compl:'Alta morbimortalidad y secuelas; tratar de inmediato ante la sospecha.'},
+  hepatopatia:{t:'Hepatopatía',col:'#7a4a00',
+    clin:'H, R y Z son hepatotóxicos; riesgo de hepatitis medicamentosa.',
+    tx:'• Vigilancia estrecha de PFH. • En hepatopatía avanzada, esquemas con menos fármacos hepatotóxicos (reducir/omitir pirazinamida) bajo manejo experto.',
+    compl:'Suspender ante transaminasas &gt;3× con síntomas o &gt;5× asintomático; reintroducir escalonado.'},
+  diabetes:{t:'Diabetes mellitus',col:'#0c3b6e',
+    clin:'La DM duplica el riesgo de TB y empeora la respuesta; comorbilidad muy relevante en México.',
+    tx:'• Mismo régimen + control glucémico estricto. • Vigilar neuropatía e interacciones. • Tamizaje bidireccional TB↔DM.',
+    compl:'Peor respuesta, más recaídas y resistencia; reforzar adherencia.'}
+};
+var ESC_CHIPS2=[['vih','🎗️ VIH'],['embarazo','🤰 Embarazo'],['ninos','👶 Niños'],['meningea','🧠 Meníngea'],['hepatopatia','🫀 Hepatopatía'],['diabetes','🩸 Diabetes']];
+function initEsc2(){var c=document.getElementById('esc2-chips');if(!c)return;c.innerHTML='';ESC_CHIPS2.forEach(function(ch,i){var b=document.createElement('button');b.className='pchip'+(i===0?' on':'');b.textContent=ch[1];b.onclick=(function(k,el){return function(){document.querySelectorAll('#esc2-chips .pchip').forEach(function(x){x.classList.remove('on');});el.classList.add('on');showEsc2(k);};})(ch[0],b);c.appendChild(b);});showEsc2('vih');}
+function showEsc2(k){var s=ESC_TB[k],d=document.getElementById('esc2-content');if(!s||!d)return;d.innerHTML='<div style="background:'+s.col+';color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;"><div style="font-size:15px;font-weight:800;">'+s.t+'</div></div>'+'<div style="background:#fff;border-radius:var(--rs);border:1px solid #e2e8f0;padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7280;margin-bottom:4px;">🩺 Contexto</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.clin+'</div></div>'+'<div style="background:var(--act);border-radius:var(--rs);border:1px solid var(--bd);padding:10px 12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:4px;">💊 Manejo</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.tx+'</div></div>'+'<div style="background:#fdeaea;border-radius:var(--rs);border:1px solid #f3c0c0;padding:10px 12px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:4px;">⚠️ Clave</div><div style="font-size:12.5px;color:#374151;line-height:1.7;">'+s.compl+'</div></div>';}
+
+window.addEventListener('load',function(){
+  var t=document.getElementById('tab-res');if(t)t.classList.add('on');
+  var a=document.getElementById('far-ds');if(a)a.innerHTML=DS_FARMACOS();
+  var b=document.getElementById('far-dr');if(b)b.innerHTML=DR_FARMACOS();
+  initEsc2();renderRaStep('start');
+});
+</script>
+</body>
+</html>
