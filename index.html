@@ -447,6 +447,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 #inicioView .qi-l{font-size:9.5px;font-weight:600;color:var(--ink);text-align:center;line-height:1.15;}
 #inicioView .rec{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:9px;cursor:pointer;width:100%;font-family:inherit;text-align:left;}
 #inicioView .rec:active{background:var(--bg);}
+#inicioView .rec-wrap{position:relative;overflow:hidden;border-radius:14px;margin-bottom:9px;}
+#inicioView .rec-wrap .rec{margin-bottom:0;position:relative;z-index:1;will-change:transform;touch-action:pan-y;}
+#inicioView .rec-del{position:absolute;inset:0;background:#e0463b;color:#fff;display:flex;align-items:center;justify-content:flex-end;gap:6px;padding-right:18px;font-size:12px;font-weight:700;border-radius:14px;}
+#inicioView .rec-del svg{width:18px;height:18px;}
 #inicioView .rec-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 #inicioView .rec-tx{flex:1;min-width:0;}
 #inicioView .rec-t{display:block;font-size:14px;font-weight:700;color:var(--ink);}
@@ -855,13 +859,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
           </svg>
         </div>
         <div class="cf-grid">
-          <div><div class="cf-l">Peso</div><div class="cf-box"><input id="pcW" type="number" inputmode="decimal" value="8.5" step="0.1" min="1" max="100"><span class="cf-unit">kg</span></div></div>
-          <div><div class="cf-l">Dosis</div><div class="cf-box"><input id="pcDose" type="number" inputmode="decimal" value="50" step="0.1" min="0"><span class="cf-unit">mg/kg</span></div></div>
+          <div><div class="cf-l">Peso</div><div class="cf-box"><input id="pcW" type="number" inputmode="decimal" placeholder="8.5" step="0.1" min="1" max="100"><span class="cf-unit">kg</span></div></div>
+          <div><div class="cf-l">Dosis</div><div class="cf-box"><input id="pcDose" type="number" inputmode="decimal" placeholder="50" step="0.1" min="0"><span class="cf-unit">mg/kg</span></div></div>
         </div>
         <input class="rng" id="pcWr" type="range" min="1" max="60" step="0.5" value="8.5">
         <div style="margin-top:9px;"><div class="cf-l">Tipo de dosis</div><div class="cf-selwrap"><select class="cf-sel" id="pcType"><option value="dia">mg/kg/día</option><option value="dosis">mg/kg/dosis</option></select><span class="cf-cv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
         <div style="margin-top:9px;"><div class="cf-l">Intervalo</div><div class="cf-selwrap"><select class="cf-sel" id="pcInt"><option value="24">Cada 24 h (1 toma/día)</option><option value="12" selected>Cada 12 h (2 tomas/día)</option><option value="8">Cada 8 h (3 tomas/día)</option><option value="6">Cada 6 h (4 tomas/día)</option><option value="4">Cada 4 h (6 tomas/día)</option></select><span class="cf-cv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>
-        <div style="margin-top:9px;"><div class="cf-l">Presentación · cantidad de fármaco por volumen</div><div class="cf-grid"><div class="cf-box"><input id="pcAmt" type="number" inputmode="decimal" value="250" step="1" min="0"><select class="cf-unitsel" id="pcAmtU"><option value="mg" selected>mg</option><option value="g">g</option></select></div><div class="cf-box"><input id="pcVolP" type="number" inputmode="decimal" value="5" step="0.1" min="0"><span class="cf-unit">mL</span></div></div></div>
+        <div style="margin-top:9px;"><div class="cf-l">Presentación · cantidad de fármaco por volumen</div><div class="cf-grid"><div class="cf-box"><input id="pcAmt" type="number" inputmode="decimal" placeholder="250" step="1" min="0"><select class="cf-unitsel" id="pcAmtU"><option value="mg" selected>mg</option><option value="g">g</option></select></div><div class="cf-box"><input id="pcVolP" type="number" inputmode="decimal" placeholder="5" step="0.1" min="0"><span class="cf-unit">mL</span></div></div></div>
         <div style="margin-top:9px;"><div class="cf-l">Dosis máxima/día (opcional)</div><div class="cf-box"><input id="pcMaxIn" type="number" inputmode="decimal" placeholder="—" step="1" min="0"><span class="cf-unit">mg</span></div></div>
         <button class="cbtn" onclick="pedCalcRun()"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2.5" stroke="#fff" stroke-width="1.9"/><path d="M8 6h8M8 11h2M12 11h4M8 15h2M12 15h4" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/></svg> Calcular dosis</button>
         <div class="cbase">Cálculo general por peso.&nbsp;<b>Verifica el rango, la dosis máxima y la concentración del producto.</b></div>
@@ -30468,19 +30472,40 @@ function soon(name){showToast(name+' \u00b7 proximamente');}
 
 function norm(s){return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 var RECENTS=[];
-function loadRecents(){ try{ var s=window.localStorage.getItem('vademed_recents'); if(s){ RECENTS=JSON.parse(s)||[]; } }catch(e){} if(!Array.isArray(RECENTS)) RECENTS=[]; }
-function saveRecents(){ try{ window.localStorage.setItem('vademed_recents', JSON.stringify(RECENTS.slice(0,6))); }catch(e){} }
-function pushRecent(i){ i=+i; RECENTS=RECENTS.filter(function(x){return x!==i;}); RECENTS.unshift(i); RECENTS=RECENTS.slice(0,6); saveRecents(); }
+function recKey(r){ return r.t+':'+(r.t==='d'?r.i:(r.t==='m'?r.f:r.k)); }
+function loadRecents(){ try{ var s=window.localStorage.getItem('vademed_recents'); if(s){ RECENTS=JSON.parse(s)||[]; } }catch(e){} if(!Array.isArray(RECENTS)) RECENTS=[]; RECENTS=RECENTS.map(function(x){ return (typeof x==='number')?{t:'d',i:x}:x; }).filter(function(x){ return x&&x.t; }); }
+function saveRecents(){ try{ window.localStorage.setItem('vademed_recents', JSON.stringify(RECENTS.slice(0,12))); }catch(e){} }
+function addRecent(r){ var kk=recKey(r); RECENTS=RECENTS.filter(function(x){return recKey(x)!==kk;}); RECENTS.unshift(r); RECENTS=RECENTS.slice(0,12); saveRecents(); }
+function pushRecent(i){ addRecent({t:'d',i:+i}); }
+function pushRecentTema(f){ var n='',c=''; try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){ if(t.file===f){n=t.t;c=p.cat;} });}); }catch(e){} if(!n)n='Tema'; addRecent({t:'m',f:f,n:n,c:c}); if(document.getElementById('iniRecents'))renderRecents(); }
+function pushRecentTool(k){ var to=(typeof TOOLS!=='undefined'?TOOLS:[]).filter(function(x){return x.key===k;})[0]; if(!to)return; addRecent({t:'k',k:k,n:to.name,s:(TYPELABEL[to.type]||'Herramienta'),ty:to.type}); if(document.getElementById('iniRecents'))renderRecents(); }
+function removeRecent(k){ RECENTS=RECENTS.filter(function(x){return recKey(x)!==k;}); saveRecents(); renderRecents(); }
+function recRowHTML(r){
+  if(r.t==='d'){ var d=DRUGS[r.i]; if(!d) return ''; var k=gkey(d); var g=GROUPS.filter(function(x){return x.key===k;})[0]||GROUPS[0];
+    return '<button class="rec" onclick="iniOpen('+r.i+')"><span class="rec-ic" style="background:var(--bg-med);color:var(--c-med)">'+(ICON[k]||ICON.shield)+'</span><span class="rec-tx"><span class="rec-t">'+d.name+'</span><span class="rec-s">'+g.label+'</span></span><span class="rec-tm">Ficha</span></button>'; }
+  if(r.t==='m'){
+    return '<button class="rec" onclick="iniOpenTema(&#39;'+r.f+'&#39;)"><span class="rec-ic" style="background:var(--bg-inter);color:var(--c-inter)"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="rec-tx"><span class="rec-t">'+r.n+'</span><span class="rec-s">'+(r.c||'Tema')+'</span></span><span class="rec-tm">Tema</span></button>'; }
+  if(r.t==='k'){ var to=(typeof TOOLS!=='undefined'?TOOLS:[]).filter(function(x){return x.key===r.k;})[0]; var nm=r.n||(to?to.name:r.k); var sub=r.s||(to?(TYPELABEL[to.type]||''):''); var ty=r.ty||(to?to.type:''); var tag=ty==='escala'?'Escala':(ty==='calculadora'?'Calc.':'Herr.');
+    return '<button class="rec" onclick="iniOpenTool(&#39;'+r.k+'&#39;)"><span class="rec-ic" style="background:var(--bg-rec);color:var(--c-rec)"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 6h8M8 10h2M8 14h2M14 10v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="rec-tx"><span class="rec-t">'+nm+'</span><span class="rec-s">'+sub+'</span></span><span class="rec-tm">'+tag+'</span></button>'; }
+  return '';
+}
 function renderRecents(){
   var el=document.getElementById('iniRecents'); if(!el) return;
-  var items=RECENTS.filter(function(i){return DRUGS[i];});
-  if(!items.length){ el.innerHTML='<div class="ini-rec-empty">Tus fichas recientes apareceran aqui cuando abras alguna.</div>'; return; }
-  el.innerHTML=items.map(function(i){ var d=DRUGS[i]; var k=gkey(d); var g=GROUPS.filter(function(x){return x.key===k;})[0]||GROUPS[0];
-    return '<button class="rec" onclick="iniOpen('+i+')">'
-      +'<span class="rec-ic" style="background:var(--bg-med);color:var(--c-med)">'+(ICON[k]||ICON.shield)+'</span>'
-      +'<span class="rec-tx"><span class="rec-t">'+d.name+'</span><span class="rec-s">'+g.label+'</span></span>'
-      +'<span class="rec-tm">Ficha</span></button>';
-  }).join('');
+  var items=RECENTS.filter(function(r){ return r.t!=='d' || DRUGS[r.i]; });
+  if(!items.length){ el.innerHTML='<div class="ini-rec-empty">Tus fichas, temas y escalas recientes apareceran aqui cuando abras alguno.</div>'; return; }
+  el.innerHTML=items.map(function(r){ var row=recRowHTML(r); if(!row)return ''; return '<div class="rec-wrap" data-k="'+recKey(r)+'"><span class="rec-del"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M6 7l1 13a1 1 0 001 1h8a1 1 0 001-1l1-13" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>Quitar</span>'+row+'</div>'; }).join('');
+  attachRecSwipe();
+}
+function attachRecSwipe(){
+  var wraps=document.querySelectorAll('#iniRecents .rec-wrap');
+  Array.prototype.forEach.call(wraps,function(w){
+    var rec=w.querySelector('.rec'); if(!rec) return;
+    var x0=0,dx=0,drag=false,moved=false;
+    rec.addEventListener('touchstart',function(e){ var t=e.touches[0]; x0=t.clientX; dx=0; drag=true; moved=false; rec.style.transition='none'; },{passive:true});
+    rec.addEventListener('touchmove',function(e){ if(!drag)return; var t=e.touches[0]; dx=t.clientX-x0; if(dx>0)dx=0; if(dx<-6)moved=true; rec.style.transform='translateX('+dx+'px)'; },{passive:true});
+    rec.addEventListener('touchend',function(){ if(!drag)return; drag=false; rec.style.transition='transform .16s'; if(dx<-70){ rec.style.transform='translateX(-110%)'; setTimeout(function(){ removeRecent(w.getAttribute('data-k')); },150); } else { rec.style.transform='translateX(0)'; } });
+    rec.addEventListener('click',function(e){ if(moved){ e.preventDefault(); e.stopPropagation(); moved=false; } },true);
+  });
 }
 function iniSearchRun(q){
   var nq=norm(q);
@@ -31013,9 +31038,10 @@ function renderToolRes(r){
 }
 function toolRecalc(){ if(CURTOOL&&CURTOOL.compute){ renderToolRes(CURTOOL.compute()); } }
 function hideExtras(){['toolView','toolsPanel','pedCalcView','labsPanel','temasPanel','temaViewer'].forEach(function(id){var e=document.getElementById(id); if(e)e.style.display='none';});}
-function openPedCalc(){var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); ['inicioView','hubView','homeView','detailView','toolView','toolsPanel'].forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';}); var v=document.getElementById('pedCalcView'); if(v) v.style.display='block'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; pedCalcRun(); window.scrollTo({top:0});}
-function pedCalcRun(){var g=function(id){return document.getElementById(id);}; if(!g('pcW'))return; var w=parseFloat(g('pcW').value)||0,dose=parseFloat(g('pcDose').value)||0,type=g('pcType').value,iv=parseInt(g('pcInt').value)||24,dpd=24/iv,amt=parseFloat(g('pcAmt').value)||0,maxd=parseFloat(g('pcMaxIn').value)||0; if(g('pcAmtU').value==='g')amt=amt*1000; var volp=parseFloat(g('pcVolP').value)||0,conc=(amt>0&&volp>0)?amt/volp:0; var total,per; if(type==='dosis'){per=w*dose;total=per*dpd;}else{total=w*dose;per=total/dpd;} var capped=false; if(maxd&&total>maxd){total=maxd;per=total/dpd;capped=true;} g('pcTotal').innerHTML=Math.round(total)+' mg <span style="color:rgba(255,255,255,.45);font-weight:600">('+(dose||0)+' mg/kg'+(type==='dosis'?'/dosis':'/día')+')</span>'; g('pcPer').textContent=Math.round(per)+' mg'; g('pcVol').textContent=conc>0?(per/conc).toFixed(1)+' mL':'—'; var _mlp=conc>0?per/conc:0; if(g('pcVolDay'))g('pcVolDay').textContent=conc>0?(_mlp*dpd).toFixed(1)+' mL':'—'; if(g('pcDrops'))g('pcDrops').textContent=conc>0?Math.round(_mlp*20)+' gotas':'—'; g('pcFreq').innerHTML=Math.round(total)+' mg/día &divide; '+dpd+' tomas = <b>'+Math.round(per)+' mg</b> &middot; cada '+iv+' h'; var mx=g('pcMaxW'); if(capped){mx.classList.add('on');mx.innerHTML='⚠ Supera la dosis máxima. Limitado a '+Math.round(maxd)+' mg/día.';}else mx.classList.remove('on');}
+function openPedCalc(){var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); ['inicioView','hubView','homeView','detailView','toolView','toolsPanel'].forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';}); var v=document.getElementById('pedCalcView'); if(v) v.style.display='block'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; ['pcW','pcDose','pcAmt','pcVolP','pcMaxIn'].forEach(function(id){var e=document.getElementById(id); if(e) e.value='';}); pedCalcRun(); window.scrollTo({top:0});}
+function pedCalcRun(){var g=function(id){return document.getElementById(id);}; if(!g('pcW'))return; var w=parseFloat(g('pcW').value)||0,dose=parseFloat(g('pcDose').value)||0,type=g('pcType').value,iv=parseInt(g('pcInt').value)||24,dpd=24/iv,amt=parseFloat(g('pcAmt').value)||0,maxd=parseFloat(g('pcMaxIn').value)||0; if(!w||!dose){['pcTotal','pcPer','pcVol','pcVolDay','pcDrops','pcFreq'].forEach(function(id){var e=g(id);if(e)e.textContent='—';});var _m=g('pcMaxW');if(_m)_m.classList.remove('on');return;} if(g('pcAmtU').value==='g')amt=amt*1000; var volp=parseFloat(g('pcVolP').value)||0,conc=(amt>0&&volp>0)?amt/volp:0; var total,per; if(type==='dosis'){per=w*dose;total=per*dpd;}else{total=w*dose;per=total/dpd;} var capped=false; if(maxd&&total>maxd){total=maxd;per=total/dpd;capped=true;} g('pcTotal').innerHTML=Math.round(total)+' mg <span style="color:rgba(255,255,255,.45);font-weight:600">('+(dose||0)+' mg/kg'+(type==='dosis'?'/dosis':'/día')+')</span>'; g('pcPer').textContent=Math.round(per)+' mg'; g('pcVol').textContent=conc>0?(per/conc).toFixed(1)+' mL':'—'; var _mlp=conc>0?per/conc:0; if(g('pcVolDay'))g('pcVolDay').textContent=conc>0?(_mlp*dpd).toFixed(1)+' mL':'—'; if(g('pcDrops'))g('pcDrops').textContent=conc>0?Math.round(_mlp*20)+' gotas':'—'; g('pcFreq').innerHTML=Math.round(total)+' mg/día &divide; '+dpd+' tomas = <b>'+Math.round(per)+' mg</b> &middot; cada '+iv+' h'; var mx=g('pcMaxW'); if(capped){mx.classList.add('on');mx.innerHTML='⚠ Supera la dosis máxima. Limitado a '+Math.round(maxd)+' mg/día.';}else mx.classList.remove('on');}
 function openTool(key){
+  try{pushRecentTool(key);}catch(e){}
   var t=null; for(var i=0;i<TOOLS.length;i++){ if(TOOLS[i].key===key){ t=TOOLS[i]; break; } }
   if(!t) return; CURTOOL=t;
   var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub');
@@ -31414,6 +31440,7 @@ function openTemas(){
 var _temaCurrent='';
 function openTemaFile(f){
   _temaCurrent=f;
+  try{pushRecentTema(f);}catch(e){}
   var fr=document.getElementById('temaFrame'), tv=document.getElementById('temaViewer');
   if(fr && tv){
     var name='Tema';
