@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Tiñas · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#8c2f5a;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+/* HEADER */
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+/* QUICK STATS */
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+/* TABBAR */
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+/* PANELS */
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+/* SECCIONES COLAPSABLES */
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+/* ALERTAS */
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+/* TABLAS */
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+/* CHIPS DE POBLACIÓN */
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+
+/* TEXTO */
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+
+/* PUNTOS CLAVE */
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f8ecf2;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* FICHA DE FÁRMACO (fu = farm unit) */
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+
+/* INDICACIONES */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+
+/* BIBLIOGRAFÍA — formato CAD */
+.biblio-header{background:linear-gradient(135deg,#2b0f1e,#8c2f5a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+
+/* ---- EXTRAS NECESARIOS (calculadoras, algoritmo, EKG, fisiopatología) ---- */
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fp-r{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.fp-a{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.fp-b{background:var(--bl);border-left:3px solid var(--bm);color:var(--b);}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.calc-btn{background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:10px 12px;font-size:12.5px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);border-left:3px solid var(--gm);color:var(--g);}
+.res-mid{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.res-high{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.opt{display:block;width:100%;text-align:left;padding:9px 11px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:12.5px;margin-bottom:6px;cursor:pointer;font-family:inherit;color:var(--gray-900);line-height:1.45;}
+.opt.on{border-color:var(--ac);background:#f8ecf2;font-weight:700;color:#8c2f5a;}
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:13.5px;font-weight:700;color:var(--gray-900);margin-bottom:10px;}
+.ekg-w{overflow-x:auto;border:1px solid var(--bd);border-radius:var(--rs);background:#fff;margin-bottom:8px;}
+.farm-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);margin-bottom:8px;overflow:hidden;}
+.farm-h{padding:9px 13px;font-size:13px;font-weight:800;color:#fff;}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.mon-t{font-size:11px;color:var(--gray-600);}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2b0f1e,#8c2f5a);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🍄</div>
+    <div>
+      <div class="hdr-eye">Dermatología · Infectología</div>
+      <div class="hdr-title">Tiñas (dermatofitosis)</div>
+      <div class="hdr-sub">Am J Clin Dermatol 2024 · Khurana ECA 2022 · <i>T. indotineae</i> 2025</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Pelo o uña → sistémico</span>
+    <span class="badge">Nunca esteroide</span>
+    <span class="badge">KOH del BORDE</span>
+    <span class="badge">Resistencia a terbinafina</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Borde</div><div class="qs-l">ahí está el hongo</div></div>
+  <div class="qs"><div class="qs-v">Capitis</div><div class="qs-l">siempre sistémico</div></div>
+  <div class="qs"><div class="qs-v">6 / 12 sem</div><div class="qs-l">uña mano / pie</div></div>
+  <div class="qs"><div class="qs-v">Itraconazol</div><div class="qs-l">si falla terbinafina</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('atlas',this)">🖼️ Atlas</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">💊 Tx Sistémico</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y las tres preguntas que resuelven el caso</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p><strong>Tiña (dermatofitosis):</strong> infección de la <strong>queratina</strong> —piel, pelo o uña— por <strong>dermatofitos</strong> (<em>Trichophyton</em>, <em>Microsporum</em>, <em>Epidermophyton</em>). Se nombra por la <strong>localización</strong>, no por el hongo: <em>corporis, cruris, pedis, manuum, capitis, barbae, faciei, unguium</em>.</p></div>
+  <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">Todo el tratamiento sale de tres preguntas</div>
+  <strong>1. ¿Hay pelo o uña de por medio?</strong> → cuero cabelludo, barba, uñas o pelo velloso invadido = <strong>SISTÉMICO obligatorio</strong>. Ningún tópico penetra el folículo ni la lámina ungueal.<br>
+  <strong>2. ¿Es limitada o extensa?</strong> → 1–2 placas de piel = tópico. Extensa, múltiples sitios, inmunosupresión o falla al tópico = sistémico.<br>
+  <strong>3. ¿Le pusieron esteroide?</strong> → si sí, ya no vas a ver la lesión clásica: es una <strong>tiña incógnita</strong>, y probablemente necesite sistémico.</div></div>
+  <div class="alert a-r"><span class="ai">⛔</span><div><div class="at">Y la regla de oro del tema</div>
+  <strong>NUNCA pongas esteroide (ni combinaciones tipo betametasona + clotrimazol) sobre una tiña.</strong><br><br>
+  Alivia la comezón tres días, borra el borde activo, extiende la infección, la mete al folículo (<strong>granuloma de Majocchi</strong>)… y el uso masivo de estos combinados es <strong>uno de los motores de la resistencia global a terbinafina</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología y agentes — y la novedad de 2024–2025</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Traducción clínica</th></tr></thead><tbody>
+    <tr><td class="dn">Frecuencia</td><td>Es de las infecciones más comunes del mundo (se estima que afecta a <strong>~20–25%</strong> de la población en algún momento). En consulta general, la ves todos los días</td></tr>
+    <tr><td class="dn"><em>Trichophyton rubrum</em></td><td>El agente <strong>más frecuente</strong> en pie, uñas, ingle y cuerpo en el adulto</td></tr>
+    <tr><td class="dn"><em>Trichophyton tonsurans</em></td><td>Causa principal de <strong>tiña capitis</strong> en muchos países (antropofílico, contagio <strong>persona a persona</strong>) → <strong>terbinafina</strong> funciona mejor</td></tr>
+    <tr><td class="dn"><em>Microsporum canis</em></td><td><strong>Zoofílico: gato y perro.</strong> Da capitis muy inflamatoria y <strong>fluoresce con luz de Wood</strong> → <strong>griseofulvina</strong> funciona mejor</td></tr>
+    <tr><td class="dm"><strong><em>Trichophyton indotineae</em></strong> ⚠️</td><td class="dm"><strong>Especie emergente, frecuentemente RESISTENTE a terbinafina</strong> (antes <em>T. mentagrophytes</em> genotipo ITS VIII). Surgió en el sur de Asia y <strong>ya se reporta en América y Europa</strong>. Da tiña extensa, muy pruriginosa y recurrente</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">🧬</span><div><strong>Lo que cambió:</strong> hasta hace poco, "tiña que no mejora" significaba <strong>mal tratada</strong>. Hoy sigue siendo lo más probable — <strong>pero ya no es la única explicación</strong>. Ante una <strong>falla a terbinafina bien dada</strong>, hay que <strong>cultivar e identificar la especie</strong> y considerar <strong>itraconazol</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. El hongo come queratina — y por eso el borde es lo que importa</strong><br>
+  Los dermatofitos producen <strong>queratinasas</strong> y digieren la queratina del estrato córneo. Crecen <strong>de forma centrífuga</strong> desde el punto de inoculación: por eso la lesión <strong>avanza en el borde y "se cura" en el centro</strong> → la clásica placa <strong>anular con aclaramiento central</strong>.<br><br>
+  <strong>Consecuencia práctica inmediata:</strong> el <strong>KOH se raspa del BORDE</strong>, no del centro (el centro ya no tiene hongo → falso negativo), y la crema se aplica <strong>rebasando el borde</strong>.</div>
+  <div class="fp fp-a"><strong>2. La inflamación depende de "qué tan ajeno" es el hongo</strong><br>
+  • <strong>Antropofílicos</strong> (<em>T. rubrum</em>, <em>T. tonsurans</em>): están adaptados al humano → <strong>poca inflamación</strong>, curso crónico y arrastrado.<br>
+  • <strong>Zoofílicos</strong> (<em>M. canis</em> del gato) y <strong>geofílicos</strong>: el sistema inmune los reconoce como muy extraños → <strong>respuesta inflamatoria intensa</strong> → <strong>querión</strong>, pústulas, dolor.<br><br>
+  Por eso el <strong>querión</strong> parece un absceso y no lo es: es <strong>tu propia inmunidad</strong> reaccionando contra el hongo. Drenarlo no solo no ayuda: <strong>daña el folículo</strong>.</div>
+  <div class="fp fp-b"><strong>3. Qué hace el esteroide (y por qué crea monstruos)</strong><br>
+  El esteroide tópico <strong>suprime la respuesta inflamatoria local</strong>. Resultado:<br>
+  • Desaparecen el eritema y la escama → <strong>la lesión pierde su forma anular</strong> y ya no parece tiña (<strong>tiña incógnita</strong>).<br>
+  • El hongo, sin freno inmunológico, <strong>se extiende</strong> y <strong>penetra el folículo piloso</strong> → <strong>granuloma de Majocchi</strong> (pústulas foliculares), que <strong>ya no responde a tópicos</strong>.<br>
+  • A escala poblacional, el uso masivo de combinados esteroide+antifúngico se ha ligado a la <strong>selección de cepas resistentes</strong>.<br><br>
+  Es el único tema donde <strong>la receta equivocada fabrica la enfermedad grave</strong>.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo y reservorios</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Factor</th><th>Comentario</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Tiña pedis / onicomicosis no tratada</strong></td><td class="dm">El <strong>reservorio #1</strong>. Secuencia clásica: <strong>pie → uña → ingle → cuerpo</strong> (autoinoculación con la toalla y la ropa interior)</td></tr>
+    <tr><td class="dn">Calor, humedad, oclusión, sudoración</td><td>Ambiente ideal del dermatofito (clima cálido, botas, obesidad, pliegues)</td></tr>
+    <tr><td class="dm"><strong>Uso de esteroides tópicos</strong></td><td class="dm">Tiña incógnita, Majocchi, extensión — y presión selectiva para resistencia</td></tr>
+    <tr><td class="dn">Mascotas (gato/perro con parches sin pelo)</td><td><em>M. canis</em> → tiña capitis y corporis en niños. <strong>Si no tratas al animal, el niño se reinfecta</strong></td></tr>
+    <tr><td class="dn">Convivientes y hacinamiento</td><td>Portadores <strong>asintomáticos</strong> en el hogar mantienen el ping-pong (sobre todo en capitis)</td></tr>
+    <tr><td class="dn">Deportes de contacto (lucha)</td><td><em>Tinea gladiatorum</em> — brotes en equipos</td></tr>
+    <tr><td class="dn">Regaderas, gimnasios, albercas</td><td>Andar descalzo en pisos compartidos → tiña pedis</td></tr>
+    <tr><td class="dn">Diabetes, VIH, inmunosupresores, biológicos</td><td>Tiña extensa, atípica y recurrente. <strong>Suelen requerir sistémico</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Cómo se ve cada una (mapa rápido)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Tiña</th><th>Presentación típica</th><th>Tratamiento base</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>Corporis</strong></td><td>Placa <strong>anular</strong>, borde activo escamoso, centro aclarado, prurito</td><td>Tópico si es limitada</td></tr>
+    <tr><td class="dn"><strong>Cruris</strong></td><td>Ingle y cara interna de muslos; <strong>respeta el escroto</strong></td><td>Tópico + tratar los pies</td></tr>
+    <tr><td class="dn"><strong>Pedis</strong></td><td>Interdigital (maceración/fisura) o <strong>en mocasín</strong> (descamación difusa)</td><td>Tópico; sistémico si es extensa o hay uñas</td></tr>
+    <tr><td class="dn"><strong>Manuum</strong></td><td>Palma seca y descamativa, a menudo <strong>unilateral</strong> ("dos pies, una mano")</td><td>Frecuentemente sistémico</td></tr>
+    <tr><td class="dm"><strong>Capitis</strong></td><td class="dm">Placa alopécica descamativa, <strong>pelos rotos</strong>, adenopatía. <strong>Querión</strong> si es inflamatoria</td><td class="dm"><strong>SIEMPRE sistémico</strong></td></tr>
+    <tr><td class="dm"><strong>Unguium</strong></td><td class="dm">Uña engrosada, amarilla, hiperqueratosis subungueal, onicólisis</td><td class="dm">Sistémico — <strong>confirmar antes</strong></td></tr>
+    <tr><td class="dn"><strong>Faciei / barbae</strong></td><td>Cara: suele ser <strong>incógnita</strong> (le pusieron crema). Barba: foliculitis → sistémico</td><td>Barbae: sistémico</td></tr>
+    <tr><td class="dm"><strong>Incógnita / Majocchi</strong></td><td class="dm">Sin borde, atípica, extensa; pústulas foliculares. <strong>Antecedente de esteroide</strong></td><td class="dm">Sistémico</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — los 10 de todos los días</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Recetar esteroide o combinados (betametasona + clotrimazol) sobre una tiña.</strong> El error #1: crea <strong>tiña incógnita</strong>, <strong>Majocchi</strong> y presión de <strong>resistencia</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Tratar la tiña capitis con crema o champú solos.</strong> No penetran el folículo. <strong>Siempre sistémico.</strong></div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Tratar las uñas sin confirmar.</strong> Cerca de <strong>la mitad</strong> de las uñas distróficas no son hongos. Son 3 meses de fármaco: <strong>confirma primero</strong>.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Tratar la ingle y olvidar los pies.</strong> El pie y las uñas son <strong>el reservorio</strong>. Si no los tratas, la tiña cruris <strong>regresa</strong>.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Suspender el tópico cuando la lesión "se ve limpia".</strong> Hay que seguir <strong>1–2 semanas más</strong>, o recae.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Raspar el KOH del centro de la lesión.</strong> El hongo está en el <strong>borde activo</strong> → raspar el centro da <strong>falso negativo</strong>.</div></div>
+  <div class="kp"><div class="kn">7</div><div class="kt"><strong>Creer que una lámpara de Wood negativa descarta tiña capitis.</strong> <em>Microsporum</em> fluoresce; <strong><em>Trichophyton</em> NO</strong> — y hoy <em>T. tonsurans</em> es de los agentes más frecuentes.</div></div>
+  <div class="kp"><div class="kn">8</div><div class="kt"><strong>Drenar el querión</strong> o tratarlo con antibiótico. No es un absceso: es inflamación contra el hongo. Drenarlo aumenta el riesgo de <strong>alopecia cicatricial</strong>.</div></div>
+  <div class="kp"><div class="kn">9</div><div class="kt"><strong>Recetar nistatina</strong> (no sirve contra dermatofitos) o <strong>ketoconazol oral</strong> (retirado para esta indicación por hepatotoxicidad).</div></div>
+  <div class="kp"><div class="kn">10</div><div class="kt"><strong>Repetir el mismo antifúngico tras una falla</strong> sin preguntarse por qué falló: ¿adherencia? ¿esteroide encima? ¿reservorio? ¿absorción del itraconazol? ¿<strong><em>T. indotineae</em></strong>?</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Cuándo referir a dermatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Conducta</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Falla a terbinafina bien dada</strong></td><td class="dm">Cultivo con <strong>identificación de especie</strong> + itraconazol; referir (sospecha de <em>T. indotineae</em>)</td></tr>
+    <tr><td class="dm"><strong>Querión</strong></td><td class="dm">Valoración pronta — el retraso deja <strong>alopecia cicatricial</strong></td></tr>
+    <tr><td class="dn">Tiña extensa o en el inmunosuprimido</td><td>Sistémico + búsqueda de causa</td></tr>
+    <tr><td class="dn">Duda diagnóstica (¿psoriasis? ¿eccema? ¿lupus?)</td><td>KOH/cultivo, biopsia si es necesario</td></tr>
+    <tr><td class="dn">Onicomicosis con contraindicación al sistémico</td><td>Alternativas tópicas / valoración individual</td></tr>
+    <tr><td class="dn">Embarazo</td><td>Manejo <strong>tópico</strong>; posponer el sistémico (itraconazol y griseofulvina <strong>contraindicados</strong>)</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">KOH — la prueba que sí debes hacer (y cómo no arruinarla)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">El error técnico que produce falsos negativos</div>
+  <strong>Raspa el BORDE ACTIVO de la lesión, nunca el centro.</strong> El centro está aclarado justamente porque <strong>ya no hay hongo ahí</strong>.</div></div>
+  <div class="kp"><div class="kn">1</div><div class="kt">Limpia con alcohol y deja secar. Raspa con bisturí romo o portaobjetos <strong>la escama del borde</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">En <strong>uñas</strong>: raspado <strong>subungueal</strong> (el detrito de debajo, lo más proximal posible), no el borde libre.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">En <strong>cuero cabelludo</strong>: pelos <strong>arrancados</strong> (no cortados) + escama; el hongo está <strong>dentro y alrededor del pelo</strong>.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">KOH al 10–20%, calentar suavemente. Buscas <strong>hifas septadas y ramificadas</strong> (y artroconidios). <strong>Confirma tiña, pero no identifica la especie.</strong></div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Cultivo (Sabouraud):</strong> tarda semanas, pero es el que da <strong>especie</strong> — indispensable si hay falla al tratamiento (¿<em>T. indotineae</em>?), si vas a dar sistémico prolongado o en capitis.</div></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">🧴</span><div>Si el paciente <strong>ya usó antifúngico o esteroide</strong>, el KOH puede salir negativo. Suspende el tópico <strong>1–2 semanas</strong> y repite antes de descartar el diagnóstico.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔦</span><span class="st">Luz de Wood y dermatoscopia — lo que sí y lo que no</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Herramienta</th><th>Hallazgo</th><th>Interpretación</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Luz de Wood</strong></td><td class="dm"><em>Microsporum</em>: fluorescencia <strong>verde</strong></td><td class="dm">⚠️ <strong><em>Trichophyton</em> NO fluoresce</strong> → <strong>una Wood negativa NO descarta tiña capitis</strong>. Es un error clásico</td></tr>
+    <tr><td class="dn">Luz de Wood</td><td><strong>Rojo coral</strong></td><td>No es tiña: es <strong>eritrasma</strong> (<em>Corynebacterium</em>) → tratamiento distinto</td></tr>
+    <tr><td class="dn">Dermatoscopia (tricoscopia)</td><td>Pelos en <strong>coma</strong>, en <strong>sacacorchos</strong>, en <strong>zigzag</strong>, "puntos negros"</td><td>Muy útil y disponible: apoya el diagnóstico de <strong>tiña capitis</strong> al lado de la cama</td></tr>
+    <tr><td class="dn">Dermatoscopia de uña</td><td>Patrón en <strong>espigas/aurora boreal</strong>, borde irregular</td><td>Orienta, pero <strong>no sustituye la confirmación micológica</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Diagnóstico diferencial — lo que se confunde con tiña</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Diagnóstico</th><th>Lo que lo distingue</th></tr></thead><tbody>
+    <tr><td class="dn">Eccema numular</td><td>Placas <strong>redondas pero SIN aclaramiento central</strong>, muy pruriginosas, vesículas; KOH negativo</td></tr>
+    <tr><td class="dn">Psoriasis</td><td>Escama <strong>plateada gruesa</strong>, superficies extensoras, uñas con <strong>pits</strong>; simétrica</td></tr>
+    <tr><td class="dn">Granuloma anular</td><td>Anular pero <strong>SIN escama</strong> (esta es la clave: sin escama, no es tiña)</td></tr>
+    <tr><td class="dn">Pitiriasis rosada</td><td>Placa heráldica + brote en "árbol de navidad"; autolimitada</td></tr>
+    <tr><td class="dm"><strong>Candidiasis intertriginosa</strong></td><td class="dm">Afecta el <strong>FONDO del pliegue</strong>, <strong>lesiones satélite</strong>, sí toma el <strong>escroto</strong>. La tiña cruris hace lo contrario: borde activo y <strong>respeta el escroto</strong></td></tr>
+    <tr><td class="dn">Eritrasma</td><td>Pliegues, pardo, poca escama; <strong>Wood: rojo coral</strong></td></tr>
+    <tr><td class="dn">Dermatitis seborreica</td><td>Escama grasa, zonas seborreicas; en el cuero cabelludo <strong>sin pelos rotos ni alopecia en placas</strong></td></tr>
+    <tr><td class="dn">Alopecia areata</td><td>Placa alopécica <strong>lisa, sin escama y sin inflamación</strong> (la capitis descama y rompe pelos)</td></tr>
+    <tr><td class="dn">Psoriasis ungueal / trauma</td><td>Causa muy frecuente de uña distrófica <strong>sin hongo</strong> → por eso se confirma antes de tratar</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div><strong>Regla útil:</strong> lesión anular <strong>con escama en el borde</strong> → piensa tiña y haz KOH. Lesión anular <strong>sin escama</strong> → piensa granuloma anular.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-atlas">
+<div class="alert a-i"><span class="ai">🖼️</span><div><div class="at">Atlas esquemático</div>Esquemas para reconocer el patrón, no fotografías. Lo que buscas en cada uno es <strong>dónde está el hongo activo</strong> — porque de ahí sale el KOH y ahí se aplica el tratamiento.</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⭕</span><span class="st">Tiña corporis — la placa anular</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="ekg-w">
+  <svg viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <rect x="0" y="0" width="340" height="190" fill="#fff"/>
+    <circle cx="120" cy="95" r="62" fill="#fdf2f6" stroke="#8c2f5a" stroke-width="9"/>
+    <circle cx="120" cy="95" r="62" fill="none" stroke="#8c2f5a" stroke-width="2" stroke-dasharray="3 3" opacity=".7"/>
+    <circle cx="120" cy="95" r="44" fill="#fff" stroke="#e8c4d3" stroke-width="1"/>
+    <text x="120" y="92" text-anchor="middle" font-size="10" fill="#9a7787">centro</text>
+    <text x="120" y="105" text-anchor="middle" font-size="10" fill="#9a7787">aclarado</text>
+    <line x1="176" y1="70" x2="228" y2="45" stroke="#8c2f5a" stroke-width="1.5"/>
+    <text x="233" y="42" font-size="11" font-weight="700" fill="#8c2f5a">BORDE ACTIVO</text>
+    <text x="233" y="56" font-size="10" fill="#374151">eritematoso, escamoso</text>
+    <text x="233" y="70" font-size="10" fill="#374151">a veces con vesículas</text>
+    <text x="233" y="92" font-size="10" font-weight="700" fill="#7b1c1c">← Aquí se raspa el KOH</text>
+    <text x="233" y="106" font-size="10" font-weight="700" fill="#0a5c45">← Hasta aquí la crema</text>
+    <text x="233" y="120" font-size="9" fill="#6b7280">(2 cm más allá del borde)</text>
+    <line x1="176" y1="120" x2="228" y2="140" stroke="#6b7280" stroke-width="1" stroke-dasharray="2 2"/>
+    <text x="233" y="144" font-size="10" fill="#374151">Crecimiento centrífugo</text>
+  </svg></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">🔬</span><div>Si raspas el <strong>centro</strong>, el KOH sale <strong>negativo</strong> — y no porque no haya tiña, sino porque ahí ya no hay hongo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩹</span><span class="st">Tiña incógnita y granuloma de Majocchi — lo que hace el esteroide</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="ekg-w">
+  <svg viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <rect x="0" y="0" width="340" height="190" fill="#fff"/>
+    <text x="12" y="20" font-size="11" font-weight="700" fill="#0a5c45">ANTES (tiña clásica)</text>
+    <circle cx="70" cy="95" r="42" fill="#fdf2f6" stroke="#8c2f5a" stroke-width="7"/>
+    <circle cx="70" cy="95" r="28" fill="#fff" stroke="#e8c4d3" stroke-width="1"/>
+    <text x="70" y="150" text-anchor="middle" font-size="9" fill="#374151">anular · borde escamoso</text>
+    <path d="M126 95 L166 95" stroke="#7b1c1c" stroke-width="2" marker-end="url(#ar)"/>
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#7b1c1c"/></marker></defs>
+    <text x="146" y="86" text-anchor="middle" font-size="9" font-weight="700" fill="#7b1c1c">esteroide</text>
+    <text x="190" y="20" font-size="11" font-weight="700" fill="#7b1c1c">DESPUÉS (incógnita / Majocchi)</text>
+    <path d="M186 60 Q252 44 312 66 Q332 106 296 140 Q236 158 196 132 Q172 98 186 60 Z" fill="#fbeff2" stroke="#c98aa4" stroke-width="2" stroke-dasharray="5 3"/>
+    <circle cx="222" cy="86" r="4" fill="#c26b8a"/><circle cx="252" cy="72" r="3.4" fill="#c26b8a"/>
+    <circle cx="284" cy="96" r="4.2" fill="#c26b8a"/><circle cx="240" cy="120" r="3.6" fill="#c26b8a"/>
+    <circle cx="272" cy="130" r="3.2" fill="#c26b8a"/><circle cx="206" cy="110" r="3.4" fill="#c26b8a"/>
+    <text x="250" y="172" text-anchor="middle" font-size="9" fill="#374151">sin borde definido · más extensa</text>
+    <text x="250" y="184" text-anchor="middle" font-size="9" font-weight="700" fill="#7b1c1c">pústulas foliculares = Majocchi</text>
+  </svg></div>
+  <div class="alert a-r" style="margin-top:8px;"><span class="ai">⛔</span><div>El esteroide <strong>borra el borde</strong>, extiende la infección y la mete al <strong>folículo</strong>. El Majocchi <strong>ya no responde a tópicos</strong>: obliga a sistémico. Y este cuadro <strong>no lo hace el hongo: lo hace la receta</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦶</span><span class="st">Tiña pedis — interdigital y en mocasín</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="ekg-w">
+  <svg viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <rect x="0" y="0" width="340" height="200" fill="#fff"/>
+    <text x="14" y="18" font-size="11" font-weight="700" fill="#8c2f5a">INTERDIGITAL</text>
+    <ellipse cx="34" cy="62" rx="11" ry="15" fill="#fbeff2" stroke="#c98aa4" stroke-width="1.5"/>
+    <ellipse cx="58" cy="56" rx="9" ry="13" fill="#fbeff2" stroke="#c98aa4" stroke-width="1.5"/>
+    <ellipse cx="80" cy="56" rx="8.5" ry="12" fill="#fbeff2" stroke="#c98aa4" stroke-width="1.5"/>
+    <ellipse cx="101" cy="58" rx="8" ry="11" fill="#fbeff2" stroke="#c98aa4" stroke-width="1.5"/>
+    <ellipse cx="120" cy="62" rx="7" ry="10" fill="#fbeff2" stroke="#c98aa4" stroke-width="1.5"/>
+    <path d="M108 66 L114 74" stroke="#7b1c1c" stroke-width="4" stroke-linecap="round"/>
+    <path d="M90 64 L96 72" stroke="#7b1c1c" stroke-width="3" stroke-linecap="round"/>
+    <text x="128" y="80" font-size="10" font-weight="700" fill="#7b1c1c">4º espacio:</text>
+    <text x="128" y="93" font-size="10" fill="#374151">maceración, fisura</text>
+    <text x="128" y="106" font-size="9" fill="#6b7280">⚠️ en el diabético = puerta</text>
+    <text x="128" y="118" font-size="9" fill="#6b7280">de entrada de celulitis</text>
+    <text x="14" y="150" font-size="11" font-weight="700" fill="#8c2f5a">EN MOCASÍN</text>
+    <path d="M24 196 Q16 168 34 162 Q64 154 96 160 Q124 166 128 180 Q126 194 100 196 Z" fill="#fbeff2" stroke="#8c2f5a" stroke-width="2"/>
+    <path d="M32 186 L44 182 M52 190 L64 185 M72 188 L84 183 M92 190 L104 186 M40 174 L52 170 M76 176 L88 172" stroke="#c98aa4" stroke-width="2" stroke-linecap="round"/>
+    <text x="150" y="164" font-size="10" fill="#374151">Descamación seca y difusa</text>
+    <text x="150" y="177" font-size="10" fill="#374151">de planta y bordes ("talco")</text>
+    <text x="150" y="192" font-size="10" font-weight="700" fill="#8c2f5a">"Dos pies, una mano"</text>
+  </svg></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💅</span><span class="st">Onicomicosis — subungueal distal-lateral</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="ekg-w">
+  <svg viewBox="0 0 340 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <rect x="0" y="0" width="340" height="170" fill="#fff"/>
+    <rect x="30" y="40" width="130" height="90" rx="16" fill="#fdf6f0" stroke="#c9a48a" stroke-width="2"/>
+    <path d="M30 96 Q60 84 160 90 L160 114 Q160 130 144 130 L46 130 Q30 130 30 114 Z" fill="#e8c98f" stroke="#b98b3c" stroke-width="1.5"/>
+    <path d="M96 96 Q118 86 160 90 L160 130 L96 130 Z" fill="#d9a94f" opacity=".85"/>
+    <rect x="30" y="40" width="130" height="16" rx="8" fill="#f6e2e9" stroke="#c98aa4" stroke-width="1"/>
+    <text x="95" y="52" text-anchor="middle" font-size="9" fill="#8c2f5a">matriz / lúnula</text>
+    <line x1="164" y1="104" x2="206" y2="80" stroke="#8c2f5a" stroke-width="1.5"/>
+    <text x="211" y="70" font-size="10" font-weight="700" fill="#8c2f5a">Distal-lateral</text>
+    <text x="211" y="84" font-size="10" fill="#374151">amarillenta, engrosada</text>
+    <text x="211" y="98" font-size="10" fill="#374151">hiperqueratosis subungueal</text>
+    <text x="211" y="112" font-size="10" fill="#374151">onicólisis (se despega)</text>
+    <text x="30" y="152" font-size="10" font-weight="700" fill="#7b1c1c">⚠️ El KOH se raspa del detrito SUBUNGUEAL, lo más proximal posible</text>
+    <text x="30" y="165" font-size="10" font-weight="700" fill="#0a5c45">✔ Confirma (KOH/cultivo/PAS) antes de comprometer 3 meses de fármaco</text>
+  </svg></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧒</span><span class="st">Tiña capitis y querión de Celso</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="ekg-w">
+  <svg viewBox="0 0 340 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <rect x="0" y="0" width="340" height="200" fill="#fff"/>
+    <text x="14" y="18" font-size="11" font-weight="700" fill="#8c2f5a">CAPITIS NO INFLAMATORIA</text>
+    <circle cx="78" cy="98" r="56" fill="#fdf6f0" stroke="#c9a48a" stroke-width="2"/>
+    <circle cx="70" cy="86" r="26" fill="#f3e6ec" stroke="#c98aa4" stroke-width="2"/>
+    <circle cx="60" cy="78" r="2" fill="#2b0f1e"/><circle cx="72" cy="74" r="2" fill="#2b0f1e"/>
+    <circle cx="80" cy="86" r="2" fill="#2b0f1e"/><circle cx="64" cy="92" r="2" fill="#2b0f1e"/>
+    <circle cx="76" cy="96" r="2" fill="#2b0f1e"/><circle cx="56" cy="88" r="2" fill="#2b0f1e"/>
+    <text x="78" y="168" text-anchor="middle" font-size="9" fill="#374151">placa alopécica descamativa</text>
+    <text x="78" y="180" text-anchor="middle" font-size="9" font-weight="700" fill="#8c2f5a">"puntos negros" = pelos rotos</text>
+    <text x="78" y="192" text-anchor="middle" font-size="9" fill="#374151">+ adenopatía occipital</text>
+    <text x="186" y="18" font-size="11" font-weight="700" fill="#7b1c1c">QUERIÓN DE CELSO</text>
+    <circle cx="252" cy="98" r="56" fill="#fdf6f0" stroke="#c9a48a" stroke-width="2"/>
+    <circle cx="246" cy="92" r="32" fill="#f2c9c9" stroke="#7b1c1c" stroke-width="2.5"/>
+    <circle cx="236" cy="82" r="4" fill="#fff8dc" stroke="#b98b3c" stroke-width="1"/>
+    <circle cx="256" cy="80" r="3.6" fill="#fff8dc" stroke="#b98b3c" stroke-width="1"/>
+    <circle cx="262" cy="98" r="4.2" fill="#fff8dc" stroke="#b98b3c" stroke-width="1"/>
+    <circle cx="240" cy="104" r="3.8" fill="#fff8dc" stroke="#b98b3c" stroke-width="1"/>
+    <circle cx="228" cy="96" r="3.2" fill="#fff8dc" stroke="#b98b3c" stroke-width="1"/>
+    <text x="252" y="168" text-anchor="middle" font-size="9" fill="#374151">masa inflamatoria, dolorosa, con pus</text>
+    <text x="252" y="180" text-anchor="middle" font-size="9" font-weight="700" fill="#7b1c1c">NO es absceso · NO drenar</text>
+    <text x="252" y="192" text-anchor="middle" font-size="9" font-weight="700" fill="#7b1c1c">tarde = alopecia cicatricial</text>
+  </svg></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Lo que ves en el KOH</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="ekg-w">
+  <svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+    <rect x="0" y="0" width="340" height="160" fill="#fff"/>
+    <circle cx="100" cy="80" r="66" fill="#f7fbfb" stroke="#9fb8c4" stroke-width="2"/>
+    <path d="M50 58 L74 66 L96 58 L120 70 L146 62" fill="none" stroke="#2b0f1e" stroke-width="2.2"/>
+    <path d="M56 92 L80 100 L100 92 L124 102 L148 94" fill="none" stroke="#2b0f1e" stroke-width="2.2"/>
+    <path d="M96 58 L104 44" fill="none" stroke="#2b0f1e" stroke-width="2.2"/>
+    <path d="M100 92 L92 108" fill="none" stroke="#2b0f1e" stroke-width="2.2"/>
+    <line x1="74" y1="62" x2="74" y2="70" stroke="#8c2f5a" stroke-width="2"/>
+    <line x1="96" y1="54" x2="96" y2="62" stroke="#8c2f5a" stroke-width="2"/>
+    <line x1="120" y1="66" x2="120" y2="74" stroke="#8c2f5a" stroke-width="2"/>
+    <line x1="80" y1="96" x2="80" y2="104" stroke="#8c2f5a" stroke-width="2"/>
+    <line x1="124" y1="98" x2="124" y2="106" stroke="#8c2f5a" stroke-width="2"/>
+    <text x="178" y="56" font-size="11" font-weight="700" fill="#8c2f5a">Hifas SEPTADAS</text>
+    <text x="178" y="70" font-size="10" fill="#374151">y ramificadas</text>
+    <text x="178" y="88" font-size="10" fill="#374151">Los tabiques (líneas rosas)</text>
+    <text x="178" y="101" font-size="10" fill="#374151">son la clave: confirman</text>
+    <text x="178" y="114" font-size="10" fill="#374151">dermatofito, pero</text>
+    <text x="178" y="128" font-size="10" font-weight="700" fill="#7b1c1c">NO dan la especie</text>
+    <text x="178" y="146" font-size="9" fill="#6b7280">→ para eso, cultivo</text>
+  </svg></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧬</span><div>Y hoy la <strong>especie importa</strong>: si falló la terbinafina, la pregunta "¿es <em>T. indotineae</em>?" <strong>solo la contesta el cultivo</strong>.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-esc">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">¿TÓPICO o SISTÉMICO? — la decisión que más se falla</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-i"><span class="ai">📏</span><div>Marca lo que aplique. <strong>Basta UN criterio</strong> para que el tópico ya no sea suficiente.</div></div>
+  <div class="calc-w" id="sis-box">
+    <button class="opt" id="sis-1" onclick="sisTog(1,this)">Afecta <strong>cuero cabelludo o barba</strong> (capitis / barbae)</button>
+    <button class="opt" id="sis-2" onclick="sisTog(2,this)">Afecta <strong>uñas</strong> (onicomicosis)</button>
+    <button class="opt" id="sis-3" onclick="sisTog(3,this)">Es <strong>extensa</strong> o hay <strong>múltiples sitios</strong></button>
+    <button class="opt" id="sis-4" onclick="sisTog(4,this)">Hay <strong>pústulas foliculares</strong> o pelo velloso afectado (<strong>Majocchi</strong>)</button>
+    <button class="opt" id="sis-5" onclick="sisTog(5,this)">Paciente <strong>inmunosuprimido</strong> (diabetes descontrolada, VIH, esteroides, biológicos)</button>
+    <button class="opt" id="sis-6" onclick="sisTog(6,this)"><strong>Falló</strong> un tratamiento tópico bien usado</button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcSIS()">Decidir</button>
+      <button class="calc-btn sc" onclick="resetSIS()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="sis-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧒</span><span class="st">Dosis pediátrica en tiña capitis (por peso)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-w"><span class="ai">⚠️</span><div>La tiña capitis <strong>SIEMPRE</strong> se trata con antifúngico <strong>sistémico</strong>. El champú es coadyuvante, no tratamiento.</div></div>
+  <div class="calc-w">
+    <label class="calc-lbl">Peso del niño (kg)</label>
+    <input id="pes-in" class="calc-in" type="number" inputmode="decimal" placeholder="Ej. 18" oninput="calcPeso()">
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <button class="calc-btn" onclick="calcPeso()">Calcular</button>
+      <button class="calc-btn sc" onclick="resetPeso()">Limpiar</button>
+    </div>
+    <div class="calc-result" id="pes-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💅</span><span class="st">Onicomicosis — esquema, duración y expectativa</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">⛔</span><div><strong>Confirma antes de tratar.</strong> Cerca de <strong>la mitad</strong> de las uñas distróficas no son hongos.</div></div>
+  <div class="calc-w">
+    <div id="on-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcONI()">Calcular esquema</button>
+      <button class="calc-btn sc" onclick="resetONI()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="on-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">⚠️ ¿Resistencia a terbinafina (<i>T. indotineae</i>)?</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-w"><span class="ai">🧬</span><div>La novedad de <strong>2023–2025</strong>: existe resistencia real a terbinafina. Pero <strong>la mayoría de las "tiñas resistentes" son tiñas mal tratadas</strong> — este checklist separa una cosa de la otra.</div></div>
+  <div class="calc-w" id="res-box">
+    <button class="opt" id="res-1" onclick="resTog(1,this)"><strong>Falló la terbinafina</strong> a dosis y duración correctas, con buena adherencia</button>
+    <button class="opt" id="res-2" onclick="resTog(2,this)">Tiña <strong>extensa, muy pruriginosa o recurrente</strong> (incluso "tiña universal")</button>
+    <button class="opt" id="res-3" onclick="resTog(3,this)">Uso previo de <strong>combinados con esteroide</strong> (betametasona + antifúngico)</button>
+    <button class="opt" id="res-4" onclick="resTog(4,this)"><strong>Convivientes o familiares</strong> con el mismo cuadro difícil de tratar</button>
+    <button class="opt" id="res-5" onclick="resTog(5,this)">Antecedente de <strong>viaje u origen</strong> en zona con alta circulación (sur de Asia) o caso previo confirmado</button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcRES()">Evaluar</button>
+      <button class="calc-btn sc" onclick="resetRES()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="res-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Duraciones — tabla de referencia rápida</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Cuadro</th><th>Fármaco</th><th>Duración</th></tr></thead><tbody>
+    <tr><td class="dn">Corporis / cruris limitada</td><td>Terbinafina 1% <strong>crema</strong></td><td>1–2 semanas (+1–2 tras curar)</td></tr>
+    <tr><td class="dn">Corporis / cruris extensa</td><td>Terbinafina 250 mg/día</td><td>2–4 semanas</td></tr>
+    <tr><td class="dn">Pedis</td><td>Tópico / terbinafina oral</td><td>2–4 sem tópico · 2–6 sem oral</td></tr>
+    <tr><td class="dm"><strong>Capitis</strong></td><td class="dm">Terbinafina (por peso)</td><td class="dm"><strong>4–6 semanas</strong></td></tr>
+    <tr><td class="dm"><strong>Capitis</strong> (<em>Microsporum</em>)</td><td class="dm">Griseofulvina 20–25 mg/kg/día</td><td class="dm"><strong>6–8 semanas</strong> (hasta 12)</td></tr>
+    <tr><td class="dm"><strong>Uña de mano</strong></td><td class="dm">Terbinafina 250 mg/día</td><td class="dm"><strong>6 semanas</strong> (se ve sana en ~6 meses)</td></tr>
+    <tr><td class="dm"><strong>Uña de pie</strong></td><td class="dm">Terbinafina 250 mg/día</td><td class="dm"><strong>12 semanas</strong> (se ve sana en ~12 meses)</td></tr>
+    <tr><td class="dn">Resistente / <em>T. indotineae</em></td><td>Itraconazol 200 mg/día</td><td>Frecuentemente <strong>&gt;6 semanas</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo — de la lesión al tratamiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="an" id="algo-box"></div>
+  <div style="margin-top:10px;"><button class="calc-btn sc" onclick="algoStart()">↩ Empezar de nuevo</button></div>
+</div></div>
+</div>
+<div class="panel" id="tab-txc">
+<div class="alert a-g"><span class="ai">💡</span><div><div class="at">Las dos reglas que resuelven casi todo</div><strong>Pelo o uña → sistémico.</strong> <strong>Piel limitada → tópico</strong> (aplicando más allá del borde y 1–2 semanas después de que se vea limpia). Y en ningún caso: <strong>esteroides</strong>.</div></div>
+<div class="chips" id="txc-chips">
+  <button class="pchip on" onclick="setTxc('corp',this)">⭕ Corporis / cruris</button>
+  <button class="pchip" onclick="setTxc('pedis',this)">🦶 Pedis</button>
+  <button class="pchip" onclick="setTxc('capitis',this)">🧒 Capitis</button>
+  <button class="pchip" onclick="setTxc('no',this)">❌ NO hacer</button>
+</div>
+<div id="txc-body"></div>
+</div>
+<div class="panel" id="tab-txh">
+<div class="alert a-i"><span class="ai">💊</span><div><div class="at">Tratamiento sistémico</div>Aquí entran las uñas, la tiña extensa, el Majocchi, el querión… y la <strong>resistencia a terbinafina</strong>, que es lo nuevo del tema.</div></div>
+<div class="chips" id="txh-chips">
+  <button class="pchip on" onclick="setTxh('unas',this)">💅 Onicomicosis</button>
+  <button class="pchip" onclick="setTxh('ext',this)">🩹 Extensa / Majocchi</button>
+  <button class="pchip" onclick="setTxh('resist',this)">🧬 Sospecha de resistencia</button>
+  <button class="pchip" onclick="setTxh('quer',this)">🔥 Querión</button>
+</div>
+<div id="txh-body"></div>
+</div>
+<div class="panel" id="tab-farm">
+<div class="calc-w" style="margin-bottom:12px;">
+  <label class="calc-lbl">Buscar</label>
+  <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. terbinafina, itraconazol, griseofulvina, champú..." oninput="filtrarFarmacos(this.value)">
+</div>
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind">
+<div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · enfermería · paciente y familia · nota · alarma</strong>.</div></div>
+<div id="ind-body"></div>
+</div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('corp',this)">⭕ Corporis</button>
+  <button class="pchip" onclick="setEscen('cruris',this)">🩲 Cruris</button>
+  <button class="pchip" onclick="setEscen('pedis',this)">🦶 Pedis</button>
+  <button class="pchip" onclick="setEscen('capitis',this)">🧒 Capitis / querión</button>
+  <button class="pchip" onclick="setEscen('unas',this)">💅 Onicomicosis</button>
+  <button class="pchip" onclick="setEscen('incog',this)">🧬 Incógnita / resistente</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Cuándo reevaluar</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Cuadro</th><th>Reevaluar</th><th>Qué esperar</th></tr></thead><tbody>
+    <tr><td class="dn">Tiña de piel (tópico)</td><td>2–3 semanas</td><td>Mejoría clara. Si no mejora: ¿es tiña? ¿usó esteroide? ¿hay reservorio? ¿necesita sistémico?</td></tr>
+    <tr><td class="dm"><strong>Capitis</strong></td><td class="dm">4–6 semanas</td><td class="dm">Repoblación del pelo y desaparición de la descamación. Idealmente <strong>curación micológica</strong> antes de suspender</td></tr>
+    <tr><td class="dm"><strong>Onicomicosis</strong></td><td class="dm">3 y 6 meses</td><td class="dm">⚠️ La uña <strong>tarda 6 meses (mano) a 12 meses (pie)</strong> en verse sana. <strong>No es falla del fármaco: es el ritmo de crecimiento de la uña</strong></td></tr>
+    <tr><td class="dn">Tratamiento sistémico prolongado</td><td>PFH según fármaco y duración</td><td>Terbinafina: PFH basal y si &gt;6 semanas. Griseofulvina: BH y PFH si &gt;8 semanas</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Por qué recae — la lista de siempre</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>El reservorio no se trató:</strong> se curó la ingle, pero los <strong>pies y las uñas</strong> siguen infectados. <strong>Esta es la causa #1.</strong></div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Se suspendió al verse limpia.</strong> Hay que seguir <strong>1–2 semanas más</strong> del tópico.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Convivientes o mascota sin tratar</strong> (portadores asintomáticos en casa, gato con parches sin pelo).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Calzado y ropa contaminados</strong>: polvo/spray antifúngico en zapatos; lavar ropa con agua caliente.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Se siguió usando esteroide</strong> (a veces el paciente lo tiene en casa y "se lo pone porque le calma la comezón").</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Absorción fallida del itraconazol</strong>: lo tomó en ayunas o con IBP → nivel insuficiente → "no sirvió".</div></div>
+  <div class="kp"><div class="kn">7</div><div class="kt"><strong>Griseofulvina sin comida grasa</strong> → no se absorbe.</div></div>
+  <div class="kp"><div class="kn">8</div><div class="kt"><strong>Factores no corregidos:</strong> humedad, oclusión, obesidad, diabetes descontrolada, inmunosupresión.</div></div>
+  <div class="kp"><div class="kn">9</div><div class="kt"><strong>Resistencia verdadera</strong> (<em>T. indotineae</em>) — <strong>después</strong> de descartar todo lo anterior.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Prevención y medidas para la casa</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Medida</th><th>Detalle</th></tr></thead><tbody>
+    <tr><td class="dn">Secar bien los pliegues y los pies</td><td>Sobre todo <strong>entre los dedos</strong>, después del baño</td></tr>
+    <tr><td class="dn">No compartir</td><td>Toallas, ropa, calzado, <strong>peines, gorras y almohadas</strong> (capitis)</td></tr>
+    <tr><td class="dn">Calzado y calcetines</td><td>Calcetines de algodón, cambio diario; <strong>polvo o spray antifúngico en los zapatos</strong>; sandalias en regaderas públicas</td></tr>
+    <tr><td class="dm"><strong>Mascotas</strong></td><td class="dm">Gato o perro con <strong>parches sin pelo</strong> → <strong>al veterinario</strong>. Si no, el niño se reinfecta indefinidamente</td></tr>
+    <tr><td class="dm"><strong>Convivientes (capitis)</strong></td><td class="dm">Champú esporicida <strong>a toda la casa</strong>: hay <strong>portadores asintomáticos</strong></td></tr>
+    <tr><td class="dn">Escuela / deporte</td><td>El niño con capitis <strong>puede volver a clases</strong> una vez iniciado el tratamiento. En deportes de contacto, cubrir lesiones y no compartir equipo</td></tr>
+    <tr><td class="dm"><strong>Antibiótico de la casa</strong></td><td class="dm">Tira las cremas con esteroide que guardan "para la comezón". Ahí empieza la tiña incógnita</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <div class="biblio-title">Bibliografía</div>
+  <div class="biblio-sub">Referencias con DOI verificado. Incluye la evidencia <strong>2022–2025</strong> sobre <strong>resistencia a terbinafina</strong> e itraconazol, que es lo que cambió el manejo.</div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Revisión de manejo</div>
+  <div class="biblio-item"><div class="biblio-num">1</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Gupta AK, Venkataraman M, et al.</strong> Management of dermatophytosis: diagnosis, treatment and antifungal resistance. <em>Am J Clin Dermatol.</em> 2024;25(3):359-389.</div>
+    <div class="biblio-meta"><span class="biblio-year">2024</span><span class="biblio-level lv-a">Revisión · Nivel A</span><span class="biblio-doi">DOI: 10.1007/s40257-024-00848-1</span></div>
+    <div class="biblio-note">Base de las dosis, duraciones y monitoreo de este archivo (tópicos, terbinafina, itraconazol, griseofulvina, fluconazol), en adultos y niños.</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🧬 Resistencia antifúngica — lo nuevo</div>
+
+  <div class="biblio-item"><div class="biblio-num">2</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Chow NA, dos Santos AR, Uhrlaß S, et al.</strong> Global emergence of antifungal-resistant dermatophytosis caused by <em>Trichophyton indotineae</em> (formerly <em>T. mentagrophytes</em> ITS genotype VIII): a genomic investigation involving 14 countries. <em>Mycoses.</em> 2025;68(8):e70101.</div>
+    <div class="biblio-meta"><span class="biblio-year">2025</span><span class="biblio-level lv-b">Estudio genómico · Nivel B</span><span class="biblio-doi">DOI: 10.1111/myc.70101</span></div>
+    <div class="biblio-note">Documenta la diseminación global de <em>T. indotineae</em> y su resistencia frecuente a terbinafina; sostiene al <strong>itraconazol como fármaco de elección</strong> en estos casos, y advierte de <strong>resistencia emergente al propio itraconazol</strong>.</div>
+  </div></div>
+
+  <div class="biblio-item"><div class="biblio-num">3</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Khurana A, Agarwal A, Agrawal D, et al.</strong> Effect of different itraconazole dosing regimens on cure rates, treatment duration, safety, and relapse rates in adult patients with tinea corporis/cruris: a randomized clinical trial. <em>JAMA Dermatol.</em> 2022;158(11):1269-1278.</div>
+    <div class="biblio-meta"><span class="biblio-year">2022</span><span class="biblio-level lv-a">ECA · Nivel A</span><span class="biblio-doi">DOI: 10.1001/jamadermatol.2022.3745 · PMID: 36103158</span></div>
+    <div class="biblio-note">Ensayo aleatorizado doble ciego que compara itraconazol <strong>100 vs 200 vs 400 mg/día</strong> en tiña corporis/cruris. Sustenta la dosis de <strong>200 mg/día</strong> como el mejor equilibrio entre eficacia, duración y seguridad.</div>
+  </div></div>
+
+  <div class="biblio-item"><div class="biblio-num">4</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Hassaan ZRAA, Mohamed HAK, Eldahshan RM, et al.</strong> Comparison between the efficacy of terbinafine and itraconazole orally vs. the combination of the two drugs in treating recalcitrant dermatophytosis. <em>Sci Rep.</em> 2023;13(1):19037.</div>
+    <div class="biblio-meta"><span class="biblio-year">2023</span><span class="biblio-level lv-b">ECA · Nivel B</span><span class="biblio-doi">DOI: 10.1038/s41598-023-46361-z</span></div>
+    <div class="biblio-note">Evidencia comparativa en dermatofitosis <strong>recalcitrante</strong> (terbinafina vs itraconazol vs combinación).</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🧒 Tiña capitis</div>
+  <div class="biblio-item"><div class="biblio-num">5</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Dascalu J, Zaaroura H, Renert-Yuval Y, Khamaysi Z, Avitan-Hersh E, Friedland R.</strong> Pediatric tinea capitis: a retrospective cohort study from 2010 to 2021. <em>J Fungi (Basel).</em> 2023;9(3):366.</div>
+    <div class="biblio-meta"><span class="biblio-year">2023</span><span class="biblio-level lv-b">Cohorte · Nivel B</span><span class="biblio-doi">DOI: 10.3390/jof9030366</span></div>
+    <div class="biblio-note">Sustenta la <strong>elección del fármaco según el agente</strong>: la terbinafina fue claramente superior en <em>T. tonsurans</em>, mientras que en <em>M. canis</em> la griseofulvina y el fluconazol tuvieron eficacia similar entre sí.</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Referencia institucional</div>
+  <div class="biblio-item"><div class="biblio-num">6</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>CENETEC / IMSS.</strong> Guías de Práctica Clínica mexicanas sobre diagnóstico y tratamiento de las dermatofitosis.</div>
+    <div class="biblio-meta"><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Institucional</span><span class="biblio-doi">Verifica la versión vigente y el cuadro básico disponible</span></div>
+    <div class="biblio-note">Coteja dosis y presentaciones con tu cuadro básico y protocolo institucional.</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="nivel-legend">
+    <span class="biblio-level lv-a">A — Guía o evidencia fuerte</span>
+    <span class="biblio-level lv-b">B — Evidencia moderada</span>
+    <span class="biblio-level lv-c">C — Evidencia limitada</span>
+    <span class="biblio-level lv-exp">Consenso / institucional</span>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin-top:12px;"><span class="ai">ℹ️</span><div>Material de <strong>apoyo educativo</strong> basado en la evidencia disponible a 2026. Verifica dosis, disponibilidad e interacciones contra tu <strong>protocolo institucional</strong> y la <strong>GPC vigente (CENETEC/IMSS)</strong>. Última revisión: julio 2026.</div>
+</div>
+</div>
+
+<script>
+/* ============ NÚCLEO COMPARTIDO — SERIE PSIQUIATRÍA ============ */
+var AC='#4a2d7a', C2='#0c3b6e', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#f1ecf8';
+
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id);
+  if(t)t.classList.add('on');
+  var b=document.querySelectorAll('.tab');
+  for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling,sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+function fpTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+/* ---------- FICHAS (estilo Sífilis) ---------- */
+var FPN=0;
+function poprow(t,v,c){
+  return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;">'+
+    '<span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span>'+
+    '<span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';
+}
+function buildSifCards(color,farmacos){
+  var h='';
+  for(var i=0;i<farmacos.length;i++){
+    var f=farmacos[i]; FPN++; var id='fp'+FPN;
+    var col=f.pri?color:'#374151';
+    if(f.no)col='#7b1c1c';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';
+    h+='<div id="'+id+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';
+    h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';
+    if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';
+    if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';
+    h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');
+    if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#eef4fb;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  }
+  return h;
+}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){
+  var h='<div style="margin-top:12px;">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>';
+  h+=buildSifCards(cardColor||badgeColor,farmacos);
+  h+='</div>';
+  return h;
+}
+function setTxc(k,el){
+  var c=document.querySelectorAll('#txc-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXC[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+function setTxh(k,el){
+  var c=document.querySelectorAll('#txh-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXH[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txh-body').innerHTML=h;
+}
+
+/* ---------- FÁRMACOS (acordeón) ---------- */
+var FDN=0;
+function fdTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+function famTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';
+}
+function farmCard(f,color,abrir){
+  FDN++; var id='fd'+FDN;
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div>';
+  h+='<div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';
+  h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';
+  h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';
+  if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';
+  h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function filtrarFarmacos(q){
+  q=(q||'').toLowerCase().trim();
+  var h='',hits=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j];
+      var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();
+      if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}
+    }
+    if(cards){
+      h+='<div style="margin-bottom:12px;">';
+      h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';
+      h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';
+      h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';
+      h+='<div id="'+fid+'">'+cards+'</div></div>';
+    }
+  }
+  if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+
+/* ---------- INDICACIONES ---------- */
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var fam=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j],id='ind'+i+'-'+j;
+      h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';
+      h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';
+      h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+      h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';
+      h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';
+      var d='';
+      for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';
+      h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';
+      h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';
+      h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';
+      h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente y familia</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';
+      h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+      h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+function indTog(id){
+  var el=document.getElementById(id),t=document.getElementById(id+'-t');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(t)t.innerHTML=open?'▼ ocultar':'► ver';
+}
+
+/* ---------- ESCENARIOS ---------- */
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';
+  h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';
+  h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';
+  h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';
+  h+='</div></div>';
+  document.getElementById('escen-body').innerHTML=h;
+}
+
+/* ---------- ALGORITMO ---------- */
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){
+    h='<div class="a-q">'+n.q+'</div>';
+    for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';
+  } else {
+    var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';
+  }
+  b.innerHTML=h;
+}
+
+/* ---------- ESCALA GENÉRICA POR ÍTEMS ---------- */
+/* items: [{k:'clave', t:'texto', max:4, labels:[...]}] */
+var SC={};
+function buildEscala(cont,items,pref){
+  var h='';
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    SC[it.k]=0;
+    h+='<div style="margin-bottom:12px;">';
+    h+='<div style="font-size:12.5px;font-weight:700;color:#111827;margin-bottom:5px;">'+(i+1)+'. '+it.t+'</div>';
+    for(var v=0;v<it.labels.length;v++){
+      h+='<button class="opt" data-sc="'+it.k+'" onclick="scPick(\''+it.k+'\','+it.vals[v]+',this)" style="margin-bottom:4px;">'+it.vals[v]+' — '+it.labels[v]+'</button>';
+    }
+    h+='</div>';
+  }
+  document.getElementById(cont).innerHTML=h;
+}
+function scPick(k,v,el){
+  SC[k]=v;
+  var g=document.querySelectorAll('[data-sc="'+k+'"]');
+  for(var i=0;i<g.length;i++)g[i].classList.remove('on');
+  if(el)el.classList.add('on');
+}
+function scSum(keys){
+  var s=0;
+  for(var i=0;i<keys.length;i++)s+=(SC[keys[i]]||0);
+  return s;
+}
+function scReset(keys,resId){
+  for(var i=0;i<keys.length;i++)SC[keys[i]]=0;
+  var all=document.querySelectorAll('[data-sc]');
+  for(var j=0;j<all.length;j++)all[j].classList.remove('on');
+  var r=document.getElementById(resId);
+  if(r){r.className='calc-result';r.innerHTML='';}
+}
+
+/* ============ TIÑAS (DERMATOFITOSIS) — DATOS ============ */
+var AC='#8c2f5a', C2='#0c3b6e', C3='#374151', CO='#0a5c45', NO='#7b1c1c';
+
+/* ---------- FICHAS MAESTRAS ---------- */
+var F_TOP={pri:true,linea:'⭐ 1ª línea — tiña de piel LIMITADA',n:'Antifúngico TÓPICO',
+  dlb:'Esquema',
+  da:'<b>Terbinafina 1% crema</b> 1–2 veces/día × <b>1–2 semanas</b> · <b>Azoles</b> (clotrimazol, ketoconazol, miconazol) 2 veces/día × <b>2–4 semanas</b>',
+  dur:'<b>Continuar 1–2 semanas DESPUÉS</b> de que la lesión desaparezca. Si se suspende al verse limpia, <b>recae</b>',
+  prep:'Aplicar en la lesión <b>y 2 cm más allá del borde</b> (el hongo vive en el borde activo, no en el centro). La <b>terbinafina es fungicida</b> → cursos más cortos; los <b>azoles son fungistáticos</b> → cursos más largos.',
+  iv:'Tópico · ambulatorio',
+  ci:'No sirve sola en: <b>cuero cabelludo, uñas, barba, pelo velloso afectado (Majocchi) ni tiña extensa</b>',
+  ea:'Irritación local, ardor',
+  nota:'Sirve para <b>corporis, cruris, pedis y manuum LIMITADAS</b> (1–2 sitios, sin pelo ni uñas). <b>Evidencia:</b> revisión de manejo de dermatofitosis, Am J Clin Dermatol 2024.'};
+
+var F_TERB={pri:true,linea:'⭐ 1ª línea sistémica (piel, uñas, capitis por Trichophyton)',n:'Terbinafina oral',
+  dlb:'Dosis adulto',
+  da:'<b>250 mg VO cada 24 h</b>',
+  dur:'<b>Corporis/cruris:</b> 2–4 sem · <b>Pedis:</b> 2–6 sem · <b>Capitis:</b> 4–6 sem · <b>Uñas de MANO:</b> 6 sem · <b>Uñas de PIE:</b> 12 sem',
+  prep:'<b>Pediátrico (por peso):</b> &lt;20 kg → <b>62.5 mg/día</b> · 20–40 kg → <b>125 mg/día</b> · &gt;40 kg → <b>250 mg/día</b>. (Con granulado la banda usual es 125 / 187.5 / 250 mg según &lt;25, 25–35 y &gt;35 kg.)',
+  iv:'VO · con o sin alimentos',
+  pres:'Tabletas 250 mg · crema 1%',
+  mon:'<b>PFH basal</b>; repetir si el curso se prolonga (&gt;6 semanas) o hay síntomas. Hepatotoxicidad rara pero real',
+  ci:'Hepatopatía activa o crónica. Precaución: puede exacerbar <b>lupus y psoriasis</b>',
+  ea:'<b>Disgeusia/ageusia</b> (puede durar semanas), cefalea, molestia GI, exantema',
+  emb:'<b>Diferir</b> en el embarazo (trata tópico y pospón el sistémico: casi ninguna tiña es urgente)',
+  nota:'<b>Inhibidor de CYP2D6</b> → ojo con antidepresivos tricíclicos, ISRS y betabloqueadores. ⚠️ <b>Y aquí está la novedad de 2024–25:</b> si falla una terbinafina bien dada, <b>piensa en <i>Trichophyton indotineae</i></b> (resistente a terbinafina) → cultivo con identificación de especie y cambia a <b>itraconazol</b>.'};
+
+var F_ITRA={pri:true,linea:'⭐ 1ª línea si hay sospecha de RESISTENCIA · 2ª línea general',n:'Itraconazol oral',
+  dlb:'Dosis adulto',
+  da:'<b>200 mg VO cada 24 h</b> (piel) — el ensayo aleatorizado de Khurana 2022 mostró que <b>200 mg/día es el mejor equilibrio</b> eficacia/seguridad frente a 100 y 400 mg',
+  dur:'<b>Corporis/cruris:</b> 2–4 sem (más si es recalcitrante) · <b>Uñas continuo:</b> 200 mg/día × 6 sem (mano) o 12 sem (pie) · <b>Pulsos:</b> 200 mg c/12 h × 1 semana al mes (2 pulsos mano · 3–4 pulsos pie)',
+  prep:'⚠️ <b>Necesita ácido gástrico</b> (cápsulas): tomar <b>con alimentos y bebida ácida</b>; los <b>IBP y antiácidos reducen su absorción</b>. Su absorción es <b>errática</b> — es la causa oculta de muchas "fallas".',
+  iv:'VO · con comida',
+  pres:'Cápsulas 100 mg',
+  mon:'PFH si el curso es prolongado; vigilar datos de insuficiencia cardiaca',
+  ci:'<b>Insuficiencia cardiaca</b> (efecto inotrópico negativo) · <b>embarazo</b> · con <b>simvastatina/lovastatina</b>, ergotamina, ciertos antiarrítmicos',
+  ea:'GI, cefalea, hipertrigliceridemia, edema, prolongación del QT',
+  nota:'⚠️ <b>Inhibidor potente de CYP3A4</b>: revisa TODA la lista de medicamentos antes de recetarlo (estatinas, anticoagulantes, benzodiacepinas, antipsicóticos, antirretrovirales…). <b>Es el fármaco de elección ante dermatofitosis resistente a terbinafina (<i>T. indotineae</i>).</b>'};
+
+var F_GRIS={pri:false,linea:'1ª línea en tiña CAPITIS por Microsporum · niños',n:'Griseofulvina',
+  dlb:'Dosis',
+  da:'<b>Niños (microsize):</b> 20–25 mg/kg/día · <b>Ultramicronizada:</b> 10–15 mg/kg/día · <b>Adulto:</b> 500–1000 mg/día',
+  dur:'<b>Capitis: 6–8 semanas</b> (puede requerir hasta 12 si es por <i>Microsporum</i>) — se prolonga hasta la curación micológica',
+  prep:'⚠️ <b>Tomar con comida GRASA</b> (leche entera, yogur): su absorción depende de la grasa. Sin eso, no alcanza nivel y "no funciona".',
+  iv:'VO · con alimentos grasos',
+  pres:'Tabletas 500 mg · suspensión',
+  mon:'BH y PFH si el tratamiento supera ~8 semanas o se repiten cursos',
+  ci:'<b>Embarazo (teratógena)</b>, porfiria, hepatopatía. Evitar embarazo hasta <b>1 mes</b> después (y en varones, se recomienda esperar antes de concebir)',
+  ea:'GI, cefalea, <b>fotosensibilidad</b>, exantema',
+  nota:'<b>Inductor enzimático:</b> reduce la eficacia de <b>anticonceptivos orales</b> y de la warfarina — <b>avísale a la paciente</b>. Sigue siendo la mejor opción cuando el agente es <b><i>Microsporum canis</i></b> (el del gatito), mientras que la <b>terbinafina gana en <i>Trichophyton tonsurans</i></b>.'};
+
+var F_FLU={pri:false,linea:'Alternativa',n:'Fluconazol oral',
+  dlb:'Dosis',
+  da:'<b>Piel:</b> 150–200 mg <b>una vez por semana</b> × 2–6 semanas · <b>Capitis (niños):</b> ~6 mg/kg/día',
+  dur:'Uñas: 150–300 mg/semana × 6–12 meses (poco eficaz — <b>no es primera opción</b> en uñas)',
+  iv:'VO',
+  pres:'Cápsulas 100/150/200 mg',
+  mon:'PFH en cursos largos',
+  ci:'QT largo; interacciones (CYP2C9/3A4): warfarina, fenitoína',
+  ea:'GI, cefalea, exantema',
+  nota:'Cómodo (dosis semanal) y útil cuando terbinafina e itraconazol no son opciones. <b>Menos eficaz</b> que ambos en uñas. Ojo: la resistencia cruzada con terbinafina se ha descrito en cepas de <i>T. indotineae</i>.'};
+
+var F_CHAMP={pri:true,linea:'Coadyuvante — obligatorio en capitis',n:'Champú antifúngico (esporicida)',
+  dlb:'Esquema',
+  da:'<b>Ketoconazol 2%</b> o <b>sulfuro de selenio 2.5%</b>, 2–3 veces por semana, dejar actuar 5 minutos',
+  dur:'Durante todo el tratamiento sistémico (2–4 semanas mínimo)',
+  prep:'Úsalo <b>en el niño Y en los contactos del hogar</b> (padres y hermanos pueden ser <b>portadores asintomáticos</b> y reinfectarlo).',
+  iv:'Tópico',
+  nota:'<b>No cura la tiña capitis</b> (ningún tópico lo hace: no penetra el folículo), pero <b>reduce las esporas y el contagio</b> — que es exactamente lo que evita el ping-pong en la casa y en la escuela.'};
+
+var F_QUER={pri:true,linea:'⭐ Querión — no es un absceso',n:'Manejo del querión de Celso',
+  dlb:'Conducta',
+  da:'<b>Antifúngico sistémico</b> (igual que cualquier capitis) + champú esporicida. Considerar <b>prednisona 0.5–1 mg/kg/día × 1–2 semanas</b> si la inflamación es intensa',
+  prep:'<b>NO drenar. NO desbridar. NO dar antibiótico "para el pus".</b> Ese "pus" es una respuesta inflamatoria intensa contra el hongo, no una infección bacteriana (aunque puede sobreinfectarse: solo entonces añade antibiótico).',
+  iv:'VO',
+  ci:'—',
+  nota:'⚠️ <b>El querión que se trata tarde deja ALOPECIA CICATRICIAL permanente.</b> Ese es todo el juego: reconocerlo rápido y dar antifúngico sistémico, no bisturí.'};
+
+var F_CONF={pri:true,linea:'⭐ Antes de tratar uñas — no negociable',n:'Confirmación micológica (KOH y/o cultivo)',
+  dlb:'Por qué',
+  da:'<b>Aproximadamente la mitad de las distrofias ungueales NO son hongos</b> (psoriasis, traumatismo, liquen plano, onicogrifosis)',
+  prep:'KOH del raspado subungueal · cultivo (Sabouraud) · PAS de recorte ungueal (el más sensible de los tres cuando está disponible).',
+  iv:'Consultorio / laboratorio',
+  nota:'Vas a comprometer al paciente a <b>3 meses de fármaco sistémico con interacciones y control hepático</b>. Hacerlo sin confirmar es exponerlo a riesgo sin diagnóstico. <b>Confirma primero.</b>'};
+
+var N_ESTER={no:true,linea:'❌ El error #1 de todo el tema',n:'Esteroide tópico (solo o combinado)',
+  dlb:'Por qué no',
+  da:'Las combinaciones tipo <b>betametasona + clotrimazol</b> (y el esteroide solo) producen <b>TIÑA INCÓGNITA</b>',
+  nota:'El esteroide <b>apaga la inflamación</b> → la lesión "mejora" 3 días, pierde su borde escamoso y su forma anular, y el hongo <b>se extiende y se mete al folículo</b> (<b>granuloma de Majocchi</b>) — que ya <b>no responde a tópicos</b> y obliga a tratamiento sistémico. <b>Además, el uso indiscriminado de estos combinados es uno de los motores de la resistencia a terbinafina.</b> Nunca los des "por si es dermatitis".'};
+
+var N_NIST={no:true,linea:'❌ No sirve',n:'Nistatina para tiña',
+  dlb:'Por qué no',
+  da:'La nistatina <b>NO tiene actividad contra dermatofitos</b> — solo contra <i>Candida</i>',
+  nota:'Si le pusiste nistatina a una tiña, no la trataste. (Y al revés: la candidiasis del pliegue tiene <b>lesiones satélite</b> y afecta <b>el fondo del pliegue</b>; la tiña cruris <b>respeta el escroto</b> y tiene <b>borde activo</b>.)'};
+
+var N_TOPCAP={no:true,linea:'❌ Falla garantizada',n:'Tratar tiña CAPITIS o UÑAS solo con tópico',
+  dlb:'Por qué no',
+  da:'Ningún tópico penetra el <b>folículo piloso</b> ni la <b>lámina ungueal</b> a concentración útil',
+  nota:'La capitis <b>SIEMPRE</b> lleva antifúngico <b>sistémico</b>. El champú es coadyuvante (reduce esporas y contagio), <b>no tratamiento</b>. Tratar una capitis con crema = semanas perdidas + riesgo de querión y <b>alopecia cicatricial</b>.'};
+
+var N_KETO={no:true,linea:'❌ Retirado para esta indicación',n:'Ketoconazol ORAL',
+  dlb:'Por qué no',
+  da:'<b>Hepatotoxicidad grave</b> e insuficiencia suprarrenal; su uso en dermatofitosis fue restringido/retirado por las agencias regulatorias',
+  nota:'El ketoconazol <b>tópico y en champú sí</b> se usa. El <b>oral, no</b> para tiñas: hay opciones más seguras y más eficaces (terbinafina, itraconazol).'};
+
+/* ---------- TX CONSULTA (tópico / ambulatorio) ---------- */
+var TXC={
+ corp:[['1ª Línea','Tiña corporis/cruris LIMITADA (1–2 placas, sin pelo ni uñas)',AC,[F_TOP]],
+       ['2ª Línea','Si es extensa, recurrente o falla el tópico',C2,[F_TERB,F_ITRA]],
+       ['3ª Línea','Buscar el reservorio',C3,[{pri:true,linea:'3ª línea — la clave para que no regrese',n:'Buscar y tratar el RESERVORIO',
+         dlb:'Dónde',
+         da:'Revisa <b>SIEMPRE los pies y las uñas</b> del paciente con tiña cruris o corporis',
+         prep:'La secuencia típica es: <b>tiña pedis → uñas → ingle → cuerpo</b> (autoinoculación con la toalla y la ropa interior). Si tratas la ingle y dejas el pie, <b>regresa</b>.',
+         iv:'Exploración',
+         nota:'También busca: <b>mascotas</b> (gato/perro con placas alopécicas → <i>M. canis</i>), <b>convivientes</b> con lesiones, deportes de contacto (lucha → <i>tinea gladiatorum</i>), y baños/gimnasios compartidos.'}]],
+       ['Coadyuvantes','Medidas generales',CO,[{pri:true,linea:'Coadyuvante',n:'Medidas que sí cambian la recurrencia',
+         dlb:'Indicaciones',
+         da:'Secar bien los pliegues · ropa <b>holgada y de algodón</b> · <b>no compartir</b> toallas, ropa ni calzado · lavar la ropa con agua caliente',
+         iv:'Educación',
+         nota:'La humedad y la oclusión son el ambiente del dermatofito. Sin cambiar eso, el fármaco solo compra tiempo.'}]]],
+
+ pedis:[['1ª Línea','Tiña pedis (interdigital o en mocasín)',AC,[F_TOP]],
+        ['2ª Línea','Mocasín extensa, hiperqueratósica o con uñas afectadas',C2,[F_TERB,F_ITRA]],
+        ['3ª Línea','Si hay uñas afectadas',C3,[F_CONF]],
+        ['Coadyuvantes','Evitar la recaída',CO,[{pri:true,linea:'Coadyuvante',n:'Calzado, humedad y prevención',
+          dlb:'Indicaciones',
+          da:'Secar entre los dedos · calcetines de algodón, cambiarlos a diario · <b>polvo o spray antifúngico en el calzado</b> · sandalias en regaderas públicas',
+          iv:'Educación',
+          nota:'⚠️ En el <b>diabético</b>, la tiña pedis interdigital es una <b>puerta de entrada</b> para celulitis y erisipela: trátala en serio, no es cosmética.'}]]],
+
+ capitis:[['1ª Línea','⚠️ Tiña CAPITIS — SIEMPRE tratamiento sistémico',AC,[F_TERB,F_GRIS]],
+          ['2ª Línea','Coadyuvante obligatorio (no es opcional)',C2,[F_CHAMP]],
+          ['3ª Línea','Si hay querión',C3,[F_QUER]],
+          ['Coadyuvantes','Lo que NO debes hacer',NO,[N_TOPCAP]]],
+
+ no:[['❌ NO recomendados','Lo que hace daño (y se receta todos los días)',NO,[N_ESTER,N_NIST,N_TOPCAP,N_KETO]],
+     ['Coadyuvantes','Lo que SÍ funciona',AC,[F_TOP,F_TERB,F_ITRA]]]
+};
+
+/* ---------- TX SISTÉMICO ---------- */
+var TXH={
+ unas:[['1ª Línea','Onicomicosis — primero CONFIRMA',AC,[F_CONF,F_TERB]],
+       ['2ª Línea','Alternativa o si hay contraindicación',C2,[F_ITRA]],
+       ['3ª Línea','Coadyuvante tópico',C3,[{pri:false,linea:'3ª línea — solo casos leves o coadyuvante',n:'Laca antifúngica (ciclopirox / amorolfina)',
+         dlb:'Uso',
+         da:'Onicomicosis <b>leve, distal, sin afección de la matriz</b>, o como coadyuvante del sistémico',
+         dur:'Meses (hasta que crezca la uña sana: <b>6 meses mano, 12 meses pie</b>)',
+         iv:'Tópico ungueal',
+         nota:'Como <b>monoterapia tiene tasas de curación bajas</b>. Útil cuando el sistémico está contraindicado o el paciente no lo quiere. <b>Trata también la tiña pedis</b> o la uña se reinfecta.'}]],
+       ['Coadyuvantes','Sin esto, recae',CO,[{pri:true,linea:'Coadyuvante clave',n:'Tratar la tiña PEDIS al mismo tiempo',
+         dlb:'Por qué',
+         da:'La onicomicosis <b>casi siempre nace de una tiña pedis</b>, y la reinfección viene del mismo pie y del calzado',
+         iv:'Tópico',
+         nota:'Curar la uña y dejar el pie es garantizar la recaída. <b>Trata las dos cosas y desinfecta el calzado.</b>'}]]],
+
+ ext:[['1ª Línea','Tiña extensa, recurrente o granuloma de Majocchi',AC,[F_TERB,F_ITRA]],
+      ['2ª Línea','Buscar por qué es extensa',C2,[{pri:true,linea:'2ª línea — pregunta obligada',n:'¿Por qué está extensa? Busca la causa',
+        dlb:'Descartar',
+        da:'① <b>Uso previo de esteroide tópico</b> (tiña incógnita/Majocchi) · ② <b>Inmunosupresión</b> (diabetes, VIH, esteroide sistémico, biológicos) · ③ <b>Reservorio no tratado</b> (pies, uñas, mascota, conviviente) · ④ <b>Resistencia</b> (<i>T. indotineae</i>)',
+        iv:'Consulta',
+        nota:'Una tiña que se extiende <b>siempre tiene una explicación</b>. Si solo subes la dosis sin buscarla, vuelve.'}]],
+      ['3ª Línea','Si el pelo velloso está afectado',C3,[{pri:false,linea:'3ª línea — Majocchi',n:'Granuloma de Majocchi',
+        dlb:'Qué es',
+        da:'El hongo <b>invadió el folículo piloso</b> → pápulas y pústulas foliculares sobre la placa',
+        prep:'<b>Los tópicos NO llegan al folículo</b> → requiere <b>sistémico</b> (terbinafina 250 mg/día × 4–6 semanas, o itraconazol).',
+        iv:'VO',
+        nota:'Es la consecuencia clásica del <b>esteroide tópico</b> aplicado sobre una tiña. Si ves pústulas foliculares sobre una placa "de eccema que no mejora", piensa en esto.'}]],
+      ['Coadyuvantes','Higiene y contactos',CO,[F_CHAMP]]],
+
+ resist:[['1ª Línea','⚠️ Sospecha de resistencia a terbinafina (<i>T. indotineae</i>)',NO,[{pri:true,linea:'⚠️ Novedad 2024–2025',n:'Dermatofitosis resistente a terbinafina',
+        dlb:'Cuándo sospechar',
+        da:'Tiña <b>extensa, muy pruriginosa, recurrente</b> que <b>NO responde</b> a terbinafina bien dada (dosis y duración correctas) — sobre todo si hubo <b>esteroides tópicos combinados</b>, contacto familiar afectado o viaje/origen del sur de Asia',
+        prep:'<b><i>Trichophyton indotineae</i></b> (antes <i>T. mentagrophytes</i> genotipo ITS VIII): emergente a nivel mundial, <b>frecuentemente resistente a terbinafina</b>. Ya se reporta en América y Europa.',
+        iv:'Consulta / laboratorio',
+        mon:'<b>Cultivo con identificación de especie</b> (y prueba de sensibilidad si está disponible). Deriva a dermatología.',
+        nota:'<b>Conducta:</b> el <b>itraconazol</b> es hoy el fármaco de elección en estos casos (200 mg/día, cursos frecuentemente <b>&gt;6 semanas</b>). ⚠️ Vigila su absorción errática (tomar con comida; los IBP la reducen) y sus interacciones por CYP3A4. Ya se describe también <b>resistencia emergente a itraconazol</b> → no lo uses a la ligera.'},F_ITRA]],
+      ['2ª Línea','Confirmar antes de escalar',C2,[{pri:true,linea:'2ª línea — antes de culpar al hongo',n:'¿De verdad es resistencia?',
+        dlb:'Verifica',
+        da:'① ¿La <b>dosis y la duración</b> fueron correctas? ② ¿<b>Sí lo tomó</b>? ③ ¿Se aplicó <b>esteroide</b> encima? ④ ¿Se trató el <b>reservorio</b> (pies, uñas, mascota, familia)? ⑤ ¿El itraconazol se tomó <b>con comida</b> y sin IBP? ⑥ ¿<b>Es tiña</b>, o es psoriasis/eccema?',
+        iv:'Consulta',
+        nota:'<b>La mayoría de las "tiñas resistentes" son tiñas mal tratadas, mal absorbidas o mal diagnosticadas.</b> Revisa esas seis casillas antes de asumir <i>T. indotineae</i>.'}]],
+      ['3ª Línea','Medidas de control',C3,[F_CHAMP]],
+      ['Coadyuvantes','Lo que la generó',NO,[N_ESTER]]],
+
+ quer:[['1ª Línea','Querión de Celso',AC,[F_QUER,F_TERB]],
+       ['2ª Línea','Elección del fármaco según el agente',C2,[F_GRIS]],
+       ['3ª Línea','Reducir contagio',C3,[F_CHAMP]],
+       ['Coadyuvantes','Errores clásicos',NO,[{no:true,linea:'❌ No hacer',n:'Drenar el querión / tratarlo como absceso',
+         dlb:'Por qué no',
+         da:'No es una colección bacteriana: es <b>inflamación intensa contra el hongo</b>',
+         nota:'Drenar o desbridar <b>aumenta el daño folicular</b> y el riesgo de <b>alopecia cicatricial</b>. El tratamiento es <b>antifúngico sistémico</b> (± esteroide corto si la inflamación es marcada). El antibiótico solo si hay <b>sobreinfección bacteriana demostrada</b>.'}]]]
+};
+
+/* ---------- FÁRMACOS (acordeón) ---------- */
+var FARMACOS=[
+ {familia:'Tópicos — tiña de piel limitada',color:'#8c2f5a',farmacos:[
+  {n:'Terbinafina 1% crema',ini:'1–2 veces/día × 1–2 semanas',obj:'Alilamina · <b>fungicida</b> → cursos más cortos',iv:'Tópico',pr:'Crema 1% (15–30 g)',
+   ci:'No usar sola en capitis, uñas o Majocchi',ea:'Irritación, ardor local',
+   mon:'Reevaluar a las 2 semanas',
+   nota:'La <b>más eficaz de los tópicos</b> y con el curso más corto. Aplicar <b>2 cm más allá del borde</b> y continuar <b>1–2 semanas después</b> de que desaparezca la lesión.'},
+  {n:'Clotrimazol 1% crema',ini:'2 veces/día × 2–4 semanas',obj:'Azol · fungistático',iv:'Tópico',pr:'Crema 1% · disponible en cuadro básico',
+   ci:'—',ea:'Irritación local',mon:'—',
+   nota:'Barato y disponible. ⚠️ <b>Nunca en la combinación con betametasona</b> — esa presentación es la que produce la tiña incógnita.'},
+  {n:'Ketoconazol 2% crema/champú',ini:'Crema 1–2/día × 2–4 sem · Champú 2–3/semana',obj:'Azol; el champú además es esporicida',iv:'Tópico',pr:'Crema 2% · champú 2%',
+   ci:'—',ea:'Irritación, sequedad',mon:'—',
+   nota:'El <b>champú es coadyuvante obligatorio en tiña capitis</b> (reduce esporas y contagio) — <b>pero no es tratamiento</b>. El ketoconazol <b>oral NO se usa</b> para tiñas.'},
+  {n:'Ciclopirox 1% / amorolfina (laca ungueal)',ini:'Laca 1–2 veces/semana, meses',obj:'Onicomicosis leve distal o coadyuvante del sistémico',iv:'Tópico ungueal',pr:'Laca 8%',
+   ci:'—',ea:'Irritación periungueal',mon:'Hasta que crezca uña sana (6 meses mano · 12 meses pie)',
+   nota:'Tasas de curación bajas como monoterapia. Útil si el sistémico está contraindicado. <b>Trata siempre la tiña pedis acompañante.</b>'}]},
+
+ {familia:'Sistémicos',color:'#0c3b6e',farmacos:[
+  {n:'Terbinafina oral',ini:'250 mg VO c/24 h (adulto)',obj:'1ª línea sistémica: piel, uñas y capitis por <i>Trichophyton</i>',iv:'VO',pr:'Tabletas 250 mg',
+   ci:'Hepatopatía activa; precaución en lupus y psoriasis',
+   ea:'<b>Disgeusia/ageusia</b>, cefalea, GI, exantema; hepatotoxicidad rara',
+   mon:'<b>PFH basal</b>; repetir si &gt;6 semanas o si hay síntomas (ictericia, coluria, náusea persistente)',
+   nota:'<b>Pediátrico:</b> &lt;20 kg 62.5 mg · 20–40 kg 125 mg · &gt;40 kg 250 mg. <b>Duración:</b> corporis 2–4 sem · pedis 2–6 sem · capitis 4–6 sem · uña mano 6 sem · uña pie 12 sem. Inhibe <b>CYP2D6</b>. ⚠️ Si falla bien dada → sospecha <b><i>T. indotineae</i></b>.'},
+  {n:'Itraconazol',ini:'200 mg VO c/24 h (piel) · pulsos 200 mg c/12 h × 1 sem/mes (uñas)',obj:'Resistencia a terbinafina, tiña extensa, uñas',iv:'VO con alimentos',pr:'Cápsulas 100 mg',
+   ci:'<b>Insuficiencia cardiaca</b>, embarazo, simvastatina/lovastatina, ergotamina',
+   ea:'GI, cefalea, edema, hipertrigliceridemia, QT',
+   mon:'PFH en cursos largos; revisar interacciones ANTES de recetar',
+   nota:'⚠️ <b>Absorción errática</b>: requiere <b>ácido gástrico</b> → con comida y bebida ácida; <b>los IBP la reducen</b>. <b>Inhibidor potente de CYP3A4.</b> Es hoy el fármaco de elección para la <b>dermatofitosis resistente a terbinafina</b>. El RCT de Khurana 2022 favorece <b>200 mg/día</b> sobre 100 o 400.'},
+  {n:'Griseofulvina',ini:'Niños 20–25 mg/kg/día (microsize) · adulto 500–1000 mg/día',obj:'Tiña capitis, sobre todo por <i><b>Microsporum canis</b></i>',iv:'VO <b>con comida grasa</b>',pr:'Tabletas 500 mg · suspensión',
+   ci:'<b>Embarazo (teratógena)</b>, porfiria, hepatopatía',
+   ea:'GI, cefalea, <b>fotosensibilidad</b>, exantema',
+   mon:'BH y PFH si &gt;8 semanas o cursos repetidos',
+   nota:'⚠️ <b>Sin grasa no se absorbe</b> (dala con leche entera o yogur). <b>Inductor enzimático</b>: reduce anticonceptivos orales y warfarina. Duración en capitis: <b>6–8 semanas</b> (hasta 12 en <i>Microsporum</i>).'},
+  {n:'Fluconazol',ini:'150–200 mg VO una vez por semana × 2–6 sem (piel) · niños ~6 mg/kg/día',obj:'Alternativa cuando terbinafina/itraconazol no son opción',iv:'VO',pr:'Cápsulas 100/150/200 mg',
+   ci:'QT largo; interacciones con warfarina y fenitoína',ea:'GI, cefalea, exantema',
+   mon:'PFH en cursos largos',
+   nota:'Cómodo por la dosis semanal, pero <b>menos eficaz en uñas</b>. Se ha descrito <b>resistencia cruzada</b> con terbinafina en cepas de <i>T. indotineae</i>.'}]},
+
+ {familia:'❌ Lo que NO debes recetar',color:'#7b1c1c',farmacos:[
+  {n:'Betametasona + clotrimazol (y cualquier esteroide sobre una tiña)',ini:'❌ Nunca sobre una tiña',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'<b>Tiña incógnita</b>, granuloma de Majocchi, extensión de la infección, atrofia cutánea, resistencia',mon:'—',
+   nota:'<b>El error más frecuente y más costoso del tema.</b> El esteroide apaga la inflamación: la lesión pierde su borde y su forma anular, "mejora" unos días y el hongo <b>se extiende y se mete al folículo</b>. Estos combinados también son uno de los motores de la <b>resistencia a terbinafina</b> descrita a nivel global.'},
+  {n:'Nistatina',ini:'❌ No tiene actividad contra dermatofitos',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'—',mon:'—',
+   nota:'Sirve para <i>Candida</i>, <b>no para tiña</b>. Si la recetaste para una tiña, la dejaste sin tratar.'},
+  {n:'Ketoconazol ORAL',ini:'❌ No indicado en dermatofitosis',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'<b>Hepatotoxicidad grave</b>, insuficiencia suprarrenal, interacciones',mon:'—',
+   nota:'Restringido/retirado por las agencias regulatorias para esta indicación. El <b>tópico y el champú sí</b>; el oral, no: existen terbinafina e itraconazol.'},
+  {n:'Tópico solo para capitis o uñas',ini:'❌ Falla garantizada',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'Semanas perdidas; riesgo de querión y alopecia cicatricial',mon:'—',
+   nota:'No penetra el <b>folículo</b> ni la <b>lámina ungueal</b>. Capitis y uñas = <b>sistémico</b>.'},
+  {n:'Antibiótico para el querión',ini:'❌ Salvo sobreinfección demostrada',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'—',mon:'—',
+   nota:'El querión es <b>inflamación por hongo</b>, no un absceso bacteriano. <b>No lo drenes.</b> Antifúngico sistémico (± esteroide corto).'}]}
+];
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Tiña de piel (corporis, cruris, pedis)',color:'#8c2f5a',farmacos:[
+  {n:'Antifúngico tópico',
+   dosis:['Terbinafina 1% crema: 1–2 veces/día × <b>1–2 semanas</b>','Clotrimazol/ketoconazol: 2 veces/día × <b>2–4 semanas</b>','<b>Continuar 1–2 semanas DESPUÉS</b> de que desaparezca la lesión'],
+   via:'Tópico, sobre la lesión y <b>2 cm más allá del borde</b>',
+   enf:'1) Verificar que <b>no haya afección de uñas ni cuero cabelludo</b> (eso cambia a sistémico). 2) Revisar los <b>pies</b> del paciente con tiña cruris: casi siempre son el reservorio. 3) Confirmar que no esté usando cremas con esteroide.',
+   pac:'Aplique la crema <b>rebasando el borde de la mancha</b>: el hongo está en la orilla, no en el centro. <b>No suspenda al verla limpia</b> — siga 1 a 2 semanas más o va a regresar. <b>No use cremas con cortisona</b> (aunque le quiten la comezón rápido: la infección se extiende por debajo). No comparta toallas ni ropa.',
+   nota:'La comezón mejora en días, la infección tarda semanas. <b>Esa diferencia es la que hace que abandonen el tratamiento.</b> Adviértelo desde la primera consulta.',
+   al:'La lesión crece pese al tratamiento, aparecen <b>pústulas</b>, o se extiende a la cara/cuero cabelludo → reevaluar.'}]},
+
+ {familia:'⚠️ Tiña capitis (niños) — siempre sistémico',color:'#0c3b6e',farmacos:[
+  {n:'Antifúngico sistémico + champú',
+   dosis:['<b>Terbinafina</b> por peso: &lt;20 kg 62.5 mg · 20–40 kg 125 mg · &gt;40 kg 250 mg/día × <b>4–6 semanas</b>','<b>Griseofulvina</b> 20–25 mg/kg/día <b>con comida grasa</b> × <b>6–8 semanas</b> (mejor si es <i>Microsporum</i>)','<b>Champú</b> de ketoconazol 2% o sulfuro de selenio 2.5%, 2–3 veces/semana'],
+   via:'VO + tópico coadyuvante',
+   enf:'1) <b>Nunca solo tópico.</b> 2) Tomar muestra (KOH/cultivo) antes de iniciar si es posible. 3) Explorar a los <b>convivientes</b> y preguntar por <b>mascotas</b>. 4) Vigilar PFH si el curso se prolonga.',
+   pac:'Este tratamiento es <b>por semanas</b> y hay que completarlo aunque el pelo ya se vea mejor. La griseofulvina <b>debe tomarse con leche entera o algo grasoso</b> o no funciona. El champú es para <b>bajar el contagio</b>, no cura por sí solo. El niño <b>puede seguir yendo a la escuela</b> una vez iniciado el tratamiento; no comparta peines, gorras ni almohadas. Si tienen gato o perro con parches sin pelo, <b>hay que llevarlo al veterinario</b> o el niño se reinfecta.',
+   nota:'Elección del fármaco: <b>terbinafina</b> funciona mejor contra <i>T. tonsurans</i>; <b>griseofulvina</b> contra <i>M. canis</i> (el de las mascotas). Si no tienes cultivo, decide por el contexto epidemiológico.',
+   al:'⚠️ Placa muy inflamada, dolorosa, con pus (<b>querión</b>) → <b>no la drenen</b>: requiere valoración inmediata y antifúngico sistémico. El retraso deja <b>calvicie permanente</b>.'}]},
+
+ {familia:'Onicomicosis',color:'#0a5c45',farmacos:[
+  {n:'Tratamiento de uñas',
+   dosis:['<b>Confirmar primero</b> (KOH/cultivo/PAS): la mitad de las uñas distróficas <b>no son hongos</b>','<b>Terbinafina</b> 250 mg/día: <b>6 semanas</b> (mano) · <b>12 semanas</b> (pie)','<b>Itraconazol</b> en pulsos: 200 mg c/12 h × 1 semana al mes (2 pulsos mano · 3–4 pulsos pie)'],
+   via:'VO (± laca coadyuvante)',
+   enf:'1) <b>PFH basal.</b> 2) Revisar interacciones (terbinafina: CYP2D6 · itraconazol: CYP3A4 y <b>contraindicado en insuficiencia cardiaca</b>). 3) Tratar la <b>tiña pedis</b> acompañante.',
+   pac:'La uña <b>no se ve sana al terminar el medicamento</b>: la uña enferma tiene que <b>crecer y salir</b>. Eso toma <b>6 meses en la mano y 12 meses en el pie</b>. No es que no haya servido. Trate también la piel del pie y desinfecte el calzado, o la uña se vuelve a infectar.',
+   nota:'La expectativa mal puesta es lo que hace que el paciente abandone o crea que falló. <b>Explícale desde el día uno que el reloj lo marca el crecimiento de la uña, no el fármaco.</b>',
+   al:'Ictericia, coluria, náusea persistente o dolor abdominal alto → <b>suspender y acudir</b> (hepatotoxicidad).'}]}
+];
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ corp:{t:'Tiña corporis — la placa anular clásica',
+  pres:'Placa <b>anular</b>, con <b>borde activo</b> eritematoso y descamativo, y <b>aclaramiento central</b>. Prurito. Crece de forma centrífuga.',
+  dx:'Clínico + <b>KOH</b> del raspado del <b>borde activo</b> (no del centro). Cultivo si es extensa, recurrente o va a llevar sistémico.',
+  tx:'<b>Tópico</b> si es limitada (terbinafina 1% × 1–2 sem). <b>Sistémico</b> si es extensa, recurrente, con pelo velloso afectado o si falló el tópico.',
+  ref:'Dermatología si es extensa, recurrente o resistente.',
+  cx:'⚠️ Raspa el <b>borde</b>, no el centro: el centro está "curado" y da <b>KOH falso negativo</b>. Y busca el reservorio: <b>revisa los pies y las uñas</b>.'},
+ cruris:{t:'Tiña cruris — la ingle',
+  pres:'Placa eritematosa con <b>borde activo</b> en la <b>cara interna de los muslos y el pliegue inguinal</b>, con prurito. Clásicamente <b>respeta el escroto</b>. Más frecuente en varones, obesidad y calor.',
+  dx:'Clínico + KOH del borde. Diferencial: <b>candidiasis</b> (afecta el <b>fondo</b> del pliegue, tiene <b>lesiones satélite</b> y <b>sí</b> toma el escroto), <b>eritrasma</b> (Wood: <b>rojo coral</b>), psoriasis invertida, dermatitis de contacto.',
+  tx:'Tópico 2–4 semanas + medidas (ropa holgada, secar bien). Sistémico si es extensa o recurrente.',
+  ref:'Dermatología si recurre pese a tratamiento correcto.',
+  cx:'⚠️ <b>Revísale SIEMPRE los pies.</b> La secuencia típica es <b>pie → uña → ingle</b> (autoinoculación con la toalla y la ropa interior). Si tratas solo la ingle, <b>regresa</b>.'},
+ pedis:{t:'Tiña pedis — interdigital y en mocasín',
+  pres:'<b>Interdigital:</b> maceración, fisura y descamación entre los dedos (sobre todo el 4º espacio). <b>En mocasín:</b> descamación seca y difusa de planta y bordes, "como talco", a menudo <b>bilateral</b> y con <b>una mano</b> afectada (síndrome <b>"dos pies, una mano"</b>).',
+  dx:'KOH. Diferencial: dermatitis de contacto, psoriasis palmoplantar, eccema dishidrótico.',
+  tx:'Tópico 2–4 semanas. <b>Sistémico</b> si es en mocasín extensa, hiperqueratósica o si hay uñas afectadas.',
+  ref:'—',
+  cx:'⚠️ En el <b>diabético</b> la fisura interdigital es <b>puerta de entrada de celulitis/erisipela</b>: trátala en serio (ver archivo de pie diabético). Y si hay uñas afectadas, el tópico solo <b>no va a bastar</b>.'},
+ capitis:{t:'⚠️ Tiña capitis y querión — el niño',
+  pres:'Placa alopécica <b>descamativa</b> con pelos rotos ("puntos negros"), o parche gris. <b>Adenopatía cervical/occipital</b> es un dato muy sugerente. <b>Querión de Celso:</b> placa <b>inflamada, dolorosa, con pústulas y costras</b> — parece un absceso, <b>no lo es</b>.',
+  dx:'Clínico + KOH/cultivo del pelo. <b>Dermatoscopia:</b> pelos en <b>coma</b> o en <b>sacacorchos</b>. Luz de Wood: <b><i>Microsporum</i> fluoresce verde; <i>Trichophyton</i> NO</b> → una <b>lámpara de Wood negativa NO descarta</b>.',
+  tx:'<b>SIEMPRE SISTÉMICO:</b> terbinafina (mejor si es <i>T. tonsurans</i>) o griseofulvina con comida grasa (mejor si es <i>M. canis</i>) + <b>champú esporicida</b> al niño y a los contactos. Querión: <b>no drenar</b>; añadir prednisona corta si la inflamación es intensa.',
+  ref:'Dermatología/pediatría. Querión → valoración pronta.',
+  cx:'⚠️⚠️ <b>El querión tratado tarde o drenado deja ALOPECIA CICATRICIAL permanente.</b> Y pregunta por la <b>mascota</b>: un gato con parches sin pelo reinfecta al niño una y otra vez.'},
+ unas:{t:'Onicomicosis — la uña',
+  pres:'Uña <b>engrosada, amarillenta, con hiperqueratosis subungueal</b> y onicólisis distal-lateral. Casi siempre acompañada de <b>tiña pedis</b>.',
+  dx:'<b>CONFIRMA ANTES DE TRATAR:</b> KOH, cultivo o PAS de recorte. Cerca de <b>la mitad</b> de las distrofias ungueales <b>no son micóticas</b> (psoriasis, trauma, liquen plano).',
+  tx:'Terbinafina 250 mg/día: <b>6 semanas mano · 12 semanas pie</b> (de elección). Itraconazol en pulsos como alternativa. Laca solo en casos leves o como coadyuvante. <b>Tratar la tiña pedis en paralelo.</b>',
+  ref:'Dermatología si hay duda diagnóstica, falla o comorbilidad.',
+  cx:'⚠️ Vas a comprometer al paciente a <b>3 meses de fármaco con interacciones y control hepático</b>: <b>no lo hagas sin confirmar</b>. Y explícale que la uña <b>tarda 6–12 meses en verse sana</b> — el reloj lo marca el crecimiento de la uña, no el medicamento.'},
+ incog:{t:'⚠️ Tiña incógnita / resistente — la que creamos nosotros',
+  pres:'Placa <b>mal definida</b>, sin el borde escamoso clásico, extensa, muy pruriginosa, a veces con <b>pústulas foliculares</b> (granuloma de Majocchi). Antecedente: <b>"le pusieron una crema y mejoró, luego empeoró"</b> — casi siempre un <b>esteroide o un combinado con betametasona</b>.',
+  dx:'KOH (puede requerir varios intentos). <b>Cultivo con identificación de especie</b> si falla el tratamiento. Suspender el esteroide.',
+  tx:'<b>Sistémico</b> (el tópico ya no basta si hay folículo afectado). Si <b>falló terbinafina bien dada</b> → sospecha <b><i>Trichophyton indotineae</i></b> y usa <b>itraconazol 200 mg/día</b>, con frecuencia &gt;6 semanas.',
+  ref:'Dermatología.',
+  cx:'⚠️ Dos mensajes: ① <b>el combinado esteroide+antifúngico es el que fabrica este cuadro</b> — deja de recetarlo; ② desde 2023–2025 hay <b>resistencia real a terbinafina</b> (<i>T. indotineae</i>), ya reportada en América y Europa. Ante una falla, <b>cultiva e identifica la especie</b> en vez de repetir el mismo fármaco.'}
+};
+
+/* ---------- ESCALA 1: ¿TÓPICO O SISTÉMICO? ---------- */
+var SIS={1:false,2:false,3:false,4:false,5:false,6:false};
+function sisTog(n,el){SIS[n]=!SIS[n];if(el)el.classList.toggle('on');}
+function calcSIS(){
+  var r=document.getElementById('sis-res');
+  var cap=SIS[1],una=SIS[2],ext=SIS[3],fol=SIS[4],inm=SIS[5],fall=SIS[6];
+  var n=0,motivos=[];
+  if(cap){n++;motivos.push('<b>Cuero cabelludo o barba</b> — ningún tópico penetra el folículo');}
+  if(una){n++;motivos.push('<b>Uñas</b> — ningún tópico penetra la lámina ungueal de forma confiable');}
+  if(ext){n++;motivos.push('<b>Tiña extensa o en múltiples sitios</b>');}
+  if(fol){n++;motivos.push('<b>Pelo velloso afectado / pústulas foliculares</b> (granuloma de Majocchi)');}
+  if(inm){n++;motivos.push('<b>Inmunosupresión</b> (diabetes descontrolada, VIH, esteroides, biológicos)');}
+  if(fall){n++;motivos.push('<b>Falla a tratamiento tópico correcto</b>');}
+  var cls,g,cond;
+  if(n===0){cls='res-ok';g='TÓPICO — es suficiente';
+    cond='Tiña de piel <b>limitada</b>, sin pelo ni uñas: <b>terbinafina 1% crema</b> 1–2 veces/día × <b>1–2 semanas</b> (o azol 2 veces/día × 2–4 semanas).<br><br>' +
+      '• Aplicar <b>2 cm más allá del borde</b>.<br>• <b>Continuar 1–2 semanas después</b> de que desaparezca la lesión.<br>• <b>Buscar el reservorio</b>: revisa <b>pies y uñas</b> (la ingle casi siempre viene del pie).<br>• <b>Nada de esteroides</b> encima.';}
+  else {cls=(cap||una||fol)?'res-high':'res-mid';
+    g='SISTÉMICO — indicado ('+n+' criterio'+(n>1?'s':'')+')';
+    cond='<b>Por qué:</b><br>• '+motivos.join('<br>• ')+'<br><br><b>Qué usar:</b><br>' +
+      '<b>Terbinafina</b> 250 mg/día (adulto). Duración: corporis 2–4 sem · pedis 2–6 sem · <b>capitis 4–6 sem</b> · <b>uña mano 6 sem</b> · <b>uña pie 12 sem</b>.<br>' +
+      '<b>Itraconazol</b> 200 mg/día si hay contraindicación, falla o <b>sospecha de resistencia</b>.<br>';
+    if(cap){cond+='<br>🧒 <b>Capitis:</b> añade <b>champú esporicida</b> (ketoconazol 2% o sulfuro de selenio) al niño <b>y a los contactos</b>. Si el agente es <i>M. canis</i> (mascota), la <b>griseofulvina con comida grasa</b> es mejor opción.';}
+    if(una){cond+='<br>💅 <b>Uñas:</b> ⚠️ <b>CONFIRMA con KOH/cultivo/PAS antes de tratar</b> — cerca de la mitad de las distrofias ungueales no son hongos. <b>PFH basal.</b>';}
+    cond+='<br><br>📋 <b>Antes de iniciar:</b> PFH basal, revisar <b>interacciones</b> (terbinafina→CYP2D6 · itraconazol→CYP3A4, contraindicado en ICC) y descartar embarazo.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+g+'</div><div>'+cond+'</div>';
+}
+function resetSIS(){
+  for(var i=1;i<=6;i++){SIS[i]=false;}
+  var els=document.querySelectorAll('#sis-box .opt');
+  for(var j=0;j<els.length;j++){els[j].classList.remove('on');}
+  var r=document.getElementById('sis-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- ESCALA 2: DOSIS PEDIÁTRICA POR PESO ---------- */
+function calcPeso(){
+  var v=parseFloat(document.getElementById('pes-in').value),r=document.getElementById('pes-res');
+  if(!v||v<=0||v>100){r.className='calc-result show res-mid';r.innerHTML='Escribe un peso válido en kg.';return;}
+  var terb = v<20 ? '62.5 mg/día' : (v<=40 ? '125 mg/día' : '250 mg/día');
+  var gris20 = Math.round(v*20), gris25 = Math.round(v*25);
+  var grisMax = gris25>1000 ? ' <b>(tope práctico ~1 g/día)</b>' : '';
+  var flu = Math.round(v*6);
+  r.className='calc-result show res-ok';
+  r.innerHTML='<div style="font-size:15px;font-weight:800;margin-bottom:6px;">Tiña capitis · '+v+' kg</div>'+
+   '<div><b>Terbinafina:</b> <b>'+terb+'</b> × <b>4–6 semanas</b><br>'+
+   '<span style="font-size:11px;opacity:.85;">(bandas: &lt;20 kg 62.5 · 20–40 kg 125 · &gt;40 kg 250 mg; con granulado suelen usarse 125 / 187.5 / 250 mg según &lt;25, 25–35, &gt;35 kg)</span><br><br>'+
+   '<b>Griseofulvina (microsize):</b> 20–25 mg/kg/día = <b>'+gris20+'–'+gris25+' mg/día</b>'+grisMax+' × <b>6–8 semanas</b><br>'+
+   '<span style="font-size:11px;opacity:.85;">⚠️ <b>Con comida grasa</b> (leche entera/yogur) o no se absorbe. Ultramicronizada: 10–15 mg/kg/día.</span><br><br>'+
+   '<b>Fluconazol (alternativa):</b> ~6 mg/kg/día = <b>'+flu+' mg/día</b></div>'+
+   '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08);font-size:12px;">'+
+   '💡 <b>Cómo elegir:</b> <b>terbinafina</b> si el agente es <i>Trichophyton</i> (p. ej. <i>T. tonsurans</i>) · <b>griseofulvina</b> si es <i>Microsporum</i> (<i>M. canis</i> — el de gatos y perros). Sin cultivo, decide por el contexto: <b>¿hay mascota con parches sin pelo?</b><br><br>'+
+   '➕ <b>Siempre:</b> champú de ketoconazol 2% o sulfuro de selenio 2–3 veces/semana, <b>al niño y a los convivientes</b>.</div>';
+}
+function resetPeso(){document.getElementById('pes-in').value='';var r=document.getElementById('pes-res');r.className='calc-result';r.innerHTML='';}
+
+/* ---------- ESCALA 3: ONICOMICOSIS ---------- */
+var ON_ITEMS=[
+ {k:'o1',t:'¿Se <b>confirmó micológicamente</b> (KOH, cultivo o PAS)?',vals:[0,1],labels:['No — todavía no','Sí — confirmada']},
+ {k:'o2',t:'¿Qué uñas están afectadas?',vals:[0,1],labels:['De la <b>MANO</b>','Del <b>PIE</b>']},
+ {k:'o3',t:'Fármaco elegido',vals:[0,1],labels:['<b>Terbinafina</b> (de elección)','<b>Itraconazol</b> (pulsos)']}
+];
+var ON_KEYS=['o1','o2','o3'];
+function calcONI(){
+  var r=document.getElementById('on-res');
+  if(typeof SC['o1']==='undefined'||typeof SC['o2']==='undefined'||typeof SC['o3']==='undefined'){
+    r.className='calc-result show res-mid';r.innerHTML='Responde las tres preguntas.';return;}
+  var conf=SC['o1'],pie=SC['o2'],itra=SC['o3'];
+  if(!conf){
+    r.className='calc-result show res-high';
+    r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">⛔ ALTO — confirma antes de tratar</div>'+
+     '<div>Cerca de <b>la mitad</b> de las uñas distróficas <b>no son onicomicosis</b> (psoriasis ungueal, traumatismo, liquen plano, onicogrifosis).<br><br>'+
+     'Vas a comprometer al paciente a <b>3 meses de antifúngico sistémico</b> con interacciones y control hepático. <b>Toma KOH, cultivo o PAS de recorte primero.</b></div>';
+    return;}
+  var g,cond;
+  if(!itra){
+    g='Terbinafina 250 mg/día — '+(pie?'12 semanas (uña de PIE)':'6 semanas (uña de MANO)');
+    cond='<b>De elección</b> en onicomicosis por dermatofito.<br><br><b>Antes de iniciar:</b> PFH basal. Inhibe <b>CYP2D6</b> (ojo con tricíclicos, ISRS, betabloqueadores).';}
+  else{
+    g='Itraconazol en pulsos — '+(pie?'3–4 pulsos (uña de PIE)':'2 pulsos (uña de MANO)');
+    cond='<b>Pulso:</b> 200 mg cada 12 h × <b>1 semana al mes</b>, se repite el número de pulsos indicado. (Alternativa continua: 200 mg/día × 6 sem mano o 12 sem pie.)<br><br>'+
+     '⚠️ <b>Tomar con alimentos</b> (necesita ácido gástrico; los <b>IBP reducen la absorción</b>). <b>Inhibidor potente de CYP3A4</b> y <b>contraindicado en insuficiencia cardiaca</b>.';}
+  cond+='<br><br>⏳ <b>Expectativa (dísela al paciente):</b> la uña <b>no se ve sana al terminar el fármaco</b>. Tiene que <b>crecer</b>: '+
+    (pie?'<b>~12 meses</b> en el pie':'<b>~6 meses</b> en la mano')+'. El reloj lo marca el <b>crecimiento de la uña</b>, no el medicamento.<br><br>'+
+    '🦶 <b>Trata en paralelo la tiña pedis</b> y desinfecta el calzado, o la uña se reinfecta.';
+  r.className='calc-result show res-ok';
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+g+'</div><div>'+cond+'</div>';
+}
+function resetONI(){scReset(ON_KEYS,'on-res');}
+
+/* ---------- ESCALA 4: ¿RESISTENCIA (T. indotineae)? ---------- */
+var RES={1:false,2:false,3:false,4:false,5:false};
+function resTog(n,el){RES[n]=!RES[n];if(el)el.classList.toggle('on');}
+function calcRES(){
+  var r=document.getElementById('res-res'),n=0;
+  for(var i=1;i<=5;i++){if(RES[i])n++;}
+  var cls,g,cond;
+  if(n===0){cls='res-ok';g='Sin datos de sospecha';
+    cond='Continúa con el manejo estándar. Si el tratamiento fue correcto y falló, <b>revisa primero adherencia, dosis, duración, absorción y reservorio</b> antes de pensar en resistencia.';}
+  else if(n<=2){cls='res-mid';g='Sospecha BAJA-INTERMEDIA';
+    cond='Antes de asumir resistencia, verifica: ① dosis y duración correctas · ② <b>adherencia real</b> · ③ que no se haya aplicado <b>esteroide</b> encima · ④ que el <b>reservorio</b> (pies, uñas, mascota, familia) esté tratado · ⑤ que el itraconazol se tomara <b>con comida y sin IBP</b> · ⑥ que <b>sea tiña</b> y no psoriasis/eccema.<br><br><b>La mayoría de las "tiñas resistentes" son tiñas mal tratadas o mal absorbidas.</b> Si aun así falla → cultivo con identificación de especie.';}
+  else {cls='res-high';g='⚠️ Sospecha ALTA de <i>Trichophyton indotineae</i> (resistente a terbinafina)';
+    cond='<b>Conducta:</b><br>① <b>Cultivo con identificación de especie</b> (y prueba de sensibilidad si está disponible).<br>' +
+      '② <b>Cambia a itraconazol 200 mg/día</b> — hoy es el fármaco de elección en dermatofitosis resistente a terbinafina. Los cursos suelen ser <b>&gt;6 semanas</b>.<br>' +
+      '③ <b>Suspende cualquier esteroide tópico</b> (incluidos los combinados con antifúngico): son parte del problema.<br>' +
+      '④ <b>Trata a los convivientes afectados</b> y descontamina ropa/toallas: se transmite persona a persona.<br>' +
+      '⑤ <b>Refiere a dermatología.</b><br><br>' +
+      '📌 <i>T. indotineae</i> (antes <i>T. mentagrophytes</i> genotipo ITS VIII) emergió globalmente desde el sur de Asia y ya se reporta en <b>América y Europa</b>. ⚠️ También hay reportes crecientes de <b>resistencia a itraconazol</b> → no lo uses a la ligera y confirma la curación.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+g+'</div><div>'+cond+'</div>';
+}
+function resetRES(){
+  for(var i=1;i<=5;i++){RES[i]=false;}
+  var els=document.querySelectorAll('#res-box .opt');
+  for(var j=0;j<els.length;j++){els[j].classList.remove('on');}
+  var r=document.getElementById('res-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- ALGORITMO ---------- */
+var ALGO={
+ start:{q:'Lesión con sospecha de tiña. Primera pregunta: <b>¿dónde está?</b>',
+  o:[['🧒 Cuero cabelludo o barba','capitis'],['💅 Uñas','unas'],['🩹 Piel (cuerpo, ingle, pies, manos)','piel']]},
+
+ capitis:{r:'high',t:'Tiña capitis (o barbae) → SIEMPRE sistémico',
+  x:'<b>Ningún tópico penetra el folículo piloso.</b> El champú es coadyuvante, <b>no tratamiento</b>.<br><br>' +
+    '① <b>Confirma</b> si puedes (KOH/cultivo del pelo; dermatoscopia: pelos en <b>coma</b> o <b>sacacorchos</b>).<br>' +
+    '② <b>Terbinafina</b> por peso × 4–6 semanas (mejor si es <i>Trichophyton</i>) <b>o griseofulvina</b> 20–25 mg/kg/día <b>con comida grasa</b> × 6–8 semanas (mejor si es <i>Microsporum canis</i> — el de las mascotas).<br>' +
+    '③ <b>Champú</b> de ketoconazol 2% o sulfuro de selenio 2–3 veces/semana, <b>al niño y a los convivientes</b> (hay portadores asintomáticos).<br>' +
+    '④ Busca la <b>mascota</b> con parches sin pelo → veterinario, o el niño se reinfecta.<br><br>' +
+    '⚠️ <b>Querión</b> (placa inflamada, dolorosa, con pus): <b>NO lo drenes</b>, no es un absceso. Antifúngico sistémico ± prednisona corta si la inflamación es intensa. <b>El retraso deja alopecia cicatricial permanente.</b><br><br>' +
+    '💡 Una <b>lámpara de Wood negativa NO descarta</b>: <i>Trichophyton</i> no fluoresce.'},
+
+ unas:{q:'¿Ya está <b>confirmada micológicamente</b> (KOH, cultivo o PAS de recorte)?',
+  o:[['✅ Sí, confirmada','unas_si'],['❌ Todavía no','unas_no']]},
+
+ unas_no:{r:'high',t:'⛔ Confirma ANTES de tratar',
+  x:'Cerca de <b>la mitad</b> de las uñas distróficas <b>no son hongos</b>: psoriasis ungueal, traumatismo, liquen plano, onicogrifosis.<br><br>' +
+    'Un tratamiento sistémico de <b>3 meses</b>, con interacciones y control hepático, <b>no se inicia a ciegas</b>.<br><br>' +
+    '① <b>KOH</b> del raspado subungueal · <b>cultivo</b> · <b>PAS</b> de recorte (el más sensible).<br>② Con el resultado, decide.'},
+
+ unas_si:{r:'ok',t:'Onicomicosis confirmada → sistémico',
+  x:'① <b>Terbinafina 250 mg/día</b> (de elección): <b>6 semanas</b> uña de mano · <b>12 semanas</b> uña de pie.<br>' +
+    '② Alternativa: <b>itraconazol en pulsos</b> (200 mg c/12 h × 1 semana al mes: 2 pulsos mano, 3–4 pulsos pie).<br>' +
+    '③ <b>PFH basal</b> y revisión de interacciones (terbinafina→CYP2D6 · itraconazol→CYP3A4, <b>contraindicado en ICC</b>).<br>' +
+    '④ <b>Trata la tiña pedis</b> en paralelo y desinfecta el calzado, o la uña se reinfecta.<br><br>' +
+    '⏳ <b>Explícale al paciente:</b> la uña <b>no se verá sana al terminar el fármaco</b> — tiene que crecer: <b>~6 meses en la mano, ~12 en el pie</b>.'},
+
+ piel:{q:'¿Es <b>limitada</b> (1–2 placas, sin pelo velloso ni uñas afectadas, sin inmunosupresión)?',
+  o:[['✅ Sí, limitada','top'],['❌ No: extensa, múltiples sitios, pústulas foliculares o inmunosupresión','sist'],['🔁 Ya falló un tópico bien usado','sist']]},
+
+ top:{r:'ok',t:'Tiña de piel limitada → TÓPICO',
+  x:'① <b>Terbinafina 1% crema</b> 1–2 veces/día × <b>1–2 semanas</b> (fungicida, curso corto), o azol (clotrimazol/ketoconazol) 2 veces/día × 2–4 semanas.<br>' +
+    '② Aplicar <b>2 cm más allá del borde</b> — el hongo vive en el <b>borde activo</b>, no en el centro.<br>' +
+    '③ <b>Continuar 1–2 semanas DESPUÉS</b> de que desaparezca la lesión (si no, recae).<br>' +
+    '④ <b>Busca el reservorio:</b> revisa <b>pies y uñas</b> (la tiña cruris casi siempre viene del pie), mascotas y convivientes.<br>' +
+    '⑤ Medidas: secar pliegues, ropa holgada, no compartir toallas.<br><br>' +
+    '⛔ <b>NADA de esteroides</b> (ni combinados con betametasona): producen <b>tiña incógnita</b> y <b>Majocchi</b>.'},
+
+ sist:{q:'Vas a dar sistémico. ¿Hubo <b>falla a terbinafina bien dada</b> (dosis y duración correctas, con buena adherencia)?',
+  o:[['❌ No — es el primer tratamiento sistémico','sist_ok'],['⚠️ Sí — ya falló la terbinafina','resist']]},
+
+ sist_ok:{r:'mid',t:'Tiña de piel extensa/complicada → sistémico',
+  x:'① <b>Terbinafina 250 mg/día</b> (adulto) × <b>2–4 semanas</b> (corporis/cruris) o 2–6 semanas (pedis). Pediátrico por peso: &lt;20 kg 62.5 · 20–40 kg 125 · &gt;40 kg 250 mg.<br>' +
+    '② Alternativa: <b>itraconazol 200 mg/día</b> (con comida; el RCT de Khurana 2022 favorece 200 mg sobre 100 o 400).<br>' +
+    '③ <b>PFH basal</b>; revisar interacciones; descartar embarazo (itraconazol y griseofulvina están contraindicados).<br>' +
+    '④ <b>Granuloma de Majocchi</b> (pústulas foliculares) → sistémico obligatorio, el tópico ya no llega.<br>' +
+    '⑤ <b>Suspende cualquier esteroide</b> tópico y trata el <b>reservorio</b>.<br><br>' +
+    '💡 Puedes asociar un tópico al sistémico para bajar la carga fúngica más rápido.'},
+
+ resist:{r:'high',t:'⚠️ Sospecha de <i>Trichophyton indotineae</i> (resistente a terbinafina)',
+  x:'Primero descarta la <b>pseudo-resistencia</b>: ¿dosis y duración correctas? ¿adherencia real? ¿esteroide encima? ¿reservorio tratado? ¿es tiña de verdad?<br><br>' +
+    'Si todo eso está cubierto:<br>' +
+    '① <b>Cultivo con identificación de especie</b> (± sensibilidad antifúngica).<br>' +
+    '② <b>Itraconazol 200 mg/día</b> — hoy el fármaco de elección en resistencia a terbinafina; cursos frecuentemente <b>&gt;6 semanas</b>. Tomar <b>con alimentos</b>; los <b>IBP reducen su absorción</b>.<br>' +
+    '③ <b>Trata a los convivientes</b> afectados (se transmite persona a persona) y descontamina ropa y toallas.<br>' +
+    '④ <b>Refiere a dermatología.</b><br><br>' +
+    '📌 <b><i>T. indotineae</i></b> (antes <i>T. mentagrophytes</i> ITS genotipo VIII) es una especie emergente, frecuentemente <b>resistente a terbinafina</b>, ya reportada en América y Europa. Su expansión se ha ligado al uso masivo de <b>combinaciones con esteroide</b>. ⚠️ Ya hay reportes de <b>resistencia a itraconazol</b> también.'}
+};
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  setTxc('corp',document.querySelector('#txc-chips .pchip'));
+  setTxh('unas',document.querySelector('#txh-chips .pchip'));
+  setEscen('corp',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');
+  buildInd();
+  buildEscala('on-items',ON_ITEMS,'on');
+  algoStart();
+});
+
+</script>
+</body>
+</html>

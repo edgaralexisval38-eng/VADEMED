@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Acné · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#9d3d6b;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f6eaf0;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#2e0a1e,#9d3d6b);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#f6eaf0;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#f6eaf0;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2e0a1e,#9d3d6b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧴</div>
+    <div>
+      <div class="hdr-eye">Dermatología</div>
+      <div class="hdr-title">Acné vulgar</div>
+      <div class="hdr-sub">AAD 2024 · Global Alliance · CENETEC · GPC México</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Unidad pilosebácea</span>
+    <span class="badge">Retinoide tópico = piedra angular</span>
+    <span class="badge">Antibiótico SIEMPRE con PBO</span>
+    <span class="badge">Isotretinoína en severo</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">~85%</div><div class="qs-l">Adolescentes</div></div>
+  <div class="qs"><div class="qs-v">4</div><div class="qs-l">Factores fisiopatológicos</div></div>
+  <div class="qs"><div class="qs-v">Retinoide+PBO</div><div class="qs-l">Base del tratamiento</div></div>
+  <div class="qs"><div class="qs-v">≤3-4 m</div><div class="qs-l">Máx antibiótico oral</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('atlas',this)">🖼️ Atlas</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🧴 Tx Tópico</button>
+  <button class="tab" onclick="showT('txh',this)">💊 Tx Sistémico</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p>El <strong>acné vulgar</strong> es una enfermedad inflamatoria crónica de la <strong>unidad pilosebácea</strong>. Afecta hasta al <strong>85%</strong> de los adolescentes y con frecuencia persiste o inicia en la vida adulta (sobre todo en mujeres).</p>
+      <p>Se clasifica por el <strong>tipo de lesión predominante</strong> y por la <strong>gravedad</strong>.</p>
+    </div>
+    <div class="tw" style="margin:10px 0;"><table class="t">
+      <tr><th>Tipo de lesión</th><th>Descripción</th></tr>
+      <tr><td class="dn">Comedón abierto (punto negro)</td><td>Folículo dilatado con tapón córneo oxidado (no inflamatorio)</td></tr>
+      <tr><td class="dn">Comedón cerrado (punto blanco)</td><td>Folículo obstruido cubierto de epidermis (no inflamatorio)</td></tr>
+      <tr><td class="dn">Pápula</td><td>Lesión inflamatoria elevada, roja, &lt;5 mm</td></tr>
+      <tr><td class="dn">Pústula</td><td>Pápula con contenido purulento visible</td></tr>
+      <tr><td class="dn">Nódulo / quiste</td><td>Lesión inflamatoria profunda, dolorosa; deja cicatriz</td></tr>
+    </table></div>
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">Gravedad (práctica)</div><strong>Leve:</strong> comedones ± pocas pápulas/pústulas. <strong>Moderado:</strong> muchas pápulas/pústulas, algún nódulo. <strong>Severo:</strong> nódulos/quistes numerosos, cicatrices o gran impacto psicosocial.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">⚙️</span><span class="st">Fisiopatología — los 4 factores</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">1️⃣</span><div><div class="at">Hiperqueratinización folicular</div>Las células del folículo se pegan y forman un tapón → comedón (la lesión primaria).</div></div>
+    <div class="alert a-w"><span class="ai">2️⃣</span><div><div class="at">↑ Producción de sebo (andrógenos)</div>Los andrógenos estimulan la glándula sebácea; la seborrea alimenta el proceso.</div></div>
+    <div class="alert a-g"><span class="ai">3️⃣</span><div><div class="at">Cutibacterium acnes</div>La bacteria prolifera en el folículo obstruido rico en sebo y activa la inflamación.</div></div>
+    <div class="alert a-i"><span class="ai">4️⃣</span><div><div class="at">Inflamación</div>Respuesta inmune e inflamatoria → pápulas, pústulas y nódulos. Presente desde etapas tempranas.</div></div>
+    <div class="prose" style="margin-top:6px;"><p>Cada tratamiento ataca uno o varios factores: retinoides (queratinización), peróxido de benzoílo/antibióticos (bacteria + inflamación), antiandrógenos/hormonal (sebo), isotretinoína (los cuatro).</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔴</span><span class="st">Factores agravantes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Factor</th><th>Comentario</th></tr>
+      <tr><td>Andrógenos / hiperandrogenismo</td><td>SOP, pubertad; sospechar si hay hirsutismo, irregularidad menstrual</td></tr>
+      <tr><td>Genética / antecedente familiar</td><td>Fuerte predisposición</td></tr>
+      <tr><td>Fármacos</td><td>Corticoides, andrógenos/anabólicos, litio, anticonvulsivos, algunos progestágenos</td></tr>
+      <tr><td>Cosméticos oclusivos ("acné cosmética")</td><td>Productos comedogénicos; preferir "no comedogénico"</td></tr>
+      <tr><td>Mecánico ("acné mecánica")</td><td>Fricción por cascos, mochilas, mascarillas ("maskné")</td></tr>
+      <tr><td>Dieta (evidencia limitada)</td><td>Posible asociación con alto índice glucémico y lácteos descremados</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Localización en zonas ricas en glándulas sebáceas: <strong>cara, cuello, tórax anterior y espalda</strong>. Buscar signos de gravedad y de causas secundarias.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Gravedad</th><th>Cuadro</th></tr>
+      <tr><td class="dn">Leve</td><td>Predominan comedones; pocas lesiones inflamatorias</td></tr>
+      <tr><td class="dn">Moderado</td><td>Numerosas pápulas y pústulas; puede haber algún nódulo</td></tr>
+      <tr><td class="dn">Severo (nódulo-quístico)</td><td>Nódulos/quistes, tendencia a cicatriz, alto impacto psicológico</td></tr>
+      <tr><td class="dn">Formas especiales</td><td>Acné fulminans, acné conglobata (severos, sistémicos); acné del adulto (mujer, mandíbula)</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Usar <strong>antibiótico (tópico u oral) en monoterapia</strong>: fomenta resistencia. Siempre combínelo con peróxido de benzoílo (y un retinoide).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Prolongar el <strong>antibiótico oral</strong> por meses/años. Limítelo a lo más corto posible (típicamente ≤3-4 meses) y mantenga con tópicos.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Suspender el tratamiento a las 2-3 semanas "porque no funciona": la mejoría tarda <strong>8-12 semanas</strong>. Advertirlo desde el inicio.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Olvidar la <strong>fotoprotección</strong> y el manejo de la hiperpigmentación en pieles oscuras (la mancha preocupa más que la lesión).</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Prescribir <strong>retinoides o tetraciclinas en embarazo</strong>: están contraindicados.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">No preguntar por el <strong>impacto psicológico</strong>: el acné se asocia a ansiedad y depresión; es indicación de escalar el tratamiento.</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt">Pedir cultivos o panel hormonal de rutina: <strong>no</strong> se indican salvo signos de hiperandrogenismo o sospecha de otra entidad.</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">➡️</span><span class="st">Cuándo referir a dermatología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Motivo</th></tr>
+      <tr><td class="dm">Acné severo / nódulo-quístico o con cicatrices</td><td>Candidato a isotretinoína</td></tr>
+      <tr><td class="dm">Acné fulminans / conglobata</td><td>Formas graves, manejo especializado</td></tr>
+      <tr><td>Falla a tratamiento adecuado</td><td>Optimizar/escalar</td></tr>
+      <tr><td>Sospecha de hiperandrogenismo</td><td>Estudio endocrinológico</td></tr>
+      <tr><td>Gran impacto psicológico</td><td>Tratamiento agresivo temprano</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ DIAGNÓSTICO ============ -->
+<div class="panel" id="tab-dx">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔎</span><span class="st">Diagnóstico — es clínico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">✔️</span><div><div class="at">Sin estudios de rutina</div>El diagnóstico es visual: presencia de comedones (clave) y lesiones inflamatorias en zonas seborreicas. No se requieren cultivos ni panel hormonal salvo indicación específica.</div></div>
+    <div class="prose"><p>Evalúe: tipo de lesión predominante, gravedad, extensión, presencia de cicatrices/hiperpigmentación, impacto psicológico y factores agravantes (fármacos, cosméticos, signos de hiperandrogenismo).</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔬</span><span class="st">Cuándo pedir estudios</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Indicación</th></tr>
+      <tr><td class="dn">Perfil androgénico (testosterona, DHEA-S, 17-OHP), LH/FSH</td><td>Signos de hiperandrogenismo: hirsutismo, alopecia, irregularidad menstrual, acné súbito/severo del adulto (sospecha de SOP)</td></tr>
+      <tr><td class="dn">Basal antes de isotretinoína</td><td>Prueba de embarazo, perfil lipídico, transaminasas</td></tr>
+      <tr><td class="dn">Cultivo</td><td>Solo si se sospecha foliculitis por gramnegativos o por Malassezia (no mejora con antibiótico)</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧩</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>Diferencia clave</th></tr>
+      <tr><td class="dn">Rosácea</td><td>Eritema, telangiectasias, rubor; <strong>sin comedones</strong>; adultos</td></tr>
+      <tr><td class="dn">Foliculitis (bacteriana / por Malassezia)</td><td>Pústulas monomorfas foliculares; picazón; no mejora con antiacné</td></tr>
+      <tr><td class="dn">Dermatitis perioral</td><td>Pápulas alrededor de boca respetando el borde bermellón</td></tr>
+      <tr><td class="dn">Erupción acneiforme por fármacos</td><td>Monomorfa, súbita, tras corticoides/EGFR</td></tr>
+      <tr><td class="dn">Hidradenitis supurativa</td><td>Nódulos/abscesos en axilas, ingles, glúteos; trayectos fistulosos</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ATLAS ============ -->
+<div class="panel" id="tab-atlas">
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🖼️</span><span class="st">Atlas de lesiones — esquemas por tipo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Esquemas de corte de piel para reconocer la morfología. La lesión primaria es el <strong>comedón</strong>; su presencia distingue el acné de otras erupciones.</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+      <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+        <div style="position:relative;">
+          <svg viewBox="0 0 200 150" style="width:100%;height:150px;display:block;background:#fff5f7;">
+            <rect x="0" y="0" width="200" height="35" fill="#f3d9c9"/>
+            <rect x="0" y="35" width="200" height="115" fill="#f8e6da"/>
+            <path d="M85 35 Q82 90 92 120 Q100 130 108 120 Q118 90 115 35 Z" fill="#e9c9b3" stroke="#c9a48c" stroke-width="1.5"/>
+            <ellipse cx="118" cy="105" rx="16" ry="12" fill="#ffe08a" stroke="#e0b84a" stroke-width="1"/>
+            <line x1="100" y1="35" x2="100" y2="15" stroke="#8a5a3a" stroke-width="2"/>
+            <ellipse cx="100" cy="40" rx="10" ry="5" fill="#7a4a2a"/>
+          </svg>
+          <span style="position:absolute;top:8px;left:8px;background:#374151;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">No inflamatorio</span>
+        </div>
+        <div style="padding:10px 12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#9d3d6b;">Comedón abierto (punto negro)</div>
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;">Folículo dilatado con tapón córneo; el color negro es <strong>oxidación</strong>, no suciedad. Base de todo el acné.</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+        <div style="position:relative;">
+          <svg viewBox="0 0 200 150" style="width:100%;height:150px;display:block;background:#fff5f7;">
+            <rect x="0" y="0" width="200" height="35" fill="#f3d9c9"/>
+            <rect x="0" y="35" width="200" height="115" fill="#f8e6da"/>
+            <path d="M85 40 Q82 90 92 120 Q100 130 108 120 Q118 90 115 40 Z" fill="#e9c9b3" stroke="#c9a48c" stroke-width="1.5"/>
+            <ellipse cx="118" cy="105" rx="16" ry="12" fill="#ffe08a" stroke="#e0b84a" stroke-width="1"/>
+            <ellipse cx="100" cy="34" rx="14" ry="9" fill="#f7ede2" stroke="#dcbfa5" stroke-width="1.5"/>
+            <ellipse cx="100" cy="52" rx="8" ry="10" fill="#f0ddc8"/>
+          </svg>
+          <span style="position:absolute;top:8px;left:8px;background:#374151;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">No inflamatorio</span>
+        </div>
+        <div style="padding:10px 12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#9d3d6b;">Comedón cerrado (punto blanco)</div>
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;">Folículo obstruido <strong>cubierto por epidermis</strong>: pápula pequeña del color de la piel, sin abertura. Puede inflamarse.</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+        <div style="position:relative;">
+          <svg viewBox="0 0 200 150" style="width:100%;height:150px;display:block;background:#fff5f7;">
+            <rect x="0" y="0" width="200" height="35" fill="#f3d9c9"/>
+            <rect x="0" y="35" width="200" height="115" fill="#f8e6da"/>
+            <ellipse cx="100" cy="30" rx="22" ry="16" fill="#d95c5c"/>
+            <ellipse cx="100" cy="28" rx="14" ry="10" fill="#c94545"/>
+            <path d="M88 45 Q86 90 94 118 Q100 128 106 118 Q114 90 112 45 Z" fill="#e6b8a0" stroke="#c98c74" stroke-width="1.5"/>
+          </svg>
+          <span style="position:absolute;top:8px;left:8px;background:#a85510;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">Inflamatorio</span>
+        </div>
+        <div style="padding:10px 12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#9d3d6b;">Pápula</div>
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;">Lesión elevada, <strong>roja y firme</strong>, &lt;5 mm, sin pus visible. Marca el paso a acné inflamatorio.</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+        <div style="position:relative;">
+          <svg viewBox="0 0 200 150" style="width:100%;height:150px;display:block;background:#fff5f7;">
+            <rect x="0" y="0" width="200" height="35" fill="#f3d9c9"/>
+            <rect x="0" y="35" width="200" height="115" fill="#f8e6da"/>
+            <ellipse cx="100" cy="30" rx="24" ry="18" fill="#d95c5c"/>
+            <ellipse cx="100" cy="24" rx="11" ry="8" fill="#fff4cf" stroke="#e9d78a" stroke-width="1"/>
+            <path d="M88 47 Q86 92 94 120 Q100 130 106 120 Q114 92 112 47 Z" fill="#e6b8a0" stroke="#c98c74" stroke-width="1.5"/>
+          </svg>
+          <span style="position:absolute;top:8px;left:8px;background:#a85510;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">Inflamatorio</span>
+        </div>
+        <div style="padding:10px 12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#9d3d6b;">Pústula</div>
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;">Pápula con <strong>centro purulento</strong> amarillo-blanco. Superficial; no suele dejar cicatriz si no se manipula.</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+        <div style="position:relative;">
+          <svg viewBox="0 0 200 150" style="width:100%;height:150px;display:block;background:#fff5f7;">
+            <rect x="0" y="0" width="200" height="35" fill="#f3d9c9"/>
+            <rect x="0" y="35" width="200" height="115" fill="#f8e6da"/>
+            <ellipse cx="100" cy="42" rx="30" ry="24" fill="#b23a4a"/>
+            <ellipse cx="100" cy="88" rx="26" ry="30" fill="#8e2b3f" opacity="0.85"/>
+            <ellipse cx="100" cy="80" rx="16" ry="20" fill="#ffe9c0" opacity="0.6"/>
+          </svg>
+          <span style="position:absolute;top:8px;left:8px;background:#4a1060;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">Severo</span>
+        </div>
+        <div style="padding:10px 12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#9d3d6b;">Nódulo / quiste</div>
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;">Lesión <strong>profunda, dolorosa</strong>, &gt;5 mm. Alto riesgo de <strong>cicatriz</strong> → indica acné severo y valorar isotretinoína.</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+        <div style="position:relative;">
+          <svg viewBox="0 0 200 150" style="width:100%;height:150px;display:block;background:#fff5f7;">
+            <rect x="0" y="0" width="200" height="45" fill="#f3d9c9"/>
+            <rect x="0" y="45" width="200" height="105" fill="#f8e6da"/>
+            <path d="M60 45 L70 45 L66 70 Z" fill="#d8b49c"/>
+            <path d="M92 45 L104 45 L98 78 Z" fill="#d8b49c"/>
+            <path d="M128 45 L140 45 L134 66 Z" fill="#d8b49c"/>
+            <ellipse cx="160" cy="55" rx="10" ry="6" fill="#c98c74" opacity="0.5"/>
+          </svg>
+          <span style="position:absolute;top:8px;left:8px;background:#0c3b6e;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">Secuela</span>
+        </div>
+        <div style="padding:10px 12px;">
+          <div style="font-size:12.5px;font-weight:700;color:#9d3d6b;">Cicatriz e hiperpigmentación</div>
+          <div style="font-size:11.5px;color:#374151;line-height:1.6;">Cicatrices deprimidas ("picahielo", "furgón") y <strong>manchas oscuras post-inflamatorias</strong> (más notorias en piel oscura). Prevenir tratando pronto y con fotoprotección.</div>
+        </div>
+      </div>
+
+    </div>
+    <div style="margin-top:10px;background:#f3f4f6;border-radius:var(--rs);padding:8px 12px;font-size:11px;color:#6b7280;">
+      <strong>Diferencial rápido:</strong> con comedones = acné; sin comedones piense en rosácea (eritema/rubor), foliculitis (pústulas monomorfas) o dermatitis perioral.
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ ESCALAS ============ -->
+<div class="panel" id="tab-esc">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📊</span><span class="st">GAGS — Global Acne Grading System</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Elija el <strong>tipo de lesión más grave</strong> en cada zona. Puntaje local = factor × grado (0 ninguna · 1 comedón · 2 pápula · 3 pústula · 4 nódulo).</div></div>
+    <div id="gags-box"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-p" onclick="calcGAGS()">Calcular</button>
+      <button class="btn btn-s" onclick="resetGAGS()">Reiniciar</button>
+    </div>
+    <div id="gags-res" class="calc-res"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🎯</span><span class="st">Clasificador rápido de gravedad y 1ª línea</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Herramienta orientativa según el tipo de lesión predominante y la extensión.</div></div>
+    <div id="sev-box"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-p" onclick="calcSev()">Ver clasificación</button>
+      <button class="btn btn-s" onclick="resetSev()">Reiniciar</button>
+    </div>
+    <div id="sev-res" class="calc-res"></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ALGORITMO ============ -->
+<div class="panel" id="tab-algo">
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- ============ TX TÓPICO ============ -->
+<div class="panel" id="tab-txc">
+  <div class="alert a-i"><span class="ai">🧴</span><div><div class="at">Base de casi todo acné</div>La terapia tópica combinada (multimodal) es el pilar. Toque cada fármaco para desplegar su ficha completa.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('leve',this)">🟢 Leve (comedonal)</button>
+    <button class="pchip" onclick="setTxc('moderado',this)">🟡 Papulopustular</button>
+    <button class="pchip" onclick="setTxc('mant',this)">🔁 Mantenimiento</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<!-- ============ TX SISTÉMICO ============ -->
+<div class="panel" id="tab-txh">
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('abx',this)">💊 Antibiótico oral</button>
+    <button class="pchip" onclick="setTxh('hormonal',this)">♀️ Hormonal (mujer)</button>
+    <button class="pchip" onclick="setTxh('iso',this)">⭐ Isotretinoína</button>
+  </div>
+  <div id="txh-body"></div>
+
+  <div class="sec" style="margin-top:14px;"><div class="sh" onclick="tog(this)">
+    <span class="si">📈</span><span class="st">Monitoreo — isotretinoína</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Cuándo</th><th>Meta / acción</th></tr>
+      <tr><td>Prueba de embarazo</td><td class="dm">Antes, mensual y al terminar</td><td>Anticoncepción estricta; teratógeno absoluto</td></tr>
+      <tr><td>Perfil lipídico</td><td>Basal y periódico</td><td>Vigilar hipertrigliceridemia</td></tr>
+      <tr><td>Transaminasas</td><td>Basal y periódico</td><td>Suspender si elevación marcada</td></tr>
+      <tr><td>Estado de ánimo</td><td>Cada visita</td><td>Preguntar por ansiedad/depresión</td></tr>
+      <tr><td>Piel/mucosas</td><td>Cada visita</td><td>Hidratación labial/nasal; fotoprotección</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚫</span><div><div class="at">Teratogenicidad</div>La isotretinoína causa malformaciones graves. Exige <strong>anticoncepción eficaz</strong> desde 1 mes antes hasta 1 mes después, con pruebas de embarazo seriadas. No donar sangre durante y 1 mes después.</div></div>
+  </div></div>
+</div>
+
+<!-- ============ FÁRMACOS ============ -->
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;">
+    <label class="calc-lbl">Buscar fármaco</label>
+    <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. adapaleno, peróxido, doxiciclina, isotretinoína..." oninput="filtrarFarmacos(this.value)">
+  </div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ============ INDICACIONES ============ -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · enfermería/consulta · paciente · nota · alarma</strong>.</div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Medidas generales (cuidado de la piel)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid #9d3d6b;border-radius:6px;padding:10px 14px;font-size:12.5px;line-height:1.85;color:#374151;">
+      1. <b>Limpieza suave</b> 2 veces al día con limpiador no agresivo; no frotar (empeora).<br>
+      2. Usar productos <b>"no comedogénicos"</b> (maquillaje e hidratante sin aceite).<br>
+      3. <b>Fotoprotección diaria</b> (varios tópicos aumentan la fotosensibilidad).<br>
+      4. <b>No exprimir ni manipular</b> las lesiones (favorece cicatriz e hiperpigmentación).<br>
+      5. <b>Constancia:</b> la mejoría tarda 8–12 semanas; no cambiar de esquema antes de tiempo.<br>
+      6. Aplicar los tópicos sobre piel seca; usar hidratante si hay irritación.<br>
+      7. Meta realista: <b>controlar</b> el acné y <b>prevenir cicatrices</b>, no "cero granos".
+    </div>
+  </div></div>
+
+<div id="ind-body"></div>
+</div>
+
+<!-- ============ ESCENARIOS ============ -->
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('adulto',this)">♀️ Acné del adulto</button>
+    <button class="pchip" onclick="setEscen('embarazo',this)">🤰 Embarazo</button>
+    <button class="pchip" onclick="setEscen('oscura',this)">🟤 Piel oscura</button>
+    <button class="pchip" onclick="setEscen('adolescente',this)">🧑 Adolescente</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ============ SEGUIMIENTO ============ -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📅</span><span class="st">Plan de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Qué evaluar</th><th>Meta</th><th>Acción</th></tr>
+      <tr><td>Inicio</td><td>Expectativas, técnica de aplicación</td><td>Adherencia</td><td>Advertir que mejora en 8-12 semanas; irritación inicial normal</td></tr>
+      <tr><td>Semana 6-8</td><td>Respuesta, tolerancia</td><td>Reducción de lesiones</td><td>Optimizar; manejar irritación (frecuencia, hidratante)</td></tr>
+      <tr><td>Semana 12</td><td>Respuesta al esquema</td><td>Mejoría clara</td><td>Si falla, escalar; si mejora, pasar a mantenimiento</td></tr>
+      <tr><td>Antibiótico oral</td><td>Duración</td><td>≤3-4 meses</td><td>Suspender y mantener con tópicos (retinoide ± PBO)</td></tr>
+      <tr><td>Mantenimiento</td><td>Prevención de recaída</td><td>Piel controlada</td><td>Retinoide tópico ± PBO de forma continua</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">🎯</span><div>La meta realista es <strong>controlar</strong> el acné y <strong>prevenir cicatrices</strong>, no "cero granos". El mantenimiento con retinoide tópico evita recaídas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧠</span><span class="st">Impacto psicológico</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>El acné se asocia a <strong>ansiedad, depresión y baja autoestima</strong>, incluso en formas leves. Pregunte por el impacto emocional; un gran malestar justifica un tratamiento más agresivo y, si procede, apoyo en salud mental.</p></div>
+    <div class="alert a-i"><span class="ai">📞</span><div><div class="at">Recursos en México</div><strong>Línea de la Vida: 800 911 2000</strong> (24 h) · <strong>SAPTEL: 55 5259 8121</strong>.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧼</span><span class="st">Cuidado de la piel (consejos)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Recomendación</th><th>Detalle</th></tr>
+      <tr><td>Limpieza suave</td><td>2 veces/día con limpiador no agresivo; no frotar (empeora)</td></tr>
+      <tr><td>Productos "no comedogénicos"</td><td>Maquillaje e hidratantes libres de aceite</td></tr>
+      <tr><td>Fotoprotección</td><td>Diaria; varios tópicos aumentan fotosensibilidad</td></tr>
+      <tr><td>No manipular</td><td>Exprimir favorece cicatriz e hiperpigmentación</td></tr>
+      <tr><td>Paciencia y constancia</td><td>La respuesta tarda semanas; no cambiar de esquema antes de tiempo</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Acné vulgar</h2>
+    <p>Guías y evidencia utilizadas. Nivel indicado.</p>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías internacionales</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Reynolds RV, Yeung H, et al. <em>Guidelines of care for the management of acne vulgaris.</em> J Am Acad Dermatol (AAD). Base de las recomendaciones de tratamiento.</div>
+        <a class="biblio-link" href="https://www.jaad.org/article/S0190-9622(23)03389-3/fulltext" target="_blank">🔗 JAAD 2024</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2018</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Zaenglein AL, et al. <em>Global Alliance to Improve Outcomes in Acne — recomendaciones de manejo.</em> Referencia de terapia combinada y escalonamiento.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/29127053/" target="_blank">🔗 PubMed</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Escalas y herramientas</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">1997</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Doshi A, Zaheer A, Stiller MJ. <em>A comparison of current acne grading systems (Global Acne Grading System).</em> Int J Dermatol. Base de la calculadora GAGS.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/9299193/" target="_blank">🔗 PubMed</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">CENETEC. <em>GPC Diagnóstico y tratamiento del acné.</em> Adaptación al contexto institucional.</div>
+        <a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC catálogo GPC</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / revisión sistemática</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales</div>
+        <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia / opinión</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Guía elaborada con base en evidencia disponible a 2026. Verifique actualizaciones de guías locales (CENETEC) y adapte al contexto institucional. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ---------- GAGS ---------- */
+var GAGS_R=[['Frente',2],['Mejilla derecha',2],['Mejilla izquierda',2],['Nariz',1],['Mentón',1],['Tórax y espalda',3]];
+var GAGS_G=[['Ninguna',0],['Comedón',1],['Pápula',2],['Pústula',3],['Nódulo',4]];
+var gagsSel={};
+function buildGAGS(){var h='';for(var i=0;i<GAGS_R.length;i++){h+='<div class="calc-row"><div class="calc-lbl2">'+GAGS_R[i][0]+' <span style="color:#9d3d6b;font-weight:700;">(×'+GAGS_R[i][1]+')</span></div><div class="calc-opts">';for(var j=0;j<GAGS_G.length;j++){h+='<button class="copt" onclick="pickG(this,'+i+','+GAGS_G[j][1]+')">'+GAGS_G[j][0]+'</button>';}h+='</div></div>';}document.getElementById('gags-box').innerHTML=h;}
+function pickG(el,r,g){var sib=el.parentNode.querySelectorAll('.copt');for(var k=0;k<sib.length;k++)sib[k].classList.remove('on');el.classList.add('on');gagsSel[r]=g;}
+function calcGAGS(){var tot=0;for(var i=0;i<GAGS_R.length;i++){tot+=(gagsSel[i]||0)*GAGS_R[i][1];}var r=document.getElementById('gags-res');var sev,col;if(tot===0){sev='Sin acné';col='#0f7a5a';}else if(tot<=18){sev='Leve';col='#0f7a5a';}else if(tot<=30){sev='Moderado';col='#d97706';}else if(tot<=38){sev='Severo';col='#c0392b';}else{sev='Muy severo';col='#7b1c1c';}r.style.background=col+'18';r.style.color=col;r.innerHTML='<b>GAGS = '+tot+' · '+sev+'</b><br><span style="font-size:11px;">Leve 1–18 · Moderado 19–30 · Severo 31–38 · Muy severo ≥39.</span>';r.classList.add('show');}
+function resetGAGS(){gagsSel={};buildGAGS();document.getElementById('gags-res').classList.remove('show');}
+
+/* ---------- CLASIFICADOR RÁPIDO ---------- */
+var sevSel={tipo:null,ext:null};
+function buildSev(){var h='';h+='<div class="calc-row"><div class="calc-lbl2">Lesión predominante</div><div class="calc-opts"><button class="copt" onclick="pickS(this,\'tipo\',\'com\')">Comedones</button><button class="copt" onclick="pickS(this,\'tipo\',\'pp\')">Pápulas/pústulas</button><button class="copt" onclick="pickS(this,\'tipo\',\'nod\')">Nódulos/quistes</button></div></div>';h+='<div class="calc-row"><div class="calc-lbl2">Extensión / impacto</div><div class="calc-opts"><button class="copt" onclick="pickS(this,\'ext\',\'loc\')">Localizado</button><button class="copt" onclick="pickS(this,\'ext\',\'ext\')">Extenso / cicatriz / psicosocial</button></div></div>';document.getElementById('sev-box').innerHTML=h;}
+function pickS(el,k,v){var sib=el.parentNode.querySelectorAll('.copt');for(var i=0;i<sib.length;i++)sib[i].classList.remove('on');el.classList.add('on');sevSel[k]=v;}
+function calcSev(){var r=document.getElementById('sev-res');if(!sevSel.tipo||!sevSel.ext){r.style.background='#fef3c7';r.style.color='#92400e';r.innerHTML='Seleccione ambos campos.';r.classList.add('show');return;}var grado,col,tx;if(sevSel.tipo==='nod'||(sevSel.tipo==='pp'&&sevSel.ext==='ext')){grado='SEVERO';col='#7b1c1c';tx='Isotretinoína (referir); o antibiótico oral + retinoide tópico + PBO si no es candidato inmediato. En mujer, valorar hormonal.';if(sevSel.tipo==='pp'){grado='MODERADO-SEVERO';col='#c0392b';}}else if(sevSel.tipo==='pp'){grado='MODERADO';col='#d97706';tx='Retinoide tópico + PBO ± antibiótico tópico (combinación fija). Si extenso, añadir antibiótico oral ≤3-4 meses. Clascoterona como antiandrógeno tópico.';}else{grado='LEVE';col='#0f7a5a';tx='Retinoide tópico (piedra angular) ± peróxido de benzoílo. Alternativas: ácido azelaico, ácido salicílico.';}r.style.background=col+'18';r.style.color=col;r.innerHTML='<b>Gravedad: '+grado+'</b><br>'+tx;r.classList.add('show');}
+function resetSev(){sevSel={tipo:null,ext:null};buildSev();document.getElementById('sev-res').classList.remove('show');}
+
+/* ---------- ALGORITMO ---------- */
+var algoState='start';
+var ALGO={
+ start:{q:'¿La lesión predominante es comedón (no inflamatorio) o inflamatoria (pápula/pústula/nódulo)?',a:[['Solo comedones','leve'],['Pápulas/pústulas','pp'],['Nódulos/quistes o cicatrices','nod']]},
+ leve:{q:'Acné comedonal (leve). Conducta:',a:[['Ver tratamiento',function(){return 'RES:1ª LÍNEA: RETINOIDE TÓPICO (adapaleno/tretinoína/tazaroteno/trifaroteno) como base ± peróxido de benzoílo. Alternativas: ácido azelaico o salicílico. Advierta que mejora en 8-12 semanas. Mantenimiento con retinoide tópico.';}]]},
+ pp:{q:'Acné papulopustular. ¿Es localizado o extenso/con impacto psicosocial?',a:[
+   ['Localizado (moderado)',function(){return 'RES:1ª LÍNEA: COMBINACIÓN TÓPICA multimodal — retinoide + peróxido de benzoílo ± antibiótico tópico (combinación fija). Antibiótico tópico NUNCA solo. Clascoterona (antiandrógeno tópico) como opción. Reevaluar a las 8-12 semanas.';}],
+   ['Extenso (moderado-severo)',function(){return 'RES:AÑADIR ANTIBIÓTICO ORAL (doxiciclina) al esquema tópico (retinoide + PBO), por el menor tiempo posible (≤3-4 meses). En mujeres valore terapia hormonal (espironolactona / anticonceptivo combinado). Si falla o hay cicatrices → isotretinoína.';}]
+ ]},
+ nod:{q:'Acné nódulo-quístico, con cicatrices o gran impacto. Conducta:',a:[['Ver tratamiento',function(){return 'RES:ISOTRETINOÍNA es el tratamiento de elección (severo, cicatrizal, refractario o con impacto psicosocial). REFERIR a dermatología. Requiere anticoncepción estricta y monitoreo. Mientras tanto: antibiótico oral + tópicos; corticoide intralesional para nódulos grandes; en mujer, hormonal.';}]]}
+};
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+
+/* ====== TRATAMIENTOS ESTILO FICHA DESPLEGABLE ====== */
+var AC='#9d3d6b', C2='#7a4a00', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#f6eaf0';
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#f9eef4;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9d3d6b;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+
+/* ---------- DEFINICIÓN DE FÁRMACOS (fichas TX) ---------- */
+var F_RETIN={pri:true,linea:'⭐ Piedra angular — retinoide tópico',n:'Retinoide tópico',dlb:'Pauta',
+ da:'Adapaleno 0.1–0.3% · Tretinoína 0.025–0.1% · Tazaroteno · Trifaroteno. Aplicar una capa fina por la noche en toda la zona (no solo en el grano)',
+ dur:'Mejoría en 8–12 semanas; base también del mantenimiento',
+ prep:'Empezar noches alternas si irrita; "moisturizer sandwich"; evitar sol (fotosensibiliza)',
+ iv:'Tópico · nocturno',
+ pres:'Adapaleno 0.1% gel · tretinoína 0.025/0.05% · adapaleno 0.3% · trifaroteno 0.005%',
+ emb:'CONTRAINDICADOS en embarazo/lactancia',
+ ci:'Embarazo; dermatitis activa importante',
+ ea:'Irritación, sequedad, eritema, descamación, brote inicial',
+ nota:'<b>Mecanismo:</b> normaliza la queratinización folicular (comedolítico) y es antiinflamatorio; mejora la pigmentación. <b>AAD 2024: recomendación fuerte.</b> Adapaleno es el mejor tolerado. Es la base a la que se añade todo lo demás.'};
+var F_PBO={pri:true,linea:'⭐ Antibacteriano sin resistencia',n:'Peróxido de benzoílo (PBO)',dlb:'Pauta',
+ da:'2.5–5% una vez al día (concentraciones bajas igual de eficaces y menos irritantes)',
+ dur:'Efecto en semanas; usar de forma continua',
+ prep:'Puede decolorar telas/cabello. Combinar con antibiótico para prevenir resistencia',
+ iv:'Tópico',
+ pres:'Peróxido de benzoílo 2.5/5% gel · combinaciones fijas',
+ emb:'Considerado de bajo riesgo; datos limitados',
+ ci:'Hipersensibilidad',
+ ea:'Irritación, sequedad, decoloración de telas',
+ nota:'<b>Mecanismo:</b> antibacteriano oxidante frente a C. acnes SIN generar resistencia + comedolítico leve. <b>Clave:</b> acompaña a todo antibiótico (tópico u oral) para evitar resistencia. AAD 2024: recomendación fuerte.'};
+var F_ABXTOP={pri:false,linea:'Antibiótico tópico — nunca solo',n:'Clindamicina tópica (+ PBO)',dlb:'Pauta',dur:'Uso continuo mientras haya lesiones; siempre con PBO/retinoide',
+ da:'Clindamicina 1% (o eritromicina) 1–2 veces/día, SIEMPRE combinada con peróxido de benzoílo y/o retinoide',
+ iv:'Tópico',
+ pres:'Clindamicina 1% gel/loción · combinación clindamicina/PBO',
+ emb:'Clindamicina/eritromicina tópicas: opciones preferibles en embarazo',
+ ci:'Uso en monoterapia (favorece resistencia)',
+ ea:'Irritación local',
+ nota:'<b>Mecanismo:</b> antibacteriano/antiinflamatorio. <b>Regla:</b> la monoterapia con antibiótico tópico NO se recomienda; combínelo siempre con PBO (y retinoide) para eficacia y evitar resistencia.'};
+var F_COMBO={pri:true,linea:'⭐ Combinación fija (adherencia)',n:'Combinaciones fijas tópicas',dlb:'Opciones',
+ da:'Adapaleno/PBO · clindamicina/PBO · tretinoína/PBO · triple (clindamicina/adapaleno/PBO)',
+ dur:'Una aplicación diaria mejora la adherencia',
+ iv:'Tópico',
+ pres:'Adapaleno 0.1%/PBO 2.5% · clindamicina 1.2%/PBO',
+ emb:'Según componentes (evitar retinoide en embarazo)',
+ ea:'Irritación combinada',
+ nota:'<b>Ventaja:</b> combinar mecanismos en un solo producto mejora la eficacia y el cumplimiento (AAD 2024, buena práctica). Elección práctica en acné papulopustular moderado.'};
+var F_AZEL={pri:false,linea:'Alternativa / coadyuvante',n:'Ácido azelaico',dlb:'Pauta',dur:'Uso continuo; respuesta en 8–12 semanas',
+ da:'15–20% dos veces al día',
+ iv:'Tópico',
+ pres:'Ácido azelaico 15% gel / 20% crema',
+ emb:'Opción razonable en embarazo',
+ ea:'Ardor, prurito, hipopigmentación transitoria',
+ nota:'<b>Mecanismo:</b> antibacteriano, comedolítico y antiinflamatorio; además <b>aclara la hiperpigmentación</b> post-inflamatoria → útil en piel oscura y en embarazo. AAD 2024: recomendación condicional.'};
+var F_CLASCO={pri:false,linea:'Antiandrógeno tópico',n:'Clascoterona 1%',dlb:'Pauta',dur:'Uso continuo; evaluar a las 12 semanas',
+ da:'Aplicar dos veces al día',
+ iv:'Tópico',
+ pres:'Clascoterona 1% crema',
+ emb:'Datos limitados',
+ ea:'Irritación local; potencial supresión suprarrenal reversible (raro)',
+ nota:'<b>Mecanismo:</b> primer antiandrógeno TÓPICO; bloquea el receptor androgénico en la piel → ↓ sebo e inflamación. Útil en ambos sexos (a diferencia del hormonal oral). AAD 2024: recomendación condicional (por costo).'};
+var F_SALIC={pri:false,linea:'Alternativa de venta libre',n:'Ácido salicílico',dlb:'Pauta',dur:'Uso continuo mientras se tolere',
+ da:'0.5–2% en limpiadores o lociones',
+ iv:'Tópico',
+ pres:'Ácido salicílico 2% (venta libre)',
+ emb:'Uso limitado en área/tiempo aceptable',
+ ea:'Irritación, sequedad',
+ nota:'<b>Mecanismo:</b> queratolítico comedolítico. Opción accesible para acné comedonal leve. AAD 2024: recomendación condicional.'};
+/* Sistémicos */
+var F_DOXI={pri:true,linea:'⭐ Antibiótico oral de elección',n:'Doxiciclina',dlb:'Dosis',
+ da:'50–100 mg cada 12–24 h (dosis subantimicrobiana 40 mg también usada)',
+ dur:'El menor tiempo posible, típicamente ≤3–4 meses; SIEMPRE con tópicos (PBO + retinoide)',
+ prep:'Tomar con abundante agua y de pie (esofagitis); evitar sol (fotosensibilidad)',
+ iv:'VO',
+ pres:'Doxiciclina 100 mg cápsula',
+ emb:'CONTRAINDICADA (tetraciclina); no en <9 años',
+ ci:'Embarazo, lactancia, niños <9 años',
+ ea:'Fotosensibilidad, molestias GI, esofagitis, candidiasis',
+ nota:'<b>Mecanismo:</b> tetraciclina antibacteriana y antiinflamatoria. <b>AAD 2024: recomendación fuerte</b> para acné inflamatorio moderado-severo. Regla de oro: combinar con PBO y limitar la duración para frenar resistencia.'};
+var F_SAREC={pri:false,linea:'2ª línea oral',n:'Minociclina / Sarecicline',dlb:'Dosis',
+ da:'Minociclina 50–100 mg/día · Sarecicline (tetraciclina de espectro estrecho) según peso',
+ dur:'Igual: la menor duración posible, con tópicos',
+ iv:'VO',
+ pres:'Minociclina 100 mg · sarecicline',
+ emb:'Contraindicadas (tetraciclinas)',
+ ci:'Embarazo, lactancia, niños <9 años',
+ ea:'Minociclina: mareo, hiperpigmentación, lupus/DRESS (raros). Sarecicline: mejor perfil GI/vestibular',
+ nota:'<b>Sarecicline</b> es de espectro estrecho (mejor administración de antibióticos). AAD 2024: ambas con recomendación condicional. Prefiera doxiciclina como primera opción.'};
+var F_ESPIRO={pri:true,linea:'⭐ Hormonal — mujer',n:'Espironolactona',dlb:'Dosis',
+ da:'50–200 mg/día (iniciar bajo y titular)',
+ dur:'Respuesta en 1–3 meses; uso prolongado',
+ iv:'VO',
+ pres:'Espironolactona 25/100 mg',
+ emb:'Evitar en embarazo (antiandrógeno; riesgo de feminización fetal)',
+ ci:'Embarazo, hiperkalemia, insuficiencia renal',
+ ea:'Irregularidad menstrual, mastalgia, hiperkalemia (poco frecuente en jóvenes sanas)',
+ nota:'<b>Mecanismo:</b> antiandrógeno que ↓ la producción de sebo. Muy útil en acné del adulto de la mujer (distribución mandibular). AAD 2024: recomendación condicional. En mujer joven sana no siempre requiere monitoreo rutinario de potasio.'};
+var F_ACO={pri:false,linea:'Hormonal — mujer',n:'Anticonceptivo oral combinado',dlb:'Indicación',
+ da:'Combinados con estrógeno + progestágeno (varios aprobados para acné)',
+ dur:'Efecto en 2–3 meses',
+ iv:'VO',
+ pres:'Etinilestradiol + progestágeno (varias marcas)',
+ emb:'No en embarazo; útil además como anticoncepción (relevante con isotretinoína)',
+ ci:'Antecedente tromboembólico, migraña con aura, tabaquismo >35 años, ciertos cánceres',
+ ea:'Náusea, sangrado intermenstrual, riesgo tromboembólico',
+ nota:'<b>Mecanismo:</b> ↓ andrógenos ováricos y sebo. AAD 2024: recomendación condicional (según preferencias). Doble beneficio: anticoncepción + acné, útil si se planea isotretinoína.'};
+var F_ISO={pri:true,linea:'⭐ Acné severo / refractario',n:'Isotretinoína oral',dlb:'Dosis',
+ da:'0.5–1 mg/kg/día; dosis acumulada objetivo ~120–150 mg/kg reduce recaídas',
+ dur:'Curso típico 4–6 meses o hasta alcanzar la dosis acumulada',
+ prep:'Tomar con alimento graso (mejor absorción). Requiere anticoncepción estricta y programa de prevención de embarazo',
+ iv:'VO · con dermatología',
+ pres:'Isotretinoína 10/20 mg cápsula',
+ emb:'TERATÓGENO ABSOLUTO — contraindicada; anticoncepción 1 mes antes/durante/1 mes después',
+ mon:'Prueba de embarazo (mensual), perfil lipídico, transaminasas, estado de ánimo',
+ ci:'Embarazo/lactancia, hipertrigliceridemia grave, hepatopatía, hipervitaminosis A, tetraciclinas concomitantes (riesgo de hipertensión intracraneal)',
+ ea:'Sequedad de piel/labios/mucosas, epistaxis, mialgias, ↑ lípidos/transaminasas, fotosensibilidad; brote inicial',
+ nota:'<b>Mecanismo:</b> retinoide oral que actúa sobre los 4 factores (atrofia la glándula sebácea) → único con potencial curativo. <b>AAD 2024: recomendación fuerte</b> en acné severo, cicatrizal, con impacto psicosocial o refractario. No combinar con tetraciclinas.'};
+
+/* ---------- TX TÓPICO / SISTÉMICO ---------- */
+var TXC={
+ 'leve':[
+   ['1ª Línea','Comedonal — base tópica',AC,[F_RETIN,F_PBO]],
+   ['Alternativas','Si no tolera / prefiere',C2,[F_AZEL,F_SALIC]],
+   ['Mantenimiento','Prevenir recaída',CO,[F_RETIN]]
+ ],
+ 'moderado':[
+   ['1ª Línea','Papulopustular — multimodal',AC,[F_COMBO,F_RETIN,F_PBO,F_ABXTOP]],
+   ['Antiandrógeno tópico','Ambos sexos',C2,[F_CLASCO]],
+   ['Coadyuvantes','Pigmentación / alternativa',CO,[F_AZEL]]
+ ],
+ 'mant':[
+   ['1ª Línea','Mantenimiento continuo',AC,[F_RETIN,F_PBO]]
+ ]
+};
+var TXH={
+ 'abx':[
+   ['1ª Línea','Tetraciclina oral (con tópicos)',AC,[F_DOXI]],
+   ['2ª Línea','Alternativas orales',C2,[F_SAREC]],
+   ['Coadyuvantes','Base tópica OBLIGADA',CO,[F_PBO,F_RETIN]]
+ ],
+ 'hormonal':[
+   ['1ª Línea','Acné del adulto — mujer',AC,[F_ESPIRO,F_ACO]],
+   ['Coadyuvantes','Base tópica',CO,[F_RETIN]]
+ ],
+ 'iso':[
+   ['1ª Línea','Severo / cicatrizal / refractario',AC,[F_ISO]]
+ ]
+};
+
+/* ---------- FÁRMACOS (acordeón buscable) ---------- */
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+var FARMACOS=[
+ {familia:'Retinoides tópicos',color:'#9d3d6b',farmacos:[
+  {n:'Retinoide tópico (adapaleno, tretinoína, tazaroteno, trifaroteno)',dur:'Uso continuo, también en mantenimiento (meses)',ini:'Capa fina nocturna en toda la zona',obj:'Piedra angular: comedolítico + antiinflamatorio; base de tratamiento y mantenimiento',iv:'Tópico nocturno',pr:'Adapaleno 0.1/0.3% · tretinoína 0.025/0.05% · trifaroteno 0.005%',emb:'Contraindicados',ci:'Embarazo',ea:'Irritación, sequedad, brote inicial, fotosensibilidad',nota:'AAD 2024 recomendación fuerte. Adapaleno el mejor tolerado. Empezar en días alternos si irrita.'}
+ ]},
+ {familia:'Antibacterianos tópicos',color:'#0c3b6e',farmacos:[
+  {n:'Peróxido de benzoílo',dur:'Uso continuo',ini:'2.5–5% una vez al día',obj:'Antibacteriano sin resistencia + comedolítico leve; acompaña a todo antibiótico',iv:'Tópico',pr:'PBO 2.5/5% gel',emb:'Bajo riesgo (datos limitados)',ci:'Hipersensibilidad',ea:'Irritación, decolora telas',nota:'Clave contra la resistencia. AAD 2024 recomendación fuerte.'},
+  {n:'Clindamicina tópica (+ PBO)',dur:'Uso continuo, siempre con PBO',ini:'1% 1–2 veces/día, nunca sola',obj:'Antibacteriano/antiinflamatorio combinado',iv:'Tópico',pr:'Clindamicina 1% · combo clindamicina/PBO',emb:'Preferible en embarazo',ci:'Monoterapia',ea:'Irritación',nota:'Monoterapia NO recomendada; siempre con PBO/retinoide.'},
+  {n:'Combinaciones fijas',dur:'Uso continuo',ini:'Adapaleno/PBO · clindamicina/PBO · triple',obj:'Multimodal en un producto (adherencia)',iv:'Tópico',pr:'Adapaleno 0.1%/PBO 2.5%',emb:'Según componentes',ci:'—',ea:'Irritación combinada',nota:'Buena práctica AAD 2024: combinar mecanismos.'}
+ ]},
+ {familia:'Otros tópicos',color:'#7a4a00',farmacos:[
+  {n:'Ácido azelaico',dur:'Uso continuo; respuesta en 8–12 semanas',ini:'15–20% dos veces/día',obj:'Antibacteriano, comedolítico y aclara hiperpigmentación',iv:'Tópico',pr:'Azelaico 15/20%',emb:'Opción en embarazo',ci:'—',ea:'Ardor, hipopigmentación transitoria',nota:'Útil en piel oscura y embarazo. Condicional AAD 2024.'},
+  {n:'Clascoterona 1%',dur:'Uso continuo; evaluar a las 12 semanas',ini:'Dos veces/día',obj:'Antiandrógeno tópico (↓ sebo), útil en ambos sexos',iv:'Tópico',pr:'Clascoterona 1% crema',emb:'Datos limitados',ci:'—',ea:'Irritación',nota:'Primer antiandrógeno tópico. Condicional AAD 2024 (costo).'},
+  {n:'Ácido salicílico',dur:'Uso continuo mientras se tolere',ini:'0.5–2%',obj:'Queratolítico comedolítico (venta libre)',iv:'Tópico',pr:'Salicílico 2%',emb:'Uso limitado aceptable',ci:'—',ea:'Irritación',nota:'Opción accesible en acné leve. Condicional AAD 2024.'}
+ ]},
+ {familia:'Antibióticos orales',color:'#0a5c45',farmacos:[
+  {n:'Doxiciclina',dur:'≤3–4 meses, luego mantener con tópicos',ini:'50–100 mg c/12–24 h · ≤3–4 meses',obj:'Acné inflamatorio moderado-severo; SIEMPRE con tópicos',iv:'VO',pr:'Doxiciclina 100 mg',emb:'Contraindicada; no <9 años',ci:'Embarazo, lactancia, niños <9 a',ea:'Fotosensibilidad, GI, esofagitis',nota:'De elección (AAD 2024 fuerte). Combinar con PBO y limitar duración.'},
+  {n:'Minociclina / Sarecicline',dur:'≤3–4 meses',ini:'2ª línea oral',obj:'Alternativa a doxiciclina; sarecicline de espectro estrecho',iv:'VO',pr:'Minociclina 100 mg · sarecicline',emb:'Contraindicadas',ci:'Embarazo, <9 años',ea:'Minociclina: mareo, hiperpigmentación, lupus/DRESS',nota:'Condicional AAD 2024. Sarecicline mejor perfil.'}
+ ]},
+ {familia:'Hormonal e isotretinoína',color:'#c0392b',farmacos:[
+  {n:'Espironolactona',dur:'Uso prolongado (meses–años)',ini:'50–200 mg/día',obj:'Antiandrógeno para acné del adulto (mujer)',iv:'VO',pr:'Espironolactona 25/100 mg',emb:'Evitar (feminización fetal)',ci:'Embarazo, hiperkalemia, ERC',ea:'Menstrual, mastalgia, hiperkalemia (rara)',nota:'Muy útil en distribución mandibular de la mujer. Condicional AAD 2024.'},
+  {n:'Anticonceptivo oral combinado',dur:'Uso prolongado (meses)',ini:'Estrógeno + progestágeno',obj:'↓ andrógenos y sebo; doble beneficio anticonceptivo',iv:'VO',pr:'Etinilestradiol + progestágeno',emb:'No en embarazo',ci:'TEV previo, migraña con aura, fumadora >35 a',ea:'Náusea, sangrado, riesgo tromboembólico',nota:'Condicional AAD 2024. Útil junto a isotretinoína (anticoncepción).'},
+  {n:'Isotretinoína oral',dur:'Curso 4–6 meses (acumulada 120–150 mg/kg)',ini:'0.5–1 mg/kg/día · acumulada 120–150 mg/kg',obj:'Acné severo, cicatrizal, refractario o con impacto psicosocial',iv:'VO · dermatología',pr:'Isotretinoína 10/20 mg',emb:'TERATÓGENO ABSOLUTO — contraindicada',mon:'Embarazo mensual, lípidos, transaminasas, ánimo',ci:'Embarazo, tetraciclinas concomitantes, hepatopatía, hipertrigliceridemia grave',ea:'Sequedad muco-cutánea, mialgias, ↑lípidos/transaminasas, brote inicial',nota:'Único con potencial curativo (actúa sobre los 4 factores). AAD 2024 fuerte. Anticoncepción estricta; no con tetraciclinas.'}
+ ]}
+];
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Tópicos — base del tratamiento',color:'#9d3d6b',farmacos:[
+  {n:'Retinoide tópico (adapaleno / tretinoína)',
+   receta:'Adapaleno 0.1% gel — aplicar <b>1 vez al día por la noche</b>, capa fina en <b>toda</b> la zona afectada (no solo el grano), sobre piel limpia y seca. Uso continuo. Protector solar por la mañana.',
+   dosis:['Adapaleno 0.1–0.3% · Tretinoína 0.025–0.05% · 1 vez/noche','Iniciar en noches alternas si irrita, luego diario'],
+   dur:'Uso continuo, también en mantenimiento (meses)',
+   via:'Tópico nocturno; esperar unos minutos tras lavar/secar',
+   enf:'Explicar técnica (capa fina, toda la zona); advertir irritación y "brote inicial" en las primeras semanas; reforzar fotoprotección; evitar en embarazo.',
+   pac:'Es la base del tratamiento. Úselo cada noche; al inicio puede irritar o "empeorar" un poco: es normal. Mejora en 8–12 semanas. Protector solar de día.',
+   nota:'AAD 2024 recomendación fuerte; también para mantenimiento.',
+   al:'Irritación intensa persistente → reducir frecuencia. Suspender y consultar si hay embarazo.'},
+  {n:'Peróxido de benzoílo',
+   receta:'Peróxido de benzoílo 2.5–5% gel — aplicar <b>1 vez al día (por la mañana)</b>, capa fina en la zona afectada. Puede blanquear telas: usar prendas y toallas claras.',
+   dosis:['2.5–5% una vez al día (concentraciones bajas igual de eficaces)'],
+   dur:'Uso continuo',
+   via:'Tópico; puede alternarse mañana PBO / noche retinoide',
+   enf:'Advertir que decolora telas/cabello; combinar con antibiótico para evitar resistencia.',
+   pac:'Ayuda a matar la bacteria del acné. Puede blanquear la ropa. Puede resecar: use hidratante.',
+   nota:'Sin resistencia bacteriana; acompaña a todo antibiótico.',
+   al:'Irritación o dermatitis de contacto.'},
+  {n:'Clindamicina tópica (siempre con PBO)',
+   receta:'Clindamicina 1%/peróxido de benzoílo gel — aplicar <b>1–2 veces al día</b> en la zona. <b>Nunca</b> clindamicina sola (favorece resistencia).',
+   dosis:['Clindamicina 1% (o eritromicina) 1–2 veces/día, combinada con PBO/retinoide'],
+   dur:'Uso continuo mientras haya lesiones; siempre con PBO',
+   via:'Tópico',
+   enf:'Verificar que se combine con PBO; no usar en monoterapia.',
+   pac:'Reduce la bacteria y la inflamación. Úselo junto con el otro producto que le indicaron.',
+   nota:'La monoterapia antibiótica tópica NO se recomienda.',
+   al:'Irritación local persistente.'},
+  {n:'Combinación fija (adapaleno/PBO)',
+   receta:'Adapaleno 0.1%/peróxido de benzoílo 2.5% gel — aplicar <b>1 vez al día por la noche</b>, capa fina. Un solo producto que combina dos mecanismos.',
+   dosis:['Adapaleno/PBO · clindamicina/PBO · triple (clindamicina/adapaleno/PBO): 1 vez/día'],
+   dur:'Uso continuo',
+   via:'Tópico',
+   enf:'Mejora la adherencia al unir mecanismos; advertir irritación combinada.',
+   pac:'Es un producto "2 en 1". Úselo una vez al día; puede resecar al inicio.',
+   nota:'Buena práctica AAD 2024: combinar mecanismos.',
+   al:'Irritación importante → espaciar aplicaciones.'},
+  {n:'Ácido azelaico',
+   receta:'Ácido azelaico 15–20% — aplicar <b>2 veces al día</b> en la zona. Útil además para aclarar manchas; opción en embarazo.',
+   dosis:['15% gel o 20% crema, dos veces al día'],
+   dur:'Uso continuo; respuesta en 8–12 semanas',
+   via:'Tópico',
+   enf:'Opción segura en embarazo y en piel oscura (aclara la pigmentación).',
+   pac:'Además de tratar el acné, ayuda a desvanecer las manchas oscuras. Puede dar ardor leve al inicio.',
+   nota:'Condicional AAD 2024.',
+   al:'Ardor/prurito intenso.'},
+  {n:'Clascoterona 1%',
+   receta:'Clascoterona 1% crema — aplicar <b>2 veces al día</b> en la zona afectada. Antiandrógeno tópico, útil en ambos sexos.',
+   dosis:['1% dos veces al día'],
+   dur:'Uso continuo; evaluar a las 12 semanas',
+   via:'Tópico',
+   enf:'Opción hormonal tópica sin efectos sistémicos relevantes.',
+   pac:'Actúa sobre la causa hormonal en la piel. Aplíquela mañana y noche.',
+   nota:'Primer antiandrógeno tópico. Condicional AAD 2024 (costo).',
+   al:'Irritación local.'},
+  {n:'Ácido salicílico',
+   receta:'Ácido salicílico 2% (limpiador o loción) — usar <b>1–2 veces al día</b>. Opción de venta libre para acné comedonal leve.',
+   dosis:['0.5–2% en limpiadores o lociones'],
+   dur:'Uso continuo mientras se tolere',
+   via:'Tópico',
+   enf:'Alternativa accesible; vigilar irritación.',
+   pac:'Ayuda a destapar los poros. Si reseca mucho, úselo día por medio.',
+   nota:'Condicional AAD 2024.',
+   al:'Sequedad/irritación.'}
+ ]},
+ {familia:'Sistémicos',color:'#0a5c45',farmacos:[
+  {n:'Doxiciclina',
+   receta:'Doxiciclina 100 mg VO — <b>1 cápsula cada 24 h</b> con abundante agua y sin acostarse enseguida, <b>por ≤3–4 meses</b>, junto con los tópicos (PBO + retinoide). Evitar el sol.',
+   dosis:['50–100 mg cada 12–24 h','Siempre con tópicos; duración limitada'],
+   dur:'≤3–4 meses; luego mantener con tópicos',
+   via:'VO con agua, erguido; no acostarse de inmediato',
+   enf:'Advertir fotosensibilidad; planear retiro a los 3–4 meses; combinar con PBO.',
+   pac:'Antibiótico para bajar la inflamación. Tómelo con bastante agua, no se acueste enseguida, evite el sol y use protector. No lo tome si está embarazada.',
+   nota:'AAD 2024 fuerte; limitar duración por resistencia.',
+   al:'Dolor al tragar (esofagitis), quemadura solar fácil, diarrea intensa.'},
+  {n:'Minociclina / Sarecicline',
+   receta:'Minociclina 100 mg VO cada 24 h (o sarecicline según peso), <b>por ≤3–4 meses</b> y con tópicos. Alternativa a doxiciclina.',
+   dosis:['Minociclina 50–100 mg/día · sarecicline según peso'],
+   dur:'≤3–4 meses, con tópicos',
+   via:'VO',
+   enf:'Minociclina: vigilar mareo, hiperpigmentación; sarecicline mejor perfil.',
+   pac:'Antibiótico alternativo. Avise si tiene mareo o coloración anormal de la piel.',
+   nota:'Condicional AAD 2024. Prefiera doxiciclina.',
+   al:'Mareo intenso, coloración azulada, síntomas tipo lupus (raros).'},
+  {n:'Espironolactona (mujer)',
+   receta:'Espironolactona 50 mg VO cada 24 h (subir hasta 100–200 mg/día según respuesta). Anticoncepción eficaz (evitar embarazo).',
+   dosis:['50–200 mg/día (iniciar bajo y titular)'],
+   dur:'Uso prolongado (meses–años)',
+   via:'VO',
+   enf:'Antiandrógeno; en mujer joven sana no siempre requiere monitoreo rutinario de potasio; evitar en embarazo.',
+   pac:'Reduce el efecto de las hormonas sobre la piel; ideal para acné de la mandíbula. No debe embarazarse mientras la toma.',
+   nota:'Condicional AAD 2024. Muy útil en acné del adulto de la mujer.',
+   al:'Mareo por presión baja, palpitaciones, irregularidad menstrual.'},
+  {n:'Anticonceptivo oral combinado (mujer)',
+   receta:'Anticonceptivo oral combinado (estrógeno + progestágeno) — <b>1 tableta diaria</b> según el esquema del envase. Doble beneficio: acné + anticoncepción.',
+   dosis:['Combinado aprobado para acné, 1 tableta/día'],
+   dur:'Uso prolongado (meses)',
+   via:'VO',
+   enf:'Descartar contraindicaciones (TEV, migraña con aura, tabaquismo >35 a); útil junto a isotretinoína.',
+   pac:'Regula las hormonas que empeoran el acné y sirve de anticonceptivo. Tómelo a la misma hora.',
+   nota:'Condicional AAD 2024 (según preferencias).',
+   al:'Dolor/edema de pierna, dolor torácico, cefalea intensa (tromboembolismo).'},
+  {n:'Isotretinoína (severo/refractario)',
+   receta:'Isotretinoína 20 mg VO cada 24 h con alimento graso (objetivo 0.5–1 mg/kg/día; acumulada 120–150 mg/kg). <b>Anticoncepción estricta.</b> Bálsamo labial y protector solar. Bajo control de dermatología.',
+   dosis:['0.5–1 mg/kg/día','Dosis acumulada objetivo ~120–150 mg/kg'],
+   dur:'Curso de 4–6 meses hasta la dosis acumulada',
+   via:'VO con alimento graso; con dermatología',
+   enf:'Programa de prevención de embarazo con pruebas seriadas; controlar lípidos y transaminasas; preguntar por ánimo; no combinar con tetraciclinas ni donar sangre.',
+   pac:'El tratamiento más potente, para acné severo. NO se embarace durante ni 1 mes después (causa malformaciones graves): use anticoncepción segura. Resecará labios y piel; use bálsamo y protector. Avise si se siente triste o desanimado.',
+   nota:'AAD 2024 fuerte; único con potencial curativo.',
+   al:'Embarazo (urgente), dolor abdominal intenso, ánimo bajo/depresión, cefalea intensa con visión borrosa.'}
+ ]}
+];
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#f6eaf0;border:1px solid #9d3d6b;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#9d3d6b;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ 'adulto':{t:'Acné del adulto (mujer)',pres:'Mujer 25+ años, lesiones inflamatorias en <b>mandíbula y mentón</b>, brotes premenstruales.',dx:'Clínico. Buscar signos de hiperandrogenismo (hirsutismo, irregularidad menstrual) → SOP; si los hay, estudio hormonal.',tx:'Terapia tópica + <b>hormonal</b>: espironolactona 50–200 mg/día y/o anticonceptivo combinado. Isotretinoína si es severo/refractario.',ref:'Ginecología/endocrinología si sospecha de SOP; dermatología si refractario.',cx:'Tratar solo con antibiótico oral de forma indefinida: el acné hormonal responde mejor a antiandrógenos.'},
+ 'embarazo':{t:'Acné en el embarazo',pres:'Acné que aparece o empeora en la gestación.',dx:'Clínico.',tx:'PERMITIDOS (preferentes): <b>ácido azelaico</b>, peróxido de benzoílo, <b>clindamicina/eritromicina tópicas</b>. Salicílico en área/tiempo limitados. CONTRAINDICADOS: <b>retinoides (tópicos y orales) y tetraciclinas</b>.',ref:'Dermatología si es severo.',cx:'Prescribir retinoides o doxiciclina: teratógenos/contraindicados. Isotretinoína está absolutamente prohibida.'},
+ 'oscura':{t:'Piel oscura (fototipos altos)',pres:'A menudo la <b>hiperpigmentación post-inflamatoria</b> preocupa más que las lesiones activas.',dx:'Clínico; valorar mancha residual y cicatriz.',tx:'Tratar el acné pronto para prevenir manchas; <b>ácido azelaico</b> (aclara), retinoides (mejoran pigmento), fotoprotección estricta. Evitar irritación excesiva (empeora la mancha).',ref:'Dermatología para manejo de secuelas pigmentarias.',cx:'Ignorar la hiperpigmentación: para el paciente suele ser el problema principal. Descartar productos aclarantes peligrosos de venta informal.'},
+ 'adolescente':{t:'Adolescente',pres:'Acné mixto en cara/espalda; gran impacto en autoestima.',dx:'Clínico; explorar impacto emocional y expectativas.',tx:'Retinoide tópico ± PBO; combinación fija si papulopustular; antibiótico oral corto si moderado-extenso. Educar en constancia y cuidado de la piel.',ref:'Dermatología si severo o cicatrizal (isotretinoína).',cx:'Minimizar el impacto emocional. Escalar temprano si hay cicatrices o gran malestar previene daño físico y psicológico.'}
+};
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  buildGAGS();buildSev();renderAlgo();
+  setTxc('leve',document.querySelector('#txc-chips .pchip'));
+  setTxh('abx',document.querySelector('#txh-chips .pchip'));
+  setEscen('adulto',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+</script>
+</body>
+</html>

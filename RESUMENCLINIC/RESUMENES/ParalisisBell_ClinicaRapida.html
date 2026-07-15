@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Parálisis de Bell · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#5b3a8a;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#ede9f5;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#1a0a3a,#5b3a8a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#ede9f5;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#ede9f5;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1a0a3a,#5b3a8a);">
+  <div class="hdr-top">
+    <div class="hdr-icon">😐</div>
+    <div>
+      <div class="hdr-eye">Neurología · Nervio facial</div>
+      <div class="hdr-title">Parálisis de Bell</div>
+      <div class="hdr-sub">AAN / AAO-HNS · AAFP · CENETEC · GPC México</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Afecta TODA la hemicara (incluye frente)</span>
+    <span class="badge">Corticoide &lt;72 h</span>
+    <span class="badge">Cuidado ocular siempre</span>
+    <span class="badge">Antiviral solo añadido</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">NC VII</div><div class="qs-l">Nervio facial</div></div>
+  <div class="qs"><div class="qs-v">&lt;72 h</div><div class="qs-l">Ventana esteroide</div></div>
+  <div class="qs"><div class="qs-v">&gt;70%</div><div class="qs-l">Recuperación completa</div></div>
+  <div class="qs"><div class="qs-v">Frente</div><div class="qs-l">Central vs periférico</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('txh',this)">🔴 Casos especiales</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p>La <strong>parálisis de Bell</strong> es una <strong>parálisis facial periférica aguda idiopática</strong> (nervio craneal VII), de instauración rápida (&lt;72 h). Es un <strong>diagnóstico de exclusión</strong>.</p>
+      <p>Dato clave: por ser <strong>periférica</strong>, afecta <strong>toda la hemicara, incluida la frente</strong> (no puede arrugarla ni cerrar bien el ojo). Si la frente se respeta, piense en una causa <strong>central</strong> (ictus).</p>
+    </div>
+    <div class="alert a-i"><span class="ai">🧠</span><div><div class="at">Regla de oro</div>Periférico (Bell) = frente <strong>afectada</strong>. Central (ictus) = frente <strong>respetada</strong> (el músculo frontal tiene inervación bilateral).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">⚙️</span><span class="st">Fisiopatología y epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Se atribuye a <strong>inflamación y edema del nervio facial</strong> en su trayecto por el conducto óseo, posiblemente por <strong>reactivación del virus del herpes simple (HSV-1)</strong>. El edema comprime el nervio y causa la disfunción.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Valor</th></tr>
+      <tr><td>Incidencia</td><td class="dn">~20–30 / 100 000 / año</td></tr>
+      <tr><td>Edad</td><td>Cualquier edad; pico 15–45 años</td></tr>
+      <tr><td>Factores de riesgo</td><td class="dn">Embarazo (3er trimestre/posparto), diabetes, obesidad, HTA</td></tr>
+      <tr><td>Pronóstico</td><td class="dn">&gt;70% recuperación completa espontánea; hasta 90% con tratamiento/parcial</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🎯</span><span class="st">Cuadro clínico</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Síntoma / signo</th><th>Detalle</th></tr>
+      <tr><td class="dn">Debilidad hemifacial aguda</td><td>Unilateral, incluye frente; máxima en horas–72 h</td></tr>
+      <tr><td class="dn">Lagoftalmos</td><td>No cierra el ojo → riesgo de exposición corneal</td></tr>
+      <tr><td class="dn">Borramiento del surco nasogeniano</td><td>Cara "lisa" del lado afectado; desviación de la comisura al sano</td></tr>
+      <tr><td class="dn">Signo de Bell</td><td>El ojo se desvía arriba al intentar cerrarlo</td></tr>
+      <tr><td>Hiperacusia</td><td>Por afección del músculo del estribo</td></tr>
+      <tr><td>Disgeusia</td><td>Alteración del gusto en ⅔ anteriores de la lengua</td></tr>
+      <tr><td>↓ Lagrimeo / dolor retroauricular</td><td>Frecuentes; el dolor puede preceder</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🚩</span><span class="st">Banderas rojas (NO es Bell)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">🧠</span><div><div class="at">Frente respetada</div>Sugiere lesión <strong>central</strong> (ictus) → vía de urgencia neurológica.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Hallazgo</th><th>Sospecha</th></tr>
+      <tr><td>Instauración gradual (semanas)</td><td>Tumor (parótida, base de cráneo)</td></tr>
+      <tr><td>Parálisis facial bilateral</td><td>Guillain-Barré, Lyme, sarcoidosis, VIH</td></tr>
+      <tr><td>Vesículas en oído/paladar + dolor intenso</td><td class="dm">Síndrome de Ramsay Hunt (zóster ótico)</td></tr>
+      <tr><td>Otros pares craneales / déficit focal</td><td>Lesión de tronco/central</td></tr>
+      <tr><td>Sin mejoría a 3–4 meses o recurrente</td><td>Imagen y estudio dirigido</td></tr>
+      <tr><td>Antecedente de trauma u otitis</td><td>Causa secundaria</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">No iniciar el <strong>corticoide dentro de las 72 h</strong>: es lo que más mejora el pronóstico.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Dar <strong>antiviral en monoterapia</strong>: es ineficaz. Solo se <em>añade</em> al corticoide en casos severos/completos.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Olvidar el <strong>cuidado ocular</strong>: el mayor riesgo agudo es la <strong>queratitis por exposición</strong> al no cerrar el ojo.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Confundir con <strong>ictus</strong> (o al revés): siempre valorar si la <strong>frente</strong> está afectada.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Pedir <strong>imagen o laboratorios de rutina</strong> en un caso típico: no se requieren.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">No buscar <strong>vesículas</strong> (Ramsay Hunt) ni preguntar por <strong>bilateralidad</strong>.</span></div>
+  </div></div>
+
+</div>
+
+<!-- ============ DIAGNÓSTICO ============ -->
+<div class="panel" id="tab-dx">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔎</span><span class="st">Central vs periférico — la clave es la frente</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+        <svg viewBox="0 0 160 190" style="width:100%;height:170px;display:block;background:#faf7fd;">
+          <ellipse cx="80" cy="95" rx="52" ry="66" fill="#f3e0cf" stroke="#d9b89c" stroke-width="1.5"/>
+          <!-- frente: arrugas en AMBOS lados (respetada) -->
+          <path d="M40 50 Q56 44 72 50" fill="none" stroke="#b98a63" stroke-width="1.6"/>
+          <path d="M40 58 Q56 52 72 58" fill="none" stroke="#b98a63" stroke-width="1.6"/>
+          <path d="M88 50 Q104 44 120 50" fill="none" stroke="#b98a63" stroke-width="1.6"/>
+          <path d="M88 58 Q104 52 120 58" fill="none" stroke="#b98a63" stroke-width="1.6"/>
+          <!-- ojos -->
+          <ellipse cx="58" cy="80" rx="10" ry="6" fill="#fff" stroke="#8a5a3a" stroke-width="1.2"/><circle cx="58" cy="80" r="3" fill="#4a2d7a"/>
+          <ellipse cx="102" cy="80" rx="10" ry="6" fill="#fff" stroke="#8a5a3a" stroke-width="1.2"/><circle cx="102" cy="80" r="3" fill="#4a2d7a"/>
+          <!-- boca caída lado derecho (del paciente) -->
+          <path d="M58 120 Q80 126 108 138" fill="none" stroke="#b3506b" stroke-width="3"/>
+        </svg>
+        <div style="padding:9px 11px;"><div style="font-size:12px;font-weight:800;color:#0c3b6e;">CENTRAL (ictus)</div><div style="font-size:11px;color:#374151;line-height:1.5;">Frente <b>respetada</b> (arruga ambos lados). Solo cae la mitad inferior. → Urgencia neurológica.</div></div>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+        <svg viewBox="0 0 160 190" style="width:100%;height:170px;display:block;background:#faf7fd;">
+          <ellipse cx="80" cy="95" rx="52" ry="66" fill="#f3e0cf" stroke="#d9b89c" stroke-width="1.5"/>
+          <!-- frente: arrugas SOLO lado sano (izq); lado afectado liso -->
+          <path d="M88 50 Q104 44 120 50" fill="none" stroke="#b98a63" stroke-width="1.6"/>
+          <path d="M88 58 Q104 52 120 58" fill="none" stroke="#b98a63" stroke-width="1.6"/>
+          <text x="46" y="56" font-size="9" fill="#c0392b" font-weight="700">liso</text>
+          <!-- ojo afectado no cierra (más abierto) -->
+          <ellipse cx="58" cy="80" rx="12" ry="9" fill="#fff" stroke="#c0392b" stroke-width="1.6"/><circle cx="58" cy="82" r="3" fill="#4a2d7a"/>
+          <ellipse cx="102" cy="80" rx="10" ry="6" fill="#fff" stroke="#8a5a3a" stroke-width="1.2"/><circle cx="102" cy="80" r="3" fill="#4a2d7a"/>
+          <!-- surco nasogeniano borrado izq (paciente derecha) + boca caída -->
+          <path d="M52 118 Q80 126 108 140" fill="none" stroke="#b3506b" stroke-width="3"/>
+        </svg>
+        <div style="padding:9px 11px;"><div style="font-size:12px;font-weight:800;color:#5b3a8a;">PERIFÉRICO (Bell)</div><div style="font-size:11px;color:#374151;line-height:1.5;">Frente <b>afectada</b> (no arruga, ojo no cierra). Cae <b>toda</b> la hemicara.</div></div>
+      </div>
+    </div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div>Ante cualquier duda o si hay otros déficits (habla, fuerza, sensibilidad, otros pares) → active la <strong>vía de ictus</strong>.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🩺</span><span class="st">Abordaje diagnóstico</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-g"><span class="ai">✔️</span><div><div class="at">Es clínico</div>En un caso típico NO se requieren estudios. Explore la fuerza facial por regiones, el cierre ocular, otoscopia (vesículas), oído y parótida, y descarte otros déficits neurológicos.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Cuándo</th></tr>
+      <tr><td class="dn">Ninguno</td><td>Caso típico unilateral con afección de frente y sin banderas rojas</td></tr>
+      <tr><td class="dn">Laboratorio (glucosa, Lyme, VIH, sarcoide)</td><td>Bilateral, atípico, epidemiología de Lyme, recurrente</td></tr>
+      <tr><td class="dn">RM con contraste</td><td>Instauración gradual, no mejora a 3–4 meses, otros pares, recurrente</td></tr>
+      <tr><td class="dn">Electrodiagnóstico (ENoG/EMG)</td><td>Parálisis completa para pronóstico/decisión quirúrgica (especializado)</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧩</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>Pista</th></tr>
+      <tr><td class="dm">Ictus</td><td>Frente respetada; otros déficits (habla, fuerza)</td></tr>
+      <tr><td class="dm">Ramsay Hunt (zóster ótico)</td><td>Vesículas en conducto/pabellón; dolor intenso; peor pronóstico</td></tr>
+      <tr><td>Enfermedad de Lyme</td><td>Puede ser bilateral; exposición a garrapatas; eritema migrans</td></tr>
+      <tr><td>Otitis media/colesteatoma</td><td>Otorrea, otalgia, hipoacusia</td></tr>
+      <tr><td>Tumor (parótida, base de cráneo)</td><td>Instauración lenta, masa, progresión</td></tr>
+      <tr><td>Guillain-Barré (Miller-Fisher)</td><td>Bilateral, arreflexia, ataxia/debilidad ascendente</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ESCALAS ============ -->
+<div class="panel" id="tab-esc">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📊</span><span class="st">House-Brackmann (gravedad y pronóstico)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Escala estándar de función del nervio facial (I normal → VI parálisis total). Útil para documentar y seguir la evolución.</div></div>
+    <div id="hb-box"></div>
+    <div id="hb-res" class="calc-res"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧭</span><span class="st">¿Central o periférico? (diferenciador rápido)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div id="cp-box"></div>
+    <div id="cp-res" class="calc-res"></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ALGORITMO ============ -->
+<div class="panel" id="tab-algo">
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- ============ TRATAMIENTO ============ -->
+<div class="panel" id="tab-txc">
+  <div class="alert a-i"><span class="ai">💊</span><div><div class="at">Tres pilares</div>Corticoide precoz (&lt;72 h) + cuidado ocular (siempre) + antiviral solo añadido en casos severos. Toque cada tarjeta para desplegar la ficha.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('base',this)">⭐ Primera línea</button>
+    <button class="pchip" onclick="setTxc('ocular',this)">👁️ Cuidado ocular</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<!-- ============ CASOS ESPECIALES ============ -->
+<div class="panel" id="tab-txh">
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('rh',this)">🔴 Ramsay Hunt</button>
+    <button class="pchip" onclick="setTxh('nomej',this)">⏳ Sin recuperación / secuelas</button>
+  </div>
+  <div id="txh-body"></div>
+
+  <div class="sec" style="margin-top:14px;"><div class="sh" onclick="tog(this)">
+    <span class="si">➡️</span><span class="st">Cuándo referir</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>A dónde</th></tr>
+      <tr><td class="dm">Frente respetada / otros déficits</td><td>Urgencias — vía de ictus</td></tr>
+      <tr><td class="dm">Ramsay Hunt</td><td>Otorrinolaringología (antiviral + esteroide)</td></tr>
+      <tr><td>Parálisis completa o sin mejoría a 3–4 meses</td><td>Neurología / ORL (electrodiagnóstico, rehabilitación)</td></tr>
+      <tr><td>Exposición corneal / dolor ocular / ↓visión</td><td>Oftalmología</td></tr>
+      <tr><td>Bilateral, recurrente o atípica</td><td>Neurología (estudio dirigido)</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ FÁRMACOS ============ -->
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;">
+    <label class="calc-lbl">Buscar fármaco</label>
+    <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. prednisona, valaciclovir, lágrimas..." oninput="filtrarFarmacos(this.value)">
+  </div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ============ INDICACIONES ============ -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada medicamento con su receta encabezando la tarjeta.</div></div>
+  <div id="ind-body"></div>
+</div>
+
+<!-- ============ ESCENARIOS ============ -->
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('clasico',this)">😐 Bell clásico</button>
+    <button class="pchip" onclick="setEscen('rh',this)">🔴 Ramsay Hunt</button>
+    <button class="pchip" onclick="setEscen('embarazo',this)">🤰 Embarazo</button>
+    <button class="pchip" onclick="setEscen('nino',this)">🧒 Niño</button>
+    <button class="pchip" onclick="setEscen('nomej',this)">⏳ No mejora</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ============ SEGUIMIENTO ============ -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📅</span><span class="st">Plan de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Qué evaluar</th><th>Meta / acción</th></tr>
+      <tr><td>Inicio (&lt;72 h)</td><td>Gravedad (HB), cierre ocular</td><td>Corticoide + cuidado ocular; ± antiviral si severo</td></tr>
+      <tr><td>1–2 semanas</td><td>Ojo (córnea), tolerancia al esteroide</td><td>Reforzar lubricación; vigilar glucemia si diabético</td></tr>
+      <tr><td>3–4 semanas</td><td>Inicio de recuperación</td><td>Si empeora o nula mejoría → replantear diagnóstico</td></tr>
+      <tr><td>3–4 meses</td><td>Recuperación (la mayoría se recupera)</td><td>Si no hay mejoría → RM y referir</td></tr>
+      <tr><td>&gt;4 meses</td><td>Secuelas (sincinesias, contractura)</td><td>Rehabilitación facial; valorar toxina botulínica</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">🎯</span><div>La mayoría empieza a mejorar en <strong>2–3 semanas</strong> y se recupera en <strong>3–4 meses</strong>. La falta de cualquier mejoría obliga a reconsiderar el diagnóstico.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔁</span><span class="st">Secuelas</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Secuela</th><th>Descripción</th></tr>
+      <tr><td class="dn">Sincinesias</td><td>Co-contracción anómala (p. ej. el ojo se cierra al sonreír) por reinervación aberrante</td></tr>
+      <tr><td class="dn">Contractura / espasmo</td><td>Tono aumentado del lado afectado</td></tr>
+      <tr><td class="dn">"Lágrimas de cocodrilo"</td><td>Lagrimeo al comer por reinervación aberrante</td></tr>
+      <tr><td>Debilidad residual</td><td>Más probable si la parálisis fue completa</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Parálisis de Bell</h2>
+    <p>Guías y evidencia utilizadas. Nivel indicado.</p>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías clínicas</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2013</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Baugh RF, et al. <em>Clinical Practice Guideline: Bell's Palsy (AAO-HNS Foundation).</em> Otolaryngol Head Neck Surg. Corticoide precoz + cuidado ocular.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/24189771/" target="_blank">🔗 PubMed</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2012</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Gronseth GS, Paduga R. <em>Evidence-based guideline update: steroids and antivirals for Bell palsy (AAN).</em> Neurology.</div>
+        <a class="biblio-link" href="https://www.neurology.org/doi/10.1212/WNL.0b013e318275978c" target="_blank">🔗 Neurology</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2023</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">AAFP. <em>Bell Palsy: Rapid Evidence Review.</em> Am Fam Physician. Prednisona 50–60 mg/día ×5 días + reducción.</div>
+        <a class="biblio-link" href="https://www.aafp.org/afp/2023/0400/bell-palsy" target="_blank">🔗 AAFP</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Ensayos clave</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2007</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Sullivan FM, et al. <em>Early treatment with prednisolone or acyclovir in Bell's palsy.</em> N Engl J Med. Esteroide mejora; antiviral solo no.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/17942873/" target="_blank">🔗 PubMed</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">CENETEC. <em>GPC Diagnóstico y tratamiento de la parálisis de Bell.</em> Adaptación al contexto institucional.</div>
+        <a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC catálogo GPC</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia</div>
+    <div class="biblio-body"><div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Observacional</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia</div>
+    </div></div>
+  </div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Guía basada en evidencia disponible a 2026. Confirme dosis con la referencia institucional. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ---------- HOUSE-BRACKMANN ---------- */
+var HB=[
+ ['I','Normal','Función facial normal en todas las áreas.'],
+ ['II','Disfunción leve','Debilidad ligera a la inspección cercana; cierre ocular completo con esfuerzo mínimo; simetría en reposo.'],
+ ['III','Moderada','Debilidad evidente pero no desfigurante; cierre ocular completo con esfuerzo; puede haber sincinesia leve.'],
+ ['IV','Moderadamente severa','Debilidad evidente y/o desfigurante; cierre ocular INcompleto; asimetría en reposo.'],
+ ['V','Severa','Movimiento apenas perceptible; asimetría en reposo.'],
+ ['VI','Parálisis total','Sin movimiento.']
+];
+function buildHB(){var h='<div class="calc-row"><div class="calc-lbl2">Grado de función facial</div><div class="calc-opts">';for(var i=0;i<HB.length;i++){h+='<button class="copt" onclick="pickHB('+i+',this)">'+HB[i][0]+'</button>';}h+='</div></div>';document.getElementById('hb-box').innerHTML=h;}
+function pickHB(i,el){var sib=el.parentNode.querySelectorAll('.copt');for(var k=0;k<sib.length;k++)sib[k].classList.remove('on');el.classList.add('on');var r=document.getElementById('hb-res');var col=i<=2?'#0f7a5a':(i<=3?'#d97706':'#c0392b');r.style.background=col+'18';r.style.color=col;r.innerHTML='<b>Grado '+HB[i][0]+' — '+HB[i][1]+'</b><br>'+HB[i][2]+(i>=3?'<br><span style="font-size:11px;">Cierre ocular incompleto → extremar el cuidado ocular.</span>':'');r.classList.add('show');}
+
+/* ---------- CENTRAL/PERIFÉRICO ---------- */
+function buildCP(){var h='<div class="calc-row"><div class="calc-lbl2">¿Puede arrugar la frente del lado afectado?</div><div class="calc-opts"><button class="copt" onclick="cp(0,this)">Sí (frente respetada)</button><button class="copt" onclick="cp(1,this)">No (frente afectada)</button></div></div>';h+='<div class="calc-row"><div class="calc-lbl2">¿Hay otros déficits (habla, fuerza, sensibilidad, otros pares)?</div><div class="calc-opts"><button class="copt" onclick="cp2(0,this)">No</button><button class="copt" onclick="cp2(1,this)">Sí</button></div></div>';document.getElementById('cp-box').innerHTML=h;}
+var cpS={frente:null,otros:null};
+function cp(v,el){var s=el.parentNode.querySelectorAll('.copt');for(var i=0;i<s.length;i++)s[i].classList.remove('on');el.classList.add('on');cpS.frente=v;cpEval();}
+function cp2(v,el){var s=el.parentNode.querySelectorAll('.copt');for(var i=0;i<s.length;i++)s[i].classList.remove('on');el.classList.add('on');cpS.otros=v;cpEval();}
+function cpEval(){if(cpS.frente===null||cpS.otros===null)return;var r=document.getElementById('cp-res');if(cpS.frente===0||cpS.otros===1){r.style.background='#fdeaea';r.style.color='#7b1c1c';r.innerHTML='<b>Patrón CENTRAL / atípico → urgencia.</b> Frente respetada u otros déficits sugieren ictus u otra lesión central. Active la vía de ictus y no lo maneje como Bell.';}else{r.style.background='#ede9f5';r.style.color='#5b3a8a';r.innerHTML='<b>Patrón PERIFÉRICO compatible con Bell.</b> Frente afectada, sin otros déficits. Busque vesículas (Ramsay Hunt); si no hay banderas rojas, trate como parálisis de Bell.';}r.classList.add('show');}
+
+/* ---------- ALGORITMO ---------- */
+var algoState='start';
+var ALGO={
+ start:{q:'Parálisis facial aguda. ¿Puede arrugar la frente del lado afectado (frente afectada)?',a:[
+   ['No — la frente cae con el resto de la cara','vesic'],
+   ['Sí — la frente se mueve/arruga normal',function(){return 'RES:FRENTE RESPETADA → patrón CENTRAL. Sospeche ICTUS u otra lesión central. Active la vía de urgencia neurológica; NO lo trate como parálisis de Bell.';}]
+ ]},
+ vesic:{q:'Frente afectada (periférico). ¿Hay vesículas en el oído/paladar, dolor intenso u otras banderas rojas (bilateral, otros pares, curso lento)?',a:[
+   ['Sí',function(){return 'RES:NO es Bell típico. Vesículas + dolor = RAMSAY HUNT (zóster ótico): antiviral + corticoide y referir a ORL. Bilateral/atípico/curso lento → estudio dirigido (Lyme, sarcoide, VIH, imagen).';}],
+   ['No — cuadro típico','tiempo']
+ ]},
+ tiempo:{q:'Parálisis de Bell típica. ¿Han pasado menos de 72 h desde el inicio?',a:[
+   ['Sí (&lt;72 h)',function(){return 'RES:INICIE CORTICOIDE: prednisona 60 mg/día VO ×5–7 días con reducción (o 50–60 mg ×5 + reducción 5 días). AÑADA antiviral (valaciclovir 1 g c/8 h ×7 d) si la parálisis es severa/completa. CUIDADO OCULAR SIEMPRE: lágrimas de día, ungüento + oclusión nocturna.';}],
+   ['No (&gt;72 h)',function(){return 'RES:Aún puede ofrecer corticoide (beneficio menos claro pero razonable). Prioridad: CUIDADO OCULAR y seguimiento. Reevaluar diagnóstico si no hay ninguna mejoría en semanas.';}]
+ ]}
+};
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+
+/* ====== FICHAS DE TRATAMIENTO ====== */
+var AC='#5b3a8a', C2='#7a4a00', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#ede9f5';
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#efeaf6;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#5b3a8a;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+
+/* ---------- DEFINICIÓN FÁRMACOS ---------- */
+var D_PRED={pri:true,linea:'⭐ Piedra angular',n:'Prednisona / Prednisolona',dlb:'Dosis',
+ da:'60 mg/día VO ×5–7 días, luego reducción (o 50–60 mg ×5 días + reducción de 5 días). Dosis acumulada ≥450 mg',
+ dur:'Curso de ~10 días (con reducción)',
+ prep:'Iniciar idealmente &lt;72 h del inicio de los síntomas',
+ iv:'VO',
+ pres:'Prednisona 5/50 mg tableta',
+ emb:'Puede usarse valorando riesgo/beneficio (preferir; consultar)',
+ mon:'Glucemia (diabéticos), PA, síntomas GI',
+ ci:'Precaución: diabetes descontrolada, úlcera, infección activa, psicosis',
+ ea:'Hiperglucemia, insomnio, gastritis, cambios de ánimo',
+ nota:'<b>Mecanismo:</b> antiinflamatorio que reduce el edema del nervio facial. <b>Lo que más mejora el pronóstico</b> (NNT ≈ 6–10). Beneficio máximo si se inicia &lt;72 h.'};
+var D_VALA={pri:false,linea:'Añadido — solo en severo/completo',n:'Valaciclovir (con corticoide)',dlb:'Dosis',
+ da:'1 g VO cada 8 h durante 7 días (o aciclovir 400 mg 5 veces/día ×10 días)',
+ dur:'7 días',
+ prep:'Siempre JUNTO al corticoide; nunca en monoterapia',
+ iv:'VO',
+ pres:'Valaciclovir 500 mg/1 g · aciclovir 400 mg',
+ emb:'Aciclovir/valaciclovir con perfil aceptable; valorar',
+ mon:'Función renal (ajuste), hidratación',
+ ci:'Insuficiencia renal (ajustar dosis)',
+ ea:'Náusea, cefalea; nefrotoxicidad si deshidratado',
+ nota:'<b>Mecanismo:</b> antiviral frente a HSV/VZV. En monoterapia NO sirve; solo <b>añade</b> un beneficio modesto (menos sincinesias) en parálisis severa/completa y es clave en Ramsay Hunt.'};
+var D_LAGRI={pri:true,linea:'⭐ Siempre — protección ocular',n:'Lágrimas artificiales + lubricante',dlb:'Pauta',
+ da:'Lágrimas artificiales cada 1–2 h durante el día + ungüento lubricante y oclusión/parche por la noche',
+ dur:'Mientras el ojo no cierre bien',
+ prep:'Gafas/protección del viento y polvo; no parche compresivo que roce la córnea',
+ iv:'Tópico ocular',
+ pres:'Lágrimas artificiales · ungüento lubricante oftálmico',
+ mon:'Síntomas de exposición: ojo rojo, dolor, visión borrosa',
+ nota:'<b>Objetivo:</b> prevenir la <b>queratitis por exposición</b>, la complicación aguda más importante. Si hay dolor ocular, ojo rojo o ↓visión → oftalmología.'};
+var D_RH_AV={pri:true,linea:'Ramsay Hunt — antiviral',n:'Antiviral (dosis de zóster)',dlb:'Dosis',
+ da:'Valaciclovir 1 g VO cada 8 h ×7 días (o aciclovir), iniciar pronto',
+ dur:'7 días',
+ iv:'VO',
+ pres:'Valaciclovir 1 g',
+ nota:'<b>En Ramsay Hunt el antiviral SÍ es parte del tratamiento</b> (zóster del ganglio geniculado), combinado con corticoide. Pronóstico peor que Bell; referir a ORL.'};
+var D_RH_ST={pri:true,linea:'Ramsay Hunt — corticoide',n:'Corticoide',dlb:'Dosis',
+ da:'Prednisona 60 mg/día VO con reducción, junto al antiviral',
+ dur:'~10 días con reducción',
+ iv:'VO',
+ pres:'Prednisona 50 mg',
+ nota:'Combinar con antiviral. Valorar manejo del dolor y vértigo/hipoacusia asociados.'};
+var D_REHAB={pri:false,linea:'Secuelas / sin recuperación',n:'Rehabilitación facial ± toxina botulínica',dlb:'Indicación',
+ da:'Terapia de reeducación neuromuscular facial; toxina botulínica para sincinesias/espasmo; valoración quirúrgica en casos seleccionados',
+ dur:'Programada según evolución (meses)',
+ iv:'Rehabilitación / especializado',
+ nota:'Indicada si hay <b>sincinesias, contractura</b> o recuperación incompleta. La descompresión quirúrgica es controvertida y muy seleccionada.'};
+
+var TXC={
+ 'base':[
+   ['1ª Línea','Corticoide precoz (&lt;72 h)',AC,[D_PRED]],
+   ['Añadido','Solo en parálisis severa/completa',C2,[D_VALA]]
+ ],
+ 'ocular':[
+   ['⭐ Siempre','Prevenir queratitis por exposición',AC,[D_LAGRI]]
+ ]
+};
+var TXH={
+ 'rh':[
+   ['Ramsay Hunt','Antiviral + corticoide (referir ORL)',AC,[D_RH_AV,D_RH_ST]],
+   ['Protección ocular','Igual que en Bell',CO,[D_LAGRI]]
+ ],
+ 'nomej':[
+   ['Sin recuperación / secuelas','Rehabilitación y opciones',AC,[D_REHAB]]
+ ]
+};
+
+/* ---------- FÁRMACOS (buscable) ---------- */
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+var FARMACOS=[
+ {familia:'Corticoide (primera línea)',color:'#5b3a8a',farmacos:[
+  {n:'Prednisona / Prednisolona',ini:'60 mg/día VO ×5–7 d + reducción · <72 h',obj:'Reducir el edema del nervio facial; mejora la recuperación',dur:'Curso ~10 días con reducción',iv:'VO',pr:'Prednisona 5/50 mg',mon:'Glucemia, PA, GI',ci:'Diabetes descontrolada, úlcera, infección activa',ea:'Hiperglucemia, insomnio, gastritis',nota:'Lo que más mejora el pronóstico (NNT ≈ 6–10). Iniciar &lt;72 h.'}
+ ]},
+ {familia:'Antiviral (añadido)',color:'#7a4a00',farmacos:[
+  {n:'Valaciclovir / Aciclovir',ini:'Valaciclovir 1 g c/8 h ×7 d (con corticoide)',obj:'Añadido en parálisis severa/completa y en Ramsay Hunt',dur:'7 días',iv:'VO',pr:'Valaciclovir 500 mg/1 g · aciclovir 400 mg',mon:'Función renal, hidratación',ci:'Ajustar en insuficiencia renal',ea:'Náusea, cefalea',nota:'NO en monoterapia (ineficaz). Solo añade beneficio modesto; esencial en Ramsay Hunt.'}
+ ]},
+ {familia:'Protección ocular',color:'#0a5c45',farmacos:[
+  {n:'Lágrimas artificiales + ungüento lubricante',ini:'Gotas c/1–2 h de día; ungüento + oclusión de noche',obj:'Prevenir la queratitis por exposición (lagoftalmos)',dur:'Mientras el ojo no cierre bien',iv:'Tópico ocular',pr:'Lágrimas artificiales · ungüento lubricante',mon:'Ojo rojo, dolor, visión',ci:'—',ea:'Visión borrosa transitoria con el ungüento',nota:'Complicación aguda más importante. Si dolor/ojo rojo/↓visión → oftalmología.'}
+ ]}
+];
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Tratamiento de la parálisis de Bell',color:'#5b3a8a',farmacos:[
+  {n:'Corticoide (prednisona)',
+   receta:'<b>Prednisona 60 mg VO cada 24 h por la mañana durante 5–7 días</b>, luego reducción hasta completar ~10 días. Iniciar &lt;72 h del comienzo. (Con alimentos.)',
+   dosis:['60 mg/día ×5–7 d + reducción (acumulada ≥450 mg)'],
+   dur:'Curso de ~10 días con reducción',
+   via:'VO por la mañana, con alimentos',
+   enf:'Iniciar lo antes posible (&lt;72 h); vigilar glucemia en diabéticos; no suspender bruscamente.',
+   pac:'Antiinflamatorio que mejora la recuperación del nervio. Tómelo por la mañana con comida. Puede dar insomnio o subir el azúcar.',
+   nota:'Lo que más mejora el pronóstico.',
+   al:'Sed/orina excesivas (hiperglucemia), dolor de estómago intenso, cambios de ánimo marcados.'},
+  {n:'Cuidado ocular (siempre)',
+   receta:'<b>Lágrimas artificiales 1 gota en el ojo afectado cada 1–2 h durante el día</b> + <b>ungüento lubricante oftálmico y oclusión del ojo por la noche</b>. Usar gafas de protección.',
+   dosis:['Gotas c/1–2 h de día','Ungüento + oclusión nocturna'],
+   dur:'Mientras el ojo no cierre por completo',
+   via:'Tópico ocular',
+   enf:'Explicar técnica de oclusión sin rozar la córnea; enseñar signos de alarma ocular.',
+   pac:'Como el ojo no cierra bien, hay que mantenerlo húmedo para que no se lastime. Gotas de día y pomada con parche de noche. Avise si el ojo duele, se pone rojo o ve borroso.',
+   nota:'Previene la queratitis por exposición (lo más importante en la fase aguda).',
+   al:'Dolor ocular, ojo rojo o visión borrosa → acudir (posible úlcera corneal).'},
+  {n:'Antiviral (solo si severo/completo)',
+   receta:'<b>Valaciclovir 1 g VO cada 8 h durante 7 días</b>, SIEMPRE junto al corticoide. Solo en parálisis severa/completa (y en Ramsay Hunt).',
+   dosis:['Valaciclovir 1 g c/8 h ×7 d (o aciclovir 400 mg 5×/d ×10 d)'],
+   dur:'7 días',
+   via:'VO, con buena hidratación',
+   enf:'Nunca en monoterapia; ajustar en insuficiencia renal; mantener hidratación.',
+   pac:'Antiviral que se añade en casos más intensos. Tómelo con bastante agua.',
+   nota:'Beneficio modesto (menos sincinesias); esencial en Ramsay Hunt.',
+   al:'Disminución de orina, confusión (ajuste renal).'}
+ ]}
+];
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#ede9f5;border:1px solid #5b3a8a;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#5b3a8a;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ 'clasico':{t:'Parálisis de Bell clásica',pres:'Debilidad hemifacial aguda con afección de la frente, sin otros déficits; puede haber dolor retroauricular, disgeusia o hiperacusia.',dx:'Clínico; sin estudios de rutina.',tx:'Prednisona 60 mg/día &lt;72 h con reducción + cuidado ocular. Antiviral solo si severa/completa.',ref:'Oftalmología si hay datos de exposición corneal.',cx:'Retrasar el corticoide o dar antiviral solo. Verificar siempre la frente para no pasar por alto un ictus.'},
+ 'rh':{t:'Síndrome de Ramsay Hunt',pres:'Parálisis facial + <b>vesículas</b> en el conducto/pabellón auricular o paladar, dolor intenso, a veces vértigo/hipoacusia.',dx:'Clínico (otoscopia con vesículas).',tx:'<b>Antiviral (valaciclovir 1 g c/8 h ×7 d) + corticoide</b>; manejo del dolor. Cuidado ocular.',ref:'Otorrinolaringología (pronóstico peor que Bell).',cx:'Tratarlo como Bell sin antiviral: en Ramsay Hunt el antiviral SÍ es esencial.'},
+ 'embarazo':{t:'Embarazo',pres:'Mayor incidencia en 3er trimestre y posparto.',dx:'Clínico.',tx:'Cuidado ocular siempre. Corticoide valorando riesgo/beneficio (suele usarse); antiviral solo si está indicado. Decisión compartida y con obstetricia.',ref:'Obstetricia para decisión conjunta.',cx:'Negar el corticoide "por el embarazo" sin valorar el caso; o descuidar la protección ocular.'},
+ 'nino':{t:'Niño',pres:'Buen pronóstico (recuperación hasta ~90%).',dx:'Clínico; considerar Lyme según epidemiología, otitis.',tx:'Cuidado ocular; corticoide en dosis ajustada al peso valorando el caso; descartar causa secundaria (otitis, Lyme).',ref:'Pediatría; ORL si otitis/atipia.',cx:'No descartar otitis media como causa; vigilar el ojo.'},
+ 'nomej':{t:'Sin mejoría / atípica',pres:'Sin ninguna mejoría a las semanas, curso progresivo, bilateral o recurrente.',dx:'Replantear: RM con contraste, laboratorios (Lyme, VIH, sarcoide, glucosa).',tx:'Tratar la causa subyacente; rehabilitación facial; valorar toxina botulínica para secuelas.',ref:'Neurología / ORL.',cx:'Asumir "Bell que no mejora": la ausencia total de mejoría obliga a buscar otra causa.'}
+};
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  buildHB();buildCP();renderAlgo();
+  setTxc('base',document.querySelector('#txc-chips .pchip'));
+  setTxh('rh',document.querySelector('#txh-chips .pchip'));
+  setEscen('clasico',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+</script>
+</body>
+</html>

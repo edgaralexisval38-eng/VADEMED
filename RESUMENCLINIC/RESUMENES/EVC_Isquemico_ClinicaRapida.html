@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>EVC Isquémico · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0c3b6e;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#eaf1f7;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.biblio-header{background:linear-gradient(135deg,#0a1a3a,#0c3b6e);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.finput{width:100%;padding:9px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:10px;}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0a1a3a,#1a3060);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧠</div>
+    <div>
+      <div class="hdr-eye">Neurología · Urgencias neurovasculares</div>
+      <div class="hdr-title">EVC Isquémico Agudo</div>
+      <div class="hdr-sub">AHA/ASA 2026 · ESO 2021-2024 · CENETEC · GPC México</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">⏱️ Ventana IVT 4.5 h</span>
+    <span class="badge">🧵 Trombectomía ≤24 h</span>
+    <span class="badge">≈85% de los EVC</span>
+    <span class="badge">"Time is brain"</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">4.5 h</div><div class="qs-l">Ventana trombólisis</div></div>
+  <div class="qs"><div class="qs-v">24 h</div><div class="qs-l">Ventana trombectomía</div></div>
+  <div class="qs"><div class="qs-v">&lt;185/110</div><div class="qs-l">PA pre-IVT (mmHg)</div></div>
+  <div class="qs"><div class="qs-v">≈1.9 M</div><div class="qs-l">Neuronas/min sin flujo</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p>La <strong>enfermedad vascular cerebral (EVC) isquémica</strong> es un déficit neurológico focal de inicio súbito causado por oclusión de una arteria cerebral, con interrupción del flujo sanguíneo y muerte neuronal por isquemia. Representa cerca del <strong>85%</strong> de todos los EVC.</p>
+      <p>El concepto central es la <strong>penumbra isquémica</strong>: tejido con hipoperfusión aún viable rodeando al núcleo infartado. La meta terapéutica es rescatarla mediante reperfusión rápida — de ahí el axioma <em>"time is brain"</em>.</p>
+    </div>
+    <div class="tw" style="margin:10px 0;"><table class="t">
+      <tr><th>Clasificación TOAST</th><th>Mecanismo</th><th>Pistas</th></tr>
+      <tr><td class="dn">Aterosclerosis de gran vaso</td><td>Estenosis carotídea/intracraneal &gt;50%</td><td>Soplo, estenosis en angio, infartos corticales</td></tr>
+      <tr><td class="dn">Cardioembólico</td><td>FA, IAM, válvula, trombo VI</td><td>Infartos múltiples/territorios, FA en ECG</td></tr>
+      <tr><td class="dn">Pequeño vaso (lacunar)</td><td>Lipohialinosis de arteriolas</td><td>Síndromes lacunares, infarto &lt;15 mm</td></tr>
+      <tr><td class="dn">Otra etiología</td><td>Disección, vasculitis, trombofilia</td><td>Joven, cuello doloroso, hipercoagulabilidad</td></tr>
+      <tr><td class="dn">Indeterminada</td><td>Criptogénico / ≥2 causas</td><td>Estudio incompleto o ESUS</td></tr>
+    </table></div>
+    <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Emergencia tiempo-dependiente</div>Cada minuto sin reperfusión mueren ~1.9 millones de neuronas. Active el "código ictus" ANTES de completar el estudio: TC simple y decisión de trombólisis idealmente en &lt;60 min (puerta-aguja).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Valor</th><th>Contexto</th></tr>
+      <tr><td>Proporción de EVC</td><td class="dn">≈85% isquémico</td><td>15% hemorrágico (HIC + HSA)</td></tr>
+      <tr><td>Mortalidad global EVC</td><td>2ª causa de muerte mundial</td><td>1ª causa de discapacidad adquirida</td></tr>
+      <tr><td>México</td><td>~30/100,000/año</td><td>Alta carga por HTA y diabetes mal controladas</td></tr>
+      <tr><td>Recurrencia a 1 año</td><td>~10-15%</td><td>Mayor si etiología no tratada</td></tr>
+      <tr><td>Ventana de reperfusión real</td><td>&lt;10-20% recibe IVT</td><td>Barrera principal: llegada tardía</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">1️⃣</span><div><div class="at">Núcleo isquémico</div>Flujo &lt;10 mL/100g/min → despolarización anóxica, falla de bombas iónicas y muerte celular en minutos. Tejido irrecuperable.</div></div>
+    <div class="alert a-w"><span class="ai">2️⃣</span><div><div class="at">Penumbra isquémica</div>Flujo 10-20 mL/100g/min → tejido eléctricamente silente pero viable, mantenido por circulación colateral. Es el <strong>objetivo del tratamiento</strong>; su supervivencia depende del tiempo.</div></div>
+    <div class="alert a-i"><span class="ai">3️⃣</span><div><div class="at">Cascada isquémica y reperfusión</div>Excitotoxicidad por glutamato, entrada de Ca²⁺, estrés oxidativo e inflamación. La reperfusión rescata penumbra pero puede causar transformación hemorrágica y edema.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Modificables</th><th>No modificables</th></tr>
+      <tr><td>HTA (principal), diabetes, dislipidemia</td><td>Edad &gt;55 años</td></tr>
+      <tr><td>Fibrilación auricular</td><td>Sexo masculino (hasta edad avanzada)</td></tr>
+      <tr><td>Tabaquismo, alcohol, sedentarismo</td><td>Antecedente familiar / EVC previo</td></tr>
+      <tr><td>Obesidad, apnea del sueño</td><td>Etnia (mayor riesgo en hispanos/afroamericanos)</td></tr>
+      <tr><td>Estenosis carotídea, anticonceptivos + tabaco</td><td>Trombofilias hereditarias</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Regla mnemotécnica <strong>F.A.S.T.</strong> (Face, Arm, Speech, Time). Todo déficit focal súbito es EVC hasta demostrar lo contrario.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Territorio</th><th>Presentación típica</th></tr>
+      <tr><td class="dn">ACM (media)</td><td>Hemiparesia/hemihipoestesia contralateral cara-brazo, afasia (izq.), heminegligencia (der.), desviación de mirada</td></tr>
+      <tr><td class="dn">ACA (anterior)</td><td>Debilidad de pierna &gt; brazo, abulia, incontinencia</td></tr>
+      <tr><td class="dn">ACP (posterior)</td><td>Hemianopsia homónima, alexia sin agrafia</td></tr>
+      <tr><td class="dn">Vertebrobasilar</td><td>Vértigo, diplopía, disartria, ataxia, síndromes cruzados, coma (basilar)</td></tr>
+      <tr><td class="dn">Lacunar</td><td>Motor puro, sensitivo puro, ataxia-hemiparesia, disartria-mano torpe</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>La oclusión de gran vaso (OGV) suele dar <strong>NIHSS ≥6</strong> con desviación de mirada + afasia/negligencia → candidato a trombectomía.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Etiquetar como "vértigo periférico" o "crisis hipertensiva" un síndrome de fosa posterior. Todo déficit súbito requiere neuroimagen.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Bajar la PA agresivamente en el isquémico no candidato a IVT: se pierde perfusión de la penumbra. Solo tratar si &gt;220/120.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Retrasar la trombólisis esperando estudios innecesarios (perfil completo, plaquetas si no hay sospecha). Solo TC simple + glucemia son obligatorios.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Descartar EVC por "TC normal": la TC simple es normal en las primeras horas del isquémico; su rol es excluir hemorragia.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Olvidar glucemia capilar: la hipoglucemia imita EVC (stroke mimic más frecuente).</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">No documentar la "última vez visto bien" (last known well), no la hora del descubrimiento. Define la ventana.</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt">Iniciar antiagregantes o heparina antes de las 24 h post-trombólisis.</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🏥</span><span class="st">Criterios de hospitalización</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Destino</th></tr>
+      <tr><td>Todo EVC isquémico agudo confirmado o sospechado</td><td class="dm">Ingreso a Unidad de Ictus / monitoreo</td></tr>
+      <tr><td>Post-trombólisis o trombectomía</td><td class="dm">UCI/Unidad de ictus ≥24 h</td></tr>
+      <tr><td>NIHSS elevado, deterioro, oclusión de gran vaso</td><td class="dm">Centro con trombectomía</td></tr>
+      <tr><td>AIT de alto riesgo (ABCD² ≥4)</td><td>Ingreso/observación, estudio urgente</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ DIAGNÓSTICO ============ -->
+<div class="panel" id="tab-dx">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔎</span><span class="st">Abordaje diagnóstico inmediato</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">⏱️</span><div><div class="at">Objetivos de tiempo (puerta →)</div>TC en &lt;25 min · interpretación &lt;45 min · aguja (IVT) &lt;60 min · punción (trombectomía) lo antes posible.</div></div>
+    <div class="prose"><p><strong>Paso 1 — Reconocer:</strong> déficit focal súbito + hora de última vez visto bien. <strong>Paso 2 — Descartar imitadores:</strong> glucemia capilar (hipoglucemia), crisis, migraña, parálisis de Todd. <strong>Paso 3 — Neuroimagen urgente:</strong> TC simple para excluir hemorragia; luego angioTC/perfusión según ventana.</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧪</span><span class="st">Interpretación de estudios</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Qué busca</th><th>Hallazgo clave</th><th>Decisión</th></tr>
+      <tr><td class="dn">TC simple</td><td>Excluir hemorragia</td><td>Normal temprano; signos precoces (arteria hiperdensa, borramiento)</td><td>Habilita IVT si no hay sangre</td></tr>
+      <tr><td class="dn">ASPECTS</td><td>Extensión temprana ACM</td><td>≥6 favorable para trombectomía</td><td>&lt;6 replantear reperfusión</td></tr>
+      <tr><td class="dn">AngioTC</td><td>Oclusión de gran vaso</td><td>Oclusión ACI/ACM-M1/M2, basilar</td><td>Activa trombectomía</td></tr>
+      <tr><td class="dn">TC perfusión / RM-DWI</td><td>Núcleo vs penumbra</td><td>Mismatch = penumbra rescatable</td><td>Selecciona ventana extendida (6-24 h)</td></tr>
+      <tr><td class="dn">Glucemia</td><td>Imitador</td><td>&lt;60 o &gt;400 corregir</td><td>Obligatoria antes de IVT</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📋</span><span class="st">Estudios complementarios (etiología)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Finalidad</th></tr>
+      <tr><td>ECG + telemetría / Holter</td><td>Detectar FA (cardioembolismo)</td></tr>
+      <tr><td>Ecocardiograma (TT/TE)</td><td>Trombo, foramen oval, valvulopatía</td></tr>
+      <tr><td>Doppler carotídeo / angioRM cuello</td><td>Estenosis, disección</td></tr>
+      <tr><td>Perfil lipídico, HbA1c</td><td>Factores de riesgo modificables</td></tr>
+      <tr><td>BH, coagulación, función renal</td><td>Basal; no debe retrasar IVT salvo sospecha de coagulopatía</td></tr>
+      <tr><td>Trombofilia / vasculitis</td><td>Solo en jóvenes o criptogénico</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">✅</span><span class="st">Criterios de elegibilidad para IVT (4.5 h)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-g"><span class="ai">✔️</span><div><div class="at">Inclusión</div>Diagnóstico clínico de EVC isquémico con déficit incapacitante · edad ≥18 · inicio (o última vez visto bien) &lt;4.5 h · TC sin hemorragia.</div></div>
+    <div class="alert a-r"><span class="ai">✖️</span><div><div class="at">Contraindicaciones principales</div>Hemorragia en TC · PA &gt;185/110 no controlable · plaquetas &lt;100k · INR &gt;1.7 o uso de DOAC &lt;48 h · cirugía mayor/EVC/TCE grave reciente (&lt;3 meses) · hemorragia GI/GU activa · glucosa &lt;50 sin corregir · endocarditis, disección aórtica.</div></div>
+    <div class="alert a-i"><span class="ai">ℹ️</span><div><div class="at">Ventana extendida (AHA/ASA 2026)</div>4.5-9 h o ictus del despertar (&lt;9 h desde punto medio del sueño) con penumbra rescatable en imagen de perfusión: la IVT puede ser razonable. En OGV 4.5-24 h con penumbra que no puede recibir trombectomía, la IVT puede ser beneficiosa.</div></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ESCALAS ============ -->
+<div class="panel" id="tab-esc">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📊</span><span class="st">NIHSS — Severidad del ictus</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Escala de 0-42. Guía elegibilidad y pronóstico. NIHSS ≥6 sugiere oclusión de gran vaso.</div></div>
+    <div id="nihss-box"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-p" onclick="calcNIHSS()">Calcular</button>
+      <button class="btn btn-s" onclick="resetNIHSS()">Reiniciar</button>
+    </div>
+    <div id="nihss-res" class="calc-res"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🫀</span><span class="st">CHA₂DS₂-VASc — Riesgo embólico en FA</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Estima riesgo de EVC en fibrilación auricular no valvular y guía la anticoagulación en prevención secundaria.</div></div>
+    <div id="chads-box"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-p" onclick="calcCHADS()">Calcular</button>
+      <button class="btn btn-s" onclick="resetCHADS()">Reiniciar</button>
+    </div>
+    <div id="chads-res" class="calc-res"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📉</span><span class="st">Escala de Rankin modificada (mRS)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Puntos</th><th>Estado funcional</th></tr>
+      <tr><td class="dn">0</td><td>Sin síntomas</td></tr>
+      <tr><td class="dn">1</td><td>Sin discapacidad significativa pese a síntomas</td></tr>
+      <tr><td class="dn">2</td><td>Discapacidad leve; independiente</td></tr>
+      <tr><td class="dn">3</td><td>Discapacidad moderada; requiere ayuda, camina solo</td></tr>
+      <tr><td class="dn">4</td><td>Moderada-grave; no camina sin ayuda</td></tr>
+      <tr><td class="dn">5</td><td>Grave; encamado, cuidado constante</td></tr>
+      <tr><td class="dn">6</td><td>Fallecido</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">🎯</span><div>El objetivo de la reperfusión es un desenlace <strong>mRS 0-2</strong> (independencia funcional) a 90 días.</div></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ALGORITMO ============ -->
+<div class="panel" id="tab-algo">
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- ============ TX CONSULTA ============ -->
+<div class="panel" id="tab-txc">
+  <div class="alert a-r"><span class="ai">🚑</span><div><div class="at">El EVC isquémico agudo NO se maneja en consulta</div>Ante sospecha, active código ictus y traslade de inmediato. Aquí: primer contacto y prevención secundaria ambulatoria. Toque cada fármaco para desplegar su ficha completa.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('contacto',this)">🚑 Primer contacto</button>
+    <button class="pchip" onclick="setTxc('prevencion',this)">🛡️ Prevención 2ª (ambulatorio)</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<!-- ============ TX HOSP ============ -->
+<div class="panel" id="tab-txh">
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('ivt',this)">💉 Candidato a IVT</button>
+    <button class="pchip" onclick="setTxh('ogv',this)">🧵 Oclusión de gran vaso</button>
+    <button class="pchip" onclick="setTxh('medico',this)">🏥 Manejo médico</button>
+  </div>
+  <div id="txh-body"></div>
+  <div class="sec" style="margin-top:14px;"><div class="sh" onclick="tog(this)">
+    <span class="si">📈</span><span class="st">Monitoreo post-reperfusión</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Meta</th><th>Frecuencia</th><th>Si no se cumple</th></tr>
+      <tr><td>Presión arterial</td><td class="dn">&lt;180/105 (post-IVT 24 h)</td><td>c/15 min ×2 h, luego c/30 min ×6 h, luego c/h</td><td>Labetalol o nicardipina IV</td></tr>
+      <tr><td>NIHSS / neuro</td><td>Sin deterioro</td><td>c/15 min ×2 h, luego c/h</td><td>TC urgente (¿sangrado?)</td></tr>
+      <tr><td>Glucemia</td><td class="dn">140-180 mg/dL</td><td>c/1-2 h</td><td>Insulina; evitar hipoglucemia</td></tr>
+      <tr><td>Temperatura</td><td>&lt;37.5 °C</td><td>c/4 h</td><td>Antipirético, buscar infección</td></tr>
+      <tr><td>SatO₂</td><td>&gt;94%</td><td>Continuo</td><td>O₂ suplementario si &lt;94%</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🩸</span><div><div class="at">Sospecha de hemorragia post-IVT</div>Cefalea intensa, náusea/vómito, deterioro neurológico o ↑PA aguda → suspender infusión, TC urgente, crioprecipitado + ácido tranexámico, valoración por neurocirugía.</div></div>
+  </div></div>
+</div>
+
+<!-- ============ FÁRMACOS ============ -->
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;">
+    <label class="calc-lbl">Buscar</label>
+    <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. tenecteplasa, labetalol, clopidogrel..." oninput="filtrarFarmacos(this.value)">
+  </div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ============ INDICACIONES ============ -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · enfermería/consulta · paciente y familia · nota · alarma</strong>.</div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Medidas generales (orden de ingreso)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid #0c3b6e;border-radius:6px;padding:10px 14px;font-size:12.5px;line-height:1.85;color:#374151;">
+      1. Ingreso a <b>Unidad de Ictus</b> con monitoreo continuo.<br>
+      2. Reposo con cabecera a 30°; movilización temprana según tolere.<br>
+      3. <b>Nada por vía oral</b> hasta tamiz de deglución (sonda si falla).<br>
+      4. O₂ suplementario solo si SatO₂ &lt;94%.<br>
+      5. Soluciones isotónicas (evitar glucosadas hipotónicas); <b>euglucemia 140–180 mg/dL</b>.<br>
+      6. <b>Normotermia &lt;37.5°C</b> (paracetamol si fiebre; buscar foco).<br>
+      7. <b>PA permisiva</b>: no tratar salvo &gt;220/120 (o &lt;185/110 si trombólisis; &lt;180/105 post-IVT).<br>
+      8. Monitoreo <b>neurológico (NIHSS)</b> y de PA seriado.<br>
+      9. Profilaxis de TVP: compresión neumática; HBPM tras excluir sangrado (24 h post-IVT).<br>
+      10. Prevención de úlceras por presión; tamiz de deglución antes de VO.<br>
+      11. Estudio etiológico: ECG/telemetría, ecocardiograma, imagen de vasos, perfil lipídico, HbA1c.
+    </div>
+  </div></div>
+
+<div id="ind-body"></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Indicaciones al alta (esquema listo)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid #0a5c45;border-radius:6px;padding:10px 14px;font-size:12.5px;line-height:1.85;color:#374151;">
+      • <b>Antiagregación:</b> AAS 100 mg VO c/24 h (o clopidogrel 75 mg si intolerancia). DAPT (AAS+clopidogrel) solo si se indicó por 21 días.<br>
+      • <b>Si FA:</b> anticoagulación oral (DOAC) según indicación.<br>
+      • <b>Atorvastatina 40–80 mg VO c/24 h</b> (meta LDL &lt;70).<br>
+      • <b>Antihipertensivo</b> para meta &lt;130/80 mmHg.<br>
+      • Control de glucemia y <b>cese tabáquico</b>.<br>
+      • <b>Rehabilitación</b> (física / lenguaje) según secuelas.<br>
+      • Cita a <b>Neurología</b>; educación <b>F.A.S.T.</b> y señales de alarma.
+    </div>
+    <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><div class="at">Regreso inmediato si</div>debilidad, dificultad para hablar, caída facial, pérdida de visión o cefalea súbita intensa.</div></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ESCENARIOS ============ -->
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('despertar',this)">🌅 Ictus del despertar</button>
+    <button class="pchip" onclick="setEscen('ait',this)">⚡ AIT</button>
+    <button class="pchip" onclick="setEscen('joven',this)">🧑 EVC en el joven</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ============ SEGUIMIENTO ============ -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📅</span><span class="st">Plan de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Evaluación</th><th>Meta</th><th>Acción</th></tr>
+      <tr><td>24 h post-IVT</td><td>TC control + neuro</td><td>Sin sangrado</td><td>Iniciar antiagregante si limpia</td></tr>
+      <tr><td>Hospitalización</td><td>Etiología (TOAST)</td><td>Identificar causa</td><td>Ajustar prevención (¿ACO?)</td></tr>
+      <tr><td>Alta</td><td>mRS, deglución, rehab</td><td>Plan funcional</td><td>Terapia física/lenguaje</td></tr>
+      <tr><td>1 mes</td><td>Adherencia, PA, LDL</td><td>PA&lt;130/80, LDL&lt;70</td><td>Titular estatina/antiHTA</td></tr>
+      <tr><td>3-6 meses</td><td>mRS, recurrencia, FA</td><td>mRS 0-2</td><td>Holter prolongado si criptogénico</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🚨</span><span class="st">Señales de alarma (educar al paciente)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><strong>F.A.S.T.:</strong> caída facial, debilidad de brazo, dificultad al hablar → es Tiempo de llamar a emergencias. También: pérdida súbita de visión, vértigo con ataxia, cefalea "en trueno".</p></div>
+    <div class="alert a-r"><span class="ai">📞</span><div>Ante cualquier síntoma nuevo súbito, acudir inmediatamente — no esperar a que "se pase". La ventana de tratamiento es de horas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">👨‍⚕️</span><span class="st">Referencia a especialista</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Especialidad</th><th>Urgencia</th></tr>
+      <tr><td>Oclusión de gran vaso</td><td>Neurología vascular / Neurointervencionismo</td><td class="dm">Inmediata</td></tr>
+      <tr><td>Estenosis carotídea &gt;70% sintomática</td><td>Cirugía vascular</td><td>&lt;2 semanas</td></tr>
+      <tr><td>FA de novo</td><td>Cardiología</td><td>Semanas</td></tr>
+      <tr><td>EVC en joven / criptogénico</td><td>Neurología (estudio trombofilia/FOP)</td><td>Ambulatoria</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🛡️</span><span class="st">Prevención secundaria</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Intervención</th><th>Meta</th></tr>
+      <tr><td>Antiagregación (aterotrombótico)</td><td>AAS o clopidogrel indefinido; DAPT 21 d en menor/AIT alto riesgo</td></tr>
+      <tr><td>Anticoagulación (FA)</td><td>DOAC preferente; iniciar según tamaño de infarto (regla 1-3-6-12 d)</td></tr>
+      <tr><td>Estatina de alta intensidad</td><td>LDL &lt;70 mg/dL</td></tr>
+      <tr><td>Control de PA</td><td>&lt;130/80 mmHg</td></tr>
+      <tr><td>Estilo de vida</td><td>Cese tabáquico, dieta, ejercicio, control glucémico</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — EVC Isquémico Agudo</h2>
+    <p>Guías internacionales y evidencia primaria utilizadas. Nivel de evidencia indicado.</p>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías y posicionamientos internacionales</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2026</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Powers WJ, Prabhakaran S, et al. <em>2026 Guideline for the Early Management of Patients With Acute Ischemic Stroke.</em> Stroke (AHA/ASA). Base de dosis de IVT, ventanas y trombectomía.</div>
+        <a class="biblio-link" href="https://www.ahajournals.org/doi/10.1161/STR.0000000000000513" target="_blank">🔗 DOI 10.1161/STR.0000000000000513</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Berge E, et al. <em>European Stroke Organisation (ESO) guidelines on intravenous thrombolysis for acute ischaemic stroke.</em> Eur Stroke J. Criterios de elegibilidad IVT.</div>
+        <a class="biblio-link" href="https://doi.org/10.1177/2396987321989865" target="_blank">🔗 DOI 10.1177/2396987321989865</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📙 Estudios clínicos relevantes (ECAs)</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Menon BK, et al. <em>Intravenous tenecteplase compared with alteplase for acute ischaemic stroke in Canada (AcT).</em> Lancet. No inferioridad de TNK 0.25 mg/kg.</div>
+        <a class="biblio-link" href="https://doi.org/10.1016/S0140-6736(22)01054-6" target="_blank">🔗 DOI 10.1016/S0140-6736(22)01054-6</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Nogueira RG, et al. <em>Thrombectomy 6 to 24 Hours after Stroke with a Mismatch (DAWN).</em> N Engl J Med. Ventana extendida de trombectomía.</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa1706442" target="_blank">🔗 DOI 10.1056/NEJMoa1706442</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Ma H, et al. <em>Thrombolysis Guided by Perfusion Imaging up to 9 Hours after Onset of Stroke (EXTEND).</em> N Engl J Med. Ventana extendida IVT.</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa1813046" target="_blank">🔗 DOI 10.1056/NEJMoa1813046</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2013</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Wang Y, et al. <em>Clopidogrel with Aspirin in Acute Minor Stroke or TIA (CHANCE).</em> N Engl J Med. Base de DAPT 21 días.</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa1215340" target="_blank">🔗 DOI 10.1056/NEJMoa1215340</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">CENETEC. <em>GPC Diagnóstico y tratamiento temprano del EVC isquémico en el adulto.</em> Adaptación al contexto institucional mexicano.</div>
+        <a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC catálogo GPC</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales / cohortes</div>
+        <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series de casos</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia / opinión</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Guía elaborada con base en evidencia disponible a 2026. Verifique actualizaciones de guías locales (CENETEC, SSa México) y adapte al contexto institucional. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ---------- NIHSS ---------- */
+var NIHSS_ITEMS=[
+ {t:'1a. Nivel de conciencia',o:[['Alerta',0],['Somnoliento',1],['Estuporoso',2],['Coma',3]]},
+ {t:'1b. Preguntas (mes, edad)',o:[['Ambas',0],['Una',1],['Ninguna',2]]},
+ {t:'1c. Órdenes (cerrar ojos, puño)',o:[['Ambas',0],['Una',1],['Ninguna',2]]},
+ {t:'2. Mirada',o:[['Normal',0],['Paresia parcial',1],['Desviación forzada',2]]},
+ {t:'3. Campos visuales',o:[['Normal',0],['Cuadrantanopsia',1],['Hemianopsia',2],['Ceguera bilateral',3]]},
+ {t:'4. Paresia facial',o:[['Normal',0],['Leve',1],['Parcial',2],['Completa',3]]},
+ {t:'5a. Brazo izquierdo',o:[['Sin caída',0],['Cae &lt;10s',1],['Esfuerzo vs gravedad',2],['Sin esfuerzo',3],['Sin movim.',4]]},
+ {t:'5b. Brazo derecho',o:[['Sin caída',0],['Cae &lt;10s',1],['Esfuerzo vs gravedad',2],['Sin esfuerzo',3],['Sin movim.',4]]},
+ {t:'6a. Pierna izquierda',o:[['Sin caída',0],['Cae &lt;5s',1],['Esfuerzo vs gravedad',2],['Sin esfuerzo',3],['Sin movim.',4]]},
+ {t:'6b. Pierna derecha',o:[['Sin caída',0],['Cae &lt;5s',1],['Esfuerzo vs gravedad',2],['Sin esfuerzo',3],['Sin movim.',4]]},
+ {t:'7. Ataxia de miembros',o:[['Ausente',0],['1 miembro',1],['2 miembros',2]]},
+ {t:'8. Sensibilidad',o:[['Normal',0],['Leve-moderada',1],['Grave/anestesia',2]]},
+ {t:'9. Lenguaje',o:[['Normal',0],['Afasia leve',1],['Afasia grave',2],['Mudo/global',3]]},
+ {t:'10. Disartria',o:[['Normal',0],['Leve',1],['Grave',2]]},
+ {t:'11. Extinción/negligencia',o:[['Ausente',0],['1 modalidad',1],['&gt;1 modalidad',2]]}
+];
+var nihssSel={};
+function buildNIHSS(){var h='';for(var i=0;i<NIHSS_ITEMS.length;i++){var it=NIHSS_ITEMS[i];h+='<div class="calc-row"><div class="calc-lbl">'+it.t+'</div><div class="calc-opts">';for(var j=0;j<it.o.length;j++){h+='<button class="copt" data-q="'+i+'" data-v="'+it.o[j][1]+'" onclick="pickN(this,'+i+','+it.o[j][1]+')">'+it.o[j][0]+'</button>';}h+='</div></div>';}document.getElementById('nihss-box').innerHTML=h;}
+function pickN(el,q,v){var sib=el.parentNode.querySelectorAll('.copt');for(var k=0;k<sib.length;k++)sib[k].classList.remove('on');el.classList.add('on');nihssSel[q]=v;}
+function calcNIHSS(){var tot=0,n=0;for(var k in nihssSel){tot+=nihssSel[k];n++;}var r=document.getElementById('nihss-res');var sev,col;if(tot===0){sev='Sin déficit';col='#065f46';}else if(tot<=4){sev='Ictus leve';col='#0f7a5a';}else if(tot<=15){sev='Moderado';col='#d97706';}else if(tot<=20){sev='Moderado-grave';col='#c0392b';}else{sev='Grave';col='#7b1c1c';}var ogv=tot>=6?'<br>NIHSS ≥6: sospechar oclusión de gran vaso → evaluar angioTC/trombectomía.':'';r.style.background=col+'18';r.style.color=col;r.innerHTML='<strong>NIHSS = '+tot+'/42 · '+sev+'</strong> ('+n+'/15 ítems)'+ogv;r.classList.add('show');}
+function resetNIHSS(){nihssSel={};buildNIHSS();document.getElementById('nihss-res').classList.remove('show');}
+
+/* ---------- CHA2DS2-VASc ---------- */
+var CHADS=[['Insuficiencia cardíaca / disfunción VI',1],['Hipertensión',1],['Edad ≥75 años',2],['Diabetes',1],['EVC/AIT/tromboembolismo previo',2],['Enf. vascular (IAM, arteriopatía)',1],['Edad 65-74 años',1],['Sexo femenino',1]];
+var chadsSel={};
+function buildCHADS(){var h='';for(var i=0;i<CHADS.length;i++){h+='<div class="calc-row"><div class="calc-lbl">'+CHADS[i][0]+'</div><div class="calc-opts"><button class="copt" onclick="pickC(this,'+i+','+CHADS[i][1]+')">Sí ('+CHADS[i][1]+')</button><button class="copt" onclick="pickC(this,'+i+',0)">No</button></div></div>';}document.getElementById('chads-box').innerHTML=h;}
+function pickC(el,q,v){var sib=el.parentNode.querySelectorAll('.copt');for(var k=0;k<sib.length;k++)sib[k].classList.remove('on');el.classList.add('on');chadsSel[q]=v;}
+function calcCHADS(){var tot=0;for(var k in chadsSel)tot+=chadsSel[k];var r=document.getElementById('chads-res');var txt,col;if(tot===0){txt='Riesgo bajo. No anticoagulación de rutina.';col='#065f46';}else if(tot===1){txt='Riesgo bajo-intermedio. Considerar anticoagulación (individualizar).';col='#d97706';}else{txt='Riesgo alto. Anticoagulación recomendada (DOAC preferente).';col='#7b1c1c';}r.style.background=col+'18';r.style.color=col;r.innerHTML='<strong>CHA₂DS₂-VASc = '+tot+'</strong><br>'+txt;r.classList.add('show');}
+function resetCHADS(){chadsSel={};buildCHADS();document.getElementById('chads-res').classList.remove('show');}
+
+/* ---------- ALGORITMO ---------- */
+var algoState='start';
+var ALGO={
+ start:{q:'Déficit neurológico focal súbito. ¿TC simple muestra hemorragia?',a:[['Sí → es EVC hemorrágico',function(){return 'RES:Consulte la guía de EVC hemorrágico. Suspenda antitrombóticos, controle PA y revierta anticoagulación.';}],['No → isquémico, continuar','q2']]},
+ q2:{q:'¿Cuánto tiempo desde la última vez visto bien?',a:[['&lt; 4.5 horas','q3'],['4.5 - 24 horas','q4'],['&gt; 24 h / desconocido','q5']]},
+ q3:{q:'¿Cumple criterios y sin contraindicaciones para IVT?',a:[['Sí, elegible',function(){return 'RES:TROMBÓLISIS IV YA. Tenecteplasa 0.25 mg/kg (máx 25 mg) en bolo IV único, O alteplasa 0.9 mg/kg (máx 90 mg; 10% bolo + resto en 60 min). Meta puerta-aguja &lt;60 min. Bajar PA a &lt;185/110 antes. Si además hay oclusión de gran vaso → activar trombectomía sin retrasar la IVT.';}],['No elegible / contraindicada','q4b']]},
+ q4:{q:'¿Hay oclusión de gran vaso (ACI, ACM-M1/M2, basilar) con penumbra rescatable?',a:[['Sí',function(){return 'RES:TROMBECTOMÍA MECÁNICA (ventana 6-24 h con selección por imagen — DAWN/DEFUSE-3). Traslade a centro neurointervencionista. Si además &lt;9 h con penumbra y no puede recibir trombectomía, la IVT puede ser beneficiosa.';}],['No','q5']]},
+ q4b:{q:'¿Oclusión de gran vaso presente?',a:[['Sí',function(){return 'RES:TROMBECTOMÍA MECÁNICA candidata (aunque IVT esté contraindicada). Active neurointervencionismo urgente.';}],['No',function(){return 'RES:Manejo médico: antiagregación (AAS 160-300 mg; DAPT si ictus menor/AIT alto riesgo ×21 d), estatina alta intensidad, PA permisiva (no tratar salvo &gt;220/120), profilaxis de TVP, deglución antes de VO, unidad de ictus.';}]]},
+ q5:{q:'Fuera de ventana de reperfusión. Prioridad:',a:[['Ver manejo médico',function(){return 'RES:MANEJO MÉDICO: ingreso a unidad de ictus, antiagregación, estatina, PA permisiva (tratar solo si &gt;220/120), euglucemia (140-180), normotermia, profilaxis TVP, tamiz de deglución, rehabilitación temprana y estudio etiológico (TOAST) para prevención secundaria.';}]]}
+};
+function renderAlgo(){var st=ALGO[algoState];if(!st){return;}var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+
+/* ====== TRATAMIENTOS ESTILO FICHA DESPLEGABLE ====== */
+var AC='#0c3b6e', C2='#7a4a00', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#eaf1f7';
+
+/* ---------- FICHAS DE TRATAMIENTO (acordeón) ---------- */
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#eef4fb;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+
+/* ---------- DEFINICIÓN DE FÁRMACOS (fichas TX) ---------- */
+var F_TNK={pri:true,linea:'⭐ 1ª línea — reperfusión IV',n:'Tenecteplasa (TNK)',dlb:'Dosis',
+ da:'0.25 mg/kg en <b>BOLO IV único</b> (máx 25 mg)',
+ dur:'Ventana ≤4.5 h desde la última vez visto bien · meta puerta-aguja &lt;60 min',
+ prep:'Reconstituir con agua estéril según presentación; administrar en bolo IV de 5–10 s',
+ iv:'IV · unidad de ictus / urgencias',
+ pres:'Tenecteplasa 50 mg frasco (TNKase® / Metalyse®)',
+ emb:'Categoría C; usar si el beneficio supera el riesgo',
+ mon:'PA &lt;185/110 ANTES; neuro + PA c/15 min ×2 h; sin antitrombóticos ×24 h',
+ ci:'Hemorragia en TC, PA&gt;185/110 no controlable, plaquetas&lt;100k, INR&gt;1.7, DOAC&lt;48 h, cirugía/EVC/TCE grave reciente &lt;3 meses',
+ ea:'Hemorragia intracraneal (~2–6%), angioedema orolingual, sangrado sistémico',
+ nota:'<b>Mecanismo:</b> activador tisular del plasminógeno con alta especificidad por fibrina. <b>Ventaja:</b> bolo único (logística) frente a la infusión de alteplasa. <b>Evidencia:</b> AHA/ASA 2026 clase 1/A; no inferior a alteplasa (AcT 2022).'};
+var F_ALTE={pri:true,linea:'⭐ 1ª línea — alternativa',n:'Alteplasa (rt-PA)',dlb:'Dosis',
+ da:'0.9 mg/kg (máx 90 mg): <b>10% en bolo</b> + 90% en <b>infusión de 60 min</b>',
+ dur:'Misma ventana ≤4.5 h',
+ prep:'Reconstituir a 1 mg/mL con agua estéril; no agitar; bomba de infusión',
+ iv:'IV · unidad de ictus',
+ pres:'Alteplasa 50 mg frasco (Actilyse®)',
+ emb:'Categoría C',
+ mon:'Igual que tenecteplasa; vigilar vía aérea por angioedema (más si toma IECA)',
+ ci:'Iguales a tenecteplasa',
+ ea:'Hemorragia intracraneal sintomática ~6%, angioedema',
+ nota:'<b>Mecanismo:</b> tPA recombinante convierte plasminógeno en plasmina. <b>Evidencia:</b> estándar histórico (NINDS, ECASS III).'};
+var F_TROMBEC={pri:true,linea:'⭐ 1ª línea — reperfusión mecánica',n:'Trombectomía mecánica',dlb:'Indicación',
+ da:'Oclusión de gran vaso (ACI, ACM-M1/M2, basilar) con penumbra rescatable',
+ dur:'Ventana 0–24 h con selección por imagen (DAWN / DEFUSE-3)',
+ prep:'No retrasar la IVT si el paciente también es elegible ("bridging")',
+ iv:'Sala de neurointervencionismo',
+ mon:'PA &lt;180/105 peri-procedimiento; evitar hipotensión que comprometa colaterales',
+ nota:'<b>Evidencia:</b> beneficio robusto en OGV (HERMES, DAWN, DEFUSE-3). Traslado a centro con capacidad neurointervencionista.'};
+var F_LABE={pri:true,linea:'Control de PA para permitir IVT',n:'Labetalol IV',dlb:'Dosis',dur:'Mientras se requiera control de PA (24 h post-IVT)',
+ da:'10–20 mg IV en 1–2 min, repetir/duplicar c/10 min (máx 300 mg) o infusión 2–8 mg/min',
+ prep:'Objetivo: PA &lt;185/110 antes de trombólisis; &lt;180/105 post-IVT',
+ iv:'IV · monitorizado',
+ pres:'Labetalol 100 mg/20 mL (5 mg/mL)',
+ ci:'Bradicardia, bloqueo AV, asma, ICC descompensada',
+ ea:'Bradicardia, hipotensión, broncoespasmo',
+ nota:'<b>Mecanismo:</b> α₁ + β-bloqueo no selectivo → baja PA sin taquicardia refleja. <b>Evidencia:</b> primera línea peri-trombólisis.'};
+var F_NICA={pri:true,linea:'Control de PA titulable',n:'Nicardipina IV',dlb:'Dosis',dur:'Infusión titulable mientras se requiera',
+ da:'Infusión 5 mg/h, ↑2.5 mg/h c/5–15 min (máx 15 mg/h)',
+ prep:'Diluir en SG5% o SSN a 0.1 mg/mL; bomba de infusión',
+ iv:'IV continua (ideal por control fino)',
+ pres:'Nicardipina 5 mg/5 mL',
+ ci:'Estenosis aórtica grave',
+ ea:'Cefalea, taquicardia refleja, flebitis',
+ nota:'<b>Mecanismo:</b> antagonista de calcio dihidropiridínico. <b>Alternativa:</b> clevidipina. Preferida cuando se requiere titulación precisa.'};
+var F_AAS={pri:true,linea:'1ª línea — prevención 2ª (aterotrombótico)',n:'Ácido acetilsalicílico (AAS)',dlb:'Dosis',
+ da:'Carga 160–300 mg → mantenimiento 75–100 mg/día',
+ dur:'Iniciar a las 24–48 h (24 h post-IVT, tras TC de control sin sangrado)',
+ iv:'VO o por sonda, con alimentos',
+ pres:'AAS 100/300 mg (Aspirina®, genérico)',
+ emb:'Dosis bajas generalmente seguras; valorar 3er trimestre',
+ ci:'Hemorragia activa, alergia, úlcera péptica activa',
+ ea:'Dispepsia, sangrado gastrointestinal',
+ nota:'<b>Mecanismo:</b> inhibición irreversible de COX-1 → ↓ tromboxano A₂. <b>Evidencia:</b> IST/CAST — base del tratamiento antiagregante.'};
+var F_CLOPI={pri:false,linea:'DAPT en ictus menor / AIT de alto riesgo',n:'Clopidogrel (+ AAS)',dlb:'Dosis',
+ da:'Carga 300 mg → 75 mg/día, <b>junto con AAS durante 21 días</b>, luego monoterapia',
+ dur:'DAPT solo 21–90 días (↑ sangrado si se prolonga)',
+ iv:'VO',
+ pres:'Clopidogrel 75 mg (Plavix®, genérico)',
+ ci:'Hemorragia activa',
+ ea:'Sangrado; variabilidad de respuesta por CYP2C19',
+ nota:'<b>Mecanismo:</b> bloqueo del receptor P2Y₁₂ plaquetario. <b>Evidencia:</b> CHANCE/POINT — DAPT corta reduce recurrencia con mínimo aumento de sangrado.'};
+var F_ACO={pri:false,linea:'2ª línea — cardioembólico (FA)',n:'Anticoagulación oral (DOAC)',dlb:'Indicación',
+ da:'Apixabán, rivaroxabán, dabigatrán o edoxabán según función renal; warfarina si válvula mecánica/estenosis mitral',
+ dur:'Momento de inicio según tamaño de infarto (regla 1–3–6–12 días)',
+ iv:'VO',
+ pres:'Apixabán 2.5/5 mg · rivaroxabán 15/20 mg · dabigatrán 110/150 mg',
+ ci:'Hemorragia activa, transformación hemorrágica extensa',
+ ea:'Sangrado',
+ nota:'<b>Mecanismo:</b> inhibición directa de factor Xa (o trombina). <b>Evidencia:</b> DOAC preferentes sobre warfarina en FA no valvular. Diferir el inicio en infartos grandes por riesgo de transformación hemorrágica.'};
+var F_ATOR={pri:true,linea:'Coadyuvante — estatina alta intensidad',n:'Atorvastatina',dlb:'Dosis',
+ da:'40–80 mg/día por la noche',
+ dur:'Indefinida · meta LDL &lt;70 mg/dL',
+ iv:'VO',
+ pres:'Atorvastatina 20/40/80 mg',
+ emb:'Contraindicada en embarazo',
+ ci:'Enfermedad hepática activa, embarazo',
+ ea:'Mialgias, ↑ transaminasas, rara rabdomiólisis',
+ nota:'<b>Mecanismo:</b> inhibe HMG-CoA reductasa; efecto estabilizador de placa. <b>Evidencia:</b> SPARCL — reduce recurrencia.'};
+var F_ENOX={pri:true,linea:'Coadyuvante — profilaxis de TVP',n:'Enoxaparina (profilaxis)',dlb:'Dosis',
+ da:'40 mg SC c/24 h (30 mg si ClCr &lt;30)',
+ dur:'Iniciar tras excluir/estabilizar sangrado (post-24 h si recibió IVT)',
+ iv:'SC',
+ pres:'Enoxaparina 40 mg/0.4 mL (Clexane®)',
+ ci:'Hemorragia activa, plaquetopenia grave (TIH)',
+ ea:'Sangrado, trombocitopenia',
+ nota:'<b>Mecanismo:</b> HBPM anti-Xa. <b>Alternativa/adjunto:</b> compresión neumática intermitente en las primeras horas.'};
+
+/* ---------- TX CONSULTA / HOSP ---------- */
+var TXC={
+ 'contacto':[
+   ['1ª Línea','Estabilizar y activar código ictus',AC,[
+     {pri:true,linea:'Primer contacto',n:'ABC + O₂ si SatO₂ &lt;94%',dlb:'Conducta',dur:'Durante la fase aguda / estabilización',da:'Vía aérea, nada por boca (riesgo de aspiración), O₂ solo si &lt;94%',iv:'Pre-hospitalario / urgencias',nota:'No dar antiagregantes ni líquidos por boca hasta neuroimagen y tamiz de deglución.'},
+     {pri:true,linea:'Obligatorio',n:'Glucemia capilar',dlb:'Conducta',dur:'Al ingreso y en controles seriados',da:'Corregir si &lt;60 mg/dL',iv:'Capilar inmediata',nota:'La hipoglucemia es el imitador de EVC más frecuente. Descártala antes de asumir ictus.'}
+   ]],
+   ['Coadyuvantes','Lo que define la ventana',CO,[
+     {pri:true,linea:'Dato clave',n:'Documentar "última vez visto bien"',dlb:'Conducta',dur:'Al primer contacto',da:'Registrar hora exacta y avisar al centro receptor',iv:'Traslado urgente a centro con TC',nota:'Es el dato más importante para decidir trombólisis/trombectomía. Traslado prioritario con aviso previo (código ictus).'}
+   ]]
+ ],
+ 'prevencion':[
+   ['1ª Línea','Aterotrombótico estable',AC,[F_AAS,F_ATOR]],
+   ['2ª Línea','Si fibrilación auricular',C2,[F_ACO]],
+   ['Coadyuvantes','Control de factores de riesgo',CO,[
+     {pri:true,linea:'Metas',n:'PA &lt;130/80 · cese tabáquico',dlb:'Conducta',dur:'A largo plazo (crónico)',da:'Antihipertensivos a largo plazo, dieta, ejercicio, control glucémico',iv:'Ambulatorio',nota:'El control estricto de PA es la medida más costo-efectiva para prevenir recurrencia.'}
+   ]]
+ ]
+};
+var TXH={
+ 'ivt':[
+   ['1ª Línea','Reperfusión farmacológica (ventana ≤4.5 h)',AC,[F_TNK,F_ALTE]],
+   ['2ª Línea','Preparar la PA para poder infundir',C2,[F_LABE,F_NICA]],
+   ['Coadyuvantes','Cuidados post-IVT',CO,[
+     {pri:true,linea:'Post-trombólisis',n:'Monitoreo neuro + PA &lt;180/105 ×24 h',dlb:'Conducta',dur:'Primeras 24 h post-IVT',da:'Sin antitrombóticos ×24 h; TC de control a las 24 h antes de antiagregar',iv:'Unidad de ictus / UCI',nota:'Deterioro, cefalea intensa o ↑PA aguda → suspender infusión y TC urgente (¿hemorragia?).'}
+   ]]
+ ],
+ 'ogv':[
+   ['1ª Línea','Reperfusión mecánica',AC,[F_TROMBEC]],
+   ['2ª Línea','Control de PA peri-procedimiento',C2,[F_NICA,F_LABE]],
+   ['Coadyuvantes','Bridging',CO,[F_TNK]]
+ ],
+ 'medico':[
+   ['1ª Línea','Manejo médico (no candidato a reperfusión)',AC,[F_AAS,F_CLOPI]],
+   ['2ª Línea','Neuroprotección general',C2,[
+     {pri:false,linea:'PA permisiva',n:'No bajar la PA salvo &gt;220/120',dlb:'Regla',dur:'Durante la fase aguda',da:'Tratar solo si PA &gt;220/120 (reducción cautelosa ~15%)',iv:'Unidad de ictus',nota:'Bajar la PA compromete la perfusión de la penumbra. Euglucemia 140–180 y normotermia &lt;37.5°C: hipo/hiperglucemia y fiebre empeoran el desenlace.'}
+   ]],
+   ['Coadyuvantes','Prevención de complicaciones',CO,[F_ENOX,F_ATOR]]
+ ]
+};
+
+/* ---------- FÁRMACOS (acordeón buscable) ---------- */
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+var FARMACOS=[
+ {familia:'Trombolíticos',color:'#0c3b6e',farmacos:[
+  {n:'Tenecteplasa (TNK)',dur:'Dosis única (evento agudo)',ini:'0.25 mg/kg bolo IV único (máx 25 mg)',obj:'Reperfusión IV en ventana ≤4.5 h; meta puerta-aguja &lt;60 min',iv:'IV bolo · unidad de ictus',pr:'Tenecteplasa 50 mg frasco (TNKase®/Metalyse®)',mon:'PA &lt;185/110 antes; neuro+PA c/15 min ×2 h; sin antitrombóticos ×24 h',ci:'Sangre en TC, PA no controlable, plaquetas&lt;100k, INR&gt;1.7, DOAC&lt;48 h, cirugía/EVC/TCE reciente',ea:'Hemorragia intracraneal, angioedema, sangrado sistémico',nota:'<b>Mecanismo:</b> tPA fibrino-específico. AHA/ASA 2026 clase 1/A; bolo único (AcT).'},
+  {n:'Alteplasa (rt-PA)',dur:'Infusión de 60 min (evento agudo)',ini:'0.9 mg/kg (máx 90 mg): 10% bolo + 60 min infusión',obj:'Reperfusión IV en ventana ≤4.5 h',iv:'IV · bomba de infusión',pr:'Alteplasa 50 mg frasco (Actilyse®)',mon:'Igual a TNK; vigilar vía aérea (angioedema, más con IECA)',ci:'Iguales a tenecteplasa',ea:'Hemorragia intracraneal ~6%, angioedema',nota:'<b>Mecanismo:</b> tPA recombinante. Estándar histórico (NINDS, ECASS III).'}
+ ]},
+ {familia:'Antihipertensivos IV',color:'#7b1c1c',farmacos:[
+  {n:'Labetalol IV',dur:'Mientras se requiera (peri-IVT)',ini:'10–20 mg IV c/10 min (máx 300 mg) o 2–8 mg/min',obj:'PA &lt;185/110 pre-IVT; &lt;180/105 post-IVT',iv:'IV · monitorizado',pr:'Labetalol 100 mg/20 mL',mon:'FC y PA; evitar en bradicardia/bloqueo/asma',ci:'Bradicardia, bloqueo AV, asma, ICC descompensada',ea:'Bradicardia, hipotensión, broncoespasmo',nota:'<b>Mecanismo:</b> α/β-bloqueo. Primera línea peri-trombólisis.'},
+  {n:'Nicardipina IV',dur:'Infusión titulable mientras se requiera',ini:'5 mg/h, ↑2.5 mg/h c/5–15 min (máx 15 mg/h)',obj:'Control fino y titulable de PA',iv:'IV continua',pr:'Nicardipina 5 mg/5 mL; diluir a 0.1 mg/mL',mon:'PA continua; evitar hipotensión',ci:'Estenosis aórtica grave',ea:'Cefalea, taquicardia refleja, flebitis',nota:'<b>Mecanismo:</b> antagonista de calcio dihidropiridínico. Ideal para titulación precisa.'}
+ ]},
+ {familia:'Antiagregantes',color:'#0a5c45',farmacos:[
+  {n:'Ácido acetilsalicílico (AAS)',dur:'Indefinido (prevención 2ª)',ini:'Carga 160–300 mg → 75–100 mg/día',obj:'Prevención secundaria aterotrombótica',iv:'VO/sonda · iniciar 24–48 h (24 h post-IVT)',pr:'AAS 100/300 mg',mon:'Signos de sangrado GI',ci:'Hemorragia activa, alergia, úlcera activa',ea:'Dispepsia, sangrado GI',nota:'<b>Mecanismo:</b> inhibición irreversible de COX-1. IST/CAST.'},
+  {n:'Clopidogrel',dur:'DAPT 21 días; luego según indicación',ini:'Carga 300 mg → 75 mg/día',obj:'DAPT con AAS ×21 d en ictus menor/AIT alto riesgo',iv:'VO',pr:'Clopidogrel 75 mg',mon:'Sangrado; respuesta variable (CYP2C19)',ci:'Hemorragia activa',ea:'Sangrado',nota:'<b>Mecanismo:</b> bloqueo P2Y₁₂. CHANCE/POINT: DAPT corta reduce recurrencia.'}
+ ]},
+ {familia:'Estatina, anticoagulación y coadyuvantes',color:'#7a4a00',farmacos:[
+  {n:'Atorvastatina',dur:'Indefinida',ini:'40–80 mg/día nocturna',obj:'LDL &lt;70 mg/dL; estabilización de placa',iv:'VO indefinida',pr:'Atorvastatina 20/40/80 mg',mon:'Transaminasas, mialgias',ci:'Hepatopatía activa, embarazo',ea:'Mialgias, ↑ transaminasas',nota:'<b>Mecanismo:</b> inhibe HMG-CoA reductasa. SPARCL.'},
+  {n:'Anticoagulación (DOAC)',dur:'Indefinida en fibrilación auricular',ini:'Según función renal; inicio 1–3–6–12 d por tamaño de infarto',obj:'Prevención secundaria en FA',iv:'VO',pr:'Apixabán 2.5/5 mg · rivaroxabán 15/20 mg · dabigatrán 110/150 mg',mon:'Función renal, sangrado',ci:'Hemorragia activa, transformación hemorrágica extensa',ea:'Sangrado',nota:'<b>Mecanismo:</b> inhibición de factor Xa/trombina. DOAC preferentes en FA no valvular.'},
+  {n:'Enoxaparina (profilaxis TVP)',dur:'Mientras el paciente esté encamado',ini:'40 mg SC c/24 h (30 mg si ClCr&lt;30)',obj:'Profilaxis de trombosis venosa en encamados',iv:'SC · tras excluir sangrado',pr:'Enoxaparina 40 mg/0.4 mL',mon:'Plaquetas (TIH), sangrado',ci:'Hemorragia activa, TIH',ea:'Sangrado, trombocitopenia',nota:'<b>Mecanismo:</b> HBPM anti-Xa. Alternativa: compresión neumática intermitente.'}
+ ]}
+];
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Reperfusión aguda',color:'#0c3b6e',farmacos:[
+  {n:'Trombólisis IV (tenecteplasa / alteplasa)',
+   receta:'<b>Tenecteplasa 0.25 mg/kg IV en bolo único</b> (máx 25 mg), previa PA &lt;185/110 — <b>O</b> alteplasa 0.9 mg/kg IV (máx 90 mg): 10% en bolo + 90% en infusión de 60 min. Sin antitrombóticos ×24 h.',
+   dosis:['TNK 0.25 mg/kg bolo (máx 25 mg)','Alteplasa 0.9 mg/kg: 10% bolo + resto 60 min'],
+   dur:'Dosis única / infusión de 60 min (evento agudo)',
+   via:'IV en unidad de ictus, monitorizado; ventana ≤4.5 h',
+   enf:'Verificar PA &lt;185/110 antes; monitor neuro y PA c/15 min ×2 h; NO otros antitrombóticos ×24 h; vigilar vía aérea (angioedema).',
+   pac:'Medicamento que disuelve el coágulo. Avise de inmediato si tiene dolor de cabeza intenso, náusea o hinchazón de labios/lengua.',
+   nota:'AAD/ASA 2026 clase 1/A. Meta puerta-aguja &lt;60 min.',
+   al:'Cefalea súbita, deterioro neurológico, ↑PA aguda o sangrado → suspender y TC urgente.'}
+ ]},
+ {familia:'Control de presión arterial (IV)',color:'#7b1c1c',farmacos:[
+  {n:'Labetalol IV',
+   receta:'<b>Labetalol 10–20 mg IV</b> en 1–2 min; repetir o duplicar c/10 min (máx 300 mg) — meta PA &lt;185/110 pre-IVT y &lt;180/105 post-IVT.',
+   dosis:['10–20 mg IV c/10 min (máx 300 mg) o infusión 2–8 mg/min'],
+   dur:'Mientras se requiera control de PA (24 h post-IVT)',
+   via:'IV lento, monitorizado',
+   enf:'Vigilar FC y broncoespasmo; evitar en bradicardia/bloqueo/asma.',
+   pac:'Baja la presión de forma controlada.',
+   nota:'Primera línea peri-trombólisis.',
+   al:'Bradicardia, hipotensión, broncoespasmo.'},
+  {n:'Nicardipina IV',
+   receta:'<b>Nicardipina IV en infusión 5 mg/h</b>, titular +2.5 mg/h c/5–15 min (máx 15 mg/h). Diluir a 0.1 mg/mL.',
+   dosis:['5 mg/h, ↑2.5 mg/h c/5–15 min (máx 15 mg/h)'],
+   dur:'Infusión titulable mientras se requiera',
+   via:'IV continua con bomba',
+   enf:'Control fino de PA; evitar hipotensión.',
+   pac:'Baja la presión de forma gradual.',
+   nota:'Ideal para titulación precisa.',
+   al:'Cefalea, taquicardia refleja, flebitis.'}
+ ]},
+ {familia:'Antiagregación',color:'#0a5c45',farmacos:[
+  {n:'AAS ± Clopidogrel',
+   receta:'<b>AAS 160–300 mg VO de carga → 100 mg c/24 h</b> (iniciar 24–48 h; 24 h post-IVT tras TC sin sangrado). DAPT: <b>+ clopidogrel 300 mg carga → 75 mg/día ×21 días</b> solo si ictus menor / AIT de alto riesgo.',
+   dosis:['AAS 160–300 mg carga → 75–100 mg/día','+ clopidogrel 300 mg → 75 mg/día ×21 d (ictus menor/AIT)'],
+   dur:'AAS indefinido; DAPT solo 21 días',
+   via:'VO o por sonda, con alimentos',
+   enf:'Confirmar TC control sin hemorragia antes de iniciar si hubo trombólisis; vigilar sangrado.',
+   pac:'Evita nuevos coágulos. Tómelo todos los días. Avise si hay sangrado o heces negras.',
+   nota:'CHANCE/POINT: DAPT corta reduce recurrencia.',
+   al:'Sangrado activo, vómito con sangre, heces negras.'}
+ ]},
+ {familia:'Prevención secundaria (crónico)',color:'#7a4a00',farmacos:[
+  {n:'Anticoagulación oral (DOAC) — si FA',
+   receta:'<b>Apixabán 5 mg VO c/12 h</b> (u otro DOAC según función renal) si fibrilación auricular — iniciar según tamaño del infarto (regla 1–3–6–12 días).',
+   dosis:['Apixabán 2.5/5 mg · rivaroxabán 15/20 mg · dabigatrán 110/150 mg'],
+   dur:'Indefinida en fibrilación auricular',
+   via:'VO',
+   enf:'Diferir el inicio en infartos grandes por riesgo de transformación hemorrágica.',
+   pac:'Anticoagulante para prevenir embolias por la arritmia. No lo suspenda sin indicación.',
+   nota:'DOAC preferentes sobre warfarina en FA no valvular.',
+   al:'Sangrado importante.'},
+  {n:'Atorvastatina',
+   receta:'<b>Atorvastatina 40–80 mg VO c/24 h por la noche</b> (meta LDL &lt;70 mg/dL). Uso indefinido.',
+   dosis:['40–80 mg/día nocturna'],
+   dur:'Indefinida (prevención secundaria)',
+   via:'VO',
+   enf:'Vigilar mialgias y transaminasas.',
+   pac:'Reduce el colesterol y estabiliza las placas. No la suspenda; avise si tiene dolor muscular intenso.',
+   nota:'SPARCL — reduce recurrencia.',
+   al:'Dolor muscular intenso con orina oscura (rara rabdomiólisis).'}
+ ]},
+ {familia:'Profilaxis',color:'#374151',farmacos:[
+  {n:'Enoxaparina (profilaxis de TVP)',
+   receta:'<b>Enoxaparina 40 mg SC c/24 h</b> (30 mg si ClCr &lt;30) para profilaxis de trombosis venosa; iniciar tras excluir sangrado (24 h post-IVT). Alternativa: compresión neumática intermitente.',
+   dosis:['40 mg SC c/24 h (30 mg si ClCr<30)'],
+   dur:'Mientras el paciente esté encamado',
+   via:'SC',
+   enf:'Vigilar plaquetas (TIH) y sangrado.',
+   pac:'Inyección para prevenir coágulos en las piernas mientras está en cama.',
+   nota:'Alternativa/adjunto: compresión neumática intermitente.',
+   al:'Sangrado, trombocitopenia.'}
+ ]}
+];
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#e6f1fb;border:1px solid #0c3b6e;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente y familia</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ 'despertar':{t:'Ictus del despertar',pres:'Déficit presente al despertar; hora de inicio desconocida.',dx:'RM con mismatch DWI/FLAIR o TC-perfusión con penumbra rescatable.',tx:'IVT puede ser razonable si &lt;9 h desde el punto medio del sueño con penumbra (AHA/ASA 2026); trombectomía si hay oclusión de gran vaso hasta 24 h.',ref:'Centro con imagen avanzada y neurointervencionismo.',cx:'Asumir que está fuera de ventana solo por desconocer la hora: la imagen de perfusión puede rescatar al paciente.'},
+ 'ait':{t:'AIT (ataque isquémico transitorio)',pres:'Déficit focal transitorio ya resuelto, sin infarto en imagen.',dx:'Estratificar con ABCD²; estudiar vasos y fuente embólica de forma urgente.',tx:'DAPT (AAS+clopidogrel) ×21 d si alto riesgo, estatina, control de factores; buscar FA y estenosis carotídea.',ref:'Ingreso/observación si ABCD² ≥4 o etiología de alto riesgo.',cx:'Tratar el AIT como algo "benigno": el riesgo de EVC es máximo en las primeras 48 h.'},
+ 'joven':{t:'EVC en el paciente joven',pres:'Ictus &lt;50 años; considerar disección arterial, foramen oval, trombofilia, vasculitis o consumo de drogas.',dx:'AngioRM de cuello, ecocardiograma con burbujas, panel de trombofilia/autoinmune, toxicología.',tx:'Mismo manejo agudo; prevención según etiología (antiagregante vs anticoagulante; cierre de FOP en casos seleccionados).',ref:'Neurología para estudio etiológico completo.',cx:'Olvidar la disección: es causa frecuente en jóvenes y se sospecha ante dolor cervical/cefalea y antecedente de trauma menor.'}
+};
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  buildNIHSS();buildCHADS();renderAlgo();
+  setTxc('contacto',document.querySelector('#txc-chips .pchip'));
+  setTxh('ivt',document.querySelector('#txh-chips .pchip'));
+  setEscen('despertar',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+
+</script>
+</body>
+</html>

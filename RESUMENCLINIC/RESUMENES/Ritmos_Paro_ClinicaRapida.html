@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ritmos de paro · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#c0142b;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#fde8ea;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#161616,#c0142b);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#fde8ea;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#fde8ea;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#161616,#c0142b);">
+  <div class="hdr-top"><div class="hdr-icon">🫀</div><div>
+    <div class="hdr-eye">Urgencias · RCP / ACLS</div>
+    <div class="hdr-title">Ritmos de paro</div>
+    <div class="hdr-sub">AHA 2025 (CPR & ECC) · PALS · CENETEC</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">⚡ Desfibrilable: FV · TV sin pulso</span>
+    <span class="badge">🚫 No desfibrilable: AESP · Asistolia</span>
+    <span class="badge">RCP de alta calidad</span>
+    <span class="badge">Buscar H y T</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">⚡ Sí</div><div class="qs-l">FV / TVsp → choque</div></div>
+  <div class="qs"><div class="qs-v">🚫 No</div><div class="qs-l">AESP / asistolia</div></div>
+  <div class="qs"><div class="qs-v">1 mg</div><div class="qs-l">Adrenalina c/3–5 min</div></div>
+  <div class="qs"><div class="qs-v">H y T</div><div class="qs-l">Causas reversibles</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('ekg',this)">🫀 EKG</button>
+  <button class="tab" onclick="showT('dif',this)">🧭 ¿Desfibrilable?</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('txh',this)">👶🤰 Pediátrico y embarazo</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Dosis rápidas</button>
+  <button class="tab" onclick="showT('hyt',this)">🔁 Causas H y T</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('post',this)">📅 Post-RCP</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Los 4 ritmos de paro</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Ritmo</th><th>¿Desfibrilable?</th><th>Acción clave</th></tr>
+      <tr><td class="dn">Fibrilación ventricular (FV)</td><td style="color:#0a5c45;font-weight:700;">⚡ SÍ</td><td>Desfibrilar + RCP</td></tr>
+      <tr><td class="dn">TV sin pulso (TVsp)</td><td style="color:#0a5c45;font-weight:700;">⚡ SÍ</td><td>Desfibrilar + RCP</td></tr>
+      <tr><td class="dn">Actividad eléctrica sin pulso (AESP)</td><td style="color:#7b1c1c;font-weight:700;">🚫 NO</td><td>RCP + adrenalina YA + tratar causa</td></tr>
+      <tr><td class="dn">Asistolia</td><td style="color:#7b1c1c;font-weight:700;">🚫 NO</td><td>RCP + adrenalina YA + tratar causa</td></tr>
+    </table></div>
+    <div class="alert a-g"><span class="ai">✅</span><div><div class="at">Lo que salva vidas</div><b>RCP de alta calidad</b> (compresiones fuertes, rápidas, con mínima interrupción) y, en FV/TVsp, <b>desfibrilación temprana</b>. Todo lo demás se organiza alrededor de esto.</div></div>
+    <div class="alert a-i"><span class="ai">💡</span><div>La AESP es "hay actividad eléctrica en el monitor pero NO hay pulso". La asistolia es ausencia de actividad (línea plana): <b>confirme en 2 derivaciones</b> y descarte FV fina y fallas técnicas (cables, ganancia).</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💪</span><span class="st">RCP de alta calidad</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Objetivo</th></tr>
+      <tr><td class="dn">Frecuencia</td><td>100–120 compresiones/min</td></tr>
+      <tr><td class="dn">Profundidad</td><td>5–6 cm (adulto); permitir reexpansión completa</td></tr>
+      <tr><td class="dn">Interrupciones</td><td>Mínimas (&lt;10 s); fracción de compresión torácica &gt;60–80%</td></tr>
+      <tr><td class="dn">Relevo</td><td>Cambiar de compresor cada 2 min</td></tr>
+      <tr><td class="dn">Ventilación</td><td>30:2 sin vía aérea avanzada; con ella, compresiones continuas + 1 ventilación c/6 s (10/min). No hiperventilar</td></tr>
+      <tr><td class="dn">Monitoreo</td><td>EtCO₂ (calidad/ROSC); evitar interrumpir por POCUS</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Interrumpir demasiado las <strong>compresiones</strong> (intubar, canalizar, POCUS): priorice compresión y choque.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Desfibrilar la <strong>AESP/asistolia</strong>: NO son desfibrilables.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Confundir <strong>FV fina con asistolia</strong>: suba la ganancia y confirme en 2 derivaciones.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Retrasar la <strong>adrenalina</strong> en ritmos no desfibrilables: darla lo antes posible.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Olvidar buscar y tratar las <strong>causas reversibles (H y T)</strong>, sobre todo en AESP.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">Dar <strong>bicarbonato, calcio, magnesio o esteroides de rutina</strong>: solo con indicación específica.</span></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-ekg">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🫀</span><div>Trazos sobre papel milimetrado. El recuadro indica si es <b style="color:#0a5c45;">⚡ desfibrilable</b> o <b style="color:#7b1c1c;">🚫 no desfibrilable</b>. Velocidad 25 mm/s (cada cuadro grande = 0.20 s).</div></div>
+
+  <div class="pop"><div class="pop-h" style="background:#0a5c45;">⚡ Fibrilación ventricular (FV) gruesa — desfibrilable</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 74" style="width:100%;height:84px;display:block;">
+      <defs><pattern id="gA" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="74" fill="url(#gA)"/>
+      <path id="wf_fvg" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;">Ondulaciones <b>caóticas e irregulares</b>, sin QRS ni ondas identificables, amplitud gruesa. <b>→ Choque inmediato + RCP.</b></div>
+  </div></div>
+  <div class="pop"><div class="pop-h" style="background:#0a5c45;">⚡ FV fina — desfibrilable (no confundir con asistolia)</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 74" style="width:100%;height:84px;display:block;">
+      <defs><pattern id="gB" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="74" fill="url(#gB)"/>
+      <path id="wf_fvf" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;">Igual de caótica pero de <b>baja amplitud</b>; puede simular asistolia. <b>Suba la ganancia y confirme en 2 derivaciones.</b></div>
+  </div></div>
+  <div class="pop"><div class="pop-h" style="background:#0a5c45;">⚡ Taquicardia ventricular sin pulso (TVsp) — desfibrilable</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 74" style="width:100%;height:84px;display:block;">
+      <defs><pattern id="gC" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="74" fill="url(#gC)"/>
+      <path id="wf_vt" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;">Complejos <b>anchos, regulares, rápidos y monomorfos</b>, sin pulso. <b>→ Se trata igual que la FV: choque + RCP.</b></div>
+  </div></div>
+  <div class="pop"><div class="pop-h" style="background:#7b1c1c;">🚫 Actividad eléctrica sin pulso (AESP) — NO desfibrilable</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 74" style="width:100%;height:84px;display:block;">
+      <defs><pattern id="gD" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="74" fill="url(#gD)"/>
+      <path id="wf_aesp" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;"><b>Ritmo organizado en el monitor (aquí P-QRS-T visibles) pero SIN pulso.</b> Cualquier ritmo salvo FV/TV/asistolia. <b>→ RCP + adrenalina YA + buscar H y T.</b></div>
+  </div></div>
+  <div class="pop"><div class="pop-h" style="background:#7b1c1c;">🚫 Asistolia — NO desfibrilable</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 74" style="width:100%;height:84px;display:block;">
+      <defs><pattern id="gE" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="74" fill="url(#gE)"/>
+      <path id="wf_asis" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;"><b>Línea prácticamente plana</b>, sin actividad. Descarte FV fina y falla técnica (cables, electrodos, ganancia); confirme en 2 derivaciones. <b>→ RCP + adrenalina YA + buscar H y T.</b></div>
+  </div></div>
+  <div class="pop"><div class="pop-h" style="background:#7a4a00;">🌀 Torsades de pointes (TV polimorfa) — desfibrilable si sin pulso</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 74" style="width:100%;height:84px;display:block;">
+      <defs><pattern id="gF" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="74" fill="url(#gF)"/>
+      <path id="wf_tdp" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;">Complejos que <b>"giran" alrededor de la línea de base</b> (amplitud que crece y decrece). Asociada a <b>QT largo</b>. Sin pulso → desfibrilar; considere <b>sulfato de magnesio</b>.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-dif">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">¿Qué ritmo es? → ¿desfibrilo?</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="dif-box"></div><div id="dif-res" class="calc-res"></div></div></div>
+</div>
+
+<div class="panel" id="tab-algo"><div id="algo-box"></div><button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button></div>
+
+<div class="panel" id="tab-txc">
+  <div class="alert a-i"><span class="ai">💊</span><div><div class="at">Elija la vía según el ritmo</div>Desfibrilable (FV/TVsp) vs no desfibrilable (AESP/asistolia). Toque cada tarjeta.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('desfib',this)">⚡ Desfibrilable (FV/TVsp)</button>
+    <button class="pchip" onclick="setTxc('nodesfib',this)">🚫 No desfibrilable (AESP/asistolia)</button>
+    <button class="pchip" onclick="setTxc('refract',this)">🔁 FV persistente/refractaria</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<div class="panel" id="tab-txh">
+  <div class="alert a-w"><span class="ai">👶🤰</span><div><div class="at">Poblaciones especiales</div>La secuencia es la misma; cambian las <strong>dosis por peso (PALS)</strong> y, en embarazo, las <strong>maniobras específicas</strong>.</div></div>
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('ped',this)">👶 Pediátrico (PALS)</button>
+    <button class="pchip" onclick="setTxh('emb',this)">🤰 Embarazo</button>
+  </div>
+  <div id="txh-body"></div>
+</div>
+
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;"><label class="calc-lbl">Buscar</label><input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. adrenalina, amiodarona, magnesio..." oninput="filtrarFarmacos(this.value)"></div>
+  <div id="farm-body"></div>
+</div>
+
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Dosis rápidas (para cantar en la reanimación)</div>Adulto y pediátrico (PALS) en cada tarjeta.</div></div>
+  <div id="ind-body"></div>
+</div>
+
+<div class="panel" id="tab-hyt">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🔁</span><div><div class="at">Causas reversibles — búscalas siempre (sobre todo en AESP)</div>5 H y 5 T. Corregir la causa es lo que revierte muchos paros.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🅷</span><span class="st">Las 5 H</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <tr><th>H</th><th>Pista</th><th>Tratamiento</th></tr>
+    <tr><td class="dn">Hipovolemia</td><td>Hemorragia, sepsis, deshidratación</td><td>Cristaloides / sangre; control del sangrado</td></tr>
+    <tr><td class="dn">Hipoxia</td><td>Vía aérea, cianosis, ahogamiento</td><td>Oxígeno, ventilar, asegurar vía aérea</td></tr>
+    <tr><td class="dn">Hidrogeniones (acidosis)</td><td>Acidosis metabólica</td><td>Ventilación; bicarbonato solo si indicación</td></tr>
+    <tr><td class="dn">Hipo/Hiperpotasemia</td><td>ERC, diálisis, EKG (ondas T)</td><td>Hiper: calcio, insulina-glucosa, bicarbonato. Hipo: reponer K/Mg</td></tr>
+    <tr><td class="dn">Hipotermia</td><td>Exposición, inmersión</td><td>Recalentamiento; prolongar reanimación</td></tr>
+  </table></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🆃</span><span class="st">Las 5 T</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <tr><th>T</th><th>Pista</th><th>Tratamiento</th></tr>
+    <tr><td class="dn">Neumotórax a Tensión</td><td>Trauma, ventilación, ausencia de ruidos, desviación traqueal</td><td>Descompresión con aguja / toracostomía</td></tr>
+    <tr><td class="dn">Taponamiento cardiaco</td><td>Trauma, POCUS (derrame)</td><td>Pericardiocentesis</td></tr>
+    <tr><td class="dn">Tóxicos</td><td>Opioides, betabloqueadores, calcioantagonistas, digoxina</td><td>Antídoto específico (p. ej. naloxona) sin retrasar RCP</td></tr>
+    <tr><td class="dn">Trombosis pulmonar (TEP)</td><td>TVP, disnea previa, POCUS (VD dilatado)</td><td>Fibrinólisis en paro por TEP muy probable</td></tr>
+    <tr><td class="dn">Trombosis coronaria (IAM)</td><td>Dolor previo, EKG</td><td>Reperfusión (PCI) tras ROSC</td></tr>
+  </table></div></div></div>
+  <div class="alert a-i" style="margin:0;"><span class="ai">🔎</span><div><b>POCUS</b> ayuda a identificar taponamiento, neumotórax a tensión, TEP masivo o hipovolemia, pero <b>no debe interrumpir</b> las compresiones ni retrasar el choque.</div></div>
+</div>
+
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('fvtv',this)">FV / TVsp</button>
+    <button class="pchip" onclick="setEscen('refract',this)">FV refractaria</button>
+    <button class="pchip" onclick="setEscen('aesp',this)">AESP</button>
+    <button class="pchip" onclick="setEscen('asis',this)">Asistolia</button>
+    <button class="pchip" onclick="setEscen('tdp',this)">Torsades</button>
+    <button class="pchip" onclick="setEscen('emb',this)">🤰 Embarazo</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<div class="panel" id="tab-post">
+  <div class="alert a-g" style="margin-bottom:12px;"><span class="ai">💓</span><div><div class="at">ROSC — recuperación de la circulación</div>Objetivo: proteger cerebro y corazón y tratar la causa.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Cuidados post-paro</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <tr><th>Área</th><th>Meta</th></tr>
+    <tr><td class="dn">Oxigenación</td><td>SpO₂ 92–98%; evitar hiperoxia e hipoxia</td></tr>
+    <tr><td class="dn">Ventilación</td><td>Normocapnia (PaCO₂ ~35–45); evitar hiperventilar</td></tr>
+    <tr><td class="dn">Hemodinamia</td><td>PAS &gt;90 / PAM ≥65 mmHg; líquidos y vasopresores según necesidad</td></tr>
+    <tr><td class="dn">EKG 12 derivaciones</td><td>Buscar STEMI → angiografía/PCI</td></tr>
+    <tr><td class="dn">Temperatura (MTD)</td><td>Manejo dirigido 32–37.5 °C; evitar la fiebre</td></tr>
+    <tr><td class="dn">Causa</td><td>Tratar la etiología (H y T); glucosa, electrolitos</td></tr>
+    <tr><td class="dn">Neuro</td><td>No pronosticar de forma temprana; sedación/EEG según protocolo</td></tr>
+  </table></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Si no hay ROSC, decidir la <b>terminación</b> es multifactorial (tiempo, causa, EtCO₂ persistentemente muy bajo, ausencia de causa reversible); <b>ningún parámetro aislado</b> lo determina.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Ritmos de paro (ACLS)</h2><p>Guías vigentes.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">American Heart Association. <em>2025 Guidelines for CPR and ECC — Part 9: Adult Advanced Life Support.</em> Circulation.</div><a class="biblio-link" href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000001376" target="_blank">🔗 AHA 2025</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">AHA. <em>Highlights of the 2025 Guidelines (Adult BLS/ALS, PALS, Post-Cardiac Arrest Care).</em></div><a class="biblio-link" href="https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines" target="_blank">🔗 cpr.heart.org</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">AHA. <em>Focused Update on ACLS: antiarrhythmics, DSED / vector change (Clase IIb).</em></div></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">🗂️ México</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">CENETEC. <em>GPC de reanimación cardiopulmonar avanzada del adulto.</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel</div><div class="biblio-body"><div class="nivel-legend"><div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">A</span> Guía/RS</div><div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">B</span> ECA/observacional</div><div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Exp</span> Referencia</div></div></div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Contenido educativo con base en AHA 2025. Confirme dosis y energías con su referencia institucional y el equipo disponible. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis / pauta')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo',f.emb,'#7a4a00');if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#fde8ea;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#c0142b;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#fde8ea;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#c0142b;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#fde8ea;border:1px solid #c0142b;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#c0142b;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#fde8ea;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0142b;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#c0142b';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+/* ---- GENERADOR DE TRAZOS EKG REALISTAS ---- */
+function _rng(s){return function(){s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};}
+function ekgSinus(w,b,amp,rr){var d='M0 '+b;for(var x=8;x<w-rr*0.5;x+=rr){var p=x,pw=rr*0.10;d+=' L'+p.toFixed(1)+' '+b+' Q'+(p+pw/2).toFixed(1)+' '+(b-amp*0.14).toFixed(1)+' '+(p+pw).toFixed(1)+' '+b;var q=p+pw+rr*0.05;d+=' L'+q.toFixed(1)+' '+b+' L'+(q+rr*0.015).toFixed(1)+' '+(b+amp*0.08).toFixed(1)+' L'+(q+rr*0.05).toFixed(1)+' '+(b-amp).toFixed(1)+' L'+(q+rr*0.085).toFixed(1)+' '+(b+amp*0.30).toFixed(1)+' L'+(q+rr*0.11).toFixed(1)+' '+b;var t=q+rr*0.11+rr*0.10,tw=rr*0.17;d+=' L'+t.toFixed(1)+' '+b+' Q'+(t+tw/2).toFixed(1)+' '+(b-amp*0.26).toFixed(1)+' '+(t+tw).toFixed(1)+' '+b;}d+=' L'+w+' '+b;return d;}
+function ekgVF(w,b,amp,seed){var r=_rng(seed||7),d='M0 '+b,ph=r()*6;for(var x=0;x<=w;x+=2){var y=b-amp*0.50*Math.sin(x*0.23+Math.sin(x*0.041)*2.6+ph)-amp*0.34*Math.sin(x*0.41+1.7)-amp*0.22*Math.sin(x*0.67+0.5)-amp*0.30*(r()-0.5)*2;d+=' L'+x+' '+y.toFixed(1);}return d;}
+function ekgVT(w,b,amp,rr){var d='M0 '+b,x=0;while(x<w){var end=x+rr;d+=' Q'+(x+rr*0.12).toFixed(1)+' '+(b-amp).toFixed(1)+' '+(x+rr*0.27).toFixed(1)+' '+(b-amp*0.80).toFixed(1)+' Q'+(x+rr*0.44).toFixed(1)+' '+(b+amp*0.95).toFixed(1)+' '+(x+rr*0.62).toFixed(1)+' '+(b+amp*0.45).toFixed(1)+' Q'+(x+rr*0.82).toFixed(1)+' '+(b-amp*0.15).toFixed(1)+' '+end.toFixed(1)+' '+b;x=end;}return d;}
+function ekgTorsades(w,b,amp){var d='M0 '+b;for(var x=0;x<=w;x+=2){var env=Math.abs(Math.sin(x*0.019+0.3));var y=b-amp*(0.25+0.75*env)*Math.sin(x*0.33);d+=' L'+x+' '+y.toFixed(1);}return d;}
+function ekgAsys(w,b){var r=_rng(3),d='M0 '+b;for(var x=0;x<=w;x+=4){var y=b+Math.sin(x*0.028)*0.7+(r()-0.5)*0.9;d+=' L'+x+' '+y.toFixed(1);}return d;}
+function setD(id,d){var el=document.getElementById(id);if(el)el.setAttribute('d',d);}
+function drawEKGs(){setD('wf_fvg',ekgVF(320,37,15,11));setD('wf_fvf',ekgVF(320,37,3.6,29));setD('wf_vt',ekgVT(320,37,20,30));setD('wf_aesp',ekgSinus(320,42,22,84));setD('wf_asis',ekgAsys(320,37));setD('wf_tdp',ekgTorsades(320,37,24));}
+
+/* ---- DIFERENCIADOR: ¿qué ritmo? ¿desfibrilo? ---- */
+function buildDif(){var opt=[['Fibrilación ventricular (FV)','sh'],['TV sin pulso (TVsp)','sh'],['Actividad eléctrica sin pulso (AESP)','no'],['Asistolia','no']];var h='<div class="calc-row"><div class="calc-lbl2">Selecciona el ritmo en el monitor:</div></div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">';for(var i=0;i<opt.length;i++)h+='<button class="copt" onclick="difPick(\''+opt[i][1]+'\',this)">'+opt[i][0]+'</button>';h+='</div>';document.getElementById('dif-box').innerHTML=h;}
+function difPick(v,el){var s=el.parentNode.querySelectorAll('.copt');for(var i=0;i<s.length;i++)s[i].classList.remove('on');el.classList.add('on');var r=document.getElementById('dif-res');r.classList.add('show');if(v==='sh'){r.style.background='#e1f5ee';r.style.color='#0a5c45';r.innerHTML='<b>⚡ DESFIBRILABLE.</b> Desfibrile de inmediato (bifásico 120–200 J) y reanude RCP 2 min sin verificar pulso. Adrenalina 1 mg tras el 1.er choque fallido, luego c/3–5 min. Si persiste tras 3 choques → amiodarona 300 mg (o lidocaína) y busque H y T.';}else{r.style.background='#fdeaea';r.style.color='#7b1c1c';r.innerHTML='<b>🚫 NO desfibrilable.</b> NO dé choque. RCP de alta calidad + adrenalina 1 mg IV/IO lo ANTES posible y c/3–5 min. Busque y trate las causas reversibles (H y T). En FV fina dudosa: suba la ganancia y confirme en 2 derivaciones.';}}
+
+/* ---- ALGORITMO ACLS ---- */
+var ALGO={
+ start:{q:'Sin respuesta, sin respiración normal y sin pulso (≤10 s). Inicie RCP, oxígeno y monitor/desfibrilador. ¿El ritmo es desfibrilable (FV/TVsp)?',a:[
+   ['⚡ Sí — FV / TV sin pulso','sh1'],
+   ['🚫 No — AESP / asistolia',function(){return 'RES:NO DESFIBRILAR. RCP de alta calidad + ADRENALINA 1 mg IV/IO lo ANTES posible y c/3–5 min. Considere vía aérea avanzada y capnografía. BUSQUE Y TRATE H y T (clave en AESP). Reevalúe el ritmo cada 2 min: si se vuelve desfibrilable → choque; si aparece ritmo organizado → verifique pulso.';}]
+ ]},
+ sh1:{q:'Desfibrile (bifásico 120–200 J) y reanude RCP 2 min de inmediato. Tras el ciclo, ¿persiste FV/TVsp?',a:[
+   ['Sí, persiste','sh2'],
+   ['Cambió a ritmo organizado / asistolia',function(){return 'RES:Verifique PULSO solo si el ritmo es organizado. Con pulso → cuidados POST-PARO (ROSC). Sin pulso con ritmo organizado → trate como AESP (RCP + adrenalina + H y T). Si es asistolia → vía no desfibrilable.';}]
+ ]},
+ sh2:{q:'FV/TVsp persistente. Ya administró el 2.º choque. ¿Qué sigue?',a:[
+   ['Fármacos + choques',function(){return 'RES:ADRENALINA 1 mg IV/IO c/3–5 min (ya indicada tras el 1.er choque fallido). Continúe ciclos CHOQUE → RCP 2 min. Si persiste tras el 3.er choque: AMIODARONA 300 mg IV/IO (2.ª dosis 150 mg) O LIDOCAÍNA 1–1.5 mg/kg. Busque H y T. Considere vía aérea avanzada.';}],
+   ['Sigue refractaria (≥3 choques)',function(){return 'RES:FV PERSISTENTE/REFRACTARIA: optimice RCP, contacto de parches y energía máxima; confirme antiarrítmico (amiodarona/lidocaína); corrija causas (magnesio SOLO si torsades/hipomagnesemia). Puede CONSIDERARSE cambio de vector (parches anteroposterior) o desfibrilación secuencial doble — Clase IIb, NO de rutina.';}]
+ ]}
+};
+
+/* ---- TARJETAS DE TRATAMIENTO ---- */
+var D_DESF={pri:true,linea:'⚡ Choque',n:'Desfibrilación',dlb:'Energía',
+ da:'Bifásico 120–200 J (según fabricante; si se desconoce, use el máximo). Monofásico 360 J. Choques siguientes iguales o mayores',
+ dur:'Reanude RCP 2 min INMEDIATAMENTE tras el choque (sin verificar pulso)',iv:'Desfibrilador',
+ ped:'2 J/kg (1.º) → 4 J/kg → ≥4 (máx 10 J/kg o dosis de adulto)',
+ nota:'Minimice la pausa peri-choque: cargue mientras se comprime, choque y reanude. Parches con buen contacto.'};
+var D_RCP={pri:true,linea:'💪 Base — siempre',n:'RCP de alta calidad',dlb:'Cómo',
+ da:'100–120/min · 5–6 cm · reexpansión completa · mínima interrupción · 30:2 (o compresiones continuas + 1 ventilación c/6 s con vía aérea avanzada)',
+ dur:'Ciclos de 2 min con relevo del compresor',iv:'—',
+ nota:'La fracción de compresión y la desfibrilación temprana son lo que más impacta en la supervivencia.'};
+var D_EPI={pri:true,linea:'💉 Vasopresor',n:'Adrenalina (epinefrina)',dlb:'Dosis',
+ da:'1 mg IV/IO cada 3–5 min. En FV/TVsp: administrar TRAS el 1.er choque fallido',
+ dur:'Repetir c/3–5 min',iv:'IV (preferente) / IO',pres:'Epinefrina 1 mg/mL (1:1000) · 0.1 mg/mL (1:10 000)',
+ ped:'0.01 mg/kg (0.1 mL/kg de 1:10 000), máx 1 mg',
+ nota:'Único vasopresor recomendado (AHA 2025). No usar vasopresina ni dosis altas de rutina.'};
+var D_EPIEARLY={pri:true,linea:'💉 Vasopresor — TEMPRANO',n:'Adrenalina lo antes posible',dlb:'Dosis',
+ da:'1 mg IV/IO LO ANTES POSIBLE y luego cada 3–5 min (en no desfibrilables no se espera al choque)',
+ dur:'c/3–5 min',iv:'IV / IO',pres:'Epinefrina 0.1 mg/mL (1:10 000)',
+ ped:'0.01 mg/kg (0.1 mL/kg de 1:10 000)',
+ nota:'La administración temprana en AESP/asistolia se asocia a mejor resultado.'};
+var D_AMIO={pri:false,linea:'Antiarrítmico (FV/TVsp refractaria)',n:'Amiodarona',dlb:'Dosis',
+ da:'300 mg IV/IO en bolo (1.ª dosis); 2.ª dosis 150 mg',
+ dur:'Tras el 3.er choque en FV/TVsp persistente',iv:'IV/IO',pres:'Amiodarona 150 mg/3 mL',
+ ped:'5 mg/kg en bolo (repetible hasta 2–3 veces, máx 15 mg/kg)',
+ nota:'Amiodarona o lidocaína son opciones equivalentes (AHA 2025).'};
+var D_LIDO={pri:false,linea:'Antiarrítmico alterno',n:'Lidocaína',dlb:'Dosis',
+ da:'1–1.5 mg/kg IV/IO (1.ª dosis); 0.5–0.75 mg/kg en dosis siguientes',
+ dur:'Alternativa a la amiodarona',iv:'IV/IO',pres:'Lidocaína 2%',
+ ped:'1 mg/kg en bolo',
+ nota:'Alternativa razonable a la amiodarona en FV/TVsp refractaria.'};
+var D_MG={pri:false,linea:'Solo si indicación',n:'Sulfato de magnesio',dlb:'Dosis',
+ da:'1–2 g IV/IO (diluido) SOLO en torsades de pointes o hipomagnesemia',
+ dur:'—',iv:'IV/IO',pres:'Sulfato de magnesio',ped:'25–50 mg/kg (máx 2 g)',
+ nota:'NO de rutina en el paro. Indicado en Torsades / hipomagnesemia.'};
+var D_HYT={pri:false,linea:'🔁 Causas reversibles',n:'Buscar y tratar H y T',dlb:'Qué',
+ da:'5 H: Hipovolemia, Hipoxia, Hidrogeniones (acidosis), Hipo/Hiperpotasemia, Hipotermia. 5 T: neumotórax a Tensión, Taponamiento, Tóxicos, TEP, IAM (Trombosis coronaria)',
+ dur:'Durante toda la reanimación',iv:'—',
+ nota:'Clave sobre todo en AESP. POCUS ayuda a identificarlas sin interrumpir las compresiones.'};
+var D_CICLO={pri:false,linea:'Ritmo de trabajo',n:'Ciclos de 2 minutos',dlb:'Secuencia',
+ da:'RCP 2 min → verificar ritmo (pausa mínima) → choque si desfibrilable → RCP; adrenalina c/3–5 min; considerar vía aérea avanzada + capnografía',
+ dur:'Hasta ROSC o decisión de terminar',iv:'—',
+ nota:'Verifique pulso solo si hay ritmo organizado.'};
+var D_NODESF={no:true,linea:'🚫 NO hacer',n:'No desfibrilar / no antiarrítmico',dlb:'Nota',
+ da:'La AESP y la asistolia NO se desfibrilan ni llevan antiarrítmico. El foco es RCP + adrenalina temprana + tratar la causa',
+ dur:'—',iv:'—',
+ nota:'Desfibrilar asistolia/AESP no aporta y distrae de lo que sí sirve.'};
+var D_DSED={no:true,linea:'Considerar (Clase IIb, NO rutinario)',n:'Cambio de vector / desfibrilación secuencial doble',dlb:'Uso',
+ da:'En FV persistente (≥3 choques): reposicionar parches a anteroposterior (cambio de vector) o desfibrilación secuencial doble con 2 desfibriladores',
+ dur:'—',iv:'—',
+ nota:'Clase IIb (evidencia limitada); NO recomendado de rutina. Optimice antes RCP, contacto de parches y energía.'};
+
+var TXC={
+ 'desfib':[
+   ['⚡ Inmediato','FV / TV sin pulso',AC,[D_DESF,D_RCP]],
+   ['💉 Fármacos','Tras el 1.er choque fallido',C2,[D_EPI,D_AMIO,D_LIDO]],
+   ['Ritmo de trabajo','Ciclos c/2 min',CO,[D_CICLO]]
+ ],
+ 'nodesfib':[
+   ['⚡ Inmediato','AESP / asistolia',AC,[D_RCP,D_EPIEARLY]],
+   ['🔁 Clave','Buscar y tratar la causa',C2,[D_HYT]],
+   ['🚫 NO indicado','',NO,[D_NODESF]]
+ ],
+ 'refract':[
+   ['Antiarrítmico','FV persistente ≥3 choques',AC,[D_AMIO,D_LIDO]],
+   ['Corregir','Causa / magnesio si TdP',C2,[D_MG,D_HYT]],
+   ['Considerar (IIb)','No rutinario',NO,[D_DSED]]
+ ]
+};
+
+/* ---- PEDIÁTRICO Y EMBARAZO ---- */
+var D_RCP_PED={pri:true,linea:'💪 Base pediátrica',n:'RCP pediátrica',dlb:'Cómo',
+ da:'Comprimir ~⅓ del diámetro AP del tórax (~4 cm lactante, ~5 cm niño), 100–120/min. 30:2 con un reanimador; 15:2 con dos reanimadores (lactante/niño)',
+ dur:'Ciclos de 2 min',iv:'—',
+ nota:'En el paro pediátrico predomina la causa hipóxica: la ventilación eficaz es crucial.'};
+var D_DESF_PED={pri:true,linea:'⚡ Choque pediátrico',n:'Desfibrilación por peso',dlb:'Energía',
+ da:'2 J/kg el primer choque; 4 J/kg el siguiente; después ≥4 J/kg (máx 10 J/kg o la dosis de adulto)',
+ dur:'—',iv:'Desfibrilador',
+ nota:'Use parches/palas pediátricos cuando estén disponibles (&lt;10 kg / lactante).'};
+var D_EPI_PED={pri:true,linea:'💉 Vasopresor',n:'Adrenalina (pediátrica)',dlb:'Dosis',
+ da:'0.01 mg/kg (0.1 mL/kg de 1:10 000) IV/IO cada 3–5 min (máx 1 mg/dosis)',
+ dur:'c/3–5 min',iv:'IV/IO',
+ nota:'En ritmos no desfibrilables, administrarla lo antes posible.'};
+var D_AMIO_PED={pri:false,linea:'Antiarrítmico (FV/TVsp)',n:'Amiodarona / lidocaína (pediátrica)',dlb:'Dosis',
+ da:'Amiodarona 5 mg/kg IV/IO en bolo (repetible hasta 2–3 veces, máx 15 mg/kg); o lidocaína 1 mg/kg',
+ dur:'Solo en FV/TV sin pulso',iv:'IV/IO',
+ nota:'Igual que en adulto: solo para ritmos desfibrilables.'};
+var D_EMB_MAN={pri:true,linea:'Maniobra específica',n:'Desplazamiento uterino izquierdo',dlb:'Qué',
+ da:'RCP de alta calidad (manos en el esternón, posición habitual) + DESPLAZAR el útero manualmente hacia la izquierda para liberar la vena cava (si el útero está a nivel/encima del ombligo, ~≥20 sem)',
+ dur:'Continuo',iv:'—',
+ nota:'Mejora el retorno venoso. Asegure la vía aérea temprano (mayor riesgo de aspiración e hipoxia).'};
+var D_CESAREA={pri:false,linea:'⚕️ Decisión temprana',n:'Cesárea perimortem',dlb:'Cuándo',
+ da:'Si no hay ROSC y el útero está a nivel/encima del ombligo: iniciar la cesárea perimortem hacia los 4 min de paro, con meta de extracción ~5 min. Se realiza donde se reanima (no trasladar)',
+ dur:'—',iv:'—',
+ nota:'Beneficia a la madre (descomprime la cava y mejora la RCP) y al feto. No debe retrasarse.'};
+var D_EMB_CAUSAS={pri:false,linea:'Causas propias',n:'Causas del embarazo',dlb:'Buscar',
+ da:'Hemorragia, embolia (TEP / líquido amniótico), preeclampsia/eclampsia, cardiopatía, sepsis, toxicidad (sulfato de magnesio, anestésicos locales), anafilaxia',
+ dur:'—',iv:'—',
+ nota:'En toxicidad por sulfato de magnesio → gluconato de calcio IV.'};
+
+var TXH={
+ 'ped':[
+   ['💪 Base','RCP pediátrica',AC,[D_RCP_PED]],
+   ['⚡ Desfibrilable','Energía por peso',C2,[D_DESF_PED]],
+   ['💉 Fármacos','Por peso (PALS)',C3,[D_EPI_PED,D_AMIO_PED]]
+ ],
+ 'emb':[
+   ['Maniobras','Específicas del embarazo',AC,[D_EMB_MAN]],
+   ['⚕️ Decisión','Cesárea perimortem',NO,[D_CESAREA]],
+   ['Causas','Propias del embarazo',C2,[D_EMB_CAUSAS]]
+ ]
+};
+
+/* ---- FÁRMACOS ---- */
+var FARMACOS=[
+ {familia:'Vasopresor del paro',color:'#c0142b',farmacos:[
+  {n:'Adrenalina (epinefrina) — paro',ini:'1 mg IV/IO c/3–5 min',obj:'Vasopresor en TODO paro',dur:'Repetir c/3–5 min',iv:'IV (preferente) / IO',pr:'Ámpula 1 mg/mL (1:1000) y 0.1 mg/mL (1:10 000). En el paro use 1:10 000 (jeringa precargada) o diluya 1 mg en 9 mL SF',emb:'Misma dosis',ped:'0.01 mg/kg (0.1 mL/kg de 1:10 000), máx 1 mg',ci:'Ninguna en el paro',ea:'Taquiarritmias e hipertensión tras ROSC',nota:'FV/TVsp: tras el 1.er choque fallido. AESP/asistolia: lo antes posible. Tras cada dosis: bolo de 20 mL y elevar la extremidad. Único vasopresor recomendado.'}
+ ]},
+ {familia:'Vasopresores post-ROSC (hipotensión)',color:'#8a1030',farmacos:[
+  {n:'Noradrenalina (norepinefrina)',ini:'0.1–0.5 mcg/kg/min en infusión',obj:'Hipotensión post-paro (1.ª elección)',dur:'Titular a PAM ≥65',iv:'IV en infusión (vía central ideal)',pr:'4 mg en 250 mL',emb:'Usar si indicada',ped:'0.1–2 mcg/kg/min',ci:'—',ea:'Isquemia por vasoconstricción, extravasación',nota:'Vasopresor de elección para la hipotensión tras ROSC.'},
+  {n:'Adrenalina en infusión',ini:'0.1–0.5 mcg/kg/min',obj:'Hipotensión/choque post-paro',dur:'Titular',iv:'IV en infusión',pr:'1 mg en 250 mL',emb:'Usar si indicada',ped:'0.1–1 mcg/kg/min',ci:'—',ea:'Taquiarritmias',nota:'Alternativa/segunda línea a la noradrenalina.'},
+  {n:'Dopamina',ini:'5–20 mcg/kg/min',obj:'Hipotensión/bradicardia post-paro',dur:'Titular',iv:'IV en infusión',pr:'Ámpula de dopamina',emb:'Usar si indicada',ped:'5–20 mcg/kg/min',ci:'—',ea:'Taquiarritmias',nota:'Menos usada; útil si hay bradicardia asociada.'}
+ ]},
+ {familia:'Antiarrítmicos (FV/TVsp)',color:'#7b1c1c',farmacos:[
+  {n:'Amiodarona',ini:'300 mg → 150 mg IV/IO en bolo',obj:'FV/TVsp refractaria (tras 3.er choque)',dur:'Bolo + mantenimiento tras ROSC: 1 mg/min ×6 h y luego 0.5 mg/min ×18 h',iv:'IV/IO',pr:'Ámpula 150 mg/3 mL; diluir en glucosa 5%',emb:'Usar si indicada',ped:'5 mg/kg en bolo (repetible, máx 15 mg/kg)',ci:'—',ea:'Hipotensión y bradicardia (sobre todo si se pasa rápido)',nota:'Amiodarona o lidocaína: opciones equivalentes (AHA 2025).'},
+  {n:'Lidocaína',ini:'1–1.5 mg/kg → 0.5–0.75 mg/kg IV/IO',obj:'Alternativa a la amiodarona',dur:'Bolos repetibles (máx ~3 mg/kg); infusión post-ROSC 1–4 mg/min',iv:'IV/IO',pr:'Solución al 2%',emb:'Usar si indicada',ped:'1 mg/kg en bolo',ci:'—',ea:'Neurotoxicidad (convulsiones, confusión) a dosis altas',nota:'Alternativa razonable a la amiodarona.'},
+  {n:'Sulfato de magnesio',ini:'1–2 g IV/IO diluido',obj:'Torsades de pointes / hipomagnesemia',dur:'—',iv:'IV/IO',pr:'Ámpula de sulfato de Mg (diluir en 10 mL)',emb:'Seguro (además útil en eclampsia)',ped:'25–50 mg/kg (máx 2 g)',ci:'—',ea:'Hipotensión y bradicardia si se pasa rápido',nota:'NO de rutina en el paro; solo Torsades o hipomagnesemia.'}
+ ]},
+ {familia:'Por causa reversible (H y T)',color:'#7a4a00',farmacos:[
+  {n:'Calcio (gluconato / cloruro)',ini:'Gluconato 10% 15–30 mL (o cloruro 10% 5–10 mL)',obj:'Hiperpotasemia, hipocalcemia, tox. por calcioantagonistas/β-bloq., toxicidad por Mg',dur:'Repetible según respuesta',iv:'IV/IO lento',pr:'Gluconato de Ca 10% · Cloruro de Ca 10%',emb:'Usar si indicada',ped:'Gluconato 60–100 mg/kg',ci:'—',ea:'Necrosis si el cloruro extravasa (preferir vía central)',nota:'NO de rutina. Estabiliza la membrana en hiperpotasemia. No mezclar con bicarbonato (precipita).'},
+  {n:'Bicarbonato de sodio',ini:'1 mEq/kg IV/IO',obj:'Hiperpotasemia, acidosis metabólica grave, tox. por antidepresivos tricíclicos/salicilatos',dur:'Según gasometría',iv:'IV/IO',pr:'NaHCO₃ 7.5%',emb:'Usar si indicada',ped:'1 mEq/kg',ci:'—',ea:'Alcalosis, hipernatremia, hipopotasemia',nota:'NO de rutina; para la acidosis lo primero es ventilar. Purgar la vía (precipita con calcio).'},
+  {n:'Insulina rápida + glucosa',ini:'10 U IV + 25 g de glucosa',obj:'Hiperpotasemia (introduce K⁺ a la célula)',dur:'Efecto ~15–30 min',iv:'IV',pr:'Insulina R + dextrosa 50%',emb:'Usar si indicada',ped:'0.1 U/kg + glucosa',ci:'—',ea:'Hipoglucemia (vigilar)',nota:'Junto con calcio y bicarbonato en la hiperpotasemia. Añadir salbutamol nebulizado.'},
+  {n:'Naloxona',ini:'0.4–2 mg IV/IM/IN (repetible)',obj:'Paro por opioides (sospecha)',dur:'Repetir; considerar infusión',iv:'IV/IM/IN',pr:'Ámpula 0.4 mg',emb:'Usar si indicada',ped:'0.1 mg/kg',ci:'—',ea:'Síndrome de abstinencia agudo',nota:'No debe retrasar la RCP ni la adrenalina; el foco sigue siendo ventilar/comprimir.'},
+  {n:'Emulsión lipídica 20% (LAST)',ini:'Bolo 1.5 mL/kg y luego infusión',obj:'Toxicidad sistémica por anestésicos locales (LAST)',dur:'Bolo + infusión 0.25 mL/kg/min',iv:'IV/IO',pr:'Intralipid 20%',emb:'Usar si indicada (bloqueos regionales)',ped:'1.5 mL/kg',ci:'—',ea:'—',nota:'Escenario obstétrico/anestésico: convulsiones o paro tras anestésico local (bupivacaína).'},
+  {n:'Dextrosa (glucosa)',ini:'25 g IV (50 mL de dextrosa 50%)',obj:'Hipoglucemia documentada',dur:'—',iv:'IV/IO',pr:'Dextrosa 50% · 10%',emb:'Usar si indicada',ped:'0.5–1 g/kg (dextrosa 10%)',ci:'—',ea:'Hiperglucemia',nota:'Solo si hipoglucemia confirmada; en niños preferir dextrosa 10%.'},
+  {n:'Fibrinolítico (alteplasa)',ini:'Considerar en paro por TEP',obj:'Paro por TEP masivo muy probable',dur:'Prolongar RCP 60–90 min tras administrarlo',iv:'IV',pr:'Alteplasa (tPA)',emb:'Valorar riesgo/beneficio',ped:'Poco frecuente',ci:'Hemorragia activa mayor',ea:'Sangrado',nota:'No de rutina; solo si TEP es la causa probable del paro.'}
+ ]},
+ {familia:'NO recomendados / retirados',color:'#6b7280',farmacos:[
+  {n:'Atropina',ini:'YA no en asistolia/AESP',obj:'Se retiró del paro (sin beneficio)',dur:'—',iv:'—',pr:'—',emb:'—',ped:'—',ci:'—',ea:'—',nota:'Sigue vigente para la BRADICARDIA sintomática con pulso (0.5–1 mg IV), no para el paro.'},
+  {n:'Vasopresina',ini:'No añade sobre adrenalina',obj:'No recomendada en el algoritmo',dur:'—',iv:'—',pr:'—',emb:'—',ped:'—',ci:'—',ea:'—',nota:'No sustituir ni combinar con la adrenalina.'},
+  {n:'Adrenalina a dosis altas',ini:'No de rutina',obj:'Sin beneficio; posible daño',dur:'—',iv:'—',pr:'—',emb:'—',ped:'—',ci:'—',ea:'—',nota:'Mantener 1 mg (adulto) / 0.01 mg/kg (niño).'}
+ ]}
+];
+
+/* ---- DOSIS RÁPIDAS (IND) ---- */
+var IND=[
+ {familia:'Vasopresor',color:'#c0142b',farmacos:[
+  {n:'Adrenalina (epinefrina)',
+   receta:'<b>Adrenalina 1 mg IV/IO cada 3–5 minutos.</b> En FV/TVsp: tras el 1.er choque fallido. En AESP/asistolia: lo antes posible.',
+   dosis:['Adulto: 1 mg IV/IO c/3–5 min','Usar presentación 1:10 000 (0.1 mg/mL)'],
+   dur:'Repetir c/3–5 min hasta ROSC',
+   pobl:'<b>👶 Pediátrico:</b> 0.01 mg/kg (0.1 mL/kg de 1:10 000) IV/IO c/3–5 min, máx 1 mg. <b>🤰 Embarazo:</b> misma dosis del adulto.',
+   via:'IV preferente; IO si el acceso IV se retrasa. Seguir con bolo de 20 mL y elevar la extremidad.',
+   pac:'Cántela con el reloj: "adrenalina en 3 minutos". Único vasopresor; no combinar con vasopresina.',
+   al:'No usar dosis altas de rutina. Vigilar taquiarritmias tras ROSC.'}
+ ]},
+ {familia:'Antiarrítmicos (solo FV/TVsp)',color:'#7b1c1c',farmacos:[
+  {n:'Amiodarona / lidocaína',
+   receta:'<b>Amiodarona 300 mg IV/IO en bolo</b> (2.ª dosis 150 mg) <b>tras el 3.er choque</b> en FV/TVsp persistente. Alternativa: <b>lidocaína 1–1.5 mg/kg</b> (luego 0.5–0.75 mg/kg).',
+   dosis:['Amiodarona 300 mg → 150 mg','o Lidocaína 1–1.5 mg/kg → 0.5–0.75 mg/kg'],
+   dur:'FV/TVsp refractaria',
+   pobl:'<b>👶 Pediátrico:</b> amiodarona 5 mg/kg (repetible, máx 15 mg/kg) o lidocaína 1 mg/kg. Solo en ritmos desfibrilables.',
+   via:'IV/IO en bolo durante la RCP',
+   pac:'Solo tienen sentido en FV/TV sin pulso; no en AESP/asistolia.',
+   al:'Amiodarona: hipotensión/bradicardia tras ROSC.'},
+  {n:'Sulfato de magnesio (Torsades)',
+   receta:'<b>Sulfato de magnesio 1–2 g IV/IO diluido</b>, SOLO en torsades de pointes o hipomagnesemia.',
+   dosis:['1–2 g IV/IO (diluido)'],
+   dur:'Dosis según respuesta',
+   pobl:'<b>👶 Pediátrico:</b> 25–50 mg/kg (máx 2 g). <b>🤰 Embarazo:</b> seguro.',
+   via:'IV/IO',
+   pac:'No es un fármaco de rutina del paro; reserva para Torsades/hipomagnesemia.',
+   al:'Hipotensión y bradicardia si se administra rápido.'}
+ ]},
+ {familia:'Desfibrilación (energías)',color:'#0a5c45',farmacos:[
+  {n:'Energía de desfibrilación',
+   receta:'<b>Bifásico 120–200 J</b> (según fabricante; si se desconoce, el máximo). <b>Monofásico 360 J.</b> Choques siguientes iguales o mayores. Reanude RCP de inmediato.',
+   dosis:['Bifásico 120–200 J','Monofásico 360 J'],
+   dur:'Cada 2 min si persiste ritmo desfibrilable',
+   pobl:'<b>👶 Pediátrico:</b> 2 J/kg (1.º) → 4 J/kg → ≥4 (máx 10 J/kg o dosis de adulto).',
+   via:'Parches con buen contacto; carga mientras se comprime.',
+   pac:'La pausa peri-choque debe ser mínima (&lt;5 s). No verifique pulso justo tras el choque.',
+   al:'Sincronizada NO: en FV/TVsp la descarga es NO sincronizada.'}
+ ]},
+ {familia:'Por causa reversible (dosis)',color:'#7a4a00',farmacos:[
+  {n:'Hiperpotasemia (paquete)',
+   receta:'<b>Gluconato de calcio 10% 15–30 mL IV</b> (estabiliza membrana) + <b>insulina rápida 10 U IV + 25 g de glucosa</b> + <b>bicarbonato 1 mEq/kg</b> ± salbutamol nebulizado.',
+   dosis:['Gluconato de Ca 10% 15–30 mL','Insulina 10 U + glucosa 25 g','Bicarbonato 1 mEq/kg'],
+   dur:'Repetir el calcio según respuesta',
+   pobl:'<b>👶 Pediátrico:</b> gluconato de Ca 60–100 mg/kg; insulina 0.1 U/kg + glucosa; bicarbonato 1 mEq/kg.',
+   via:'IV/IO. NO mezclar calcio con bicarbonato en la misma vía (precipita): purgar entre ellos.',
+   pac:'Causa frecuente de AESP/asistolia (ERC, diálisis). El calcio actúa en minutos.',
+   al:'Vigilar hipoglucemia tras insulina.'},
+  {n:'Naloxona (opioides)',
+   receta:'<b>Naloxona 0.4–2 mg IV/IM/IN</b>, repetible. No debe retrasar la RCP ni la adrenalina.',
+   dosis:['0.4–2 mg IV/IM/IN, repetible'],
+   dur:'Repetir; considerar infusión si recae',
+   pobl:'<b>👶 Pediátrico:</b> 0.1 mg/kg.',
+   via:'IV/IM/IN',
+   pac:'Sospéchalo por contexto (opioides, miosis) sin frenar compresiones/ventilación.',
+   al:'Abstinencia aguda tras revertir.'},
+  {n:'Magnesio (Torsades) / LAST',
+   receta:'<b>Torsades:</b> sulfato de magnesio 1–2 g IV. <b>LAST</b> (toxicidad por anestésico local): <b>emulsión lipídica 20%, bolo 1.5 mL/kg</b> y luego infusión 0.25 mL/kg/min.',
+   dosis:['Magnesio 1–2 g IV','Intralipid 20% 1.5 mL/kg + infusión'],
+   dur:'Según respuesta',
+   pobl:'<b>👶 Pediátrico:</b> magnesio 25–50 mg/kg; lípidos 1.5 mL/kg.',
+   via:'IV/IO',
+   pac:'La LAST es relevante en el paro obstétrico/anestésico (bupivacaína).',
+   al:'Magnesio rápido → hipotensión/bradicardia.'}
+ ]},
+ {familia:'Post-ROSC (infusiones)',color:'#8a1030',farmacos:[
+  {n:'Vasopresor para hipotensión',
+   receta:'<b>Noradrenalina 0.1–0.5 mcg/kg/min</b> en infusión, titulada a <b>PAM ≥65 mmHg</b> (alternativa: adrenalina o dopamina). Corregir hipovolemia con cristaloides.',
+   dosis:['Noradrenalina 0.1–0.5 mcg/kg/min','Adrenalina 0.1–0.5 mcg/kg/min','Dopamina 5–20 mcg/kg/min'],
+   dur:'Titular a la meta hemodinámica',
+   pobl:'<b>👶 Pediátrico:</b> mantener PAS/PAM por encima del percentil 10 para la edad.',
+   via:'IV en infusión (vía central ideal)',
+   pac:'Tras el ROSC busque STEMI (EKG 12 derivaciones), controle SpO₂ 92–98% y temperatura.',
+   al:'Evitar hiperoxia y la fiebre.'},
+  {n:'Mantenimiento antiarrítmico',
+   receta:'Si respondió a amiodarona: <b>infusión 1 mg/min ×6 h y luego 0.5 mg/min ×18 h</b>. Si respondió a lidocaína: <b>1–4 mg/min</b>.',
+   dosis:['Amiodarona 1 mg/min ×6 h → 0.5 mg/min ×18 h','Lidocaína 1–4 mg/min'],
+   dur:'24 h y reevaluar',
+   pobl:'<b>👶 Pediátrico:</b> ajustar por peso con guía especializada.',
+   via:'IV en infusión',
+   pac:'Continúa el antiarrítmico que logró el control.',
+   al:'Vigilar hipotensión/bradicardia.'}
+ ]}
+];
+
+/* ---- ESCENARIOS ---- */
+var ESCEN={
+ 'fvtv':{t:'FV / TV sin pulso',pres:'Colapso súbito; monitor con FV (caótica) o TV ancha rápida sin pulso.',dx:'Confirmar ritmo desfibrilable.',tx:'CHOQUE inmediato + RCP 2 min. Adrenalina 1 mg tras el 1.er choque, c/3–5 min. Si persiste tras 3.er choque → amiodarona 300 mg (o lidocaína). Buscar H y T.',ref:'—',cx:'Retrasar el choque; pausas largas peri-choque; verificar pulso tras cada choque.'},
+ 'refract':{t:'FV refractaria / persistente (≥3 choques)',pres:'FV que no cede pese a ≥3 desfibrilaciones y RCP adecuada.',dx:'Reevaluar calidad de RCP, contacto de parches, energía.',tx:'Optimizar RCP y energía; confirmar amiodarona/lidocaína; magnesio solo si Torsades. Considerar (Clase IIb, no rutinario) cambio de vector o desfibrilación secuencial doble. Buscar IAM/TEP.',ref:'Valorar ECMO-RCP en centros con capacidad.',cx:'Repetir sin optimizar; usar DSED de rutina; olvidar la causa (IAM).'},
+ 'aesp':{t:'AESP (actividad eléctrica sin pulso)',pres:'Ritmo organizado en el monitor pero SIN pulso.',dx:'Buscar activamente la causa (H y T); POCUS sin interrumpir compresiones.',tx:'RCP + adrenalina 1 mg lo antes posible y c/3–5 min. NO desfibrilar. Tratar la causa (volumen, tensión, taponamiento, TEP, tóxicos, K⁺...).',ref:'—',cx:'Desfibrilar; no buscar la causa reversible.'},
+ 'asis':{t:'Asistolia',pres:'Línea plana; ausencia de actividad.',dx:'Confirmar en 2 derivaciones; descartar FV fina y falla técnica (cables, ganancia, electrodos).',tx:'RCP + adrenalina lo antes posible y c/3–5 min. NO desfibrilar. Buscar H y T.',ref:'—',cx:'Llamar asistolia a una FV fina; desfibrilar asistolia.'},
+ 'tdp':{t:'Torsades de pointes',pres:'TV polimorfa que "gira"; asociada a QT largo (fármacos, hipoK/hipoMg).',dx:'Reconocer el patrón; revisar QT y electrolitos.',tx:'Si sin pulso → desfibrilar. Sulfato de magnesio 1–2 g IV. Corregir K/Mg y retirar fármacos que alargan el QT.',ref:'—',cx:'Olvidar el magnesio; mantener el fármaco causal.'},
+ 'emb':{t:'Paro en la embarazada',pres:'Paro con útero a nivel/encima del ombligo (~≥20 sem).',dx:'Mismo algoritmo + causas obstétricas.',tx:'RCP de alta calidad + DESPLAZAMIENTO UTERINO a la izquierda; vía aérea temprana. Si no hay ROSC → CESÁREA PERIMORTEM hacia los 4 min (extracción ~5 min). Buscar causas del embarazo.',ref:'Activar obstetricia/neonatología de inmediato.',cx:'Retrasar la cesárea perimortem; no descomprimir la cava; en toxicidad por Mg, olvidar el calcio.'}
+};
+
+window.addEventListener('load',function(){
+  drawEKGs();buildDif();renderAlgo();
+  setTxc('desfib',document.querySelector('#txc-chips .pchip'));
+  setTxh('ped',document.querySelector('#txh-chips .pchip'));
+  setEscen('fvtv',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+
+</script>
+</body>
+</html>

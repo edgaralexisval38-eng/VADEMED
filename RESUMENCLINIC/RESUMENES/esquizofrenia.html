@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Esquizofrenia · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#4a2d7a;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+/* HEADER */
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+/* QUICK STATS */
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+/* TABBAR */
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+/* PANELS */
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+/* SECCIONES COLAPSABLES */
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+/* ALERTAS */
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+/* TABLAS */
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+/* CHIPS DE POBLACIÓN */
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+
+/* TEXTO */
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+
+/* PUNTOS CLAVE */
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f1ecf8;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* FICHA DE FÁRMACO (fu = farm unit) */
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+
+/* INDICACIONES */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+
+/* BIBLIOGRAFÍA — formato CAD */
+.biblio-header{background:linear-gradient(135deg,#1a0f2e,#4a2d7a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+
+/* ---- EXTRAS NECESARIOS (calculadoras, algoritmo, EKG, fisiopatología) ---- */
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fp-r{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.fp-a{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.fp-b{background:var(--bl);border-left:3px solid var(--bm);color:var(--b);}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.calc-btn{background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:10px 12px;font-size:12.5px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);border-left:3px solid var(--gm);color:var(--g);}
+.res-mid{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.res-high{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.opt{display:block;width:100%;text-align:left;padding:9px 11px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:12.5px;margin-bottom:6px;cursor:pointer;font-family:inherit;color:var(--gray-900);line-height:1.45;}
+.opt.on{border-color:var(--ac);background:#f1ecf8;font-weight:700;color:#4a2d7a;}
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:13.5px;font-weight:700;color:var(--gray-900);margin-bottom:10px;}
+.ekg-w{overflow-x:auto;border:1px solid var(--bd);border-radius:var(--rs);background:#fff;margin-bottom:8px;}
+.farm-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);margin-bottom:8px;overflow:hidden;}
+.farm-h{padding:9px 13px;font-size:13px;font-weight:800;color:#fff;}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.mon-t{font-size:11px;color:var(--gray-600);}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1a0f2e,#4a2d7a);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧠</div>
+    <div>
+      <div class="hdr-eye">Psiquiatría</div>
+      <div class="hdr-title">Esquizofrenia</div>
+      <div class="hdr-sub">DSM-5-TR · APA 2020 · Kane 2019 · 🆕 xanomelina–trospio 2024</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">2 fallidos → clozapina</span>
+    <span class="badge">La DUP decide el pronóstico</span>
+    <span class="badge">Acatisia ≠ agitación</span>
+    <span class="badge">Mueren del corazón</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">≥6 meses</div><div class="qs-l">criterio DSM-5-TR</div></div>
+  <div class="qs"><div class="qs-v">4–6 sem</div><div class="qs-l">prueba adecuada</div></div>
+  <div class="qs"><div class="qs-v">≥2 fallidos</div><div class="qs-l">= clozapina</div></div>
+  <div class="qs"><div class="qs-v">~1 de 3</div><div class="qs-l">resistente</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y los 3 dominios de síntomas</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p><strong>Esquizofrenia:</strong> trastorno psicótico <strong>crónico</strong> caracterizado por delirios, alucinaciones, desorganización, síntomas negativos y deterioro cognitivo, con <strong>≥6 meses</strong> de signos continuos y deterioro del funcionamiento.</p></div>
+  <div class="alert a-r"><span class="ai">🧩</span><div><div class="at">Tres dominios — y el tratamiento solo es bueno para uno</div>
+  <strong>1. Positivos</strong> (delirios, alucinaciones, desorganización) → <strong>responden bien</strong> a los antipsicóticos.<br>
+  <strong>2. Negativos</strong> (abulia, anhedonia, aplanamiento, alogia, aislamiento) → <strong>responden mal</strong>. <strong>Son los que más discapacitan a largo plazo.</strong><br>
+  <strong>3. Cognitivos</strong> (atención, memoria de trabajo, función ejecutiva) → <strong>responden mal</strong> y predicen el funcionamiento real.<br><br>
+  Por eso el paciente "sin voces" puede seguir sin poder trabajar: <strong>curamos el síntoma que menos importa para su vida diaria.</strong></div></div>
+  <div class="alert a-w"><span class="ai">🎯</span><div><div class="at">Los dos hechos que más cambian el pronóstico</div>
+  ① <strong>La DUP</strong> (duración de la psicosis no tratada): cuanto más tiempo lleva psicótico sin tratamiento, <strong>peor el resultado a largo plazo</strong>. Es el predictor <strong>modificable</strong> más importante.<br>
+  ② <strong>La adherencia</strong>: es la causa <strong>#1 de recaída</strong>, y cada recaída deja huella funcional.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Contexto clínico</th></tr></thead><tbody>
+    <tr><td class="dn">Prevalencia</td><td>~<strong>1%</strong> (bastante estable entre países y culturas)</td></tr>
+    <tr><td class="dn">Edad de inicio</td><td>Adolescencia tardía y adultez temprana. <strong>Más temprano en varones</strong> (hombres ~15–25 años; mujeres ~25–35, con un segundo pico peri-menopáusico)</td></tr>
+    <tr><td class="dm"><strong>Mortalidad</strong></td><td class="dm">Expectativa de vida <strong>15–20 años menor</strong> — y la causa principal <strong>NO es el suicidio, es la enfermedad CARDIOVASCULAR</strong> (tabaquismo, síndrome metabólico por antipsicóticos, subatención médica)</td></tr>
+    <tr><td class="dm">Suicidio</td><td class="dm">Riesgo elevado, sobre todo en <strong>jóvenes, primeros años, con buena introspección</strong> y depresión pospsicótica</td></tr>
+    <tr><td class="dn">Comorbilidad</td><td><strong>Tabaquismo</strong> (muy alto), sustancias, depresión, síndrome metabólico</td></tr>
+    <tr><td class="dn">Resistencia al tratamiento</td><td>Aproximadamente <strong>1 de cada 3</strong> pacientes → candidatos a <strong>clozapina</strong> (y casi nunca la reciben a tiempo)</td></tr>
+  </tbody></table></div>
+  <div class="alert a-r" style="margin-top:8px;"><span class="ai">❤️</span><div><strong>Consecuencia práctica:</strong> vigilar peso, cintura, glucosa, lípidos y tensión arterial <strong>no es opcional ni "de medicina interna"</strong> — es parte central del tratamiento psiquiátrico. Tu paciente se va a morir del corazón, no de las voces.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Dopamina — dos vías, dos efectos opuestos</strong><br>La hipótesis dopaminérgica sigue siendo el eje: <strong>hiperactividad</strong> en la vía <strong>mesolímbica</strong> → síntomas <strong>positivos</strong> (los antipsicóticos bloquean D2 ahí y por eso funcionan); e <strong>hipoactividad</strong> en la vía <strong>mesocortical</strong> → síntomas <strong>negativos y cognitivos</strong> (y por eso los antipsicóticos <strong>NO los mejoran</strong>, e incluso pueden empeorarlos). El bloqueo D2 en las otras dos vías explica los efectos adversos: <strong>nigroestriada</strong> → extrapiramidales y discinesia tardía; <strong>tuberoinfundibular</strong> → hiperprolactinemia. <strong>Todo el perfil del fármaco cabe en esas cuatro vías.</strong></div>
+  <div class="fp fp-a"><strong>2. Glutamato (NMDA) y neurodesarrollo</strong><br>La hipofunción del receptor <strong>NMDA</strong> en interneuronas GABAérgicas explica lo que la dopamina no explica: la <strong>ketamina y la fenciclidina reproducen los síntomas positivos, negativos Y cognitivos</strong> en personas sanas, cosa que las anfetaminas (puramente dopaminérgicas) no hacen. Se suma el modelo del <strong>neurodesarrollo</strong>: la vulnerabilidad se instala años antes del primer brote (complicaciones obstétricas, infecciones prenatales, poda sináptica anómala en la adolescencia) — por eso hay síntomas prodrómicos y caída del rendimiento <strong>antes</strong> de la psicosis franca.</div>
+  <div class="fp fp-b"><strong>3. 🆕 La vía muscarínica — la novedad de 2024</strong><br>Los receptores <strong>muscarínicos M1 y M4</strong> modulan indirectamente la liberación de dopamina. Estimularlos reduce los síntomas psicóticos <strong>sin bloquear D2</strong>. Esa es la base de la <strong>xanomelina–trospio</strong> (aprobada en septiembre de 2024): el <strong>primer antipsicótico con un mecanismo realmente nuevo</strong> en décadas. Como no toca D2, <strong>no produce extrapiramidales, discinesia tardía ni hiperprolactinemia</strong>. Es un cambio conceptual — pero es <strong>nuevo</strong>: faltan datos a largo plazo y <strong>no desplaza a la clozapina</strong>.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo y de mal pronóstico</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Factor</th><th>Implicación</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>DUP prolongada</strong> (psicosis no tratada)</td><td class="dm"><strong>El predictor modificable más importante.</strong> Tratar rápido &gt; elegir la molécula perfecta</td></tr>
+    <tr><td class="dm"><strong>No adherencia</strong></td><td class="dm"><strong>Causa #1 de recaída.</strong> Casi siempre hay un efecto adverso concreto detrás → se soluciona ajustando o con LAI</td></tr>
+    <tr><td class="dn">Antecedente familiar</td><td>Heredabilidad alta y poligénica (se superpone con la del bipolar)</td></tr>
+    <tr><td class="dn"><strong>Cannabis</strong> (sobre todo de alta potencia y en la adolescencia)</td><td>Aumenta el riesgo y adelanta el debut en predispuestos</td></tr>
+    <tr><td class="dn">Metanfetamina / cocaína</td><td>Precipitan psicosis y empeoran el curso</td></tr>
+    <tr><td class="dn">Predominio de síntomas <strong>negativos y cognitivos</strong></td><td>Peor funcionamiento a largo plazo (y peor respuesta al fármaco)</td></tr>
+    <tr><td class="dn">Inicio temprano e insidioso, mal funcionamiento premórbido</td><td>Peor pronóstico</td></tr>
+    <tr><td class="dm"><strong>Emoción expresada</strong> familiar alta (crítica, hostilidad, sobreimplicación)</td><td class="dm">Aumenta recaídas — <strong>y es modificable</strong> con intervención familiar</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dominio</th><th>Qué ves</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>Positivos</strong></td><td>Delirios (persecutorios, de referencia, de control), <strong>alucinaciones auditivas</strong> (voces que comentan o dialogan), discurso desorganizado, conducta desorganizada o catatónica</td></tr>
+    <tr><td class="dm"><strong>Negativos</strong></td><td class="dm"><strong>Abulia</strong> (falta de iniciativa), <strong>anhedonia</strong>, <strong>aplanamiento afectivo</strong>, <strong>alogia</strong> (pobreza del discurso), aislamiento social. <strong>Lo que más discapacita.</strong></td></tr>
+    <tr><td class="dn"><strong>Cognitivos</strong></td><td>Atención, memoria de trabajo, función ejecutiva, velocidad de procesamiento. Predicen el funcionamiento real mejor que los delirios</td></tr>
+    <tr><td class="dn">Afectivos</td><td>Depresión (frecuente, sobre todo pospsicótica), riesgo suicida</td></tr>
+    <tr><td class="dn">Pródromo</td><td>Meses-años antes: aislamiento, caída del rendimiento, ideas extrañas, suspicacia, afecto raro</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">👁️</span><div><strong>Regla de oro del diferencial:</strong> en esquizofrenia predominan las alucinaciones <strong>AUDITIVAS</strong> y la conciencia está <strong>clara</strong>. <strong>Alucinaciones VISUALES + atención alterada + curso fluctuante = orgánico</strong> (delirium, tóxico, neurológico) <strong>hasta demostrar lo contrario</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">🚨 <strong>Etiquetar de "brote psicótico" un DELIRIUM.</strong> Alucinaciones visuales + atención alterada + curso fluctuante = <strong>orgánico</strong>. Es el error potencialmente <strong>mortal</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Retrasar la clozapina.</strong> Tras 2 antipsicóticos fallidos, el siguiente es <strong>clozapina</strong> — no un tercero igual, no una combinación. El paciente pierde <strong>años</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Polifarmacia antipsicótica:</strong> duplica los efectos adversos sin beneficio demostrado. Si piensas en un tercero, lo que necesitas es clozapina.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Confundir ACATISIA con agitación psicótica</strong> → subir la dosis → empeora. Es causa subestimada de <strong>suicidio</strong> y de abandono. Pregunta: "¿inquietud por dentro, no poder estar quieto?".</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Confundir PARKINSONISMO por el fármaco con síntomas negativos</strong> → subir la dosis → empeora. Se ven igual: lento, rígido, aplanado.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>No verificar la adherencia</strong> antes de declarar refractariedad. Es la causa #1 de "no respuesta". Considera niveles séricos o un <strong>LAI</strong>.</div></div>
+  <div class="kp"><div class="kn">7</div><div class="kt"><strong>Vigilar solo el ánimo y no el cuerpo.</strong> Estos pacientes mueren de <strong>enfermedad cardiovascular</strong>: peso, cintura, glucosa, lípidos y TA en cada control.</div></div>
+  <div class="kp"><div class="kn">8</div><div class="kt"><strong>Dejar el anticolinérgico "de rutina y para siempre":</strong> empeora la cognición y la <strong>discinesia tardía</strong>, y <strong>no sirve para la acatisia</strong>.</div></div>
+  <div class="kp"><div class="kn">9</div><div class="kt"><strong>Suspender el antipsicótico al mejorar.</strong> La recaída es muy probable y cada una deja huella funcional.</div></div>
+  <div class="kp"><div class="kn">10</div><div class="kt"><strong>Usar antipsicótico en la CATATONIA:</strong> puede empeorarla y precipitar catatonia maligna/SNM. <strong>Benzodiacepina primero.</strong></div></div>
+  <div class="kp"><div class="kn">11</div><div class="kt">💩 <strong>Olvidar el estreñimiento en clozapina:</strong> el <strong>íleo</strong> mata más que la agranulocitosis. <strong>Laxante profiláctico desde el día 1.</strong></div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de hospitalización</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Criterio</th><th>Por qué</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Riesgo suicida</strong></td><td class="dm">Alto en jóvenes, primeros años, con introspección y depresión pospsicótica</td></tr>
+    <tr><td class="dm">Riesgo para terceros / agresividad</td><td class="dm">Delirios de persecución con conducta activa</td></tr>
+    <tr><td class="dn">Desorganización grave: no come, no bebe, no se cuida</td><td>Riesgo médico real</td></tr>
+    <tr><td class="dn"><strong>Catatonia</strong></td><td>Urgencia — lorazepam y valorar TEC</td></tr>
+    <tr><td class="dm"><strong>Sospecha de SNM</strong></td><td class="dm">Urgencia médica: suspender antipsicótico, UCI</td></tr>
+    <tr><td class="dn">Primer episodio sin red de apoyo, o necesidad de descartar organicidad</td><td>Estudio y estabilización</td></tr>
+    <tr><td class="dn">Inicio de clozapina sin posibilidad de monitoreo ambulatorio confiable</td><td>Titulación e vigilancia hematológica y cardiaca</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Criterios DSM-5-TR (resumidos)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-i"><span class="ai">📖</span><div>Resumen y paráfrasis de los criterios con fines educativos. Para uso diagnóstico formal, consulta el <strong>DSM-5-TR</strong> original.</div></div>
+  <div class="kp"><div class="kn">A</div><div class="kt"><strong>≥2 de los siguientes</strong>, cada uno presente una parte significativa del tiempo durante <strong>1 mes</strong> (o menos si se trató con éxito). <strong>Al menos uno debe ser (1), (2) o (3):</strong><br>
+  ① <strong>Delirios</strong><br>② <strong>Alucinaciones</strong><br>③ <strong>Discurso desorganizado</strong> (descarrilamiento, incoherencia)<br>④ Comportamiento <strong>muy desorganizado o catatónico</strong><br>⑤ <strong>Síntomas negativos</strong> (expresión emocional disminuida, abulia)</div></div>
+  <div class="kp"><div class="kn">B</div><div class="kt"><strong>Deterioro del funcionamiento</strong> (trabajo, relaciones, autocuidado) claramente por debajo del nivel previo.</div></div>
+  <div class="kp"><div class="kn">C</div><div class="kt"><strong>Signos continuos durante ≥6 MESES</strong>, que deben incluir <strong>al menos 1 mes de síntomas del criterio A</strong> (fase activa); el resto pueden ser síntomas prodrómicos o residuales. <strong>Este criterio de tiempo es el que separa la esquizofrenia del trastorno esquizofreniforme y del psicótico breve.</strong></div></div>
+  <div class="kp"><div class="kn">D</div><div class="kt">Se han <strong>descartado</strong> el trastorno <strong>esquizoafectivo</strong> y el trastorno depresivo o bipolar <strong>con características psicóticas</strong>.</div></div>
+  <div class="kp"><div class="kn">E</div><div class="kt">No atribuible a los efectos de una <strong>sustancia</strong> ni a otra <strong>afección médica</strong>.</div></div>
+  <div class="kp"><div class="kn">F</div><div class="kt">Si hay antecedente de <strong>TEA</strong> o de un trastorno de la comunicación de inicio en la infancia, el diagnóstico <strong>solo</strong> se hace si hay <strong>delirios o alucinaciones prominentes</strong> (además de los demás síntomas) durante al menos 1 mes.</div></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">⏱️</span><div><div class="at">El criterio del TIEMPO decide el diagnóstico</div>
+  <strong>&lt;1 mes</strong> (con retorno completo al funcionamiento previo) → <strong>Trastorno psicótico breve</strong><br>
+  <strong>1 a 6 meses</strong> → <strong>Trastorno esquizofreniforme</strong><br>
+  <strong>≥6 meses</strong> → <strong>Esquizofrenia</strong></div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Estudios en el primer episodio (descarta orgánico ANTES de etiquetar)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🚨</span><div>Etiquetar a alguien de "esquizofrénico" cambia su vida para siempre. <strong>Descarta primero lo tratable.</strong></div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Estudio</th><th>Qué descarta</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Toxicológico en orina</strong></td><td class="dm"><strong>Metanfetamina (cristal), cocaína, cannabis</strong> — causa frecuentísima de psicosis en urgencias en el norte de México</td></tr>
+    <tr><td class="dn">BH, QS, electrolitos, glucosa, calcio</td><td>Delirium metabólico; basal para el tratamiento</td></tr>
+    <tr><td class="dn">PFH, función renal</td><td>Basal; encefalopatía hepática</td></tr>
+    <tr><td class="dn"><strong>TSH</strong></td><td>Hipo/hipertiroidismo (pueden dar psicosis y síntomas afectivos)</td></tr>
+    <tr><td class="dn"><strong>VIH y VDRL/sífilis</strong></td><td>Neurosífilis y VIH: causas <strong>tratables</strong> de psicosis</td></tr>
+    <tr><td class="dn">B12, ácido fólico</td><td>Deficiencia (psicosis y deterioro cognitivo)</td></tr>
+    <tr><td class="dn"><strong>ECG</strong></td><td>QTc basal antes de antipsicóticos</td></tr>
+    <tr><td class="dn">Peso, cintura, glucosa/HbA1c, lípidos, TA</td><td><strong>Basal metabólico obligatorio</strong></td></tr>
+    <tr><td class="dm"><strong>Neuroimagen (TC/RM)</strong></td><td class="dm">Si hay <strong>focalización, catatonia, deterioro cognitivo, inicio atípico o &gt;40 años</strong>: tumor, EM, encefalitis autoinmune (anti-NMDA), demencia frontotemporal</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">🧠</span><div><strong>Piensa en encefalitis autoinmune (anti-NMDA)</strong> ante: psicosis de inicio abrupto en una mujer joven, con <strong>catatonia, crisis convulsivas, movimientos anormales, disautonomía o deterioro cognitivo rápido</strong>. Se trata y se cura — y se pierde si nadie la piensa.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diagnóstico diferencial</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Entidad</th><th>La clave para diferenciarla</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Delirium</strong></td><td class="dm">Inicio <strong>agudo y fluctuante</strong>, <strong>atención alterada</strong>, <strong>alucinaciones VISUALES</strong>. 🚨 El error potencialmente mortal</td></tr>
+    <tr><td class="dm">Psicosis por sustancias</td><td class="dm">Metanfetamina, cocaína, cannabis, alucinógenos, corticoides. Se resuelve en días-semanas con abstinencia; si persiste <strong>&gt;1 mes sin consumo</strong>, reconsidera</td></tr>
+    <tr><td class="dn">Trastorno esquizofreniforme</td><td>Idéntico, pero <strong>1 a 6 meses</strong></td></tr>
+    <tr><td class="dn">Trastorno psicótico breve</td><td><strong>&lt;1 mes</strong>, con retorno completo al funcionamiento previo</td></tr>
+    <tr><td class="dn"><strong>Esquizoafectivo</strong></td><td>Hay episodio del ánimo mayor <strong>Y</strong> psicosis, pero con <strong>≥2 semanas de delirios/alucinaciones SIN síntomas del ánimo</strong></td></tr>
+    <tr><td class="dn">Bipolar o depresión con psicosis</td><td>La psicosis ocurre <strong>SOLO durante</strong> los episodios del ánimo</td></tr>
+    <tr><td class="dn">Trastorno delirante</td><td>Delirios ≥1 mes <strong>sin</strong> los demás síntomas del criterio A; funcionamiento sorprendentemente conservado</td></tr>
+    <tr><td class="dn">TOC con introspección ausente</td><td>Hay <strong>obsesiones y rituales estructurados</strong>; es un <strong>especificador del TOC</strong>, no una psicosis</td></tr>
+    <tr><td class="dn">TEA</td><td>Inicio en la infancia, déficits sociales y comunicativos; <strong>sin delirios ni alucinaciones prominentes</strong></td></tr>
+    <tr><td class="dm">Encefalitis autoinmune (anti-NMDA)</td><td class="dm">Psicosis abrupta + <strong>catatonia, crisis, movimientos anormales, disautonomía</strong> → <strong>es tratable</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-esc">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">¿Es esquizofrenia RESISTENTE? → ¿toca clozapina?</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-w"><span class="ai">⚠️</span><div>Marca solo lo que <strong>realmente</strong> se cumple. La mitad de las "refractariedades" son pacientes que <strong>no están tomando</strong> el medicamento.</div></div>
+  <div class="calc-w">
+    <button class="opt" id="tr-1" onclick="trTog(1,this)">Se han probado <strong>≥2 antipsicóticos distintos</strong></button>
+    <button class="opt" id="tr-2" onclick="trTog(2,this)">Cada uno a <strong>dosis terapéutica adecuada</strong></button>
+    <button class="opt" id="tr-3" onclick="trTog(3,this)">Cada uno durante <strong>≥6 semanas</strong></button>
+    <button class="opt" id="tr-4" onclick="trTog(4,this)">Se <strong>verificó la adherencia</strong> (niveles séricos, LAI o supervisión confiable)</button>
+    <button class="opt" id="tr-5" onclick="trTog(5,this)">Se <strong>descartó el consumo de sustancias</strong></button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcTR()">Evaluar</button>
+      <button class="calc-btn sc" onclick="resetTR()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="tr-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Equivalentes de clorpromazina — ¿está sobredosificado?</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-i"><span class="ai">📏</span><div>Sirve para <strong>comparar dosis entre antipsicóticos</strong> y detectar sobredosificación. Por arriba de <strong>~1000 mg equivalentes</strong>, más miligramos <strong>no dan más eficacia</strong> — solo más efectos adversos.</div></div>
+  <div class="calc-w">
+    <label class="calc-lbl">Antipsicótico</label>
+    <div id="eq-drugs"></div>
+    <label class="calc-lbl" style="margin-top:10px;">Dosis diaria total (mg/día)</label>
+    <input id="eq-dose" class="calc-in" type="number" step="0.5" placeholder="Ej. 6">
+    <button class="calc-btn" onclick="calcEq()">Calcular equivalente</button>
+    <div class="calc-result" id="eq-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💥</span><span class="st">Efectos adversos: reconocerlos y tratarlos</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Cuadro</th><th>Cuándo</th><th>Cómo se ve</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>Distonía aguda</strong></td><td>Horas–días</td><td>Tortícolis, crisis oculógira, trismo, protrusión lingual (aterrador para el paciente)</td><td><strong>Biperideno 2–5 mg IM/IV</strong> — cede en minutos</td></tr>
+    <tr><td class="dm"><strong>Acatisia</strong></td><td class="dm">Días–semanas</td><td class="dm"><strong>Inquietud interna</strong>, no puede estar quieto. <strong>Se confunde con agitación psicótica</strong></td><td class="dm">Bajar dosis / cambiar · <strong>propranolol 20–40 mg c/8–12 h</strong>. <strong>El anticolinérgico NO sirve.</strong> 🚨 Riesgo de suicidio</td></tr>
+    <tr><td class="dn"><strong>Parkinsonismo</strong></td><td>Semanas</td><td>Rigidez, bradicinesia, temblor, cara inexpresiva. <strong>Se confunde con síntomas negativos</strong></td><td>Bajar dosis / cambiar · biperideno</td></tr>
+    <tr><td class="dn"><strong>Discinesia tardía</strong></td><td>Meses–años</td><td>Movimientos orofaciales (chupeteo, protrusión lingual), tronco</td><td><strong>Suspender anticolinérgico</strong> · cambiar (valorar clozapina) · VMAT2 (valbenazina). Puede ser <strong>irreversible</strong></td></tr>
+    <tr><td class="dm"><strong>SNM</strong></td><td class="dm">Días–semanas</td><td class="dm"><strong>Fiebre + rigidez "en tubo de plomo" + estado mental alterado + disautonomía + CK alta</strong></td><td class="dm">🚨 <strong>SUSPENDER el antipsicótico</strong>, hidratar, enfriar, UCI; dantroleno/bromocriptina; TEC si es refractario</td></tr>
+    <tr><td class="dn">Hiperprolactinemia</td><td>Semanas</td><td>Amenorrea, galactorrea, ginecomastia, disfunción sexual</td><td>Cambiar a aripiprazol/quetiapina. <strong>Pregúntala: nadie la reporta solo</strong></td></tr>
+    <tr><td class="dm">Síndrome metabólico</td><td class="dm">Meses–años</td><td class="dm">Peso, cintura, glucosa, lípidos, TA</td><td class="dm">Vigilancia basal, 3 meses y anual. <strong>Es lo que los mata</strong></td></tr>
+  </tbody></table></div>
+  <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><div class="at">SNM vs síndrome serotoninérgico vs catatonia maligna</div>
+  <strong>SNM:</strong> <strong>rigidez</strong> "en tubo de plomo", hiporreflexia, instalación en <strong>días</strong>, antecedente de antipsicótico.<br>
+  <strong>Síndrome serotoninérgico:</strong> <strong>hiperreflexia, CLONUS</strong>, mioclonías, instalación en <strong>horas</strong>, antecedente de serotoninérgicos (ISRS, tramadol, linezolid).<br>
+  <strong>Catatonia maligna:</strong> puede ser indistinguible del SNM → responde a <strong>benzodiacepinas y TEC</strong>.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo de decisión — esquizofrenia</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="an" id="algo-box"></div>
+  <div style="margin-top:10px;"><button class="calc-btn sc" onclick="algoStart()">↩ Empezar de nuevo</button></div>
+</div></div>
+</div>
+<div class="panel" id="tab-txc">
+<div class="alert a-g"><span class="ai">💡</span><div><div class="at">Las tres reglas</div>
+① <strong>No hay un antipsicótico "mejor"</strong> (salvo la clozapina en refractariedad): <strong>se elige por el perfil de efectos adversos</strong>.<br>
+② <strong>Tras 2 antipsicóticos fallidos → CLOZAPINA</strong>, no un tercero.<br>
+③ <strong>La adherencia es el tratamiento</strong>: si falla, el LAI no es un castigo, es la solución.</div></div>
+<div class="chips" id="txc-chips">
+  <button class="pchip on" onclick="setTxc('primero',this)">🆕 Primer episodio</button>
+  <button class="pchip" onclick="setTxc('mant',this)">➖ Mantenimiento</button>
+  <button class="pchip" onclick="setTxc('resis',this)">🔴 Resistente</button>
+  <button class="pchip" onclick="setTxc('no',this)">❌ NO hacer</button>
+</div>
+<div id="txc-body"></div>
+</div>
+<div class="panel" id="tab-txh">
+<div class="alert a-i"><span class="ai">🛏️</span><div><div class="at">Urgencias y hospitalización</div>Agitación aguda, urgencias por el fármaco (SNM, agranulocitosis, catatonia) y psicosis por sustancias.</div></div>
+<div class="chips" id="txh-chips">
+  <button class="pchip on" onclick="setTxh('agit',this)">🔥 Agitación aguda</button>
+  <button class="pchip" onclick="setTxh('urg',this)">🚨 SNM / clozapina / catatonia</button>
+  <button class="pchip" onclick="setTxh('subs',this)">💊 Psicosis y sustancias</button>
+</div>
+<div id="txh-body"></div>
+
+<div class="sec" style="margin-top:12px;"><div class="sh" onclick="tog(this)"><span class="si">📟</span><span class="st">Tabla de monitoreo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Parámetro</th><th>Frecuencia</th><th>Si se altera</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Peso, cintura, TA, glucosa/HbA1c, lípidos</strong></td><td>Basal · 3 meses · luego anual</td><td class="dm">Cambiar a un antipsicótico menos metabólico; tratar el riesgo cardiovascular. <strong>Es lo que los mata</strong></td></tr>
+    <tr><td class="dm"><strong>BH con neutrófilos (clozapina)</strong></td><td class="dm">Semanal al inicio (18 semanas o según protocolo) → quincenal → mensual, <strong>indefinidamente</strong></td><td class="dm">Neutrófilos &lt;500 = <strong>agranulocitosis</strong> → suspender y nunca reexponer</td></tr>
+    <tr><td class="dm"><strong>Evacuaciones (clozapina)</strong></td><td class="dm"><strong>Cada consulta</strong></td><td class="dm">💩 Laxante profiláctico desde el día 1: el <strong>íleo mata más que la agranulocitosis</strong></td></tr>
+    <tr><td class="dn">Troponina/PCR (clozapina)</td><td>Si hay fiebre, taquicardia, dolor torácico o disnea en las <strong>primeras 8 semanas</strong></td><td><strong>Miocarditis</strong> → suspender, cardiología</td></tr>
+    <tr><td class="dn">Extrapiramidales y <strong>acatisia</strong></td><td>Cada consulta</td><td>Bajar dosis / cambiar / propranolol (acatisia)</td></tr>
+    <tr><td class="dn">Discinesia tardía</td><td>Periódicamente (exploración orofacial)</td><td>Suspender anticolinérgico; valorar clozapina o VMAT2</td></tr>
+    <tr><td class="dn">Prolactina</td><td>Si hay síntomas (amenorrea, galactorrea, disfunción sexual)</td><td>Cambiar de antipsicótico. <strong>Pregúntala: nadie la reporta solo</strong></td></tr>
+    <tr><td class="dn">ECG (QTc)</td><td>Basal y con dosis altas o polifarmacia</td><td>Ajustar; cuidado con haloperidol, amisulprida, ziprasidona</td></tr>
+    <tr><td class="dm"><strong>Riesgo suicida</strong></td><td class="dm">Cada consulta</td><td class="dm">Evaluación urgente. <strong>La clozapina es el único que reduce la conducta suicida</strong></td></tr>
+    <tr><td class="dn">Adherencia y consumo de sustancias</td><td>Cada consulta</td><td>Ajustar efectos adversos; valorar LAI</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-farm">
+<div class="calc-w" style="margin-bottom:12px;">
+  <label class="calc-lbl">Buscar</label>
+  <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. clozapina, risperidona, biperideno, acatisia..." oninput="filtrarFarmacos(this.value)">
+</div>
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind">
+<div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · consulta/enfermería · paciente y familia · nota · alarma</strong>.</div></div>
+<div id="ind-body"></div>
+</div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('primer',this)">🆕 Primer episodio</button>
+  <button class="pchip" onclick="setEscen('resis',this)">🔴 No responde</button>
+  <button class="pchip" onclick="setEscen('negat',this)">🌫️ Síntomas negativos</button>
+  <button class="pchip" onclick="setEscen('catat',this)">🗿 Catatonia</button>
+  <button class="pchip" onclick="setEscen('ea',this)">💥 Efectos adversos</button>
+  <button class="pchip" onclick="setEscen('dd',this)">🔍 Diferencial</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Plan de seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Qué evaluar</th><th>Meta</th></tr></thead><tbody>
+    <tr><td class="dn">Semanas 1–2</td><td>Tolerancia, <strong>acatisia</strong>, distonía, sedación</td><td>Que el paciente <strong>no odie el tratamiento</strong> (aquí se pierde la adherencia)</td></tr>
+    <tr><td class="dn">Semanas 4–6</td><td>Respuesta a los síntomas positivos</td><td>Prueba adecuada = <strong>dosis terapéutica × 4–6 semanas</strong></td></tr>
+    <tr><td class="dn">Mes 3</td><td><strong>Metabólico</strong> (peso, cintura, glucosa, lípidos, TA)</td><td>Detectar el daño antes de que se instale</td></tr>
+    <tr><td class="dn">Cada consulta</td><td><strong>Adherencia, acatisia, sustancias, riesgo suicida</strong></td><td>Las cuatro que no se saltan</td></tr>
+    <tr><td class="dn">Anual</td><td>Metabólico completo, discinesia tardía, ECG si aplica</td><td>Prevención cardiovascular activa</td></tr>
+    <tr><td class="dm">Si toma clozapina</td><td class="dm"><strong>BH/neutrófilos</strong> según protocolo + <strong>evacuaciones en cada consulta</strong></td><td class="dm">No negociable</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">⏳</span><div><div class="at">¿Cuánto dura el tratamiento?</div>
+  Tras la remisión, <strong>se continúa el antipsicótico</strong> (recomendación 1A de la APA 2020). Suspenderlo al mejorar conduce a recaída en la gran mayoría, y <strong>cada recaída deja huella funcional</strong>. Si se plantea retirarlo (casos muy seleccionados: primer episodio, remisión prolongada, buen apoyo), se hace <strong>muy lento y con vigilancia estrecha</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Riesgo suicida</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🚨</span><div>El riesgo es <strong>alto</strong>, sobre todo en <strong>jóvenes, en los primeros años</strong>, con <strong>buena introspección</strong> (darse cuenta de lo que la enfermedad le quitó) y con <strong>depresión pospsicótica</strong>. <strong>Pregunta directamente</strong> — preguntar no induce la conducta.</div></div>
+  <div class="kp"><div class="kn">•</div><div class="kt"><strong>La clozapina es el único antipsicótico con evidencia de reducir la conducta suicida</strong> — es indicación por sí sola, aunque los síntomas positivos hayan respondido a otro fármaco.</div></div>
+  <div class="kp"><div class="kn">•</div><div class="kt">🚨 <strong>Vigila la ACATISIA:</strong> es una causa subestimada de suicidio. La inquietud interna intolerable es insoportable y el paciente rara vez la nombra bien: la describe como "ansiedad" o "desesperación".</div></div>
+  <div class="kp"><div class="kn">•</div><div class="kt">Trata la <strong>depresión pospsicótica</strong>: es frecuente y es el momento de mayor riesgo.</div></div>
+  <div class="alert a-i"><span class="ai">📞</span><div><div class="at">Recursos en México</div><strong>Línea de la Vida: 800 911 2000</strong> (24 h, gratuita) · <strong>SAPTEL: 55 5259 8121</strong> · Urgencias: 911.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Referencia</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>A dónde</th><th>Urgencia</th></tr></thead><tbody>
+    <tr><td class="dm">Sospecha de SNM</td><td>Urgencias / UCI</td><td class="dm">Inmediata</td></tr>
+    <tr><td class="dm">Riesgo suicida o heteroagresividad</td><td>Urgencias psiquiátricas</td><td class="dm">Inmediata</td></tr>
+    <tr><td class="dm">Catatonia</td><td class="dm">Hospitalización (lorazepam; valorar TEC)</td><td class="dm">Inmediata</td></tr>
+    <tr><td class="dn">Primer episodio psicótico</td><td>Psiquiatría / programa de primer episodio</td><td><strong>Lo antes posible</strong> (la DUP importa)</td></tr>
+    <tr><td class="dn">Criterios de resistencia</td><td>Psiquiatría con protocolo de <strong>clozapina</strong></td><td>Preferente — <strong>no lo pospongas años</strong></td></tr>
+    <tr><td class="dn">Sospecha de encefalitis autoinmune</td><td>Neurología</td><td>Urgente</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Esquizofrenia</h2>
+  <p>Guía vigente, criterios de resistencia y la novedad farmacológica de 2024. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="alert a-w"><span class="ai">🗓️</span><div><div class="at">Sobre la vigencia — dicho con honestidad</div>
+La <strong>guía formal más reciente</strong> sigue siendo la de la <strong>APA (2020)</strong>: no hay una edición posterior. <strong>Lo que sí cambió</strong> es el arsenal: en <strong>septiembre de 2024</strong> se aprobó la <strong>xanomelina–trospio</strong>, el primer antipsicótico con mecanismo <strong>no dopaminérgico</strong>, que por su fecha <strong>no aparece en ninguna guía todavía</strong>. Aquí se incluye — con la advertencia de que es nuevo y <strong>no desplaza a la clozapina</strong>.</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧾</span><span class="st">Resumen de la evidencia</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Todo paciente con esquizofrenia debe recibir un antipsicótico</strong> y ser vigilado en eficacia y efectos adversos; <strong>quien mejoró debe continuarlo</strong> (APA 2020, recomendaciones 1A).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Clozapina</strong> para esquizofrenia <strong>resistente</strong> y para <strong>riesgo suicida sustancial</strong> — es el único con superioridad demostrada (APA 2020; criterios de resistencia: Kane 2019).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Inyectables de larga acción (LAI)</strong> cuando hay problemas de adherencia <strong>o simplemente si el paciente los prefiere</strong> (APA 2020).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Intervenciones psicosociales con evidencia:</strong> atención especializada coordinada en el primer episodio, TCC para psicosis, psicoeducación e intervención familiar, empleo con apoyo.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt">🆕 <strong>Xanomelina–trospio (2024):</strong> agonista muscarínico M1/M4 — sin bloqueo D2, por tanto <strong>sin extrapiramidales, discinesia tardía ni hiperprolactinemia</strong>. Faltan datos a largo plazo.</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías de práctica clínica</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Keepers GA, Fochtmann LJ, Anzia JM, et al. <em>The American Psychiatric Association Practice Guideline for the Treatment of Patients With Schizophrenia.</em> Am J Psychiatry. 2020;177(9):868–872. [<strong>Guía formal vigente</strong>: antipsicótico y vigilancia (1A), continuación tras la mejoría (1A), clozapina en resistencia y riesgo suicida, LAI, atención coordinada en el primer episodio, TCC para psicosis.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1176/appi.ajp.2020.177901" target="_blank" rel="noopener">🔗 DOI 10.1176/appi.ajp.2020.177901 · PMID 33343262</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">NICE</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">National Institute for Health and Care Excellence. <em>Psychosis and schizophrenia in adults: prevention and management (CG178).</em> [Intervención familiar, TCC para psicosis, monitoreo físico y metabólico.]</div>
+      <a class="biblio-link" href="https://www.nice.org.uk/guidance/cg178" target="_blank" rel="noopener">🔗 nice.org.uk/guidance/cg178</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📙 Resistencia al tratamiento y clozapina</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Kane JM, Agid O, Baldwin ML, et al. <em>Clinical Guidance on the Identification and Management of Treatment-Resistant Schizophrenia.</em> J Clin Psychiatry. 2019;80(2):18com12123. [<strong>Criterios operativos de resistencia</strong> (≥2 antipsicóticos, dosis y duración adecuadas, adherencia verificada) y el problema de la <strong>infrautilización de la clozapina</strong>.]</div>
+      <a class="biblio-link" href="https://doi.org/10.4088/JCP.18com12123" target="_blank" rel="noopener">🔗 DOI 10.4088/JCP.18com12123</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🆕 Novedad farmacológica (2024)</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Sarpal DK, Sarpal SS. <em>Xanomeline-trospium (Cobenfy) for schizophrenia: a review of the literature.</em> Clin Psychopharmacol Neurosci. 2024. [Revisión de los ensayos <strong>EMERGENT</strong>: agonismo muscarínico M1/M4 sin bloqueo D2; aprobación de la FDA en <strong>septiembre de 2024</strong>.]</div>
+      <a class="biblio-link" href="https://doi.org/10.9758/cpn.24.1253" target="_blank" rel="noopener">🔗 DOI 10.9758/cpn.24.1253</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Referencia diagnóstica e institucional</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">5</span><span class="biblio-year">DSM-5-TR</span><span class="biblio-level lv-exp">Referencia</span></div>
+      <div class="biblio-ref">American Psychiatric Association. <em>Manual Diagnóstico y Estadístico de los Trastornos Mentales, 5ª ed., texto revisado (DSM-5-TR).</em> 2022. [Criterios A–F de esquizofrenia y espectro psicótico. Los criterios de este archivo son un <strong>resumen parafraseado</strong> con fines educativos.]</div>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">6</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">Secretaría de Salud / CENETEC. <em>Catálogo Maestro de Guías de Práctica Clínica.</em> [Verificar la GPC mexicana vigente, el protocolo institucional de <strong>clozapina</strong> (monitoreo hematológico) y la disponibilidad de fármacos.]</div>
+      <a class="biblio-link" href="http://www.cenetec.gob.mx/spry/v2/catalogoMaestroGPCgobmx.html" target="_blank" rel="noopener">🔗 Catálogo Maestro CENETEC</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales / cohortes</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso de expertos / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Referencia</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Material de <strong>apoyo educativo</strong>; no sustituye el juicio clínico ni el DSM-5-TR original. Los <strong>equivalentes de clorpromazina son aproximados</strong> y varían entre fuentes. Verifica dosis, protocolo de clozapina y disponibilidad contra tu <strong>protocolo institucional</strong> y la <strong>GPC vigente (CENETEC/IMSS)</strong>. Última revisión: julio 2026.</div>
+</div>
+</div>
+
+<script>
+/* ============ NÚCLEO COMPARTIDO — SERIE PSIQUIATRÍA ============ */
+var AC='#4a2d7a', C2='#0c3b6e', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#f1ecf8';
+
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id);
+  if(t)t.classList.add('on');
+  var b=document.querySelectorAll('.tab');
+  for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling,sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+function fpTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+/* ---------- FICHAS (estilo Sífilis) ---------- */
+var FPN=0;
+function poprow(t,v,c){
+  return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;">'+
+    '<span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span>'+
+    '<span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';
+}
+function buildSifCards(color,farmacos){
+  var h='';
+  for(var i=0;i<farmacos.length;i++){
+    var f=farmacos[i]; FPN++; var id='fp'+FPN;
+    var col=f.pri?color:'#374151';
+    if(f.no)col='#7b1c1c';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';
+    h+='<div id="'+id+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';
+    h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';
+    if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';
+    if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';
+    h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');
+    if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#eef4fb;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  }
+  return h;
+}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){
+  var h='<div style="margin-top:12px;">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>';
+  h+=buildSifCards(cardColor||badgeColor,farmacos);
+  h+='</div>';
+  return h;
+}
+function setTxc(k,el){
+  var c=document.querySelectorAll('#txc-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXC[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+function setTxh(k,el){
+  var c=document.querySelectorAll('#txh-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXH[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txh-body').innerHTML=h;
+}
+
+/* ---------- FÁRMACOS (acordeón) ---------- */
+var FDN=0;
+function fdTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+function famTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';
+}
+function farmCard(f,color,abrir){
+  FDN++; var id='fd'+FDN;
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div>';
+  h+='<div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';
+  h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';
+  h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';
+  if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';
+  h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function filtrarFarmacos(q){
+  q=(q||'').toLowerCase().trim();
+  var h='',hits=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j];
+      var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();
+      if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}
+    }
+    if(cards){
+      h+='<div style="margin-bottom:12px;">';
+      h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';
+      h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';
+      h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';
+      h+='<div id="'+fid+'">'+cards+'</div></div>';
+    }
+  }
+  if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+
+/* ---------- INDICACIONES ---------- */
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var fam=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j],id='ind'+i+'-'+j;
+      h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';
+      h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';
+      h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+      h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';
+      h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';
+      var d='';
+      for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';
+      h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';
+      h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';
+      h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';
+      h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente y familia</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';
+      h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+      h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+function indTog(id){
+  var el=document.getElementById(id),t=document.getElementById(id+'-t');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(t)t.innerHTML=open?'▼ ocultar':'► ver';
+}
+
+/* ---------- ESCENARIOS ---------- */
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';
+  h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';
+  h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';
+  h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';
+  h+='</div></div>';
+  document.getElementById('escen-body').innerHTML=h;
+}
+
+/* ---------- ALGORITMO ---------- */
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){
+    h='<div class="a-q">'+n.q+'</div>';
+    for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';
+  } else {
+    var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';
+  }
+  b.innerHTML=h;
+}
+
+/* ---------- ESCALA GENÉRICA POR ÍTEMS ---------- */
+/* items: [{k:'clave', t:'texto', max:4, labels:[...]}] */
+var SC={};
+function buildEscala(cont,items,pref){
+  var h='';
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    SC[it.k]=0;
+    h+='<div style="margin-bottom:12px;">';
+    h+='<div style="font-size:12.5px;font-weight:700;color:#111827;margin-bottom:5px;">'+(i+1)+'. '+it.t+'</div>';
+    for(var v=0;v<it.labels.length;v++){
+      h+='<button class="opt" data-sc="'+it.k+'" onclick="scPick(\''+it.k+'\','+it.vals[v]+',this)" style="margin-bottom:4px;">'+it.vals[v]+' — '+it.labels[v]+'</button>';
+    }
+    h+='</div>';
+  }
+  document.getElementById(cont).innerHTML=h;
+}
+function scPick(k,v,el){
+  SC[k]=v;
+  var g=document.querySelectorAll('[data-sc="'+k+'"]');
+  for(var i=0;i<g.length;i++)g[i].classList.remove('on');
+  if(el)el.classList.add('on');
+}
+function scSum(keys){
+  var s=0;
+  for(var i=0;i<keys.length;i++)s+=(SC[keys[i]]||0);
+  return s;
+}
+function scReset(keys,resId){
+  for(var i=0;i<keys.length;i++)SC[keys[i]]=0;
+  var all=document.querySelectorAll('[data-sc]');
+  for(var j=0;j<all.length;j++)all[j].classList.remove('on');
+  var r=document.getElementById(resId);
+  if(r){r.className='calc-result';r.innerHTML='';}
+}
+
+/* ============ ESQUIZOFRENIA — DATOS ============ */
+
+/* ---------- FICHAS ---------- */
+var F_ASG={pri:true,linea:'⭐ 1ª línea — cualquier antipsicótico (la elección se hace por EFECTOS ADVERSOS)',n:'Antipsicótico de 2ª generación',
+  dlb:'Principio',
+  da:'<b>No hay un antipsicótico "mejor" que los demás</b> (excepto la clozapina en refractariedad). <b>Se elige por el perfil de efectos adversos</b> que ese paciente pueda tolerar',
+  dur:'Prueba adecuada: <b>dosis terapéutica × 4–6 semanas</b> (algunos síntomas siguen mejorando hasta las 12)',
+  prep:'<b>Risperidona</b> 2–6 mg · <b>Olanzapina</b> 10–20 mg · <b>Quetiapina</b> 300–750 mg · <b>Aripiprazol</b> 10–30 mg · <b>Paliperidona</b> 3–12 mg · <b>Amisulprida</b> 400–800 mg',
+  iv:'VO · ambulatorio y hospitalario',
+  mon:'<b>Peso y cintura, glucosa/HbA1c, lípidos, TA</b> (basal, 3 meses, luego anual); prolactina si hay síntomas; ECG (QTc); extrapiramidales',
+  ea:'Metabólicos (olanzapina &gt; quetiapina &gt; risperidona &gt; aripiprazol), extrapiramidales, hiperprolactinemia (risperidona/paliperidona), acatisia (aripiprazol), sedación',
+  nota:'<b>Empieza con dosis BAJAS en el primer episodio:</b> estos pacientes responden a dosis menores y son mucho más sensibles a los efectos adversos. Una mala experiencia inicial (rigidez, acatisia, aumento de peso) <b>destruye la adherencia para siempre</b>. <b>Evidencia:</b> APA 2020 (recomendación 1A: tratar con antipsicótico y vigilar eficacia y efectos adversos).'};
+
+var F_CLOZ={pri:true,linea:'⭐ ÚNICO tratamiento con superioridad demostrada en refractariedad',n:'Clozapina',
+  dlb:'Indicación',
+  da:'<b>Esquizofrenia resistente</b>: falla de <b>≥2 antipsicóticos</b> distintos, cada uno a <b>dosis adecuada</b> y por <b>≥6 semanas</b>, con <b>adherencia verificada</b>. También: <b>riesgo suicida persistente</b> y <b>agresividad persistente</b>',
+  dur:'Titulación: <b>12.5 mg día 1</b> → subir 25–50 mg/día → <b>300–450 mg/día</b> en 2–3 semanas (máximo 900 mg)',
+  prep:'<b>Monitoreo hematológico obligatorio:</b> BH con <b>conteo absoluto de neutrófilos</b> — <b>semanal</b> al inicio (18 semanas o según protocolo), luego quincenal y después mensual, <b>mientras dure el tratamiento</b>',
+  iv:'VO · con protocolo institucional',
+  pres:'Tabletas 25 y 100 mg',
+  mon:'<b>BH/neutrófilos</b> · peso, glucosa, lípidos · <b>troponina y PCR</b> si hay sospecha de miocarditis (primeras 8 semanas) · <b>vigilar estreñimiento SIEMPRE</b>',
+  ci:'Neutropenia previa por clozapina, íleo paralítico, epilepsia no controlada, imposibilidad de monitoreo hematológico',
+  ea:'<b>Agranulocitosis</b>, <b>miocarditis</b> (primeras 8 semanas), <b>estreñimiento grave/íleo</b>, sialorrea, sedación, convulsiones (dosis-dependiente), aumento de peso marcado, taquicardia, hipotensión',
+  nota:'🚨 <b>Se subutiliza dramáticamente</b>: el paciente promedio llega a clozapina años tarde, tras 5 antipsicóticos inútiles. <b>Si falló 2, el siguiente es clozapina — no un tercer antipsicótico igual.</b><br><br>⚠️ <b>Lo que más mata NO es la agranulocitosis, es el ESTREÑIMIENTO</b> (íleo, perforación). Prescribe laxante <b>profiláctico</b> desde el inicio y pregunta por evacuaciones en cada consulta.<br><br>🚬 <b>El tabaco induce el CYP1A2:</b> si el paciente <b>deja de fumar</b> (o lo hospitalizas donde no se puede fumar), los niveles de clozapina pueden <b>duplicarse</b> → toxicidad. Ajusta la dosis.'};
+
+var F_XANO={pri:false,linea:'🆕 Novedad 2024 — primer antipsicótico NO dopaminérgico',n:'Xanomelina–trospio (Cobenfy®)',
+  dlb:'Mecanismo (lo importante)',
+  da:'<b>Agonista muscarínico M1/M4</b> (xanomelina) + <b>antagonista muscarínico periférico que no cruza la barrera hematoencefálica</b> (trospio, para reducir los efectos colinérgicos periféricos)',
+  dur:'<b>NO bloquea receptores D2</b> — es el primer antipsicótico con un mecanismo realmente nuevo en décadas',
+  prep:'Aprobado por la FDA en <b>septiembre de 2024</b> para esquizofrenia en adultos, con base en los ensayos <b>EMERGENT</b>. Titulación oral cada 12 h',
+  iv:'VO',
+  pres:'⚠️ <b>Disponibilidad en México: verificar</b> — puede no estar disponible aún',
+  ea:'Náusea, vómito, estreñimiento, dispepsia, hipertensión, taquicardia (efectos colinérgicos/anticolinérgicos gastrointestinales)',
+  ci:'Retención urinaria, hepatopatía moderada-grave, íleo',
+  nota:'<b>Por qué importa:</b> al no bloquear D2, <b>no produce extrapiramidales, ni discinesia tardía, ni hiperprolactinemia, ni el aumento de peso típico</b> — que son las razones por las que los pacientes abandonan el tratamiento.<br><br>⚠️ <b>Honestidad clínica:</b> es <b>nuevo</b>. No hay datos de largo plazo, <b>no desplaza a la clozapina</b> en refractariedad, y su lugar exacto en el algoritmo <b>aún se está definiendo</b>. No lo pongas de primera línea solo porque es novedad.'};
+
+var F_LAI={pri:true,linea:'⭐ 1ª línea si hay mala adherencia (y casi siempre la hay)',n:'Antipsicótico inyectable de larga acción (LAI)',
+  dlb:'Indicación',
+  da:'<b>Mala adherencia, recaídas u hospitalizaciones repetidas</b>, o simplemente <b>preferencia del paciente</b> (APA 2020 lo recomienda también por preferencia)',
+  prep:'<b>Risperidona LAI</b> (c/2 semanas) · <b>Paliperidona palmitato</b> (mensual, trimestral y semestral) · <b>Aripiprazol LAI</b> (mensual) · <b>Haloperidol decanoato</b> (mensual)',
+  iv:'IM',
+  mon:'Igual que la vía oral (metabólico, prolactina, extrapiramidales) + asistencia a la aplicación',
+  nota:'<b>La falta de adherencia es la causa #1 de recaída</b> — y la recaída no es gratis: cada episodio psicótico se asocia a peor funcionamiento posterior. <b>No esperes a la tercera hospitalización</b> para ofrecer el inyectable. Ofrécelo <b>temprano</b>, incluso en el primer episodio, y preséntalo como una <b>ventaja</b> (no tener que acordarse todos los días), no como un castigo.'};
+
+var F_CSC={pri:true,linea:'⭐ 1ª línea NO farmacológica — primer episodio',n:'Atención especializada coordinada (primer episodio)',
+  dlb:'Componentes',
+  da:'Equipo con <b>manejo de caso, intervención familiar, TCC para psicosis, apoyo educativo/laboral</b> y farmacoterapia a dosis bajas',
+  prep:'<b>Recomendación de la APA 2020</b> para el primer episodio de psicosis. Cambia la trayectoria de la enfermedad, no solo los síntomas',
+  iv:'Programa ambulatorio',
+  nota:'🚨 <b>La duración de la psicosis NO tratada (DUP) es el predictor modificable más importante del pronóstico.</b> Cada mes que el paciente lleva psicótico sin tratamiento empeora el resultado a largo plazo. <b>Detectar y tratar rápido vale más que elegir la molécula perfecta.</b>'};
+
+var F_TCC={pri:false,linea:'Coadyuvante con evidencia',n:'TCC para psicosis + intervención familiar',
+  dlb:'Indicación',
+  da:'<b>Síntomas positivos persistentes</b> pese al fármaco; también reduce el malestar asociado a las voces',
+  prep:'<b>Intervención familiar</b>: reduce recaídas (trabaja la "emoción expresada" — crítica, hostilidad y sobreimplicación de la familia)',
+  iv:'Ambulatorio',
+  nota:'Recomendadas por la APA 2020. La <b>intervención familiar</b> es de las medidas con mayor impacto en recaídas, y en México es especialmente aplicable porque el paciente casi siempre vive con la familia.'};
+
+var F_HALOP={pri:false,linea:'Agitación aguda / 1ª generación',n:'Haloperidol',
+  dlb:'Dosis',
+  da:'<b>Agitación:</b> 5 mg IM (repetible). Mantenimiento: 5–15 mg/día VO',
+  prep:'En agitación suele combinarse con <b>lorazepam</b>. Ten <b>biperideno</b> a la mano por la distonía aguda',
+  iv:'IM / VO',
+  pres:'Ampolleta 5 mg/mL; tabletas 5 mg; gotas. Decanoato para LAI',
+  mon:'<b>ECG (QTc)</b>, extrapiramidales',
+  ci:'Parkinson, QT largo',
+  ea:'<b>Extrapiramidales</b> (distonía aguda, acatisia, parkinsonismo), <b>discinesia tardía</b>, QT largo',
+  nota:'Eficaz, barato y disponible en todo México. Su costo es <b>neurológico</b> (extrapiramidales y discinesia tardía a largo plazo), no metabólico. Sigue siendo una opción válida — sobre todo si el problema del paciente es el peso.'};
+
+var F_BIPER={pri:false,linea:'Manejo de efectos adversos',n:'Biperideno (anticolinérgico)',
+  dlb:'Indicación',
+  da:'<b>Distonía aguda:</b> 2–5 mg IM/IV (respuesta en minutos) · <b>Parkinsonismo:</b> 2–4 mg/día VO',
+  iv:'IM / IV / VO',
+  pres:'Ampolleta 5 mg/mL; tabletas 2 mg',
+  ci:'Glaucoma de ángulo cerrado, retención urinaria',
+  ea:'Boca seca, visión borrosa, retención urinaria, confusión (sobre todo en el adulto mayor), deterioro cognitivo',
+  nota:'⚠️ <b>NO sirve para la acatisia</b> (para eso: bajar la dosis o <b>propranolol</b>). Y ⚠️ <b>empeora la discinesia tardía</b>. No lo dejes "de rutina y para siempre": revisa periódicamente si sigue haciendo falta.'};
+
+var F_PROP={pri:false,linea:'Manejo de efectos adversos',n:'Propranolol (para ACATISIA)',
+  dlb:'Indicación',
+  da:'<b>Acatisia:</b> propranolol <b>20–40 mg cada 8–12 h</b> (primero: <b>bajar la dosis del antipsicótico</b> o cambiarlo)',
+  iv:'VO',
+  pres:'Tabletas 10, 40 mg',
+  ci:'Asma, bradicardia, bloqueo AV, hipotensión',
+  ea:'Bradicardia, hipotensión, fatiga',
+  nota:'🚨 <b>La acatisia es una de las causas más subestimadas de suicidio</b> en psiquiatría y de abandono del tratamiento. Se confunde con "agitación psicótica" → suben el antipsicótico → <b>empeora</b>. <b>Pregunta siempre:</b> "¿siente una inquietud por dentro, como que no puede quedarse quieto?". El anticolinérgico NO la resuelve.'};
+
+/* NO recomendados */
+var N_POLI={no:true,linea:'❌ Sin evidencia, mucho daño',n:'Polifarmacia antipsicótica',
+  dlb:'Recomendación',
+  da:'Combinar <b>2 o más antipsicóticos</b> no tiene evidencia sólida — <b>salvo situaciones específicas</b> (p. ej. potenciar clozapina)',
+  iv:'—',
+  nota:'Duplica los efectos adversos (metabólicos, extrapiramidales, QT) sin beneficio demostrado. <b>Si estás pensando en un tercer antipsicótico, lo que necesitas es CLOZAPINA.</b> Y antes: <b>verifica la adherencia</b> — la mayoría de las "refractariedades" son pacientes que no lo están tomando.'};
+
+var N_ANTICOL={no:true,linea:'❌ No de rutina',n:'Anticolinérgico profiláctico permanente',
+  dlb:'Recomendación',
+  da:'No lo dejes indefinidamente "por si acaso"',
+  iv:'—',
+  nota:'Deteriora la <b>cognición</b> (que ya está afectada en la esquizofrenia), <b>empeora la discinesia tardía</b> y no sirve para la acatisia. Úsalo para la <b>distonía aguda</b> y el parkinsonismo, y <b>reevalúa la necesidad</b> periódicamente.'};
+
+var N_TARDE={no:true,linea:'❌ El error estructural',n:'Retrasar la clozapina',
+  dlb:'Recomendación',
+  da:'Tras <b>2 antipsicóticos fallidos</b> (dosis y tiempo adecuados, adherencia verificada), el siguiente paso es <b>clozapina</b>',
+  iv:'—',
+  nota:'El paciente promedio llega a la clozapina <b>años</b> después de cumplir criterios, tras probar 4 o 5 antipsicóticos que ya se sabía que no funcionarían. <b>Cada año de psicosis activa deteriora el funcionamiento.</b> El miedo al monitoreo hematológico no justifica esa demora.'};
+
+/* ---------- TX CONSULTA ---------- */
+var TXC={
+ primero:[['1ª Línea','Primer episodio — dosis BAJAS y equipo, no solo pastillas',AC,[F_ASG,F_CSC]],
+   ['2ª Línea','Adherencia desde el inicio',C2,[F_LAI]],
+   ['3ª Línea','Coadyuvantes con evidencia',C3,[F_TCC]],
+   ['Coadyuvantes','Manejo de efectos adversos',CO,[F_PROP,F_BIPER]]],
+ mant:[['1ª Línea','Mantenimiento — continuar el que funcionó',AC,[F_ASG,F_LAI]],
+   ['2ª Línea','Psicosocial',C2,[F_TCC]],
+   ['3ª Línea','Novedad (valorar disponibilidad)',C3,[F_XANO]],
+   ['Coadyuvantes','Efectos adversos',CO,[F_PROP,F_BIPER]]],
+ resis:[['1ª Línea','Resistente = clozapina. Punto.',AC,[F_CLOZ]],
+   ['2ª Línea','Antes de llamarlo resistente, verifica',C2,[{pri:false,linea:'2ª línea — verificar primero',n:'¿Es refractariedad o es NO ADHERENCIA?',
+     dlb:'Verificar',
+     da:'① ¿<b>Realmente lo tomó</b>? (la causa más común de "no respuesta") ② ¿Dosis adecuada? ③ ¿<b>≥6 semanas</b>? ④ ¿Consumo de sustancias? ⑤ ¿Depresión o efectos adversos confundidos con síntomas negativos?',
+     iv:'Consulta',
+     nota:'Cuando sea posible, <b>mide niveles séricos</b> o considera un <b>LAI</b> para tener certeza de que el fármaco está entrando. Declarar refractario a alguien que no lo toma lleva a polifarmacia inútil.'}]],
+   ['3ª Línea','Si la clozapina no basta',C3,[{pri:false,linea:'3ª línea — clozapina insuficiente',n:'Potenciación de clozapina',
+     dlb:'Opciones',
+     da:'<b>TEC añadida a clozapina</b> (la opción con mejor evidencia), o añadir un segundo antipsicótico (evidencia limitada)',
+     iv:'Psiquiatría especializada',
+     nota:'Antes de potenciar: <b>verifica el nivel sérico de clozapina</b> y la adherencia. Muchas "clozapinas fallidas" están infradosificadas.'}]],
+   ['❌ NO hacer','Los dos errores clásicos',NO,[N_POLI,N_TARDE]]],
+ no:[['❌ NO recomendados','Lo que hace daño',NO,[N_POLI,N_ANTICOL,N_TARDE]],
+     ['Coadyuvantes','Lo que SÍ funciona',AC,[F_CLOZ,F_LAI,F_CSC]]]
+};
+
+/* ---------- TX HOSPITALARIO ---------- */
+var TXH={
+ agit:[['1ª Línea','Agitación aguda — desescalada verbal PRIMERO',AC,[F_HALOP,{pri:true,linea:'⭐ 1ª línea',n:'Lorazepam',
+     dlb:'Dosis',
+     da:'<b>1–2 mg IM/VO</b>, repetible',
+     prep:'⚠️ <b>NO administrar junto con olanzapina IM</b> (depresión respiratoria/hipotensión): separar ≥1 h',
+     iv:'IM / VO',
+     pres:'Lorazepam 1 y 2 mg',
+     ea:'Sedación, depresión respiratoria, desinhibición paradójica',
+     nota:'La <b>desescalada verbal</b> va primero: espacio, tono bajo, no rodear al paciente, ofrecer opciones. La contención química es el último recurso, no el primero.'},{pri:false,linea:'Alternativa',n:'Olanzapina IM',
+     dlb:'Dosis',
+     da:'<b>10 mg IM</b> (máximo 30 mg/día)',
+     prep:'⚠️ <b>Nunca junto con benzodiacepina parenteral</b>',
+     iv:'IM',
+     pres:'Ampolleta 10 mg',
+     ea:'Sedación, hipotensión, metabólicos',
+     nota:'Muy eficaz y con menos extrapiramidales que el haloperidol, pero la regla de no combinarla con benzodiacepina IM <b>no se rompe</b>.'}]],
+   ['2ª Línea','Manejo del efecto adverso agudo',C2,[F_BIPER,F_PROP]],
+   ['3ª Línea','Iniciar/ajustar el antipsicótico de fondo',C3,[F_ASG]],
+   ['Coadyuvantes','Descartar causas',CO,[{pri:true,linea:'Coadyuvante — obligatorio',n:'Descartar delirium y causa orgánica',
+     dlb:'Conducta',
+     da:'<b>Toda psicosis aguda merece descartar delirium</b> antes de asumir que es esquizofrenia',
+     prep:'Banderas de <b>delirium</b>: inicio <b>agudo y fluctuante</b>, <b>alteración de la atención</b> y del nivel de conciencia, <b>alucinaciones visuales</b>, desorientación. Pide: glucosa, BH, QS, electrolitos, EGO, toxicológico, TSH, y neuroimagen si hay focalización',
+     iv:'Urgencias',
+     nota:'🚨 Un delirium tratado con antipsicótico y dado de alta como "brote psicótico" es un error potencialmente <b>mortal</b>. <b>Alucinaciones VISUALES = piensa orgánico</b> (en esquizofrenia predominan las auditivas).'}]]],
+ urg:[['1ª Línea','🚨 Urgencias por el fármaco',AC,[{pri:true,linea:'🚨 Síndrome neuroléptico maligno (SNM)',n:'SNM — suspender TODO antipsicótico',
+     dlb:'Cuadro',
+     da:'<b>Fiebre + rigidez "en tubo de plomo" + alteración del estado mental + disautonomía</b> (TA lábil, taquicardia, diaforesis) + <b>CK muy elevada</b> y leucocitosis',
+     prep:'<b>Tratamiento:</b> ① <b>Suspender el antipsicótico</b> ② Soporte: hidratación IV agresiva, enfriamiento, vigilar <b>rabdomiólisis e insuficiencia renal</b> ③ <b>Dantroleno</b> y/o <b>bromocriptina</b> en casos graves ④ <b>TEC</b> si es refractario',
+     iv:'UCI / urgencias',
+     nota:'<b>Diferencial:</b> <b>síndrome serotoninérgico</b> (hiperreflexia, <b>clonus</b>, mioclonías, inicio en horas, antecedente de serotoninérgicos) vs SNM (<b>rigidez</b>, hiporreflexia, instalación en días). <b>Catatonia maligna</b> puede ser indistinguible → responde a benzodiacepinas y TEC.'},{pri:true,linea:'🚨 Agranulocitosis por clozapina',n:'Neutropenia grave',
+     dlb:'Conducta',
+     da:'Neutrófilos absolutos <b>&lt;500/mm³</b> = <b>agranulocitosis</b> → <b>SUSPENDER la clozapina de inmediato</b>, aislamiento y hematología. <b>Nunca reexponer</b>',
+     prep:'Vigilar <b>fiebre, odinofagia, úlceras orales, infección</b> — enseña al paciente a reportarlas de inmediato',
+     iv:'Hospitalario',
+     nota:'Por eso el <b>monitoreo hematológico es obligatorio</b> y no negociable. Pero recuerda: <b>lo que más mata en clozapina es el íleo por estreñimiento</b>, no la agranulocitosis.'}]],
+   ['2ª Línea','Catatonia',C2,[{pri:false,linea:'Catatonia',n:'Catatonia — lorazepam y TEC',
+     dlb:'Cuadro',
+     da:'Inmovilidad, mutismo, negativismo, posturas, flexibilidad cérea, ecolalia/ecopraxia',
+     prep:'<b>Prueba con lorazepam</b> 1–2 mg IV/IM: respuesta a menudo <b>dramática</b> (dosis diarias hasta 6–16 mg según respuesta). Si no responde → <b>TEC</b> (muy eficaz)',
+     iv:'Hospitalario',
+     nota:'⚠️ <b>Los antipsicóticos pueden EMPEORAR la catatonia</b> y precipitar <b>catatonia maligna/SNM</b>. Ante la duda: <b>benzodiacepina primero</b>. Y busca causa médica (encefalitis autoinmune, metabólica).'}]],
+   ['3ª Línea','Discinesia tardía',C3,[{pri:false,linea:'Discinesia tardía',n:'Discinesia tardía',
+     dlb:'Conducta',
+     da:'Movimientos involuntarios <b>orofaciales</b> (chupeteo, protrusión lingual), tronco y extremidades; aparece <b>tras meses o años</b>',
+     prep:'① <b>Suspender el anticolinérgico</b> (lo empeora) ② Reducir o cambiar el antipsicótico (considerar <b>clozapina</b>) ③ <b>Valbenazina/deutetrabenazina</b> (inhibidores de VMAT2) — verificar disponibilidad en México',
+     iv:'Ambulatorio',
+     nota:'Puede ser <b>irreversible</b> — por eso importa usar la <b>dosis mínima eficaz</b> y evaluarla periódicamente. Mayor riesgo con antipsicóticos de 1ª generación, edad avanzada y tiempo de exposición.'}]],
+   ['Coadyuvantes','Riesgo suicida',CO,[{pri:true,linea:'⭐ Riesgo suicida',n:'Suicidio en esquizofrenia',
+     dlb:'Conducta',
+     da:'El riesgo es <b>alto</b>, sobre todo en <b>jóvenes, primeros años de enfermedad, con buena introspección y depresión pospsicótica</b>',
+     prep:'Preguntar <b>directamente</b> en cada consulta. Tratar la depresión comórbida. Vigilar la <b>acatisia</b> (factor de riesgo subestimado)',
+     iv:'Consulta / urgencias',
+     nota:'<b>La clozapina es el único antipsicótico con evidencia de reducir la conducta suicida</b> — es una indicación por sí sola, aunque los síntomas psicóticos hayan respondido a otro fármaco. <b>Recursos México:</b> Línea de la Vida <b>800 911 2000</b> · SAPTEL <b>55 5259 8121</b>.'}]]],
+ subs:[['1ª Línea','Psicosis y sustancias',AC,[{pri:true,linea:'⭐ Primero: ¿es esquizofrenia o es la sustancia?',n:'Psicosis inducida por sustancias',
+     dlb:'Diferencial',
+     da:'<b>Metanfetamina, cocaína, cannabis (sobre todo de alta potencia), alucinógenos, corticoides</b>',
+     prep:'La psicosis por sustancias <b>suele resolverse en días-semanas</b> tras la abstinencia. Si <b>persiste &gt;1 mes sin consumo</b>, reconsidera esquizofrenia. <b>Pide toxicológico SIEMPRE en el primer episodio</b>',
+     iv:'Urgencias',
+     nota:'⚠️ En el norte de México el consumo de <b>metanfetamina (cristal)</b> es una causa frecuentísima de psicosis en urgencias. Cuadro típico: <b>paranoia intensa, alucinaciones táctiles</b> ("bichos"), agitación, midriasis, taquicardia, hipertensión. <b>No es lo mismo</b> que un debut esquizofrénico — pero el consumo también <b>precipita</b> la esquizofrenia en predispuestos, así que no lo descartes por completo.'},F_HALOP]],
+   ['2ª Línea','Comorbilidad dual',C2,[{pri:false,linea:'2ª línea',n:'Patología dual (esquizofrenia + sustancias)',
+     dlb:'Conducta',
+     da:'Muy frecuente (tabaco, cannabis, alcohol, estimulantes). Empeora el curso, la adherencia y el pronóstico',
+     prep:'Tratar <b>ambos a la vez</b> (no "primero deja las drogas y luego te trato"). Considerar <b>LAI</b> por la adherencia',
+     iv:'Ambulatorio',
+     nota:'🚬 <b>El tabaco induce el CYP1A2 y baja los niveles de clozapina y olanzapina.</b> Si el paciente deja de fumar de golpe (hospitalización), sus niveles <b>suben</b> → toxicidad. Es un detalle que casi nadie recuerda y que causa ingresos evitables.'}]],
+   ['3ª Línea','Adherencia',C3,[F_LAI]],
+   ['Coadyuvantes','Familia',CO,[F_TCC]]]
+};
+
+/* ---------- FÁRMACOS ---------- */
+var FARMACOS=[
+ {familia:'Antipsicóticos de 2ª generación (1ª línea)',color:'#4a2d7a',farmacos:[
+  {n:'Risperidona',ini:'2–6 mg/día (empezar 1–2 mg)',obj:'Primer episodio y mantenimiento; existe LAI c/2 semanas',iv:'VO / IM larga acción',pr:'Tabletas 1, 2, 3 mg; solución; LAI',
+   mon:'Extrapiramidales, <b>prolactina</b>, peso, glucosa, lípidos',
+   ci:'Parkinson; precaución en adulto mayor con demencia',
+   ea:'<b>Hiperprolactinemia</b> (amenorrea, galactorrea, ginecomastia, disfunción sexual), extrapiramidales dosis-dependientes, aumento de peso',
+   nota:'Eficaz y barata. La <b>hiperprolactinemia</b> es causa <b>silenciosa</b> de abandono: nadie la reporta espontáneamente (da pena) — <b>pregúntala tú</b>. Por arriba de 6 mg/día los extrapiramidales suben sin ganar eficacia.'},
+  {n:'Olanzapina',ini:'10–20 mg/día · 10 mg IM en agitación',obj:'Muy eficaz; ideal cuando el problema es la agitación o el bajo peso',iv:'VO / IM',pr:'Tabletas 5 y 10 mg; ampolleta IM 10 mg',
+   mon:'<b>Peso, cintura, glucosa/HbA1c, lípidos</b> — estrictamente',
+   ci:'Precaución en diabetes/obesidad. ⚠️ <b>NO IM junto con benzodiacepina IM</b>',
+   ea:'<b>El peor perfil metabólico</b> (peso, diabetes, dislipidemia), sedación',
+   nota:'De las más eficaces, pero engorda mucho. En un paciente joven que apenas empieza, ese aumento de peso <b>es la razón por la que dejará el tratamiento</b>. Elige con los ojos abiertos.'},
+  {n:'Aripiprazol',ini:'10–30 mg/día',obj:'Buen perfil metabólico; LAI mensual disponible',iv:'VO / IM larga acción',pr:'Tabletas 10, 15, 20, 30 mg',
+   mon:'Peso, glucosa, lípidos; <b>buscar acatisia activamente</b>',
+   ci:'Hipersensibilidad',
+   ea:'<b>Acatisia</b> (frecuente), insomnio, náusea, activación',
+   nota:'Agonista parcial D2: poco peso, poca prolactina. ⚠️ <b>La acatisia se confunde con agitación psicótica</b> → suben la dosis → empeora. Pregunta: "¿siente inquietud por dentro, como que no puede estar quieto?".'},
+  {n:'Quetiapina',ini:'300–750 mg/día',obj:'Útil si hay insomnio o intolerancia a extrapiramidales',iv:'VO',pr:'25, 100, 200, 300 mg (y XR)',
+   mon:'Peso, cintura, glucosa, lípidos, TA',
+   ci:'Precaución en síndrome metabólico',
+   ea:'Sedación importante, aumento de peso, hipotensión ortostática',
+   nota:'Muy pocos extrapiramidales, pero es la <b>menos potente</b> de las opciones antipsicóticas: en esquizofrenia franca a menudo se queda corta a dosis bajas. Si la usas, llega a dosis <b>terapéuticas</b> (≥300–600 mg), no la dejes en 50 mg "para dormir".'},
+  {n:'Paliperidona',ini:'3–12 mg/día VO · LAI mensual / trimestral / semestral',obj:'Metabolito activo de la risperidona; el LAI es su gran ventaja',iv:'VO / IM larga acción',pr:'Tabletas de liberación prolongada; LAI',
+   mon:'Prolactina, extrapiramidales, peso, glucosa',
+   ci:'Parkinson',
+   ea:'Hiperprolactinemia, extrapiramidales, aumento de peso',
+   nota:'El <b>LAI trimestral y semestral</b> cambia la vida de un paciente con recaídas por abandono: 2 a 4 inyecciones al año.'},
+  {n:'Amisulprida',ini:'400–800 mg/día',obj:'Dosis bajas (50–300 mg) tienen efecto sobre <b>síntomas negativos</b>',iv:'VO',pr:'Tabletas 200, 400 mg (disponibilidad variable)',
+   mon:'<b>Prolactina</b>, QTc, extrapiramidales',
+   ci:'Feocromocitoma, prolactinoma, QT largo',
+   ea:'<b>Hiperprolactinemia marcada</b>, prolongación del QT, extrapiramidales',
+   nota:'De las pocas con evidencia en <b>síntomas negativos</b> (a dosis bajas). Su costo es la prolactina, que sube mucho.'}]},
+ {familia:'Clozapina — el único superior en refractariedad',color:'#7b1c1c',farmacos:[
+  {n:'Clozapina',ini:'12.5 mg día 1 → 300–450 mg/día en 2–3 semanas (máx 900)',
+   obj:'<b>Esquizofrenia resistente</b> (≥2 antipsicóticos fallidos), <b>riesgo suicida persistente</b> y <b>agresividad persistente</b>',
+   iv:'VO',pr:'Tabletas 25 y 100 mg',
+   mon:'<b>BH con neutrófilos absolutos: semanal al inicio (18 semanas o según protocolo) → quincenal → mensual, indefinidamente.</b> Peso, glucosa, lípidos. Troponina/PCR si sospecha de miocarditis. <b>Preguntar por evacuaciones en CADA consulta</b>',
+   ci:'Neutropenia previa por clozapina, íleo, epilepsia no controlada, imposibilidad de monitoreo',
+   ea:'<b>Agranulocitosis · miocarditis (primeras 8 semanas) · estreñimiento grave/íleo (la principal causa de muerte) · sialorrea · sedación · convulsiones · aumento de peso · taquicardia</b>',
+   nota:'🚨 <b>Se usa demasiado tarde y demasiado poco.</b> Si fallaron 2 antipsicóticos bien dados, el siguiente es <b>clozapina</b>, no un tercero igual.<br>💩 <b>Laxante profiláctico desde el día 1</b> — el íleo mata más que la agranulocitosis.<br>🚬 <b>Dejar de fumar duplica los niveles</b> (CYP1A2) → toxicidad.'}]},
+ {familia:'Novedad 2024 — mecanismo nuevo',color:'#0a5c45',farmacos:[
+  {n:'Xanomelina–trospio (Cobenfy®)',ini:'Aprobado por la FDA en septiembre de 2024',
+   obj:'<b>Agonista muscarínico M1/M4 + trospio periférico</b>. <b>NO bloquea D2</b> — primer mecanismo verdaderamente nuevo en décadas (ensayos EMERGENT)',
+   iv:'VO cada 12 h',pr:'⚠️ <b>Verificar disponibilidad en México</b>',
+   mon:'Presión arterial, frecuencia cardiaca, síntomas gastrointestinales, función hepática',
+   ci:'Retención urinaria, íleo, hepatopatía moderada-grave',
+   ea:'Náusea, vómito, estreñimiento, dispepsia, hipertensión, taquicardia',
+   nota:'<b>Ventaja teórica:</b> sin extrapiramidales, sin discinesia tardía, sin hiperprolactinemia, sin el aumento de peso típico. <b>Honestidad:</b> es nuevo, faltan datos a largo plazo y <b>NO desplaza a la clozapina</b> en refractariedad. Su lugar en el algoritmo todavía se está definiendo.'}]},
+ {familia:'1ª generación y manejo de efectos adversos',color:'#0c3b6e',farmacos:[
+  {n:'Haloperidol',ini:'5 mg IM en agitación · 5–15 mg/día VO',obj:'Agitación aguda; opción de mantenimiento barata (decanoato para LAI)',iv:'IM / VO',pr:'Ampolleta 5 mg/mL; tabletas; gotas; decanoato',
+   mon:'<b>ECG (QTc)</b>, extrapiramidales, discinesia tardía',
+   ci:'Parkinson, QT largo',
+   ea:'<b>Extrapiramidales, discinesia tardía</b>, QT largo',
+   nota:'Barato, disponible y eficaz. Su costo es <b>neurológico</b>, no metabólico. Ten <b>biperideno</b> a la mano al usarlo IM.'},
+  {n:'Biperideno',ini:'Distonía aguda: 2–5 mg IM/IV · Parkinsonismo: 2–4 mg/día VO',obj:'Distonía aguda y parkinsonismo inducidos por antipsicótico',iv:'IM / IV / VO',pr:'Ampolleta 5 mg/mL; tabletas 2 mg',
+   mon:'Cognición (sobre todo en el adulto mayor)',
+   ci:'Glaucoma de ángulo cerrado, retención urinaria',
+   ea:'Boca seca, visión borrosa, retención urinaria, <b>confusión y deterioro cognitivo</b>',
+   nota:'⚠️ <b>NO sirve para la acatisia</b> y <b>empeora la discinesia tardía</b>. No lo dejes indefinidamente "por protocolo": reevalúa.'},
+  {n:'Propranolol',ini:'20–40 mg cada 8–12 h',obj:'<b>ACATISIA</b> (después de intentar bajar o cambiar el antipsicótico)',iv:'VO',pr:'Tabletas 10 y 40 mg',
+   mon:'FC y TA',
+   ci:'Asma, bradicardia, bloqueo AV',
+   ea:'Bradicardia, hipotensión, fatiga',
+   nota:'🚨 <b>La acatisia es causa subestimada de suicidio y de abandono.</b> Se confunde con agitación psicótica → suben el antipsicótico → empeora. Pregunta por "inquietud interna".'},
+  {n:'Lorazepam',ini:'1–2 mg IM/VO',obj:'Agitación aguda · <b>catatonia</b> (prueba diagnóstica y terapéutica)',iv:'IM / VO',pr:'Tabletas 1 y 2 mg',
+   ci:'⚠️ <b>No junto con olanzapina IM</b> (separar ≥1 h)',
+   ea:'Sedación, depresión respiratoria, desinhibición paradójica',
+   nota:'En <b>catatonia</b>, la respuesta al lorazepam suele ser dramática y es <b>diagnóstica</b>. Recuerda: los antipsicóticos pueden <b>empeorar</b> la catatonia.'}]},
+ {familia:'❌ NO recomendados (y por qué)',color:'#7b1c1c',farmacos:[
+  {n:'Polifarmacia antipsicótica',ini:'❌ Sin evidencia sólida',obj:'Duplica efectos adversos sin beneficio demostrado',iv:'—',pr:'—',
+   ci:'—',ea:'Metabólicos, extrapiramidales, QT — todo al doble',
+   nota:'<b>Si estás pensando en el tercer antipsicótico, lo que necesitas es CLOZAPINA.</b> Y antes: verifica que <b>sí lo esté tomando</b>.'},
+  {n:'Anticolinérgico profiláctico permanente',ini:'❌ No de rutina',obj:'Solo para distonía aguda y parkinsonismo, reevaluando',iv:'—',pr:'—',
+   ci:'—',ea:'Deterioro cognitivo, empeora la discinesia tardía',
+   nota:'La cognición ya está afectada en la esquizofrenia: no la empeores de gratis.'},
+  {n:'Retrasar la clozapina',ini:'❌ El error estructural',obj:'Tras 2 antipsicóticos fallidos → clozapina',iv:'—',pr:'—',
+   ci:'—',ea:'Años de psicosis activa = deterioro funcional',
+   nota:'El miedo al monitoreo hematológico no justifica dejar a alguien psicótico durante años.'}]}
+];
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Clozapina — el protocolo que no se improvisa',color:'#7b1c1c',farmacos:[
+  {n:'Clozapina: inicio, monitoreo y las 3 cosas que matan',
+   dosis:['Día 1: <b>12.5 mg</b> · subir 25–50 mg/día según tolerancia','Objetivo: <b>300–450 mg/día</b> en 2–3 semanas (máximo 900 mg)','<b>BH con neutrófilos: semanal al inicio</b> (18 semanas o según protocolo) → quincenal → mensual, <b>mientras dure el tratamiento</b>','<b>Laxante profiláctico desde el día 1</b>'],
+   via:'Vía oral; la mayor parte de la dosis por la noche (sedación). Titulación lenta por hipotensión y taquicardia',
+   enf:'Basal: BH con neutrófilos, peso, cintura, glucosa, lípidos, ECG. Vigilar: <b>fiebre, odinofagia o úlceras orales</b> (agranulocitosis) · <b>dolor torácico, taquicardia, disnea o fiebre en las primeras 8 semanas</b> (miocarditis → troponina y PCR) · <b>evacuaciones: preguntar en CADA consulta</b> (íleo).',
+   pac:'Este medicamento es el <b>más eficaz</b> cuando los otros no funcionaron, pero exige <b>análisis de sangre periódicos</b> — sin ellos no se puede continuar. Avise <b>de inmediato</b> si tiene <b>fiebre, dolor de garganta o llagas en la boca</b>; si le duele el pecho o se agita al respirar; y <b>si deja de evacuar</b>. Va a salivar mucho por las noches (es normal y molesto, se puede tratar). <b>Si deja de fumar, avíseme antes</b>: hay que ajustar la dosis.',
+   nota:'🚨 <b>Las tres que matan:</b> ① <b>estreñimiento → íleo</b> (la primera causa de muerte por clozapina, y la más olvidada) ② <b>miocarditis</b> (primeras 8 semanas) ③ <b>agranulocitosis</b>. Solo la tercera está en la mente de todos.',
+   al:'🚨 Fiebre, odinofagia, úlceras orales · dolor torácico o disnea (primeras 8 semanas) · <b>ausencia de evacuaciones, distensión o dolor abdominal</b> · sedación excesiva · convulsión → <b>evaluación inmediata</b>.'}]},
+ {familia:'Inicio del antipsicótico y adherencia',color:'#4a2d7a',farmacos:[
+  {n:'Primer episodio: dosis bajas y expectativas claras',
+   dosis:['Iniciar con la <b>dosis más baja eficaz</b> (el primer episodio responde a menos)','Prueba adecuada: <b>4–6 semanas</b> a dosis terapéutica','Continuar el tratamiento tras la remisión — <b>no suspender al mejorar</b>'],
+   via:'Vía oral; considerar <b>LAI desde temprano</b> si hay dudas de adherencia',
+   enf:'Basal: peso, cintura, TA, glucosa/HbA1c, lípidos, ECG, prolactina si hay síntomas. Repetir metabólico a los <b>3 meses</b> y luego anual. Buscar <b>acatisia</b> y extrapiramidales en cada consulta.',
+   pac:'El medicamento <b>no es para siempre "por castigo"</b>: es para que no vuelva a pasar. Las voces y las ideas suelen mejorar en semanas, pero <b>si lo suspende cuando se siente bien, la recaída es muy probable</b> — y cada recaída deja más huella. Si algo le molesta (peso, rigidez, inquietud, problemas sexuales), <b>dígamelo: se puede cambiar</b>. No lo suspenda por su cuenta.',
+   nota:'🚨 <b>La duración de la psicosis no tratada (DUP) es el predictor modificable más importante del pronóstico.</b> Y la <b>no adherencia</b> es la causa #1 de recaída — casi siempre por un efecto adverso concreto que el paciente no se atrevió a mencionar.',
+   al:'Rigidez + fiebre + confusión → <b>SNM, urgencia</b>. Inquietud intensa e ideación suicida → <b>acatisia</b>, evaluar de inmediato.'},
+  {n:'Inyectable de larga acción (LAI): cómo ofrecerlo',
+   dosis:['Risperidona LAI (c/2 semanas) · Paliperidona palmitato (mensual, trimestral, semestral) · Aripiprazol LAI (mensual) · Haloperidol decanoato (mensual)','Ofrecerlo <b>temprano</b>, incluso en el primer episodio'],
+   via:'IM (glúteo o deltoides según el fármaco)',
+   enf:'Verificar tolerancia previa por vía oral. Agendar las aplicaciones y <b>buscar activamente al paciente que no acude</b> (la inasistencia es el primer signo de recaída).',
+   pac:'En vez de acordarse todos los días, <b>una inyección cada mes</b> (o cada 3 o 6 meses). Muchos pacientes lo prefieren porque les <b>devuelve la normalidad</b>: dejan de sentir que "toman medicamento todo el tiempo".',
+   nota:'Preséntalo como una <b>ventaja</b>, nunca como un castigo por "no obedecer". La APA 2020 lo recomienda también cuando el paciente simplemente <b>lo prefiere</b>.',
+   al:'Si no acude a la aplicación → contactar de inmediato: es el momento de prevenir la recaída, no después.'}]},
+ {familia:'Familia y psicoeducación',color:'#0a5c45',farmacos:[
+  {n:'Intervención familiar y señales de recaída',
+   dosis:['Identificar los <b>3 primeros signos</b> de recaída de ESTE paciente','Reducir la <b>emoción expresada</b> (crítica, hostilidad, sobreimplicación)','Plan escrito: a quién llamar y cuándo'],
+   via:'Psicoeducación en consulta, con la familia presente',
+   enf:'Preguntar por sueño, aislamiento, suspicacia creciente, abandono del tratamiento y consumo de sustancias.',
+   pac:'(A la familia) Los reclamos, las críticas constantes y el estar encima <b>aumentan las recaídas</b> — está estudiado. No es falta de cariño: es que la crítica constante estresa y el estrés detona el brote. Y si empieza a <b>dormir mal, encerrarse o volverse desconfiado</b>, <b>avísenme antes</b> de que sea una crisis.',
+   nota:'La <b>intervención familiar</b> es de las medidas con mayor impacto en recaídas (APA 2020). En México, donde el paciente casi siempre vive con su familia, es <b>especialmente rentable</b>.',
+   al:'🚨 Ideación suicida, agresividad, aislamiento total, abandono del tratamiento, consumo de estimulantes → evaluación urgente.'}]}
+];
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ primer:{t:'Primer episodio psicótico',
+  pres:'Adolescente o adulto joven con delirios, alucinaciones, discurso desorganizado, aislamiento y caída del rendimiento.',
+  dx:'🚨 <b>Descarta orgánico y tóxico ANTES de etiquetar:</b> toxicológico (metanfetamina, cocaína, cannabis), BH, QS, electrolitos, PFH, TSH, VIH/VDRL, glucosa. <b>Neuroimagen</b> si hay focalización, catatonia, deterioro cognitivo o inicio atípico. <b>Alucinaciones VISUALES → piensa orgánico</b> (en esquizofrenia predominan las auditivas).',
+  tx:'Antipsicótico a <b>dosis BAJAS</b> (son más sensibles y más vulnerables a los efectos adversos) + <b>atención especializada coordinada</b> (manejo de caso, familia, TCC, apoyo laboral/escolar). Considerar <b>LAI desde el inicio</b>.',
+  ref:'Programa de primer episodio si existe; psiquiatría en todo caso.',
+  cx:'🚨 <b>La duración de la psicosis NO tratada (DUP) es el predictor modificable más importante del pronóstico.</b> Cada mes sin tratar empeora el resultado a largo plazo. <b>No esperes a "estar seguro" del diagnóstico para tratar la psicosis.</b>'},
+ resis:{t:'No responde → ¿resistente o no lo está tomando?',
+  pres:'Síntomas positivos persistentes pese a "varios" antipsicóticos.',
+  dx:'<b>Criterios de resistencia:</b> ≥2 antipsicóticos distintos, cada uno a <b>dosis adecuada</b>, por <b>≥6 semanas</b>, con <b>adherencia verificada</b> (idealmente con niveles séricos o un LAI). <b>Descartar antes:</b> no adherencia (la causa #1), consumo de sustancias, dosis insuficiente, tiempo insuficiente.',
+  tx:'👉 <b>CLOZAPINA.</b> Es el <b>único</b> antipsicótico con superioridad demostrada en esquizofrenia resistente. Titular desde 12.5 mg con monitoreo hematológico obligatorio.',
+  ref:'Psiquiatría con protocolo de clozapina.',
+  cx:'🚨 <b>El error más costoso: probar un tercer, cuarto y quinto antipsicótico</b> (o combinarlos) en vez de pasar a clozapina. El paciente pierde <b>años</b> de vida funcional. Y ojo: la mitad de las "refractariedades" son pacientes <b>que no lo están tomando</b>.'},
+ negat:{t:'Síntomas negativos — lo que más discapacita',
+  pres:'Abulia, anhedonia, aplanamiento afectivo, alogia, aislamiento. <b>Es lo que más discapacita a largo plazo</b> y lo que peor responde al tratamiento.',
+  dx:'🔍 <b>Descarta los "negativos falsos" (secundarios), que SÍ son tratables:</b> ① <b>Parkinsonismo por el antipsicótico</b> (¡se ve igual: aplanado, lento, rígido!) → baja la dosis ② <b>Depresión</b> comórbida ③ <b>Efecto sedante</b> del fármaco ④ Institucionalización y falta de estímulo ⑤ Síntomas positivos ocultos (no sale por miedo a los perseguidores).',
+  tx:'Optimizar/reducir el antipsicótico si hay parkinsonismo; tratar la depresión; <b>amisulprida a dosis bajas</b> tiene alguna evidencia; <b>rehabilitación psicosocial, apoyo laboral y activación conductual</b> son el pilar. Cariprazina tiene datos favorables.',
+  ref:'Rehabilitación psicosocial.',
+  cx:'⚠️ Confundir <b>parkinsonismo inducido por el fármaco</b> (tratable bajando la dosis) con <b>síntomas negativos primarios</b> → se sube el antipsicótico → empeora todo. Es un error clásico y muy frecuente.'},
+ catat:{t:'Catatonia',
+  pres:'Inmovilidad, mutismo, negativismo, posturas mantenidas, flexibilidad cérea, ecolalia/ecopraxia. Puede evolucionar a <b>catatonia maligna</b> (fiebre, disautonomía).',
+  dx:'<b>Prueba con lorazepam 1–2 mg IV/IM:</b> la respuesta suele ser dramática y es diagnóstica. Buscar causa médica (encefalitis autoinmune, metabólica, neurológica).',
+  tx:'<b>Lorazepam</b> (dosis diarias hasta 6–16 mg según respuesta). Si no responde o hay catatonia maligna → <b>TEC</b> (muy eficaz).',
+  ref:'Hospitalización. TEC si es refractaria o maligna.',
+  cx:'🚨 <b>Los antipsicóticos pueden EMPEORAR la catatonia</b> y precipitar catatonia maligna o SNM. Ante la duda: <b>benzodiacepina primero, antipsicótico después</b>.'},
+ ea:{t:'Efectos adversos: reconocerlos rápido',
+  pres:'El paciente "empeoró" o "está raro" tras el antipsicótico.',
+  dx:'<b>Distonía aguda:</b> horas-días; contractura de cuello, lengua, ojos (crisis oculógira) → <b>biperideno 2–5 mg IM</b>, cede en minutos.<br><b>Acatisia:</b> <b>inquietud interna</b>, no puede estar quieto → se confunde con agitación psicótica → <b>bajar dosis / cambiar / propranolol 20–40 mg</b> (el anticolinérgico NO sirve).<br><b>Parkinsonismo:</b> rigidez, bradicinesia, aplanamiento → se confunde con síntomas negativos.<br><b>Discinesia tardía:</b> meses-años; movimientos orofaciales → suspender anticolinérgico, valorar clozapina o VMAT2.<br><b>SNM:</b> <b>fiebre + rigidez + estado mental alterado + disautonomía + CK alta</b>.',
+  tx:'Según el cuadro (ver arriba). <b>SNM: suspender el antipsicótico</b>, soporte, hidratación, dantroleno/bromocriptina, TEC si es refractario.',
+  ref:'SNM → urgencias/UCI.',
+  cx:'🚨 <b>Las tres confusiones que hacen daño:</b> ① acatisia leída como <b>agitación psicótica</b> → suben la dosis ② parkinsonismo leído como <b>síntomas negativos</b> → suben la dosis ③ SNM leído como "<b>infección</b>" → siguen dando el antipsicótico.'},
+ dd:{t:'Diagnóstico diferencial',
+  pres:'Psicosis: ¿de qué tipo?',
+  dx:'<b>Trastorno esquizofreniforme:</b> igual que esquizofrenia, pero de <b>1 a 6 meses</b>.<br><b>Trastorno psicótico breve:</b> <b>&lt;1 mes</b> y regreso completo al funcionamiento previo.<br><b>Esquizoafectivo:</b> episodio del ánimo mayor <b>+</b> psicosis, <b>pero con ≥2 semanas de delirios/alucinaciones SIN síntomas del ánimo</b>.<br><b>Bipolar/depresión con psicosis:</b> la psicosis ocurre <b>SOLO durante</b> los episodios del ánimo.<br><b>Trastorno delirante:</b> delirios ≥1 mes <b>sin</b> los demás síntomas; el funcionamiento se conserva sorprendentemente bien.<br><b>Psicosis por sustancias:</b> metanfetamina, cocaína, cannabis, corticoides.<br><b>Delirium:</b> inicio <b>agudo y fluctuante</b>, <b>alteración de la atención</b>, alucinaciones <b>visuales</b>.<br><b>TOC con introspección ausente:</b> hay <b>rituales estructurados</b>; es un especificador del TOC, <b>no una psicosis</b>.',
+  tx:'Dirigido al diagnóstico correcto.',
+  ref:'Según el caso.',
+  cx:'🚨 <b>Delirium disfrazado de "brote psicótico"</b> es el error potencialmente mortal. Regla práctica: <b>alucinaciones visuales + atención alterada + curso fluctuante = orgánico hasta demostrar lo contrario</b>.'}
+};
+
+/* ---------- CALCULADORA: ¿ES RESISTENTE? ---------- */
+var TR={1:false,2:false,3:false,4:false,5:false};
+function trTog(n,el){TR[n]=!TR[n];if(el)el.classList.toggle('on');}
+function calcTR(){
+  var falta=[];
+  if(!TR[1])falta.push('no se han probado <b>2 antipsicóticos distintos</b>');
+  if(!TR[2])falta.push('la <b>dosis</b> no fue adecuada');
+  if(!TR[3])falta.push('no se completaron <b>≥6 semanas</b> con cada uno');
+  if(!TR[4])falta.push('no se ha <b>verificado la adherencia</b> (esta es la causa #1 de falsa refractariedad)');
+  if(!TR[5])falta.push('no se ha descartado el <b>consumo de sustancias</b>');
+  var r=document.getElementById('tr-res');
+  if(falta.length){
+    r.className='calc-result show res-mid';
+    r.innerHTML='<div style="font-size:15px;font-weight:800;margin-bottom:4px;">⚠️ AÚN NO cumple criterios de esquizofrenia resistente</div>'+
+      'Falta: <b>'+falta.join('</b>; <b>')+'</b>.<br><br>'+
+      '<b>Antes de escalar:</b> confirma que el paciente <b>realmente está tomando</b> el fármaco (considera niveles séricos o cambiar a un <b>inyectable de larga acción</b> para tener certeza), llega a <b>dosis terapéutica</b> y espera <b>6 semanas completas</b>.<br><br>'+
+      '⚠️ <b>NO añadas un segundo antipsicótico:</b> la polifarmacia duplica los efectos adversos sin beneficio demostrado.';
+  } else {
+    r.className='calc-result show res-high';
+    r.innerHTML='<div style="font-size:15px;font-weight:800;margin-bottom:4px;">🔴 ESQUIZOFRENIA RESISTENTE → CLOZAPINA</div>'+
+      'Cumple criterios. <b>La clozapina es el ÚNICO antipsicótico con superioridad demostrada aquí</b> — no un tercer antipsicótico, no una combinación.<br><br>'+
+      '<b>Cómo iniciarla:</b><br>'+
+      '• <b>12.5 mg el día 1</b> → subir 25–50 mg/día → objetivo <b>300–450 mg/día</b> en 2–3 semanas (máx 900).<br>'+
+      '• <b>BH con neutrófilos absolutos:</b> semanal al inicio (18 semanas o según protocolo) → quincenal → mensual, mientras dure el tratamiento.<br>'+
+      '• <b>Laxante profiláctico desde el día 1</b> (el íleo por estreñimiento es la principal causa de muerte, por encima de la agranulocitosis).<br>'+
+      '• Vigilar <b>miocarditis</b> en las primeras 8 semanas (fiebre, taquicardia, dolor torácico → troponina y PCR).<br>'+
+      '• 🚬 <b>Si deja de fumar, los niveles pueden duplicarse</b> (CYP1A2) → ajustar dosis.<br><br>'+
+      '💡 <b>La clozapina también está indicada</b> —aunque los síntomas positivos hayan respondido— si hay <b>riesgo suicida persistente</b> o <b>agresividad persistente</b>.';
+  }
+}
+function resetTR(){
+  TR={1:false,2:false,3:false,4:false,5:false};
+  for(var i=1;i<=5;i++){var b=document.getElementById('tr-'+i);if(b)b.classList.remove('on');}
+  var r=document.getElementById('tr-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- CALCULADORA: EQUIVALENTES DE CLORPROMAZINA ---------- */
+/* Equivalencias aproximadas: mg del fármaco ≈ 100 mg de clorpromazina */
+var EQ=[
+ {n:'Haloperidol',f:2},{n:'Risperidona',f:2},{n:'Olanzapina',f:5},
+ {n:'Quetiapina',f:75},{n:'Aripiprazol',f:7.5},{n:'Paliperidona',f:1.5},
+ {n:'Ziprasidona',f:60},{n:'Amisulprida',f:100},{n:'Clozapina',f:50}
+];
+var EQSEL=0;
+function eqPick(i,el){
+  EQSEL=i;
+  var o=document.querySelectorAll('#eq-drugs .opt');
+  for(var j=0;j<o.length;j++)o[j].classList.remove('on');
+  if(el)el.classList.add('on');
+}
+function buildEq(){
+  var h='';
+  for(var i=0;i<EQ.length;i++)h+='<button class="opt'+(i===0?' on':'')+'" onclick="eqPick('+i+',this)">'+EQ[i].n+'</button>';
+  document.getElementById('eq-drugs').innerHTML=h;
+}
+function calcEq(){
+  var d=parseFloat(document.getElementById('eq-dose').value),r=document.getElementById('eq-res');
+  if(isNaN(d)||d<=0){r.className='calc-result show res-mid';r.innerHTML='Introduce una dosis diaria válida (mg/día).';return;}
+  var f=EQ[EQSEL],cpz=Math.round(d/f.f*100);
+  var cls,extra;
+  if(cpz>1000){cls='res-high';
+    extra='🔴 <b>Dosis muy alta (&gt;1000 mg equivalentes).</b> Por arriba de este rango, la evidencia muestra <b>poco o ningún beneficio adicional</b> y <b>sí más efectos adversos</b> (extrapiramidales, metabólicos, QT).<br><br><b>Si no responde a esta dosis, el problema no es la dosis:</b> verifica <b>adherencia</b>, descarta <b>sustancias</b>, y si cumple criterios de resistencia → <b>CLOZAPINA</b>, no más miligramos.';}
+  else if(cpz>600){cls='res-mid';
+    extra='🟡 <b>Dosis alta.</b> Estás en el rango superior. Antes de subir más, revisa <b>adherencia</b>, <b>tiempo de prueba</b> (≥6 semanas) y <b>consumo de sustancias</b>. Vigila extrapiramidales y perfil metabólico.';}
+  else {cls='res-ok';
+    extra='🟢 <b>Dosis dentro del rango habitual.</b> Recuerda: en el <b>primer episodio</b> se responde a dosis <b>más bajas</b> y la tolerancia a los efectos adversos es menor.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+f.n+' '+d+' mg/día ≈ <b>'+cpz+' mg</b> de clorpromazina</div>'+
+    '<div>'+extra+'</div>'+
+    '<div style="margin-top:8px;font-size:11px;opacity:.85;">⚠️ Las equivalencias son <b>aproximadas</b> y varían entre fuentes: sirven para <b>comparar</b> y detectar sobredosificación, <b>no para convertir dosis a ciegas</b> al cambiar de fármaco (los cambios se hacen con titulación cruzada).</div>';
+}
+
+/* ---------- ALGORITMO ---------- */
+var ALGO={
+ start:{q:'¿Es un <b>primer episodio</b> psicótico o un paciente ya diagnosticado?',
+  o:[['🆕 Primer episodio','organico'],['🔁 Ya diagnosticado, en tratamiento','respuesta']]},
+ organico:{q:'🚨 Antes de etiquetar: ¿descartaste causa <b>orgánica o tóxica</b>? (toxicológico, BH, QS, electrolitos, TSH, VIH/VDRL; neuroimagen si hay focalización o cuadro atípico)',
+  o:[['✅ Descartado','primer_ep'],['⚠️ Hay alucinaciones VISUALES, atención alterada o curso fluctuante','delirium'],['💊 Toxicológico positivo (metanfetamina, cocaína, cannabis)','sustancia']]},
+ delirium:{r:'high',t:'🚨 Piensa DELIRIUM, no esquizofrenia',
+  x:'<b>Alucinaciones visuales + alteración de la atención + curso agudo y fluctuante = orgánico hasta demostrar lo contrario.</b><br><br>• Busca la causa: infección (¡EGO en el adulto mayor!), metabólica, fármacos (anticolinérgicos, corticoides, opioides), abstinencia alcohólica, hipoxia, lesión del SNC.<br>• <b>Trata la causa</b>; el antipsicótico es solo sintomático y a dosis bajas.<br><br>⚠️ Un delirium egresado como "brote psicótico" puede ser <b>mortal</b>. En esquizofrenia predominan las alucinaciones <b>auditivas</b> y la conciencia está <b>clara</b>.'},
+ sustancia:{r:'mid',t:'Psicosis inducida por sustancias',
+  x:'<b>Metanfetamina, cocaína, cannabis de alta potencia, alucinógenos, corticoides.</b><br><br>• Suele resolverse en <b>días a semanas</b> con la abstinencia.<br>• Antipsicótico sintomático + benzodiacepina para la agitación.<br>• <b>Si la psicosis persiste &gt;1 mes sin consumo</b> → reconsidera esquizofrenia.<br><br>⚠️ El consumo <b>también precipita</b> la esquizofrenia en personas predispuestas: no lo descartes de golpe, da seguimiento. En el norte de México, el <b>cristal</b> es una causa muy frecuente en urgencias (paranoia intensa, alucinaciones táctiles, midriasis, taquicardia).'},
+ primer_ep:{r:'ok',t:'Primer episodio → dosis bajas + equipo',
+  x:'1) <b>Antipsicótico a la dosis más baja eficaz</b> — el primer episodio responde a menos y tolera peor los efectos adversos. Una mala experiencia inicial destruye la adherencia para siempre.<br>2) <b>Atención especializada coordinada</b> (manejo de caso, intervención familiar, TCC para psicosis, apoyo escolar/laboral) — recomendación de la APA 2020.<br>3) <b>Ofrece el LAI desde temprano</b>, no como castigo sino como comodidad.<br>4) <b>Basal metabólico</b> (peso, cintura, glucosa, lípidos, TA) y ECG.<br>5) Involucra a la familia: reducir la crítica y la hostilidad <b>reduce recaídas</b>.<br><br>🚨 <b>La DUP (duración de psicosis no tratada) es el predictor modificable más importante del pronóstico:</b> tratar rápido vale más que elegir la molécula perfecta.'},
+ respuesta:{q:'¿Ha respondido al tratamiento actual (dosis terapéutica, ≥6 semanas)?',
+  o:[['✅ Sí, está estable','mantenimiento'],['❌ No responde','verificar'],['⚠️ "Empeoró" o está raro tras el fármaco','efectos']]},
+ mantenimiento:{r:'ok',t:'Mantenimiento — no suspender',
+  x:'1) <b>Continuar el antipsicótico que funcionó</b> (APA 2020, recomendación 1A). Suspenderlo al mejorar = recaída muy probable, y cada recaída deja huella funcional.<br>2) <b>Vigila el cuerpo, no solo el ánimo:</b> peso, cintura, glucosa/HbA1c, lípidos y TA (basal, 3 meses, luego anual). <b>Estos pacientes mueren de enfermedad cardiovascular</b>, no de psicosis.<br>3) Busca <b>acatisia, parkinsonismo y discinesia tardía</b> en cada consulta.<br>4) Pregunta por <b>prolactina</b> (amenorrea, galactorrea, disfunción sexual): nadie la reporta solo, y es causa silenciosa de abandono.<br>5) <b>Si abandona el tratamiento → LAI.</b><br>6) TCC para psicosis e intervención familiar si hay síntomas persistentes.'},
+ verificar:{q:'Antes de llamarlo resistente: ¿está <b>realmente tomando</b> el medicamento, a dosis adecuada, por ≥6 semanas, y sin consumo de sustancias?',
+  o:[['✅ Todo verificado','resistente'],['❓ No estoy seguro de la adherencia','adherencia']]},
+ adherencia:{r:'mid',t:'Probablemente NO es resistencia: es NO ADHERENCIA',
+  x:'<b>Es la causa #1 de "falta de respuesta".</b><br><br>1) <b>Pregunta sin juzgar por qué lo deja.</b> Casi siempre hay una razón concreta: aumento de peso, rigidez, <b>acatisia</b>, sedación, disfunción sexual, amenorrea/galactorrea. <b>Todo eso se puede ajustar.</b><br>2) Considera <b>niveles séricos</b> cuando sea posible.<br>3) <b>Cambia a un inyectable de larga acción</b> (LAI): resuelve la duda y previene recaídas.<br>4) Descarta <b>consumo de sustancias</b>.<br><br>⚠️ <b>NO añadas un segundo antipsicótico</b>: la polifarmacia duplica efectos adversos sin beneficio demostrado.'},
+ resistente:{r:'high',t:'🔴 Esquizofrenia resistente → CLOZAPINA',
+  x:'<b>≥2 antipsicóticos, dosis adecuada, ≥6 semanas, adherencia verificada</b> = resistente. <b>La clozapina es el ÚNICO antipsicótico con superioridad demostrada aquí.</b><br><br>• <b>12.5 mg día 1</b> → subir 25–50 mg/día → <b>300–450 mg/día</b> (máx 900).<br>• <b>BH con neutrófilos: semanal al inicio</b> (18 semanas o según protocolo) → quincenal → mensual, mientras dure.<br>• 💩 <b>Laxante profiláctico desde el día 1</b>: el <b>íleo</b> mata más que la agranulocitosis.<br>• ❤️ <b>Miocarditis</b> en las primeras 8 semanas: fiebre, taquicardia, dolor torácico → troponina y PCR.<br>• 🚬 <b>Dejar de fumar duplica los niveles</b> (CYP1A2).<br><br>💡 También indicada por <b>riesgo suicida persistente</b> o <b>agresividad persistente</b>, aunque los síntomas positivos hayan respondido.<br><br>🚨 <b>No pierdas años probando un tercer y cuarto antipsicótico.</b>'},
+ efectos:{r:'mid',t:'Puede ser el FÁRMACO, no la enfermedad',
+  x:'<b>Las tres confusiones que hacen daño:</b><br><br>1) <b>Acatisia</b> (inquietud interna, no puede estar quieto) leída como <b>agitación psicótica</b> → suben la dosis → empeora. <b>Trátala:</b> baja o cambia el antipsicótico, o <b>propranolol 20–40 mg c/8–12 h</b> (el anticolinérgico NO sirve). 🚨 Es causa subestimada de <b>suicidio</b>.<br><br>2) <b>Parkinsonismo</b> (rigidez, lentitud, cara inexpresiva) leído como <b>síntomas negativos</b> → suben la dosis → empeora. <b>Trátalo:</b> baja la dosis o cambia de fármaco.<br><br>3) <b>Fiebre + rigidez + confusión + disautonomía + CK alta</b> = <b>SÍNDROME NEUROLÉPTICO MALIGNO</b> → <b>suspende el antipsicótico YA</b>, hidratación, enfriamiento, urgencias/UCI; dantroleno/bromocriptina; TEC si es refractario.<br><br>Y si hay <b>distonía aguda</b> (crisis oculógira, tortícolis): <b>biperideno 2–5 mg IM</b>, cede en minutos.'}
+};
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  setTxc('primero',document.querySelector('#txc-chips .pchip'));
+  setTxh('agit',document.querySelector('#txh-chips .pchip'));
+  setEscen('primer',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');
+  buildInd();
+  buildEq();
+  algoStart();
+});
+
+</script>
+</body>
+</html>

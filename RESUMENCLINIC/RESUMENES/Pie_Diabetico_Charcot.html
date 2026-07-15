@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pie diabético y Charcot · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0b6b6b;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+/* HEADER */
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+/* QUICK STATS */
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+/* TABBAR */
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+/* PANELS */
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+/* SECCIONES COLAPSABLES */
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+/* ALERTAS */
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+/* TABLAS */
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+/* CHIPS DE POBLACIÓN */
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+
+/* TEXTO */
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+
+/* PUNTOS CLAVE */
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e6f2f2;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* FICHA DE FÁRMACO (fu = farm unit) */
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+
+/* INDICACIONES */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+
+/* BIBLIOGRAFÍA — formato CAD */
+.biblio-header{background:linear-gradient(135deg,#04302f,#0b6b6b);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+
+/* ---- EXTRAS NECESARIOS (calculadoras, algoritmo, EKG, fisiopatología) ---- */
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fp-r{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.fp-a{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.fp-b{background:var(--bl);border-left:3px solid var(--bm);color:var(--b);}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.calc-btn{background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:10px 12px;font-size:12.5px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);border-left:3px solid var(--gm);color:var(--g);}
+.res-mid{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.res-high{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.opt{display:block;width:100%;text-align:left;padding:9px 11px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:12.5px;margin-bottom:6px;cursor:pointer;font-family:inherit;color:var(--gray-900);line-height:1.45;}
+.opt.on{border-color:var(--ac);background:#e6f2f2;font-weight:700;color:#0b6b6b;}
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:13.5px;font-weight:700;color:var(--gray-900);margin-bottom:10px;}
+.ekg-w{overflow-x:auto;border:1px solid var(--bd);border-radius:var(--rs);background:#fff;margin-bottom:8px;}
+.farm-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);margin-bottom:8px;overflow:hidden;}
+.farm-h{padding:9px 13px;font-size:13px;font-weight:800;color:#fff;}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.mon-t{font-size:11px;color:var(--gray-600);}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#04302f,#0b6b6b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦶</div>
+    <div>
+      <div class="hdr-eye">Endocrinología · Heridas</div>
+      <div class="hdr-title">Pie diabético y pie de Charcot</div>
+      <div class="hdr-sub">IWGDF 2023 · IWGDF/IDSA 2023 (infección) · IWGDF 2023 (Charcot)</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">La descarga es el tratamiento</span>
+    <span class="badge">Charcot ≠ celulitis</span>
+    <span class="badge">Probe-to-bone</span>
+    <span class="badge">El ITB alto engaña</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">10 g</div><div class="qs-l">monofilamento</div></div>
+  <div class="qs"><div class="qs-v">&gt;2 °C</div><div class="qs-l">sospecha Charcot</div></div>
+  <div class="qs"><div class="qs-v">≥2 signos</div><div class="qs-l">= infección</div></div>
+  <div class="qs"><div class="qs-v">50%/4 sem</div><div class="qs-l">debe reducir el área</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hospital</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y la pregunta que ordena todo el caso</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p><strong>Pie diabético:</strong> infección, ulceración o destrucción de los tejidos del pie en una persona con diabetes, asociada a <strong>neuropatía</strong> y/o <strong>enfermedad arterial periférica (EAP)</strong>.</p></div>
+  <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">Frente a cada pie, contesta cuatro preguntas — en este orden</div>
+  <strong>1. ¿Hay puerta de entrada?</strong> (úlcera, fisura, ampolla rota) → sin herida, la infección es poco probable.<br>
+  <strong>2. ¿Hay infección?</strong> → se define <strong>clínicamente</strong>: ≥2 signos de inflamación. No la definen el cultivo ni la PCR.<br>
+  <strong>3. ¿Llega sangre?</strong> → ITB + <strong>presión de dedo</strong>. Sin perfusión, nada cicatriza.<br>
+  <strong>4. ¿Está descargado?</strong> → si el paciente camina sobre la úlcera, no cierra. Punto.</div></div>
+  <div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Y la regla que salva pies</div>
+  <strong>Pie caliente + hinchado + rojo + neuropatía + SIN puerta de entrada = CHARCOT ACTIVO hasta demostrar lo contrario.</strong><br><br>
+  No es celulitis. No es gota. No es un esguince. <strong>Inmoviliza hoy</strong> y estudia después: cada semana caminando sobre un Charcot activo es hueso que colapsa <strong>de forma irreversible</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología — por qué esto importa tanto</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Traducción clínica</th></tr></thead><tbody>
+    <tr><td class="dn">Riesgo de úlcera a lo largo de la vida</td><td>Aproximadamente <strong>1 de cada 4</strong> personas con diabetes (~19–34% en las series citadas por la IWGDF)</td></tr>
+    <tr><td class="dm"><strong>Recurrencia</strong></td><td class="dm">~<strong>40% al año</strong> y hasta ~65% a 5 años. Por eso el paciente que cicatriza no está "curado": está <strong>en remisión</strong></td></tr>
+    <tr><td class="dm">Úlcera → amputación</td><td class="dm">La <strong>mayoría de las amputaciones no traumáticas</strong> de miembro inferior están precedidas por una úlcera de pie</td></tr>
+    <tr><td class="dn">Mortalidad</td><td>La mortalidad a 5 años tras una úlcera de pie diabético es <strong>alta</strong> — la causa suele ser <strong>cardiovascular</strong>, no el pie. El pie es la ventana al sistema arterial</td></tr>
+    <tr><td class="dn">Charcot: retraso diagnóstico</td><td>Frecuentemente se diagnostica <strong>meses tarde</strong>, confundido con celulitis, gota o esguince — y para entonces el pie ya se deformó</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">💡</span><div>Estos números tienen una consecuencia práctica: <strong>una úlcera de pie diabético no es un problema local de la piel</strong>. Es un marcador de enfermedad arterial y de mortalidad. Trata el pie <strong>y</strong> trata el riesgo cardiovascular.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Neuropatía — la que quita la alarma</strong><br>
+  • <strong>Sensitiva:</strong> se pierde la <strong>sensibilidad protectora</strong>. El paciente no siente la piedra en el zapato, la ampolla ni la quemadura. <strong>La ausencia de dolor no es buena noticia: es la enfermedad.</strong><br>
+  • <strong>Motora:</strong> atrofia de los músculos intrínsecos → <strong>dedos en garra</strong>, cabezas metatarsianas prominentes → <strong>picos de presión</strong> en la planta → callo → úlcera debajo del callo.<br>
+  • <strong>Autonómica:</strong> piel <strong>seca y fisurada</strong> (anhidrosis) y <strong>shunts arteriovenosos</strong> → el pie se ve <strong>caliente y con buenos pulsos</strong>… y aun así puede estar en problemas.</div>
+  <div class="fp fp-a"><strong>2. Enfermedad arterial periférica — la que impide reparar</strong><br>
+  Afecta típicamente los vasos <strong>infrapoplíteos</strong> (tibiales, peroneos), de forma difusa y distal. En el diabético se suma la <strong>calcificación de la media (Mönckeberg)</strong>: las arterias no se comprimen → el <strong>ITB sale falsamente normal o alto</strong>. Por eso hay que medir <strong>presión de dedo</strong> (las arterias digitales rara vez se calcifican). Sin flujo, ninguna cura, ningún apósito y ningún antibiótico cierran la herida.</div>
+  <div class="fp fp-b"><strong>3. Trauma repetitivo — el que abre la herida (y el Charcot)</strong><br>
+  La úlcera neuropática no nace de un golpe: nace de <strong>miles de pasos normales</strong> sobre un punto de presión que nadie siente. Presión repetida → callo → hemorragia subcutánea bajo el callo → úlcera.<br><br>
+  <strong>El pie de Charcot:</strong> en un pie con neuropatía (y circulación conservada), un trauma menor desencadena una <strong>respuesta inflamatoria que no se apaga</strong>: citocinas → vía <strong>RANK-L</strong> → activación de osteoclastos → <strong>osteólisis</strong>. El hueso se ablanda… y el paciente <strong>sigue caminando porque no le duele</strong>. Resultado: fracturas, luxaciones y <strong>colapso del arco → deformidad en mecedora</strong> (<em>rocker-bottom</em>) → nueva zona de presión → úlcera → osteomielitis → amputación.<br><br>
+  ⚠️ Fíjate en la trampa: <strong>la inflamación (calor, rubor, edema) es idéntica a la de una infección</strong>. Lo que las separa es <strong>la puerta de entrada</strong>.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Factor</th><th>Comentario</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Úlcera o amputación previa</strong></td><td class="dm">El factor de riesgo <strong>más potente</strong>. Este paciente es de <strong>máximo riesgo de por vida</strong></td></tr>
+    <tr><td class="dm"><strong>Pérdida de la sensibilidad protectora</strong></td><td class="dm">Monofilamento de 10 g ausente → el pie ya no avisa</td></tr>
+    <tr><td class="dn">Enfermedad arterial periférica</td><td>Pulsos ausentes, ITB &lt;0.9 (o &gt;1.3 = no interpretable)</td></tr>
+    <tr><td class="dn">Deformidad del pie</td><td>Dedos en garra, hallux valgus, cabezas metatarsianas prominentes, <strong>pie de Charcot</strong></td></tr>
+    <tr><td class="dn">Callo plantar</td><td><strong>Es una úlcera en construcción</strong>: multiplica la presión local</td></tr>
+    <tr><td class="dn">Enfermedad renal crónica / diálisis</td><td>Riesgo muy elevado de úlcera y amputación</td></tr>
+    <tr><td class="dn">Retinopatía / mala visión</td><td>No puede revisarse los pies (por eso: espejo o que lo revise alguien más)</td></tr>
+    <tr><td class="dn">Tabaquismo</td><td>El factor modificable con más impacto en la perfusión distal</td></tr>
+    <tr><td class="dn">Mal control glucémico, larga evolución</td><td>Más neuropatía y más EAP</td></tr>
+    <tr><td class="dn">Calzado inadecuado, andar descalzo</td><td>Causa directa y evitable de muchas úlceras</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Exploración del pie en 5 minutos</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Quítale los zapatos y los calcetines — a los dos pies.</strong> Suena obvio; es lo que más se omite. Revisa <strong>entre los dedos</strong> (fisuras, tiña = puerta de entrada) y el <strong>talón</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Piel:</strong> callo (¿hay hemorragia debajo?), fisuras, sequedad, ampollas, uñas, micosis, cambios de color, <strong>deformidad</strong> (garra, mecedora).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Neuropatía:</strong> <strong>monofilamento 10 g</strong> (Semmes-Weinstein) en al menos 3 sitios plantares — si falla en uno, hay pérdida de sensibilidad protectora. Complementa con <strong>diapasón de 128 Hz</strong> o el <strong>Ipswich touch test</strong> (tocar suavemente la punta de 6 dedos).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Perfusión:</strong> pulsos pedio y tibial posterior, temperatura, llenado capilar. <strong>Mide el ITB</strong> — y si sale &gt;1.3, <strong>no lo creas</strong>: usa <strong>presión de dedo/TBI</strong>.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Si hay úlcera:</strong> mide (largo × ancho × profundidad), <strong>desbrida el callo del borde</strong> (siempre es más grande de lo que parece) y haz <strong>probe-to-bone</strong> con sonda roma.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Si el pie está caliente:</strong> mide la <strong>Δ de temperatura</strong> con termómetro infrarrojo, mismo punto en ambos pies. <strong>&gt;2 °C = inflamación activa</strong> (Charcot o infección).</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes — los 10 que cuestan pies</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Tratar un Charcot como celulitis.</strong> Pie caliente e hinchado <strong>sin herida</strong> + neuropatía = Charcot. Tres semanas de antibiótico mientras camina = pie deformado <strong>para siempre</strong>. <strong>Es EL error del tema.</strong></div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dar antibiótico a una úlcera no infectada.</strong> <strong>Toda úlcera está colonizada.</strong> Sin ≥2 signos de inflamación, no hay infección: hay una herida que necesita <strong>descarga</strong>, no antibiótico.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>No descargar.</strong> Se receta el apósito más caro… y el paciente se va caminando con su mismo zapato. <strong>Si camina sobre la úlcera, no cierra.</strong></div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Cultivar con hisopo superficial.</strong> Cultiva colonizadores → se persiguen <em>Pseudomonas</em> y <em>Enterococcus</em> que nunca fueron el problema. <strong>Toma tejido profundo</strong>; si sospechas hueso, <strong>biopsia ósea</strong>.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Creerle a un ITB normal o alto.</strong> La <strong>calcificación de Mönckeberg</strong> lo eleva falsamente. Usa <strong>presión de dedo</strong> (≥30 mmHg favorece cicatrización).</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Pensar que "no duele = no es grave".</strong> Es exactamente al revés: <strong>no duele porque hay neuropatía</strong>, y por eso llega tarde y con más destrucción.</div></div>
+  <div class="kp"><div class="kn">7</div><div class="kt"><strong>Descartar osteomielitis o Charcot con una radiografía normal.</strong> La Rx tarda <strong>2–3 semanas</strong> en mostrar osteomielitis y es <strong>normal en el Charcot fase 0</strong>. Si el <strong>probe-to-bone</strong> es positivo o la sospecha clínica es alta, <strong>actúa</strong>.</div></div>
+  <div class="kp"><div class="kn">8</div><div class="kt"><strong>Desbridar la necrosis seca de un pie isquémico.</strong> Convierte una lesión estable en una herida que no puede cicatrizar. <strong>Primero sangre, después bisturí.</strong></div></div>
+  <div class="kp"><div class="kn">9</div><div class="kt"><strong>Prolongar el antibiótico "hasta que cierre la úlcera".</strong> El antibiótico trata la <strong>infección</strong>, no cierra heridas. Duración por infección, no por herida.</div></div>
+  <div class="kp"><div class="kn">10</div><div class="kt"><strong>Dar de alta al paciente que cicatrizó.</strong> Recurre ~<strong>40% en un año</strong>. Está <strong>en remisión, no curado</strong>: necesita calzado terapéutico y revisión periódica <strong>de por vida</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de hospitalización y referencia urgente</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Conducta</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Infección grave (grado 4)</strong>: SIRS/sepsis</td><td class="dm"><strong>Hospitalizar</strong> + IV amplio espectro + valoración quirúrgica</td></tr>
+    <tr><td class="dm"><strong>Crepitación, gas en Rx, bullas, necrosis, dolor desproporcionado</strong></td><td class="dm">🚨 <strong>Quirófano urgente</strong> (sospecha de infección necrosante)</td></tr>
+    <tr><td class="dm"><strong>Absceso o colección profunda</strong></td><td class="dm">Drenaje quirúrgico — <strong>el antibiótico no drena pus</strong></td></tr>
+    <tr><td class="dn">Isquemia crítica (dolor de reposo, necrosis, presión de dedo &lt;30 mmHg)</td><td><strong>Vascular sin demora</strong>: revascularizar</td></tr>
+    <tr><td class="dn">Infección moderada con comorbilidad, mal control o falla a VO</td><td>Hospitalizar / IV</td></tr>
+    <tr><td class="dn">Sospecha de <strong>osteomielitis</strong></td><td>Imagen (RM), biopsia ósea, cirugía + infectología</td></tr>
+    <tr><td class="dm"><strong>Sospecha de Charcot activo</strong></td><td class="dm"><strong>Descarga inmediata</strong> + referencia urgente (aunque no requiera "hospitalizar", <strong>no puede esperar semanas</strong>)</td></tr>
+    <tr><td class="dn">Incapacidad para el cuidado ambulatorio (vive solo, sin apoyo, sin acceso)</td><td>Considerar ingreso o red de apoyo formal</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Infección: el diagnóstico es CLÍNICO</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Regla de oro</div>La infección se diagnostica con <strong>≥2 signos de inflamación</strong>: eritema, calor, dolor/hipersensibilidad, induración/edema, o <strong>secreción purulenta</strong>.<br><br>
+  <strong>No la diagnostica el cultivo</strong> (toda úlcera está colonizada), <strong>ni la PCR</strong>, ni "se ve fea".</div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Grado IWGDF/IDSA</th><th>Definición</th><th>Conducta</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>1 — No infectada</strong></td><td>Sin signos de inflamación</td><td><strong>SIN antibiótico.</strong> Descarga + desbridamiento</td></tr>
+    <tr><td class="dn"><strong>2 — Leve</strong></td><td>≥2 signos; eritema <strong>≤2 cm</strong>; solo piel/TCS</td><td>Antibiótico <strong>VO 1–2 semanas</strong> (Gram+)</td></tr>
+    <tr><td class="dm"><strong>3 — Moderada</strong></td><td class="dm">Eritema <strong>&gt;2 cm</strong> <strong>o</strong> estructuras profundas (absceso, fascitis, artritis, <strong>osteomielitis</strong>); sin SIRS</td><td class="dm">Cultivo de tejido + antibiótico (frecuentemente IV); valorar cirugía e ingreso</td></tr>
+    <tr><td class="dm"><strong>4 — Grave</strong></td><td class="dm">Infección + <strong>SIRS/sepsis</strong></td><td class="dm">🚨 <strong>Hospital, IV amplio espectro, cirugía urgente</strong></td></tr>
+    <tr><td class="dn">Sufijo <strong>(O)</strong></td><td>Osteomielitis asociada</td><td>Duración y cirugía cambian (ver Tx Hospitalario)</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">🦠</span><div><strong>Cultivo:</strong> de <strong>tejido profundo</strong> tras desbridar (nunca hisopo superficial), <strong>antes</strong> del antibiótico. Biomarcadores (PCR, VSG, procalcitonina) solo <strong>si la clínica es dudosa</strong> — no sustituyen la exploración.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦴</span><span class="st">Osteomielitis — cómo sospecharla y confirmarla</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Probe-to-bone:</strong> sonda roma estéril → si toca <strong>hueso duro o áspero</strong>, es positivo. En una úlcera de <strong>alto riesgo</strong>, un probe positivo apoya fuertemente el diagnóstico (y uno negativo, en riesgo bajo, lo aleja). <strong>Es gratis y tarda 10 segundos.</strong></div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Sospecha alta si:</strong> úlcera <strong>&gt;2 cm²</strong>, <strong>&gt;3 mm de profundidad</strong>, evolución <strong>&gt;2 semanas</strong> sin cicatrizar pese a manejo correcto, <strong>VSG &gt;70 mm/h</strong>, o <strong>"dedo en salchicha"</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Radiografía simple</strong> (siempre, es barata): busca lisis, reacción perióstica, secuestro, <strong>gas</strong>. ⚠️ <strong>Normal NO descarta</strong> — los cambios tardan 2–3 semanas.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Resonancia magnética:</strong> el estudio de imagen <strong>de elección</strong> (edema óseo, absceso, extensión). Si no hay RM: repetir Rx en 2–4 semanas o gammagrafía/SPECT.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Biopsia ósea = estándar de oro</strong> (cultivo + histología). Cambia el antibiótico en un porcentaje importante de casos frente al cultivo de tejido blando.</div></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>En un pie con úlcera crónica que no avanza, la pregunta no es "¿le cambio el apósito?" sino <strong>"¿el hueso está metido en esto?"</strong></div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Perfusión — y por qué el ITB te engaña</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Prueba</th><th>Valor</th><th>Interpretación</th></tr></thead><tbody>
+    <tr><td class="dn">ITB (índice tobillo-brazo)</td><td>0.90–1.30</td><td>Normal (pero <strong>no descarta</strong> EAP en el diabético)</td></tr>
+    <tr><td class="dn">ITB</td><td>&lt;0.90</td><td><strong>Enfermedad arterial periférica</strong></td></tr>
+    <tr><td class="dm">ITB</td><td class="dm"><strong>&gt;1.30</strong></td><td class="dm">⚠️ <strong>NO interpretable</strong> — arterias calcificadas (Mönckeberg). <strong>Muy frecuente en diabetes y ERC</strong></td></tr>
+    <tr><td class="dn">Presión de dedo / TBI</td><td>≥30 mmHg (TBI ≥0.70)</td><td>Favorece la cicatrización. <strong>Las arterias digitales rara vez se calcifican</strong> → es la prueba confiable</td></tr>
+    <tr><td class="dm">Presión de dedo</td><td class="dm">&lt;30 mmHg</td><td class="dm">Isquemia significativa → <strong>revascularizar</strong></td></tr>
+    <tr><td class="dn">TcPO₂</td><td>≥25 mmHg</td><td>Favorece cicatrización</td></tr>
+    <tr><td class="dn">Ondas Doppler</td><td>Trifásica / monofásica</td><td>Monofásica = enfermedad significativa; útil cuando el ITB no sirve</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">⏱️</span><div><strong>Regla de las 4 semanas:</strong> si con descarga y cuidado correctos la úlcera <strong>no reduce ~50% de su área en 4 semanas</strong> → revisa <strong>perfusión</strong>, <strong>hueso</strong> y <strong>adherencia a la descarga</strong>. Casi siempre es una de esas tres.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">⚠️ Charcot activo — cómo se diagnostica (y por qué se pierde)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🔥</span><div><div class="at">El cuadro</div>Pie <strong>caliente, rojo, hinchado</strong> en una persona con diabetes y <strong>neuropatía</strong>, con <strong>Δ de temperatura &gt;2 °C</strong> respecto al pie contralateral, <strong>SIN puerta de entrada</strong>. Duele poco o nada. <strong>El paciente sigue caminando</strong> — y ahí está el daño. A menudo hay antecedente de un <strong>trauma menor</strong> (un tropezón, un esguince, una cirugía del pie).</div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Signo</th><th>Charcot activo</th><th>Infección (celulitis/osteomielitis)</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Puerta de entrada</strong></td><td class="dm"><strong>NO</strong> (piel íntegra)</td><td class="dm"><strong>SÍ</strong> (úlcera, fisura, herida)</td></tr>
+    <tr><td class="dn">Δ temperatura</td><td>&gt;2 °C, todo el pie/mediopié</td><td>&gt;2 °C, alrededor de la herida</td></tr>
+    <tr><td class="dm"><strong>Prueba de elevación</strong> (5–10 min)</td><td class="dm">El eritema <strong>DISMINUYE</strong> claramente</td><td class="dm">El eritema <strong>PERSISTE</strong></td></tr>
+    <tr><td class="dn">Fiebre / leucocitosis / PCR muy alta</td><td>Habitualmente <strong>ausentes</strong></td><td>Frecuentes (sobre todo si es moderada/grave)</td></tr>
+    <tr><td class="dn">Pulsos</td><td><strong>Presentes</strong> (suele haber buena circulación)</td><td>Variables</td></tr>
+    <tr><td class="dn">Deformidad</td><td>Puede aparecer/progresar (arco colapsado, mecedora)</td><td>No, salvo destrucción ósea avanzada</td></tr>
+    <tr><td class="dn">Radiografía</td><td>⚠️ <strong>NORMAL en fase 0</strong>; luego fragmentación/luxación</td><td>Cambios tardíos (2–3 semanas)</td></tr>
+    <tr><td class="dn">RM</td><td>Edema óseo <strong>multiarticular</strong> (mediopié), sin trayecto desde una úlcera</td><td>Edema óseo <strong>adyacente a la úlcera</strong>, trayecto/colección</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">📷</span><div><strong>Clasificación de Eichenholtz (evolución):</strong> <strong>Fase 0</strong> (inflamación, <strong>Rx normal</strong>, solo RM) → <strong>1 Fragmentación</strong> (lisis, fracturas, luxación) → <strong>2 Coalescencia</strong> (baja la inflamación, empieza a consolidar) → <strong>3 Consolidación/Remodelación</strong> (pie frío, ya deformado). <strong>El objetivo del tratamiento es detenerlo en fase 0–1.</strong></div></div>
+  <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><strong>Ante la duda: inmoviliza.</strong> Inmovilizar de más cuesta unas semanas de molestia. Inmovilizar de menos cuesta <strong>el pie</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Diferenciales del "pie rojo e hinchado"</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Diagnóstico</th><th>Lo que lo delata</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Charcot activo</strong></td><td class="dm">Neuropatía, <strong>sin herida</strong>, eritema que <strong>baja al elevar</strong>, sin fiebre, pulsos presentes</td></tr>
+    <tr><td class="dn">Celulitis / infección</td><td><strong>Puerta de entrada</strong>, eritema que persiste al elevar, fiebre/leucocitosis posibles</td></tr>
+    <tr><td class="dn">TVP</td><td>Edema de <strong>toda la pierna</strong>, dolor en pantorrilla, factores de riesgo → Doppler</td></tr>
+    <tr><td class="dn">Gota / artritis séptica</td><td><strong>Monoarticular</strong>, dolor intenso (¡aunque haya neuropatía!), primer ortejo → artrocentesis si hay derrame</td></tr>
+    <tr><td class="dn">Fractura por estrés / esguince</td><td>Antecedente de trauma; ojo: <strong>puede ser el disparador de un Charcot</strong></td></tr>
+    <tr><td class="dm">Isquemia aguda</td><td class="dm">Pie <strong>frío, pálido, sin pulsos</strong>, dolor → <strong>urgencia vascular</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-esc">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Clasificación de la INFECCIÓN (IWGDF/IDSA 2023)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-i"><span class="ai">📏</span><div>Define la <strong>gravedad</strong> y con ella la vía (VO/IV), la hospitalización y la duración. Recuerda: sin <strong>≥2 signos de inflamación</strong> no hay infección.</div></div>
+  <div class="calc-w">
+    <div id="inf-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcINF()">Clasificar</button>
+      <button class="calc-btn sc" onclick="resetINF()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="inf-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">⚠️ ¿CHARCOT o INFECCIÓN? — el diferencial que salva pies</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🔥</span><div>Marca lo que <strong>encuentres en la exploración</strong>. Esta es la decisión que más se equivoca en el pie diabético.</div></div>
+  <div class="calc-w" id="ch-box">
+    <button class="opt" id="ch-1" onclick="chTog(1,this)">Hay <strong>puerta de entrada</strong> (úlcera, herida, fisura, ampolla rota)</button>
+    <button class="opt" id="ch-2" onclick="chTog(2,this)">El pie afectado está <strong>&gt;2 °C más caliente</strong> que el contralateral</button>
+    <button class="opt" id="ch-3" onclick="chTog(3,this)">Al <strong>elevar la pierna 5–10 min, el eritema DISMINUYE</strong></button>
+    <button class="opt" id="ch-4" onclick="chTog(4,this)">Hay <strong>fiebre, leucocitosis o PCR muy elevada</strong></button>
+    <button class="opt" id="ch-5" onclick="chTog(5,this)">Hay <strong>neuropatía</strong> (monofilamento 10 g ausente)</button>
+    <button class="opt" id="ch-6" onclick="chTog(6,this)">Los <strong>pulsos están presentes</strong></button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcCH()">Orientar diagnóstico</button>
+      <button class="calc-btn sc" onclick="resetCH()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="ch-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">SINBAD — clasificar la úlcera y estimar pronóstico</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-i"><span class="ai">📏</span><div>Sistema <strong>simple y validado</strong> (IWGDF 2023), pensado para <strong>comunicar entre niveles de atención</strong> y estimar el pronóstico de cicatrización. 6 puntos.</div></div>
+  <div class="calc-w">
+    <div id="sb-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcSINBAD()">Calcular</button>
+      <button class="calc-btn sc" onclick="resetSINBAD()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="sb-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤠</span><span class="st">Clasificación de la UNIVERSIDAD DE TEXAS (grado × estadio)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-i"><span class="ai">📏</span><div>La clasificación <strong>más usada y mejor validada para predecir amputación</strong>. Cruza dos ejes: <strong>GRADO</strong> (profundidad, 0–III) y <strong>ESTADIO</strong> (A–D: infección y/o isquemia).<br><br>
+  Su ventaja sobre <strong>Wagner</strong>: Wagner solo mide profundidad y necrosis; <strong>Texas añade infección e isquemia</strong>, que son las dos cosas que de verdad cuestan el pie. El riesgo de amputación sube <strong>en ambas direcciones de la tabla</strong>.</div></div>
+
+  <div class="tw"><table class="t"><thead><tr><th>Grado ↓ / Estadio →</th><th>A · limpia</th><th>B · infección</th><th>C · isquemia</th><th>D · infección + isquemia</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>0</strong> · pre/postulcerativa epitelizada</td><td>0-A</td><td>0-B</td><td>0-C</td><td class="dm">0-D</td></tr>
+    <tr><td class="dn"><strong>I</strong> · superficial (no tendón/cápsula/hueso)</td><td>I-A</td><td>I-B</td><td>I-C</td><td class="dm">I-D</td></tr>
+    <tr><td class="dn"><strong>II</strong> · penetra a tendón o cápsula</td><td>II-A</td><td class="dm">II-B</td><td class="dm">II-C</td><td class="dm">II-D</td></tr>
+    <tr><td class="dm"><strong>III</strong> · penetra a hueso o articulación</td><td class="dm">III-A</td><td class="dm">III-B</td><td class="dm">III-C</td><td class="dm"><strong>III-D</strong> 🚨</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">🦴</span><div><strong>Dos lecturas rápidas de la tabla:</strong> <strong>grado III</strong> = hueso o articulación → <strong>asume osteomielitis</strong> hasta demostrar lo contrario. <strong>Estadio D</strong> = infección + isquemia → la casilla con <strong>mayor prevalencia de amputación</strong> en la validación original.</div></div>
+
+  <div class="calc-w">
+    <div id="tx-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcTEXAS()">Clasificar</button>
+      <button class="calc-btn sc" onclick="resetTEXAS()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="tx-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧾</span><span class="st">¿Cuál clasificación uso? — Texas vs SINBAD vs WIfI vs Wagner</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Sistema</th><th>Qué mide</th><th>Úsalo para</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>Texas</strong></td><td>Profundidad (0–III) × infección/isquemia (A–D)</td><td><strong>Describir la úlcera y estimar el riesgo de amputación</strong>. El caballito de batalla en consulta</td></tr>
+    <tr><td class="dn"><strong>SINBAD</strong></td><td>Sitio, isquemia, neuropatía, infección, área, profundidad (0–6)</td><td><strong>Comunicar entre niveles</strong> de atención y auditar resultados (rápido y simple)</td></tr>
+    <tr><td class="dn"><strong>WIfI</strong></td><td>Herida × isquemia × infección (0–3 cada uno)</td><td><strong>Decidir si revascularizar</strong> y estimar el beneficio de hacerlo</td></tr>
+    <tr><td class="dm"><strong>IWGDF/IDSA</strong></td><td class="dm">Gravedad de la <strong>infección</strong> (1–4, sufijo O)</td><td class="dm">Decidir <strong>vía, hospitalización y duración</strong> del antibiótico</td></tr>
+    <tr><td class="dn">Wagner</td><td>Solo profundidad y necrosis (0–5)</td><td>Histórico y aún muy usado, pero <strong>ignora infección e isquemia</strong> por separado → hoy se prefiere Texas</td></tr>
+  </tbody></table></div>
+  <div class="alert a-g" style="margin-top:8px;"><span class="ai">💡</span><div>No compiten: se complementan. En la práctica: <strong>Texas</strong> para describir la úlcera, <strong>IWGDF/IDSA</strong> para la infección, <strong>WIfI</strong> cuando huele a isquemia.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">WIfI — riesgo de amputación y beneficio de revascularizar</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-i"><span class="ai">📏</span><div><strong>W</strong>ound · <strong>I</strong>schemia · <strong>f</strong>oot <strong>I</strong>nfection. Estratifica el <strong>riesgo de amputación mayor a 1 año</strong> y el <strong>beneficio esperado de la revascularización</strong>.</div></div>
+  <div class="calc-w">
+    <div id="wi-items"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcWIFI()">Calcular</button>
+      <button class="calc-btn sc" onclick="resetWIFI()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="wi-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗓️</span><span class="st">Riesgo de ulceración IWGDF y frecuencia de revisión</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Categoría</th><th>Perfil</th><th>Revisar el pie</th></tr></thead><tbody>
+    <tr><td class="dn"><strong>0 — Muy bajo</strong></td><td>Sin neuropatía ni EAP</td><td>1 vez al año</td></tr>
+    <tr><td class="dn"><strong>1 — Bajo</strong></td><td>Neuropatía <strong>o</strong> EAP</td><td>Cada <strong>6–12 meses</strong></td></tr>
+    <tr><td class="dm"><strong>2 — Moderado</strong></td><td class="dm">Neuropatía + EAP, <strong>o</strong> neuropatía + deformidad, <strong>o</strong> EAP + deformidad</td><td class="dm">Cada <strong>3–6 meses</strong></td></tr>
+    <tr><td class="dm"><strong>3 — Alto</strong></td><td class="dm">Neuropatía o EAP <strong>+ úlcera o amputación previa</strong>, o ERC terminal</td><td class="dm">Cada <strong>1–3 meses</strong></td></tr>
+  </tbody></table></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>El paciente con <strong>úlcera previa o amputación</strong> es <strong>categoría 3 de por vida</strong>. No hay "alta". Hay <strong>remisión vigilada</strong>.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo — el pie diabético agudo, paso a paso</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="an" id="algo-box"></div>
+  <div style="margin-top:10px;"><button class="calc-btn sc" onclick="algoStart()">↩ Empezar de nuevo</button></div>
+</div></div>
+</div>
+<div class="panel" id="tab-txc">
+<div class="alert a-g"><span class="ai">💡</span><div><div class="at">Lo que realmente cura</div><strong>Descarga + desbridamiento + perfusión + control de la infección.</strong> En ese orden de importancia. El apósito es lo <strong>menos</strong> determinante, y es en lo único en que solemos pensar.</div></div>
+<div class="chips" id="txc-chips">
+  <button class="pchip on" onclick="setTxc('nofx',this)">🟢 Úlcera SIN infección</button>
+  <button class="pchip" onclick="setTxc('leve',this)">🟡 Infección leve</button>
+  <button class="pchip" onclick="setTxc('char',this)">🔥 Charcot activo</button>
+  <button class="pchip" onclick="setTxc('no',this)">❌ NO hacer</button>
+</div>
+<div id="txc-body"></div>
+</div>
+<div class="panel" id="tab-txh">
+<div class="alert a-i"><span class="ai">🛏️</span><div><div class="at">Hospital: infección grave, hueso, isquemia</div>Aquí el desenlace lo deciden tres cosas: <strong>drenar a tiempo</strong>, <strong>revascularizar a tiempo</strong> y <strong>no confundir el Charcot con una infección</strong>.</div></div>
+<div class="chips" id="txh-chips">
+  <button class="pchip on" onclick="setTxh('modgrave',this)">🔴 Infección moderada/grave</button>
+  <button class="pchip" onclick="setTxh('osteo',this)">🦴 Osteomielitis</button>
+  <button class="pchip" onclick="setTxh('isq',this)">🩸 Isquemia</button>
+  <button class="pchip" onclick="setTxh('charg',this)">🔥 Charcot complicado</button>
+</div>
+<div id="txh-body"></div>
+</div>
+<div class="panel" id="tab-farm">
+<div class="calc-w" style="margin-bottom:12px;">
+  <label class="calc-lbl">Buscar</label>
+  <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. dicloxacilina, vancomicina, yeso, desbridamiento..." oninput="filtrarFarmacos(this.value)">
+</div>
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind">
+<div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · enfermería · paciente y familia · nota · alarma</strong>.</div></div>
+<div id="ind-body"></div>
+</div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('neuro',this)">🦶 Úlcera neuropática</button>
+  <button class="pchip" onclick="setEscen('infec',this)">🦠 Infección moderada</button>
+  <button class="pchip" onclick="setEscen('osteo',this)">🦴 Osteomielitis</button>
+  <button class="pchip" onclick="setEscen('isq',this)">🩸 Pie isquémico</button>
+  <button class="pchip" onclick="setEscen('charcot',this)">🔥 Charcot activo</button>
+  <button class="pchip" onclick="setEscen('charcron',this)">🦿 Charcot crónico</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Mientras hay úlcera</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dn">Cada visita (semanal)</td><td>Desbridar callo/tejido no viable · <strong>medir y fotografiar</strong> · revisar la piel bajo el dispositivo de descarga · <strong>probe-to-bone</strong></td></tr>
+    <tr><td class="dm"><strong>48–72 h si hay infección</strong></td><td class="dm">Reevaluar con el <strong>borde del eritema marcado</strong>. Si avanza: pus, hueso o isquemia — no "otro antibiótico"</td></tr>
+    <tr><td class="dm"><strong>4 semanas</strong></td><td class="dm">¿Se redujo <strong>~50% el área</strong>? Si NO → revisa <strong>perfusión, hueso y adherencia a la descarga</strong>. Refiere a equipo multidisciplinario</td></tr>
+    <tr><td class="dn">Al cicatrizar</td><td>Transición a <strong>calzado terapéutico con plantilla</strong>. Reforzar: es <strong>remisión</strong>, no alta</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Seguimiento del Charcot — cuándo retirar la descarga</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Δ de temperatura</strong> en cada visita (termómetro infrarrojo, mismo punto en ambos pies). Es tu marcador objetivo de actividad.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Cambio de yeso cada 1–2 semanas al inicio</strong>: al bajar el edema, el yeso queda flojo y puede lastimar.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Criterio para retirar la descarga:</strong> <strong>Δtemp &lt;2 °C</strong> de forma sostenida <strong>+ consolidación radiológica</strong>. No "cuando ya se ve mejor" ni cuando el paciente se cansó del yeso.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Duración típica: 3–6 meses o más.</strong> Retirar antes = colapso y deformidad.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Transición gradual:</strong> TCC → órtesis (CROW/walker) → <strong>calzado terapéutico a la medida</strong>. El pie <strong>cambió de forma</strong>: con su zapato de antes hace una úlcera en semanas.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Vigilancia de por vida:</strong> riesgo de <strong>Charcot contralateral</strong> y de úlcera sobre la deformidad.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Prevención de la recurrencia — "remisión, no curación"</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-w"><span class="ai">🔁</span><div>Tras cicatrizar, <strong>~40% recurre en un año</strong>. El paciente que cerró su úlcera es el paciente de <strong>mayor riesgo</strong> que tienes. Trátalo como tal.</div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Intervención</th><th>Detalle</th></tr></thead><tbody>
+    <tr><td class="dm"><strong>Calzado terapéutico + plantilla</strong></td><td class="dm">A la medida, que <strong>demuestre reducción de la presión plantar</strong>. Y que <strong>lo use</strong> — también dentro de casa</td></tr>
+    <tr><td class="dn">Autoexploración diaria</td><td>Los <strong>dos</strong> pies, incluyendo entre los dedos y la planta (espejo o familiar si no ve bien)</td></tr>
+    <tr><td class="dn"><strong>Monitoreo de temperatura en casa</strong></td><td>Δ &gt;2 °C entre puntos equivalentes por 2 días seguidos → <strong>reducir actividad y consultar</strong>. Reduce recurrencias</td></tr>
+    <tr><td class="dn">Cuidado podológico regular</td><td>Desbridar callo <strong>antes</strong> de que se vuelva úlcera. Nunca "cortarse los callos" en casa ni con navaja</td></tr>
+    <tr><td class="dn">Nunca andar descalzo</td><td>Ni en casa, ni en la playa, ni en la regadera</td></tr>
+    <tr><td class="dn">Revisión programada</td><td>Según categoría de riesgo IWGDF (ver Escalas): categoría 3 → <strong>cada 1–3 meses</strong></td></tr>
+    <tr><td class="dm"><strong>Riesgo cardiovascular</strong></td><td class="dm">Estatina, antiagregante si hay EAP, <strong>cese del tabaco</strong>, control de glucosa y presión. <strong>Estos pacientes mueren del corazón, no del pie</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <div class="biblio-title">Bibliografía</div>
+  <div class="biblio-sub">Guías IWGDF 2023 (publicadas en <em>Diabetes Metab Res Rev</em> 2024) — incluye la <strong>primera guía dedicada al Charcot activo</strong>. Todas las referencias con DOI verificado.</div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías de práctica clínica (IWGDF 2023)</div>
+
+  <div class="biblio-item"><div class="biblio-num">1</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Schaper NC, van Netten JJ, Apelqvist J, Bus SA, Fitridge R, Game F, Monteiro-Soares M, Senneville E; IWGDF Editorial Board.</strong> Practical guidelines on the prevention and management of diabetes-related foot disease (IWGDF 2023 update). <em>Diabetes Metab Res Rev.</em> 2024;40(3):e3657.</div>
+    <div class="biblio-meta"><span class="biblio-year">2023–24</span><span class="biblio-level lv-a">Guía · Nivel A</span><span class="biblio-doi">DOI: 10.1002/dmrr.3657 · PMID: 37243927</span></div>
+    <div class="biblio-note">Documento rector: prevención, clasificación y manejo. Es la guía de referencia internacional del pie diabético.</div>
+  </div></div>
+
+  <div class="biblio-item"><div class="biblio-num">2</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Senneville É, Albalawi Z, van Asten SA, et al.</strong> IWGDF/IDSA guidelines on the diagnosis and treatment of diabetes-related foot infections (IWGDF/IDSA 2023). <em>Diabetes Metab Res Rev.</em> 2024;40(3):e3687. (Publicación simultánea en <em>Clin Infect Dis.</em> 2023;ciad527.)</div>
+    <div class="biblio-meta"><span class="biblio-year">2023–24</span><span class="biblio-level lv-a">Guía · Nivel A</span><span class="biblio-doi">DOI: 10.1002/dmrr.3687 · 10.1093/cid/ciad527 · PMID: 37779457</span></div>
+    <div class="biblio-note">Origen de la clasificación de gravedad usada en la calculadora, del "infección = diagnóstico clínico" y de las duraciones de antibiótico (incluida la osteomielitis).</div>
+  </div></div>
+
+  <div class="biblio-item"><div class="biblio-num">3</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Wukich DK, Schaper NC, Gooday C, Bal A, Bem R, Chhabra A, Hastings M, Holmes C, Petrova NL, Santini Araujo MG, Senneville E, Raspovic KM.</strong> Guidelines on the diagnosis and treatment of active Charcot neuro-osteoarthropathy in persons with diabetes mellitus (IWGDF 2023). <em>Diabetes Metab Res Rev.</em> 2024;40(3):e3646.</div>
+    <div class="biblio-meta"><span class="biblio-year">2023–24</span><span class="biblio-level lv-a">Guía · Nivel A</span><span class="biblio-doi">DOI: 10.1002/dmrr.3646</span></div>
+    <div class="biblio-note"><strong>Primera guía de la IWGDF dedicada exclusivamente al Charcot activo.</strong> Sostiene la descarga/inmovilización como tratamiento y <strong>no recomienda</strong> el uso rutinario de bifosfonatos.</div>
+  </div></div>
+
+  <div class="biblio-item"><div class="biblio-num">4</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Bus SA, Armstrong DG, Crews RT, et al.</strong> Guidelines on offloading foot ulcers in persons with diabetes (IWGDF 2023 update). <em>Diabetes Metab Res Rev.</em> 2023;e3647.</div>
+    <div class="biblio-meta"><span class="biblio-year">2023</span><span class="biblio-level lv-a">Guía · Nivel A</span><span class="biblio-doi">DOI: 10.1002/dmrr.3647</span></div>
+    <div class="biblio-note">Base de la jerarquía de descarga: yeso de contacto total o dispositivo <strong>irremovible</strong> por encima de cualquier alternativa removible.</div>
+  </div></div>
+
+  <div class="biblio-item"><div class="biblio-num">5</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Monteiro-Soares M, Hamilton EJ, Russell DA, et al.</strong> Guidelines on the classification of foot ulcers in people with diabetes (IWGDF 2023 update). <em>Diabetes Metab Res Rev.</em> 2023;e3648.</div>
+    <div class="biblio-meta"><span class="biblio-year">2023</span><span class="biblio-level lv-b">Guía · Nivel B</span><span class="biblio-doi">DOI: 10.1002/dmrr.3648</span></div>
+    <div class="biblio-note">Respalda el uso de <strong>SINBAD</strong> para comunicación entre niveles y de <strong>WIfI</strong> cuando se valora revascularización.</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📙 Clasificaciones — estudio original</div>
+  <div class="biblio-item"><div class="biblio-num">6</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>Armstrong DG, Lavery LA, Harkless LB.</strong> Validation of a diabetic wound classification system: the contribution of depth, infection, and ischemia to risk of amputation. <em>Diabetes Care.</em> 1998;21(5):855-859.</div>
+    <div class="biblio-meta"><span class="biblio-year">1998</span><span class="biblio-level lv-b">Validación · Nivel B</span><span class="biblio-doi">DOI: 10.2337/diacare.21.5.855 · PMID: 9589255</span></div>
+    <div class="biblio-note">Estudio original de la <strong>clasificación de la Universidad de Texas</strong>. Demostró que la prevalencia de amputación aumenta <strong>tanto con la profundidad (grado) como con el estadio</strong>, y que la <strong>isquemia</strong> y la combinación <strong>infección + isquemia (estadio D)</strong> son las que más elevan el riesgo. Es la razón por la que Texas desplazó a Wagner en la práctica.</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Referencia institucional</div>
+  <div class="biblio-item"><div class="biblio-num">7</div><div class="biblio-body">
+    <div class="biblio-cite"><strong>CENETEC / IMSS.</strong> Guías de Práctica Clínica mexicanas sobre prevención, diagnóstico y tratamiento del pie diabético.</div>
+    <div class="biblio-meta"><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Institucional</span><span class="biblio-doi">Verifica la versión vigente y la disponibilidad del cuadro básico</span></div>
+    <div class="biblio-note">Las dosis y presentaciones de este archivo deben cotejarse con tu cuadro básico y protocolo institucional.</div>
+  </div></div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="nivel-legend">
+    <span class="biblio-level lv-a">A — Guía o evidencia fuerte</span>
+    <span class="biblio-level lv-b">B — Evidencia moderada</span>
+    <span class="biblio-level lv-c">C — Evidencia limitada</span>
+    <span class="biblio-level lv-exp">Consenso / institucional</span>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin-top:12px;"><span class="ai">ℹ️</span><div>Material de <strong>apoyo educativo</strong> basado en las guías IWGDF 2023. Verifica dosis, disponibilidad y conducta contra tu <strong>protocolo institucional</strong> y la <strong>GPC vigente (CENETEC/IMSS)</strong>. Última revisión: julio 2026.</div>
+</div>
+</div>
+
+<script>
+/* ============ NÚCLEO COMPARTIDO — SERIE PSIQUIATRÍA ============ */
+var AC='#4a2d7a', C2='#0c3b6e', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#f1ecf8';
+
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id);
+  if(t)t.classList.add('on');
+  var b=document.querySelectorAll('.tab');
+  for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling,sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+function fpTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+/* ---------- FICHAS (estilo Sífilis) ---------- */
+var FPN=0;
+function poprow(t,v,c){
+  return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;">'+
+    '<span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span>'+
+    '<span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';
+}
+function buildSifCards(color,farmacos){
+  var h='';
+  for(var i=0;i<farmacos.length;i++){
+    var f=farmacos[i]; FPN++; var id='fp'+FPN;
+    var col=f.pri?color:'#374151';
+    if(f.no)col='#7b1c1c';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';
+    h+='<div id="'+id+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';
+    h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';
+    if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';
+    if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';
+    h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');
+    if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#eef4fb;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  }
+  return h;
+}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){
+  var h='<div style="margin-top:12px;">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>';
+  h+=buildSifCards(cardColor||badgeColor,farmacos);
+  h+='</div>';
+  return h;
+}
+function setTxc(k,el){
+  var c=document.querySelectorAll('#txc-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXC[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+function setTxh(k,el){
+  var c=document.querySelectorAll('#txh-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXH[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txh-body').innerHTML=h;
+}
+
+/* ---------- FÁRMACOS (acordeón) ---------- */
+var FDN=0;
+function fdTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+function famTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';
+}
+function farmCard(f,color,abrir){
+  FDN++; var id='fd'+FDN;
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div>';
+  h+='<div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';
+  h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';
+  h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';
+  if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';
+  h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function filtrarFarmacos(q){
+  q=(q||'').toLowerCase().trim();
+  var h='',hits=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j];
+      var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();
+      if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}
+    }
+    if(cards){
+      h+='<div style="margin-bottom:12px;">';
+      h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';
+      h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';
+      h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';
+      h+='<div id="'+fid+'">'+cards+'</div></div>';
+    }
+  }
+  if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+
+/* ---------- INDICACIONES ---------- */
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var fam=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j],id='ind'+i+'-'+j;
+      h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';
+      h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';
+      h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+      h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';
+      h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';
+      var d='';
+      for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';
+      h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';
+      h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';
+      h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';
+      h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente y familia</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';
+      h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+      h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+function indTog(id){
+  var el=document.getElementById(id),t=document.getElementById(id+'-t');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(t)t.innerHTML=open?'▼ ocultar':'► ver';
+}
+
+/* ---------- ESCENARIOS ---------- */
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';
+  h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';
+  h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';
+  h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';
+  h+='</div></div>';
+  document.getElementById('escen-body').innerHTML=h;
+}
+
+/* ---------- ALGORITMO ---------- */
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){
+    h='<div class="a-q">'+n.q+'</div>';
+    for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';
+  } else {
+    var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';
+  }
+  b.innerHTML=h;
+}
+
+/* ---------- ESCALA GENÉRICA POR ÍTEMS ---------- */
+/* items: [{k:'clave', t:'texto', max:4, labels:[...]}] */
+var SC={};
+function buildEscala(cont,items,pref){
+  var h='';
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    SC[it.k]=0;
+    h+='<div style="margin-bottom:12px;">';
+    h+='<div style="font-size:12.5px;font-weight:700;color:#111827;margin-bottom:5px;">'+(i+1)+'. '+it.t+'</div>';
+    for(var v=0;v<it.labels.length;v++){
+      h+='<button class="opt" data-sc="'+it.k+'" onclick="scPick(\''+it.k+'\','+it.vals[v]+',this)" style="margin-bottom:4px;">'+it.vals[v]+' — '+it.labels[v]+'</button>';
+    }
+    h+='</div>';
+  }
+  document.getElementById(cont).innerHTML=h;
+}
+function scPick(k,v,el){
+  SC[k]=v;
+  var g=document.querySelectorAll('[data-sc="'+k+'"]');
+  for(var i=0;i<g.length;i++)g[i].classList.remove('on');
+  if(el)el.classList.add('on');
+}
+function scSum(keys){
+  var s=0;
+  for(var i=0;i<keys.length;i++)s+=(SC[keys[i]]||0);
+  return s;
+}
+function scReset(keys,resId){
+  for(var i=0;i<keys.length;i++)SC[keys[i]]=0;
+  var all=document.querySelectorAll('[data-sc]');
+  for(var j=0;j<all.length;j++)all[j].classList.remove('on');
+  var r=document.getElementById(resId);
+  if(r){r.className='calc-result';r.innerHTML='';}
+}
+
+/* ============ PIE DIABÉTICO Y PIE DE CHARCOT — DATOS ============ */
+var AC='#0b6b6b', C2='#0c3b6e', C3='#374151', CO='#0a5c45', NO='#7b1c1c', CH='#7a4a00';
+
+/* ---------- FICHAS MAESTRAS ---------- */
+var F_DESC={pri:true,linea:'⭐ 1ª línea — lo que realmente cura la úlcera',n:'DESCARGA (offloading)',
+  dlb:'Estándar de oro',
+  da:'<b>Yeso de contacto total (TCC)</b> o <b>walker irremovible</b> (rendered irremovable) — cambio semanal',
+  dur:'Hasta la <b>cicatrización completa</b>; luego calzado terapéutico <b>de por vida</b>',
+  prep:'Jerarquía IWGDF 2023: ① TCC o walker <b>irremovible</b> → ② walker <b>removible</b> (solo si hay contraindicación) → ③ calzado/fieltro (último recurso, el peor). <b>Lo irremovible gana porque el paciente no se lo puede quitar.</b>',
+  iv:'Aplicación por personal entrenado',
+  ci:'Precaución si hay <b>infección moderada-grave</b> o <b>isquemia grave</b> → usa dispositivo removible para poder revisar el pie a diario',
+  ea:'Úlceras iatrogénicas por roce del yeso (por eso lo revisa alguien entrenado)',
+  nota:'<b>Esta es la ficha más importante de todo el archivo.</b> El apósito de moda, la crema y el antibiótico <b>no cierran una úlcera plantar si el paciente sigue caminando sobre ella</b>. La presión repetida es la causa; quitar la presión es el tratamiento. <b>Si el paciente camina, la úlcera no cierra: así de simple.</b> <b>Evidencia:</b> IWGDF 2023 (descarga).'};
+
+var F_DESB={pri:true,linea:'⭐ 1ª línea — preparación del lecho',n:'Desbridamiento cortante',
+  dlb:'Frecuencia',
+  da:'<b>Cada visita</b> mientras haya tejido necrótico, esfacelo o <b>hiperqueratosis en el borde</b>',
+  prep:'Retirar callo perilesional (es un elevador de presión y esconde la úlcera real), esfacelo y tejido no viable, hasta ver <b>tejido sano sangrante</b>. Volver a medir y fotografiar.',
+  iv:'Consultorio, bisturí; anestesia rara vez necesaria (neuropatía)',
+  ci:'⚠️ <b>NO desbridar agresivamente el pie isquémico</b> (ITB muy bajo, necrosis seca en talón/dedos): puede convertir una necrosis seca estable en una herida abierta que no cicatriza. <b>Primero perfusión.</b>',
+  nota:'El <b>callo alrededor de la úlcera</b> no es un detalle cosmético: multiplica la presión local. Retirarlo es parte del tratamiento. En pie <b>isquémico o con necrosis seca</b>: <b>momificar y referir a vascular</b>, no desbridar.'};
+
+var F_CURA={pri:true,linea:'⭐ 1ª línea — cuidado local',n:'Cura en ambiente húmedo + control del exudado',
+  dlb:'Principio',
+  da:'Lecho <b>húmedo</b>, piel perilesional <b>seca</b>. Elegir el apósito por el <b>exudado</b>, no por la marca',
+  prep:'Poco exudado → hidrogel/hidrocoloide. Mucho exudado → espuma/alginato. Cambio según saturación (no "cada 24 h" por costumbre).',
+  iv:'Curación en consultorio/domicilio',
+  nota:'<b>Ningún apósito ha demostrado ser superior de forma consistente</b> (IWGDF 2023): la evidencia que sí es fuerte está en la <b>descarga</b>, el <b>desbridamiento</b>, el <b>control de la infección</b> y la <b>perfusión</b>. No gastes el presupuesto en apósitos caros y le dejes al paciente su zapato de siempre.'};
+
+var F_ATB_L={pri:true,linea:'⭐ 1ª línea — infección LEVE (grado 2)',n:'Antibiótico oral dirigido a cocos Gram+',
+  dlb:'Esquema',
+  da:'<b>Dicloxacilina</b> 500 mg VO c/6 h · <b>Cefalexina</b> 500 mg VO c/6 h · <b>Amoxicilina/clavulanato</b> 875/125 mg VO c/12 h',
+  dur:'<b>1–2 semanas</b> (extender a 3–4 solo si la respuesta es lenta). <b>No prolongar "por si acaso".</b>',
+  prep:'Cubrir <b>S. aureus y estreptococo</b>. Si hay riesgo de <b>SARM</b> (colonización previa, prevalencia local alta, hospitalización reciente): TMP/SMX 160/800 mg c/12 h, doxiciclina 100 mg c/12 h, o clindamicina 300–450 mg c/8 h.',
+  iv:'VO · ambulatorio',
+  nota:'⚠️ <b>El antibiótico NO es tratamiento de la úlcera</b>: es tratamiento de la <b>infección</b>. <b>Toda úlcera abierta está colonizada</b> — la colonización <b>no</b> se trata. Sin ≥2 signos de inflamación, <b>no hay infección y no va antibiótico</b>. <b>Evidencia:</b> IWGDF/IDSA 2023.'};
+
+var F_CULT={pri:true,linea:'⭐ Antes del antibiótico',n:'Cultivo de TEJIDO profundo (no hisopo)',
+  dlb:'Técnica',
+  da:'Tras <b>desbridar y limpiar</b>: tomar <b>tejido/curetaje profundo</b> o aspirado. En osteomielitis: <b>biopsia ósea</b> (estándar de oro)',
+  prep:'Idealmente <b>antes</b> de iniciar el antibiótico (o tras 48–72 h de ventana si ya lo recibió y está estable).',
+  iv:'Consultorio / quirófano',
+  nota:'<b>El hisopado superficial cultiva la flora de la superficie, no al patógeno.</b> Es la causa más frecuente de tratar <i>Pseudomonas</i> o <i>Enterococcus</i> que nunca fueron el problema — y de escalar antibióticos sin necesidad.'};
+
+var F_PERF={pri:true,linea:'⭐ 1ª línea — sin sangre no cicatriza',n:'Evaluar y restaurar la PERFUSIÓN',
+  dlb:'Evaluación',
+  da:'Pulsos + <b>ITB</b> + <b>presión de dedo o índice dedo-brazo (TBI)</b> + ondas Doppler',
+  prep:'ITB <b>&lt;0.9</b> = enfermedad arterial periférica. ITB <b>&gt;1.3</b> = <b>no interpretable</b> (calcificación de Mönckeberg — muy frecuente en diabetes) → usa <b>presión de dedo</b> (≥30 mmHg favorece cicatrización) o TcPO₂ (≥25 mmHg).',
+  iv:'Consulta / angiología',
+  nota:'⚠️ <b>Un ITB "normal" o alto NO descarta isquemia en el diabético.</b> Las arterias calcificadas no se comprimen y el índice sale falsamente elevado. <b>Si la úlcera no cicatriza en 4–6 semanas con descarga correcta → piensa perfusión y refiere a vascular.</b>'};
+
+var F_CH_DESC={pri:true,linea:'⭐ 1ª línea — Charcot activo: LO ÚNICO que detiene la destrucción',n:'Inmovilización y descarga TOTAL inmediata',
+  dlb:'Conducta',
+  da:'<b>Yeso de contacto total (TCC)</b> + <b>NO apoyo</b> (o carga mínima con muletas/silla) — <b>desde el día de la sospecha, sin esperar la resonancia</b>',
+  dur:'<b>Meses</b>, no semanas: típicamente <b>3–6 meses o más</b>. Se retira cuando la Δ de temperatura es <b>&lt;2 °C</b> respecto al pie contralateral <b>y</b> hay consolidación radiológica',
+  prep:'Cambio de yeso <b>cada 1–2 semanas</b> al inicio (el edema baja rápido y el yeso queda flojo). Después, transición gradual a órtesis (CROW / walker) y luego a calzado terapéutico a la medida.',
+  iv:'Ortopedia / clínica de pie diabético',
+  nota:'<b>El tiempo es hueso.</b> Cada semana caminando sobre un Charcot activo es colapso óseo irreversible → deformidad en mecedora → úlcera → amputación. <b>Ante la sospecha, inmoviliza HOY</b> y luego confirma con imagen. <b>Evidencia:</b> IWGDF 2023 (primera guía dedicada a Charcot activo).'};
+
+var F_CH_IMG={pri:true,linea:'⭐ Confirmación diagnóstica',n:'Imagen en Charcot (RM)',
+  dlb:'Estudio',
+  da:'<b>Radiografía</b> con carga (comparativa) + <b>Resonancia magnética</b> (el estudio de elección)',
+  prep:'⚠️ En el <b>Charcot fase 0</b> (activo temprano) la <b>radiografía es NORMAL</b> — solo hay edema óseo, visible en RM. Una placa normal <b>no descarta nada</b>. Si no hay RM: gammagrafía/SPECT o repetir la Rx en 2–4 semanas <b>manteniendo la inmovilización mientras tanto</b>.',
+  iv:'Imagenología',
+  nota:'La RM también ayuda al diferencial con <b>osteomielitis</b> (aunque puede ser difícil): la osteomielitis suele ser <b>adyacente a una úlcera</b> y afectar un hueso; el Charcot afecta <b>múltiples huesos y articulaciones del mediopié</b>, sin puerta de entrada.'};
+
+var F_CX={pri:false,linea:'Cirugía — cuándo',n:'Desbridamiento / drenaje / amputación / cirugía de Charcot',
+  dlb:'Indicaciones urgentes',
+  da:'<b>Absceso, fascitis necrosante, gas en tejidos, isquemia con sepsis</b> → <b>quirófano URGENTE</b>, no "mañana en la lista"',
+  prep:'Osteomielitis: resección/amputación menor puede <b>acortar el antibiótico</b>. Charcot crónico: reconstrucción/exostectomía si hay deformidad con úlcera recurrente o inestabilidad.',
+  iv:'Quirófano',
+  nota:'<b>Una infección profunda con sepsis en el pie diabético es una urgencia quirúrgica</b>, igual que una apendicitis. El antibiótico solo no drena pus.'};
+
+var F_REVASC={pri:false,linea:'2ª línea — isquemia',n:'Revascularización',
+  dlb:'Indicación',
+  da:'Úlcera + <b>presión de dedo &lt;30 mmHg</b>, TcPO₂ &lt;25 mmHg, o úlcera <b>sin cicatrizar a las 4–6 semanas</b> pese a manejo óptimo',
+  prep:'Endovascular o bypass, según anatomía y centro. Evaluar con <b>WIfI</b> (calculadora en Escalas).',
+  iv:'Angiología / cirugía vascular',
+  nota:'<b>No esperes a la gangrena.</b> El pie diabético isquémico duele poco (neuropatía) y por eso llega tarde. Toda úlcera que no avanza necesita que le preguntes por la sangre que le llega.'};
+
+var F_METAB={pri:true,linea:'Coadyuvante — el terreno',n:'Control metabólico y de comorbilidades',
+  dlb:'Objetivos',
+  da:'<b>Glucemia</b> (individualizada), <b>tabaquismo = 0</b>, estatina + antiagregante si hay EAP, nutrición y proteínas, corregir anemia y edema',
+  iv:'Consulta',
+  nota:'El tabaco es el factor modificable con más impacto en la perfusión distal. Y la desnutrición (albúmina baja) cierra la puerta a la cicatrización: <b>una herida come proteínas</b>.'};
+
+var N_ATB_NO={no:true,linea:'❌ Error muy frecuente',n:'Antibiótico a la úlcera NO infectada',
+  dlb:'Por qué no',
+  da:'<b>Toda úlcera abierta está colonizada por bacterias.</b> Colonización ≠ infección',
+  nota:'Sin <b>≥2 signos de inflamación</b> (eritema, calor, dolor/hipersensibilidad, induración, secreción purulenta) <b>no hay infección</b>. Dar antibiótico "para que no se infecte" solo genera <b>resistencia, diarrea por C. difficile y falsa tranquilidad</b> mientras el paciente sigue caminando sobre la herida. <b>Evidencia:</b> IWGDF/IDSA 2023.'};
+
+var N_HISOPO={no:true,linea:'❌ No sirve',n:'Cultivo por hisopado superficial',
+  dlb:'Por qué no',
+  da:'Cultiva colonizadores de la superficie, no el patógeno del tejido profundo',
+  nota:'Resultado típico: "flora mixta" o <i>Pseudomonas</i> → se escala el antibiótico sin necesidad. <b>Toma tejido, no superficie.</b>'};
+
+var N_BIFOS={no:true,linea:'❌ No de rutina',n:'Bifosfonatos en Charcot activo',
+  dlb:'Por qué no',
+  da:'La IWGDF 2023 <b>no recomienda</b> el uso rutinario de bifosfonatos (ni calcitonina) para tratar el Charcot activo',
+  nota:'Suena lógico (osteólisis mediada por RANKL), pero los estudios <b>no demostraron beneficio clínico</b> en tiempo de resolución ni en desenlaces. <b>El tratamiento con evidencia sigue siendo la descarga con yeso.</b> No cambies un yeso por una pastilla.'};
+
+var N_CAMINAR={no:true,linea:'❌ La causa del fracaso',n:'"Que camine poquito" / dispositivo removible sin supervisión',
+  dlb:'Por qué no',
+  da:'El paciente <b>no siente dolor</b> (neuropatía) → se quita el walker → camina → la úlcera no cierra y el Charcot colapsa',
+  nota:'La adherencia a un dispositivo <b>removible</b> es notoriamente mala, y el paciente no tiene la señal de alarma que tenemos los demás: <b>el dolor</b>. Por eso la IWGDF prefiere lo <b>irremovible</b>. No es desconfianza: es fisiopatología.'};
+
+/* ---------- TX CONSULTA ---------- */
+var TXC={
+ nofx:[['1ª Línea','Úlcera SIN infección — lo que sí cura',AC,[F_DESC,F_DESB]],
+       ['2ª Línea','Cuidado local y perfusión',C2,[F_CURA,F_PERF]],
+       ['3ª Línea','Si no cicatriza a las 4–6 semanas',C3,[F_REVASC]],
+       ['Coadyuvantes','El terreno',CO,[F_METAB]]],
+ leve:[['1ª Línea','Infección LEVE (grado 2 IWGDF/IDSA)',AC,[F_CULT,F_ATB_L]],
+       ['2ª Línea','Sin esto, el antibiótico no basta',C2,[F_DESC,F_DESB]],
+       ['3ª Línea','Evaluar perfusión siempre',C3,[F_PERF]],
+       ['Coadyuvantes','Vigilancia',CO,[{pri:true,linea:'Coadyuvante',n:'Reevaluación a las 48–72 h',
+         dlb:'Qué revisar',
+         da:'Marcar el <b>borde del eritema con plumón</b> y comparar. Menos eritema, menos edema, menos exudado = va bien',
+         iv:'Consulta',
+         nota:'Si a las 48–72 h <b>empeora</b> (eritema que avanza, fiebre, dolor desproporcionado, crepitación, bullas, necrosis) → <b>hospital y valoración quirúrgica</b>. La infección del pie diabético puede pasar de leve a amputación en días.'}]]],
+ char:[['1ª Línea','⚠️ Charcot ACTIVO — el reloj corre',CH,[F_CH_DESC,F_CH_IMG]],
+       ['2ª Línea','Descartar lo que se le parece',C2,[{pri:false,linea:'2ª línea — diferencial',n:'Descartar infección, TVP y gota',
+         dlb:'Cómo',
+         da:'¿Hay <b>puerta de entrada</b> (úlcera, fisura, herida)? ¿Fiebre, leucocitosis, PCR muy alta? ¿Signos de TVP? ¿Monoarticular con dolor intenso (gota)?',
+         prep:'<b>Prueba de la elevación:</b> eleva la pierna 5–10 minutos. En el <b>Charcot</b> el eritema <b>disminuye</b> claramente (es vasodilatación/inflamación neurogénica); en la <b>celulitis</b> el eritema <b>persiste</b>.',
+         iv:'Consulta',
+         nota:'El Charcot sin úlcera <b>casi nunca es infección</b>: sin puerta de entrada, las bacterias no llegan solas al hueso. <b>Ese solo dato reordena todo el caso.</b>'}]],
+       ['3ª Línea','Vigilancia objetiva',C3,[{pri:false,linea:'3ª línea — seguimiento',n:'Termometría cutánea (Δ de temperatura)',
+         dlb:'Método',
+         da:'Termómetro infrarrojo: comparar <b>el mismo punto</b> en ambos pies. <b>Δ &gt;2 °C</b> = actividad inflamatoria',
+         iv:'Consulta / domicilio',
+         nota:'Es la forma <b>barata y objetiva</b> de saber si el Charcot sigue activo y cuándo se puede empezar a retirar la descarga. También sirve para vigilar recurrencia de úlcera en pacientes de alto riesgo.'}]],
+       ['Coadyuvantes','Lo que NO ayuda',NO,[N_BIFOS,N_CAMINAR]]],
+ no:[['❌ NO recomendados','Lo que hace daño (y es lo que más se hace)',NO,[N_ATB_NO,N_HISOPO,N_CAMINAR,N_BIFOS]],
+     ['Coadyuvantes','Lo que SÍ funciona',AC,[F_DESC,F_DESB,F_PERF]]]
+};
+
+/* ---------- TX HOSPITALARIO ---------- */
+var TXH={
+ modgrave:[['1ª Línea','Infección MODERADA / GRAVE (grado 3–4)',AC,[{pri:true,linea:'⭐ 1ª línea — antibiótico IV empírico de amplio espectro',n:'Esquema IV inicial',
+     dlb:'Opciones',
+     da:'<b>Ampicilina/sulbactam</b> 3 g IV c/6 h · <b>Piperacilina/tazobactam</b> 4.5 g IV c/6–8 h · <b>Ceftriaxona</b> 1–2 g IV c/24 h + <b>metronidazol</b> 500 mg IV c/8 h · <b>Ertapenem</b> 1 g IV c/24 h',
+     dur:'Ajustar a las 48–72 h con el cultivo de tejido. <b>Desescalar</b> y pasar a VO en cuanto haya respuesta clínica. Total: <b>1–3 semanas</b> (tejido blando)',
+     prep:'Añadir cobertura de <b>SARM</b> (vancomicina 15–20 mg/kg IV c/8–12 h, linezolid 600 mg c/12 h o daptomicina 6 mg/kg/día) si: colonización conocida, prevalencia local alta, infección grave o falla previa.',
+     iv:'IV · hospitalizado',
+     mon:'Función renal y niveles de vancomicina; PCR y clínica cada 48–72 h; marcar el borde del eritema',
+     nota:'La <b>duración</b> se cuenta por la <b>infección de tejido blando</b>, no por "hasta que cierre la úlcera". <b>El antibiótico no cierra heridas.</b>'},F_CULT]],
+   ['2ª Línea','Lo que decide el desenlace',C2,[F_CX,F_PERF]],
+   ['3ª Línea','Sin esto, recae',C3,[F_DESC]],
+   ['Coadyuvantes','Soporte',CO,[F_METAB]]],
+ osteo:[['1ª Línea','Osteomielitis — confirmar antes de tratar 6 semanas',AC,[{pri:true,linea:'⭐ 1ª línea — diagnóstico',n:'Probe-to-bone + imagen + biopsia ósea',
+     dlb:'Diagnóstico',
+     da:'<b>Probe-to-bone (+)</b> con sonda roma que toca hueso duro/áspero + <b>Rx alterada</b> → alta probabilidad. <b>RM</b> si hay duda. <b>Biopsia ósea = estándar de oro</b> (cultivo e histología)',
+     prep:'Sospecha alta si: úlcera <b>&gt;2 cm²</b>, <b>&gt;3 mm de profundidad</b>, evolución &gt;2 semanas sin cicatrizar, <b>VSG &gt;70 mm/h</b>, o "dedo en salchicha".',
+     iv:'Consulta / quirófano',
+     nota:'El <b>probe-to-bone</b> es gratis, tarda 10 segundos y cambia el diagnóstico. En un pie con úlcera <b>de alto riesgo</b>, un probe positivo tiene alto valor predictivo. <b>Úsalo siempre.</b>'},
+    {pri:true,linea:'⭐ Tratamiento',n:'Antibiótico dirigido (duración según la cirugía)',
+     dlb:'Duración',
+     da:'<b>Sin cirugía / manejo médico:</b> ~<b>6 semanas</b> · <b>Resección parcial con hueso infectado residual:</b> ~<b>3 semanas</b> · <b>Resección completa del hueso infectado</b> (p. ej. amputación de dedo): <b>≤1 semana</b> (solo cobertura de tejido blando)',
+     prep:'Dirigir por <b>cultivo óseo</b>. Buena biodisponibilidad ósea VO: <b>clindamicina, TMP/SMX, levofloxacino/ciprofloxacino + clindamicina, linezolid</b> (vigilar mielosupresión si &gt;2 semanas), doxiciclina.',
+     iv:'IV inicial → VO',
+     nota:'<b>Quitar el hueso infectado acorta el antibiótico.</b> Esa es la lógica: no es "cirugía vs antibiótico", es <b>cuánto hueso queda</b>.'}]],
+   ['2ª Línea','Cirugía',C2,[F_CX]],
+   ['3ª Línea','Perfusión',C3,[F_PERF,F_REVASC]],
+   ['Coadyuvantes','Descarga',CO,[F_DESC]]],
+ isq:[['1ª Línea','Isquemia crítica / úlcera que no cicatriza',AC,[F_PERF,F_REVASC]],
+   ['2ª Línea','Si además hay infección',C2,[F_CX]],
+   ['3ª Línea','Cuidado local prudente',C3,[{pri:false,linea:'3ª línea — precaución',n:'Necrosis seca en pie isquémico',
+     dlb:'Conducta',
+     da:'<b>Mantener seca y momificada</b>; NO desbridar ni humedecer hasta revascularizar',
+     iv:'Consulta',
+     nota:'Abrir una necrosis seca en un pie sin flujo convierte una lesión estable en una herida que <b>no puede cicatrizar</b> y se infecta. <b>Primero sangre, después bisturí.</b>'}]],
+   ['Coadyuvantes','Riesgo cardiovascular',CO,[F_METAB]]],
+ charg:[['1ª Línea','Charcot con úlcera o inestabilidad',CH,[F_CH_DESC,F_CX]],
+   ['2ª Línea','Si además hay infección sobre el Charcot',C2,[F_CULT,{pri:false,linea:'2ª línea',n:'Charcot + úlcera infectada',
+     dlb:'Ojo',
+     da:'Aquí <b>sí</b> puede haber osteomielitis: existe puerta de entrada. Trata la infección <b>y</b> mantén la descarga',
+     iv:'Hospital',
+     nota:'Es el escenario más difícil: la RM no distingue bien entre hueso de Charcot y hueso infectado. <b>Decide con la clínica y la biopsia ósea</b>, no solo con la imagen.'}]],
+   ['3ª Línea','Reconstrucción',C3,[{pri:false,linea:'3ª línea — Charcot crónico',n:'Cirugía reconstructiva / exostectomía',
+     dlb:'Indicación',
+     da:'Deformidad <b>en mecedora</b> con úlcera recurrente, inestabilidad del retropié, o imposibilidad de calzar el pie',
+     iv:'Ortopedia especializada',
+     nota:'Idealmente <b>en fase inactiva</b> (consolidada). La cirugía sobre un Charcot activo tiene alta tasa de complicaciones.'}]],
+   ['Coadyuvantes','De por vida',CO,[{pri:true,linea:'Coadyuvante',n:'Calzado y órtesis a la medida',
+     dlb:'Después del yeso',
+     da:'Transición: TCC → órtesis <b>CROW</b>/walker → <b>calzado terapéutico a la medida</b> con plantilla de descarga',
+     iv:'Ortesista',
+     nota:'El pie de Charcot consolidado <b>ya no es el mismo pie</b>: cambió su forma y sus puntos de presión. Con el zapato de antes, hace una úlcera en semanas.'}]]]
+};
+
+/* ---------- FÁRMACOS (acordeón) ---------- */
+var FARMACOS=[
+ {familia:'Infección LEVE (grado 2) — vía oral, 1–2 semanas',color:'#0b6b6b',farmacos:[
+  {n:'Dicloxacilina',ini:'500 mg VO c/6 h',obj:'Cocos Gram+ (S. aureus sensible, estreptococo)',iv:'VO',pr:'Cápsulas 500 mg · cuadro básico',
+   ci:'Alergia a penicilinas',ea:'Molestia gástrica, diarrea',mon:'Respuesta clínica a 48–72 h',
+   nota:'Opción clásica y barata para infección leve <b>sin factores de riesgo de SARM</b>. Tomar con el estómago vacío.'},
+  {n:'Cefalexina',ini:'500 mg VO c/6 h',obj:'Cocos Gram+',iv:'VO',pr:'Cápsulas 500 mg',
+   ci:'Alergia a cefalosporinas',ea:'Diarrea, náusea',mon:'Clínica a 48–72 h',
+   nota:'Alternativa cómoda y bien tolerada. Ajustar en ERC.'},
+  {n:'Amoxicilina/clavulanato',ini:'875/125 mg VO c/12 h',obj:'Gram+, algunos Gram− y anaerobios',iv:'VO',pr:'Tabletas 875/125 mg',
+   ci:'Alergia a penicilinas; antecedente de colestasis por el fármaco',ea:'Diarrea (frecuente)',mon:'Clínica',
+   nota:'Buena opción si sospechas <b>anaerobios</b> (herida maloliente, necrótica) o flora mixta. No cubre SARM.'},
+  {n:'Trimetoprim/sulfametoxazol',ini:'160/800 mg VO c/12 h',obj:'Cobertura de <b>SARM</b> comunitario',iv:'VO',pr:'Tabletas 160/800 mg',
+   ci:'ERC avanzada, hiperkalemia, embarazo (1er y 3er trimestre), alergia a sulfas',ea:'Exantema, <b>hiperkalemia</b>, elevación de creatinina, citopenias',
+   mon:'<b>Potasio y creatinina</b> — sobre todo en diabético con ERC o con IECA/ARA-II',
+   nota:'⚠️ Cuidado con la <b>hiperkalemia</b>: el paciente típico de pie diabético tiene ERC y toma IECA. No cubre bien estreptococo → a veces se combina.'},
+  {n:'Clindamicina',ini:'300–450 mg VO c/8 h',obj:'Gram+ (incluye SARM según sensibilidad) y anaerobios',iv:'VO/IV',pr:'Cápsulas 300 mg',
+   ci:'Colitis por C. difficile previa',ea:'<b>Diarrea y C. difficile</b> (el mayor riesgo de esta clase)',mon:'Vigilar diarrea',
+   nota:'Buena penetración a <b>hueso</b> → útil en osteomielitis por VO. Vigilar resistencia inducible (test D).'},
+  {n:'Doxiciclina',ini:'100 mg VO c/12 h',obj:'SARM comunitario',iv:'VO',pr:'Cápsulas 100 mg',
+   ci:'Embarazo, niños &lt;8 años',ea:'Fotosensibilidad, esofagitis (tomar con agua y erguido)',mon:'Clínica',
+   nota:'Alternativa a TMP/SMX cuando el potasio o la creatinina no lo permiten. Cobertura de estreptococo poco confiable.'}]},
+
+ {familia:'Infección MODERADA / GRAVE (grado 3–4) — IV',color:'#0c3b6e',farmacos:[
+  {n:'Ampicilina/sulbactam',ini:'3 g IV c/6 h',obj:'Gram+, Gram− y anaerobios',iv:'IV',pr:'Frasco 1.5 g y 3 g',
+   ci:'Alergia a penicilinas',ea:'Diarrea, exantema',mon:'Función renal',
+   nota:'Buen esquema empírico inicial para infección moderada <b>sin riesgo de Pseudomonas ni SARM</b>.'},
+  {n:'Piperacilina/tazobactam',ini:'4.5 g IV c/6–8 h (infusión extendida 4 h)',obj:'Amplio espectro incl. <b>Pseudomonas</b> y anaerobios',iv:'IV',pr:'Frasco 4.5 g',
+   ci:'Alergia a penicilinas',ea:'Diarrea; <b>nefrotoxicidad aumentada si se combina con vancomicina</b>',
+   mon:'<b>Creatinina</b> (sobre todo con vancomicina), electrolitos',
+   nota:'Resérvalo para <b>infección grave, herida crónica, uso previo de antibióticos o exposición al agua</b>. Usarlo de rutina es sobretratamiento.'},
+  {n:'Ceftriaxona + metronidazol',ini:'Ceftriaxona 1–2 g IV c/24 h + metronidazol 500 mg IV c/8 h',obj:'Gram+/Gram− + anaerobios',iv:'IV',pr:'Frascos 1 g / bolsa 500 mg',
+   ci:'Alergia; metronidazol: alcohol (efecto disulfiram)',ea:'Sabor metálico, náusea; neuropatía si es prolongado',
+   mon:'Clínica',nota:'Combinación cómoda y disponible en cualquier hospital. <b>No cubre SARM ni Pseudomonas.</b>'},
+  {n:'Ertapenem',ini:'1 g IV c/24 h',obj:'Amplio espectro (NO Pseudomonas)',iv:'IV',pr:'Frasco 1 g',
+   ci:'Alergia a betalactámicos',ea:'Diarrea, convulsiones (raras)',mon:'Función renal',
+   nota:'Útil si hay <b>BLEE</b> o falla a betalactámicos previos, y por su dosis <b>única diaria</b> permite tratamiento ambulatorio IV.'},
+  {n:'Meropenem',ini:'1 g IV c/8 h',obj:'Amplio espectro incl. Pseudomonas y BLEE',iv:'IV',pr:'Frasco 500 mg / 1 g',
+   ci:'Alergia a carbapenémicos',ea:'Convulsiones (dosis altas, ERC)',mon:'Función renal',
+   nota:'Para infección <b>grave/sepsis</b> con riesgo de multirresistencia. Desescalar en cuanto llegue el cultivo.'},
+  {n:'Vancomicina',ini:'15–20 mg/kg IV c/8–12 h (dosis de carga 25–30 mg/kg si es grave)',obj:'<b>SARM</b>',iv:'IV',pr:'Frasco 500 mg / 1 g',
+   ci:'Alergia',ea:'Nefrotoxicidad (↑ con pip/tazo), síndrome de hombre rojo si se infunde rápido',
+   mon:'<b>Niveles (AUC/CMI 400–600 o valle 15–20 mg/L)</b> y creatinina',
+   nota:'Añadir a un esquema Gram−/anaerobios cuando hay riesgo de SARM. <b>Infundir en ≥1 h.</b>'},
+  {n:'Linezolid',ini:'600 mg IV o VO c/12 h',obj:'SARM; excelente <b>biodisponibilidad oral</b>',iv:'IV/VO',pr:'Tabletas 600 mg · bolsa 600 mg',
+   ci:'Uso de IMAO; precaución con ISRS (síndrome serotoninérgico)',ea:'<b>Mielosupresión</b> (&gt;2 semanas), neuropatía óptica/periférica en uso prolongado',
+   mon:'<b>BH semanal</b> si &gt;2 semanas',
+   nota:'Permite pasar a <b>VO sin perder potencia</b> — muy útil para completar tratamiento en casa. Cuidado en el paciente que toma ISRS.'},
+  {n:'Daptomicina',ini:'6 mg/kg IV c/24 h (8–10 mg/kg en infección ósea)',obj:'SARM',iv:'IV',pr:'Frasco 350/500 mg',
+   ci:'No usar en neumonía (el surfactante la inactiva)',ea:'<b>Elevación de CPK</b>, miopatía',
+   mon:'<b>CPK semanal</b>; suspender estatina si hay elevación',nota:'Alternativa a vancomicina cuando hay falla renal o intolerancia.'}]},
+
+ {familia:'Herida, descarga y coadyuvantes',color:'#0a5c45',farmacos:[
+  {n:'Yeso de contacto total (TCC)',ini:'Estándar de oro para la úlcera plantar y el Charcot activo',obj:'Redistribuir la presión y forzar la adherencia',iv:'Aplicación especializada',pr:'Cambio semanal (más seguido al inicio del Charcot)',
+   ci:'Infección profunda no controlada, isquemia grave, mala adherencia al seguimiento',ea:'Úlcera por roce del yeso, rigidez, atrofia muscular',
+   mon:'Revisión del pie en cada cambio',
+   nota:'<b>El tratamiento con la evidencia más sólida de todo el pie diabético.</b> Si no hay TCC disponible: walker <b>hecho irremovible</b> (con cinta o abrazadera).'},
+  {n:'Desbridamiento cortante',ini:'En cada visita mientras haya tejido no viable o callo',obj:'Preparar el lecho, eliminar el callo que eleva la presión',iv:'Consultorio',pr:'Bisturí, cureta',
+   ci:'<b>Pie isquémico con necrosis seca</b> (no desbridar antes de revascularizar)',ea:'Sangrado, dolor (raro por neuropatía)',
+   mon:'Medir y fotografiar la úlcera en cada visita',
+   nota:'La úlcera <b>siempre es más grande de lo que se ve</b> hasta que quitas el callo del borde.'},
+  {n:'Apósitos (elección por exudado)',ini:'Poco exudado → hidrogel/hidrocoloide · Mucho → espuma/alginato',obj:'Lecho húmedo, piel perilesional seca',iv:'Tópico',pr:'Según disponibilidad institucional',
+   ci:'—',ea:'Maceración perilesional si el apósito se satura',mon:'Cambio según saturación, no por horario fijo',
+   nota:'<b>La IWGDF no recomienda un apósito específico sobre otro.</b> El dinero rinde más en descarga que en apósitos caros.'},
+  {n:'Terapia de presión negativa (NPWT)',ini:'Considerar en heridas posquirúrgicas / posamputación con lecho complejo',obj:'Estimular tejido de granulación y controlar exudado',iv:'Dispositivo',pr:'Hospitalario',
+   ci:'Tejido necrótico sin desbridar, osteomielitis no tratada, neoplasia, hemorragia activa',ea:'Dolor al cambio, sangrado',
+   mon:'Revisión cada 48–72 h',nota:'Uso <b>selectivo</b> (sobre todo posquirúrgico), no para toda úlcera.'},
+  {n:'Estatina + antiagregante',ini:'Estatina de alta intensidad; antiagregante si hay EAP establecida',obj:'Riesgo cardiovascular (la causa real de muerte de estos pacientes)',iv:'VO',pr:'Atorvastatina 40–80 mg',
+   ci:'Según fármaco',ea:'Mialgias',mon:'Perfil lipídico',
+   nota:'⚠️ <b>La mortalidad cardiovascular tras una úlcera de pie diabético es muy alta.</b> El pie es la ventana: si tiene EAP en el pie, la tiene en el corazón.'}]},
+
+ {familia:'❌ Lo que NO debes hacer',color:'#7b1c1c',farmacos:[
+  {n:'Antibiótico a úlcera NO infectada',ini:'❌ No indicado',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'Resistencia, C. difficile, falsa tranquilidad',mon:'—',
+   nota:'<b>Toda úlcera está colonizada.</b> Sin ≥2 signos de inflamación no hay infección. El antibiótico no cierra heridas: <b>la descarga sí</b>.'},
+  {n:'Cultivo por hisopo superficial',ini:'❌ No informativo',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'Sobretratamiento dirigido a colonizadores',mon:'—',
+   nota:'Toma <b>tejido profundo</b> tras desbridar, o <b>biopsia ósea</b> si sospechas osteomielitis.'},
+  {n:'Bifosfonatos para Charcot activo',ini:'❌ No recomendados de rutina (IWGDF 2023)',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'—',mon:'—',
+   nota:'Sin beneficio clínico demostrado. <b>La descarga con yeso es el tratamiento.</b>'},
+  {n:'Oxígeno hiperbárico de rutina',ini:'❌ No para toda úlcera',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'Costo y tiempo; barotrauma',mon:'—',
+   nota:'La IWGDF lo reserva para <b>casos seleccionados</b> (úlcera isquémica que no cicatriza pese a manejo óptimo y revascularización). No es un sustituto de la revascularización.'},
+  {n:'Reposo en cama absoluto como "descarga"',ini:'❌ Contraproducente',obj:'—',iv:'—',pr:'—',
+   ci:'—',ea:'TVP, sarcopenia, úlceras por presión, dependencia',mon:'—',
+   nota:'La descarga <b>no es acostar al paciente</b>: es un dispositivo que le permite <b>caminar sin cargar la herida</b>.'}]}
+];
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Úlcera de pie diabético — manejo ambulatorio',color:'#0b6b6b',farmacos:[
+  {n:'Descarga (la indicación que cura)',
+   dosis:['Yeso de contacto total o walker <b>irremovible</b> hasta la cicatrización','Cambio semanal con revisión del pie','Después: calzado terapéutico con plantilla, <b>de por vida</b>'],
+   via:'Dispositivo de descarga',
+   enf:'1) Revisar la piel bajo el dispositivo en <b>cada cambio</b> (puede haber úlceras por roce y el paciente <b>no las siente</b>). 2) Medir y fotografiar la úlcera cada semana. 3) Verificar que el dispositivo no esté flojo cuando baje el edema.',
+   pac:'Este aparato es <b>el tratamiento</b>, no una molestia: la herida solo cierra si deja de pisarla. <b>No se lo quite</b> para bañarse o para ir al baño en la noche — cúbralo con una bolsa. Aunque no le duela y sienta que puede caminar normal, cada paso sin el aparato <b>abre otra vez lo que ya había cerrado</b>.',
+   nota:'<b>La falta de dolor es la trampa.</b> El paciente no tiene la señal que lo haría cuidarse: por eso lo irremovible funciona mejor que lo removible.',
+   al:'Fiebre, mal olor, secreción, aumento del enrojecimiento o hinchazón, dolor nuevo, o que el yeso apriete o lastime → <b>acudir el mismo día</b>.'},
+  {n:'Curación de la úlcera',
+   dosis:['Limpieza con solución fisiológica','Desbridar callo y tejido no viable en cada visita','Apósito según exudado; cambiar cuando se sature'],
+   via:'Curación local',
+   enf:'1) <b>Nunca</b> usar antisépticos citotóxicos de forma rutinaria en tejido de granulación. 2) Documentar tamaño (largo × ancho × profundidad) y fotografiar. 3) Aplicar <b>probe-to-bone</b> con sonda roma y registrar el resultado.',
+   pac:'No se ponga remedios caseros, alcohol, ni "polvos" en la herida. Revísese los <b>dos pies todos los días</b> —incluyendo entre los dedos y la planta con un espejo— y avise de cualquier cambio.',
+   nota:'Una úlcera que <b>no reduce ~50% su área en 4 semanas</b> con manejo correcto está avisando: <b>revisa perfusión, infección profunda/hueso y adherencia a la descarga</b>.',
+   al:'Herida que crece, se profundiza o expone hueso; mal olor; secreción purulenta.'}]},
+
+ {familia:'Infección — antibiótico y vigilancia',color:'#0c3b6e',farmacos:[
+  {n:'Antibiótico en pie diabético',
+   dosis:['<b>Leve:</b> VO 1–2 semanas','<b>Moderada/grave:</b> IV inicial, desescalar a las 48–72 h con cultivo','<b>Osteomielitis:</b> ~6 semanas (menos si se reseca el hueso)'],
+   via:'VO o IV según gravedad',
+   enf:'1) Tomar cultivo de <b>tejido profundo</b> antes del antibiótico. 2) <b>Marcar el borde del eritema</b> con plumón y fechar: es la forma más simple de saber si avanza. 3) Vigilar glucemia (la infección la descontrola) y función renal.',
+   pac:'El antibiótico trata la <b>infección</b>, no cierra la herida. Tómelo completo y no lo guarde "para la próxima". Si le da diarrea intensa, avise.',
+   nota:'La duración se cuenta por la <b>infección</b>, no "hasta que cierre la úlcera". Prolongar el antibiótico mientras el paciente sigue caminando sobre la herida es el ciclo más común de fracaso.',
+   al:'⚠️ Fiebre, escalofríos, eritema que avanza pese al antibiótico, dolor desproporcionado, <b>crepitación, bullas o necrosis</b> → <b>urgencias inmediatamente</b> (puede ser infección necrosante).'}]},
+
+ {familia:'⚠️ Charcot activo — indicaciones críticas',color:'#7a4a00',farmacos:[
+  {n:'Inmovilización del pie de Charcot',
+   dosis:['Yeso de contacto total <b>desde hoy</b>, sin esperar la resonancia','No apoyar el pie (muletas/silla) o carga mínima según indicación','Duración típica: <b>3–6 meses o más</b>'],
+   via:'Yeso / órtesis',
+   enf:'1) Medir <b>Δ de temperatura</b> con termómetro infrarrojo (mismo punto, ambos pies) en cada visita y <b>registrarla</b>. 2) Cambiar el yeso cada 1–2 semanas al inicio (el edema baja y queda flojo). 3) Revisar la piel en cada cambio.',
+   pac:'Su pie está <b>inflamado por dentro y los huesos están blandos</b>. Aunque no le duela y se vea "solo hinchado", si camina sobre él <b>se le va a deformar el pie de forma permanente</b>. Esto va para meses, y quitarse el aparato antes de tiempo es lo que arruina el resultado.',
+   nota:'<b>Se retira la descarga cuando la Δ de temperatura es &lt;2 °C y hay consolidación radiológica</b>, no cuando "ya se ve mejor" ni cuando el paciente se cansa del yeso.',
+   al:'Aparición de una úlcera bajo el yeso, fiebre, mal olor, o que el pie cambie de forma → revisión inmediata.'}]}
+];
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ neuro:{t:'Úlcera plantar neuropática ("mal perforante") — sin infección',
+  pres:'Úlcera <b>redonda, con borde de callo grueso</b>, en cabeza de metatarsiano o talón. <b>No duele.</b> Pulsos presentes, pie caliente y seco (autonómica), monofilamento ausente. El paciente llega "porque le vieron algo raro", no por dolor.',
+  dx:'Monofilamento 10 g + <b>probe-to-bone</b> + ITB/presión de dedo. Clasificar con <b>SINBAD</b>. Sin ≥2 signos de inflamación → <b>NO es infección</b>.',
+  tx:'<b>Descarga (TCC/walker irremovible) + desbridamiento del callo + cura húmeda.</b> <b>Sin antibiótico.</b> Control metabólico.',
+  ref:'Clínica de pie diabético / heridas.',
+  cx:'⚠️ Es la úlcera que más antibiótico recibe <b>sin necesitarlo</b> y menos descarga recibe <b>necesitándola</b>. Si a las 4 semanas no ha reducido ~50%: revisa <b>perfusión, hueso y adherencia a la descarga</b>.'},
+ infec:{t:'Infección moderada (grado 3) — celulitis y secreción',
+  pres:'Úlcera con <b>eritema &gt;2 cm</b>, calor, edema, secreción purulenta, dolor local (aunque haya neuropatía). Sin criterios de sepsis. Glucemias descontroladas de repente (es una pista).',
+  dx:'Diagnóstico <b>clínico</b> (≥2 signos de inflamación). <b>Cultivo de tejido profundo</b>. PCR/VSG. Rx para gas y hueso. <b>Probe-to-bone</b>. Evaluar perfusión.',
+  tx:'Antibiótico <b>IV empírico</b> (ampicilina/sulbactam o ceftriaxona+metronidazol; añadir cobertura de SARM si hay riesgo), desescalar con cultivo. <b>Drenaje/desbridamiento quirúrgico si hay colección.</b> Descarga.',
+  ref:'Hospitalizar si: infección grave, moderada con comorbilidad, isquemia, imposibilidad de cuidado ambulatorio o falla a VO.',
+  cx:'⚠️ Marca el borde del eritema y reevalúa a las <b>48–72 h</b>. Si avanza pese al antibiótico: <b>hay pus que drenar, hueso infectado o isquemia</b> — no es "cambiar de antibiótico".'},
+ osteo:{t:'Osteomielitis — el hueso ya está en el juego',
+  pres:'Úlcera <b>crónica (&gt;2 semanas)</b> que no cierra, <b>&gt;2 cm²</b> o <b>&gt;3 mm de profundidad</b>, "dedo en salchicha", hueso visible o palpable.',
+  dx:'<b>Probe-to-bone positivo</b> + <b>Rx alterada</b> → alta probabilidad. <b>VSG &gt;70 mm/h</b> apoya. <b>RM</b> si hay duda. <b>Biopsia ósea = estándar de oro</b> (cultivo dirigido).',
+  tx:'Antibiótico dirigido: <b>~6 semanas</b> si es manejo médico; <b>~3 semanas</b> si queda hueso infectado residual tras resección; <b>≤1 semana</b> si se resecó completo. Valorar cirugía. Descarga siempre.',
+  ref:'Cirugía / ortopedia + infectología.',
+  cx:'⚠️ <b>Una Rx normal NO descarta osteomielitis temprana</b> (los cambios tardan 2–3 semanas en verse). Si el probe-to-bone es positivo en una úlcera de alto riesgo, actúa aunque la placa esté limpia.'},
+ isq:{t:'Pie isquémico — la úlcera que no cicatriza',
+  pres:'Úlcera en <b>dedos, talón o borde lateral</b> (no en el punto de presión), dolorosa a veces, <b>borde pálido o necrótico</b>, pie frío, piel atrófica, sin vello, pulsos disminuidos o ausentes.',
+  dx:'ITB (<b>&lt;0.9</b> = EAP; <b>&gt;1.3 = no interpretable</b> por calcificación) → <b>presión de dedo</b> (≥30 mmHg favorece cicatrización) o TcPO₂. Clasificar con <b>WIfI</b>.',
+  tx:'<b>Revascularización</b> (endovascular o bypass) — sin sangre no hay cicatrización. Estatina + antiagregante + cese del tabaco. <b>NO desbridar la necrosis seca antes de revascularizar.</b>',
+  ref:'Angiología / cirugía vascular <b>sin demora</b>.',
+  cx:'⚠️ <b>El ITB alto engaña.</b> La calcificación de Mönckeberg es tan común en el diabético que un ITB "bueno" puede convivir con una isquemia grave. Usa <b>presión de dedo</b>.'},
+ charcot:{t:'⚠️ CHARCOT ACTIVO — el diagnóstico que más se pierde',
+  pres:'Pie <b>caliente, rojo, hinchado</b>, con <b>diferencia de temperatura &gt;2 °C</b> respecto al otro pie… <b>SIN herida ni puerta de entrada</b>. Duele poco o nada. El paciente <b>sigue caminando</b>. Suele haber neuropatía establecida. A veces hay antecedente de un trauma menor (un tropezón, un esguince, una cirugía del pie).',
+  dx:'Diagnóstico <b>CLÍNICO y urgente</b>. <b>Δ temperatura &gt;2 °C</b>. <b>Prueba de la elevación:</b> al elevar la pierna 5–10 min el eritema <b>disminuye</b> (en la celulitis persiste). <b>Rx puede ser NORMAL (fase 0)</b> → <b>RM</b> (edema óseo) es el estudio de elección.',
+  tx:'<b>INMOVILIZAR HOY</b>: yeso de contacto total + no apoyo. <b>No esperes la resonancia para descargar.</b> Duración de meses; se retira cuando Δtemp &lt;2 °C y hay consolidación radiológica. <b>Bifosfonatos: NO de rutina.</b>',
+  ref:'Ortopedia / clínica de pie diabético con urgencia.',
+  cx:'⚠️⚠️ <b>Este es EL error del tema:</b> se diagnostica "celulitis", "gota" o "esguince", se dan antibióticos 3 semanas y se le dice al paciente que camine. Mientras tanto, el mediopié colapsa → <b>deformidad en mecedora</b> → úlcera plantar → osteomielitis → amputación. <b>Pie caliente + hinchado + neuropatía + SIN herida = Charcot hasta demostrar lo contrario.</b>'},
+ charcron:{t:'Charcot crónico con deformidad — el pie ya cambió de forma',
+  pres:'Pie <b>ancho, con arco colapsado (deformidad en mecedora)</b>, prominencias óseas plantares, ya <b>sin</b> calor ni eritema (fase inactiva). Sobre la prominencia aparece una <b>úlcera plantar recurrente</b>.',
+  dx:'Rx en carga (evaluar deformidad y estabilidad). Δtemp <b>&lt;2 °C</b> confirma inactividad. Si hay úlcera: buscar <b>osteomielitis</b> (ahora sí hay puerta de entrada).',
+  tx:'<b>Calzado terapéutico a la medida + plantilla de descarga</b> (el pie ya no cabe en su zapato de antes). Si hay úlcera recurrente, inestabilidad o el pie no se puede calzar → <b>cirugía reconstructiva/exostectomía</b> en fase inactiva.',
+  ref:'Ortesista + ortopedia de pie.',
+  cx:'⚠️ Aquí ya se perdió la ventana del Charcot agudo. Este pie es de <b>alto riesgo de por vida</b>: revisión cada 1–3 meses, calzado especial y vigilancia de temperatura. <b>La meta ya no es curar: es evitar la amputación.</b>'}
+};
+
+/* ---------- ESCALA 1: SINBAD ---------- */
+var SB_ITEMS=[
+ {k:'s1',t:'<b>S</b>itio (Site)',vals:[0,1],labels:['Antepié','Mediopié o retropié']},
+ {k:'s2',t:'<b>I</b>squemia (Ischaemia)',vals:[0,1],labels:['Flujo conservado (al menos un pulso)','Evidencia clínica de flujo reducido']},
+ {k:'s3',t:'<b>N</b>europatía (Neuropathy)',vals:[0,1],labels:['Sensibilidad protectora conservada','Sensibilidad protectora ausente (monofilamento −)']},
+ {k:'s4',t:'Infección <b>B</b>acteriana',vals:[0,1],labels:['Ausente','Presente']},
+ {k:'s5',t:'<b>A</b>rea (superficie)',vals:[0,1],labels:['&lt;1 cm²','≥1 cm²']},
+ {k:'s6',t:'<b>D</b>epth (profundidad)',vals:[0,1],labels:['Confinada a piel y TCS','Alcanza músculo, tendón o hueso']}
+];
+var SB_KEYS=['s1','s2','s3','s4','s5','s6'];
+function calcSINBAD(){
+  var s=scSum(SB_KEYS),r=document.getElementById('sb-res'),cls,g,cond;
+  if(s<=2){cls='res-ok';g='SINBAD '+s+'/6 — riesgo BAJO';
+    cond='Mejor pronóstico de cicatrización. <b>Manejo ambulatorio</b> con <b>descarga + desbridamiento + cura</b>. Reevaluar en 1–2 semanas y medir el área: debe reducir <b>~50% en 4 semanas</b>.';}
+  else if(s===3){cls='res-mid';g='SINBAD 3/6 — riesgo INTERMEDIO';
+    cond='Pronóstico intermedio. Revisa qué componentes son positivos: si es <b>isquemia</b> → vascular; si es <b>infección</b> → cultivo de tejido y antibiótico; si es <b>profundidad</b> → probe-to-bone y descartar hueso.';}
+  else {cls='res-high';g='SINBAD '+s+'/6 — riesgo ALTO';
+    cond='<b>Peor pronóstico de cicatrización y mayor riesgo de amputación.</b> Referir a un equipo multidisciplinario de pie diabético. Valorar hospitalización, imagen para hueso y estudio vascular.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+g+'</div><div>'+cond+'</div>'+
+   '<div style="margin-top:6px;font-size:11px;opacity:.85;">SINBAD (IWGDF 2023): sistema simple y validado para <b>comunicar entre niveles de atención</b> y estimar pronóstico. No sustituye la evaluación de perfusión.</div>';
+}
+function resetSINBAD(){scReset(SB_KEYS,'sb-res');}
+
+/* ---------- ESCALA 2: INFECCIÓN IWGDF/IDSA ---------- */
+var INF_ITEMS=[
+ {k:'i1',t:'¿Hay <b>≥2 signos de inflamación</b>? (eritema, calor, dolor/hipersensibilidad, induración, secreción purulenta)',vals:[0,1],labels:['No','Sí']},
+ {k:'i2',t:'Extensión del <b>eritema</b> y profundidad',vals:[0,1,2],labels:['Eritema ≤2 cm alrededor de la úlcera, solo piel/TCS','Eritema &gt;2 cm <b>o</b> afecta estructuras profundas (absceso, fascitis, artritis, osteomielitis)','—']},
+ {k:'i3',t:'¿Hay <b>SIRS/sepsis</b>? (≥2 de: T &gt;38 o &lt;36 °C · FC &gt;90 · FR &gt;20 · leucocitos &gt;12 000 o &lt;4 000)',vals:[0,1],labels:['No','Sí']},
+ {k:'i4',t:'¿Hay <b>osteomielitis</b> (probe-to-bone +, imagen o biopsia)?',vals:[0,1],labels:['No','Sí — añade el sufijo (O)']}
+];
+var INF_KEYS=['i1','i2','i3','i4'];
+function calcINF(){
+  var r=document.getElementById('inf-res');
+  if(typeof SC['i1']==='undefined'){r.className='calc-result show res-mid';r.innerHTML='Responde al menos la primera pregunta.';return;}
+  var infl=SC['i1'],ext=SC['i2']||0,sirs=SC['i3']||0,osteo=SC['i4']||0,cls,g,cond;
+  if(!infl){cls='res-ok';g='Grado 1 — NO INFECTADA';
+    cond='<b>NO va antibiótico.</b> Toda úlcera está colonizada; sin ≥2 signos de inflamación no hay infección. <b>Tratamiento: descarga + desbridamiento + cura + control metabólico.</b>';}
+  else if(sirs){cls='res-high';g='Grado 4 — GRAVE (con SIRS/sepsis)';
+    cond='<b>URGENCIA.</b> Hospitalizar. Antibiótico <b>IV de amplio espectro</b> (pip/tazo o carbapenémico ± cobertura de SARM), <b>cultivo de tejido</b>, reanimación, <b>valoración quirúrgica urgente</b> (drenaje/desbridamiento) y evaluación vascular. Busca <b>gas, crepitación, bullas, necrosis</b> → infección necrosante.';}
+  else if(ext>=1){cls='res-mid';g='Grado 3 — MODERADA';
+    cond='Eritema &gt;2 cm o afección profunda, sin SIRS. <b>Cultivo de tejido profundo</b> + antibiótico (frecuentemente <b>IV inicial</b>: ampicilina/sulbactam, ceftriaxona+metronidazol; SARM si hay riesgo). Valorar hospitalización, cirugía si hay colección, e imagen para <b>hueso</b>. Duración 1–3 semanas.';}
+  else {cls='res-mid';g='Grado 2 — LEVE';
+    cond='Infección local, eritema ≤2 cm, solo piel/TCS. <b>Antibiótico VO 1–2 semanas</b> dirigido a Gram+ (dicloxacilina/cefalexina; añadir cobertura de SARM si hay riesgo). Cultivo de tejido si es posible. <b>Descarga y desbridamiento siguen siendo obligatorios.</b>';}
+  if(osteo&&infl){g+=' + (O) OSTEOMIELITIS';
+    cond+='<br><br>🦴 <b>Osteomielitis:</b> antibiótico dirigido por <b>biopsia ósea</b>. Duración: <b>~6 semanas</b> (médico) · <b>~3 semanas</b> si queda hueso infectado tras resección · <b>≤1 semana</b> si se resecó completo.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+g+'</div><div>'+cond+'</div>'+
+   '<div style="margin-top:6px;font-size:11px;opacity:.85;">Clasificación IWGDF/IDSA 2023. El diagnóstico de infección es <b>clínico</b>: no lo hacen ni el cultivo ni la PCR.</div>';
+}
+function resetINF(){scReset(INF_KEYS,'inf-res');}
+
+/* ---------- ESCALA 3: WIfI ---------- */
+var WI_ITEMS=[
+ {k:'w1',t:'<b>W</b>ound — herida',vals:[0,1,2,3],labels:['Sin úlcera (dolor isquémico de reposo)','Úlcera pequeña y superficial en pierna/pie distal','Úlcera más profunda con hueso/articulación expuesta; gangrena limitada a los dedos','Úlcera extensa/profunda; gangrena que afecta el antepié o el mediopié']},
+ {k:'w2',t:'<b>I</b>schemia — isquemia (ITB / presión de dedo)',vals:[0,1,2,3],labels:['ITB ≥0.80 · presión dedo ≥60 mmHg','ITB 0.60–0.79 · dedo 40–59','ITB 0.40–0.59 · dedo 30–39','ITB ≤0.39 · dedo &lt;30']},
+ {k:'w3',t:'<b>fI</b> — infección del pie (grado IWGDF/IDSA)',vals:[0,1,2,3],labels:['Sin infección','Leve (grado 2)','Moderada (grado 3)','Grave / con SIRS (grado 4)']}
+];
+var WI_KEYS=['w1','w2','w3'];
+function calcWIFI(){
+  var r=document.getElementById('wi-res');
+  if(typeof SC['w1']==='undefined'||typeof SC['w2']==='undefined'||typeof SC['w3']==='undefined'){
+    r.className='calc-result show res-mid';r.innerHTML='Responde los tres componentes (W, I y fI).';return;}
+  var W=SC['w1'],I=SC['w2'],F=SC['w3'],s=W+I+F,cls,g,cond;
+  if(s<=1){cls='res-ok';g='Estadio 1 — riesgo MUY BAJO de amputación mayor a 1 año';
+    cond='Beneficio esperado de la revascularización: <b>muy bajo</b>. Manejo conservador: descarga, cuidado local, control metabólico.';}
+  else if(s<=3){cls='res-ok';g='Estadio 2 — riesgo BAJO';
+    cond='Beneficio de revascularización: <b>bajo</b>. Optimiza descarga, infección y factores de riesgo; reevalúa la cicatrización a las 4 semanas.';}
+  else if(s<=5){cls='res-mid';g='Estadio 3 — riesgo MODERADO';
+    cond='<b>Beneficio moderado de la revascularización.</b> Evaluación vascular formal (angiotomografía/angiografía) y manejo por equipo multidisciplinario.';}
+  else {cls='res-high';g='Estadio 4 — riesgo ALTO de amputación mayor';
+    cond='<b>Beneficio alto de la revascularización</b> y de la cirugía. Referencia <b>urgente</b> a cirugía vascular. Si además fI=3 → <b>control quirúrgico de la infección primero</b>, con revascularización en paralelo o inmediatamente después.';}
+  if(I>=2&&W>=1){cond+='<br><br>🩸 <b>Isquemia significativa con herida:</b> sin restaurar perfusión, la úlcera <b>no va a cicatrizar</b> por más apósitos y antibióticos que se usen.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">WIfI '+W+'-'+I+'-'+F+' → '+g+'</div><div>'+cond+'</div>'+
+   '<div style="margin-top:6px;font-size:11px;opacity:.85;">Estimación simplificada. WIfI estratifica el <b>riesgo de amputación</b> y el <b>beneficio esperado de revascularizar</b>; la decisión final es del equipo vascular.</div>';
+}
+function resetWIFI(){scReset(WI_KEYS,'wi-res');}
+
+/* ---------- ESCALA 4: UNIVERSIDAD DE TEXAS (grado × estadio) ---------- */
+var TX_ITEMS=[
+ {k:'t1',t:'<b>GRADO</b> — profundidad de la herida',vals:[0,1,2,3],
+  labels:['<b>0</b> · Lesión pre o postulcerativa <b>completamente epitelizada</b>','<b>I</b> · Úlcera <b>superficial</b>: no llega a tendón, cápsula ni hueso','<b>II</b> · Úlcera que <b>penetra a tendón o cápsula</b>','<b>III</b> · Úlcera que <b>penetra a hueso o articulación</b>']},
+ {k:'t2',t:'<b>ESTADIO</b> — comorbilidad de la herida',vals:[0,1,2,3],
+  labels:['<b>A</b> · Sin infección ni isquemia','<b>B</b> · Con <b>INFECCIÓN</b>','<b>C</b> · Con <b>ISQUEMIA</b>','<b>D</b> · Con <b>infección E isquemia</b>']}
+];
+var TX_KEYS=['t1','t2'];
+var TX_G=['0','I','II','III'], TX_S=['A','B','C','D'];
+function calcTEXAS(){
+  var r=document.getElementById('tx-res');
+  if(typeof SC['t1']==='undefined'||typeof SC['t2']==='undefined'){
+    r.className='calc-result show res-mid';r.innerHTML='Selecciona el <b>grado</b> (profundidad) y el <b>estadio</b> (infección/isquemia).';return;}
+  var g=SC['t1'], s=SC['t2'], cod='Texas '+TX_G[g]+'-'+TX_S[s], cls, riesgo, cond='';
+
+  /* Riesgo: sube con la profundidad Y con el estadio. La isquemia y la combinación infección+isquemia son las que más pesan. */
+  var carga=g+s+(s===3?2:0)+(s===2?1:0);
+  if(carga<=1){cls='res-ok';riesgo='riesgo BAJO de amputación';}
+  else if(carga<=3){cls='res-mid';riesgo='riesgo INTERMEDIO';}
+  else {cls='res-high';riesgo='riesgo ALTO de amputación';}
+
+  /* Conducta por profundidad */
+  if(g===0){cond+='<b>Grado 0:</b> piel <b>íntegra</b> (lesión pre o postulcerativa). Estás en la fase que de verdad importa: la <b>prevención</b>. Calzado terapéutico con plantilla, desbridar el callo <b>antes</b> de que se ulcere, autoexploración diaria y revisión según categoría de riesgo IWGDF.';}
+  else if(g===1){cond+='<b>Grado I (superficial):</b> <b>descarga</b> (yeso de contacto total / walker irremovible) + desbridamiento del callo + cura húmeda. Es el grado con mejor pronóstico… <b>si se descarga de verdad</b>.';}
+  else if(g===2){cond+='<b>Grado II (llega a tendón o cápsula):</b> herida <b>profunda</b>. <b>Probe-to-bone</b> obligatorio y radiografía. Valora desbridamiento quirúrgico. Vigila muy de cerca la progresión a hueso.';}
+  else {cond+='<b>Grado III (llega a hueso o articulación):</b> 🦴 <b>asume osteomielitis hasta demostrar lo contrario.</b> Probe-to-bone, Rx (recuerda: normal <b>no descarta</b>), <b>RM</b> y <b>biopsia ósea</b>. Antibiótico dirigido ~6 semanas (menos si se reseca el hueso) + valoración quirúrgica.';}
+
+  /* Conducta por estadio */
+  if(s===0){cond+='<br><br><b>Estadio A (limpia):</b> sin infección ni isquemia → <b>NO va antibiótico</b>. El tratamiento es <b>descarga + desbridamiento + cura</b>.';}
+  else if(s===1){cond+='<br><br><b>Estadio B (infección):</b> clasifica la gravedad con la calculadora <b>IWGDF/IDSA</b> (leve/moderada/grave) y trata en consecuencia. <b>Cultivo de tejido profundo</b>, nunca hisopo. La descarga sigue siendo obligatoria.';}
+  else if(s===2){cond+='<br><br><b>Estadio C (isquemia):</b> 🩸 <b>sin sangre no cicatriza.</b> Mide <b>presión de dedo</b> (el ITB engaña por calcificación), aplica <b>WIfI</b> y refiere a <b>vascular</b>. ⚠️ <b>No desbridar la necrosis seca</b> antes de revascularizar.';}
+  else {cond+='<br><br><b>Estadio D (infección + isquemia):</b> 🚨 <b>la peor combinación.</b> Es la categoría con mayor prevalencia de amputación en la validación original. <b>Hospitalizar</b>: antibiótico IV + <b>valoración quirúrgica</b> (drenar/desbridar) + <b>revascularización</b> — en paralelo, no en secuencia. Equipo multidisciplinario.';}
+
+  if(g===3&&s===3){cond+='<br><br>⛔ <b>Texas III-D es el peor cuadrante de la escala:</b> hueso expuesto, infectado y sin flujo. Aquí se decide el pie en <b>horas-días</b>, no en semanas de curaciones.';}
+
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+cod+' — '+riesgo+'</div><div>'+cond+'</div>'+
+   '<div style="margin-top:6px;font-size:11px;opacity:.85;">Universidad de Texas (Armstrong 1998): el riesgo de amputación aumenta <b>tanto con la profundidad (grado) como con el estadio</b>. Su ventaja sobre Wagner es que <b>incorpora infección e isquemia</b>, que es lo que realmente cuesta el pie.</div>';
+}
+function resetTEXAS(){scReset(TX_KEYS,'tx-res');}
+
+/* ---------- ESCALA 5: ¿CHARCOT O INFECCIÓN? ---------- */
+var CHK={1:false,2:false,3:false,4:false,5:false,6:false};
+function chTog(n,el){CHK[n]=!CHK[n];if(el)el.classList.toggle('on');}
+function calcCH(){
+  var r=document.getElementById('ch-res');
+  var puerta=CHK[1], dtemp=CHK[2], eleva=CHK[3], sist=CHK[4], neuro=CHK[5], pulsos=CHK[6];
+  var pCh=0,pInf=0;
+  if(!puerta)pCh+=2; else pInf+=2;
+  if(dtemp)pCh+=1;
+  if(eleva)pCh+=2;
+  if(sist)pInf+=2;
+  if(neuro)pCh+=1;
+  if(pulsos)pCh+=1;
+  var cls,g,cond;
+  if(!puerta&&neuro&&dtemp){cls='res-high';g='⚠️ CHARCOT ACTIVO hasta demostrar lo contrario';
+    cond='<b>Pie caliente + hinchado + neuropatía + SIN puerta de entrada.</b> Sin herida, las bacterias no tienen por dónde llegar al hueso.<br><br><b>Actúa HOY:</b><br>① <b>Inmoviliza y descarga</b> (yeso de contacto total, no apoyo) — <b>sin esperar la resonancia</b>.<br>② Solicita <b>RM</b> (la radiografía puede ser <b>normal</b> en fase 0).<br>③ Registra la <b>Δ de temperatura</b> como línea base.<br>④ Refiere a ortopedia / clínica de pie diabético.<br><br>⛔ <b>NO</b> lo mandes a casa con antibiótico y "que camine poquito": eso es lo que produce el pie en mecedora y la amputación.';}
+  else if(puerta&&sist){cls='res-high';g='INFECCIÓN — probablemente moderada/grave';
+    cond='Hay <b>puerta de entrada</b> y <b>repercusión sistémica</b>. Cultivo de tejido profundo, antibiótico (IV si hay SIRS), <b>valoración quirúrgica</b>, probe-to-bone e imagen para descartar osteomielitis. Evalúa perfusión.';}
+  else if(puerta){cls='res-mid';g='Probable INFECCIÓN de tejido blando (con úlcera de origen)';
+    cond='Clasifica la gravedad con la calculadora <b>IWGDF/IDSA</b>. Recuerda: <b>≥2 signos de inflamación</b> para llamarla infección. <b>Un Charcot puede coexistir con una úlcera infectada</b> — si el pie está globalmente caliente y deformado, considera ambos.';}
+  else {cls='res-mid';g='Pie inflamado SIN puerta de entrada — descarta primero Charcot';
+    cond='Sin herida, la infección es poco probable. Diferenciales: <b>Charcot activo</b> (el más importante y el que urge), <b>TVP</b>, <b>gota</b>, <b>artritis</b>, esguince/fractura por estrés.<br><br>Completa el cuadro: <b>Δtemp &gt;2 °C</b>, <b>prueba de elevación</b> (el eritema del Charcot baja al elevar), neuropatía, pulsos presentes. <b>Ante la duda: inmoviliza y estudia.</b> Inmovilizar de más cuesta semanas; inmovilizar de menos cuesta el pie.';}
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:16px;font-weight:800;margin-bottom:4px;">'+g+'</div><div>'+cond+'</div>';
+}
+function resetCH(){
+  for(var i=1;i<=6;i++){CHK[i]=false;}
+  var els=document.querySelectorAll('#ch-box .opt');
+  for(var j=0;j<els.length;j++){els[j].classList.remove('on');}
+  var r=document.getElementById('ch-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- ALGORITMO ---------- */
+var ALGO={
+ start:{q:'Paciente con diabetes y un <b>pie inflamado</b> (rojo, caliente, hinchado) o con una <b>lesión</b>. Primera pregunta, la que ordena todo: ¿hay <b>puerta de entrada</b> (úlcera, herida, fisura, ampolla rota)?',
+  o:[['❌ NO hay herida — el pie está íntegro','sin_puerta'],['✅ SÍ hay úlcera o herida','con_puerta']]},
+
+ sin_puerta:{q:'¿El paciente tiene <b>neuropatía</b> (monofilamento 10 g ausente) y el pie afectado está <b>&gt;2 °C más caliente</b> que el otro?',
+  o:[['🔥 Sí — neuropatía + pie caliente e hinchado','charcot'],['❄️ No hay neuropatía o el pie está frío / con pulsos ausentes','otros']]},
+
+ charcot:{r:'high',t:'⚠️ CHARCOT ACTIVO hasta demostrar lo contrario — INMOVILIZA HOY',
+  x:'<b>Pie caliente + hinchado + neuropatía + SIN puerta de entrada = Charcot activo</b> mientras no se demuestre otra cosa.<br><br>' +
+    '① <b>Descarga total INMEDIATA</b> (yeso de contacto total, no apoyo). <b>No esperes la resonancia.</b><br>' +
+    '② <b>RM</b> = estudio de elección. ⚠️ <b>La radiografía puede ser NORMAL en fase 0</b> — una placa limpia no descarta nada.<br>' +
+    '③ Registra <b>Δ de temperatura</b> (termómetro infrarrojo, mismo punto en ambos pies): es tu medida objetiva de actividad.<br>' +
+    '④ <b>Prueba de elevación:</b> eleva la pierna 5–10 min — en el Charcot el eritema <b>disminuye</b>; en la celulitis <b>persiste</b>.<br>' +
+    '⑤ Referencia a ortopedia / clínica de pie diabético.<br>' +
+    '⑥ <b>Bifosfonatos: NO de rutina</b> (IWGDF 2023).<br><br>' +
+    '⛔ <b>El error clásico:</b> diagnosticarlo como celulitis o gota, dar 3 semanas de antibiótico y dejar que camine. Resultado: colapso del mediopié → <b>deformidad en mecedora</b> → úlcera → osteomielitis → amputación.<br><br>' +
+    '💡 <b>Duración:</b> meses (3–6 o más). Se retira la descarga cuando <b>Δtemp &lt;2 °C</b> y hay <b>consolidación radiológica</b>.'},
+
+ otros:{r:'mid',t:'Pie inflamado sin herida y sin neuropatía → otros diagnósticos',
+  x:'Considera:<br>• <b>TVP</b> (edema de toda la pierna, dolor, factores de riesgo) → ultrasonido Doppler.<br>• <b>Gota / artritis séptica</b> (monoarticular, dolor intenso, primer ortejo) → artrocentesis si hay derrame.<br>• <b>Celulitis</b> sin úlcera visible (busca una <b>fisura interdigital o tiña</b> como puerta de entrada — revísala siempre).<br>• <b>Fractura por estrés</b> o esguince.<br>• <b>Isquemia aguda</b> si el pie está <b>frío, pálido y sin pulsos</b> → <b>urgencia vascular</b>.<br><br>⚠️ Si tiene neuropatía, aunque no la hayas documentado: <b>vuelve a considerar Charcot</b>. Es el diagnóstico que más se pierde.'},
+
+ con_puerta:{q:'¿Hay <b>≥2 signos de inflamación</b> (eritema, calor, dolor/hipersensibilidad, induración, secreción purulenta)?',
+  o:[['✅ Sí — hay infección','infec_grav'],['❌ No — la úlcera está limpia','no_inf']]},
+
+ no_inf:{r:'ok',t:'Úlcera NO infectada → descarga, no antibiótico',
+  x:'<b>Toda úlcera está colonizada. Colonización ≠ infección. NO va antibiótico.</b><br><br>' +
+    '① <b>DESCARGA</b>: yeso de contacto total o walker <b>irremovible</b>. <b>Es el tratamiento.</b><br>' +
+    '② <b>Desbridar</b> callo perilesional y tejido no viable en cada visita.<br>' +
+    '③ Cura en <b>ambiente húmedo</b>; apósito según exudado.<br>' +
+    '④ <b>Evalúa perfusión</b> (ITB + presión de dedo — ojo: <b>ITB &gt;1.3 no es interpretable</b> por calcificación).<br>' +
+    '⑤ <b>Probe-to-bone</b>: si toca hueso, cambia el juego.<br>' +
+    '⑥ Control metabólico, tabaquismo cero, nutrición.<br><br>' +
+    '💡 <b>Regla de las 4 semanas:</b> si el área no se reduce ~50 % en 4 semanas con manejo correcto, algo falta: <b>perfusión, hueso o adherencia a la descarga</b>.'},
+
+ infec_grav:{q:'¿Hay <b>SIRS/sepsis</b>, o signos de infección <b>profunda</b> (absceso, crepitación, bullas, necrosis, gas en la Rx, dolor desproporcionado)?',
+  o:[['🚨 Sí — grave / profunda','grave'],['🟡 No, pero el eritema es &gt;2 cm o hay afección profunda','moderada'],['🟢 No, eritema ≤2 cm y solo piel/TCS','leve']]},
+
+ grave:{r:'high',t:'🚨 Infección GRAVE (grado 4) — urgencia médico-quirúrgica',
+  x:'① <b>Hospitalizar.</b> Reanimación, control glucémico, hemocultivos.<br>' +
+    '② <b>Antibiótico IV de amplio espectro</b>: piperacilina/tazobactam 4.5 g c/6–8 h o carbapenémico, <b>+ cobertura de SARM</b> (vancomicina/linezolid/daptomicina) si hay riesgo.<br>' +
+    '③ <b>VALORACIÓN QUIRÚRGICA URGENTE</b>: si hay absceso, gas, crepitación, bullas o necrosis → <b>quirófano ahora</b>, no mañana. <b>El antibiótico no drena pus.</b><br>' +
+    '④ <b>Cultivo de tejido profundo / hueso</b> en el quirófano.<br>' +
+    '⑤ <b>Evaluación vascular</b> en paralelo (WIfI): si hay isquemia, sin revascularización no cicatriza.<br>' +
+    '⑥ Desescalar a las 48–72 h con el cultivo.<br><br>' +
+    '⚠️ La <b>fascitis necrosante</b> del pie diabético mata. Dolor desproporcionado, crepitación, bullas hemorrágicas y avance rápido = <b>quirófano</b>.'},
+
+ moderada:{r:'mid',t:'Infección MODERADA (grado 3)',
+  x:'① <b>Cultivo de tejido profundo</b> (no hisopo) antes del antibiótico.<br>' +
+    '② <b>Antibiótico</b>, frecuentemente <b>IV inicial</b>: ampicilina/sulbactam 3 g c/6 h, o ceftriaxona + metronidazol. Añade cobertura de <b>SARM</b> si hay riesgo. Desescala a las 48–72 h.<br>' +
+    '③ <b>Probe-to-bone + Rx</b>: si es positivo o la úlcera es &gt;2 cm² / &gt;3 mm / crónica → <b>sospecha osteomielitis</b> (RM, biopsia ósea; ~6 semanas de antibiótico, menos si se reseca el hueso).<br>' +
+    '④ <b>Drenaje/desbridamiento</b> si hay colección.<br>' +
+    '⑤ <b>Descarga y evaluación vascular</b> — sin esto, el antibiótico solo compra tiempo.<br>' +
+    '⑥ <b>Marca el borde del eritema</b> y reevalúa en 48–72 h. Si avanza: hay pus, hueso o isquemia.<br><br>' +
+    '💡 Hospitaliza si hay comorbilidad relevante, isquemia, falla al tratamiento oral o no hay forma de garantizar el cuidado en casa.'},
+
+ leve:{r:'ok',t:'Infección LEVE (grado 2)',
+  x:'① <b>Antibiótico VO 1–2 semanas</b> dirigido a Gram+: dicloxacilina 500 mg c/6 h, cefalexina 500 mg c/6 h o amoxicilina/clavulanato 875/125 c/12 h. <b>SARM</b> (TMP/SMX, doxiciclina, clindamicina) si hay factores de riesgo.<br>' +
+    '② <b>Cultivo de tejido</b> si es posible (nunca hisopo superficial).<br>' +
+    '③ <b>Descarga + desbridamiento</b>: siguen siendo obligatorios. El antibiótico trata la infección, <b>no cierra la úlcera</b>.<br>' +
+    '④ <b>Probe-to-bone</b> y evaluación de perfusión.<br>' +
+    '⑤ <b>Reevaluar en 48–72 h</b> con el borde del eritema marcado.<br><br>' +
+    '⚠️ Si empeora pese al antibiótico: no es "cambiar de antibiótico" — es <b>buscar pus, hueso o isquemia</b>.'}
+};
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  setTxc('nofx',document.querySelector('#txc-chips .pchip'));
+  setTxh('modgrave',document.querySelector('#txh-chips .pchip'));
+  setEscen('neuro',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');
+  buildInd();
+  buildEscala('sb-items',SB_ITEMS,'sb');
+  buildEscala('tx-items',TX_ITEMS,'tx');
+  buildEscala('inf-items',INF_ITEMS,'inf');
+  buildEscala('wi-items',WI_ITEMS,'wi');
+  algoStart();
+});
+
+</script>
+</body>
+</html>

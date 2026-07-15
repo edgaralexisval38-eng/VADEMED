@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>EVC Hemorrágico · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#7b1c1c;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f7eaea;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.biblio-header{background:linear-gradient(135deg,#1a0a0a,#7b1c1c);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--rl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--r);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--rl);color:var(--r);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--r);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--rm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.finput{width:100%;padding:9px 12px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:10px;}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1a0a0a,#7b1c1c);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧠</div>
+    <div>
+      <div class="hdr-eye">Neurología · Urgencias neurovasculares</div>
+      <div class="hdr-title">EVC Hemorrágico</div>
+      <div class="hdr-sub">AHA/ASA 2022 · INTERACT3 · ESO 2025 · CENETEC · GPC México</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">🩸 HIC + HSA</span>
+    <span class="badge">PAS objetivo 130-140</span>
+    <span class="badge">Revertir ACO &lt;90 min</span>
+    <span class="badge">Mortalidad 30-40%</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">130-140</div><div class="qs-l">PAS objetivo (mmHg)</div></div>
+  <div class="qs"><div class="qs-v">&lt;90 min</div><div class="qs-l">Reversión ACO</div></div>
+  <div class="qs"><div class="qs-v">≈15%</div><div class="qs-l">De los EVC</div></div>
+  <div class="qs"><div class="qs-v">30-40%</div><div class="qs-l">Mortalidad a 30 d</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p>El <strong>EVC hemorrágico</strong> es el sangrado no traumático dentro del cráneo. Representa ~15% de los EVC pero concentra una mortalidad desproporcionada. Dos entidades principales:</p>
+    </div>
+    <div class="tw" style="margin:10px 0;"><table class="t">
+      <tr><th>Tipo</th><th>Localización</th><th>Causa típica</th><th>Escala clave</th></tr>
+      <tr><td class="dn">Hemorragia intracerebral (HIC)</td><td>Parénquima cerebral</td><td>HTA crónica (ganglios basales, tálamo, protuberancia, cerebelo); angiopatía amiloide (lobar)</td><td>ICH Score</td></tr>
+      <tr><td class="dn">Hemorragia subaracnoidea (HSA)</td><td>Espacio subaracnoideo</td><td>Ruptura de aneurisma sacular</td><td>Hunt-Hess / Fisher</td></tr>
+    </table></div>
+    <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Alta letalidad temprana</div>La expansión del hematoma en las primeras horas es el principal determinante modificable. Las 4 prioridades: <strong>controlar la PA, revertir anticoagulación, evaluar neurocirugía y manejar la PIC</strong>.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Valor</th><th>Contexto</th></tr>
+      <tr><td>Proporción de EVC</td><td class="dn">~10-15%</td><td>HIC ~10%, HSA ~5%</td></tr>
+      <tr><td>Mortalidad a 30 días (HIC)</td><td class="dn">30-40%</td><td>Solo ~20% recupera independencia funcional</td></tr>
+      <tr><td>Factor de riesgo #1</td><td>Hipertensión arterial</td><td>Especialmente en jóvenes; amiloide en ancianos</td></tr>
+      <tr><td>Poblaciones de mayor riesgo</td><td>Afroamericanos, mexicano-americanos</td><td>~1.6× mayor riesgo de HIC</td></tr>
+      <tr><td>ACO como causa creciente</td><td>↑ con uso de anticoagulantes</td><td>Peor pronóstico; requiere reversión urgente</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">1️⃣</span><div><div class="at">Lesión primaria</div>Ruptura vascular → hematoma que produce efecto de masa, disrupción del tejido y ↑ presión intracraneal (PIC).</div></div>
+    <div class="alert a-w"><span class="ai">2️⃣</span><div><div class="at">Expansión del hematoma</div>Ocurre hasta en 1/3 de los casos en las primeras horas y predice mal pronóstico. Objetivo directo del control de PA y la reversión de anticoagulación.</div></div>
+    <div class="alert a-i"><span class="ai">3️⃣</span><div><div class="at">Lesión secundaria</div>Edema perihematoma, inflamación, toxicidad de productos de degradación de hemoglobina y estrés oxidativo. Puede haber hidrocefalia si hay extensión intraventricular.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Modificables</th><th>No modificables / estructurales</th></tr>
+      <tr><td>Hipertensión arterial (principal)</td><td>Edad avanzada</td></tr>
+      <tr><td>Anticoagulantes y antiagregantes</td><td>Angiopatía amiloide cerebral</td></tr>
+      <tr><td>Alcohol y drogas (cocaína, simpaticomiméticos)</td><td>Malformaciones (MAV, aneurismas, cavernomas)</td></tr>
+      <tr><td>Tabaquismo</td><td>Trastornos de coagulación</td></tr>
+      <tr><td>PA mal controlada</td><td>Tumores, transformación hemorrágica de isquemia</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Déficit focal súbito frecuentemente acompañado de <strong>cefalea, náusea/vómito, deterioro del estado de alerta e hipertensión marcada</strong> — más que en el isquémico, aunque la clínica no distingue de forma fiable: <strong>la TC es indispensable</strong>.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Localización</th><th>Presentación típica</th></tr>
+      <tr><td class="dn">Ganglios basales/cápsula</td><td>Hemiparesia densa, desviación de mirada; la más común (HTA)</td></tr>
+      <tr><td class="dn">Tálamo</td><td>Hemihipoestesia, ojos desviados hacia abajo/adentro</td></tr>
+      <tr><td class="dn">Cerebelo</td><td>Cefalea occipital, vértigo, ataxia; <span class="dm">riesgo de herniación → cirugía urgente</span></td></tr>
+      <tr><td class="dn">Protuberancia</td><td>Coma, pupilas puntiformes, tetraparesia; mal pronóstico</td></tr>
+      <tr><td class="dn">Lobar</td><td>Convulsiones, déficit variable; amiloide en ancianos</td></tr>
+      <tr><td class="dn">HSA</td><td>Cefalea "en trueno" (la peor de la vida), rigidez de nuca, ± pérdida de conciencia</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Administrar trombolítico o antiagregante sin TC: puede haber hemorragia. El primer paso siempre es TC simple.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Retrasar la reversión de anticoagulación esperando estudios. Debe iniciarse tan pronto se confirma la HIC (objetivo &lt;90 min).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Bajar la PA de forma brusca o excesiva (&lt;130 mmHg): puede reducir la perfusión. La reducción debe ser suave y sostenida.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Transfundir plaquetas de rutina en HIC por uso de antiagregantes: empeora el desenlace (PATCH), salvo cirugía o plaquetopenia grave.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Usar corticoides o terapia hiperosmolar continua "profiláctica": sin beneficio, potencial daño.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">No reconocer la hemorragia cerebelosa/hidrocefalia: son emergencias neuroquirúrgicas que requieren evacuación o drenaje ventricular.</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt">Establecer órdenes de "no reanimar" o techos terapéuticos en las primeras 24-48 h: se recomienda dar cuidado completo antes de limitar.</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🏥</span><span class="st">Criterios de hospitalización</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Destino</th></tr>
+      <tr><td>Toda HIC / HSA aguda</td><td class="dm">UCI neurológica / unidad de ictus</td></tr>
+      <tr><td>Deterioro de conciencia, GCS ≤8</td><td class="dm">UCI + protección de vía aérea</td></tr>
+      <tr><td>Hemorragia cerebelosa, hidrocefalia, efecto de masa</td><td class="dm">Neurocirugía urgente</td></tr>
+      <tr><td>HSA aneurismática</td><td class="dm">Centro con neurointervencionismo (embolización/clipaje)</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ DIAGNÓSTICO ============ -->
+<div class="panel" id="tab-dx">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔎</span><span class="st">Abordaje diagnóstico inmediato</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🩻</span><div><div class="at">TC simple = estudio inicial</div>Confirma la hemorragia (hiperdensidad), define localización, volumen y extensión intraventricular. Active el protocolo "Código HIC".</div></div>
+    <div class="prose"><p><strong>Volumen del hematoma (fórmula ABC/2):</strong> (A × B × C) / 2, con las tres dimensiones en cm. Un volumen &gt;30 mL se asocia a peor pronóstico. Repetir TC a las 6-24 h o ante deterioro para evaluar expansión/hidrocefalia.</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧪</span><span class="st">Interpretación de estudios</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Qué busca</th><th>Hallazgo</th><th>Decisión</th></tr>
+      <tr><td class="dn">TC simple</td><td>Confirmar/localizar sangre</td><td>Hiperdensidad; "spot sign" en angioTC = riesgo de expansión</td><td>Activa manejo agudo</td></tr>
+      <tr><td class="dn">AngioTC</td><td>Aneurisma, MAV, spot sign</td><td>Lesión estructural subyacente</td><td>Deriva a intervencionismo</td></tr>
+      <tr><td class="dn">INR / TP-TTPa</td><td>Coagulopatía</td><td>INR ≥2 (warfarina)</td><td>Revertir (PCC + vit K)</td></tr>
+      <tr><td class="dn">Anti-Xa / historia de DOAC</td><td>Anticoagulación directa</td><td>Toma reciente (&lt;48 h)</td><td>Idarucizumab / andexanet / PCC</td></tr>
+      <tr><td class="dn">Punción lumbar</td><td>HSA con TC negativa</td><td>Xantocromía</td><td>Solo si alta sospecha y TC normal</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📋</span><span class="st">Estudios complementarios (etiología)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Finalidad</th></tr>
+      <tr><td>BH, plaquetas, función renal/hepática</td><td>Coagulopatía, comorbilidad</td></tr>
+      <tr><td>Toxicología</td><td>Cocaína/simpaticomiméticos en jóvenes</td></tr>
+      <tr><td>RM / angioRM diferida</td><td>Cavernomas, tumor, amiloide, MAV</td></tr>
+      <tr><td>Angiografía por catéter (DSA)</td><td>Estándar de oro para aneurisma/MAV, sobre todo en HSA o HIC lobar joven</td></tr>
+      <tr><td>ECG, troponina</td><td>Cambios neurogénicos frecuentes en HSA</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🎯</span><span class="st">Metas de manejo agudo (resumen)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">🩸</span><div><div class="at">Presión arterial</div>En HIC leve-moderada con PAS 150-220: reducción suave y sostenida a <strong>~130-140 mmHg</strong> (evitar &lt;130). Iniciar pronto; parte del paquete de cuidados INTERACT3.</div></div>
+    <div class="alert a-w"><span class="ai">💉</span><div><div class="at">Reversión de anticoagulación</div>Discontinuar y revertir de inmediato según agente. Objetivo &lt;90 min desde llegada.</div></div>
+    <div class="alert a-i"><span class="ai">🌡️</span><div><div class="at">Paquete de cuidados (INTERACT3)</div>Control intensivo de PA + glucemia + temperatura ≤37.5 °C + reversión de anticoagulación → mejora el desenlace funcional.</div></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ESCALAS ============ -->
+<div class="panel" id="tab-esc">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📊</span><span class="st">ICH Score — Pronóstico de HIC</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Estima la mortalidad a 30 días de la hemorragia intracerebral. Rango 0-6.</div></div>
+    <div id="ich-box"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-p" onclick="calcICH()">Calcular</button>
+      <button class="btn btn-s" onclick="resetICH()">Reiniciar</button>
+    </div>
+    <div id="ich-res" class="calc-res"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧠</span><span class="st">Escala de Coma de Glasgow (GCS)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Evalúa el nivel de conciencia (3-15). GCS ≤8 indica coma y necesidad de proteger la vía aérea.</div></div>
+    <div id="gcs-box"></div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-p" onclick="calcGCS()">Calcular</button>
+      <button class="btn btn-s" onclick="resetGCS()">Reiniciar</button>
+    </div>
+    <div id="gcs-res" class="calc-res"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">💥</span><span class="st">Hunt-Hess y Fisher (HSA)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p style="font-weight:700;margin-bottom:4px;">Hunt-Hess (clínica de HSA):</p></div>
+    <div class="tw" style="margin-bottom:10px;"><table class="t">
+      <tr><th>Grado</th><th>Clínica</th></tr>
+      <tr><td class="dn">I</td><td>Asintomático o cefalea leve, rigidez leve</td></tr>
+      <tr><td class="dn">II</td><td>Cefalea intensa, rigidez, sin déficit (salvo par craneal)</td></tr>
+      <tr><td class="dn">III</td><td>Somnolencia, confusión o déficit focal leve</td></tr>
+      <tr><td class="dn">IV</td><td>Estupor, hemiparesia moderada-grave</td></tr>
+      <tr><td class="dn">V</td><td>Coma profundo, descerebración</td></tr>
+    </table></div>
+    <div class="prose"><p style="font-weight:700;margin-bottom:4px;">Fisher (sangre en TC → riesgo de vasoespasmo):</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Grado</th><th>TC</th></tr>
+      <tr><td class="dn">1</td><td>Sin sangre visible</td></tr>
+      <tr><td class="dn">2</td><td>Capa fina difusa (&lt;1 mm)</td></tr>
+      <tr><td class="dn">3</td><td>Coágulo grueso (&gt;1 mm) — mayor riesgo de vasoespasmo</td></tr>
+      <tr><td class="dn">4</td><td>Hemorragia intraventricular o intraparenquimatosa</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ALGORITMO ============ -->
+<div class="panel" id="tab-algo">
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- ============ TX CONSULTA ============ -->
+<div class="panel" id="tab-txc">
+  <div class="alert a-r"><span class="ai">🚑</span><div><div class="at">El EVC hemorrágico es una emergencia hospitalaria</div>En primer contacto: estabilizar, NO dar antitrombóticos, controlar PA con precaución y trasladar. Toque cada fármaco para desplegar su ficha completa.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('contacto',this)">🚑 Primer contacto</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<!-- ============ TX HOSP ============ -->
+<div class="panel" id="tab-txh">
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('hic',this)">🩸 HIC espontánea</button>
+    <button class="pchip" onclick="setTxh('hsa',this)">💥 HSA aneurismática</button>
+  </div>
+  <div id="txh-body"></div>
+  <div class="sec" style="margin-top:14px;"><div class="sh" onclick="tog(this)">
+    <span class="si">📈</span><span class="st">Monitoreo en UCI</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Meta</th><th>Frecuencia</th><th>Si no se cumple</th></tr>
+      <tr><td>PAS</td><td class="dn">~130-140 mmHg (evitar &lt;130)</td><td>Continuo/c/15 min al inicio</td><td>Nicardipina/labetalol IV titulables</td></tr>
+      <tr><td>GCS / pupilas</td><td>Sin deterioro</td><td>c/1 h</td><td>TC urgente; valorar PIC/cirugía</td></tr>
+      <tr><td>INR / coagulación</td><td class="dn">INR ≤1.4</td><td>Tras reversión</td><td>Dosis adicional de PCC / vit K</td></tr>
+      <tr><td>Glucemia</td><td>140-180 mg/dL</td><td>c/1-2 h</td><td>Insulina; evitar hipoglucemia</td></tr>
+      <tr><td>Temperatura</td><td>≤37.5 °C</td><td>c/4 h</td><td>Antipirético; buscar foco</td></tr>
+      <tr><td>Sodio (si osmoterapia)</td><td>Según objetivo</td><td>c/6 h</td><td>Ajustar salino hipertónico/manitol</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Profilaxis de TVP: compresión neumática intermitente desde el ingreso; HBPM en dosis profiláctica puede iniciarse a las 24-48 h con hematoma estable.</div></div>
+  </div></div>
+</div>
+
+<!-- ============ FÁRMACOS ============ -->
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;">
+    <label class="calc-lbl">Buscar</label>
+    <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. protrombínico, idarucizumab, nimodipino..." oninput="filtrarFarmacos(this.value)">
+  </div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ============ INDICACIONES ============ -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · enfermería/consulta · paciente y familia · nota · alarma</strong>.</div></div>
+  <div id="ind-body"></div>
+</div>
+
+<!-- ============ ESCENARIOS ============ -->
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('aco',this)">💉 Anticoagulado con HIC</button>
+    <button class="pchip" onclick="setEscen('cerebelosa',this)">🧠 Hemorragia cerebelosa</button>
+    <button class="pchip" onclick="setEscen('trueno',this)">⚡ Cefalea en trueno</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ============ SEGUIMIENTO ============ -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📅</span><span class="st">Plan de seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Evaluación</th><th>Meta</th><th>Acción</th></tr>
+      <tr><td>6-24 h</td><td>TC control</td><td>Descartar expansión/hidrocefalia</td><td>Cirugía/DVE si procede</td></tr>
+      <tr><td>Hospitalización</td><td>Etiología (SMASH-U)</td><td>Identificar causa</td><td>angio/RM; tratar MAV/aneurisma</td></tr>
+      <tr><td>Alta</td><td>GCS, mRS, deglución, rehab</td><td>Plan funcional</td><td>Terapia física/lenguaje</td></tr>
+      <tr><td>Semanas</td><td>Control estricto de PA</td><td>&lt;130/80 mmHg</td><td>Antihipertensivos a largo plazo</td></tr>
+      <tr><td>Decisión de reanudar ACO</td><td>Balance riesgo trombótico vs resangrado</td><td>Individualizar</td><td>Generalmente diferir ≥4-8 semanas; considerar cierre de orejuela en FA</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🚨</span><span class="st">Señales de alarma</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Educar a la familia: <strong>somnolencia creciente, vómito, cefalea intensa, debilidad nueva, crisis convulsivas o dificultad para despertar</strong> → acudir de inmediato. Estas pueden indicar resangrado, edema o hidrocefalia.</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">👨‍⚕️</span><span class="st">Referencia a especialista</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Especialidad</th><th>Urgencia</th></tr>
+      <tr><td>Hemorragia cerebelosa / hidrocefalia / efecto de masa</td><td>Neurocirugía</td><td class="dm">Inmediata</td></tr>
+      <tr><td>Aneurisma / MAV</td><td>Neurointervencionismo / neurocirugía</td><td class="dm">Urgente</td></tr>
+      <tr><td>Reversión compleja de anticoagulación</td><td>Hematología</td><td>Urgente</td></tr>
+      <tr><td>Rehabilitación de secuelas</td><td>Medicina física y rehabilitación</td><td>Al alta</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🛡️</span><span class="st">Prevención de recurrencia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Intervención</th><th>Meta</th></tr>
+      <tr><td>Control de PA a largo plazo (clave)</td><td>&lt;130/80 mmHg</td></tr>
+      <tr><td>Evitar/limitar alcohol, tabaco, drogas</td><td>Reducir riesgo</td></tr>
+      <tr><td>Reevaluar necesidad de antitrombóticos</td><td>Individualizar; en HIC lobar amiloide suelen evitarse</td></tr>
+      <tr><td>Tratar la lesión estructural</td><td>Embolizar/clipar aneurisma; tratar MAV</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — EVC Hemorrágico</h2>
+    <p>Guías internacionales y evidencia primaria utilizadas. Nivel de evidencia indicado.</p>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías y posicionamientos internacionales</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Greenberg SM, et al. <em>2022 Guideline for the Management of Patients With Spontaneous Intracerebral Hemorrhage.</em> Stroke (AHA/ASA). Base de PA, reversión de ACO y manejo.</div>
+        <a class="biblio-link" href="https://www.ahajournals.org/doi/10.1161/STR.0000000000000407" target="_blank">🔗 DOI 10.1161/STR.0000000000000407</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Ma L, et al. <em>The third Intensive Care Bundle with Blood Pressure Reduction in Acute Cerebral Haemorrhage (INTERACT3).</em> Lancet. Paquete de cuidados goal-directed.</div>
+        <a class="biblio-link" href="https://doi.org/10.1016/S0140-6736(23)00806-1" target="_blank">🔗 DOI 10.1016/S0140-6736(23)00806-1</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📙 Estudios clínicos relevantes (ECAs)</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Pradilla G, et al. <em>Trial of Early Minimally Invasive Removal of Intracerebral Hemorrhage (ENRICH).</em> N Engl J Med. Evacuación mínimamente invasiva.</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa2308440" target="_blank">🔗 DOI 10.1056/NEJMoa2308440</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Connolly SJ, et al. <em>Andexanet for Factor Xa Inhibitor–Associated Acute Intracerebral Hemorrhage (ANNEXA-I).</em> N Engl J Med. Reversión de inhibidores de Xa.</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa2313040" target="_blank">🔗 DOI 10.1056/NEJMoa2313040</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2016</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Baharoglu MI, et al. <em>Platelet transfusion versus standard care after acute stroke due to spontaneous ICH (PATCH).</em> Lancet. Contra transfusión de plaquetas rutinaria.</div>
+        <a class="biblio-link" href="https://doi.org/10.1016/S0140-6736(16)30392-0" target="_blank">🔗 DOI 10.1016/S0140-6736(16)30392-0</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2001</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Hemphill JC, et al. <em>The ICH Score: a simple, reliable grading scale for intracerebral hemorrhage.</em> Stroke. Escala pronóstica utilizada.</div>
+        <a class="biblio-link" href="https://doi.org/10.1161/01.STR.32.4.891" target="_blank">🔗 DOI 10.1161/01.STR.32.4.891</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">CENETEC. <em>GPC Diagnóstico y tratamiento de la hemorragia intracerebral / subaracnoidea.</em> Adaptación al contexto institucional mexicano.</div>
+        <a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC catálogo GPC</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales / cohortes</div>
+        <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series de casos</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia / opinión</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Guía elaborada con base en evidencia disponible a 2026. Verifique actualizaciones de guías locales (CENETEC, SSa México) y adapte al contexto institucional. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ---------- ICH SCORE ---------- */
+var ICH_ITEMS=[
+ {t:'GCS',o:[['13-15',0],['5-12',1],['3-4',2]]},
+ {t:'Volumen del hematoma',o:[['&lt;30 mL',0],['≥30 mL',1]]},
+ {t:'Hemorragia intraventricular',o:[['No',0],['Sí',1]]},
+ {t:'Origen infratentorial',o:[['No',0],['Sí',1]]},
+ {t:'Edad',o:[['&lt;80 años',0],['≥80 años',1]]}
+];
+var ichSel={};
+function buildICH(){var h='';for(var i=0;i<ICH_ITEMS.length;i++){var it=ICH_ITEMS[i];h+='<div class="calc-row"><div class="calc-lbl">'+it.t+'</div><div class="calc-opts">';for(var j=0;j<it.o.length;j++){h+='<button class="copt" onclick="pickI(this,'+i+','+it.o[j][1]+')">'+it.o[j][0]+'</button>';}h+='</div></div>';}document.getElementById('ich-box').innerHTML=h;}
+function pickI(el,q,v){var sib=el.parentNode.querySelectorAll('.copt');for(var k=0;k<sib.length;k++)sib[k].classList.remove('on');el.classList.add('on');ichSel[q]=v;}
+function calcICH(){if(Object.keys(ichSel).length<5){var rr=document.getElementById('ich-res');rr.style.background='#fef3c7';rr.style.color='#92400e';rr.innerHTML='Complete los 5 componentes.';rr.classList.add('show');return;}var tot=0;for(var k in ichSel)tot+=ichSel[k];var mort={0:'0%',1:'13%',2:'26%',3:'72%',4:'97%',5:'100%',6:'100%'};var col=tot<=1?'#0f7a5a':(tot<=2?'#d97706':'#7b1c1c');var r=document.getElementById('ich-res');r.style.background=col+'18';r.style.color=col;r.innerHTML='<strong>ICH Score = '+tot+'/6</strong><br>Mortalidad estimada a 30 días: ~'+mort[tot]+'.<br><span style="font-size:11px;">Herramienta pronóstica; no debe usarse aisladamente para limitar tratamiento en las primeras 24-48 h.</span>';r.classList.add('show');}
+function resetICH(){ichSel={};buildICH();document.getElementById('ich-res').classList.remove('show');}
+
+/* ---------- GCS ---------- */
+var GCS_ITEMS=[
+ {t:'Apertura ocular',o:[['Espontánea',4],['A la voz',3],['Al dolor',2],['Nula',1]]},
+ {t:'Respuesta verbal',o:[['Orientada',5],['Confusa',4],['Palabras',3],['Sonidos',2],['Nula',1]]},
+ {t:'Respuesta motora',o:[['Obedece',6],['Localiza',5],['Retira',4],['Flexión',3],['Extensión',2],['Nula',1]]}
+];
+var gcsSel={};
+function buildGCS(){var h='';for(var i=0;i<GCS_ITEMS.length;i++){var it=GCS_ITEMS[i];h+='<div class="calc-row"><div class="calc-lbl">'+it.t+'</div><div class="calc-opts">';for(var j=0;j<it.o.length;j++){h+='<button class="copt" onclick="pickG(this,'+i+','+it.o[j][1]+')">'+it.o[j][0]+' ('+it.o[j][1]+')</button>';}h+='</div></div>';}document.getElementById('gcs-box').innerHTML=h;}
+function pickG(el,q,v){var sib=el.parentNode.querySelectorAll('.copt');for(var k=0;k<sib.length;k++)sib[k].classList.remove('on');el.classList.add('on');gcsSel[q]=v;}
+function calcGCS(){if(Object.keys(gcsSel).length<3){var rr=document.getElementById('gcs-res');rr.style.background='#fef3c7';rr.style.color='#92400e';rr.innerHTML='Complete los 3 componentes.';rr.classList.add('show');return;}var tot=0;for(var k in gcsSel)tot+=gcsSel[k];var sev,col;if(tot>=13){sev='Leve';col='#0f7a5a';}else if(tot>=9){sev='Moderado';col='#d97706';}else{sev='Grave (coma) — proteger vía aérea';col='#7b1c1c';}var r=document.getElementById('gcs-res');r.style.background=col+'18';r.style.color=col;r.innerHTML='<strong>GCS = '+tot+'/15 · '+sev+'</strong>';r.classList.add('show');}
+function resetGCS(){gcsSel={};buildGCS();document.getElementById('gcs-res').classList.remove('show');}
+
+/* ---------- ALGORITMO ---------- */
+var algoState='start';
+var ALGO={
+ start:{q:'Déficit neurológico súbito + TC con hiperdensidad (sangre). Confirmado EVC hemorrágico. ¿PAS entre 150-220 mmHg?',a:[['Sí','q2'],['PAS >220','q2b'],['PAS <150','q3']]},
+ q2:{q:'Control de PA (INTERACT3). Conducta:',a:[['Ver manejo de PA',function(){return 'RES:Reducir la PAS de forma suave y sostenida a ~130-140 mmHg (evitar &lt;130) con nicardipina o labetalol IV titulables. Iniciar pronto como parte del paquete: glucemia 140-180, temperatura ≤37.5°C. Continuar → reversión de anticoagulación.';}]]},
+ q2b:{q:'PAS muy elevada (>220). Conducta:',a:[['Ver manejo',function(){return 'RES:Reducción con infusión IV continua titulable (nicardipina), con monitoreo estrecho para evitar caídas bruscas. Objetivo individualizado; evitar hipoperfusión. Continuar con reversión de anticoagulación y evaluación neuroquirúrgica.';}]]},
+ q3:{q:'¿El paciente estaba anticoagulado?',a:[['Sí','q4'],['No','q5']]},
+ q4:{q:'¿Con qué agente?',a:[
+   ['Warfarina (AVK), INR ≥2',function(){return 'RES:REVERSIÓN URGENTE: 4-F PCC (complejo protrombínico) EN PREFERENCIA a plasma + vitamina K 10 mg IV. Objetivo INR ≤1.4. Iniciar &lt;90 min.';}],
+   ['Dabigatrán',function(){return 'RES:REVERSIÓN URGENTE: idarucizumab 5 g IV (2 bolos de 2.5 g). Iniciar &lt;90 min.';}],
+   ['Inhibidor de factor Xa (apixabán, rivaroxabán, edoxabán)',function(){return 'RES:REVERSIÓN URGENTE: andexanet alfa (ANNEXA-I) o 4-F PCC si no está disponible. Iniciar &lt;90 min.';}],
+   ['Heparina',function(){return 'RES:Protamina IV para revertir la heparina. Ajustar por dosis y tiempo.';}]
+ ]},
+ q5:{q:'Sin anticoagulación. Evaluar necesidad neuroquirúrgica:',a:[
+   ['Hemorragia cerebelosa, hidrocefalia o efecto de masa',function(){return 'RES:NEUROCIRUGÍA URGENTE: evacuación del hematoma cerebeloso y/o drenaje ventricular externo (DVE) por hidrocefalia. La hemorragia cerebelosa con deterioro es indicación quirúrgica clara.';}],
+   ['HIC supratentorial accesible',function(){return 'RES:Considerar evacuación mínimamente invasiva temprana en casos seleccionados (ENRICH). La cirugía abierta de rutina no mejora el desenlace en la mayoría; decidir con neurocirugía.';}],
+   ['Sin indicación quirúrgica inmediata',function(){return 'RES:MANEJO MÉDICO en UCI: control de PA, euglucemia, normotermia, profilaxis de TVP (compresión neumática; HBPM a 24-48 h si estable), analgesia, tratar convulsiones si ocurren (no profilaxis rutinaria), evitar corticoides/osmoterapia profiláctica.';}]
+ ]}
+};
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+
+/* ====== TRATAMIENTOS ESTILO FICHA DESPLEGABLE ====== */
+var AC='#7b1c1c', C2='#7a4a00', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#f7eaea';
+
+/* ---------- FICHAS DE TRATAMIENTO (acordeón) ---------- */
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#fbeeee;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7b1c1c;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+
+/* ---------- DEFINICIÓN DE FÁRMACOS (fichas TX) ---------- */
+var F_PCC={pri:true,linea:'⭐ Reversión de warfarina (AVK)',n:'Complejo protrombínico 4-F (PCC)',dlb:'Dosis',
+ da:'25–50 UI/kg IV según INR (usar protocolo institucional)',
+ dur:'Objetivo INR ≤1.4 · reversión &lt;90 min desde la llegada',
+ prep:'Reconstituir según fabricante; administrar por bomba. <b>Siempre junto con vitamina K</b>',
+ iv:'IV · urgencias / UCI',
+ pres:'Kcentra® / Octaplex® / Beriplex® (factores II, VII, IX, X)',
+ mon:'INR post-dosis; vigilar eventos trombóticos',
+ ci:'Trombosis reciente, CID',
+ ea:'Eventos tromboembólicos, reacciones',
+ nota:'<b>Mecanismo:</b> aporta factores dependientes de vitamina K → corrige la coagulopatía por AVK de forma rápida. <b>Evidencia:</b> AHA/ASA 2022 clase 1, preferido sobre plasma fresco congelado (más rápido, menos volumen).'};
+var F_VITK={pri:true,linea:'Coadyuvante obligado del PCC',n:'Vitamina K (fitomenadiona)',dlb:'Dosis',
+ da:'10 mg IV lento',
+ dur:'Efecto sostenido en 6–24 h (por eso se combina con PCC)',
+ prep:'Diluir e infundir lento (riesgo de reacción anafilactoide si es rápida)',
+ iv:'IV',
+ pres:'Fitomenadiona 10 mg/mL',
+ ci:'Hipersensibilidad',
+ ea:'Reacción anafilactoide si se infunde rápido',
+ nota:'<b>Mecanismo:</b> restaura la síntesis hepática de factores; mantiene la reversión que el PCC logra de inmediato. Sola es insuficiente en la urgencia.'};
+var F_IDAR={pri:true,linea:'⭐ Reversión de dabigatrán',n:'Idarucizumab',dlb:'Dosis',
+ da:'5 g IV (dos bolos de 2.5 g consecutivos)',
+ dur:'Reversión inmediata · &lt;90 min',
+ iv:'IV · bolos consecutivos',
+ pres:'Praxbind® 2.5 g/50 mL (2 viales)',
+ mon:'Vigilar retrombosis por la enfermedad de base',
+ ci:'Ninguna absoluta en emergencia',
+ ea:'Trombosis (por patología subyacente), reacciones',
+ nota:'<b>Mecanismo:</b> anticuerpo monoclonal con alta afinidad por el dabigatrán, lo neutraliza. <b>Evidencia:</b> RE-VERSE AD; AHA/ASA 2022.'};
+var F_ANDE={pri:true,linea:'⭐ Reversión de inhibidores de factor Xa',n:'Andexanet alfa',dlb:'Dosis',
+ da:'Bolo + infusión de 2 h (dosis alta o baja según agente, dosis y tiempo desde la última toma)',
+ dur:'Reversión durante la infusión · &lt;90 min',
+ prep:'Reconstituir; seguir protocolo por dosis. Alternativa: 4-F PCC si no está disponible',
+ iv:'IV · bolo + infusión',
+ pres:'Ondexxya® / AndexXa®',
+ mon:'Riesgo trombótico elevado; monitoreo estrecho',
+ ci:'Valorar riesgo trombótico individual',
+ ea:'Eventos tromboembólicos',
+ nota:'<b>Mecanismo:</b> factor Xa recombinante modificado (señuelo) que secuestra al inhibidor (apixabán, rivaroxabán, edoxabán). <b>Evidencia:</b> ANNEXA-I.'};
+var F_PROTA={pri:false,linea:'Reversión de heparina',n:'Protamina',dlb:'Dosis',
+ da:'1 mg por cada 100 UI de heparina administrada en las últimas horas (ajustar por tiempo)',
+ prep:'Infusión IV lenta',
+ iv:'IV lento',
+ pres:'Sulfato de protamina 50 mg/5 mL',
+ ci:'Antecedente de reacción grave',
+ ea:'Hipotensión, bradicardia, reacción anafilactoide',
+ nota:'<b>Mecanismo:</b> se une a la heparina formando un complejo inactivo. Revierte parcialmente a la HBPM.'};
+var F_NICA={pri:true,linea:'⭐ Control de PA titulable',n:'Nicardipina IV',dlb:'Dosis',
+ da:'Infusión 5 mg/h, ↑2.5 mg/h c/5–15 min (máx 15 mg/h)',
+ dur:'Objetivo PAS ~130–140 mmHg de forma suave (evitar &lt;130)',
+ prep:'Diluir en SG5% o SSN a 0.1 mg/mL; bomba de infusión',
+ iv:'IV continua (control fino)',
+ pres:'Nicardipina 5 mg/5 mL',
+ ci:'Estenosis aórtica grave',
+ ea:'Cefalea, taquicardia refleja, flebitis',
+ nota:'<b>Mecanismo:</b> antagonista de calcio dihidropiridínico. <b>Evidencia:</b> preferido para reducción controlada de PA en HIC (INTERACT2/3).'};
+var F_LABE={pri:true,linea:'Alternativa/adyuvante de PA',n:'Labetalol IV',dlb:'Dosis',
+ da:'10–20 mg IV c/10 min o infusión 2–8 mg/min',
+ prep:'Objetivo PAS ~130–140 mmHg',
+ iv:'IV · monitorizado',
+ pres:'Labetalol 100 mg/20 mL',
+ ci:'Bradicardia, bloqueo AV, asma, ICC descompensada',
+ ea:'Bradicardia, broncoespasmo',
+ nota:'<b>Mecanismo:</b> α/β-bloqueo. Alternativa o complemento a la nicardipina.'};
+var F_SSH={pri:true,linea:'Manejo de PIC / herniación',n:'Salina hipertónica (3%)',dlb:'Dosis',
+ da:'Bolos según protocolo; objetivo de sodio guiado',
+ dur:'Uso puntual en herniación/PIC elevada, no profiláctico continuo',
+ prep:'Vía central para concentraciones altas; monitor de Na c/6 h',
+ iv:'IV · UCI',
+ pres:'Solución salina hipertónica 3% / 7.5%',
+ mon:'Sodio sérico, osmolaridad, estado volémico',
+ ci:'Hipernatremia grave, ICC descompensada',
+ ea:'Hipernatremia, sobrecarga, flebitis',
+ nota:'<b>Mecanismo:</b> gradiente osmótico que extrae agua del parénquima cerebral. <b>Evidencia:</b> para herniación aguda; evitar terapia hiperosmolar continua "profiláctica".'};
+var F_MANI={pri:false,linea:'Manejo de PIC (alternativa)',n:'Manitol',dlb:'Dosis',
+ da:'0.25–1 g/kg IV en bolo',
+ dur:'Reducción aguda de PIC en herniación',
+ prep:'Infusión rápida con filtro',
+ iv:'IV · con filtro',
+ pres:'Manitol 20% frasco',
+ mon:'Osmolaridad, diuresis, electrolitos, volemia',
+ ci:'Hipovolemia, anuria, ICC',
+ ea:'Diuresis excesiva, hipovolemia, alteración electrolítica',
+ nota:'<b>Mecanismo:</b> diurético osmótico. Uso puntual en herniación; vigilar hipovolemia que baje la perfusión.'};
+var F_EVAC={pri:true,linea:'⭐ Neuroquirúrgico',n:'Evacuación / drenaje ventricular externo (DVE)',dlb:'Indicación',
+ da:'Hemorragia cerebelosa con deterioro o hidrocefalia; efecto de masa; HIC supratentorial seleccionada',
+ prep:'Cerebelosa con deterioro = indicación quirúrgica clara. Supratentorial: valorar evacuación mínimamente invasiva temprana (ENRICH)',
+ iv:'Quirófano / neurocirugía',
+ nota:'<b>Evidencia:</b> la craneotomía abierta de rutina no mejora el desenlace en la mayoría de HIC supratentoriales; ENRICH apoya la evacuación mínimamente invasiva temprana en casos seleccionados. La cerebelosa y la hidrocefalia son emergencias quirúrgicas.'};
+var F_NIMO={pri:true,linea:'⭐ Solo HSA aneurismática',n:'Nimodipino VO',dlb:'Dosis',
+ da:'60 mg VO c/4 h durante 21 días',
+ dur:'Prevención del déficit isquémico tardío por vasoespasmo',
+ prep:'VO o por sonda. <b>NUNCA IV</b> (riesgo de hipotensión grave y muerte)',
+ iv:'VO / sonda',
+ pres:'Nimodipino 30 mg comprimido',
+ mon:'PA (espaciar dosis si hipotensión)',
+ ci:'Hipotensión significativa',
+ ea:'Hipotensión, cefalea',
+ nota:'<b>Mecanismo:</b> antagonista de calcio neuroselectivo. <b>Evidencia:</b> mejora el desenlace neurológico en HSA. <b>NO</b> está indicado en HIC. El error grave es administrarlo IV.'};
+var F_TXA={pri:false,linea:'Uso selectivo',n:'Ácido tranexámico',dlb:'Indicación',
+ da:'Según protocolo (p. ej. hemorragia por trombólisis; HSA como puente al aseguramiento)',
+ prep:'Diluir; infusión IV',
+ iv:'IV',
+ pres:'Ácido tranexámico 500 mg/5 mL',
+ ci:'Trombosis activa, CID',
+ ea:'Trombosis, náusea',
+ nota:'<b>Mecanismo:</b> antifibrinolítico (inhibe la conversión de plasminógeno a plasmina). <b>Evidencia:</b> beneficio en HIC espontánea no confirmado (TICH-2); útil en la hemorragia asociada a trombólisis.'};
+
+/* ---------- TX CONSULTA / HOSP ---------- */
+var TXC={
+ 'contacto':[
+   ['1ª Línea','Estabilizar y trasladar (código HIC)',AC,[
+     {pri:true,linea:'Primer contacto',n:'ABC · proteger vía aérea si GCS ≤8',dlb:'Conducta',da:'O₂, cabecera a 30°, nada por boca; intubar si hay compromiso de conciencia',iv:'Pre-hospitalario / urgencias',nota:'El deterioro puede ser rápido. Anticipe la protección de vía aérea.'},
+     {no:true,linea:'❌ Evitar',n:'NO antitrombóticos ni trombolítico',dlb:'Conducta',da:'No administrar AAS, heparina ni trombolítico',iv:'—',nota:'Agravarían el sangrado. El primer paso siempre es la TC.'}
+   ]],
+   ['Coadyuvantes','Traslado y PA',CO,[
+     {pri:true,linea:'Conducta',n:'Control cauteloso de PA + traslado',dlb:'Conducta',da:'Si PAS muy elevada, reducción SUAVE con IV titulable; trasladar a centro con TC + neurocirugía',iv:'Traslado urgente',nota:'No bajar la PA de forma brusca. Documentar uso de anticoagulantes para acelerar la reversión.'}
+   ]]
+ ]
+};
+var TXH={
+ 'hic':[
+   ['1ª Línea','Paquete de cuidados (INTERACT3)',AC,[F_NICA,F_LABE]],
+   ['2ª Línea','Reversión si está anticoagulado',C2,[F_PCC,F_VITK,F_IDAR,F_ANDE]],
+   ['3ª Línea','Neuroquirúrgico',C3,[F_EVAC]],
+   ['Coadyuvantes','PIC y soporte',CO,[F_SSH,F_MANI,F_TXA]]
+ ],
+ 'hsa':[
+   ['1ª Línea','Asegurar el aneurisma + prevenir vasoespasmo',AC,[F_NIMO,F_EVAC]],
+   ['2ª Línea','Control de PA',C2,[F_NICA,F_LABE]],
+   ['Coadyuvantes','Reversión si aplica',CO,[F_PCC,F_VITK]]
+ ]
+};
+
+/* ---------- FÁRMACOS (acordeón buscable) ---------- */
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+var FARMACOS=[
+ {familia:'Reversión de anticoagulación',color:'#7b1c1c',farmacos:[
+  {n:'Complejo protrombínico 4-F (PCC)',ini:'25–50 UI/kg IV según INR + vitamina K',obj:'Revertir warfarina (INR ≤1.4) en &lt;90 min',iv:'IV · urgencias/UCI',pr:'Kcentra®/Octaplex®/Beriplex®',mon:'INR post-dosis; eventos trombóticos',ci:'Trombosis reciente, CID',ea:'Tromboembolismo, reacciones',nota:'<b>Mecanismo:</b> aporta factores II, VII, IX, X. AHA/ASA 2022 clase 1, preferido sobre plasma.'},
+  {n:'Vitamina K (fitomenadiona)',ini:'10 mg IV lento',obj:'Reversión sostenida de AVK (efecto 6–24 h)',iv:'IV lento',pr:'Fitomenadiona 10 mg/mL',mon:'Reacción a la infusión',ci:'Hipersensibilidad',ea:'Reacción anafilactoide si es rápida',nota:'<b>Mecanismo:</b> restaura síntesis hepática de factores. Coadyuvante obligado del PCC.'},
+  {n:'Idarucizumab',ini:'5 g IV (2 bolos de 2.5 g)',obj:'Revertir dabigatrán de inmediato',iv:'IV · bolos',pr:'Praxbind® 2.5 g/50 mL',mon:'Retrombosis por enfermedad de base',ci:'Ninguna absoluta en emergencia',ea:'Trombosis, reacciones',nota:'<b>Mecanismo:</b> anticuerpo que neutraliza al dabigatrán. RE-VERSE AD.'},
+  {n:'Andexanet alfa',ini:'Bolo + infusión 2 h (dosis alta/baja)',obj:'Revertir inhibidores de factor Xa',iv:'IV · bolo + infusión',pr:'Ondexxya®/AndexXa®',mon:'Riesgo trombótico elevado',ci:'Valorar riesgo trombótico',ea:'Tromboembolismo',nota:'<b>Mecanismo:</b> factor Xa señuelo que secuestra al inhibidor. ANNEXA-I. Alternativa: 4-F PCC.'},
+  {n:'Protamina',ini:'1 mg / 100 UI de heparina reciente',obj:'Revertir heparina (parcial para HBPM)',iv:'IV lento',pr:'Sulfato de protamina 50 mg/5 mL',mon:'PA, FC',ci:'Reacción grave previa',ea:'Hipotensión, bradicardia',nota:'<b>Mecanismo:</b> forma complejo inactivo con la heparina.'}
+ ]},
+ {familia:'Antihipertensivos IV titulables',color:'#0c3b6e',farmacos:[
+  {n:'Nicardipina IV',ini:'5 mg/h, ↑2.5 mg/h c/5–15 min (máx 15 mg/h)',obj:'PAS ~130–140 mmHg de forma suave (evitar &lt;130)',iv:'IV continua',pr:'Nicardipina 5 mg/5 mL; diluir a 0.1 mg/mL',mon:'PA continua',ci:'Estenosis aórtica grave',ea:'Cefalea, taquicardia refleja, flebitis',nota:'<b>Mecanismo:</b> antagonista de calcio dihidropiridínico. Preferido (INTERACT2/3).'},
+  {n:'Labetalol IV',ini:'10–20 mg IV c/10 min o 2–8 mg/min',obj:'Control de PA (alternativa/adyuvante)',iv:'IV · monitorizado',pr:'Labetalol 100 mg/20 mL',mon:'FC, broncoespasmo',ci:'Bradicardia, bloqueo AV, asma, ICC descompensada',ea:'Bradicardia, broncoespasmo',nota:'<b>Mecanismo:</b> α/β-bloqueo.'}
+ ]},
+ {familia:'Manejo de PIC / herniación',color:'#7a4a00',farmacos:[
+  {n:'Salina hipertónica 3%',ini:'Bolos según protocolo; objetivo de Na',obj:'Reducir PIC/edema en herniación (no profiláctico)',iv:'IV · vía central · UCI',pr:'SSH 3% / 7.5%',mon:'Sodio c/6 h, osmolaridad, volemia',ci:'Hipernatremia grave, ICC',ea:'Hipernatremia, sobrecarga',nota:'<b>Mecanismo:</b> gradiente osmótico. Uso puntual en herniación.'},
+  {n:'Manitol',ini:'0.25–1 g/kg IV bolo',obj:'Reducción aguda de PIC',iv:'IV · con filtro',pr:'Manitol 20%',mon:'Osmolaridad, diuresis, electrolitos',ci:'Hipovolemia, anuria, ICC',ea:'Diuresis, hipovolemia',nota:'<b>Mecanismo:</b> diurético osmótico. Evitar osmoterapia continua profiláctica.'}
+ ]},
+ {familia:'HSA y coadyuvantes',color:'#0a5c45',farmacos:[
+  {n:'Nimodipino VO',ini:'60 mg VO c/4 h ×21 días (NUNCA IV)',obj:'Prevenir déficit por vasoespasmo en HSA aneurismática',iv:'VO/sonda · con psiquiatría no — con neuro',pr:'Nimodipino 30 mg comprimido',mon:'PA (espaciar si hipotensión)',ci:'Hipotensión',ea:'Hipotensión, cefalea',nota:'<b>Mecanismo:</b> antagonista de calcio neuroselectivo. Solo HSA, no HIC. El error grave es darlo IV.'},
+  {n:'Ácido tranexámico',ini:'Uso selectivo (protocolo)',obj:'Antifibrinolítico en sangrado por trombólisis / HSA como puente',iv:'IV',pr:'Ácido tranexámico 500 mg/5 mL',mon:'Signos de trombosis',ci:'Trombosis activa, CID',ea:'Trombosis, náusea',nota:'<b>Mecanismo:</b> inhibe la fibrinólisis. Beneficio no confirmado en HIC espontánea (TICH-2).'}
+ ]}
+];
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Reversión de anticoagulación',color:'#7b1c1c',farmacos:[
+  {n:'PCC 4-F + Vitamina K (warfarina)',dosis:['PCC 25–50 UI/kg IV según INR','Vitamina K 10 mg IV lento'],via:'IV en urgencias/UCI, monitorizado; objetivo &lt;90 min desde la llegada',enf:'Confirmar el tipo de anticoagulante y el último INR; administrar sin demora; vigilar signos de trombosis; repetir INR tras la dosis (meta ≤1.4).',pac:'Le daremos un medicamento para detener el efecto del anticoagulante y frenar el sangrado. Avise si tiene dolor o hinchazón en una pierna, dolor de pecho o dificultad para respirar.',nota:'AHA/ASA 2022 clase 1. La reversión rápida mejora la supervivencia. Para dabigatrán use idarucizumab; para inhibidores de Xa, andexanet o PCC.',al:'Dolor/edema de pierna, dolor torácico o disnea (posible trombosis).'}
+ ]},
+ {familia:'Control de presión arterial',color:'#0c3b6e',farmacos:[
+  {n:'Nicardipina / Labetalol IV',dosis:['Nicardipina 5 mg/h, titular a máx 15 mg/h','Labetalol 10–20 mg IV c/10 min'],via:'Infusión IV continua con monitor de PA',enf:'PA c/15 min al inicio; objetivo PAS ~130–140 mmHg; reducción suave (evitar &lt;130); documentar la tendencia; avisar deterioro neurológico.',pac:'Bajaremos su presión de forma controlada para reducir el riesgo de que el sangrado crezca.',nota:'Parte del paquete INTERACT3 (PA + glucosa + temperatura + reversión de anticoagulación).',al:'Somnolencia creciente, vómito o debilidad nueva (posible expansión del hematoma).'}
+ ]},
+ {familia:'HSA — prevención de vasoespasmo',color:'#0a5c45',farmacos:[
+  {n:'Nimodipino VO',dosis:['60 mg VO c/4 h durante 21 días'],via:'VO o por sonda; NUNCA IV',enf:'Administrar solo por vía enteral; vigilar hipotensión; espaciar la dosis si la PA baja; JAMÁS por vía intravenosa (riesgo de muerte).',pac:'Este medicamento protege al cerebro tras el sangrado por aneurisma. Es importante tomar cada dosis, aunque se sienta bien.',nota:'Reduce el déficit isquémico tardío en HSA aneurismática. No se usa en HIC.',al:'Mareo o desmayo por presión baja.'}
+ ]}
+];
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente y familia</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ 'aco':{t:'Anticoagulado con HIC',pres:'HIC en paciente con warfarina o anticoagulante oral directo (DOAC).',dx:'TC + INR/anti-Xa + historia del último fármaco y dosis.',tx:'Reversión inmediata según el agente: PCC+vitamina K (warfarina), idarucizumab (dabigatrán), andexanet o PCC (inhibidores de Xa). Objetivo &lt;90 min.',ref:'UCI neurológica; hematología si el caso es complejo.',cx:'Esperar estudios completos antes de revertir: la reversión no debe retrasarse. Documentar siempre el anticoagulante desde el primer contacto.'},
+ 'cerebelosa':{t:'Hemorragia cerebelosa',pres:'Cefalea occipital, vértigo, ataxia y vómito; riesgo de compresión del tronco e hidrocefalia.',dx:'TC: localización cerebelosa, tamaño e hidrocefalia.',tx:'Emergencia neuroquirúrgica: evacuación del hematoma y/o drenaje ventricular externo ante deterioro o hematoma grande.',ref:'Neurocirugía inmediata.',cx:'Subestimar una hemorragia cerebelosa "pequeña": puede deteriorar rápidamente por compresión del tronco.'},
+ 'trueno':{t:'Cefalea "en trueno" (sospecha de HSA)',pres:'La peor cefalea de la vida, súbita, ± rigidez de nuca o pérdida de conciencia.',dx:'TC simple urgente; si es negativa y la sospecha es alta, punción lumbar (xantocromía) y angiografía.',tx:'Asegurar el aneurisma (embolización/clipaje), nimodipino VO, cuidados neurocríticos.',ref:'Neurointervencionismo / neurocirugía.',cx:'Dar de alta una cefalea en trueno con TC negativa sin descartar HSA: la TC pierde sensibilidad con las horas.'}
+};
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  buildICH();buildGCS();renderAlgo();
+  setTxc('contacto',document.querySelector('#txc-chips .pchip'));
+  setTxh('hic',document.querySelector('#txh-chips .pchip'));
+  setEscen('aco',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+
+</script>
+</body>
+</html>

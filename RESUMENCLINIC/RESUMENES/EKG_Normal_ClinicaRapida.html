@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>EKG normal · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0e7c66;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e0f0ec;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#06342b,#0e7c66);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#e0f0ec;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#e0f0ec;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#06342b,#0e7c66);">
+  <div class="hdr-top"><div class="hdr-icon">🫀</div><div>
+    <div class="hdr-eye">Cardiología · Electrocardiografía</div>
+    <div class="hdr-title">EKG normal</div>
+    <div class="hdr-sub">Medidas · derivaciones · morfología · cómo tomarlo</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">25 mm/s · 10 mm/mV</span>
+    <span class="badge">12 derivaciones</span>
+    <span class="badge">Sistema hexaxial</span>
+    <span class="badge">QT/QTc</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">0.04 s</div><div class="qs-l">Cuadro chico</div></div>
+  <div class="qs"><div class="qs-v">0.20 s</div><div class="qs-l">Cuadro grande</div></div>
+  <div class="qs"><div class="qs-v">60–100</div><div class="qs-l">FC normal</div></div>
+  <div class="qs"><div class="qs-v">1 mV</div><div class="qs-l">= 10 mm</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('papel',this)">📐 Papel y FC</button>
+  <button class="tab" onclick="showT('deriv',this)">🔟 Derivaciones y caras</button>
+  <button class="tab" onclick="showT('ondas',this)">🫀 Ondas e intervalos</button>
+  <button class="tab" onclick="showT('morfo',this)">📈 Morfología normal</button>
+  <button class="tab" onclick="showT('qt',this)">⏱️ QT y QTc</button>
+  <button class="tab" onclick="showT('valores',this)">📏 Valores normales</button>
+  <button class="tab" onclick="showT('eje',this)">🧭 Eje</button>
+  <button class="tab" onclick="showT('toma',this)">🔌 Cómo tomarlo</button>
+  <button class="tab" onclick="showT('lectura',this)">✅ Lectura</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Idea general</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>El EKG registra la actividad eléctrica del corazón desde <strong>12 derivaciones</strong> (12 "puntos de vista") en papel milimetrado a velocidad y amplitud estándar. Leerlo bien exige dominar el papel, las ondas/intervalos, la morfología normal por derivación y una lectura sistemática.</p></div>
+    <div class="alert a-i"><span class="ai">💡</span><div>Estándar: <b>25 mm/s</b> y <b>10 mm/mV</b>. Cuadro chico (1 mm) = <b>0.04 s</b> y <b>0.1 mV</b>; cuadro grande (5 mm) = <b>0.20 s</b> y <b>0.5 mV</b>.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-papel">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📐</span><span class="st">El papel milimetrado</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 320 150" style="width:100%;max-width:420px;display:block;margin:0 auto;">
+      <defs><pattern id="gN0" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="150" fill="url(#gN0)"/>
+      <rect x="30" y="30" width="5" height="5" fill="none" stroke="#0e7c66" stroke-width="1.5"/>
+      <line x1="30" y1="46" x2="35" y2="46" stroke="#0e7c66" stroke-width="1.5"/><text x="38" y="49" font-size="8" fill="#0e7c66">1 mm = 0.04 s / 0.1 mV</text>
+      <rect x="30" y="70" width="25" height="25" fill="none" stroke="#c0142b" stroke-width="1.8"/>
+      <line x1="30" y1="106" x2="55" y2="106" stroke="#c0142b" stroke-width="1.5"/><text x="58" y="109" font-size="8" fill="#c0142b">5 mm = 0.20 s / 0.5 mV (cuadro grande)</text>
+      <path d="M230,120 L230,70 L245,70 L245,120" fill="none" stroke="#17171a" stroke-width="1.5"/>
+      <text x="196" y="135" font-size="8" fill="#17171a">Calibración: 10 mm = 1 mV</text>
+    </svg>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <tr><th>Cuadro</th><th>Horizontal (tiempo)</th><th>Vertical (voltaje)</th></tr>
+      <tr><td class="dn">Chico (1 mm)</td><td>0.04 s (40 ms)</td><td>0.1 mV</td></tr>
+      <tr><td class="dn">Grande (5 mm)</td><td>0.20 s (200 ms)</td><td>0.5 mV</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔢</span><span class="st">Frecuencia cardiaca</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Método</th><th>Fórmula</th></tr>
+      <tr><td class="dn">Regla de 300</td><td>300 ÷ (cuadros GRANDES entre R-R)</td></tr>
+      <tr><td class="dn">Regla de 1500</td><td>1500 ÷ (cuadros CHICOS entre R-R)</td></tr>
+      <tr><td class="dn">Irregular</td><td>QRS en 6 s (30 cuadros grandes) × 10</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Secuencia de cuadros grandes: <b>300 · 150 · 100 · 75 · 60 · 50</b>. (Si el R-R cae en el 3.er cuadro grande → 100 lpm.)</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-deriv">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔟</span><span class="st">Las 12 derivaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Grupo</th><th>Derivaciones</th><th>Nota</th></tr>
+      <tr><td class="dn">Bipolares (Einthoven)</td><td>I, II, III</td><td>Ley de Einthoven: <b>II = I + III</b></td></tr>
+      <tr><td class="dn">Aumentadas (Goldberger)</td><td>aVR, aVL, aVF</td><td>Unipolares de extremidades</td></tr>
+      <tr><td class="dn">Precordiales (Wilson)</td><td>V1–V6</td><td>Plano horizontal</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗺️</span><span class="st">Caras y territorios coronarios</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 320 170" style="width:100%;max-width:420px;display:block;margin:0 auto;">
+      <g font-size="11" font-weight="700" text-anchor="middle">
+      <!-- fila 1 -->
+      <rect x="10" y="10" width="70" height="34" rx="4" fill="#f2c9d0"/><text x="45" y="31" fill="#8a2b3a">I</text>
+      <rect x="86" y="10" width="70" height="34" rx="4" fill="#e2e8f0"/><text x="121" y="31" fill="#555">aVR</text>
+      <rect x="162" y="10" width="70" height="34" rx="4" fill="#cfe0f5"/><text x="197" y="31" fill="#1f4e8a">V1</text>
+      <rect x="238" y="10" width="70" height="34" rx="4" fill="#d4ecd9"/><text x="273" y="31" fill="#1e6b3a">V4</text>
+      <!-- fila 2 -->
+      <rect x="10" y="48" width="70" height="34" rx="4" fill="#f6e0b0"/><text x="45" y="69" fill="#8a5a1e">II</text>
+      <rect x="86" y="48" width="70" height="34" rx="4" fill="#f2c9d0"/><text x="121" y="69" fill="#8a2b3a">aVL</text>
+      <rect x="162" y="48" width="70" height="34" rx="4" fill="#cfe0f5"/><text x="197" y="69" fill="#1f4e8a">V2</text>
+      <rect x="238" y="48" width="70" height="34" rx="4" fill="#d4ecd9"/><text x="273" y="69" fill="#1e6b3a">V5</text>
+      <!-- fila 3 -->
+      <rect x="10" y="86" width="70" height="34" rx="4" fill="#f6e0b0"/><text x="45" y="107" fill="#8a5a1e">III</text>
+      <rect x="86" y="86" width="70" height="34" rx="4" fill="#f6e0b0"/><text x="121" y="107" fill="#8a5a1e">aVF</text>
+      <rect x="162" y="86" width="70" height="34" rx="4" fill="#d4ecd9"/><text x="197" y="107" fill="#1e6b3a">V3</text>
+      <rect x="238" y="86" width="70" height="34" rx="4" fill="#f2c9d0"/><text x="273" y="107" fill="#8a2b3a">V6</text>
+      </g>
+      <g font-size="9" text-anchor="start">
+      <rect x="10" y="132" width="12" height="10" fill="#f6e0b0"/><text x="26" y="141" fill="#374151">Inferior (II, III, aVF)</text>
+      <rect x="150" y="132" width="12" height="10" fill="#f2c9d0"/><text x="166" y="141" fill="#374151">Lateral (I, aVL, V5, V6)</text>
+      <rect x="10" y="148" width="12" height="10" fill="#cfe0f5"/><text x="26" y="157" fill="#374151">Septal (V1, V2)</text>
+      <rect x="150" y="148" width="12" height="10" fill="#d4ecd9"/><text x="166" y="157" fill="#374151">Anterior (V3, V4)</text>
+      </g>
+    </svg>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <tr><th>Cara</th><th>Derivaciones</th><th>Arteria (habitual)</th></tr>
+      <tr><td class="dn">Septal</td><td>V1–V2</td><td>DA</td></tr>
+      <tr><td class="dn">Anterior</td><td>V3–V4</td><td>DA</td></tr>
+      <tr><td class="dn">Lateral</td><td>I, aVL, V5, V6</td><td>Circunfleja / diagonal</td></tr>
+      <tr><td class="dn">Inferior</td><td>II, III, aVF</td><td>Coronaria derecha (o Cx)</td></tr>
+      <tr><td class="dn">aVR</td><td>—</td><td>Cavidad/base (visión "desde el hombro derecho")</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-ondas">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🫀</span><div><div class="at">Anatomía del complejo (con medidas)</div>Onda P · intervalo PR · complejo QRS · segmento ST · onda T · intervalo QT (± onda U).</div></div>
+  <svg viewBox="0 0 360 210" style="width:100%;max-width:460px;display:block;margin:0 auto;">
+    <defs><pattern id="gN1" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="20" height="20" fill="#fff5f6"/><path d="M0 4H20M0 8H20M0 12H20M0 16H20M4 0V20M8 0V20M12 0V20M16 0V20" stroke="#f7ccd2" stroke-width="0.4"/><path d="M0 0H20M0 0V20" stroke="#e9a6b0" stroke-width="0.9"/></pattern></defs>
+    <rect width="360" height="210" fill="url(#gN1)"/>
+    <path d="M10,110 L45,110 Q62,92 80,110 L110,110 L116,110 L120,124 L132,40 L144,140 L150,110 L178,110 Q205,84 232,110 L350,110" fill="none" stroke="#17171a" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="62" y="86" font-size="11" fill="#0e7c66" font-weight="700" text-anchor="middle">P</text>
+    <text x="132" y="34" font-size="11" fill="#0e7c66" font-weight="700" text-anchor="middle">R</text>
+    <text x="118" y="134" font-size="9" fill="#0e7c66" text-anchor="middle">Q</text>
+    <text x="146" y="152" font-size="9" fill="#0e7c66" text-anchor="middle">S</text>
+    <text x="205" y="78" font-size="11" fill="#0e7c66" font-weight="700" text-anchor="middle">T</text>
+    <g stroke="#c0142b" stroke-width="1.2" fill="none">
+      <path d="M45,168 L45,175 L114,175 L114,168"/>
+      <path d="M116,180 L116,187 L150,187 L150,180"/>
+      <path d="M116,195 L116,202 L232,202 L232,195"/>
+    </g>
+    <text x="79" y="166" font-size="9" fill="#c0142b" text-anchor="middle">PR 120–200 ms</text>
+    <text x="133" y="178" font-size="9" fill="#c0142b" text-anchor="middle">QRS &lt;120 ms</text>
+    <text x="174" y="193" font-size="9" fill="#c0142b" text-anchor="middle">QT (corregir por FC)</text>
+    <line x1="150" y1="110" x2="178" y2="110" stroke="#2b6cb0" stroke-width="2.5"/>
+    <text x="164" y="104" font-size="8.5" fill="#2b6cb0" text-anchor="middle">ST</text>
+  </svg>
+  <div class="tw" style="margin-top:8px;"><table class="t">
+    <tr><th>Onda/intervalo</th><th>Significa</th><th>Normal</th></tr>
+    <tr><td class="dn">P</td><td>Despolarización auricular</td><td>&lt;0.12 s, &lt;2.5 mm; + en II, − en aVR</td></tr>
+    <tr><td class="dn">PR</td><td>Inicio P → inicio QRS (paso por nodo AV)</td><td>0.12–0.20 s</td></tr>
+    <tr><td class="dn">QRS</td><td>Despolarización ventricular</td><td>&lt;0.12 s (0.08–0.10)</td></tr>
+    <tr><td class="dn">Punto J / ST</td><td>Fin del QRS / repolarización inicial</td><td>Isoeléctrico</td></tr>
+    <tr><td class="dn">T</td><td>Repolarización ventricular</td><td>Asimétrica, concordante con QRS</td></tr>
+    <tr><td class="dn">QT</td><td>Inicio QRS → fin T</td><td>Corregir (QTc)</td></tr>
+    <tr><td class="dn">Onda U</td><td>Repolarización tardía (a veces visible)</td><td>Pequeña, tras la T</td></tr>
+  </table></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">📏</span><div>Mida los intervalos donde mejor se definen: <b>PR y QRS</b> suelen medirse en II; el <b>QT</b> en II o V5. Tome el complejo con el intervalo más largo.</div></div>
+  <div class="pop" style="margin-top:12px;"><div class="pop-h" style="background:#0e7c66;">Tira de ritmo (sinusal normal)</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 80" style="width:100%;height:88px;display:block;"><defs><pattern id="gN2" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs><rect width="320" height="80" fill="url(#gN2)"/><path id="wf_strip" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    <div style="padding:6px 12px;font-size:11.5px;color:#374151;">Ritmo sinusal: cada P (+ en II) seguida de QRS, RR regular, FC 60–100.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-morfo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Progresión de la onda R (V1→V6)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 120" style="width:100%;max-width:460px;display:block;margin:0 auto;background:#fbf7f4;border-radius:8px;">
+      <line x1="10" y1="80" x2="350" y2="80" stroke="#ddd" stroke-width="1"/>
+      <!-- V1: rS -->
+      <path d="M20,80 L30,74 L36,105 L46,80" fill="none" stroke="#17171a" stroke-width="1.6"/><text x="33" y="118" font-size="9" fill="#0e7c66" text-anchor="middle">V1</text>
+      <!-- V2 -->
+      <path d="M75,80 L85,68 L91,104 L101,80" fill="none" stroke="#17171a" stroke-width="1.6"/><text x="88" y="118" font-size="9" fill="#0e7c66" text-anchor="middle">V2</text>
+      <!-- V3 transicion RS -->
+      <path d="M130,80 L140,54 L146,100 L156,80" fill="none" stroke="#17171a" stroke-width="1.6"/><text x="143" y="118" font-size="9" fill="#0e7c66" text-anchor="middle">V3</text>
+      <!-- V4 -->
+      <path d="M185,80 L195,40 L201,92 L211,80" fill="none" stroke="#17171a" stroke-width="1.6"/><text x="198" y="118" font-size="9" fill="#0e7c66" text-anchor="middle">V4</text>
+      <!-- V5 qR -->
+      <path d="M240,80 L246,86 L252,34 L260,84 L266,80" fill="none" stroke="#17171a" stroke-width="1.6"/><text x="253" y="118" font-size="9" fill="#0e7c66" text-anchor="middle">V5</text>
+      <!-- V6 qR -->
+      <path d="M295,80 L301,85 L307,40 L315,83 L321,80" fill="none" stroke="#17171a" stroke-width="1.6"/><text x="308" y="118" font-size="9" fill="#0e7c66" text-anchor="middle">V6</text>
+      <text x="180" y="14" font-size="9.5" fill="#374151" text-anchor="middle">La R crece y la S mengua de V1 a V6</text>
+    </svg>
+    <div style="font-size:11.5px;color:#374151;margin-top:4px;">La R aumenta progresivamente de V1 a V5–V6; la <b>zona de transición</b> (R = S) está normalmente en <b>V3–V4</b>. Una mala progresión de R sugiere infarto anterior antiguo, mala colocación o EPOC.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Morfología normal por derivación</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Elemento</th><th>Normal</th></tr>
+      <tr><td class="dn">Onda P</td><td>Positiva en I, II, aVF y V4–V6; negativa en aVR; bifásica en V1</td></tr>
+      <tr><td class="dn">Onda T</td><td>Positiva en la mayoría; <b>invertida en aVR (normal)</b>; puede invertirse en V1 (y III/aVL aisladamente)</td></tr>
+      <tr><td class="dn">Ondas Q fisiológicas</td><td>Pequeñas y estrechas (&lt;0.04 s y &lt;25% de la R) en I, aVL, V5–V6 (q septal); pueden verse en III/aVF</td></tr>
+      <tr><td class="dn">Complejo en aVR</td><td>Todo predominantemente negativo (P, QRS y T)</td></tr>
+      <tr><td class="dn">Punto J / ST</td><td>Isoeléctrico; una elevación cóncava leve puede ser repolarización precoz (variante)</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-qt">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">QT corregido (QTc)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🧮</span><div>El QT varía con la FC → se corrige. <b>Bazett:</b> QTc = QT ÷ √RR. <b>Fridericia:</b> QTc = QT ÷ ∛RR (mejor a FC extremas). RR en segundos.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th></th><th>Hombres</th><th>Mujeres</th></tr>
+      <tr><td class="dn">QTc normal</td><td>≤ 440 ms</td><td>≤ 460 ms</td></tr>
+      <tr><td class="dn">Prolongado</td><td>&gt; 450 ms</td><td>&gt; 470 ms</td></tr>
+      <tr><td class="dn" style="color:#7b1c1c;">Riesgo de Torsades</td><td colspan="2">QTc &gt; 500 ms</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Alargan el QT: fármacos (antiarrítmicos, macrólidos, antipsicóticos, ondansetrón…), <b>hipopotasemia, hipomagnesemia, hipocalcemia</b>, bradicardia, isquemia, congénito. Regla práctica: el QT normal suele ser <b>&lt; la mitad del RR</b>.</div></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">Medir en II o V5; excluir la onda U; usar el complejo con QT más largo.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-valores">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Valores normales</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Normal</th></tr>
+      <tr><td class="dn">Frecuencia</td><td>60–100 lpm</td></tr>
+      <tr><td class="dn">Onda P</td><td>&lt;0.12 s, &lt;2.5 mm; positiva en II</td></tr>
+      <tr><td class="dn">Intervalo PR</td><td>0.12–0.20 s (3–5 cuadros chicos)</td></tr>
+      <tr><td class="dn">QRS</td><td>&lt;0.12 s (normal 0.08–0.10)</td></tr>
+      <tr><td class="dn">QTc</td><td>≤440 ms (H) / ≤460 ms (M)</td></tr>
+      <tr><td class="dn">Eje QRS</td><td>−30° a +90°</td></tr>
+      <tr><td class="dn">Zona de transición</td><td>V3–V4</td></tr>
+      <tr><td class="dn">Segmento ST</td><td>Isoeléctrico</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-eje">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Sistema hexaxial</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 300 260" style="width:100%;max-width:380px;display:block;margin:0 auto;background:#fbf7f4;border-radius:8px;">
+      <!-- sector normal -30 a +90 sombreado -->
+      <path d="M150,130 L260,130 A110,110 0 0 1 150,240 Z" fill="#d4ecd9" opacity="0.55"/>
+      <path d="M150,130 L245,75 Z" fill="none"/>
+      <!-- ejes -->
+      <g stroke="#bbb" stroke-width="1">
+      <line x1="40" y1="130" x2="260" y2="130"/> <!-- I 0 -->
+      <line x1="95" y1="225" x2="205" y2="35"/>  <!-- II/aVL 60/-120 -->
+      <line x1="205" y1="225" x2="95" y2="35"/>  <!-- III/aVR 120/-60ish -->
+      <line x1="150" y1="20" x2="150" y2="240"/> <!-- aVF 90 -->
+      </g>
+      <!-- etiquetas positivas -->
+      <g font-size="10" font-weight="700">
+      <text x="266" y="133" fill="#8a2b3a">I (0°)</text>
+      <text x="205" y="232" fill="#8a5a1e">II (+60°)</text>
+      <text x="60" y="232" fill="#8a5a1e">III (+120°)</text>
+      <text x="140" y="253" fill="#8a5a1e" text-anchor="middle">aVF (+90°)</text>
+      <text x="248" y="66" fill="#8a2b3a">aVL (−30°)</text>
+      <text x="30" y="66" fill="#555">aVR (−150°)</text>
+      </g>
+      <text x="200" y="180" font-size="9" fill="#1e6b3a" text-anchor="middle">Eje normal</text>
+      <text x="200" y="192" font-size="9" fill="#1e6b3a" text-anchor="middle">−30° a +90°</text>
+      <circle cx="150" cy="130" r="3" fill="#333"/>
+    </svg>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚡</span><span class="st">Determinar el eje (rápido)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>QRS en I</th><th>QRS en aVF</th><th>Eje</th></tr>
+      <tr><td class="dn">➕</td><td>➕</td><td><b>Normal</b></td></tr>
+      <tr><td class="dn">➕</td><td>➖</td><td>Izquierda* (confirmar con II: si II ➖ → izq)</td></tr>
+      <tr><td class="dn">➖</td><td>➕</td><td>Derecha</td></tr>
+      <tr><td class="dn">➖</td><td>➖</td><td>Extremo (noroeste)</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">Método fino: buscar la derivación más <b>isoeléctrica</b>; el eje es perpendicular a ella (hacia donde el QRS sea positivo).</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-toma">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔌</span><span class="st">Colocación de electrodos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 320 300" style="width:100%;max-width:400px;display:block;margin:0 auto;background:#fbf7f4;border-radius:8px;">
+      <path d="M90,40 Q160,25 230,40 L245,120 Q250,200 220,270 L100,270 Q70,200 75,120 Z" fill="#f6d9c8" stroke="#d8a98f" stroke-width="1.5"/>
+      <line x1="160" y1="45" x2="160" y2="150" stroke="#caa" stroke-width="1" stroke-dasharray="3 2"/>
+      <circle cx="150" cy="118" r="6" fill="#c0142b"/><text x="150" y="121" font-size="7.5" fill="#fff" text-anchor="middle">V1</text>
+      <circle cx="172" cy="118" r="6" fill="#e6b800"/><text x="172" y="121" font-size="7.5" fill="#333" text-anchor="middle">V2</text>
+      <circle cx="185" cy="135" r="6" fill="#0a9d3a"/><text x="185" y="138" font-size="7.5" fill="#fff" text-anchor="middle">V3</text>
+      <circle cx="198" cy="150" r="6" fill="#8a5a2b"/><text x="198" y="153" font-size="7.5" fill="#fff" text-anchor="middle">V4</text>
+      <circle cx="218" cy="150" r="6" fill="#111"/><text x="218" y="153" font-size="7.5" fill="#fff" text-anchor="middle">V5</text>
+      <circle cx="236" cy="150" r="6" fill="#5b3a9e"/><text x="236" y="153" font-size="7.5" fill="#fff" text-anchor="middle">V6</text>
+      <circle cx="78" cy="55" r="7" fill="#fff" stroke="#111" stroke-width="1.5"/><text x="78" y="45" font-size="8" fill="#333" text-anchor="middle">RA (blanco)</text>
+      <circle cx="242" cy="55" r="7" fill="#111"/><text x="242" y="45" font-size="8" fill="#333" text-anchor="middle">LA (negro)</text>
+      <circle cx="105" cy="285" r="7" fill="#0a9d3a"/><text x="105" y="300" font-size="8" fill="#333" text-anchor="middle">RL (verde)</text>
+      <circle cx="215" cy="285" r="7" fill="#c0142b"/><text x="215" y="300" font-size="8" fill="#333" text-anchor="middle">LL (rojo)</text>
+    </svg>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <tr><th>Derivación</th><th>Posición</th></tr>
+      <tr><td class="dn">V1</td><td>4.º EIC, borde <b>derecho</b> del esternón</td></tr>
+      <tr><td class="dn">V2</td><td>4.º EIC, borde <b>izquierdo</b> del esternón</td></tr>
+      <tr><td class="dn">V3</td><td>Entre V2 y V4</td></tr>
+      <tr><td class="dn">V4</td><td>5.º EIC, línea medioclavicular</td></tr>
+      <tr><td class="dn">V5</td><td>5.º EIC, línea axilar anterior (nivel de V4)</td></tr>
+      <tr><td class="dn">V6</td><td>5.º EIC, línea axilar media (nivel de V4)</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🎨</span><div><b>Extremidades (AHA/EE. UU.):</b> RA blanco, LA negro, LL rojo, RL verde. "Humo (negro) sobre fuego (rojo)" a la izquierda; "nieve (blanco) sobre pasto (verde)" a la derecha.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧑‍⚕️</span><span class="st">Pasos para tomarlo</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt">Paciente en <b>decúbito supino</b>, relajado, sin hablar; extremidades apoyadas.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Preparar la piel</b>: rasurar si hace falta, limpiar/desengrasar; buen contacto (gel).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Colocar electrodos de extremidades y precordiales V1–V6 en su posición.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Verificar <b>calibración</b> (10 mm/mV) y <b>velocidad</b> (25 mm/s); minimizar artefacto.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Registrar</b> 12 derivaciones + tira de ritmo; rotular nombre, fecha y hora.</span></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">⚠️</span><div>Errores frecuentes: <b>inversión de cables</b> (RA/LA → P y QRS negativos en I con aVR positivo), mala posición precordial (altera la R en V1–V3), artefacto por temblor o mala tierra.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-lectura">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Lectura sistemática</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Calibración/velocidad</b>: confirmar 10 mm/mV y 25 mm/s.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Frecuencia</b> (regla de 300/1500).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Ritmo</b>: ¿regular? ¿cada P seguida de QRS? ¿P sinusal (+ en II)?</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Eje</b> (I y aVF).</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Intervalos</b>: PR, QRS, QT/QTc.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt"><b>Ondas P</b>: crecimiento auricular (P mitrale/pulmonale).</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt"><b>QRS</b>: voltajes (hipertrofia), progresión de R, bloqueos de rama, ondas Q patológicas.</span></div>
+    <div class="kp"><span class="kn">8</span><span class="kt"><b>ST-T</b>: elevación/descenso, inversión de T (isquemia/lesión) por territorio.</span></div>
+    <div class="kp"><span class="kn">9</span><span class="kt"><b>Comparar</b> con EKG previos y correlacionar con la clínica.</span></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — EKG normal</h2><p>Referencias.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Estándares</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">AHA</span><span class="biblio-level lv-a">Estándar</span></div><div class="biblio-ref">AHA/ACCF/HRS. <em>Recomendaciones para la estandarización e interpretación del ECG.</em></div></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">Ref</span><span class="biblio-level lv-exp">Texto</span></div><div class="biblio-ref">Dubin · Surawicz-Knilans. <em>Interpretación del ECG.</em></div></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo; los trazos son esquemáticos generados por software. Valores de referencia orientativos. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis / pauta')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo',f.emb,'#7a4a00');if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#e0f0ec;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0e7c66;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#e0f0ec;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#0e7c66;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#e0f0ec;border:1px solid #0e7c66;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#0e7c66;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#e0f0ec;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0e7c66;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#0e7c66';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+function setD(id,dd){var el=document.getElementById(id);if(el)el.setAttribute('d',dd);}
+function ekgSinus(w,b,amp,rr){var d='M0 '+b;for(var x=8;x<w-rr*0.5;x+=rr){var p=x,pw=rr*0.10;d+=' L'+p.toFixed(1)+' '+b+' Q'+(p+pw/2).toFixed(1)+' '+(b-amp*0.14).toFixed(1)+' '+(p+pw).toFixed(1)+' '+b;var q=p+pw+rr*0.05;d+=' L'+q.toFixed(1)+' '+b+' L'+(q+rr*0.015).toFixed(1)+' '+(b+amp*0.08).toFixed(1)+' L'+(q+rr*0.05).toFixed(1)+' '+(b-amp).toFixed(1)+' L'+(q+rr*0.085).toFixed(1)+' '+(b+amp*0.30).toFixed(1)+' L'+(q+rr*0.11).toFixed(1)+' '+b;var t=q+rr*0.11+rr*0.10,tw=rr*0.17;d+=' L'+t.toFixed(1)+' '+b+' Q'+(t+tw/2).toFixed(1)+' '+(b-amp*0.26).toFixed(1)+' '+(t+tw).toFixed(1)+' '+b;}d+=' L'+w+' '+b;return d;}
+function drawEKGs(){setD('wf_strip',ekgSinus(320,42,24,72));}
+window.addEventListener('load',function(){drawEKGs();});
+
+</script>
+</body>
+</html>

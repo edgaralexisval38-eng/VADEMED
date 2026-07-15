@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bloqueos cardíacos · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#7b1c1c;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+/* HEADER */
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+/* QUICK STATS */
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+/* TABBAR */
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+/* PANELS */
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+/* SECCIONES COLAPSABLES */
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+/* ALERTAS */
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+/* TABLAS */
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+/* CHIPS DE POBLACIÓN */
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+
+/* TEXTO */
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+
+/* PUNTOS CLAVE */
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f3eaf7;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* FICHA DE FÁRMACO (fu = farm unit) */
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+
+/* INDICACIONES */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+
+/* BIBLIOGRAFÍA — formato CAD */
+.biblio-header{background:linear-gradient(135deg,#1a0a0a,#7b1c1c);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+
+/* ---- EXTRAS NECESARIOS (calculadoras, algoritmo, EKG, fisiopatología) ---- */
+.fp{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.6;}
+.fp-r{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.fp-a{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.fp-b{background:var(--bl);border-left:3px solid var(--bm);color:var(--b);}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.calc-btn{background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:10px;border-radius:var(--rs);padding:10px 12px;font-size:12.5px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);border-left:3px solid var(--gm);color:var(--g);}
+.res-mid{background:var(--al);border-left:3px solid var(--am);color:var(--a);}
+.res-high{background:var(--rl);border-left:3px solid var(--rm);color:var(--r);}
+.opt{display:block;width:100%;text-align:left;padding:9px 11px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:12.5px;margin-bottom:6px;cursor:pointer;font-family:inherit;color:var(--gray-900);line-height:1.45;}
+.opt.on{border-color:var(--ac);background:#fdf2f2;font-weight:700;color:var(--r);}
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:13.5px;font-weight:700;color:var(--gray-900);margin-bottom:10px;}
+.ekg-w{overflow-x:auto;border:1px solid var(--bd);border-radius:var(--rs);background:#fff;margin-bottom:8px;}
+.farm-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);margin-bottom:8px;overflow:hidden;}
+.farm-h{padding:9px 13px;font-size:13px;font-weight:800;color:#fff;}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.mon-t{font-size:11px;color:var(--gray-600);}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#1a0a0a,#7b1c1c);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫀</div>
+    <div>
+      <div class="hdr-eye">Cardiología · Electrocardiografía · Urgencias</div>
+      <div class="hdr-title">Bloqueos cardíacos</div>
+      <div class="hdr-sub">ACC/AHA/HRS 2018 · ESC 2021 · ACLS 2020 · GPC IMSS</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Esquemas de EKG</span>
+    <span class="badge">Nodal vs infranodal</span>
+    <span class="badge">Mobitz II = marcapasos</span>
+    <span class="badge">Atropina falla en infranodal</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">PR &gt;0.20 s</div><div class="qs-l">BAV 1er grado</div></div>
+  <div class="qs"><div class="qs-v">Mobitz I / II</div><div class="qs-l">BAV 2° grado</div></div>
+  <div class="qs"><div class="qs-v">Disociación AV</div><div class="qs-l">BAV completo</div></div>
+  <div class="qs"><div class="qs-v">QRS ≥0.12 s</div><div class="qs-l">Bloqueo de rama</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('ekg',this)">📈 EKG</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y clasificación</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>Los <strong>bloqueos cardíacos</strong> son retrasos o interrupciones de la conducción del impulso eléctrico en su recorrido <strong>nodo sinusal → nodo AV → haz de His → ramas → Purkinje</strong>. Se dividen en <strong>auriculoventriculares (BAV)</strong> y de <strong>rama/fasciculares</strong> (intraventriculares).</p>
+  <p>Lo que define el pronóstico no es el nombre, sino el <strong>nivel del bloqueo</strong>: <strong>nodal</strong> (suprahisiano, benigno, responde a atropina) vs <strong>infranodal</strong> (His-Purkinje, riesgo de asistolia, requiere marcapasos).</p></div>
+  <div class="tw"><table class="t"><thead><tr><th>Tipo</th><th>Hallazgo en EKG</th><th>Nivel</th><th>Riesgo</th></tr></thead><tbody>
+    <tr><td class="dn">BAV 1°</td><td>PR &gt;0.20 s constante, todas conducen</td><td>Nodal</td><td>Bajo</td></tr>
+    <tr><td class="dn">BAV 2° Mobitz I</td><td>PR se alarga hasta que cae un QRS</td><td>Nodal</td><td>Bajo</td></tr>
+    <tr><td class="dn">BAV 2° Mobitz II</td><td>PR fijo, caída súbita de QRS</td><td>Infranodal</td><td class="dm">Alto</td></tr>
+    <tr><td class="dn">BAV 2:1 / avanzado</td><td>Conduce 1 de cada 2 · ≥2 P bloqueadas</td><td>Variable</td><td class="dm">Intermedio-alto</td></tr>
+    <tr><td class="dn">BAV 3° (completo)</td><td>Disociación AV total + escape</td><td>Infranodal (usual)</td><td class="dm">Muy alto</td></tr>
+    <tr><td class="dn">BRD</td><td>QRS ≥0.12 s, rSR′ en V1, S ancha en V6</td><td>Intraventricular</td><td>Bajo (aislado)</td></tr>
+    <tr><td class="dn">BRI</td><td>QRS ≥0.12 s, R mellada en V6, QS en V1</td><td>Intraventricular</td><td class="dm">Intermedio</td></tr>
+    <tr><td class="dn">HBA / HBP</td><td>Eje izquierdo / eje derecho</td><td>Fascicular</td><td>Bajo</td></tr>
+    <tr><td class="dn">Bifascicular</td><td>BRD + HBA (o HBP)</td><td>Infranodal</td><td class="dm">Intermedio</td></tr>
+  </tbody></table></div>
+  <div class="alert a-r" style="margin-top:10px;"><span class="ai">🚨</span><div><div class="at">Regla que no se negocia</div><strong>Mobitz II, BAV avanzado y BAV completo → marcapasos</strong>, aunque el paciente esté asintomático. En ellos la <strong>atropina no funciona</strong> (bloqueo infranodal) y puede empeorar el bloqueo al acelerar la aurícula.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Contexto</th></tr></thead><tbody>
+    <tr><td class="dn">Edad</td><td>La prevalencia de bloqueos AV y de rama <strong>aumenta con la edad</strong> (fibrosis degenerativa del sistema de conducción: enfermedad de Lev-Lenègre, causa más común de BAV no isquémico)</td></tr>
+    <tr><td class="dn">BAV 1° y Mobitz I</td><td>Pueden verse en <strong>personas sanas</strong>, atletas y durante el sueño (tono vagal alto)</td></tr>
+    <tr><td class="dn">BRD aislado</td><td>Relativamente frecuente y a menudo <strong>benigno</strong> en corazón estructuralmente sano</td></tr>
+    <tr><td class="dn">BRI</td><td>Menos frecuente; casi siempre asociado a <strong>cardiopatía estructural</strong> (HTA, isquémica, miocardiopatía, valvulopatía aórtica)</td></tr>
+    <tr><td class="dn">IAM</td><td>El BAV complica sobre todo el <strong>IAM inferior</strong> (nodal, transitorio, buen pronóstico) y menos el anterior (infranodal, mal pronóstico)</td></tr>
+    <tr><td class="dn">Post-procedimiento</td><td>BAV como complicación de <strong>TAVI</strong>, cirugía valvular y ablación septal</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-b"><strong>1. Bloqueo NODAL (suprahisiano)</strong><br>El nodo AV está ricamente inervado por el <strong>vago</strong> y depende de canales de calcio. Un tono vagal alto, la isquemia inferior (arteria del nodo AV) o los fármacos (BB, calcioantagonistas no-DHP, digoxina) enlentecen su conducción → <strong>PR largo, Wenckebach</strong>. Es un bloqueo "amortiguado": el escape de la unión es <strong>estable (40–60 lpm, QRS estrecho)</strong> y responde a atropina.</div>
+  <div class="fp fp-a"><strong>2. Bloqueo INFRANODAL (His-Purkinje)</strong><br>Aquí la conducción es por canales de sodio y <strong>no depende del vago</strong> → por eso la <strong>atropina no sirve</strong>. Se debe a fibrosis degenerativa, isquemia anteroseptal extensa o infiltración. El fallo es "todo o nada": <strong>Mobitz II y BAV completo</strong>. El escape ventricular es <strong>lento e inestable (&lt;40 lpm, QRS ancho)</strong>, con riesgo de <strong>asistolia y torsades</strong>.</div>
+  <div class="fp fp-r"><strong>3. Consecuencia hemodinámica</strong><br>Al caer la frecuencia, cae el <strong>gasto cardiaco (GC = FC × volumen latido)</strong>: hipoperfusión cerebral (síncope de Stokes-Adams), coronaria (angina) y sistémica (choque, insuficiencia cardiaca). Además, la <strong>bradicardia extrema alarga el QT</strong> y predispone a <strong>torsades de pointes</strong> bradicardia-dependiente.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo y causas</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Grupo</th><th>Causas</th><th>¿Reversible?</th></tr></thead><tbody>
+    <tr><td class="dn">Fármacos</td><td>Betabloqueadores, calcioantagonistas no-DHP (verapamilo, diltiazem), digoxina, amiodarona, ivabradina, clonidina, litio</td><td>Sí — <strong>primera causa a descartar</strong></td></tr>
+    <tr><td class="dn">Isquemia</td><td>IAM <strong>inferior</strong> (nodal, transitorio) · IAM <strong>anterior</strong> (infranodal, mal pronóstico)</td><td>Sí (con reperfusión)</td></tr>
+    <tr><td class="dn">Metabólicas</td><td><strong>Hiperkalemia</strong>, hipotiroidismo, hipotermia, acidosis, hipoxia</td><td>Sí</td></tr>
+    <tr><td class="dn">Degenerativa</td><td>Fibrosis del sistema de conducción (Lev-Lenègre) — <strong>la más común</strong> en el adulto mayor</td><td>No</td></tr>
+    <tr><td class="dn">Infecciosa</td><td>Enfermedad de <strong>Lyme</strong>, endocarditis con absceso del anillo, <strong>Chagas</strong>, miocarditis, fiebre reumática</td><td>Sí (tratando la causa)</td></tr>
+    <tr><td class="dn">Infiltrativa / autoinmune</td><td>Sarcoidosis, amiloidosis, LES, esclerodermia</td><td>Parcial</td></tr>
+    <tr><td class="dn">Vagal / fisiológico</td><td>Atletas, sueño, dolor, vómito, maniobra de Valsalva</td><td>Sí (benigno)</td></tr>
+    <tr><td class="dn">Iatrogénica</td><td><strong>TAVI</strong>, cirugía valvular, ablación, cierre de CIV</td><td>Variable</td></tr>
+    <tr><td class="dn">Congénita</td><td>BAV congénito (lupus materno / anti-Ro-SSA)</td><td>No</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Severidad</th><th>Manifestaciones</th><th>Conducta inmediata</th></tr></thead><tbody>
+    <tr><td class="dn">Asintomático</td><td>Hallazgo incidental en EKG (típico del BAV 1°, Mobitz I, BRD, hemibloqueos)</td><td>Estudiar nivel y causa; no urgente</td></tr>
+    <tr><td class="dn">Síntomas leves</td><td>Fatiga, intolerancia al esfuerzo, mareo, "cabeza hueca"</td><td>EKG, Holter, revisar fármacos</td></tr>
+    <tr><td class="dn">Síntomas mayores</td><td><strong>Síncope</strong> (Stokes-Adams), presíncope, angina, disnea, confusión en el adulto mayor</td><td>Monitorizar; valorar marcapasos</td></tr>
+    <tr><td class="dm">Inestabilidad</td><td><strong>Hipotensión, choque, alteración del estado mental, dolor torácico isquémico, insuficiencia cardiaca aguda</strong></td><td class="dm">Protocolo ACLS: atropina → infusión → marcapasos</td></tr>
+    <tr><td class="dm">Paro</td><td>Asistolia, ritmo agónico, torsades bradicardia-dependiente</td><td class="dm">RCP + marcapasos + tratar causa</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>El <strong>síncope sin pródromo</strong> ("caída súbita", sin aviso) en un paciente con bloqueo de rama es muy sugestivo de <strong>BAV paroxístico</strong>: monitorizar y valorar marcapasos aunque el EKG basal sea "normal" entre episodios.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Dar atropina y confiarse en Mobitz II o BAV completo:</strong> son infranodales; la atropina puede no servir y hasta empeorar el bloqueo. Prepara el marcapasos <em>desde el inicio</em>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Confundir Mobitz I con Mobitz II:</strong> mide el PR de los latidos <em>conducidos</em>. Si se alarga → Mobitz I (benigno). Si es fijo y cae un QRS → Mobitz II (marcapasos).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Etiquetar un 2:1 sin estratificar:</strong> el 2:1 no es Mobitz I ni II por sí solo. Usa QRS, PR y respuesta a atropina/ejercicio para ubicar el nivel.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>No buscar causa reversible:</strong> fármacos, IAM inferior, hiperkalemia, hipotiroidismo. Implantar un marcapasos definitivo sobre una causa corregible es un error costoso.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Ignorar el BRI nuevo con dolor torácico:</strong> aplica Sgarbossa modificada; no descartes IAM "porque el BRI no deja ver".</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Colocar marcapasos transcutáneo sin verificar captura ni sedar:</strong> confirma espiga → QRS <em>y</em> pulso palpable; es doloroso, requiere analgesia/sedación.</div></div>
+  <div class="kp"><div class="kn">7</div><div class="kt"><strong>Tratar el número y no al paciente:</strong> una FC de 45 lpm asintomática en un atleta no se trata; una de 50 lpm con choque, sí.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de hospitalización</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Destino</th></tr></thead><tbody>
+    <tr><td class="dm">Bradicardia inestable (hipotensión, choque, alteración mental, angina, ICC)</td><td class="dm">Urgencias / UCI con marcapasos disponible</td></tr>
+    <tr><td class="dm">Mobitz II · BAV avanzado · BAV completo</td><td class="dm">Ingreso monitorizado + marcapasos</td></tr>
+    <tr><td class="dn">Síncope con bloqueo bifascicular o bloqueo de rama alternante</td><td>Ingreso + monitor + valoración EEF</td></tr>
+    <tr><td class="dn">Bloqueo AV en contexto de IAM</td><td>Unidad coronaria</td></tr>
+    <tr><td class="dn">Bloqueo por hiperkalemia, intoxicación o hipotiroidismo grave</td><td>Ingreso para corregir la causa</td></tr>
+    <tr><td class="dn">BAV 1°, Mobitz I, BRD/hemibloqueo asintomáticos</td><td>Manejo <strong>ambulatorio</strong> con estudio dirigido</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo diagnóstico en el EKG (5 pasos)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>¿Hay ondas P y son regulares?</strong> Sin P → pensar en FA con respuesta lenta, ritmo de la unión o paro sinusal (no es BAV).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>¿Cada P va seguida de QRS?</strong> Sí, con PR &gt;0.20 s → <strong>BAV 1°</strong>. No → sigue.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>¿El PR de los latidos conducidos cambia?</strong> Se alarga progresivamente → <strong>Mobitz I</strong>. Es fijo con caída súbita → <strong>Mobitz II</strong>.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>¿Hay relación P-QRS?</strong> Ninguna (P y QRS independientes, más P que QRS) → <strong>BAV completo</strong>.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Mide el QRS:</strong> ≥0.12 s → bloqueo de rama (mira V1: rSR′ = BRD · QS = BRI) y sospecha nivel <strong>infranodal</strong>.</div></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">📏</span><div>Usa una <strong>tira larga (DII o V1)</strong> para ver la relación P-QRS. A 25 mm/s: 1 cuadro chico = 0.04 s, 1 grande = 0.20 s. PR normal 0.12–0.20 s; QRS normal &lt;0.12 s.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Interpretación de hallazgos</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Hallazgo</th><th>Qué significa</th><th>Nivel probable</th><th>Acción</th></tr></thead><tbody>
+    <tr><td class="dn">QRS estrecho</td><td>Escape/conducción por la unión</td><td>Nodal</td><td>Vigilar; atropina si sintomático</td></tr>
+    <tr><td class="dn">QRS ancho</td><td>Escape ventricular o bloqueo distal</td><td class="dm">Infranodal</td><td class="dm">Marcapasos</td></tr>
+    <tr><td class="dn">Mejora con atropina o ejercicio</td><td>Conducción dependiente del vago</td><td>Nodal</td><td>Buen pronóstico</td></tr>
+    <tr><td class="dn">Empeora con ejercicio / atropina</td><td>Conducción His-Purkinje agotada</td><td class="dm">Infranodal</td><td class="dm">Marcapasos</td></tr>
+    <tr><td class="dn">Mejora con maniobras vagales</td><td>Paradójico: menos impulsos llegan al His</td><td class="dm">Infranodal</td><td class="dm">Marcapasos</td></tr>
+    <tr><td class="dn">Bloqueo de rama alternante</td><td>Enfermedad difusa del sistema His-Purkinje</td><td class="dm">Infranodal</td><td class="dm">Marcapasos (indicación fuerte)</td></tr>
+    <tr><td class="dn">T picudas + QRS ancho + P planas</td><td><strong>Hiperkalemia</strong></td><td>Metabólico</td><td class="dm">Calcio IV inmediato</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios complementarios</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Estudio</th><th>Para qué</th><th>Cuándo</th></tr></thead><tbody>
+    <tr><td class="dn">EKG 12 derivaciones + tira larga</td><td>Diagnóstico y nivel</td><td>Siempre</td></tr>
+    <tr><td class="dn">Electrolitos (K⁺, Ca²⁺, Mg²⁺)</td><td>Hiperkalemia y causas metabólicas</td><td>Siempre</td></tr>
+    <tr><td class="dn">Troponina · EKG seriado</td><td>Isquemia como causa</td><td>Sospecha de SICA</td></tr>
+    <tr><td class="dn">TSH</td><td>Hipotiroidismo</td><td>Bradicardia sin causa clara</td></tr>
+    <tr><td class="dn">Niveles de digoxina</td><td>Intoxicación digitálica</td><td>Si la toma</td></tr>
+    <tr><td class="dn">Holter 24–48 h / monitor de eventos</td><td>Correlacionar síntomas con el ritmo</td><td>Síntomas intermitentes</td></tr>
+    <tr><td class="dn">Monitor implantable (loop)</td><td>Síncope recurrente inexplicado</td><td>Estudio negativo previo</td></tr>
+    <tr><td class="dn">Ecocardiograma</td><td>Cardiopatía estructural, FEVI</td><td>BRI, sospecha estructural, pre-marcapasos</td></tr>
+    <tr><td class="dn">Prueba de esfuerzo</td><td>Diferenciar nodal vs infranodal; competencia cronotrópica</td><td>BAV 2:1, dudas de nivel</td></tr>
+    <tr><td class="dn">Estudio electrofisiológico (EEF)</td><td>Medir intervalo HV; localizar el bloqueo</td><td>Síncope + bloqueo de rama; nivel incierto</td></tr>
+    <tr><td class="dn">Serología de Lyme</td><td>BAV en zona endémica / exposición</td><td>Contexto epidemiológico</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📐</span><span class="st">Criterios específicos (rama y fasciculares)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Patrón</th><th>Criterios</th></tr></thead><tbody>
+    <tr><td class="dn">BRD completo</td><td>QRS ≥120 ms · rSR′ (o rsR′) en V1-V2 · S ancha en I, aVL y V6 · tiempo de activación ventricular tardío en V1</td></tr>
+    <tr><td class="dn">BRI completo</td><td>QRS ≥120 ms · R ancha, mellada o empastada en I, aVL, V5-V6 · <strong>ausencia de q</strong> en I, V5-V6 · QS o rS en V1</td></tr>
+    <tr><td class="dn">Bloqueo incompleto</td><td>Misma morfología con QRS 110–119 ms</td></tr>
+    <tr><td class="dn">HBA izquierdo</td><td>Eje −45° a −90° · qR en I/aVL · rS en II/III/aVF · QRS &lt;120 ms</td></tr>
+    <tr><td class="dn">HBP izquierdo</td><td>Eje +90° a +180° · rS en I/aVL · qR en II/III/aVF · excluir causas de eje derecho</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">ℹ️</span><div>Criterios de estandarización <strong>AHA/ACCF/HRS (Surawicz, 2009)</strong>. En presencia de BRI o marcapasos, la valoración de isquemia requiere <strong>Sgarbossa modificada</strong> (ver Escalas).</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-ekg"><div class="alert a-i"><span class="ai">📈</span><div><div class="at">Cómo usar</div>Esquemas de patrón (no a escala real). Compara el trazo real del paciente con la morfología y confirma con los criterios. Velocidad estándar: 25 mm/s → 1 cuadro chico = 0.04 s · 1 cuadro grande = 0.20 s.</div></div><div class="prose" style="margin:10px 2px 6px;"><p><strong>Bloqueos auriculoventriculares</strong></p></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">①</span><span class="st">BAV 1er grado</span><span class="sg open">&#8964;</span></div><div class="sb"><div class="ekg-w"><svg viewBox="0 0 550 118" width="100%" style="max-width:550px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk1" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk1" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk1)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="550" height="118" fill="url(#Gk1)"/><text x="19" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="153" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="287" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="421" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,84 12,84 19,67 26,84 66,84 69,91 75,36 82,101 89,84 100,84 112,69 126,84 140,84 146,84 153,67 160,84 200,84 203,91 209,36 216,101 223,84 234,84 246,69 260,84 274,84 280,84 287,67 294,84 334,84 337,91 343,36 350,101 357,84 368,84 380,69 394,84 408,84 414,84 421,67 428,84 468,84 471,91 477,36 484,101 491,84 502,84 514,69 528,84 542,84"/><text x="6" y="112" font-size="10" fill="#64748b">PR largo constante (>0.20 s) · todas las P conducen</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>PR &gt;0.20 s (&gt;1 cuadro grande), constante.</strong></div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>Toda</strong> P conduce: relación P:QRS 1:1, ningún QRS se pierde.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Nivel <strong>nodal</strong>; QRS suele ser estrecho.</div></div><div class="alert a-g"><span class="ai">🩺</span><div><div class="at">Conducta</div>Observar. Revisar fármacos frenadores. No requiere tratamiento específico ni marcapasos si es aislado y asintomático.</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">②</span><span class="st">BAV 2° grado — Mobitz I (Wenckebach)</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 586 118" width="100%" style="max-width:586px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk2" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk2" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk2)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="586" height="118" fill="url(#Gk2)"/><text x="19" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="135" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="263" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="405" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="475" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><line x1="426" y1="40" x2="426" y2="90" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 2"/><text x="426" y="34" font-size="9" fill="#c0392b" font-weight="700" text-anchor="middle">✕ no conduce</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,84 12,84 19,67 26,84 48,84 51,91 57,36 64,101 71,84 82,84 94,69 108,84 122,84 128,84 135,67 142,84 176,84 179,91 185,36 192,101 199,84 210,84 222,69 236,84 250,84 256,84 263,67 270,84 318,84 321,91 327,36 334,101 341,84 352,84 364,69 378,84 392,84 398,84 405,67 412,84 462,84 468,84 475,67 482,84 504,84 507,91 513,36 520,101 527,84 538,84 550,69 564,84 578,84"/><text x="6" y="112" font-size="10" fill="#64748b">PR se alarga progresivamente hasta que una P se bloquea (Wenckebach)</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>PR se alarga progresivamente</strong> hasta que una P se bloquea; el ciclo reinicia.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Agrupamiento de latidos; el intervalo RR se acorta antes de la pausa.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Nivel <strong>nodal</strong>; QRS estrecho. Frecuentemente vagal o por fármacos.</div></div><div class="alert a-g"><span class="ai">🩺</span><div><div class="at">Conducta</div>Suele ser benigno: observar y retirar fármacos frenadores. Atropina solo si hay bradicardia sintomática. Marcapasos rara vez (solo si sintomático y persistente).</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">③</span><span class="st">BAV 2° grado — Mobitz II</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 580 118" width="100%" style="max-width:580px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk3" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk3" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk3)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="580" height="118" fill="url(#Gk3)"/><text x="19" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="143" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="267" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="337" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="461" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><line x1="288" y1="40" x2="288" y2="90" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 2"/><text x="288" y="34" font-size="9" fill="#c0392b" font-weight="700" text-anchor="middle">✕ no conduce</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,84 12,84 19,67 26,84 56,84 59,91 65,36 72,101 79,84 90,84 102,69 116,84 130,84 136,84 143,67 150,84 180,84 183,91 189,36 196,101 203,84 214,84 226,69 240,84 254,84 260,84 267,67 274,84 324,84 330,84 337,67 344,84 374,84 377,91 383,36 390,101 397,84 408,84 420,69 434,84 448,84 454,84 461,67 468,84 498,84 501,91 507,36 514,101 521,84 532,84 544,69 558,84 572,84"/><text x="6" y="112" font-size="10" fill="#64748b">PR constante · caída súbita de un QRS</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>PR constante</strong> con <strong>caída súbita</strong> de un QRS, sin alargamiento previo.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Nivel <strong>infranodal</strong> (His-Purkinje); QRS a menudo ancho.</div></div><div class="kp"><div class="kn">•</div><div class="kt">⚠️ Alto riesgo de progresar a bloqueo AV completo y asistolia.</div></div><div class="alert a-r"><span class="ai">🩺</span><div><div class="at">Conducta</div><strong>Marcapasos definitivo</strong> (indicado aunque esté asintomático). La atropina suele ser <strong>inútil o perjudicial</strong>. Preparar marcapasos transcutáneo y monitorizar.</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">④</span><span class="st">BAV 2:1 y avanzado (alto grado)</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 526 118" width="100%" style="max-width:526px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk4" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk4" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk4)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="526" height="118" fill="url(#Gk4)"/><text x="19" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="143" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="213" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="337" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="407" y="62" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><line x1="164" y1="40" x2="164" y2="90" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 2"/><text x="164" y="34" font-size="9" fill="#c0392b" font-weight="700" text-anchor="middle">✕ no conduce</text><line x1="358" y1="40" x2="358" y2="90" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 2"/><text x="358" y="34" font-size="9" fill="#c0392b" font-weight="700" text-anchor="middle">✕ no conduce</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,84 12,84 19,67 26,84 56,84 59,91 65,36 72,101 79,84 90,84 102,69 116,84 130,84 136,84 143,67 150,84 200,84 206,84 213,67 220,84 250,84 253,91 259,36 266,101 273,84 284,84 296,69 310,84 324,84 330,84 337,67 344,84 394,84 400,84 407,67 414,84 444,84 447,91 453,36 460,101 467,84 478,84 490,69 504,84 518,84"/><text x="6" y="112" font-size="10" fill="#64748b">Conduce 1 de cada 2 P (2:1)</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>2:1:</strong> conduce 1 de cada 2 P; por sí solo <strong>no distingue</strong> Mobitz I de II.</div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>Avanzado:</strong> ≥2 P consecutivas bloqueadas con conducción aún presente.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Pistas de nivel: QRS estrecho + PR largo + respuesta a atropina → nodal. QRS ancho → infranodal.</div></div><div class="alert a-w"><span class="ai">🩺</span><div><div class="at">Conducta</div>Estratificar el nivel (maniobras vagales/atropina, ejercicio, EEF). Si hay datos infranodales o síntomas → <strong>marcapasos</strong>. Monitorizar.</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⑤</span><span class="st">BAV 3er grado (completo)</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 600 118" width="100%" style="max-width:600px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk5" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk5" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk5)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="600" height="118" fill="url(#Gk5)"/><text x="29" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="87" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="133" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="185" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="237" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="289" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="341" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="393" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="445" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="497" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="549" y="63" font-size="10" fill="#1e3a8a" font-weight="700" text-anchor="middle">P</text><text x="63" y="114" font-size="9" fill="#0a2540" font-weight="700" text-anchor="middle">R</text><text x="213" y="114" font-size="9" fill="#0a2540" font-weight="700" text-anchor="middle">R</text><text x="363" y="114" font-size="9" fill="#0a2540" font-weight="700" text-anchor="middle">R</text><text x="519" y="114" font-size="9" fill="#0a2540" font-weight="700" text-anchor="middle">R</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="0,84 18,84 21,84 29,68 40,84 40,84 52,84 55,91 61,36 68,101 75,84 76,84 79,84 87,68 98,84 98,84 122,84 125,84 133,68 144,84 144,84 174,84 177,84 185,68 196,84 196,84 202,84 205,91 211,36 218,101 225,84 226,84 229,84 237,68 248,84 248,84 278,84 281,84 289,68 300,84 300,84 330,84 333,84 341,68 352,84 352,84 355,91 361,36 368,101 375,84 376,84 382,84 385,84 393,68 404,84 404,84 434,84 437,84 445,68 456,84 456,84 486,84 489,84 497,68 508,84 508,84 511,91 517,36 524,101 531,84 532,84 538,84 541,84 549,68 560,84 560,84 600,84"/><text x="6" y="112" font-size="10" fill="#64748b">Disociación AV: P y QRS a ritmos independientes (escape ventricular lento)</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>Disociación AV completa:</strong> ninguna P conduce; P y QRS marchan independientes (PP y RR regulares, sin relación).</div></div><div class="kp"><div class="kn">•</div><div class="kt">Ritmo de <strong>escape</strong>: de la unión (QRS estrecho, 40–60 lpm) o ventricular (QRS ancho, &lt;40 lpm).</div></div><div class="kp"><div class="kn">•</div><div class="kt">Síncope, insuficiencia cardiaca, angina; puede ser inestable.</div></div><div class="alert a-r"><span class="ai">🩺</span><div><div class="at">Conducta</div><strong>Urgencia.</strong> Monitor + O₂ + acceso IV → atropina (poco eficaz si es infranodal) → <strong>marcapasos transcutáneo</strong> si inestable → transvenoso → <strong>definitivo</strong>. Tratar causa reversible (IAM, fármacos, hiperK⁺).</div></div></div></div><div class="prose" style="margin:14px 2px 6px;"><p><strong>Bloqueos de rama y fasciculares</strong></p></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">▐</span><span class="st">Bloqueo de rama derecha (BRD)</span><span class="sg open">&#8964;</span></div><div class="sb"><div class="ekg-w"><svg viewBox="0 0 420 120" width="100%" style="max-width:420px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk6" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk6" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk6)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="420" height="120" fill="url(#Gk6)"/><text x="10" y="16" font-size="12" fill="#1e3a8a" font-weight="800">V1</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,70 18,70 26,56 34,70 44,70 58,26 74,86 120,70 150,70 165,58 185,70 205,70"/><text x="220" y="16" font-size="12" fill="#1e3a8a" font-weight="800">V6</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="216,70 232,62 240,30 250,70 266,70 330,92 360,70 380,58 400,70 415,70"/><line x1="210" y1="0" x2="210" y2="120" stroke="#cbd5e1" stroke-width="1"/><text x="6" y="114" font-size="10" fill="#64748b">BRD: rSR′ en V1 (orejas de conejo) · S ancha en V6/I · QRS ≥0.12 s</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>QRS ≥0.12 s</strong> + <strong>rSR′ en V1-V2</strong> ("orejas de conejo").</div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>S ancha y empastada</strong> en I, aVL y V6.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Alteración de la repolarización secundaria (T negativa en V1-V3).</div></div><div class="alert a-g"><span class="ai">🩺</span><div><div class="at">Conducta</div>No requiere fármacos. Aislado en corazón sano suele ser benigno. Si es <strong>nuevo</strong> o hay síntomas: buscar cardiopatía (isquemia, TEP, sobrecarga derecha).</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">▌</span><span class="st">Bloqueo de rama izquierda (BRI)</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 420 120" width="100%" style="max-width:420px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk7" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk7" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk7)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="420" height="120" fill="url(#Gk7)"/><text x="10" y="16" font-size="12" fill="#1e3a8a" font-weight="800">V1</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,70 20,70 30,112 60,70 120,70 150,80 185,70 205,70"/><text x="220" y="16" font-size="12" fill="#1e3a8a" font-weight="800">V6</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="216,70 230,70 250,32 268,52 284,28 306,70 330,70 360,58 395,70 415,70"/><line x1="210" y1="0" x2="210" y2="120" stroke="#cbd5e1" stroke-width="1"/><text x="6" y="114" font-size="10" fill="#64748b">BRI: QS/rS en V1 · R ancha y mellada (M) en V6/I sin q septal · QRS ≥0.12 s</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>QRS ≥0.12 s</strong> + <strong>R ancha y mellada (en "M")</strong> en I, aVL, V5-V6.</div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>QS o rS profundo en V1</strong>; ausencia de q septal en I y V6.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Casi siempre traduce <strong>cardiopatía estructural</strong>; dificulta la lectura de isquemia.</div></div><div class="alert a-r"><span class="ai">🩺</span><div><div class="at">Conducta</div><strong>BRI nuevo + dolor torácico → actuar como isquemia</strong> (aplicar Sgarbossa modificada, ver pestaña Escalas). No hay fármaco que lo revierta: tratar la cardiopatía de base.</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">◣</span><span class="st">Hemibloqueo anterior izquierdo (HBA)</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 420 120" width="100%" style="max-width:420px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk8" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk8" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk8)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="420" height="120" fill="url(#Gk8)"/><text x="10" y="16" font-size="12" fill="#1e3a8a" font-weight="800">I</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,70 20,76 30,30 60,70 120,70 150,58 185,70 205,70"/><text x="220" y="16" font-size="12" fill="#1e3a8a" font-weight="800">aVF</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="216,70 230,62 240,70 250,110 280,70 330,70 360,78 395,70 415,70"/><line x1="210" y1="0" x2="210" y2="120" stroke="#cbd5e1" stroke-width="1"/><text x="6" y="114" font-size="10" fill="#64748b">HBA izquierdo: eje a la izquierda · qR en I/aVL · rS en II/III/aVF</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>Eje desviado a la izquierda</strong> (−45° a −90°).</div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>qR</strong> en I y aVL; <strong>rS</strong> en II, III y aVF.</div></div><div class="kp"><div class="kn">•</div><div class="kt">QRS &lt;0.12 s (solo ligeramente prolongado). Es el hemibloqueo más frecuente.</div></div><div class="alert a-g"><span class="ai">🩺</span><div><div class="at">Conducta</div>Sin tratamiento específico. Su importancia está en la <strong>combinación con BRD</strong> (bifascicular) y en la progresión.</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">◢</span><span class="st">Hemibloqueo posterior izquierdo (HBP)</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 420 120" width="100%" style="max-width:420px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk9" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk9" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk9)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="420" height="120" fill="url(#Gk9)"/><text x="10" y="16" font-size="12" fill="#1e3a8a" font-weight="800">I</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,70 20,62 30,70 40,110 70,70 120,70 150,78 185,70 205,70"/><text x="220" y="16" font-size="12" fill="#1e3a8a" font-weight="800">aVF</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="216,70 230,76 240,30 270,70 330,70 360,58 395,70 415,70"/><line x1="210" y1="0" x2="210" y2="120" stroke="#cbd5e1" stroke-width="1"/><text x="6" y="114" font-size="10" fill="#64748b">HBP izquierdo: eje a la derecha · rS en I · qR en II/III/aVF</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>Eje desviado a la derecha</strong> (+90° a +180°), tras excluir otras causas (HVD, TEP, hábito).</div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>rS</strong> en I y aVL; <strong>qR</strong> en II, III y aVF.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Poco frecuente; suele implicar daño más extenso.</div></div><div class="alert a-g"><span class="ai">🩺</span><div><div class="at">Conducta</div>Sin tratamiento específico aislado. Vigilar progresión y buscar cardiopatía subyacente.</div></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Bi / trifascicular y bloqueo alternante</span><span class="sg">&#8964;</span></div><div class="sb hidden"><div class="ekg-w"><svg viewBox="0 0 420 120" width="100%" style="max-width:420px;display:block;" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="gk6" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#f2cccc" stroke-width="1"/></pattern><pattern id="Gk6" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#gk6)"/><path d="M50 0H0V50" fill="none" stroke="#e69a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="420" height="120" fill="url(#Gk6)"/><text x="10" y="16" font-size="12" fill="#1e3a8a" font-weight="800">V1</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="6,70 18,70 26,56 34,70 44,70 58,26 74,86 120,70 150,70 165,58 185,70 205,70"/><text x="220" y="16" font-size="12" fill="#1e3a8a" font-weight="800">V6</text><polyline fill="none" stroke="#0a2540" stroke-width="2.2" stroke-linejoin="round" points="216,70 232,62 240,30 250,70 266,70 330,92 360,70 380,58 400,70 415,70"/><line x1="210" y1="0" x2="210" y2="120" stroke="#cbd5e1" stroke-width="1"/><text x="6" y="114" font-size="10" fill="#64748b">BRD: rSR′ en V1 (orejas de conejo) · S ancha en V6/I · QRS ≥0.12 s</text></svg></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>Bifascicular:</strong> BRD + HBA (más común) o BRD + HBP.</div></div><div class="kp"><div class="kn">•</div><div class="kt"><strong>"Trifascicular":</strong> bifascicular + PR largo (término impreciso) — el dato real de alarma es el <strong>bloqueo de rama alternante</strong>.</div></div><div class="kp"><div class="kn">•</div><div class="kt">Riesgo de progresión a <strong>BAV completo</strong>.</div></div><div class="alert a-w"><span class="ai">🩺</span><div><div class="at">Conducta</div><strong>Síncope</strong> + bifascicular, o <strong>bloqueo de rama alternante</strong> → <strong>marcapasos</strong> (indicación fuerte). Sin síntomas: vigilancia y valoración por electrofisiología.</div></div></div></div></div>
+<div class="panel" id="tab-esc">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Analizador de EKG — ¿qué bloqueo es y qué hago?</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="calc-w">
+    <label class="calc-lbl">Intervalo PR (ms)</label>
+    <input class="calc-in" id="e-pr" type="number" inputmode="numeric" placeholder="Ej. 240 (normal 120–200)">
+    <label class="calc-lbl">Duración del QRS (ms)</label>
+    <input class="calc-in" id="e-qrs" type="number" inputmode="numeric" placeholder="Ej. 90 (normal &lt;120)">
+    <label class="calc-lbl">Relación P–QRS (elige el patrón)</label>
+    <button class="opt" id="p-1" onclick="pPick(1,this)">Todas las P conducen (ninguna se pierde)</button>
+    <button class="opt" id="p-2" onclick="pPick(2,this)">El PR se alarga progresivamente hasta que cae un QRS</button>
+    <button class="opt" id="p-3" onclick="pPick(3,this)">PR constante y de pronto cae un QRS</button>
+    <button class="opt" id="p-4" onclick="pPick(4,this)">Conduce 1 de cada 2 P (2:1) o hay ≥2 P seguidas bloqueadas</button>
+    <button class="opt" id="p-5" onclick="pPick(5,this)">P y QRS independientes (disociación AV)</button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcEKG()">Analizar</button>
+      <button class="calc-btn sc" onclick="resetEKG()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="e-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🫀</span><span class="st">Sgarbossa modificada (Smith) — IAM con BRI o marcapasos</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-i"><span class="ai">ℹ️</span><div>Regla <strong>no ponderada</strong>: basta <strong>1 criterio positivo</strong> para considerar oclusión coronaria aguda en presencia de BRI (o ritmo de marcapasos). Sensibilidad ~80%, especificidad ~99% (Smith 2012).</div></div>
+  <div class="calc-w">
+    <button class="opt" id="s-1" onclick="sTog(1,this)">1️⃣ Elevación del ST <strong>concordante</strong> ≥1 mm en ≥1 derivación (QRS positivo)</button>
+    <button class="opt" id="s-2" onclick="sTog(2,this)">2️⃣ Depresión del ST <strong>concordante</strong> ≥1 mm en V1, V2 o V3</button>
+    <button class="opt" id="s-3" onclick="sTog(3,this)">3️⃣ Elevación del ST <strong>discordante excesiva</strong>: ST ≥1 mm y razón <strong>ST/S ≤ −0.25</strong> (ST ≥25% de la profundidad de la S)</button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcSgar()">Evaluar</button>
+      <button class="calc-btn sc" onclick="resetSgar()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="s-res"></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔋</span><span class="st">¿Necesita marcapasos? — checklist de indicación</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="calc-w">
+    <button class="opt" id="m-1" onclick="mTog(1,this)">BAV de <strong>3er grado</strong> (completo) adquirido y persistente</button>
+    <button class="opt" id="m-2" onclick="mTog(2,this)">BAV 2° <strong>Mobitz II</strong></button>
+    <button class="opt" id="m-3" onclick="mTog(3,this)">BAV <strong>avanzado / alto grado</strong> (≥2 P consecutivas bloqueadas)</button>
+    <button class="opt" id="m-4" onclick="mTog(4,this)"><strong>Bloqueo de rama alternante</strong></button>
+    <button class="opt" id="m-5" onclick="mTog(5,this)"><strong>Síncope</strong> + bloqueo bifascicular (o HV muy prolongado en EEF)</button>
+    <button class="opt" id="m-6" onclick="mTog(6,this)">Bradicardia <strong>sintomática</strong> por causa <strong>irreversible</strong></button>
+    <button class="opt" id="m-7" onclick="mTog(7,this)">⚠️ Existe una <strong>causa reversible activa</strong> (fármacos, isquemia aguda, hiperK⁺, hipotiroidismo, Lyme)</button>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button class="calc-btn" onclick="calcMcp()">Evaluar</button>
+      <button class="calc-btn sc" onclick="resetMcp()">Reiniciar</button>
+    </div>
+    <div class="calc-result" id="m-res"></div>
+  </div>
+  <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div>Herramienta de apoyo. La decisión final de implante corresponde a <strong>cardiología/electrofisiología</strong> conforme a ACC/AHA/HRS 2018 y ESC 2021.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo de bradicardia con bloqueo (ACLS)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="an" id="algo-box"></div>
+  <div style="margin-top:10px;"><button class="calc-btn sc" onclick="algoStart()">↩ Empezar de nuevo</button></div>
+</div></div>
+</div>
+<div class="panel" id="tab-txc">
+<div class="alert a-i"><span class="ai">🏥</span><div><div class="at">Manejo ambulatorio (paciente estable)</div>Aquí no se "trata el bloqueo" con fármacos: se <strong>quita lo que lo causa</strong>, se <strong>corrige la causa</strong> y se <strong>decide si necesita marcapasos</strong>. Elige el escenario.</div></div>
+<div class="chips" id="txc-chips">
+  <button class="pchip on" onclick="setTxc('gen',this)">🩺 Bloqueo estable</button>
+  <button class="pchip" onclick="setTxc('farm',this)">💊 Fármaco-inducido</button>
+  <button class="pchip" onclick="setTxc('mayor',this)">👴 Adulto mayor</button>
+  <button class="pchip" onclick="setTxc('atleta',this)">🏃 Atleta / vagal</button>
+</div>
+<div id="txc-body"></div>
+</div>
+<div class="panel" id="tab-txh">
+<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Secuencia ACLS</div><strong>Atropina → infusión (dopamina o epinefrina) → marcapasos transcutáneo → transvenoso.</strong> En Mobitz II y BAV completo, <strong>prepara el marcapasos desde el inicio</strong>: no esperes a que falle la atropina.</div></div>
+<div class="chips" id="txh-chips">
+  <button class="pchip on" onclick="setTxh('inest',this)">⚡ Bradicardia inestable</button>
+  <button class="pchip" onclick="setTxh('infra',this)">🔋 Mobitz II / BAV completo</button>
+  <button class="pchip" onclick="setTxh('tox',this)">☠️ Intoxicación BB / CAA</button>
+  <button class="pchip" onclick="setTxh('dig',this)">🌿 Digoxina</button>
+  <button class="pchip" onclick="setTxh('hiperk',this)">🧂 Hiperkalemia</button>
+</div>
+<div id="txh-body"></div>
+
+<div class="sec" style="margin-top:12px;"><div class="sh" onclick="tog(this)"><span class="si">📟</span><span class="st">Tabla de monitoreo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Parámetro</th><th>Meta</th><th>Frecuencia</th><th>Si no se cumple</th></tr></thead><tbody>
+    <tr><td class="dn">Frecuencia cardiaca</td><td>&gt;50 lpm con perfusión adecuada</td><td>Monitor continuo</td><td>Escalar: atropina → infusión → marcapasos</td></tr>
+    <tr><td class="dn">TA media</td><td>≥65 mmHg</td><td>c/5 min en agudo</td><td>Infusión de catecolaminas + marcapasos</td></tr>
+    <tr><td class="dn">Captura del marcapasos</td><td>Espiga → QRS <strong>y</strong> pulso palpable</td><td>Continuo</td><td>Subir mA, recolocar parches, verificar contacto</td></tr>
+    <tr><td class="dn">Estado mental / perfusión</td><td>Alerta, llenado &lt;2 s, diuresis &gt;0.5 mL/kg/h</td><td>Continuo</td><td>Reevaluar causa; considerar UCI</td></tr>
+    <tr><td class="dn">K⁺ y electrolitos</td><td>K⁺ 3.5–5.0 mEq/L</td><td>Al ingreso y según evolución</td><td>Corregir hiperkalemia (calcio, insulina-glucosa)</td></tr>
+    <tr><td class="dn">EKG de 12 derivaciones</td><td>Detectar isquemia / progresión</td><td>Al ingreso y si hay cambio clínico</td><td>Activar código infarto si SICA</td></tr>
+    <tr><td class="dn">Dolor por marcapasos transcutáneo</td><td>Confort adecuado</td><td>Continuo</td><td>Analgesia/sedación (fentanilo, midazolam)</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-farm">
+<div class="calc-w" style="margin-bottom:12px;">
+  <label class="calc-lbl">Buscar fármaco</label>
+  <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. atropina, dopamina, glucagón..." oninput="filtrarFarmacos(this.value)">
+</div>
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind">
+<div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada fármaco despliega: <strong>dosis · vía · enfermería · paciente · nota · alarma</strong>. Verifica siempre contra el protocolo de tu unidad.</div></div>
+<div id="ind-body"></div>
+</div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('iami',this)">💔 IAM inferior</button>
+  <button class="pchip" onclick="setEscen('iama',this)">🫀 IAM anterior</button>
+  <button class="pchip" onclick="setEscen('hiperk',this)">🧂 Hiperkalemia</button>
+  <button class="pchip" onclick="setEscen('tavi',this)">🔧 Post-TAVI / cirugía</button>
+  <button class="pchip" onclick="setEscen('atleta',this)">🏃 Atleta / vagal</button>
+  <button class="pchip" onclick="setEscen('emb',this)">🤰 Embarazo / congénito</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Plan de seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Evaluación</th><th>Meta</th><th>Acción si no se cumple</th></tr></thead><tbody>
+    <tr><td class="dn">Inmediato (agudo)</td><td>EKG, monitor, electrolitos, causa reversible</td><td>FC &gt;50 con perfusión adecuada</td><td>Escalar ACLS / marcapasos</td></tr>
+    <tr><td class="dn">24–72 h</td><td>¿Revirtió al retirar el fármaco o corregir la causa?</td><td>Resolución del bloqueo</td><td>Si persiste infranodal → marcapasos definitivo</td></tr>
+    <tr><td class="dn">1–2 semanas</td><td>EKG de control; síntomas (síncope, fatiga)</td><td>Estable, sin síncope</td><td>Holter / monitor de eventos</td></tr>
+    <tr><td class="dn">1–3 meses</td><td>Holter si síntomas intermitentes; eco si BRI o sospecha estructural</td><td>Sin progresión</td><td>Referir a electrofisiología (EEF)</td></tr>
+    <tr><td class="dn">Con marcapasos</td><td>Revisión del dispositivo (umbrales, batería, % de estimulación)</td><td>Funcionamiento adecuado</td><td>Reprogramar; valorar estimulación fisiológica si % alto y FEVI baja</td></tr>
+    <tr><td class="dn">Anual (bloqueo estable)</td><td>EKG + síntomas + revisión de fármacos</td><td>Sin progresión ni síntomas</td><td>Reevaluar indicación de marcapasos</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Señales de alarma (educación al paciente)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🚨</span><div>Acudir a <strong>urgencias de inmediato</strong> si aparece: <strong>desmayo o casi desmayo</strong>, mareo intenso al ponerse de pie, <strong>falta de aire</strong> nueva, <strong>dolor en el pecho</strong>, palpitaciones con debilidad, o <strong>pulso muy lento</strong> (&lt;40) con malestar.</div></div>
+  <div class="kp"><div class="kn">•</div><div class="kt">Llevar <strong>siempre la lista de medicamentos</strong>: varios (para presión, corazón o tiroides) pueden enlentecer el pulso.</div></div>
+  <div class="kp"><div class="kn">•</div><div class="kt">No suspender ni ajustar fármacos por cuenta propia: <strong>consultar primero</strong>.</div></div>
+  <div class="kp"><div class="kn">•</div><div class="kt">Si tiene marcapasos: acudir si hay <strong>hipo persistente</strong>, contracciones raras, fiebre o enrojecimiento de la herida, o si regresan los síntomas previos.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Referencia a especialista</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Especialidad</th><th>Urgencia</th></tr></thead><tbody>
+    <tr><td class="dm">Mobitz II · BAV avanzado · BAV completo</td><td>Cardiología / Electrofisiología</td><td class="dm">Inmediata (traslado monitorizado)</td></tr>
+    <tr><td class="dm">Bradicardia inestable</td><td>Urgencias / UCI</td><td class="dm">Inmediata</td></tr>
+    <tr><td class="dn">Síncope + bloqueo bifascicular o de rama</td><td>Electrofisiología (EEF)</td><td>Urgente (días)</td></tr>
+    <tr><td class="dn">Bloqueo AV en IAM</td><td>Cardiología intervencionista</td><td class="dm">Inmediata (reperfusión)</td></tr>
+    <tr><td class="dn">BRI de novo</td><td>Cardiología (eco + isquemia)</td><td>Preferente</td></tr>
+    <tr><td class="dn">BAV 1° / Mobitz I sintomáticos</td><td>Cardiología</td><td>Ordinaria</td></tr>
+    <tr><td class="dn">Portador de marcapasos con disfunción</td><td>Electrofisiología / clínica de dispositivos</td><td>Según síntoma</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Prevención y medidas generales</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Revisar la polifarmacia</strong> en cada consulta (BB + verapamilo/diltiazem + digoxina = combinación de riesgo).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Vigilar K⁺ y función renal</strong> en pacientes con IECA/ARA-II, espironolactona o ERC (riesgo de hiperkalemia).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Control de la cardiopatía de base</strong> (HTA, isquémica) y tamizaje de hipotiroidismo cuando corresponda.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>EKG antes y después</strong> de iniciar o subir fármacos cronotrópicos negativos en el adulto mayor.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt">En zonas endémicas: pensar en <strong>Lyme y Chagas</strong> ante BAV en paciente joven.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Bloqueos cardíacos</h2>
+  <p>Referencias primarias, guías internacionales y estudios utilizados para esta guía. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧾</span><span class="st">Resumen de la evidencia</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt">La conducta ante el bloqueo depende del <strong>nivel</strong> (nodal vs infranodal) y de los <strong>síntomas</strong>, no solo del grado (ACC/AHA/HRS 2018).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Mobitz II, BAV avanzado y BAV completo</strong> adquiridos y persistentes son indicación de <strong>marcapasos permanente</strong> (ACC/AHA/HRS 2018; ESC 2021).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">La <strong>atropina</strong> es el fármaco inicial en bradicardia sintomática, pero su eficacia es escasa en bloqueo infranodal; el <strong>marcapasos</strong> no debe retrasarse (ACLS 2020).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">En <strong>BRI</strong> con sospecha de infarto, la <strong>Sgarbossa modificada</strong> mejora sustancialmente la sensibilidad frente a la regla original (Smith, 2012).</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías y posicionamientos internacionales</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Kusumoto FM, Schoenfeld MH, Barrett C, et al. <em>2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Patients With Bradycardia and Cardiac Conduction Delay.</em> Circulation. 2019;140(8):e382–e482. [Base de la clasificación, estratificación por nivel e indicaciones de marcapasos.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000628" target="_blank" rel="noopener">🔗 DOI 10.1161/CIR.0000000000000628</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Glikson M, Nielsen JC, Kronborg MB, et al. <em>2021 ESC Guidelines on cardiac pacing and cardiac resynchronization therapy.</em> Eur Heart J. 2021;42(35):3427–3520. [Indicaciones de estimulación permanente y manejo del bloqueo de rama con síncope.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1093/eurheartj/ehab364" target="_blank" rel="noopener">🔗 DOI 10.1093/eurheartj/ehab364</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2020</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Panchal AR, Bartos JA, Cabañas JG, et al. <em>Part 3: Adult Basic and Advanced Life Support — AHA Guidelines for CPR and ECC (algoritmo de bradicardia).</em> Circulation. 2020;142(16_suppl_2):S366–S468. [Secuencia atropina → dopamina/epinefrina → marcapasos; dosis de urgencia.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000916" target="_blank" rel="noopener">🔗 DOI 10.1161/CIR.0000000000000916</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">2009</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">Surawicz B, Childers R, Deal BJ, et al. <em>AHA/ACCF/HRS Recommendations for the Standardization and Interpretation of the Electrocardiogram, Part III: Intraventricular Conduction Disturbances.</em> J Am Coll Cardiol. 2009;53(11):976–981. [Criterios diagnósticos de BRD, BRI y hemibloqueos usados en la pestaña EKG.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1016/j.jacc.2008.12.013" target="_blank" rel="noopener">🔗 DOI 10.1016/j.jacc.2008.12.013</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Estudios clínicos clave</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">5</span><span class="biblio-year">2012</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Smith SW, Dodd KW, Henry TD, Dvorak DM, Pearce LA. <em>Diagnosis of ST-Elevation Myocardial Infarction in the Presence of Left Bundle Branch Block With the ST-Elevation to S-Wave Ratio in a Modified Sgarbossa Rule.</em> Ann Emerg Med. 2012;60(6):766–776. [Sustento de la calculadora de Sgarbossa modificada — razón ST/S ≤ −0.25.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1016/j.annemergmed.2012.07.119" target="_blank" rel="noopener">🔗 DOI 10.1016/j.annemergmed.2012.07.119 · PMID 22939607</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">6</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">Secretaría de Salud / CENETEC. <em>Catálogo Maestro de Guías de Práctica Clínica.</em> [Consultar la GPC vigente aplicable a bradiarritmias y a la disponibilidad de fármacos y dispositivos en el contexto institucional.]</div>
+      <a class="biblio-link" href="http://www.cenetec.gob.mx/spry/v2/catalogoMaestroGPCgobmx.html" target="_blank" rel="noopener">🔗 Catálogo Maestro CENETEC</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales / cohortes</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso de expertos / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a 2026 y es <strong>material de apoyo educativo</strong>, no sustituye el juicio clínico. Se recomienda verificar actualizaciones de guías locales (CENETEC, SSa México) y adaptar al protocolo institucional. Los esquemas de EKG son <strong>representaciones didácticas</strong>, no trazos reales a escala. Última revisión: julio 2026.</div>
+</div>
+</div>
+
+<script>
+var AC='#7b1c1c', C2='#7a4a00', C3='#374151', CO='#0a5c45', NAV='#0c3b6e';
+
+/* ---------- NAVEGACIÓN ---------- */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id);
+  if(t)t.classList.add('on');
+  var b=document.querySelectorAll('.tab');
+  for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+function tog(h){
+  var sb=h.nextElementSibling,sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+function fpTog(id){
+  var el=document.getElementById(id),arr=document.getElementById(id+'-arr');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+/* ---------- FICHAS DE FÁRMACO ---------- */
+var FPN=0;
+function poprow(t,v,c){
+  return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;">'+
+    '<span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span>'+
+    '<span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';
+}
+function buildSifCards(color,farmacos){
+  var h='';
+  for(var i=0;i<farmacos.length;i++){
+    var f=farmacos[i]; FPN++; var id='fp'+FPN;
+    var col=f.pri?color:'#374151';
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+    h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';
+    h+='<div id="'+id+'" style="display:none;">';
+    h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+    h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';
+    h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';
+    if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">Duración: '+f.dur+'</div>';
+    if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';
+    h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('Embarazo (FDA)',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#eef4fb;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1e3a5f;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  }
+  return h;
+}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){
+  var h='<div style="margin-top:12px;">';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>';
+  h+=buildSifCards(cardColor||badgeColor,farmacos);
+  h+='</div>';
+  return h;
+}
+
+/* ---------- FÁRMACOS (datos maestros) ---------- */
+var F_ATROPINA={pri:true,linea:'⭐ 1ª línea — bradicardia sintomática',n:'Atropina IV',
+  da:'1 mg IV en bolo rápido; repetir cada 3–5 min hasta <b>máximo 3 mg</b>',
+  dur:'Efecto breve (minutos) — es medida puente',
+  prep:'Bolo directo sin diluir, seguido de 20 mL de solución fisiológica y elevación del brazo',
+  iv:'IV · Urgencias con monitor',
+  pres:'Ampolleta 1 mg/mL (1 mL) · genérico · cuadro básico IMSS',
+  fda:'Cat. C — usar si el beneficio supera el riesgo',
+  ci:'Relativas: glaucoma de ángulo cerrado, miastenia, taquiarritmia, isquemia activa. <b>Ineficaz en trasplante cardiaco</b> (corazón denervado)',
+  ea:'Taquicardia, boca seca, midriasis, retención urinaria, delirium en el adulto mayor',
+  nota:'<b>Mecanismo:</b> antagonista muscarínico → bloquea el vago sobre el <b>nodo AV y sinusal</b> → acelera la conducción nodal. <b>Por eso NO sirve en bloqueo infranodal (Mobitz II, BAV completo con QRS ancho):</b> el His-Purkinje no tiene tono vagal; incluso puede empeorar el bloqueo al acelerar la aurícula sin acelerar el ventrículo. <b>Coadyuvantes:</b> O₂ si SatO₂ &lt;90%, acceso IV, monitor, parches de marcapasos listos. <b>Evidencia:</b> AHA ACLS 2020 (bradicardia sintomática); ACC/AHA/HRS 2018.'};
+
+var F_DOPAMINA={pri:false,linea:'2ª línea — infusión',n:'Dopamina IV',
+  da:'5–20 µg/kg/min en infusión continua; titular cada 5 min por respuesta',
+  prep:'<b>Dilución:</b> 400 mg en 250 mL de SG 5% = <b>1600 µg/mL</b>. Ej. paciente de 70 kg a 10 µg/kg/min = 700 µg/min = <b>26 mL/h</b>. Bomba de infusión obligatoria',
+  iv:'IV · preferente por <b>vía central</b> (riesgo de necrosis por extravasación)',
+  pres:'Ampolleta 200 mg/5 mL · genérico · IMSS',
+  fda:'Cat. C',
+  ci:'Taquiarritmias, feocromocitoma, hipovolemia no corregida',
+  ea:'Taquicardia, arritmias, isquemia, náusea; <b>necrosis tisular</b> si se extravasa (antídoto: fentolamina local)',
+  nota:'<b>Mecanismo:</b> a dosis 5–10 µg/kg/min predomina el efecto <b>β1</b> (cronotrópico e inotrópico positivo); &gt;10 µg/kg/min añade efecto <b>α1</b> vasoconstrictor. Útil cuando hay bradicardia <b>con hipotensión</b>. <b>Coadyuvantes:</b> corregir volumen antes de iniciar; monitor continuo. <b>Evidencia:</b> ACLS 2020 (alternativa a atropina o mientras se coloca el marcapasos).'};
+
+var F_EPI={pri:false,linea:'2ª línea — infusión',n:'Epinefrina (adrenalina) IV',
+  da:'2–10 µg/min en infusión continua; titular por respuesta',
+  prep:'<b>Dilución:</b> 1 mg en 250 mL de SG 5% o SF = <b>4 µg/mL</b>. Para 5 µg/min = <b>75 mL/h</b>. Bomba obligatoria',
+  iv:'IV · preferente vía central',
+  pres:'Ampolleta 1 mg/mL · genérico · IMSS',
+  fda:'Cat. C',
+  ci:'Precaución en cardiopatía isquémica e HTA grave (no hay CI absoluta en paro/inestabilidad)',
+  ea:'Taquiarritmias, HTA, ansiedad, isquemia miocárdica, hiperglucemia',
+  nota:'<b>Mecanismo:</b> agonista α y β; el efecto <b>β1</b> aumenta frecuencia y contractilidad. De elección si hay <b>bradicardia + hipotensión/choque</b>. <b>Coadyuvantes:</b> volumen, O₂, marcapasos en paralelo. <b>Evidencia:</b> ACLS 2020 (equivalente a dopamina como 2ª línea).'};
+
+var F_ISO={pri:false,linea:'Alternativa — infusión',n:'Isoproterenol IV',
+  da:'2–10 µg/min en infusión; titular hasta FC adecuada',
+  prep:'<b>Dilución:</b> 1 mg en 250 mL de SG 5% = 4 µg/mL. Bomba obligatoria',
+  iv:'IV · monitor continuo',
+  pres:'Ampolleta 1 mg/5 mL — <b>disponibilidad limitada en México</b>',
+  fda:'Cat. C',
+  ci:'Cardiopatía isquémica activa, taquiarritmias, intoxicación digitálica',
+  ea:'Taquiarritmias, hipotensión (vasodilatación β2), isquemia, cefalea',
+  nota:'<b>Mecanismo:</b> agonista β1/β2 puro → aumenta la frecuencia del <b>escape</b>. Útil como puente al marcapasos y en <b>torsades bradicardia-dependiente</b>. Cuidado: la vasodilatación β2 puede bajar la TA. <b>Evidencia:</b> ESC 2021 / ACC-AHA-HRS 2018 (uso puente).'};
+
+var F_MTC={pri:true,linea:'⭐ Si inestable o falla de fármacos',n:'Marcapasos transcutáneo',
+  dlb:'Indicación / ajuste',
+  da:'Bradicardia inestable que no responde a atropina, o desde el inicio si Mobitz II / BAV completo',
+  prep:'<b>Paso a paso:</b> 1) Parche anterior (precordio) + posterior (interescapular). 2) Modo <b>demanda</b>. 3) Frecuencia 60–80 lpm. 4) Subir mA desde 0 hasta lograr <b>captura</b> (espiga → QRS ancho + onda T). 5) Dejar 10% por encima del umbral. 6) <b>Sedación y analgesia</b> antes o durante',
+  iv:'Externo · Urgencias / UCI',
+  ci:'No demorar por falta de sedación si el paciente está en riesgo vital; precaución en hipotermia grave',
+  ea:'Dolor y contracción muscular intensos, quemadura cutánea, falla de captura',
+  nota:'<b>Mecanismo:</b> despolariza el miocardio a través de la pared torácica. <b>Verificar SIEMPRE dos capturas:</b> eléctrica (espiga seguida de QRS) y <b>mecánica</b> (pulso femoral/carotídeo palpable — no confíes en el oxímetro ni en el monitor solos). Es <b>medida puente</b> al transvenoso o definitivo. <b>Coadyuvantes:</b> fentanilo 25–50 µg IV y/o midazolam 1–2 mg IV. <b>Evidencia:</b> ACLS 2020; ACC/AHA/HRS 2018.'};
+
+var F_MTV={pri:false,linea:'Puente / definitivo',n:'Marcapasos transvenoso y definitivo',
+  dlb:'Indicación',
+  da:'Transvenoso temporal: inestabilidad persistente o necesidad prolongada. <b>Definitivo:</b> Mobitz II, BAV avanzado o completo, bradicardia sintomática irreversible, bloqueo de rama alternante, síncope + bifascicular',
+  prep:'Transvenoso: acceso yugular interno derecho o subclavio, bajo fluoroscopía o guiado por EKG',
+  iv:'Hemodinamia / electrofisiología',
+  ea:'Perforación, neumotórax, infección, desplazamiento del electrodo, arritmias',
+  nota:'<b>Antes de implantar un definitivo: descarta causa reversible</b> (fármacos, isquemia aguda, hiperK⁺, hipotiroidismo, Lyme) — muchas veces el bloqueo revierte. <b>Evidencia:</b> ACC/AHA/HRS 2018 (Clase I para BAV 3°, Mobitz II y avanzado adquiridos); ESC 2021.'};
+
+var F_GLUCAGON={pri:true,linea:'⭐ Antídoto — intoxicación por BB / calcioantagonista',n:'Glucagón IV',
+  da:'Bolo 3–10 mg IV (50–150 µg/kg) en 1–2 min; si responde, infusión de 3–5 mg/h',
+  prep:'Reconstituir con su diluyente; para infusión, diluir en SG 5%',
+  iv:'IV · monitor',
+  pres:'Frasco ámpula 1 mg (se requieren varios frascos) · disponibilidad limitada',
+  fda:'Cat. B',
+  ci:'Feocromocitoma, insulinoma',
+  ea:'Náusea y <b>vómito frecuentes</b> (proteger vía aérea), hiperglucemia, hipokalemia',
+  nota:'<b>Mecanismo:</b> activa la adenilato-ciclasa por un receptor <b>independiente del β</b> → sube el AMPc y el calcio intracelular, "saltándose" el bloqueo del betabloqueador. <b>Coadyuvantes:</b> antiemético (ondansetrón 4–8 mg IV), calcio IV, <b>insulina a dosis altas + glucosa (HIET)</b>, vasopresores; consultar toxicología/CIATOX. <b>Evidencia:</b> consenso de toxicología clínica.'};
+
+var F_CALCIO={pri:false,linea:'Antídoto / hiperkalemia',n:'Calcio IV (gluconato o cloruro)',
+  da:'<b>Gluconato de calcio 10%:</b> 10–20 mL IV en 5–10 min. <b>Cloruro de calcio 10%:</b> 10 mL IV (3× más calcio elemental, solo por vía central)',
+  prep:'Diluir en 50–100 mL de SG 5% y pasar lento con monitor; repetir a los 5 min si persisten los cambios en el EKG',
+  iv:'IV · gluconato por periférica; cloruro por <b>central</b>',
+  pres:'Gluconato de calcio 10% ampolleta 10 mL · IMSS',
+  fda:'Cat. C',
+  ci:'<b>Intoxicación digitálica</b> (usar con extrema cautela — riesgo teórico de "corazón de piedra"); hipercalcemia',
+  ea:'Bradicardia si se pasa rápido, necrosis por extravasación (cloruro), rubor, sabor metálico',
+  nota:'<b>Mecanismo:</b> en <b>hiperkalemia</b> estabiliza la membrana del miocito (no baja el K⁺): antagoniza el efecto del K⁺ sobre el potencial de membrana; efecto en minutos, dura 30–60 min. En intoxicación por <b>calcioantagonistas</b> compite en el canal L. <b>Coadyuvantes en hiperK⁺:</b> insulina rápida 10 U + 25 g de glucosa, salbutamol nebulizado, bicarbonato si acidosis, diuréticos/diálisis para eliminar K⁺. <b>Evidencia:</b> consenso; guías de hiperkalemia.'};
+
+var F_FAB={pri:false,linea:'Antídoto — intoxicación digitálica',n:'Anticuerpos antidigoxina (Fab)',
+  da:'Dosis según carga corporal o nivel sérico; en intoxicación aguda con inestabilidad se usan viales empíricos (consultar toxicología)',
+  prep:'Reconstituir y pasar IV en 30 min',
+  iv:'IV · UCI',
+  pres:'Frasco ámpula (disponibilidad limitada en México — <b>consultar CIATOX</b>)',
+  ci:'Ninguna absoluta en intoxicación grave',
+  ea:'Hipokalemia (al revertir el efecto), reaparición de la falla cardiaca o de la FA de base, reacción alérgica',
+  nota:'<b>Mecanismo:</b> fragmentos Fab que secuestran la digoxina y la retiran del receptor Na⁺/K⁺-ATPasa. <b>Indicaciones:</b> arritmia ventricular grave, bradiarritmia o BAV inestables, <b>K⁺ &gt;5 mEq/L</b> en intoxicación aguda. <b>Ojo:</b> evitar calcio IV. La atropina y el marcapasos son medidas puente. <b>Evidencia:</b> consenso de toxicología.'};
+
+var F_FENT={pri:true,linea:'Coadyuvante — analgesia',n:'Fentanilo IV',
+  da:'25–50 µg IV lento; repetir según dolor y estado hemodinámico',
+  prep:'Bolo lento (1–2 min); monitor con oximetría',
+  iv:'IV',
+  pres:'Ampolleta 500 µg/10 mL · IMSS',
+  fda:'Cat. C',
+  ci:'Depresión respiratoria sin vía aérea asegurada; precaución en hipotensión',
+  ea:'Depresión respiratoria, hipotensión, rigidez torácica (bolo rápido), náusea',
+  nota:'<b>Mecanismo:</b> agonista µ opioide. Indicado para el <b>dolor del marcapasos transcutáneo</b> (es muy doloroso). Antídoto: naloxona. <b>Coadyuvantes:</b> midazolam para ansiólisis; O₂ y ambú a la mano.'};
+
+var F_MIDA={pri:false,linea:'Coadyuvante — sedación',n:'Midazolam IV',
+  da:'1–2 mg IV lento; titular (dosis menores en el adulto mayor)',
+  prep:'Bolo lento con monitor',
+  iv:'IV',
+  pres:'Ampolleta 5 mg/5 mL · 15 mg/3 mL · IMSS',
+  fda:'Cat. D',
+  ci:'Depresión respiratoria, hipotensión grave, miastenia',
+  ea:'Depresión respiratoria, hipotensión, sedación excesiva, amnesia',
+  nota:'<b>Mecanismo:</b> benzodiacepina (GABA-A). Para la <b>tolerancia del marcapasos transcutáneo</b>. Antídoto: flumazenil (usar con cautela). Vigilar vía aérea.'};
+
+var F_ONDAN={pri:false,linea:'Coadyuvante — antiemético',n:'Ondansetrón IV',
+  da:'4–8 mg IV',
+  prep:'Bolo lento en 2–5 min o diluido en 50 mL',
+  iv:'IV',
+  pres:'Ampolleta 4 mg/2 mL · 8 mg/4 mL · IMSS',
+  fda:'Cat. B',
+  ci:'QT largo congénito (precaución: prolonga el QT)',
+  ea:'Cefalea, estreñimiento, prolongación del QT',
+  nota:'<b>Mecanismo:</b> antagonista 5-HT₃. Indicado por el <b>vómito del glucagón</b> y por náusea en el paciente monitorizado. <b>Precaución:</b> en bradicardia extrema el QT ya está largo → vigilar riesgo de torsades.'};
+
+/* Medidas ambulatorias (fichas no farmacológicas) */
+var M_RETIRO={pri:true,linea:'⭐ 1ª línea ambulatoria',n:'Retirar / ajustar cronotrópicos negativos',
+  dlb:'Conducta',
+  da:'Suspender o reducir: betabloqueadores, verapamilo, diltiazem, digoxina, amiodarona, ivabradina, clonidina',
+  dur:'Reevaluar con EKG en 24–72 h tras el ajuste',
+  prep:'Sustituir por alternativas que no frenen el nodo AV (p. ej. para HTA: IECA/ARA-II, amlodipino, tiazida)',
+  iv:'Ambulatorio',
+  ci:'No suspender bruscamente el betabloqueador en cardiopatía isquémica sin plan (riesgo de rebote): reducir de forma escalonada y vigilada',
+  nota:'<b>Es la causa reversible más frecuente</b> y la primera a corregir: hasta que no se retiren los frenadores, no se puede decidir si el bloqueo es "definitivo". Revisar además interacciones que suben niveles (p. ej. amiodarona + digoxina).'};
+
+var M_CAUSA={pri:false,linea:'2ª línea — tratar la causa',n:'Corregir causa metabólica / infecciosa',
+  dlb:'Conducta',
+  da:'Hipotiroidismo → levotiroxina · Hiperkalemia → corregir y revisar IECA/ARA-II/espironolactona · Lyme → antibiótico · Isquemia → revascularización',
+  prep:'Solicitar: K⁺, función renal, TSH, troponina; serología si sospecha de Lyme/Chagas',
+  iv:'Ambulatorio / hospitalario según gravedad',
+  nota:'El BAV por <b>Lyme</b> y el de la <b>hiperkalemia</b> suelen revertir por completo con el tratamiento: no implantar marcapasos definitivo antes de corregirlas.'};
+
+var M_REF={pri:false,linea:'3ª línea — referencia',n:'Referencia a cardiología / electrofisiología',
+  dlb:'Indicación',
+  da:'Mobitz II · BAV avanzado o completo · síncope + bloqueo bifascicular · bloqueo de rama alternante · bradicardia sintomática irreversible',
+  prep:'Enviar con EKG (idealmente la tira del evento), Holter si se tiene, lista de fármacos y laboratorios',
+  iv:'Referencia',
+  nota:'La decisión de <b>marcapasos definitivo</b> corresponde a cardiología/EEF (ACC/AHA/HRS 2018, ESC 2021). Si hay inestabilidad → traslado monitorizado, no cita ordinaria.'};
+
+var M_COAD={pri:true,linea:'Coadyuvantes',n:'Monitoreo y educación',
+  dlb:'Medidas',
+  da:'Holter 24–48 h o monitor de eventos · ecocardiograma si BRI o sospecha estructural · educación en señales de alarma',
+  prep:'Enseñar a tomar el pulso; diario de síntomas (mareo, síncope, fatiga)',
+  iv:'Ambulatorio',
+  nota:'<b>Señales de alarma:</b> desmayo, presíncope, disnea nueva, dolor torácico, pulso &lt;40 con malestar → urgencias. Advertir sobre conducir si hay síncope (valorar restricción temporal).'};
+
+/* ---------- TX CONSULTA ---------- */
+var TXC={
+ gen:[['1ª Línea','Quitar la causa antes que nada',AC,[M_RETIRO]],
+      ['2ª Línea','Corregir lo metabólico/infeccioso',C2,[M_CAUSA]],
+      ['3ª Línea','Cuándo referir',C3,[M_REF]],
+      ['Coadyuvantes','Estudio y educación',CO,[M_COAD]]],
+ farm:[['1ª Línea','Suspender el fármaco responsable',AC,[M_RETIRO]],
+       ['2ª Línea','Revisar interacciones y función renal',C2,[Object.assign({},M_CAUSA,{n:'Revisar interacciones y depuración',da:'Amiodarona/verapamilo suben la digoxina · ERC acumula fármacos · vigilar K⁺ con IECA/ARA-II/espironolactona',nota:'La bradicardia "por fármaco" suele ser por <b>interacción o acumulación</b>, no por dosis alta. Ajustar por TFG.'})]],
+       ['3ª Línea','Si no revierte al retirarlo',C3,[M_REF]],
+       ['Coadyuvantes','Control',CO,[M_COAD]]],
+ mayor:[['1ª Línea','Depurar la polifarmacia',AC,[M_RETIRO]],
+        ['2ª Línea','Buscar fibrosis degenerativa y causas',C2,[M_CAUSA]],
+        ['3ª Línea','Umbral bajo para referir',C3,[M_REF]],
+        ['Coadyuvantes','Prevención de caídas',CO,[Object.assign({},M_COAD,{n:'Monitoreo, caídas y educación',da:'Holter · valorar riesgo de caídas y fracturas · revisar hipotensión ortostática',nota:'En el adulto mayor el bloqueo puede presentarse como <b>confusión, caídas o fatiga</b>, no como síncope clásico. La causa más común es la <b>fibrosis degenerativa</b> (Lev-Lenègre): suele ser irreversible → marcapasos si es sintomático.'})]]],
+ atleta:[['1ª Línea','Confirmar que es fisiológico',AC,[{pri:true,linea:'⭐ 1ª línea',n:'Observación (bradicardia vagal)',dlb:'Conducta',
+        da:'BAV 1° o Mobitz I <b>asintomáticos</b>, que <b>desaparecen con el ejercicio</b> o con atropina',
+        prep:'Prueba de esfuerzo: si el bloqueo <b>mejora</b> al aumentar la frecuencia → nodal/vagal (benigno)',
+        iv:'Ambulatorio',
+        nota:'<b>Mecanismo:</b> tono vagal alto en reposo (atletas, sueño). No requiere tratamiento ni restricción deportiva si es asintomático y desaparece con el esfuerzo. <b>Alarma:</b> si <b>empeora</b> con el ejercicio → infranodal → referir.'}]],
+       ['2ª Línea','Descartar patología si hay dudas',C2,[M_CAUSA]],
+       ['3ª Línea','Referir si hay síntomas o empeora con esfuerzo',C3,[M_REF]],
+       ['Coadyuvantes','Seguimiento',CO,[M_COAD]]]
+};
+function setTxc(k,el){
+  var c=document.querySelectorAll('#txc-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXC[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ---------- TX HOSPITALARIO ---------- */
+var TXH={
+ inest:[['1ª Línea','Bradicardia con hipotensión, choque, alteración mental, angina o ICC',AC,[F_ATROPINA]],
+        ['2ª Línea','Si no responde a atropina (o mientras se prepara el marcapasos)',C2,[F_DOPAMINA,F_EPI]],
+        ['3ª Línea','Estimulación eléctrica',C3,[F_MTC,F_MTV]],
+        ['Coadyuvantes','Analgesia, sedación y soporte',CO,[F_FENT,F_MIDA,F_ONDAN]]],
+ infra:[['1ª Línea','⚠️ Prepara el marcapasos DESDE EL INICIO — no dependas de la atropina',AC,[F_MTC]],
+        ['2ª Línea','Puente farmacológico mientras llega el marcapasos',C2,[F_EPI,F_ISO,F_DOPAMINA]],
+        ['3ª Línea','Definitivo',C3,[F_MTV]],
+        ['Coadyuvantes','Confort y soporte',CO,[F_FENT,F_MIDA]]],
+ tox:[['1ª Línea','Antídoto específico',AC,[F_GLUCAGON]],
+      ['2ª Línea','Calcio y soporte hemodinámico',C2,[F_CALCIO,F_EPI]],
+      ['3ª Línea','Si persiste inestable',C3,[F_MTC]],
+      ['Coadyuvantes','Manejo del vómito y sedación',CO,[F_ONDAN,F_MIDA]]],
+ dig:[['1ª Línea','Antídoto específico',AC,[F_FAB]],
+      ['2ª Línea','Medidas puente (⚠️ evitar calcio IV)',C2,[F_ATROPINA,F_MTC]],
+      ['3ª Línea','Corregir electrolitos',C3,[Object.assign({},F_CALCIO,{pri:false,linea:'⚠️ Precaución en digital',n:'Corrección de K⁺ y Mg²⁺',
+        da:'Tratar la hiperkalemia (marcador de gravedad) y reponer Mg²⁺ si está bajo',
+        prep:'En intoxicación digitálica <b>evitar calcio IV</b>; la hiperkalemia se maneja con insulina-glucosa y los <b>Fab</b> como tratamiento definitivo',
+        nota:'La <b>hiperkalemia</b> en intoxicación digitálica aguda (K⁺ &gt;5) es indicación de anticuerpos Fab y marcador de mal pronóstico.'})]],
+      ['Coadyuvantes','Soporte',CO,[F_ONDAN]]],
+ hiperk:[['1ª Línea','Estabilizar la membrana (¡primero!)',AC,[F_CALCIO]],
+         ['2ª Línea','Meter el K⁺ a la célula',C2,[{pri:false,linea:'2ª línea — redistribución',n:'Insulina rápida + glucosa',
+           da:'10 U de insulina rápida IV + 25 g de glucosa (50 mL de SG 50%)',
+           prep:'<b>Paso a paso:</b> 1) Glucosa primero o simultánea. 2) Insulina IV en bolo. 3) Vigilar glucemia c/30 min por 4–6 h (riesgo de hipoglucemia tardía). Si la glucosa es &gt;250 mg/dL, se puede dar la insulina sola',
+           iv:'IV',pres:'Insulina rápida 100 U/mL · SG 50% ampolleta',ea:'Hipoglucemia (frecuente), hipokalemia de rebote',
+           nota:'<b>Mecanismo:</b> la insulina activa la Na⁺/K⁺-ATPasa e introduce el K⁺ a la célula (efecto en 15–30 min, dura 4–6 h). <b>Coadyuvantes:</b> salbutamol 10–20 mg nebulizado (efecto aditivo), bicarbonato solo si hay acidosis metabólica.'},
+           {pri:false,linea:'2ª línea — redistribución',n:'Salbutamol nebulizado',
+           da:'10–20 mg nebulizados (dosis alta, 4–8 veces la dosis broncodilatadora)',
+           prep:'Nebulizar en 10–15 min',iv:'Inhalado',pres:'Solución para nebulizar 5 mg/mL',
+           ea:'Taquicardia, temblor',
+           nota:'<b>Mecanismo:</b> agonista β2 → Na⁺/K⁺-ATPasa → entrada de K⁺ a la célula. Efecto aditivo con la insulina. <b>Ojo:</b> ~20% de los pacientes no responden.'}]],
+         ['3ª Línea','Eliminar el K⁺ del cuerpo',C3,[{pri:false,linea:'3ª línea — eliminación',n:'Diuréticos / quelantes / diálisis',
+           da:'Furosemida IV si hay diuresis conservada · quelantes de potasio VO · <b>hemodiálisis</b> si ERC, K⁺ muy alto o refractario',
+           prep:'La diálisis es el único método rápido y definitivo en el paciente anúrico',
+           iv:'IV / VO / hemodiálisis',
+           nota:'La estabilización con calcio y la redistribución <b>no bajan el K⁺ corporal total</b>: siempre hay que eliminarlo. Suspender IECA/ARA-II, espironolactona, AINE y suplementos de K⁺.'}]],
+         ['Coadyuvantes','Marcapasos si hay bradicardia grave',CO,[F_MTC]]]
+};
+function setTxh(k,el){
+  var c=document.querySelectorAll('#txh-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var d=TXH[k],h='';
+  for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);
+  document.getElementById('txh-body').innerHTML=h;
+}
+
+/* ---------- BUSCADOR DE FÁRMACOS ---------- */
+var FARMACOS=[
+ {familia:'Anticolinérgicos',color:'#7b1c1c',farmacos:[
+   {n:'Atropina',ini:'1 mg IV en bolo',obj:'Repetir c/3–5 min · máx 3 mg',iv:'IV · urgencias con monitor',pr:'Ampolleta 1 mg/mL · IMSS',
+    ci:'Glaucoma de ángulo cerrado, taquiarritmia; ineficaz en trasplante cardiaco',ea:'Taquicardia, boca seca, retención urinaria, delirium',
+    nota:'<b>Mecanismo:</b> antimuscarínico → acelera el nodo AV/sinusal. <b>No sirve en bloqueo infranodal (Mobitz II, BAV completo con QRS ancho).</b> <b>Dilución:</b> bolo directo + 20 mL de SF. <b>Coadyuvantes:</b> parches de marcapasos listos. <b>Interacciones:</b> potencia otros anticolinérgicos.'}]},
+ {familia:'Cronotrópicos en infusión',color:'#0c3b6e',farmacos:[
+   {n:'Dopamina',ini:'5 µg/kg/min',obj:'Titular 5–20 µg/kg/min',iv:'IV en bomba · preferente central',pr:'Ampolleta 200 mg/5 mL',
+    ci:'Taquiarritmias, feocromocitoma, hipovolemia',ea:'Arritmias, isquemia, necrosis por extravasación',
+    nota:'<b>Mecanismo:</b> β1 (5–10 µg/kg/min) y α1 (&gt;10). <b>Dilución:</b> 400 mg en 250 mL SG5% = 1600 µg/mL; 70 kg a 10 µg/kg/min ≈ 26 mL/h. <b>Coadyuvantes:</b> corregir volumen. <b>Antídoto de extravasación:</b> fentolamina local.'},
+   {n:'Epinefrina',ini:'2 µg/min',obj:'Titular 2–10 µg/min',iv:'IV en bomba · preferente central',pr:'Ampolleta 1 mg/mL',
+    ci:'Precaución en isquemia e HTA grave',ea:'Taquiarritmias, HTA, isquemia',
+    nota:'<b>Mecanismo:</b> α + β1. De elección si hay <b>bradicardia + hipotensión</b>. <b>Dilución:</b> 1 mg en 250 mL = 4 µg/mL; 5 µg/min = 75 mL/h. <b>Coadyuvantes:</b> volumen, marcapasos en paralelo.'},
+   {n:'Isoproterenol',ini:'2 µg/min',obj:'Titular 2–10 µg/min',iv:'IV en bomba',pr:'Ampolleta 1 mg/5 mL · disponibilidad limitada en MX',
+    ci:'Isquemia activa, intoxicación digitálica',ea:'Taquiarritmias, hipotensión, isquemia',
+    nota:'<b>Mecanismo:</b> β1/β2 puro → sube la frecuencia del escape. Útil en <b>torsades bradicardia-dependiente</b> y como puente. <b>Dilución:</b> 1 mg en 250 mL = 4 µg/mL.'}]},
+ {familia:'Antídotos',color:'#7a4a00',farmacos:[
+   {n:'Glucagón',ini:'3–10 mg IV en bolo',obj:'Infusión 3–5 mg/h si responde',iv:'IV · monitor',pr:'Frasco ámpula 1 mg',
+    ci:'Feocromocitoma, insulinoma',ea:'Vómito frecuente, hiperglucemia, hipokalemia',
+    nota:'<b>Mecanismo:</b> sube el AMPc por una vía <b>independiente del receptor β</b> → antídoto en intoxicación por <b>betabloqueador/calcioantagonista</b>. <b>Coadyuvantes:</b> ondansetrón (vomita mucho), calcio IV, insulina a dosis altas + glucosa (HIET), vasopresores. Consultar CIATOX.'},
+   {n:'Calcio (gluconato / cloruro)',ini:'Gluconato 10% 10–20 mL IV',obj:'Repetir a los 5 min si persisten cambios en EKG',iv:'Gluconato periférica · cloruro central',pr:'Gluconato 10% ampolleta 10 mL · IMSS',
+    ci:'<b>Intoxicación digitálica</b> (evitar); hipercalcemia',ea:'Bradicardia si se pasa rápido, necrosis por extravasación',
+    nota:'<b>Mecanismo:</b> estabiliza la membrana del miocito en <b>hiperkalemia</b> (no baja el K⁺) y compite en el canal L en intoxicación por calcioantagonistas. <b>Dilución:</b> en 50–100 mL de SG5%, lento con monitor. <b>Coadyuvantes:</b> insulina + glucosa, salbutamol, diálisis.'},
+   {n:'Anticuerpos antidigoxina (Fab)',ini:'Según carga/nivel (consultar toxicología)',obj:'Revertir arritmia y BAV',iv:'IV en 30 min · UCI',pr:'Frasco ámpula · disponibilidad limitada',
+    ci:'Ninguna absoluta en intoxicación grave',ea:'Hipokalemia, reaparición de FA/ICC, alergia',
+    nota:'<b>Mecanismo:</b> secuestra la digoxina del receptor Na⁺/K⁺-ATPasa. <b>Indicaciones:</b> bradiarritmia/BAV inestable, arritmia ventricular, <b>K⁺ &gt;5</b>. <b>Evitar calcio IV.</b>'},
+   {n:'Insulina rápida + glucosa (HIET / hiperkalemia)',ini:'10 U IV + 25 g de glucosa',obj:'Bajar K⁺; en intoxicación por CAA: 1 U/kg bolo + 0.5–1 U/kg/h',iv:'IV',pr:'Insulina rápida 100 U/mL · SG 50%',
+    ci:'Hipoglucemia no corregida',ea:'Hipoglucemia (vigilar 4–6 h), hipokalemia',
+    nota:'<b>Mecanismo:</b> activa la Na⁺/K⁺-ATPasa (mete K⁺ a la célula) y, a dosis altas, mejora el <b>inotropismo</b> en intoxicación por calcioantagonistas (HIET). <b>Coadyuvantes:</b> glucosa continua y monitoreo estrecho de glucemia y K⁺.'}]},
+ {familia:'Coadyuvantes (confort y soporte)',color:'#0a5c45',farmacos:[
+   {n:'Fentanilo',ini:'25–50 µg IV lento',obj:'Analgesia para marcapasos transcutáneo',iv:'IV',pr:'Ampolleta 500 µg/10 mL · IMSS',
+    ci:'Depresión respiratoria sin vía aérea asegurada',ea:'Depresión respiratoria, hipotensión, rigidez torácica',
+    nota:'<b>Mecanismo:</b> agonista µ. El marcapasos transcutáneo <b>duele mucho</b>: analgesia obligada. Antídoto: naloxona.'},
+   {n:'Midazolam',ini:'1–2 mg IV lento',obj:'Sedación/ansiólisis; titular',iv:'IV',pr:'Ampolleta 5 mg/5 mL · IMSS',
+    ci:'Depresión respiratoria, hipotensión grave',ea:'Depresión respiratoria, hipotensión, amnesia',
+    nota:'<b>Mecanismo:</b> GABA-A. Dosis menores en el adulto mayor. Antídoto: flumazenil (con cautela).'},
+   {n:'Ondansetrón',ini:'4–8 mg IV',obj:'Antiemético (vómito por glucagón)',iv:'IV',pr:'Ampolleta 4 mg/2 mL · IMSS',
+    ci:'QT largo congénito',ea:'Cefalea, estreñimiento, prolonga el QT',
+    nota:'<b>Mecanismo:</b> antagonista 5-HT₃. <b>Precaución:</b> la bradicardia ya alarga el QT → vigilar torsades.'}]}
+];
+function farmCard(f,color){
+  var h='<div class="farm-card"><div class="farm-h" style="background:'+color+';">'+f.n+'</div><div class="farm-b">';
+  h+='<div class="farm-f"><div class="farm-l">Dosis inicial</div><div class="farm-v">'+f.ini+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Objetivo / titulación</div><div class="farm-v">'+f.obj+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Vía / administración</div><div class="farm-v">'+f.iv+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';
+  h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';
+  h+='<div style="background:#fdf2f2;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#7b1c1c;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function filtrarFarmacos(q){
+  q=(q||'').toLowerCase().trim();
+  var h='',hits=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],cards='';
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j];
+      var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini).toLowerCase();
+      if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color);hits++;}
+    }
+    if(cards)h+='<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';margin-bottom:6px;padding-left:2px;border-left:3px solid '+fam.color+';padding:2px 0 2px 8px;">'+fam.familia+'</div>'+cards+'</div>';
+  }
+  if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+
+/* ---------- INDICACIONES ---------- */
+var IND_BLOQ=[
+ {familia:'Urgencias — bradicardia sintomática',color:'#7b1c1c',farmacos:[
+  {n:'Atropina IV',
+   dosis:[{label:'1 mg IV en bolo — repetir c/3–5 min (máx 3 mg)'}],
+   via:'IV directa, bolo rápido, seguida de 20 mL de solución fisiológica',
+   enfermeria:'1) Monitor, oximetría, TA c/5 min. 2) Acceso IV permeable de buen calibre. 3) Bolo rápido (no lento: dosis bajas o lentas pueden producir bradicardia paradójica). 4) Lavar con 20 mL de SF y elevar el brazo. 5) Dejar listos los parches de marcapasos y el desfibrilador. 6) Registrar FC y TA antes y después.',
+   paciente:'Le vamos a poner un medicamento en la vena para que su corazón lata más rápido. Es normal sentir la boca seca, la vista un poco borrosa y el corazón acelerado. Avísenos si siente dolor en el pecho o mucha falta de aire.',
+   nota:'Fármaco de primera línea en bradicardia sintomática (ACLS 2020). <b>Mecanismo:</b> bloquea el vago sobre el nodo AV. <b>Advertencia:</b> en Mobitz II y BAV completo (infranodal) suele fallar — no retrases el marcapasos.',
+   alarma:'Si no hay respuesta tras 3 mg, o si el paciente sigue hipotenso/con alteración del estado mental → iniciar infusión y marcapasos transcutáneo de inmediato.'},
+  {n:'Marcapasos transcutáneo',
+   dosis:[{label:'Frecuencia 60–80 lpm · subir mA hasta lograr captura + 10%'}],
+   via:'Parches externos: uno anterior (precordio) y otro posterior (interescapular)',
+   enfermeria:'1) Rasurar/secar la piel (no rasurar si retrasa). 2) Colocar parches AP con buen contacto. 3) Modo demanda; fijar frecuencia 60–80. 4) Subir el amperaje gradualmente hasta ver <b>captura</b>. 5) Confirmar <b>pulso femoral/carotídeo</b> (captura mecánica). 6) Administrar analgesia/sedación indicada. 7) Vigilar quemaduras y recolocar parches si falla la captura.',
+   paciente:'Vamos a colocar unos parches en el pecho y la espalda que enviarán pequeños impulsos para que su corazón mantenga un ritmo adecuado. <b>Va a sentir golpes o piquetes fuertes y contracción de los músculos: es normal.</b> Le daremos medicamento para el dolor. Es una medida temporal mientras se resuelve el problema.',
+   nota:'Medida <b>puente</b> al marcapasos transvenoso/definitivo. Verificar SIEMPRE captura eléctrica <b>y</b> mecánica: el monitor puede mostrar espigas sin que el corazón esté latiendo.',
+   alarma:'Pérdida de captura, ausencia de pulso, quemadura cutánea, o dolor incontrolable → avisar de inmediato al médico.'}]},
+ {familia:'Antídotos y causas reversibles',color:'#7a4a00',farmacos:[
+  {n:'Glucagón IV',
+   dosis:[{label:'Bolo 3–10 mg IV en 1–2 min'},{label:'Infusión 3–5 mg/h si hubo respuesta'}],
+   via:'IV — reconstituir con su diluyente; para infusión, diluir en SG 5%',
+   enfermeria:'1) Preparar <b>varios frascos</b> (se requieren dosis altas). 2) Tener listo el antiemético y aspiración: <b>el vómito es muy frecuente</b>. 3) Proteger la vía aérea si hay alteración del estado de alerta. 4) Vigilar glucemia (produce hiperglucemia) y K⁺. 5) Monitor continuo de FC y TA.',
+   paciente:'Este medicamento contrarresta el efecto de las pastillas del corazón que le bajaron el pulso. Es muy común sentir náuseas y vomitar; le pondremos algo para eso.',
+   nota:'Antídoto en intoxicación por <b>betabloqueadores y calcioantagonistas</b>. Coadyuvantes: calcio IV, insulina a dosis altas + glucosa (HIET), vasopresores. Consultar toxicología/CIATOX.',
+   alarma:'Vómito con riesgo de broncoaspiración, hipoglucemia tardía, o persistencia del choque → escalar (HIET, vasopresores, marcapasos).'},
+  {n:'Calcio IV (hiperkalemia)',
+   dosis:[{label:'Gluconato de calcio 10%: 10–20 mL IV en 5–10 min'},{label:'Cloruro de calcio 10%: 10 mL IV (solo por vía central)'}],
+   via:'IV lento con monitor; diluido en 50–100 mL de SG 5%',
+   enfermeria:'1) Verificar que la vía sea permeable (riesgo de necrosis por extravasación, sobre todo con cloruro). 2) Pasar lento y con monitor. 3) Repetir a los 5 min si persisten los cambios en el EKG. 4) Preparar insulina + glucosa como siguiente paso. 5) Vigilar glucemia y K⁺ seriados.',
+   paciente:'Le vamos a dar calcio en la vena para proteger su corazón de un mineral (potasio) que está muy alto. Después le daremos otro medicamento para bajarlo.',
+   nota:'El calcio <b>estabiliza la membrana pero NO baja el potasio</b>: siempre hay que seguir con insulina + glucosa, salbutamol y eliminación (diuréticos/diálisis).',
+   alarma:'⚠️ <b>Evitar calcio si se sospecha intoxicación digitálica.</b> Extravasación, bradicardia por infusión rápida → detener y avisar.'}]}
+];
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND_BLOQ.length;i++){
+    var fam=IND_BLOQ[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+' fármaco(s)</div><div class="ind-bb">';
+    for(var j=0;j<fam.farmacos.length;j++){
+      var f=fam.farmacos[j],id='ind'+i+'-'+j;
+      h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';
+      h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';
+      h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';
+      h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';
+      h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';
+      var d='';
+      for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k].label+'</div>';
+      h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis</div>'+d+'</div>';
+      h+='<div style="background:#fff8e1;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#7a4a00;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';
+      h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enfermeria+'</div></div>';
+      h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.paciente+'</div></div>';
+      h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';
+      h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.alarma+'</div></div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+function indTog(id){
+  var el=document.getElementById(id),t=document.getElementById(id+'-t');
+  if(!el)return;
+  var open=el.style.display==='none'||el.style.display==='';
+  el.style.display=open?'block':'none';
+  if(t)t.innerHTML=open?'▼ ocultar':'► ver';
+}
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ iami:{t:'IAM inferior (arteria coronaria derecha)',
+  pres:'BAV de 1er grado, Mobitz I o incluso BAV completo con <b>escape de la unión (QRS estrecho, 40–60 lpm)</b>; suele haber bradicardia sinusal y náusea (reflejo de Bezold-Jarisch).',
+  dx:'EKG: elevación del ST en II, III y aVF. Buscar extensión al <b>ventrículo derecho</b> (V4R) y a posterior.',
+  tx:'<b>Reperfusión urgente</b> (es el tratamiento del bloqueo). Atropina si hay bradicardia sintomática (<b>aquí sí funciona</b>: es nodal). Marcapasos transcutáneo si no responde.',
+  ref:'Unidad coronaria / hemodinamia inmediata.',
+  cx:'Casi siempre <b>transitorio</b> (horas-días) y de buen pronóstico: rara vez requiere marcapasos definitivo. ⚠️ Si hay infarto de <b>ventrículo derecho</b>: <b>evitar nitratos y diuréticos</b> (dependen de la precarga) → dar volumen.'},
+ iama:{t:'IAM anterior (descendente anterior)',
+  pres:'BAV <b>Mobitz II</b> o completo con <b>escape ventricular lento (QRS ancho, &lt;40 lpm)</b>; frecuentemente con bloqueo de rama nuevo o bifascicular.',
+  dx:'EKG: elevación del ST en V1-V4 ± BRI nuevo (aplicar <b>Sgarbossa modificada</b>).',
+  tx:'<b>Reperfusión urgente</b> + <b>marcapasos</b> (transcutáneo de inmediato, transvenoso pronto). La <b>atropina no funciona</b> (infranodal).',
+  ref:'Hemodinamia inmediata + UCI coronaria.',
+  cx:'<b>Mal pronóstico</b>: implica necrosis septal extensa. Alto riesgo de asistolia, choque cardiogénico y de requerir <b>marcapasos definitivo</b>.'},
+ hiperk:{t:'Hiperkalemia',
+  pres:'Bradicardia, BAV de cualquier grado, QRS ancho progresivo hasta <b>onda sinusoidal</b>; debilidad muscular. Sospechar en ERC, IECA/ARA-II, espironolactona, rabdomiólisis.',
+  dx:'EKG: <b>T picudas</b> y simétricas → P aplanadas/ausentes → PR largo → QRS ancho → sinusoide. Confirmar con K⁺ sérico (no esperar el resultado si el EKG es típico).',
+  tx:'1) <b>Gluconato de calcio 10% 10–20 mL IV</b> (estabiliza la membrana). 2) <b>Insulina 10 U + 25 g de glucosa</b> IV. 3) <b>Salbutamol 10–20 mg</b> nebulizado. 4) Eliminar: diuréticos, quelantes, <b>diálisis</b>.',
+  ref:'Ingreso; nefrología/diálisis si ERC o refractario.',
+  cx:'⚠️ El bloqueo <b>revierte al corregir el K⁺</b>: <b>no implantar marcapasos definitivo</b>. Suspender IECA/ARA-II, espironolactona, AINE y suplementos de potasio.'},
+ tavi:{t:'Post-TAVI / cirugía valvular / ablación',
+  pres:'BAV completo o <b>BRI de novo</b> en las primeras 24–72 h (el sistema de conducción pasa junto al anillo aórtico).',
+  dx:'Monitor continuo; EKG diario. Vigilar QRS y PR (su prolongación progresiva predice el BAV).',
+  tx:'Monitorización; <b>marcapasos temporal</b> si hay BAV avanzado. Si el bloqueo persiste más allá de la ventana de observación → <b>marcapasos definitivo</b>.',
+  ref:'Cardiología / electrofisiología del centro implantador.',
+  cx:'Es la complicación más frecuente del TAVI. El <b>BRI nuevo</b> post-TAVI obliga a vigilancia prolongada por riesgo de BAV tardío.'},
+ atleta:{t:'Atleta / bradicardia vagal',
+  pres:'BAV 1° o Mobitz I <b>asintomáticos</b>, típicamente en reposo o durante el sueño; FC baja con buena tolerancia.',
+  dx:'Prueba de esfuerzo (o simplemente pedirle que camine): si el bloqueo <b>desaparece al subir la frecuencia</b> → nodal/vagal (benigno). Holter para correlacionar.',
+  tx:'<b>Ninguno.</b> Observación y educación. No restringir el deporte si es asintomático y desaparece con el esfuerzo.',
+  ref:'Solo si hay síntomas, si empeora con el ejercicio o si el QRS es ancho.',
+  cx:'⚠️ Si el bloqueo <b>empeora con el ejercicio</b> → es infranodal → estudio y probable marcapasos. No asumir "corazón de atleta" ante síncope de esfuerzo.'},
+ emb:{t:'Embarazo / BAV congénito',
+  pres:'BAV congénito completo (asociado a <b>anticuerpos anti-Ro/SSA</b> maternos): escape con QRS estrecho, a menudo bien tolerado y descubierto en la juventud.',
+  dx:'EKG, Holter y eco; en la embarazada, valorar tolerancia hemodinámica y el bienestar fetal.',
+  tx:'Si es sintomático o hay escape lento/inestable → <b>marcapasos</b> (puede colocarse en el embarazo con protección fetal y guía ecográfica). Preferir fármacos seguros en gestación.',
+  ref:'Cardiología + obstetricia de alto riesgo (equipo multidisciplinario).',
+  cx:'En la mujer con anti-Ro/SSA existe riesgo de <b>BAV congénito fetal</b>: requiere vigilancia ecocardiográfica fetal en embarazos posteriores.'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';
+  h+='<div style="margin-bottom:8px;"><div class="farm-l">Diagnóstico</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';
+  h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';
+  h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Hospitalizar / referir</div>'+e.ref+'</div></div>';
+  h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Complicaciones y trampas</div>'+e.cx+'</div></div>';
+  h+='</div></div>';
+  document.getElementById('escen-body').innerHTML=h;
+}
+
+/* ---------- CALCULADORA: ANALIZADOR DE EKG ---------- */
+var pPat=0;
+function pPick(n,el){
+  pPat=n;
+  for(var i=1;i<=5;i++){var b=document.getElementById('p-'+i);if(b)b.classList.remove('on');}
+  if(el)el.classList.add('on');
+}
+function calcEKG(){
+  var pr=parseFloat(document.getElementById('e-pr').value);
+  var qrs=parseFloat(document.getElementById('e-qrs').value);
+  var r=document.getElementById('e-res');
+  if(!pPat){r.className='calc-result show res-mid';r.innerHTML='Selecciona el <b>patrón de relación P–QRS</b> para analizar.';return;}
+  if(isNaN(qrs)){r.className='calc-result show res-mid';r.innerHTML='Captura la <b>duración del QRS</b> (en ms) para estimar el nivel del bloqueo.';return;}
+  var ancho=qrs>=120;
+  var tipo='',nivel='',riesgo='',cond='',cls='res-ok';
+  if(pPat===1){
+    if(isNaN(pr)){r.className='calc-result show res-mid';r.innerHTML='Captura el <b>intervalo PR</b> (ms).';return;}
+    if(pr>200){tipo='BAV de 1er grado';nivel='Nodal (habitual)';riesgo='Bajo';cls='res-ok';
+      cond='Observar. Revisar y ajustar fármacos frenadores. <b>No requiere marcapasos</b> si es aislado y asintomático.';}
+    else{tipo='Conducción AV normal (PR '+pr+' ms)';nivel='—';riesgo='—';cls='res-ok';
+      cond='No hay bloqueo AV. Si el QRS es ≥120 ms, evalúa <b>bloqueo de rama</b> (mira V1: rSR′ = BRD · QS = BRI).';}
+  } else if(pPat===2){
+    tipo='BAV 2° grado — Mobitz I (Wenckebach)';nivel='Nodal';riesgo='Bajo';cls='res-ok';
+    cond='Suele ser benigno. Observar y retirar fármacos frenadores. <b>Atropina solo si hay bradicardia sintomática.</b> Marcapasos rara vez (solo si es sintomático y persistente).';
+  } else if(pPat===3){
+    tipo='BAV 2° grado — Mobitz II';nivel='<b>Infranodal (His-Purkinje)</b>';riesgo='<b>ALTO</b> — progresa a BAV completo';cls='res-high';
+    cond='<b>MARCAPASOS</b> (indicado aunque esté asintomático). La <b>atropina suele ser inútil o perjudicial</b>. Coloca parches de marcapasos transcutáneo y monitoriza. Ingreso.';
+  } else if(pPat===4){
+    tipo='BAV 2:1 o avanzado (alto grado)';
+    nivel=ancho?'<b>Probablemente infranodal</b> (QRS ancho)':'Posiblemente nodal (QRS estrecho) — no concluyente';
+    riesgo=ancho?'<b>ALTO</b>':'Intermedio';cls=ancho?'res-high':'res-mid';
+    cond=ancho?'Trátalo como <b>infranodal</b>: monitor + <b>marcapasos</b>. No confíes en la atropina.'
+              :'El 2:1 <b>no distingue</b> Mobitz I de II por sí solo. Estratifica: atropina/ejercicio (si mejora → nodal), maniobras vagales (si mejora → infranodal) o EEF. Si hay síntomas → marcapasos.';
+  } else if(pPat===5){
+    tipo='BAV de 3er grado (completo) — disociación AV';
+    nivel=ancho?'<b>Infranodal</b> (escape ventricular)':'Escape de la unión (QRS estrecho)';
+    riesgo='<b>MUY ALTO</b>';cls='res-high';
+    cond='<b>URGENCIA.</b> Monitor, O₂, acceso IV. Atropina 1 mg (poco eficaz si es infranodal) → <b>marcapasos transcutáneo</b> si está inestable → transvenoso → <b>definitivo</b>. Busca causa reversible (IAM, fármacos, hiperK⁺).';
+  }
+  var extra='';
+  if(ancho)extra='<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08);"><b>QRS '+qrs+' ms (≥120):</b> hay bloqueo de rama o escape ventricular → sospecha nivel <b>infranodal</b> y prepara marcapasos.</div>';
+  else if(!isNaN(qrs))extra='<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,0,0,.08);"><b>QRS '+qrs+' ms (estrecho):</b> conducción/escape suprahisiano — más probable nivel nodal.</div>';
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">'+tipo+'</div>'+
+    '<div><b>Nivel:</b> '+nivel+'</div><div><b>Riesgo:</b> '+riesgo+'</div>'+
+    '<div style="margin-top:6px;"><b>Conducta:</b> '+cond+'</div>'+extra+
+    '<div style="margin-top:6px;font-size:11px;opacity:.85;">Apoyo educativo — correlaciona siempre con la clínica y el trazo completo.</div>';
+}
+function resetEKG(){
+  document.getElementById('e-pr').value='';
+  document.getElementById('e-qrs').value='';
+  pPat=0;
+  for(var i=1;i<=5;i++){var b=document.getElementById('p-'+i);if(b)b.classList.remove('on');}
+  var r=document.getElementById('e-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- CALCULADORA: SGARBOSSA MODIFICADA ---------- */
+var sSel={1:false,2:false,3:false};
+function sTog(n,el){sSel[n]=!sSel[n];if(el)el.classList.toggle('on');}
+function calcSgar(){
+  var n=(sSel[1]?1:0)+(sSel[2]?1:0)+(sSel[3]?1:0);
+  var r=document.getElementById('s-res');
+  if(n>0){
+    r.className='calc-result show res-high';
+    r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">POSITIVA ('+n+' de 3 criterios)</div>'+
+      'Alta probabilidad de <b>oclusión coronaria aguda</b> pese al BRI. <b>Activa el código infarto</b> y trata como IAM con elevación del ST (reperfusión urgente).'+
+      '<div style="margin-top:6px;font-size:11px;opacity:.9;">Regla no ponderada: basta 1 criterio. Sensibilidad ~80%, especificidad ~99% (Smith 2012).</div>';
+  } else {
+    r.className='calc-result show res-mid';
+    r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">NEGATIVA (0 de 3)</div>'+
+      'No cumple criterios, pero <b>no descarta el infarto</b>. Si la clínica es sugestiva: <b>EKG seriados</b>, troponinas de alta sensibilidad, ecocardiograma y valoración por cardiología. Un <b>BRI nuevo con clínica isquémica</b> sigue siendo de alto riesgo.';
+  }
+}
+function resetSgar(){
+  sSel={1:false,2:false,3:false};
+  for(var i=1;i<=3;i++){var b=document.getElementById('s-'+i);if(b)b.classList.remove('on');}
+  var r=document.getElementById('s-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- CALCULADORA: INDICACIÓN DE MARCAPASOS ---------- */
+var mSel={1:false,2:false,3:false,4:false,5:false,6:false,7:false};
+function mTog(n,el){mSel[n]=!mSel[n];if(el)el.classList.toggle('on');}
+function calcMcp(){
+  var ind=(mSel[1]||mSel[2]||mSel[3]||mSel[4]||mSel[5]||mSel[6]);
+  var rev=mSel[7];
+  var r=document.getElementById('m-res');
+  if(ind&&rev){
+    r.className='calc-result show res-mid';
+    r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">PRIMERO CORRIGE LA CAUSA REVERSIBLE</div>'+
+      'Hay criterios de marcapasos, pero también una <b>causa potencialmente reversible activa</b>. Retira los fármacos frenadores, corrige el K⁺, la tiroides o la isquemia y <b>reevalúa</b>. '+
+      'Mientras tanto: <b>monitor + marcapasos temporal</b> si hay inestabilidad. Solo si el bloqueo <b>persiste</b> tras corregir la causa → marcapasos definitivo.';
+  } else if(ind){
+    r.className='calc-result show res-high';
+    r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">SÍ — INDICACIÓN DE MARCAPASOS</div>'+
+      'Cumple criterio(s) de estimulación permanente (ACC/AHA/HRS 2018 · ESC 2021). <b>Referir a cardiología/electrofisiología</b>; si hay inestabilidad, marcapasos temporal y traslado monitorizado. '+
+      '<div style="margin-top:6px;font-size:11px;opacity:.9;">La decisión y el modo de estimulación los define el especialista.</div>';
+  } else {
+    r.className='calc-result show res-ok';
+    r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">NO SE CUMPLEN CRITERIOS CLAROS</div>'+
+      'Continúa con <b>vigilancia</b>: revisa fármacos, corrige causas y valora Holter/monitor de eventos. Reevalúa si aparece <b>síncope</b>, progresión del bloqueo o QRS ancho.';
+  }
+}
+function resetMcp(){
+  mSel={1:false,2:false,3:false,4:false,5:false,6:false,7:false};
+  for(var i=1;i<=7;i++){var b=document.getElementById('m-'+i);if(b)b.classList.remove('on');}
+  var r=document.getElementById('m-res');r.className='calc-result';r.innerHTML='';
+}
+
+/* ---------- ALGORITMO INTERACTIVO ---------- */
+var ALGO={
+ start:{q:'Paciente con bradicardia (FC &lt;50 lpm) y/o bloqueo en el EKG. ¿Hay <b>signos de inestabilidad</b>? (hipotensión, choque, alteración del estado mental, dolor torácico isquémico, insuficiencia cardiaca aguda)',
+   o:[['🚨 SÍ — está inestable','inest'],['🙂 NO — estable','estable']]},
+ estable:{q:'Paciente <b>estable</b>. ¿Qué muestra el EKG?',
+   o:[['BAV 1° o Mobitz I (QRS estrecho)','benigno'],['Mobitz II, BAV avanzado o completo','infra_est'],['Bloqueo de rama / hemibloqueo aislado','rama']]},
+ benigno:{r:'ok',t:'Observación y estudio ambulatorio',
+   x:'<b>Nivel nodal, riesgo bajo.</b><br>1) <b>Revisa y retira fármacos frenadores</b> (BB, verapamilo/diltiazem, digoxina, amiodarona).<br>2) Solicita K⁺, función renal, TSH; troponina si hay sospecha de isquemia.<br>3) Holter si hay síntomas intermitentes.<br>4) <b>No requiere marcapasos</b> si es asintomático.<br>5) Educa en señales de alarma (síncope, mareo, disnea).'},
+ infra_est:{r:'high',t:'Marcapasos — aunque esté estable',
+   x:'<b>Nivel infranodal: alto riesgo de progresión a asistolia.</b><br>1) <b>Monitor continuo + ingreso.</b> Coloca parches de marcapasos transcutáneo (en espera).<br>2) Acceso IV, O₂ si SatO₂ &lt;90%, EKG de 12 derivaciones.<br>3) <b>Busca causa reversible:</b> fármacos, isquemia (troponina, EKG), K⁺, TSH.<br>4) <b>Referencia urgente a cardiología/electrofisiología para marcapasos.</b><br>5) La atropina <b>no</b> es tratamiento definitivo aquí.'},
+ rama:{r:'mid',t:'Estudio dirigido según el patrón',
+   x:'1) <b>BRD aislado asintomático:</b> suele ser benigno → vigilancia.<br>2) <b>BRI nuevo:</b> busca cardiopatía estructural (eco) y <b>si hay dolor torácico aplica Sgarbossa modificada</b> → posible código infarto.<br>3) <b>Bifascicular + síncope</b> o <b>bloqueo de rama alternante</b> → <b>ingreso + valoración para marcapasos</b> (EEF).<br>4) Sin síntomas: EKG de control y seguimiento.'},
+ inest:{q:'<b>Inestable.</b> Aplica de inmediato: monitor, O₂, acceso IV, EKG de 12 derivaciones. Administra <b>atropina 1 mg IV</b> (repetible c/3–5 min, máx 3 mg). ¿Respondió?',
+   o:[['✅ SÍ — mejoró FC y perfusión','resp'],['❌ NO — sigue inestable','nores']]},
+ resp:{r:'ok',t:'Respondió a la atropina — busca y trata la causa',
+   x:'<b>La respuesta sugiere bloqueo nodal.</b><br>1) Mantén monitorizado (puede recaer).<br>2) <b>Identifica y corrige la causa:</b> fármacos (BB, CAA, digoxina), <b>IAM inferior</b>, hiperkalemia, hipotiroidismo.<br>3) EKG seriados y troponina si hay sospecha de isquemia.<br>4) Deja los parches de marcapasos colocados.<br>5) Si recurre o el bloqueo es Mobitz II/completo → <b>marcapasos</b>.'},
+ nores:{q:'No respondió a la atropina (o el bloqueo es Mobitz II / BAV completo). Elige el siguiente paso disponible:',
+   o:[['⚡ Marcapasos transcutáneo (preferente)','mtc'],['💉 Infusión: dopamina o epinefrina','inf']]},
+ mtc:{r:'high',t:'Marcapasos transcutáneo AHORA',
+   x:'1) Parches <b>anterior + posterior</b>; modo <b>demanda</b>; frecuencia 60–80 lpm.<br>2) Sube los mA hasta lograr <b>captura</b> y deja 10% por encima del umbral.<br>3) <b>Verifica captura eléctrica (espiga→QRS) Y mecánica (pulso palpable).</b><br>4) <b>Sedación y analgesia</b> (fentanilo 25–50 µg IV ± midazolam 1–2 mg IV): duele mucho.<br>5) Es un <b>puente</b> → prepara <b>marcapasos transvenoso</b> y valoración para <b>definitivo</b>.<br>6) En paralelo: trata la causa (IAM → reperfusión; hiperK⁺ → calcio; intoxicación → antídoto).'},
+ inf:{r:'mid',t:'Infusión mientras llega el marcapasos',
+   x:'<b>Dopamina</b> 5–20 µg/kg/min (400 mg en 250 mL SG5% = 1600 µg/mL) <b>o Epinefrina</b> 2–10 µg/min (1 mg en 250 mL = 4 µg/mL), en bomba y titulando por respuesta.<br><b>Ojo:</b> la infusión <b>no sustituye</b> al marcapasos en bloqueo infranodal: colócalo cuanto antes.<br>Si hay <b>torsades bradicardia-dependiente</b>: considera isoproterenol y sulfato de magnesio.<br>Trata siempre la causa de fondo.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){
+    h='<div class="a-q">'+n.q+'</div>';
+    for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';
+  } else {
+    var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';
+  }
+  b.innerHTML=h;
+}
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  setTxc('gen',document.querySelector('#txc-chips .pchip'));
+  setTxh('inest',document.querySelector('#txh-chips .pchip'));
+  setEscen('iami',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');
+  buildInd();
+  algoStart();
+});
+
+</script>
+</body>
+</html>

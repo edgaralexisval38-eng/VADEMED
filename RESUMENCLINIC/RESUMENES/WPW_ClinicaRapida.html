@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wolff-Parkinson-White · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#8e244d;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f6e3ea;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#3a0f20,#8e244d);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#f6e3ea;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#f6e3ea;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#3a0f20,#8e244d);">
+  <div class="hdr-top"><div class="hdr-icon">🫀</div><div>
+    <div class="hdr-eye">Cardiología · Electrofisiología</div>
+    <div class="hdr-title">Wolff-Parkinson-White</div>
+    <div class="hdr-sub">Preexcitación · vía accesoria (haz de Kent)</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">PR corto</span>
+    <span class="badge">Onda delta</span>
+    <span class="badge">QRS ancho</span>
+    <span class="badge">FA preexcitada = peligro</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">&lt;120 ms</div><div class="qs-l">PR corto</div></div>
+  <div class="qs"><div class="qs-v">Δ</div><div class="qs-l">Onda delta</div></div>
+  <div class="qs"><div class="qs-v">Kent</div><div class="qs-l">Vía accesoria</div></div>
+  <div class="qs"><div class="qs-v">Ablación</div><div class="qs-l">Tratamiento definitivo</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('ekg',this)">🫀 EKG (patrón)</button>
+  <button class="tab" onclick="showT('tipos',this)">🔀 Tipos y arritmias</button>
+  <button class="tab" onclick="showT('agudo',this)">🚨 Manejo agudo</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('def',this)">🎯 Definitivo</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">¿Qué es?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Existe una <strong>vía accesoria</strong> (haz de Kent) que conecta aurícula y ventrículo <strong>saltándose el nodo AV</strong>. El impulso llega antes al ventrículo (<strong>preexcitación</strong>) → PR corto y <strong>onda delta</strong>. Esa vía puede sostener <strong>taquicardias por reentrada</strong> (TRAV) y, si aparece <strong>fibrilación auricular</strong>, conducir muy rápido al ventrículo con riesgo de <strong>FV y muerte súbita</strong>.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Término</th><th>Significado</th></tr>
+      <tr><td class="dn">Patrón WPW</td><td>Hallazgo EKG de preexcitación <b>sin</b> arritmias (asintomático)</td></tr>
+      <tr><td class="dn">Síndrome WPW</td><td>Preexcitación <b>+ arritmias sintomáticas</b></td></tr>
+      <tr><td class="dn">Vía "oculta"</td><td>Solo conduce retrógrada → EKG basal normal, pero puede dar TRAV ortodrómica</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-ekg">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🫀</span><div><div class="at">Tríada del EKG</div><b>PR corto (&lt;120 ms) · Onda delta (empastamiento inicial del QRS) · QRS ancho (&gt;120 ms)</b> ± cambios secundarios del ST-T.</div></div>
+  <div class="pop"><div class="pop-h" style="background:#8e244d;">Patrón WPW (ritmo sinusal con preexcitación)</div><div class="pop-b" style="padding:0;">
+    <svg viewBox="0 0 320 90" style="width:100%;height:100px;display:block;">
+      <defs><pattern id="gW1" width="25" height="25" patternUnits="userSpaceOnUse"><rect width="25" height="25" fill="#fff5f6"/><path d="M0 5H25M0 10H25M0 15H25M0 20H25M5 0V25M10 0V25M15 0V25M20 0V25" stroke="#f7ccd2" stroke-width="0.5"/><path d="M0 0H25M0 0V25" stroke="#e9a6b0" stroke-width="1"/></pattern></defs>
+      <rect width="320" height="90" fill="url(#gW1)"/>
+      <path id="wf_wpw" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <div style="padding:8px 12px;font-size:12px;color:#374151;">La <b>onda delta</b> es la subida lenta y "empastada" al inicio del QRS (círculos). Acorta el PR y ensancha el QRS.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Normal vs WPW (comparación)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="background:#fff5f6;border-radius:8px;padding:4px;">
+        <svg viewBox="0 0 160 90" style="width:100%;display:block;"><rect width="160" height="90" fill="url(#gW1)"/><path id="wf_norm1" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div style="font-size:11px;text-align:center;color:#0a5c45;"><b>Normal:</b> PR normal, sin delta</div>
+      </div>
+      <div style="background:#fff5f6;border-radius:8px;padding:4px;">
+        <svg viewBox="0 0 160 90" style="width:100%;display:block;"><rect width="160" height="90" fill="url(#gW1)"/><path id="wf_wpw2" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div style="font-size:11px;text-align:center;color:#8e244d;"><b>WPW:</b> PR corto + delta</div>
+      </div>
+    </div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Criterios EKG</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Criterio</th><th>Valor</th></tr>
+      <tr><td class="dn">PR</td><td>Corto, &lt;120 ms (&lt;3 cuadros chicos)</td></tr>
+      <tr><td class="dn">Onda delta</td><td>Empastamiento del ascenso inicial del QRS</td></tr>
+      <tr><td class="dn">QRS</td><td>Ancho, &gt;120 ms</td></tr>
+      <tr><td class="dn">ST-T</td><td>Cambios secundarios (discordantes con el QRS)</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>La preexcitación puede <b>imitar</b> IAM (ondas Q por delta negativa), hipertrofia o bloqueo de rama. Contexto y comparación son clave.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-tipos">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🅰️</span><span class="st">Tipo A vs Tipo B (por la delta en V1)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th></th><th>Tipo A</th><th>Tipo B</th></tr>
+      <tr><td class="dn">Delta/QRS en V1</td><td>Positivo (R dominante)</td><td>Negativo</td></tr>
+      <tr><td class="dn">Vía accesoria</td><td>Izquierda (posterior)</td><td>Derecha</td></tr>
+      <tr><td class="dn">Simula</td><td>Puede parecer BRD/IAM posterior</td><td>Puede parecer BRI</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Arritmias asociadas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="pop"><div class="pop-h" style="background:#0a5c45;">TRAV ortodrómica (QRS estrecho, regular) — la más común</div><div class="pop-b" style="padding:0;">
+      <svg viewBox="0 0 320 80" style="width:100%;height:88px;display:block;"><rect width="320" height="80" fill="url(#gW1)"/><path id="wf_ortho" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <div style="padding:6px 12px;font-size:11.5px;color:#374151;">Baja por el nodo AV y sube por la vía → <b>QRS estrecho</b>, regular, ~150–250/min. Se maneja como una TSV.</div>
+    </div></div>
+    <div class="pop"><div class="pop-h" style="background:#a86a00;">TRAV antidrómica (QRS ancho, regular)</div><div class="pop-b" style="padding:0;">
+      <svg viewBox="0 0 320 80" style="width:100%;height:88px;display:block;"><rect width="320" height="80" fill="url(#gW1)"/><path id="wf_anti" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <div style="padding:6px 12px;font-size:11.5px;color:#374151;">Baja por la vía y sube por el nodo → <b>QRS ancho</b> regular; difícil de distinguir de TV.</div>
+    </div></div>
+    <div class="pop"><div class="pop-h" style="background:#7b1c1c;">🚨 FA preexcitada (irregular, QRS ancho, MUY rápida)</div><div class="pop-b" style="padding:0;">
+      <svg viewBox="0 0 320 80" style="width:100%;height:88px;display:block;"><rect width="320" height="80" fill="url(#gW1)"/><path id="wf_afib" fill="none" stroke="#17171a" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <div style="padding:6px 12px;font-size:11.5px;color:#374151;"><b>Irregular</b>, complejos <b>anchos y de anchura variable</b>, a veces &gt;250–300/min. <b>Emergencia:</b> puede degenerar en FV.</div>
+    </div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-agudo">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🚨</span><div><div class="at">Regla de oro</div>Si es <b>irregular y ancha</b> (FA preexcitada) → <b>NO uses bloqueadores del nodo AV</b>. Si es <b>estrecha y regular</b> (TRAV ortodrómica) → maniobras vagales/adenosina.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Según el ritmo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Manejo</th></tr>
+      <tr><td class="dn" style="color:#7b1c1c;">Inestable (cualquier ritmo)</td><td><b>Cardioversión eléctrica sincronizada</b> inmediata</td></tr>
+      <tr><td class="dn" style="color:#0a5c45;">TRAV ortodrómica (estrecha, regular)</td><td>Maniobras vagales → <b>adenosina</b>; luego betabloqueador/calcioantagonista si necesario</td></tr>
+      <tr><td class="dn" style="color:#7b1c1c;">FA preexcitada (irregular, ancha)</td><td>Estable: <b>procainamida</b> o <b>ibutilida</b> IV. <b>EVITAR</b> adenosina/BB/calcioantagonistas/digoxina/amiodarona IV. Inestable → cardioversión</td></tr>
+      <tr><td class="dn">TRAV antidrómica (ancha, regular)</td><td>Si no se puede excluir TV: tratar como ancha → procainamida o cardioversión</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>En la <b>FA preexcitada</b>, los bloqueadores del nodo AV "empujan" la conducción por la vía accesoria → aceleran el ritmo ventricular y pueden provocar <b>FV</b>.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-farm">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Qué SÍ usar</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Fármaco</th><th>Uso</th></tr>
+      <tr><td class="dn">Adenosina</td><td>TRAV ortodrómica (estrecha/regular). <b>Tener desfibrilador listo</b> (puede desencadenar FA)</td></tr>
+      <tr><td class="dn">Procainamida</td><td><b>1.ª línea</b> en FA preexcitada estable: bloquea la vía accesoria</td></tr>
+      <tr><td class="dn">Ibutilida</td><td>Alternativa Clase I en FA preexcitada estable</td></tr>
+      <tr><td class="dn">Cardioversión sincronizada</td><td>Inestable o cuando falla el fármaco</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⛔</span><span class="st">Qué EVITAR en FA preexcitada</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">⛔</span><div>Regla mnemónica <b>"ABCD"</b> (+ amiodarona IV): <b>A</b>denosina, <b>B</b>etabloqueadores, <b>C</b>alcioantagonistas (verapamil/diltiazem), <b>D</b>igoxina — y <b>amiodarona IV</b> (Clase IIb/posible daño). Todos pueden acelerar la conducción por la vía y precipitar FV.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-def">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Tratamiento definitivo y riesgo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Aspecto</th><th>Nota</th></tr>
+      <tr><td class="dn">Ablación por catéter</td><td><b>Tratamiento de elección</b> en WPW sintomático (síndrome): elimina la vía accesoria con alta tasa de éxito</td></tr>
+      <tr><td class="dn">Patrón asintomático</td><td>Estratificar riesgo (prueba de esfuerzo, estudio electrofisiológico) en ciertos casos (p. ej., ocupaciones de riesgo, deportistas). Ablación si vía de alto riesgo</td></tr>
+      <tr><td class="dn">Riesgo alto de la vía</td><td>Periodo refractario corto → conducción muy rápida en FA → riesgo de FV</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('orto',this)">Estrecha regular</button>
+    <button class="pchip" onclick="setEscen('fa',this)">🚨 Irregular ancha</button>
+    <button class="pchip" onclick="setEscen('inest',this)">Inestable</button>
+    <button class="pchip" onclick="setEscen('asint',this)">Patrón asintomático</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — WPW</h2><p>Guías y evidencia.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2015/16</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">ACC/AHA/HRS. <em>Guideline for the management of adult patients with SVT</em> (incluye preexcitación).</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2014</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">AHA/ACC/HRS. <em>AF guideline</em>: procainamida/ibutilida (Clase I) y agentes del nodo AV como Clase III (daño) en FA preexcitada.</div><a class="biblio-link" href="https://emedicine.medscape.com/article/159222-guidelines" target="_blank">🔗 Resumen</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">🗂️ México</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">CENETEC. <em>GPC de arritmias supraventriculares / preexcitación.</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Contenido educativo; los trazos son esquemáticos generados por software, no EKG reales. Confirme dosis/decisiones con su referencia institucional. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis / pauta')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo',f.emb,'#7a4a00');if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#f6e3ea;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8e244d;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#f6e3ea;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#8e244d;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#f6e3ea;border:1px solid #8e244d;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#8e244d;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#f6e3ea;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#8e244d;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#8e244d';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+/* ---- GENERADORES EKG ---- */
+function _rng(s){return function(){s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};}
+function setD(id,dd){var el=document.getElementById(id);if(el)el.setAttribute('d',dd);}
+function ekgSinus(w,b,amp,rr){var d='M0 '+b;for(var x=8;x<w-rr*0.5;x+=rr){var p=x,pw=rr*0.10;d+=' L'+p.toFixed(1)+' '+b+' Q'+(p+pw/2).toFixed(1)+' '+(b-amp*0.14).toFixed(1)+' '+(p+pw).toFixed(1)+' '+b;var q=p+pw+rr*0.05;d+=' L'+q.toFixed(1)+' '+b+' L'+(q+rr*0.015).toFixed(1)+' '+(b+amp*0.08).toFixed(1)+' L'+(q+rr*0.05).toFixed(1)+' '+(b-amp).toFixed(1)+' L'+(q+rr*0.085).toFixed(1)+' '+(b+amp*0.30).toFixed(1)+' L'+(q+rr*0.11).toFixed(1)+' '+b;var t=q+rr*0.11+rr*0.10,tw=rr*0.17;d+=' L'+t.toFixed(1)+' '+b+' Q'+(t+tw/2).toFixed(1)+' '+(b-amp*0.26).toFixed(1)+' '+(t+tw).toFixed(1)+' '+b;}d+=' L'+w+' '+b;return d;}
+function ekgWPW(w,b,amp,rr){var d='M0 '+b;for(var x=8;x<w-rr*0.5;x+=rr){var p=x,pw=rr*0.09;d+=' L'+p.toFixed(1)+' '+b+' Q'+(p+pw/2).toFixed(1)+' '+(b-amp*0.13).toFixed(1)+' '+(p+pw).toFixed(1)+' '+b;var q=p+pw+rr*0.015;d+=' L'+q.toFixed(1)+' '+b;var dE=q+rr*0.12;d+=' L'+dE.toFixed(1)+' '+(b-amp*0.38).toFixed(1);var r=dE+rr*0.05;d+=' L'+r.toFixed(1)+' '+(b-amp).toFixed(1);var s=r+rr*0.07;d+=' L'+s.toFixed(1)+' '+(b+amp*0.22).toFixed(1);var j=s+rr*0.05;d+=' L'+j.toFixed(1)+' '+b;var t=j+rr*0.09,tw=rr*0.16;d+=' L'+t.toFixed(1)+' '+b+' Q'+(t+tw/2).toFixed(1)+' '+(b+amp*0.16).toFixed(1)+' '+(t+tw).toFixed(1)+' '+b;}d+=' L'+w+' '+b;return d;}
+function ekgSVTnarrow(w,b,amp,rr){var d='M0 '+b;for(var x=4;x<w-rr*0.5;x+=rr){var q=x;d+=' L'+q.toFixed(1)+' '+b+' L'+(q+rr*0.05).toFixed(1)+' '+(b+amp*0.1).toFixed(1)+' L'+(q+rr*0.12).toFixed(1)+' '+(b-amp).toFixed(1)+' L'+(q+rr*0.19).toFixed(1)+' '+(b+amp*0.25).toFixed(1)+' L'+(q+rr*0.26).toFixed(1)+' '+b;d+=' L'+(q+rr*0.40).toFixed(1)+' '+b+' Q'+(q+rr*0.47).toFixed(1)+' '+(b+amp*0.13).toFixed(1)+' '+(q+rr*0.54).toFixed(1)+' '+b;}d+=' L'+w+' '+b;return d;}
+function ekgWideReg(w,b,amp,rr){var d='M0 '+b,x=0;while(x<w){var end=x+rr;d+=' Q'+(x+rr*0.12).toFixed(1)+' '+(b-amp).toFixed(1)+' '+(x+rr*0.28).toFixed(1)+' '+(b-amp*0.8).toFixed(1)+' Q'+(x+rr*0.46).toFixed(1)+' '+(b+amp*0.9).toFixed(1)+' '+(x+rr*0.62).toFixed(1)+' '+(b+amp*0.4).toFixed(1)+' Q'+(x+rr*0.82).toFixed(1)+' '+(b-amp*0.15).toFixed(1)+' '+end.toFixed(1)+' '+b;x=end;}return d;}
+function ekgAFpre(w,b,amp,seed){var r=_rng(seed||5),d='M0 '+b,x=6;while(x<w-24){var wd=15+r()*22,a=amp*(0.7+r()*0.5);d+=' L'+x.toFixed(1)+' '+b+' Q'+(x+wd*0.3).toFixed(1)+' '+(b-a).toFixed(1)+' '+(x+wd*0.5).toFixed(1)+' '+(b-a*0.7).toFixed(1)+' Q'+(x+wd*0.75).toFixed(1)+' '+(b+a*0.85).toFixed(1)+' '+(x+wd).toFixed(1)+' '+b;x=x+wd+(10+r()*30);}d+=' L'+w+' '+b;return d;}
+function drawEKGs(){
+ setD('wf_wpw',ekgWPW(320,48,26,96));
+ setD('wf_norm1',ekgSinus(160,48,25,145));
+ setD('wf_wpw2',ekgWPW(160,48,25,145));
+ setD('wf_ortho',ekgSVTnarrow(320,42,22,46));
+ setD('wf_anti',ekgWideReg(320,42,20,48));
+ setD('wf_afib',ekgAFpre(320,42,20,5));
+}
+
+/* ---- ESCENARIOS ---- */
+var ESCEN={
+ 'orto':{t:'Taquicardia estrecha regular',pres:'QRS estrecho, regular, ~150–250/min; probable TRAV ortodrómica.',dx:'EKG de 12 derivaciones.',tx:'Maniobras vagales → adenosina. Si recurre/no cede: betabloqueador o calcioantagonista. Si inestable → cardioversión.',ref:'Cardiología para valorar ablación.',cx:'Tratar como TV sin necesidad; olvidar tener desfibrilador listo con adenosina.'},
+ 'fa':{t:'🚨 Irregular y ancha (FA preexcitada)',pres:'Irregular, complejos anchos de anchura variable, muy rápida (a veces >250–300/min).',dx:'EKG; reconocer la irregularidad y la anchura variable.',tx:'Estable: procainamida o ibutilida IV. Inestable: cardioversión sincronizada. NUNCA bloqueadores del nodo AV (ABCD + amiodarona IV).',ref:'Cardiología/EF urgente.',cx:'Dar adenosina/verapamil/BB/digoxina/amiodarona → riesgo de FV.'},
+ 'inest':{t:'Inestable',pres:'Hipotensión, dolor torácico, alteración del estado mental, insuficiencia cardiaca.',dx:'Clínico + EKG.',tx:'Cardioversión eléctrica SINCRONIZADA inmediata (cualquier ritmo).',ref:'—',cx:'Perder tiempo con fármacos en el paciente inestable.'},
+ 'asint':{t:'Patrón WPW asintomático',pres:'Preexcitación en EKG sin arritmias.',dx:'EKG; valorar estratificación de riesgo.',tx:'Estratificar (prueba de esfuerzo, estudio EF) en casos seleccionados (deportistas, ocupaciones de riesgo). Ablación si vía de alto riesgo.',ref:'Cardiología/EF.',cx:'Asumir que "asintomático" = sin riesgo (algunas vías conducen muy rápido).'}
+};
+window.addEventListener('load',function(){drawEKGs();setEscen('orto',document.querySelector('#escen-chips .pchip'));});
+
+</script>
+</body>
+</html>

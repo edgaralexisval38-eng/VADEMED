@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Blefaritis · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#8a5a2c;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f3ece2;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#2e1c08,#8a5a2c);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#f3ece2;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#f3ece2;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2e1c08,#8a5a2c);">
+  <div class="hdr-top">
+    <div class="hdr-icon">👁️</div>
+    <div>
+      <div class="hdr-eye">Oftalmología · Párpado</div>
+      <div class="hdr-title">Blefaritis</div>
+      <div class="hdr-sub">AAO PPP · AAFP · CENETEC · GPC México</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Higiene palpebral = base</span>
+    <span class="badge">Crónica y recidivante</span>
+    <span class="badge">Anterior vs posterior</span>
+    <span class="badge">Tetraciclinas NO en niños/embarazo</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Higiene</div><div class="qs-l">Pilar del Tx</div></div>
+  <div class="qs"><div class="qs-v">Crónica</div><div class="qs-l">Se controla, no se "cura"</div></div>
+  <div class="qs"><div class="qs-v">Borde</div><div class="qs-l">Ant. vs post. (MGD)</div></div>
+  <div class="qs"><div class="qs-v">Semanas</div><div class="qs-l">Respuesta lenta</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('atlas',this)">🖼️ Atlas</button>
+  <button class="tab" onclick="showT('esc',this)">🧭 Diferenciador</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">💊 Tx general</button>
+  <button class="tab" onclick="showT('txh',this)">👶🤰 Niños y embarazo</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>La <strong>blefaritis</strong> es una <strong>inflamación crónica del borde palpebral</strong>, muy frecuente, recidivante y molesta. Rara vez amenaza la visión, pero causa gran malestar.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Tipo</th><th>Ubicación</th><th>Rasgos</th></tr>
+      <tr><td class="dn">Anterior</td><td>Base de las pestañas</td><td>Estafilocócica (collaretes, costras duras) o seborreica (escamas grasas)</td></tr>
+      <tr><td class="dn">Posterior (DGM)</td><td>Glándulas de Meibomio</td><td>Disfunción de glándulas de Meibomio; orificios obstruidos, secreción espesa; ligada a rosácea y ojo seco</td></tr>
+    </table></div>
+    <div class="alert a-i"><span class="ai">💡</span><div>Suele coexistir con <strong>ojo seco</strong> y <strong>rosácea</strong>. El tratamiento es de <strong>control</strong>, no de curación: la clave es la constancia en la higiene palpebral.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Cuadro clínico</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Síntoma / signo</th><th>Detalle</th></tr>
+      <tr><td class="dn">Ardor, prurito, sensación de cuerpo extraño</td><td>Bilateral, crónico, peor al despertar</td></tr>
+      <tr><td class="dn">Costras / escamas en pestañas</td><td>Collaretes (estafilo), escamas grasas (seborreica)</td></tr>
+      <tr><td class="dn">Borde palpebral rojo y engrosado</td><td>Telangiectasias; orificios de Meibomio obstruidos (posterior)</td></tr>
+      <tr><td class="dn">Lagrimeo / ojo rojo leve</td><td>Por inestabilidad de la lágrima</td></tr>
+      <tr><td>Chalazión / orzuelos recurrentes</td><td>Complicación frecuente de la DGM</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas (referir)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Hallazgo</th><th>Sospecha</th></tr>
+      <tr><td class="dm">Dolor intenso, ↓visión, fotofobia marcada</td><td>Afección corneal (queratitis) → oftalmología</td></tr>
+      <tr><td class="dm">Blefaritis unilateral, atípica, ulcerada, con pérdida de pestañas</td><td>Carcinoma sebáceo (imita chalazión/blefaritis) → biopsia</td></tr>
+      <tr><td>Blefaritis en niño con fotofobia/opacidad corneal</td><td>Blefaroqueratoconjuntivitis infantil (riesgo de cicatriz)</td></tr>
+      <tr><td>Sin respuesta a tratamiento adecuado</td><td>Reevaluar diagnóstico</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Abandonar la <strong>higiene palpebral</strong>: es el pilar; sin ella recae.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Esperar <strong>curación rápida</strong>: la respuesta tarda <strong>semanas</strong>; hay que advertirlo.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Dar <strong>doxiciclina a niños &lt;8 años o embarazadas</strong>: contraindicada; usar alternativas.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Usar <strong>esteroide tópico prolongado</strong> sin control: riesgo de glaucoma/catarata → es de especialista y por poco tiempo.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Pasar por alto un <strong>carcinoma sebáceo</strong> en blefaritis/chalazión unilateral atípico y recurrente.</span></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Diagnóstico (clínico)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">✔️</span><div>Es clínico: inspección del <strong>borde palpebral y pestañas</strong> (costras, collaretes, escamas), estado de los <strong>orificios de Meibomio</strong> (expresión), calidad de la lágrima y córnea. No requiere estudios de rutina.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Explorar</th><th>Anterior</th><th>Posterior (DGM)</th></tr>
+      <tr><td>Base de pestañas</td><td>Collaretes / escamas</td><td>Normal</td></tr>
+      <tr><td>Borde palpebral</td><td>Eritema, costras</td><td>Telangiectasias, orificios tapados</td></tr>
+      <tr><td>Expresión de Meibomio</td><td>Normal / turbia</td><td>Secreción espesa "pasta de dientes"</td></tr>
+      <tr><td>Asociaciones</td><td>Dermatitis seborreica</td><td>Rosácea, ojo seco, chalazión</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>Pista</th></tr>
+      <tr><td class="dn">Conjuntivitis</td><td>Afecta conjuntiva con secreción; el borde palpebral está sano</td></tr>
+      <tr><td class="dn">Orzuelo / chalazión</td><td>Nódulo palpebral localizado (complicación de blefaritis)</td></tr>
+      <tr><td class="dn">Dermatitis de contacto/atópica</td><td>Prurito intenso, eccema periocular</td></tr>
+      <tr><td class="dm">Carcinoma sebáceo</td><td>Unilateral, recurrente, pérdida de pestañas → biopsia</td></tr>
+      <tr><td>Demodex</td><td>Collaretes cilíndricos en la base de la pestaña</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-atlas">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖼️</span><span class="st">Atlas — borde palpebral</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+        <svg viewBox="0 0 200 120" style="width:100%;height:120px;display:block;background:#fbf6ef;">
+          <path d="M10 60 Q100 30 190 60" fill="none" stroke="#d99" stroke-width="7"/>
+          <g stroke="#7a4a2a" stroke-width="2">
+          <line x1="40" y1="60" x2="36" y2="82"/><line x1="60" y1="58" x2="57" y2="82"/><line x1="80" y1="56" x2="78" y2="82"/><line x1="100" y1="55" x2="100" y2="83"/><line x1="120" y1="56" x2="122" y2="82"/><line x1="140" y1="58" x2="143" y2="82"/><line x1="160" y1="60" x2="164" y2="82"/></g>
+          <circle cx="40" cy="66" r="4" fill="#f2e6c8"/><circle cx="80" cy="63" r="4" fill="#f2e6c8"/><circle cx="120" cy="63" r="4" fill="#f2e6c8"/><circle cx="160" cy="66" r="4" fill="#f2e6c8"/>
+        </svg>
+        <div style="padding:9px 11px;"><div style="font-size:12px;font-weight:800;color:#8a5a2c;">Anterior (estafilo/seborreica)</div><div style="font-size:11px;color:#374151;line-height:1.5;">Costras y <b>collaretes/escamas</b> en la <b>base de las pestañas</b>; borde rojo.</div></div>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+        <svg viewBox="0 0 200 120" style="width:100%;height:120px;display:block;background:#fbf6ef;">
+          <path d="M10 60 Q100 30 190 60" fill="none" stroke="#d77" stroke-width="7"/>
+          <path d="M10 60 Q100 30 190 60" fill="none" stroke="#b85" stroke-width="1" stroke-dasharray="2 3"/>
+          <g fill="#e8c98a" stroke="#c99" stroke-width="0.6">
+          <circle cx="55" cy="52" r="3.4"/><circle cx="80" cy="49" r="3.4"/><circle cx="105" cy="48" r="3.4"/><circle cx="130" cy="49" r="3.4"/><circle cx="155" cy="52" r="3.4"/></g>
+          <path d="M35 66 Q45 55 55 66" fill="none" stroke="#c0392b" stroke-width="1.2"/>
+          <path d="M145 66 Q155 55 165 66" fill="none" stroke="#c0392b" stroke-width="1.2"/>
+        </svg>
+        <div style="padding:9px 11px;"><div style="font-size:12px;font-weight:800;color:#8a5a2c;">Posterior (DGM)</div><div style="font-size:11px;color:#374151;line-height:1.5;">Orificios de <b>Meibomio obstruidos</b> (puntos amarillos), telangiectasias; ligada a rosácea.</div></div>
+      </div>
+    </div>
+    <div style="margin-top:10px;background:#f3f4f6;border-radius:6px;padding:8px 12px;font-size:11px;color:#6b7280;"><b>Collarete cilíndrico</b> en la base de la pestaña sugiere <b>Demodex</b>. Blefaritis unilateral atípica con pérdida de pestañas → descartar carcinoma sebáceo.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">¿Anterior o posterior? (orienta el Tx)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="dif-box"></div>
+    <div id="dif-res" class="calc-res"></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-algo"><div id="algo-box"></div><button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button></div>
+
+<div class="panel" id="tab-txc">
+  <div class="alert a-i"><span class="ai">💊</span><div><div class="at">La base es la higiene palpebral</div>Compresas tibias + masaje + limpieza del borde. Los fármacos son coadyuvantes. Toque cada tarjeta para desplegar.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('primera',this)">1ª línea (base)</button>
+    <button class="pchip" onclick="setTxc('segunda',this)">2ª línea</button>
+    <button class="pchip" onclick="setTxc('coadyuv',this)">Coadyuvantes</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<div class="panel" id="tab-txh">
+  <div class="alert a-w"><span class="ai">👶🤰</span><div><div class="at">Poblaciones especiales</div>La <strong>higiene palpebral es segura y es la base en todos</strong>. Lo que cambia son los fármacos: en niños &lt;8 años y embarazo <strong>NO tetraciclinas</strong>.</div></div>
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('nino',this)">👶 Niños</button>
+    <button class="pchip" onclick="setTxh('emb',this)">🤰 Embarazo / lactancia</button>
+  </div>
+  <div id="txh-body"></div>
+</div>
+
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;"><label class="calc-lbl">Buscar</label><input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. eritromicina, doxiciclina, higiene..." oninput="filtrarFarmacos(this.value)"></div>
+  <div id="farm-body"></div>
+</div>
+
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada medida/fármaco con su receta y su bloque de <strong>niños y embarazo</strong>.</div></div>
+  <div id="ind-body"></div>
+</div>
+
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('ant',this)">Anterior (estafilo)</button>
+    <button class="pchip" onclick="setEscen('post',this)">Posterior / rosácea</button>
+    <button class="pchip" onclick="setEscen('nino',this)">👶 Niño</button>
+    <button class="pchip" onclick="setEscen('emb',this)">🤰 Embarazada</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Qué</th><th>Acción</th></tr>
+      <tr><td>Inicio</td><td>Explicar cronicidad y técnica de higiene</td><td>Higiene diaria; expectativa de semanas</td></tr>
+      <tr><td>4–6 semanas</td><td>Respuesta y adherencia</td><td>Reforzar higiene; añadir fármaco según tipo</td></tr>
+      <tr><td>Recaídas</td><td>Frecuentes</td><td>Mantener higiene continua de base</td></tr>
+      <tr><td>Sin respuesta / atípico</td><td>Reevaluar</td><td>Referir (córnea, Demodex, neoplasia)</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">🎯</span><div>Meta realista: <strong>control</strong> de síntomas con higiene de mantenimiento. La constancia es más importante que cualquier fármaco.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Blefaritis</h2><p>Guías y evidencia. Nivel indicado.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">American Academy of Ophthalmology. <em>Blepharitis Preferred Practice Pattern.</em> Ophthalmology.</div><a class="biblio-link" href="https://www.aao.org/education/preferred-practice-pattern/blepharitis-ppp" target="_blank">🔗 AAO PPP</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2015</span><span class="biblio-level lv-b">Nivel B</span></div><div class="biblio-ref">Pflugfelder SC, et al. <em>Management and therapy of blepharitis / meibomian gland dysfunction.</em> Revisión.</div></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">🗂️ México</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">CENETEC. <em>GPC de padecimientos oculares externos.</em> Adaptación institucional.</div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia</div><div class="biblio-body"><div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">A</span> Guía/RS</div><div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">B</span> Observacional</div><div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">C</span> Consenso</div><div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Exp</span> Referencia</div>
+  </div></div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Evidencia a 2026. Confirme dosis con la referencia institucional. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis / pauta')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo',f.emb,'#7a4a00');if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#f3ece2;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#8a5a2c;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#f3ece2;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#8a5a2c;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#f3ece2;border:1px solid #8a5a2c;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#8a5a2c;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#f3ece2;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#8a5a2c;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#8a5a2c';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+/* ---- DIFERENCIADOR anterior/posterior ---- */
+var difS={loc:null,sec:null};
+function buildDif(){var h='<div class="calc-row"><div class="calc-lbl2">¿Dónde predominan las costras/hallazgos?</div><div class="calc-opts"><button class="copt" onclick="dif(0,this)">Base de pestañas</button><button class="copt" onclick="dif(1,this)">Borde interno (glándulas)</button></div></div>';h+='<div class="calc-row"><div class="calc-lbl2">Al presionar el párpado, la secreción de Meibomio es...</div><div class="calc-opts"><button class="copt" onclick="dif2(0,this)">Clara/normal</button><button class="copt" onclick="dif2(1,this)">Espesa/turbia</button></div></div>';document.getElementById('dif-box').innerHTML=h;}
+function dif(v,el){var s=el.parentNode.querySelectorAll('.copt');for(var i=0;i<s.length;i++)s[i].classList.remove('on');el.classList.add('on');difS.loc=v;difEval();}
+function dif2(v,el){var s=el.parentNode.querySelectorAll('.copt');for(var i=0;i<s.length;i++)s[i].classList.remove('on');el.classList.add('on');difS.sec=v;difEval();}
+function difEval(){if(difS.loc===null||difS.sec===null)return;var r=document.getElementById('dif-res');if(difS.loc===1||difS.sec===1){r.style.background='#f3ece2';r.style.color='#8a5a2c';r.innerHTML='<b>Blefaritis POSTERIOR (disfunción de Meibomio) probable.</b> Énfasis en compresas tibias + masaje/expresión; considere doxiciclina (adultos no embarazadas) u omega-3; buscar rosácea. Ojo seco frecuente.';}else{r.style.background='#f3ece2';r.style.color='#8a5a2c';r.innerHTML='<b>Blefaritis ANTERIOR probable.</b> Higiene del borde palpebral + antibiótico tópico en ungüento (eritromicina/bacitracina) al acostarse. Buscar dermatitis seborreica.';}r.classList.add('show');}
+
+/* ---- ALGORITMO ---- */
+var ALGO={
+ start:{q:'Paciente con ardor/costras en párpados crónicos. ¿Hay dolor intenso, baja de visión o fotofobia marcada?',a:[
+   ['Sí',function(){return 'RES:BANDERA ROJA (posible afección corneal) → referir a OFTALMOLOGÍA. No es una blefaritis simple.';}],
+   ['No — cuadro típico','tipo']
+ ]},
+ tipo:{q:'¿El paciente es niño (&lt;8 años) o está embarazada/lactando?',a:[
+   ['Sí',function(){return 'RES:BASE en todos: HIGIENE PALPEBRAL (compresas tibias + limpieza del borde) — es segura. Si requiere fármaco: ungüento de ERITROMICINA/bacitracina tópico. NO doxiciclina (usar eritromicina/azitromicina oral solo si es imprescindible y con valoración). Ver pestaña "Niños y embarazo".';}],
+   ['No — adulto','loc']
+ ]},
+ loc:{q:'¿Predomina anterior (base de pestañas) o posterior (Meibomio/rosácea)?',a:[
+   ['Anterior',function(){return 'RES:HIGIENE PALPEBRAL + UNGÜENTO DE ERITROMICINA al acostarse (2–4 semanas). Lágrimas artificiales si hay ojo seco. Buscar dermatitis seborreica.';}],
+   ['Posterior / rosácea',function(){return 'RES:COMPRESAS TIBIAS + MASAJE/EXPRESIÓN de Meibomio (base). DOXICICLINA 50–100 mg/día (efecto antiinflamatorio) por 6–12 semanas en adulto no embarazada; alternativa azitromicina. Omega-3. Tratar la rosácea.';}]
+ ]}
+};
+
+/* ---- TX GENERAL ---- */
+var D_HIG={pri:true,linea:'⭐ Base — en todos, siempre',n:'Higiene palpebral',dlb:'Pauta',
+ da:'Compresas tibias 5–10 min + masaje del párpado + limpieza del borde con limpiador palpebral (o champú neutro muy diluido), 1–2 veces al día',
+ dur:'Diaria; mantenimiento indefinido (es lo que evita recaídas)',
+ iv:'Tópico / domiciliario',
+ emb:'Segura',ped:'Segura (adaptar; supervisada)',
+ nota:'<b>Es el pilar del tratamiento.</b> Las compresas ablandan las secreciones y destapan las glándulas; la limpieza retira costras y biofilm. Sin higiene, cualquier fármaco fracasa.'};
+var D_ERI={pri:true,linea:'Antibiótico tópico (anterior)',n:'Ungüento de eritromicina / bacitracina',dlb:'Dosis',
+ da:'Aplicar en el borde palpebral al acostarse',
+ dur:'2–4 semanas (según respuesta)',
+ iv:'Tópico ocular',pres:'Eritromicina ungüento oftálmico 0.5% · bacitracina',
+ emb:'Preferentes en embarazo/lactancia',ped:'Seguros; de elección en niños',
+ nota:'<b>Para blefaritis anterior estafilocócica.</b> Reduce la carga bacteriana del borde. Seguro en niños y embarazo.'};
+var D_DOXI={pri:false,linea:'Antiinflamatorio (posterior/rosácea)',n:'Doxiciclina',dlb:'Dosis',
+ da:'50–100 mg VO al día (dosis subantimicrobiana también útil)',
+ dur:'6–12 semanas; a veces mantenimiento',
+ iv:'VO',pres:'Doxiciclina 100 mg',
+ emb:'CONTRAINDICADA',ped:'CONTRAINDICADA en &lt;8 años',
+ ci:'Embarazo, lactancia, niños &lt;8 años',ea:'Fotosensibilidad, GI, esofagitis',
+ nota:'<b>Efecto antiinflamatorio</b> sobre las glándulas de Meibomio (no solo antibiótico). Útil en DGM/rosácea del adulto. En niños/embarazo → azitromicina o eritromicina oral.'};
+var D_AZI={pri:false,linea:'Alternativa a doxiciclina',n:'Azitromicina',dlb:'Dosis',
+ da:'Tópica (gotas) o VO en pauta corta; alternativa cuando la tetraciclina está contraindicada',
+ dur:'Pauta corta (según preparado)',
+ iv:'Tópico / VO',pres:'Azitromicina gotas · 500 mg VO',
+ emb:'Alternativa aceptable (valorar)',ped:'Alternativa en niños',
+ nota:'Opción antiinflamatoria/antibacteriana cuando NO se pueden usar tetraciclinas (niños, embarazo).'};
+var D_LAGRI={pri:false,linea:'Coadyuvante — ojo seco',n:'Lágrimas artificiales',dlb:'Pauta',
+ da:'1 gota varias veces al día según síntomas (preferir sin conservador si uso frecuente)',
+ dur:'Según síntomas; puede ser prolongado',
+ iv:'Tópico ocular',pres:'Lágrimas artificiales',
+ emb:'Seguras',ped:'Seguras',
+ nota:'La blefaritis suele acompañarse de ojo seco; las lágrimas mejoran el confort.'};
+var D_OMEGA={pri:false,linea:'Coadyuvante — antiinflamatorio suave',n:'Ácidos grasos omega-3',dlb:'Pauta',
+ da:'Suplemento oral de omega-3 (aceite de pescado/linaza) como coadyuvante en disfunción de Meibomio',
+ dur:'Semanas–meses (efecto lento)',
+ iv:'VO',pres:'Cápsulas de omega-3',
+ emb:'Aceptable (valorar)',ped:'Poco usado en niños',
+ nota:'Mejora la calidad de la secreción de Meibomio; efecto modesto y lento. Útil en la forma posterior.'};
+var D_COMPT={pri:true,linea:'⭐ Base — en todos',n:'Compresas tibias',dlb:'Pauta',
+ da:'Compresa tibia sobre los párpados 5–10 min, 1–2 veces al día (antes de la limpieza del borde)',
+ dur:'Diaria; mantenimiento',
+ iv:'Domiciliario',emb:'Segura',ped:'Segura',
+ nota:'Ablandan las secreciones y destapan las glándulas de Meibomio; potencian la limpieza.'};
+var D_STER={no:true,linea:'⚠️ Solo especialista, brotes',n:'Corticoide tópico (brote)',dlb:'Uso',
+ da:'Esteroide tópico suave, ciclo corto, para inflamación intensa — indicado por oftalmología',
+ dur:'Ciclo corto (días), con control',
+ iv:'Tópico ocular',pres:'—',
+ ci:'Uso prolongado sin control (glaucoma, catarata, infección)',
+ nota:'Reservado a brotes inflamatorios importantes y bajo control oftalmológico por sus riesgos.'};
+
+var TXC={
+ 'primera':[['1ª Línea','Base en TODOS — el pilar (higiene diaria)',AC,[D_COMPT,D_HIG]]],
+ 'segunda':[['2ª Línea — anterior','Antibiótico tópico',C2,[D_ERI]],['2ª Línea — posterior/rosácea','Antiinflamatorio (adulto)',C2,[D_DOXI,D_AZI]]],
+ 'coadyuv':[['Coadyuvantes','Confort y control',CO,[D_LAGRI,D_OMEGA]],['Brote','Solo especialista',NO,[D_STER]]]
+};
+var TXH={
+ 'nino':[
+   ['⭐ Base','Segura en niños',AC,[D_HIG]],
+   ['Fármaco de elección','Tópico',CO,[D_ERI]],
+   ['Si requiere oral','NO tetraciclinas',C2,[D_AZI]]
+ ],
+ 'emb':[
+   ['⭐ Base','Segura en embarazo/lactancia',AC,[D_HIG]],
+   ['Fármaco de elección','Tópico',CO,[D_ERI]],
+   ['Si requiere oral','NO tetraciclinas',C2,[D_AZI]]
+ ]
+};
+
+/* ---- FÁRMACOS ---- */
+var FARMACOS=[
+ {familia:'1ª línea (base, todos)',color:'#8a5a2c',farmacos:[
+  {n:'Compresas tibias',ini:'5–10 min, 1–2×/día',obj:'Ablandar/destapar glándulas (base)',dur:'Diaria, mantenimiento',iv:'Domiciliario',pr:'Paño tibio limpio',emb:'Segura',ped:'Segura',ci:'—',ea:'—',nota:'Antes de la limpieza del borde.'},
+  {n:'Higiene palpebral (limpieza)',ini:'Limpieza del borde 1–2×/día',obj:'Pilar del tratamiento en todos los tipos',dur:'Diaria, mantenimiento indefinido',iv:'Domiciliario',pr:'Limpiador palpebral · champú neutro diluido',emb:'Segura',ped:'Segura',ci:'—',ea:'Irritación leve si se frota en exceso',nota:'Lo que más previene recaídas.'}
+ ]},
+ {familia:'2ª línea — anterior (tópico)',color:'#0c3b6e',farmacos:[
+  {n:'Eritromicina / bacitracina ungüento',ini:'Borde palpebral al acostarse',obj:'Blefaritis anterior estafilocócica',dur:'2–4 semanas',iv:'Tópico',pr:'Eritromicina ung. 0.5%',emb:'Preferente',ped:'De elección',ci:'Hipersensibilidad',ea:'Visión borrosa transitoria',nota:'Seguro en niños y embarazo.'}
+ ]},
+ {familia:'2ª línea — posterior/rosácea',color:'#7a4a00',farmacos:[
+  {n:'Doxiciclina',ini:'50–100 mg/día · 6–12 semanas',obj:'DGM/rosácea (efecto antiinflamatorio)',dur:'6–12 semanas',iv:'VO',pr:'Doxiciclina 100 mg',emb:'CONTRAINDICADA',ped:'CONTRAINDICADA <8 años',ci:'Embarazo, lactancia, <8 años',ea:'Fotosensibilidad, GI',nota:'En niños/embarazo → azitromicina o eritromicina oral.'},
+  {n:'Azitromicina',ini:'Tópica o VO (pauta corta)',obj:'Alternativa antiinflamatoria sin tetraciclina',dur:'Pauta corta',iv:'Tópico/VO',pr:'Azitromicina gotas · 500 mg',emb:'Alternativa (valorar)',ped:'Alternativa',ci:'Hipersensibilidad',ea:'GI',nota:'Elección cuando NO se pueden usar tetraciclinas.'}
+ ]},
+ {familia:'Coadyuvantes',color:'#0a5c45',farmacos:[
+  {n:'Lágrimas artificiales',ini:'Varias veces/día',obj:'Confort / ojo seco asociado',dur:'Según síntomas',iv:'Tópico',pr:'Lágrimas artificiales',emb:'Seguras',ped:'Seguras',ci:'—',ea:'—',nota:'Preferir sin conservador si uso frecuente.'},
+  {n:'Omega-3 (oral)',ini:'Suplemento diario',obj:'Mejorar secreción de Meibomio (posterior)',dur:'Semanas–meses',iv:'VO',pr:'Cápsulas de omega-3',emb:'Aceptable (valorar)',ped:'Poco usado',ci:'—',ea:'Eructos, GI leve',nota:'Efecto modesto y lento.'},
+  {n:'Corticoide tópico (brote)',ini:'Ciclo corto, especialista',obj:'Inflamación intensa',dur:'Días, con control',iv:'Tópico',pr:'—',emb:'Valorar con especialista',ped:'Valorar con especialista',ci:'Uso prolongado sin control',ea:'↑PIO, catarata',nota:'Solo bajo control oftalmológico.'}
+ ]}
+];
+
+/* ---- INDICACIONES ---- */
+var IND=[
+ {familia:'Base y coadyuvantes',color:'#8a5a2c',farmacos:[
+  {n:'Higiene palpebral',
+   receta:'<b>Compresa tibia sobre los párpados cerrados 5–10 min</b>, luego <b>masaje suave</b> del párpado hacia las pestañas y <b>limpieza del borde</b> con limpiador palpebral (o champú neutro muy diluido), <b>1–2 veces al día</b>. Continuar de mantenimiento.',
+   dosis:['Compresa tibia 5–10 min','Masaje + limpieza del borde 1–2×/día'],
+   dur:'Diaria; mantenimiento indefinido',
+   pobl:'<b>Segura en niños y embarazo/lactancia</b> — es la base del tratamiento en todos. En niños, hágalo un adulto con paño limpio.',
+   via:'Domiciliario; enseñar la técnica',
+   pac:'La blefaritis es crónica; se controla con esta rutina diaria. La mejoría tarda semanas y si deja la higiene, regresa.',
+   al:'Dolor intenso, baja de visión o mucha fotofobia → acudir.'}
+ ]},
+ {familia:'Fármacos',color:'#0c3b6e',farmacos:[
+  {n:'Eritromicina ungüento (anterior)',
+   receta:'<b>Ungüento de eritromicina oftálmica: aplicar una pequeña cantidad en el borde de los párpados al acostarse</b>, durante 2–4 semanas. Ideal tras la higiene palpebral.',
+   dosis:['Borde palpebral al acostarse × 2–4 semanas'],
+   dur:'2–4 semanas',
+   pobl:'<b>De elección en niños y embarazo</b> (tópico, seguro). Alternativa: bacitracina ungüento.',
+   via:'Tópico ocular nocturno',
+   pac:'Pomada para los párpados por la noche; puede dejar la vista borrosa un rato, por eso se usa al dormir.',
+   al:'Empeoramiento, dolor o enrojecimiento del ojo.'},
+  {n:'Doxiciclina (posterior/rosácea — adulto)',
+   receta:'<b>Doxiciclina 100 mg VO cada 24 h</b> (o 50 mg) con abundante agua, por 6–12 semanas. Evitar el sol.',
+   dosis:['50–100 mg/día × 6–12 semanas'],
+   dur:'6–12 semanas',
+   pobl:'<b>CONTRAINDICADA en niños &lt;8 años y en embarazo/lactancia.</b> En esas poblaciones use <b>azitromicina</b> (tópica/oral) o <b>eritromicina oral</b> si se requiere efecto sistémico.',
+   via:'VO con agua, erguido; evitar sol',
+   pac:'Baja la inflamación de las glándulas del párpado. Tómelo con agua, no se acueste enseguida y evite el sol. No lo tome si está embarazada.',
+   al:'Dolor al tragar, quemadura solar fácil.'}
+ ]}
+];
+
+window.addEventListener('load',function(){
+  buildDif();renderAlgo();
+  setTxc('primera',document.querySelector('#txc-chips .pchip'));
+  setTxh('nino',document.querySelector('#txh-chips .pchip'));
+  setEscen('ant',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+var ESCEN={
+ 'ant':{t:'Blefaritis anterior (estafilocócica)',pres:'Costras y collaretes en la base de las pestañas, borde rojo, ardor matutino.',dx:'Clínico.',tx:'Higiene palpebral + ungüento de eritromicina al acostarse 2–4 semanas; lágrimas si hay ojo seco.',ref:'Si afección corneal o no responde.',cx:'Suspender la higiene al mejorar (recae). Descartar Demodex si collaretes cilíndricos.'},
+ 'post':{t:'Blefaritis posterior / rosácea',pres:'Orificios de Meibomio obstruidos, secreción espesa, telangiectasias, rosácea facial, ojo seco.',dx:'Clínico (expresión de Meibomio).',tx:'Compresas tibias + masaje/expresión; doxiciclina 6–12 sem (adulto no embarazada) u omega-3; tratar rosácea.',ref:'Chalazión recurrente o córnea afectada.',cx:'Olvidar el componente antiinflamatorio; en niño/embarazo, no usar tetraciclina.'},
+ 'nino':{t:'Niño',pres:'Puede haber blefaroqueratoconjuntivitis (ojo rojo, fotofobia, afección corneal) — potencialmente cicatrizal.',dx:'Clínico; valorar córnea.',tx:'Higiene palpebral (por un adulto) + ungüento de eritromicina. Si requiere oral: azitromicina/eritromicina. NUNCA tetraciclinas. Compresas tibias para chalaziones.',ref:'Oftalmología si fotofobia/opacidad corneal.',cx:'Usar doxiciclina; subestimar la afección corneal (riesgo de cicatriz y ambliopía).'},
+ 'emb':{t:'Embarazada / lactancia',pres:'Blefaritis habitual durante el embarazo.',dx:'Clínico.',tx:'Higiene palpebral (base, segura) + ungüento de eritromicina/bacitracina. Si requiere sistémico: azitromicina/eritromicina oral valorando riesgo/beneficio. NO tetraciclinas.',ref:'Según gravedad.',cx:'Prescribir doxiciclina; olvidar que la higiene es suficiente en la mayoría.'}
+};
+
+</script>
+</body>
+</html>

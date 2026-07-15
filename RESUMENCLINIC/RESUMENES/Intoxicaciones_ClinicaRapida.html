@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Intoxicaciones Agudas · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#1d6b5f;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e6f2ef;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#06231e,#1d6b5f);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--gl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--g);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--gl);color:var(--g);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--g);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--gm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#06231e,#1d6b5f);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧪</div>
+    <div>
+      <div class="hdr-eye">Toxicología · Urgencias</div>
+      <div class="hdr-title">Intoxicaciones Agudas</div>
+      <div class="hdr-sub">AACT/EAPCCT · Goldfrank · CENETEC · GPC México</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">ABCDE primero</span>
+    <span class="badge">Identifica el toxidrome</span>
+    <span class="badge">Carbón activado 1ª línea</span>
+    <span class="badge">Lavado gástrico: casi nunca</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">ABCDE</div><div class="qs-l">Prioridad</div></div>
+  <div class="qs"><div class="qs-v">1 g/kg</div><div class="qs-l">Carbón activado</div></div>
+  <div class="qs"><div class="qs-v">&lt;1 h</div><div class="qs-l">Ventana útil descon.</div></div>
+  <div class="qs"><div class="qs-v">&lt;1%</div><div class="qs-l">Mortalidad global</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🏥 Tx Consulta</button>
+  <button class="tab" onclick="showT('txh',this)">🛏️ Tx Hosp.</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Antídotos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📌</span><span class="st">Definición y principios</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p>La <strong>intoxicación aguda</strong> es la lesión por exposición a una sustancia en cantidad capaz de producir daño. La mortalidad global es <strong>&lt;1%</strong>: el reto no es "detectar el veneno", sino <strong>identificar pronto al paciente grave y darle soporte</strong>.</p>
+      <p>Reglas de oro: <strong>1)</strong> trata al paciente, no al tóxico; <strong>2)</strong> ABCDE y glucemia siempre; <strong>3)</strong> reconoce el <strong>toxidrome</strong>; <strong>4)</strong> la mayoría solo necesita <strong>soporte</strong>; <strong>5)</strong> hay antídoto para pocos; <strong>6)</strong> la descontaminación GI es la excepción, no la regla.</p>
+    </div>
+    <div class="alert a-i"><span class="ai">📞</span><div><div class="at">Centro toxicológico</div>Ante duda diagnóstica o de manejo, contacte a su centro de información toxicológica regional. Tenga a mano el nombre del producto, cantidad, hora y vía de exposición.</div></div>
+    <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Nunca olvidar</div>Glucemia capilar en todo paciente con alteración del estado mental. Y buscar coingesta (paracetamol y salicilatos son "silenciosos" y frecuentes en intentos suicidas).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧭</span><span class="st">Toxidromes — reconocimiento rápido</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Toxidrome</th><th>Clínica</th><th>Causas típicas</th><th>Antídoto/manejo</th></tr>
+      <tr><td class="dn">Colinérgico</td><td>SLUDGE/DUMBELS: sialorrea, lagrimeo, diarrea, miosis, bradicardia, broncorrea, fasciculaciones</td><td>Organofosforados, carbamatos</td><td>Atropina + pralidoxima</td></tr>
+      <tr><td class="dn">Anticolinérgico</td><td>Rojo, seco, caliente, ciego (midriasis), "loco"; retención urinaria, taquicardia</td><td>Antihistamínicos, TCA, atropina, escopolamina</td><td>Soporte; fisostigmina en casos selectos</td></tr>
+      <tr><td class="dn">Opioide</td><td>Miosis, depresión respiratoria, coma, bradicardia</td><td>Morfina, heroína, fentanilo, tramadol</td><td>Naloxona</td></tr>
+      <tr><td class="dn">Simpaticomimético</td><td>Midriasis, taquicardia, HTA, hipertermia, diaforesis, agitación</td><td>Cocaína, anfetaminas, metanfetamina</td><td>Benzodiacepinas, enfriamiento</td></tr>
+      <tr><td class="dn">Sedante-hipnótico</td><td>Depresión de conciencia con signos vitales relativamente conservados</td><td>Benzodiacepinas, alcohol, barbitúricos</td><td>Soporte; flumazenil con cautela</td></tr>
+      <tr><td class="dn">Serotoninérgico</td><td>Clonus, hiperreflexia, hipertermia, agitación, diaforesis</td><td>ISRS + otros serotoninérgicos</td><td>Benzodiacepinas, ciproheptadina</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Valor</th><th>Contexto</th></tr>
+      <tr><td>Mortalidad global</td><td class="dn">&lt;1%</td><td>La mayoría se resuelve con soporte</td></tr>
+      <tr><td>Vía más frecuente</td><td>Ingesta oral</td><td>Seguida de inhalación y dérmica</td></tr>
+      <tr><td>Grupos de riesgo</td><td>Niños (accidental) y adultos (intencional)</td><td>Bimodal por edad</td></tr>
+      <tr><td>Coingesta frecuente</td><td>Paracetamol, alcohol, benzodiacepinas</td><td>Buscar siempre en el intento suicida</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔴</span><span class="st">Banderas rojas</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Hallazgo</th><th>Sospecha</th></tr>
+      <tr><td>QRS ancho en ECG</td><td>Bloqueadores de canales de sodio (TCA, cocaína) → bicarbonato</td></tr>
+      <tr><td>QTc prolongado</td><td>Riesgo de torsades (metadona, antipsicóticos, antiarrítmicos)</td></tr>
+      <tr><td>Acidosis metabólica con brecha aniónica</td><td>Alcoholes tóxicos, salicilatos, metformina (MUDPILES)</td></tr>
+      <tr><td>Brecha osmolar elevada</td><td>Metanol, etilenglicol, etanol</td></tr>
+      <tr><td>Hipertermia grave</td><td>Simpaticomimético, serotoninérgico, anticolinérgico, hipertermia maligna</td></tr>
+      <tr><td>Bradicardia + hipotensión</td><td>Betabloqueador, calcioantagonista, digoxina, clonidina</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Hacer <strong>lavado gástrico de rutina</strong>. Hoy casi nunca se indica: solo en ingesta potencialmente letal, muy reciente (&lt;1 h) y con vía aérea protegida.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Dar <strong>jarabe de ipecacuana</strong> o catárticos: ya no se recomiendan (sin beneficio, con riesgo).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Administrar <strong>carbón activado</strong> con vía aérea no protegida (riesgo de broncoaspiración), o en cáusticos/hidrocarburos, o para tóxicos que no adsorbe (hierro, litio, alcoholes, potasio).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Usar <strong>flumazenil</strong> a ciegas: puede precipitar crisis convulsivas en consumo crónico de benzodiacepinas o coingesta de proconvulsivantes.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Olvidar el <strong>nivel de paracetamol</strong> a las 4 h en todo intento suicida por ingesta: es tratable y silencioso.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">Confiar en un tamiz toxicológico urinario negativo: no descarta intoxicación y rara vez cambia el manejo agudo.</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt">No evaluar el <strong>riesgo suicida</strong> ni la seguridad del entorno antes del alta.</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🏥</span><span class="st">Criterios de ingreso / UCI</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Destino</th></tr>
+      <tr><td>Alteración de conciencia, inestabilidad, arritmia, convulsiones</td><td class="dm">UCI</td></tr>
+      <tr><td>Requiere infusión de antídoto o vigilancia prolongada</td><td class="dm">UCI / hospitalización</td></tr>
+      <tr><td>Ingesta de liberación prolongada o tóxico de efecto tardío</td><td>Observación ≥12-24 h</td></tr>
+      <tr><td>Intento suicida</td><td class="dm">Valoración por psiquiatría antes del alta</td></tr>
+      <tr><td>Asintomático tras periodo de observación adecuado y bajo riesgo</td><td>Alta con red de apoyo</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ DIAGNÓSTICO ============ -->
+<div class="panel" id="tab-dx">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🔎</span><span class="st">Abordaje del paciente intoxicado</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🅰️</span><div><div class="at">Primero ABCDE</div>Vía aérea, ventilación, circulación, déficit neurológico (glucemia + pupilas), exposición/temperatura. El soporte salva más vidas que cualquier antídoto.</div></div>
+    <div class="prose"><p><strong>Historia dirigida (las 5 preguntas):</strong> ¿qué?, ¿cuánto?, ¿cuándo?, ¿por qué vía? y ¿por qué? (accidental vs intencional). Recabe envases, testigos y medicación del hogar. <strong>Coctel del coma</strong> según contexto: <strong>dextrosa</strong> (si hipoglucemia), <strong>tiamina</strong> (desnutrido/alcohólico), <strong>naloxona</strong> (sospecha de opioide).</p></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧪</span><span class="st">Estudios y su interpretación</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Qué aporta</th><th>Clave</th></tr>
+      <tr><td class="dn">Glucemia capilar</td><td>Descarta hipoglucemia</td><td>Obligatoria en todo alterado</td></tr>
+      <tr><td class="dn">ECG</td><td>QRS/QTc, bloqueos, isquemia</td><td>QRS ancho → bicarbonato; QTc largo → torsades</td></tr>
+      <tr><td class="dn">Gasometría + electrolitos</td><td>Acidosis, brecha aniónica</td><td>MUDPILES para brecha alta</td></tr>
+      <tr><td class="dn">Osmolaridad sérica</td><td>Brecha osmolar</td><td>Alcoholes tóxicos</td></tr>
+      <tr><td class="dn">Paracetamol y salicilatos séricos</td><td>Coingestas silenciosas y tratables</td><td>Paracetamol a las 4 h; nomograma</td></tr>
+      <tr><td class="dn">Función renal/hepática, CK</td><td>Daño de órgano blanco, rabdomiólisis</td><td>Guía diálisis/soporte</td></tr>
+      <tr><td class="dn">Prueba de embarazo</td><td>En mujer en edad fértil</td><td>Cambia manejo</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>El tamiz toxicológico urinario tiene falsos positivos/negativos y rara vez modifica el manejo urgente. Priorice ECG, gasometría, glucosa y niveles de paracetamol/salicilatos.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧮</span><span class="st">Reglas nemotécnicas útiles</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">🔤</span><div><div class="at">MUDPILES (acidosis con brecha aniónica alta)</div>Metanol, Uremia, Cetoacidosis Diabética, Paraldehído/Propilenglicol, Isoniazida/hierro, Lactato, Etilenglicol, Salicilatos.</div></div>
+    <div class="alert a-i"><span class="ai">🔤</span><div><div class="at">Tóxicos NO adsorbidos por carbón activado</div>Metales (hierro, litio, plomo), alcoholes, hidrocarburos, cáusticos, potasio. ("PHAILS": Pesticidas, Hidrocarburos, Ácidos/álcalis, hIerro/metales, Litio, Solventes/alcoholes.)</div></div>
+    <div class="alert a-i"><span class="ai">🔤</span><div><div class="at">Diálisis útil (extraíbles) — "I-STUMBLE"</div>Isopropanol, Salicilatos, Teofilina, Uremia, Metanol, Barbitúricos, Litio, Etilenglicol. Alto potencial de eliminación extracorpórea.</div></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ESCALAS ============ -->
+<div class="panel" id="tab-esc">
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📈</span><span class="st">Nomograma de Rumack-Matthew (paracetamol)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Válido solo para <strong>ingesta única aguda</strong> y nivel tomado <strong>entre 4 y 24 h</strong>. La línea de tratamiento parte de 150 µg/mL a las 4 h.</div></div>
+    <div class="calc-w">
+      <label class="calc-lbl">Horas desde la ingesta (4–24)</label>
+      <input id="rm-h" class="calc-in" type="number" step="0.5" placeholder="Ej. 6">
+      <label class="calc-lbl">Nivel de paracetamol (µg/mL)</label>
+      <input id="rm-n" class="calc-in" type="number" step="1" placeholder="Ej. 120">
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-p" onclick="calcRM()">Evaluar</button>
+        <button class="btn btn-s" onclick="resetRM()">Reiniciar</button>
+      </div>
+      <div id="rm-res" class="calc-res"></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧮</span><span class="st">Brecha aniónica y brecha osmolar</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="calc-w" style="margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:8px;">Brecha aniónica</div>
+      <label class="calc-lbl">Na⁺ (mEq/L)</label><input id="ag-na" class="calc-in" type="number" placeholder="140">
+      <label class="calc-lbl">Cl⁻ (mEq/L)</label><input id="ag-cl" class="calc-in" type="number" placeholder="104">
+      <label class="calc-lbl">HCO₃⁻ (mEq/L)</label><input id="ag-hco3" class="calc-in" type="number" placeholder="24">
+      <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="calcAG()">Calcular</button><button class="btn btn-s" onclick="resetAG()">Reiniciar</button></div>
+      <div id="ag-res" class="calc-res"></div>
+    </div>
+    <div class="calc-w">
+      <div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:8px;">Brecha osmolar</div>
+      <label class="calc-lbl">Osmolaridad medida (mOsm/kg)</label><input id="og-m" class="calc-in" type="number" placeholder="300">
+      <label class="calc-lbl">Na⁺ (mEq/L)</label><input id="og-na" class="calc-in" type="number" placeholder="140">
+      <label class="calc-lbl">Glucosa (mg/dL)</label><input id="og-glu" class="calc-in" type="number" placeholder="90">
+      <label class="calc-lbl">BUN (mg/dL)</label><input id="og-bun" class="calc-in" type="number" placeholder="14">
+      <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="calcOG()">Calcular</button><button class="btn btn-s" onclick="resetOG()">Reiniciar</button></div>
+      <div id="og-res" class="calc-res"></div>
+    </div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🧠</span><span class="st">Glasgow — cuándo proteger la vía aérea</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>En el paciente intoxicado, un <strong>GCS ≤8</strong> o la pérdida de reflejos protectores obliga a considerar <strong>intubación</strong>, sobre todo antes de cualquier descontaminación GI. La decisión es clínica (trayectoria, secreciones, tóxico implicado), no solo el número.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Componente</th><th>Rango</th></tr>
+      <tr><td class="dn">Apertura ocular</td><td>1–4</td></tr>
+      <tr><td class="dn">Respuesta verbal</td><td>1–5</td></tr>
+      <tr><td class="dn">Respuesta motora</td><td>1–6</td></tr>
+      <tr><td class="dn">Total</td><td>3–15 · ≤8 = coma</td></tr>
+    </table></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ALGORITMO ============ -->
+<div class="panel" id="tab-algo">
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoReset()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- ============ TX CONSULTA ============ -->
+<div class="panel" id="tab-txc">
+  <div class="alert a-r"><span class="ai">🚑</span><div><div class="at">Estabilizar antes que descontaminar</div>El soporte (ABCDE) precede a todo. Aquí: abordaje inicial y descontaminación gastrointestinal. Toque cada tarjeta para desplegar la ficha completa.</div></div>
+  <div class="chips" id="txc-chips">
+    <button class="pchip on" onclick="setTxc('inicial',this)">🅰️ Abordaje inicial</button>
+    <button class="pchip" onclick="setTxc('descon',this)">🧽 Descontaminación</button>
+  </div>
+  <div id="txc-body"></div>
+</div>
+
+<!-- ============ TX HOSP ============ -->
+<div class="panel" id="tab-txh">
+  <div class="chips" id="txh-chips">
+    <button class="pchip on" onclick="setTxh('soporte',this)">🩺 Soporte y eliminación</button>
+    <button class="pchip" onclick="setTxh('opioide',this)">💤 Opioide / sedante</button>
+    <button class="pchip" onclick="setTxh('paracetamol',this)">💊 Paracetamol</button>
+    <button class="pchip" onclick="setTxh('colinergico',this)">🌾 Colinérgico</button>
+    <button class="pchip" onclick="setTxh('alcoholes',this)">🍸 Alcoholes tóxicos</button>
+    <button class="pchip" onclick="setTxh('cardio',this)">❤️ Cardiotóxicos</button>
+  </div>
+  <div id="txh-body"></div>
+
+  <div class="sec" style="margin-top:14px;"><div class="sh" onclick="tog(this)">
+    <span class="si">📈</span><span class="st">Monitoreo en el paciente intoxicado</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Meta</th><th>Frecuencia</th><th>Si no se cumple</th></tr>
+      <tr><td>Vía aérea / conciencia</td><td>Reflejos conservados</td><td>Continuo</td><td>Intubar si GCS ≤8 o pérdida de reflejos</td></tr>
+      <tr><td>ECG / ritmo</td><td>QRS &lt;120 ms, QTc normal</td><td>Continuo si cardiotóxico</td><td>QRS ancho → bicarbonato; torsades → Mg</td></tr>
+      <tr><td>Glucemia</td><td>Euglucemia</td><td>c/1-2 h</td><td>Dextrosa / octreotida (sulfonilureas)</td></tr>
+      <tr><td>Temperatura</td><td>&lt;38.5 °C</td><td>c/1-4 h</td><td>Enfriamiento activo, benzodiacepinas</td></tr>
+      <tr><td>Diuresis / función renal</td><td>&gt;0.5 mL/kg/h</td><td>Horaria</td><td>Líquidos; valorar diálisis</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ ANTÍDOTOS (Fármacos) ============ -->
+<div class="panel" id="tab-farm">
+  <div class="calc-w" style="margin-bottom:12px;">
+    <label class="calc-lbl">Buscar antídoto o tóxico</label>
+    <input id="farm-search" class="calc-in" style="margin-bottom:0;" type="text" placeholder="Ej. naloxona, paracetamol, organofosforado..." oninput="filtrarFarmacos(this.value)">
+  </div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ============ INDICACIONES ============ -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div><div class="at">Indicaciones listas para transcribir</div>Cada punto despliega: <strong>dosis · vía · enfermería/consulta · paciente y familia · nota · alarma</strong>.</div></div>
+    <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Medidas generales (abordaje inicial)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid #1d6b5f;border-radius:6px;padding:10px 14px;font-size:12.5px;line-height:1.85;color:#374151;">
+      1. <b>ABCDE</b>; proteger vía aérea si GCS ≤8; O₂ si hipoxia.<br>
+      2. Monitor cardíaco y <b>ECG</b>; accesos IV; <b>glucemia capilar</b>.<br>
+      3. <b>Coctel del coma</b> según contexto: dextrosa (hipoglucemia), tiamina, naloxona.<br>
+      4. Soporte con líquidos; tratar arritmias (QRS ancho → bicarbonato) y convulsiones (benzodiacepinas).<br>
+      5. <b>Descontaminación GI solo si indicada</b> (carbón 1 g/kg con vía aérea protegida).<br>
+      6. Identificar el <b>toxidrome</b>; administrar el <b>antídoto específico</b> si existe.<br>
+      7. Contactar al <b>centro de información toxicológica</b>.<br>
+      8. Observación según cinética del tóxico (liberación prolongada 12–24 h).
+    </div>
+  </div></div>
+
+<div id="ind-body"></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Indicaciones al alta (esquema listo)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div style="background:#fff;border:1px solid #e2e8f0;border-left:3px solid #0a5c45;border-radius:6px;padding:10px 14px;font-size:12.5px;line-height:1.85;color:#374151;">
+      • Alta solo si <b>asintomático tras observación adecuada</b> según el tóxico.<br>
+      • <b>Intoxicación intencional:</b> valoración por <b>psiquiatría antes del alta</b> y aseguramiento del entorno.<br>
+      • <b>Retiro de medios</b> e involucrar a la red de apoyo.<br>
+      • Educación sobre <b>almacenamiento seguro</b> de medicamentos/tóxicos (prevención accidental).<br>
+      • Cita de seguimiento; continuar antídoto ambulatorio solo si está indicado.
+    </div>
+    <div class="alert a-i" style="margin-top:10px;"><span class="ai">📞</span><div><div class="at">Recursos en México</div><b>Línea de la Vida: 800 911 2000</b> (24 h) · <b>SAPTEL: 55 5259 8121</b> · Urgencias: 911.</div></div>
+  </div></div>
+
+</div>
+
+<!-- ============ ESCENARIOS ============ -->
+<div class="panel" id="tab-escen">
+  <div class="chips" id="escen-chips">
+    <button class="pchip on" onclick="setEscen('parac',this)">💊 Paracetamol</button>
+    <button class="pchip" onclick="setEscen('opio',this)">💤 Opioides</button>
+    <button class="pchip" onclick="setEscen('orga',this)">🌾 Organofosforados</button>
+    <button class="pchip" onclick="setEscen('benzo',this)">😴 Benzodiacepinas</button>
+    <button class="pchip" onclick="setEscen('tca',this)">💔 Tricíclicos</button>
+    <button class="pchip" onclick="setEscen('co',this)">🔥 Monóxido de carbono</button>
+  </div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ============ SEGUIMIENTO ============ -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">📅</span><span class="st">Observación y seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Qué evaluar</th><th>Meta</th><th>Acción</th></tr>
+      <tr><td>Primeras horas</td><td>ABCDE, ECG, toxidrome</td><td>Estabilidad</td><td>Soporte + antídoto si aplica</td></tr>
+      <tr><td>4 h post-ingesta</td><td>Nivel de paracetamol/salicilatos</td><td>Bajo umbral</td><td>NAC si sobre la línea de tratamiento</td></tr>
+      <tr><td>Liberación prolongada</td><td>Recurrencia de síntomas</td><td>Sin rebote</td><td>Observar 12-24 h</td></tr>
+      <tr><td>Antes del alta</td><td>Asintomático, riesgo suicida, entorno</td><td>Seguro</td><td>Valoración por psiquiatría si fue intencional</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">🚨</span><span class="st">Riesgo suicida y recursos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">🚨</span><div>Toda intoxicación intencional requiere <strong>valoración de riesgo suicida</strong> y aseguramiento del entorno antes del alta. Pregunte directamente; preguntar no induce la conducta.</div></div>
+    <div class="alert a-i"><span class="ai">📞</span><div><div class="at">Recursos en México</div><strong>Línea de la Vida: 800 911 2000</strong> (24 h, gratuita) · <strong>SAPTEL: 55 5259 8121</strong> · Urgencias: 911.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)">
+    <span class="si">👨‍⚕️</span><span class="st">Referencia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>A dónde</th><th>Urgencia</th></tr>
+      <tr><td class="dm">Inestabilidad, arritmia, coma</td><td>UCI</td><td class="dm">Inmediata</td></tr>
+      <tr><td>Necesidad de diálisis (I-STUMBLE)</td><td>Nefrología</td><td class="dm">Urgente</td></tr>
+      <tr><td>Duda diagnóstica o de manejo</td><td>Centro de información toxicológica</td><td>Inmediata (telefónica)</td></tr>
+      <tr><td>Intento suicida</td><td>Psiquiatría</td><td>Antes del alta</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Intoxicaciones Agudas</h2>
+    <p>Posicionamientos de toxicología, textos de referencia y evidencia utilizada. Nivel indicado.</p>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Posicionamientos y guías</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">AACT / EAPCCT. <em>Systematic review on the use of activated charcoal for gastrointestinal decontamination.</em> Clin Toxicol. Base del uso selectivo del carbón activado.</div>
+        <a class="biblio-link" href="https://www.clintox.org/resources/position-statements" target="_blank">🔗 AACT position statements</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2013</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">AACT / EAPCCT. <em>Position paper update: gastric lavage for gastrointestinal decontamination.</em> Lavado gástrico no de rutina.</div>
+        <a class="biblio-link" href="https://www.clintox.org/resources/position-statements" target="_blank">🔗 Position statement</a></div>
+      <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2014</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">AACT / EAPCCT. <em>Position paper update: whole bowel irrigation.</em> Indicaciones de la irrigación intestinal total.</div>
+        <a class="biblio-link" href="https://www.clintox.org/resources/position-statements" target="_blank">🔗 Position statement</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📕 Textos de referencia</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">Nelson LS, Howland MA, et al. <em>Goldfrank's Toxicologic Emergencies, 11ª ed.</em> McGraw-Hill. Texto de referencia en toxicología clínica.</div></div>
+      <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2022</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">Olson KR. <em>Poisoning & Drug Overdose (Manual de intoxicaciones y sobredosis).</em> Lange. Referencia de antídotos y dosis.</div></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">CENETEC. <em>GPC Atención del paciente con intoxicación aguda en el servicio de urgencias.</em> Adaptación al contexto institucional.</div>
+        <a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC catálogo GPC</a></div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Metaanálisis / revisión sistemática</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales</div>
+        <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia / opinión</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Guía elaborada con base en evidencia disponible a 2026. Las dosis de antídotos deben confirmarse con la referencia institucional y con el centro de información toxicológica. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+
+/* ---------- RUMACK-MATTHEW ---------- */
+function calcRM(){var h=parseFloat(document.getElementById('rm-h').value),n=parseFloat(document.getElementById('rm-n').value),r=document.getElementById('rm-res');function setR(c,t){r.style.background=c+'18';r.style.color=c;r.innerHTML=t;r.classList.add('show');}if(isNaN(h)||isNaN(n)){setR('#7a4a00','Ingrese horas y nivel.');return;}if(h<4){setR('#7a4a00','<b>Nivel demasiado temprano.</b> Repita el nivel a las 4 h de la ingesta; antes no es interpretable en el nomograma.');return;}if(h>24){setR('#c0392b','<b>Fuera del nomograma (&gt;24 h).</b> Decida según clínica, transaminasas y nivel detectable; ante duda, inicie N-acetilcisteína y consulte toxicología.');return;}var thr=150*Math.pow(2,-(h-4)/4);var thrR=Math.round(thr);if(n>=thr){setR('#7b1c1c','<b>SOBRE la línea de tratamiento</b> (umbral ≈ '+thrR+' µg/mL a las '+h+' h).<br>➡️ Inicie <b>N-acetilcisteína</b> lo antes posible.');}else{setR('#0f7a5a','<b>Bajo la línea de tratamiento</b> (umbral ≈ '+thrR+' µg/mL a las '+h+' h).<br>Si fue ingesta única y el nivel es fiable, no requiere NAC. Reevalúe si hay coingesta o dudas del tiempo.');}}
+function resetRM(){document.getElementById('rm-h').value='';document.getElementById('rm-n').value='';document.getElementById('rm-res').classList.remove('show');}
+
+/* ---------- BRECHAS ---------- */
+function calcAG(){var na=parseFloat(document.getElementById('ag-na').value),cl=parseFloat(document.getElementById('ag-cl').value),hco3=parseFloat(document.getElementById('ag-hco3').value),r=document.getElementById('ag-res');if(isNaN(na)||isNaN(cl)||isNaN(hco3)){r.style.background='#7a4a0018';r.style.color='#7a4a00';r.innerHTML='Complete los tres valores.';r.classList.add('show');return;}var ag=na-(cl+hco3);var col,txt;if(ag>12){col='#7b1c1c';txt='<b>Brecha aniónica elevada.</b> Piense en MUDPILES: alcoholes tóxicos, salicilatos, metformina, cetoacidosis, uremia, lactato.';}else if(ag<8){col='#7a4a00';txt='<b>Brecha baja.</b> Poco frecuente; revise el laboratorio.';}else{col='#0f7a5a';txt='<b>Brecha normal (8–12).</b> No descarta intoxicación por tóxicos sin brecha.';}r.style.background=col+'18';r.style.color=col;r.innerHTML='<b>Brecha aniónica = '+ag+' mEq/L</b><br>'+txt;r.classList.add('show');}
+function resetAG(){['ag-na','ag-cl','ag-hco3'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('ag-res').classList.remove('show');}
+function calcOG(){var m=parseFloat(document.getElementById('og-m').value),na=parseFloat(document.getElementById('og-na').value),glu=parseFloat(document.getElementById('og-glu').value),bun=parseFloat(document.getElementById('og-bun').value),r=document.getElementById('og-res');if(isNaN(m)||isNaN(na)||isNaN(glu)||isNaN(bun)){r.style.background='#7a4a0018';r.style.color='#7a4a00';r.innerHTML='Complete los cuatro valores.';r.classList.add('show');return;}var calc=2*na+glu/18+bun/2.8;var gap=m-calc;var gapR=Math.round(gap*10)/10;var col,txt;if(gap>10){col='#7b1c1c';txt='<b>Brecha osmolar elevada.</b> Sospeche <b>alcoholes tóxicos</b> (metanol, etilenglicol) o etanol. Confirme y considere fomepizol/diálisis.';}else{col='#0f7a5a';txt='<b>Brecha normal (≤10).</b> Una brecha normal NO descarta ingesta tardía de alcohol tóxico (ya metabolizado a ácidos → aparece brecha aniónica).';}r.style.background=col+'18';r.style.color=col;r.innerHTML='<b>Osm calculada ≈ '+Math.round(calc)+' · Brecha osmolar = '+gapR+' mOsm/kg</b><br>'+txt;r.classList.add('show');}
+function resetOG(){['og-m','og-na','og-glu','og-bun'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('og-res').classList.remove('show');}
+
+/* ---------- ALGORITMO ---------- */
+var algoState='start';
+var ALGO={
+ start:{q:'Paciente con sospecha de intoxicación. Primer paso:',a:[['Ver prioridad',function(){return 'GO:abcde';}]]},
+ abcde:{q:'¿Está estable tras ABCDE (vía aérea, ventilación, circulación) y glucemia corregida?',a:[['No — inestable/coma',function(){return 'RES:ESTABILIZAR PRIMERO: proteger vía aérea (intubar si GCS ≤8), oxígeno, accesos, líquidos; corregir hipoglucemia con dextrosa; naloxona si hay patrón opioide; tiamina si desnutrición/alcoholismo. Trate arritmias (QRS ancho → bicarbonato). Estabilizado → continúe.';}],['Sí — estable','toxid']]},
+ toxid:{q:'¿Reconoce un toxidrome o tóxico específico?',a:[['Sí, con antídoto',function(){return 'RES:ADMINISTRE EL ANTÍDOTO específico (pestaña Antídotos): opioide→naloxona · paracetamol→N-acetilcisteína · organofosforado→atropina+pralidoxima · benzodiacepina→soporte (flumazenil con cautela) · alcohol tóxico→fomepizol · bloqueador de Na→bicarbonato · betabloqueador/calcioantagonista→glucagón/insulina/calcio · digoxina→Fab · cianuro→hidroxocobalamina · CO→oxígeno. Continúe con descontaminación si aplica.';}],['No claro / sin antídoto','descon']]},
+ descon:{q:'Descontaminación GI: ¿la ingesta es potencialmente grave, muy reciente (&lt;1 h) y con vía aérea protegida?',a:[
+   ['Sí, y el tóxico lo adsorbe el carbón',function(){return 'RES:CARBÓN ACTIVADO 1 g/kg VO/SNG (dosis única). Es la descontaminación de elección. Evítelo en cáusticos, hidrocarburos, alcoholes y metales (no los adsorbe) o con vía aérea no protegida.';}],
+   ['Fármaco de liberación prolongada, hierro, litio o "body packer"',function(){return 'RES:IRRIGACIÓN INTESTINAL TOTAL con polietilenglicol (1–2 L/h en adultos hasta efluente claro). Indicada cuando el carbón no sirve o para liberación prolongada/paquetes.';}],
+   ['No cumple criterios',function(){return 'RES:NO descontaminar. La mayoría solo requiere OBSERVACIÓN y SOPORTE. El lavado gástrico casi nunca se indica (solo ingesta letal &lt;1 h con vía aérea protegida) y la ipecacuana/catárticos ya no se usan.';}]
+ ]}
+};
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('GO:')===0){algoState=out.substring(3);renderAlgo();return;}if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+
+/* ====== TRATAMIENTOS ESTILO FICHA DESPLEGABLE ====== */
+var AC='#1d6b5f', C2='#7a4a00', C3='#374151', CO='#0a5c45', NO='#7b1c1c', TINT='#e6f2ef';
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">'+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo / lactancia',f.emb,'#7a4a00');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#eaf5f2;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1d6b5f;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+
+/* ---------- DEFINICIÓN DE FÁRMACOS / ANTÍDOTOS (fichas TX) ---------- */
+var D_SOPORTE={pri:true,linea:'⭐ La base — siempre',n:'Soporte vital (ABCDE)',dur:'Mientras persista la toxicidad',dlb:'Conducta',
+ da:'Vía aérea (intubar si GCS ≤8 o pérdida de reflejos), O₂, ventilación, accesos y líquidos, tratar arritmias y convulsiones',
+ prep:'Coctel del coma según contexto: dextrosa (hipoglucemia), tiamina (desnutrido/alcohólico), naloxona (patrón opioide)',
+ iv:'Urgencias / UCI',
+ nota:'<b>Principio:</b> la mayoría de los intoxicados se recupera solo con soporte. Estabilice antes de descontaminar o dar antídotos. Convulsiones → benzodiacepinas; hipertermia → enfriamiento activo.'};
+var D_DEXTROSA={pri:true,linea:'Coctel del coma',n:'Dextrosa (+ tiamina)',dur:'Dosis única; repetir si recurre la hipoglucemia',dlb:'Dosis',
+ da:'Adulto: 25 g IV (50 mL de glucosa al 50%). Tiamina 100 mg IV en desnutrido/alcohólico antes o con la glucosa',
+ iv:'IV',
+ pres:'Solución glucosada 50% · tiamina 100 mg',
+ nota:'<b>Mecanismo:</b> corrige la hipoglucemia, imitadora frecuente de intoxicación. La tiamina previene la encefalopatía de Wernicke.'};
+var D_NALOX={pri:true,linea:'⭐ Antídoto — opioides',n:'Naloxona',dlb:'Dosis',
+ da:'0.04–0.4 mg IV, repetir y titular c/2–3 min hasta ventilación adecuada (no necesariamente despertar total); hasta 2 mg. Puede IM/IN si no hay acceso',
+ dur:'Vida media corta → vigilar re-sedación; considerar infusión (⅔ de la dosis efectiva por hora)',
+ iv:'IV / IM / intranasal',
+ pres:'Naloxona 0.4 mg/mL',
+ mon:'Ventilación, re-sedación (opioides de acción larga)',
+ ea:'Síndrome de abstinencia agudo (agitación, dolor, edema pulmonar)',
+ nota:'<b>Mecanismo:</b> antagonista competitivo de receptores opioides. Titule para restaurar la respiración, evitando abstinencia brusca. La re-sedación es el error principal con metadona/liberación prolongada.'};
+var D_FLUMA={no:true,linea:'⚠️ Usar con mucha cautela — benzodiacepinas',n:'Flumazenil',dur:'Efecto 20–60 min; vigilar re-sedación',dlb:'Dosis',
+ da:'0.2 mg IV, repetir hasta 1 mg. <b>Rara vez indicado</b>',
+ iv:'IV',
+ pres:'Flumazenil 0.5 mg/5 mL',
+ ci:'Uso crónico de benzodiacepinas, coingesta de proconvulsivantes (TCA), epilepsia, dependencia',
+ ea:'Convulsiones, arritmias, abstinencia',
+ nota:'<b>Mecanismo:</b> antagonista del receptor de benzodiacepinas. El manejo de la sobredosis de benzodiacepinas es SOPORTE; el flumazenil puede precipitar crisis y arritmias. Reservado a casos muy seleccionados (p. ej. reversión iatrogénica en no dependientes).'};
+var D_NAC={pri:true,linea:'⭐ Antídoto — paracetamol',n:'N-acetilcisteína (NAC)',dlb:'Dosis',
+ da:'IV (esquema 21 h): 150 mg/kg en 1 h → 50 mg/kg en 4 h → 100 mg/kg en 16 h. VO alternativa: 140 mg/kg → 70 mg/kg c/4 h ×17 dosis',
+ dur:'Máxima eficacia si se inicia &lt;8 h de la ingesta; útil incluso tardíamente y en falla hepática',
+ prep:'Diluir en glucosa 5%; usar el nomograma de Rumack-Matthew para decidir a las 4–24 h',
+ iv:'IV (preferida) o VO',
+ pres:'N-acetilcisteína 200 mg/mL',
+ mon:'Transaminasas, INR, función renal; reacción anafilactoide durante la carga IV',
+ ea:'Reacción anafilactoide (rubor, broncoespasmo) con la infusión rápida',
+ nota:'<b>Mecanismo:</b> repone glutatión y conjuga el metabolito tóxico (NAPQI). <b>Regla:</b> ante duda del tiempo o coingesta, inicie NAC — es segura y hepatoprotectora.'};
+var D_ATROP={pri:true,linea:'⭐ Antídoto — colinérgico',n:'Atropina',dlb:'Dosis',
+ da:'1–3 mg IV, DUPLICAR c/5 min hasta secar secreciones bronquiales (meta: pulmones limpios, no la FC)',
+ dur:'Pueden requerirse dosis muy altas e infusión continua',
+ iv:'IV',
+ pres:'Atropina 1 mg/mL',
+ mon:'Secreciones respiratorias, FC, estado ventilatorio',
+ ea:'Taquicardia, delirium anticolinérgico, retención urinaria',
+ nota:'<b>Mecanismo:</b> antagonista muscarínico → revierte la crisis colinérgica de organofosforados/carbamatos. La meta terapéutica es la <b>broncorrea</b>, no la taquicardia.'};
+var D_PRALI={pri:true,linea:'Antídoto — organofosforados',n:'Pralidoxima (2-PAM)',dur:'24–48 h o hasta mejoría, según gravedad',dlb:'Dosis',
+ da:'30 mg/kg IV en bolo (máx 2 g) → infusión 8 mg/kg/h. Iniciar pronto, junto con atropina',
+ iv:'IV',
+ pres:'Pralidoxima 1 g frasco',
+ mon:'Fuerza muscular, fasciculaciones',
+ nota:'<b>Mecanismo:</b> reactiva la acetilcolinesterasa antes de su "envejecimiento". Complementa a la atropina (no la sustituye). Útil sobre todo en organofosforados; menos en carbamatos.'};
+var D_FOMEP={pri:true,linea:'⭐ Antídoto — alcoholes tóxicos',n:'Fomepizol',dlb:'Dosis',
+ da:'15 mg/kg IV de carga → 10 mg/kg c/12 h ×4 dosis → 15 mg/kg c/12 h después',
+ dur:'Mantener hasta niveles seguros/resolución de acidosis; ajustar con diálisis',
+ prep:'Alternativa: etanol IV si no hay fomepizol (más difícil de dosificar)',
+ iv:'IV',
+ pres:'Fomepizol 1 g/mL frasco',
+ mon:'Gasometría, brechas, función renal, niveles de alcohol',
+ nota:'<b>Mecanismo:</b> inhibe la alcohol-deshidrogenasa → bloquea la formación de metabolitos tóxicos de metanol/etilenglicol. Coadyuvantes: folato/leucovorina (metanol), tiamina y piridoxina (etilenglicol); diálisis si acidosis grave o daño de órgano.'};
+var D_BICARB={pri:true,linea:'⭐ Bloqueo de canales de Na (TCA, cocaína)',n:'Bicarbonato de sodio',dur:'Bolos hasta estrechar el QRS; infusión según pH',dlb:'Dosis',
+ da:'1–2 mEq/kg IV en bolo si QRS &gt;100–120 ms; repetir hasta estrechar el QRS. Infusión para mantener pH 7.45–7.55',
+ iv:'IV',
+ pres:'Bicarbonato de sodio 7.5% / 8.4%',
+ mon:'ECG (QRS), pH, sodio, potasio',
+ nota:'<b>Mecanismo:</b> aporta sodio y alcaliniza → revierte el bloqueo de canales de sodio (QRS ancho, arritmias). También sirve para alcalinización urinaria en salicilatos/fenobarbital.'};
+var D_HIDROXO={pri:true,linea:'Antídoto — cianuro',n:'Hidroxocobalamina',dur:'Dosis única; repetir una vez si es necesario',dlb:'Dosis',
+ da:'5 g IV en 15 min (niños 70 mg/kg); repetir si es necesario',
+ iv:'IV',
+ pres:'Hidroxocobalamina 5 g (kit Cyanokit®)',
+ mon:'PA, coloración (orina/piel rojiza transitoria), interferencia con laboratorios',
+ nota:'<b>Mecanismo:</b> se une al cianuro formando cianocobalamina, excretada por orina. Útil en inhalación de humo con sospecha de cianuro.'};
+var D_FAB={pri:true,linea:'Antídoto — digoxina',n:'Fragmentos Fab antidigoxina',dur:'Efecto en minutos–horas; dosis según carga',dlb:'Dosis',
+ da:'Según carga corporal o niveles; dosis empírica en paro/arritmia grave (p. ej. 10–20 viales)',
+ iv:'IV',
+ pres:'Fab antidigoxina (DigiFab®)',
+ mon:'Potasio, ECG, función cardíaca',
+ nota:'<b>Mecanismo:</b> anticuerpos que secuestran la digoxina. Indicado en arritmias graves, hiperkalemia por digoxina (&gt;5 mEq/L) o inestabilidad. En hiperkalemia por digoxina evite el calcio de rutina.'};
+var D_GLUCA={pri:true,linea:'Betabloqueador',n:'Glucagón',dur:'Infusión mientras persista la toxicidad',dlb:'Dosis',
+ da:'3–5 mg IV en bolo (repetir) → infusión 2–5 mg/h',
+ iv:'IV',
+ pres:'Glucagón 1 mg frasco',
+ mon:'FC, PA, glucosa; vómito frecuente',
+ nota:'<b>Mecanismo:</b> aumenta el AMPc miocárdico por vía independiente del receptor β → mejora inotropismo/cronotropismo en la sobredosis de betabloqueador.'};
+var D_INSU={pri:true,linea:'Betabloqueador / calcioantagonista',n:'Insulina euglucémica a dosis altas',dur:'Infusión hasta recuperación hemodinámica',dlb:'Dosis',
+ da:'Insulina regular 1 UI/kg bolo → infusión 0.5–1 UI/kg/h (titular), con dextrosa para euglucemia y vigilancia de potasio',
+ iv:'IV · UCI',
+ pres:'Insulina regular + soluciones glucosadas',
+ mon:'Glucemia c/30 min, potasio',
+ nota:'<b>Mecanismo:</b> mejora el metabolismo miocárdico de la glucosa e inotropismo en choque por betabloqueador/calcioantagonista. Terapia de elección junto con calcio y vasopresores.'};
+var D_CALCIO={pri:false,linea:'Calcioantagonista',n:'Calcio IV',dur:'Repetir según respuesta/ECG',dlb:'Dosis',
+ da:'Gluconato de calcio 10% 30–60 mL IV (o cloruro de calcio por vía central); repetir según respuesta',
+ iv:'IV',
+ pres:'Gluconato de calcio 10% · cloruro de calcio 10%',
+ mon:'Calcio sérico, ECG',
+ nota:'<b>Mecanismo:</b> aumenta el calcio extracelular para superar el bloqueo de los canales. Coadyuvante de la insulina euglucémica en la sobredosis de calcioantagonista.'};
+var D_LIPIDOS={pri:false,linea:'Anestésico local / lipofílicos',n:'Emulsión lipídica al 20%',dur:'Bolo(s) + infusión breve hasta estabilidad',dlb:'Dosis',
+ da:'1.5 mL/kg IV en bolo → infusión 0.25 mL/kg/min; repetir bolos en colapso',
+ iv:'IV · UCI',
+ pres:'Emulsión lipídica 20%',
+ mon:'Respuesta hemodinámica, triglicéridos, pancreatitis',
+ nota:'<b>Mecanismo:</b> "lipid sink" que secuestra fármacos lipofílicos. Indicada en toxicidad por anestésicos locales y como rescate en colapso por otros lipofílicos.'};
+var D_O2={pri:true,linea:'Antídoto — monóxido de carbono',n:'Oxígeno (100% / hiperbárico)',dlb:'Dosis',
+ da:'O₂ al 100% con mascarilla con reservorio; cámara hiperbárica en casos graves',
+ dur:'Reduce la vida media de la carboxihemoglobina (de ~4-5 h con aire a ~1 h con O₂ 100%)',
+ iv:'Inhalado',
+ pres:'O₂ alto flujo · cámara hiperbárica',
+ mon:'Carboxihemoglobina, neuro',
+ nota:'<b>Mecanismo:</b> desplaza al CO de la hemoglobina. Considere hiperbárico si hay pérdida de conciencia, déficit neurológico, isquemia, embarazo o COHb muy elevada.'};
+/* Descontaminación */
+var D_CARBON={pri:true,linea:'⭐ Descontaminación de elección',n:'Carbón activado (dosis única)',dlb:'Dosis',
+ da:'1 g/kg VO o por sonda (adulto 25–100 g)',
+ dur:'Más útil dentro de la 1ª hora; no de rutina',
+ prep:'Vía aérea protegida obligatoria. Relación carbón:tóxico ~10:1',
+ iv:'VO / sonda',
+ pres:'Carbón activado suspensión',
+ ci:'Vía aérea no protegida, cáusticos, hidrocarburos; tóxicos NO adsorbidos (metales, alcoholes, litio, potasio)',
+ ea:'Vómito, broncoaspiración, estreñimiento',
+ nota:'<b>Mecanismo:</b> adsorbe el tóxico en la luz intestinal impidiendo su absorción. Es la descontaminación GI de elección cuando está indicada.'};
+var D_LAVADO={no:true,linea:'❌ Casi nunca — descontaminación',n:'Lavado gástrico',dur:'Procedimiento único, precoz (&lt;1 h)',dlb:'Indicación (muy restringida)',
+ da:'Solo si ingesta potencialmente LETAL, muy reciente (&lt;1 h) y con vía aérea protegida',
+ prep:'Sonda orogástrica de gran calibre, decúbito lateral izquierdo; instilar y aspirar salino en alícuotas',
+ iv:'Con vía aérea asegurada',
+ ci:'Vía aérea no protegida, cáusticos, hidrocarburos, riesgo de perforación/hemorragia',
+ ea:'Broncoaspiración, perforación, arritmias, hipoxia',
+ nota:'<b>Postura actual (AACT/EAPCCT):</b> el lavado gástrico NO se recomienda de rutina; recupera poco tóxico y tiene riesgos. Reservado a situaciones excepcionales. La ipecacuana y los catárticos ya NO se usan.'};
+var D_WBI={pri:false,linea:'Descontaminación — casos selectos',n:'Irrigación intestinal total (WBI)',dur:'Horas, hasta efluente rectal claro',dlb:'Dosis',
+ da:'Polietilenglicol 1–2 L/h (adulto) VO/SNG hasta efluente rectal claro',
+ iv:'VO / sonda',
+ ci:'Íleo, obstrucción, perforación, vía aérea no protegida, inestabilidad',
+ ea:'Náusea, distensión, broncoaspiración',
+ nota:'<b>Indicaciones:</b> fármacos de liberación prolongada o con capa entérica, tóxicos no adsorbidos por carbón (hierro, litio, plomo) y "body packers/stuffers".'};
+var D_MDAC={pri:false,linea:'Eliminación aumentada',n:'Carbón a dosis múltiples (MDAC)',dur:'Cada 4 h por varias dosis según el tóxico',dlb:'Dosis',
+ da:'0.5 g/kg c/4 h (con vía aérea protegida y peristalsis presente)',
+ iv:'VO / sonda',
+ ci:'Íleo/obstrucción, vía aérea no protegida',
+ nota:'<b>Mecanismo:</b> "diálisis gastrointestinal" para tóxicos con recirculación enterohepática/enteroentérica: carbamazepina, dapsona, fenobarbital, quinina, teofilina.'};
+var D_ALCAL={pri:false,linea:'Eliminación aumentada',n:'Alcalinización urinaria',dur:'Hasta el descenso de niveles/mejoría',dlb:'Dosis',
+ da:'Bicarbonato IV en infusión para pH urinario 7.5–8; reponer potasio',
+ iv:'IV',
+ mon:'pH urinario, potasio, sobrecarga',
+ nota:'<b>Mecanismo:</b> atrapa en la orina ácidos débiles ionizados. Indicada en salicilatos y fenobarbital. Vigile la hipokalemia (impide alcalinizar la orina).'};
+var D_DIALISIS={pri:false,linea:'Eliminación extracorpórea',n:'Hemodiálisis',dur:'Sesión(es) según niveles y clínica',dlb:'Indicación',
+ da:'Tóxicos dializables (I-STUMBLE): isopropanol, salicilatos, teofilina, uremia, metanol, barbitúricos, litio, etilenglicol; también valproato y metformina graves',
+ iv:'Nefrología',
+ mon:'Gasometría, niveles, estado clínico',
+ nota:'<b>Mecanismo:</b> depura el tóxico de la sangre. Considérela ante toxinas de bajo peso molecular, poca unión a proteínas y toxicidad grave o acidosis refractaria.'};
+
+/* ---------- TX CONSULTA / HOSP ---------- */
+var TXC={
+ 'inicial':[
+   ['1ª Línea','Estabilizar (lo primero)',AC,[D_SOPORTE,D_DEXTROSA]],
+   ['Coadyuvantes','Coctel del coma dirigido',CO,[D_NALOX]]
+ ],
+ 'descon':[
+   ['1ª Línea','Descontaminación GI (solo si indicada)',AC,[D_CARBON]],
+   ['2ª Línea','Cuando el carbón no sirve',C2,[D_WBI,D_LAVADO]],
+   ['Coadyuvantes','Eliminación aumentada',CO,[D_MDAC,D_ALCAL]]
+ ]
+};
+var TXH={
+ 'soporte':[
+   ['1ª Línea','Medidas generales',AC,[D_SOPORTE]],
+   ['Eliminación','Casos seleccionados',C2,[D_DIALISIS,D_MDAC,D_ALCAL]]
+ ],
+ 'opioide':[
+   ['1ª Línea','Antídoto',AC,[D_NALOX]],
+   ['Sedante-hipnótico','Benzodiacepinas',C2,[D_FLUMA]]
+ ],
+ 'paracetamol':[
+   ['1ª Línea','Antídoto',AC,[D_NAC]],
+   ['Coadyuvantes','Descontaminación temprana',CO,[D_CARBON]]
+ ],
+ 'colinergico':[
+   ['1ª Línea','Antídotos (organofosforados/carbamatos)',AC,[D_ATROP,D_PRALI]],
+   ['Coadyuvantes','Soporte',CO,[D_SOPORTE]]
+ ],
+ 'alcoholes':[
+   ['1ª Línea','Bloquear el metabolismo',AC,[D_FOMEP]],
+   ['2ª Línea','Corregir y eliminar',C2,[D_BICARB,D_DIALISIS]]
+ ],
+ 'cardio':[
+   ['Bloqueador de Na','TCA, cocaína',AC,[D_BICARB]],
+   ['Betabloq. / calcioantag.','',C2,[D_GLUCA,D_INSU,D_CALCIO]],
+   ['Digoxina','',C3,[D_FAB]],
+   ['Anestésico local / lipofílico','Rescate',CO,[D_LIPIDOS]]
+ ]
+};
+
+/* ---------- ANTÍDOTOS (acordeón buscable) ---------- */
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Indicación / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.mon)h+='<div class="farm-f"><div class="farm-l">Monitoreo</div><div class="farm-v" style="color:#0a5c45;">'+f.mon+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:'+AC+';">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+var FARMACOS=[
+ {familia:'Descontaminación gastrointestinal',color:'#1d6b5f',farmacos:[
+  {n:'Carbón activado (dosis única)',dur:'Dosis única (más útil &lt;1 h)',ini:'1 g/kg VO/SNG · más útil <1 h',obj:'Descontaminación GI de elección cuando está indicada',iv:'VO/sonda · vía aérea protegida',pr:'Carbón activado suspensión',mon:'Vía aérea, tolerancia',ci:'Vía aérea no protegida, cáusticos, hidrocarburos, metales/alcoholes/litio (no adsorbidos)',ea:'Vómito, broncoaspiración',nota:'<b>Mecanismo:</b> adsorbe el tóxico en la luz intestinal. No de rutina.'},
+  {n:'Lavado gástrico',dur:'Procedimiento único (&lt;1 h)',ini:'Casi nunca — solo ingesta letal <1 h con vía aérea protegida',obj:'Vaciado gástrico en situaciones excepcionales',iv:'Sonda orogástrica, vía aérea asegurada',pr:'Sonda de gran calibre + salino',mon:'Vía aérea, ritmo',ci:'Vía aérea no protegida, cáusticos, hidrocarburos',ea:'Broncoaspiración, perforación, arritmias',nota:'<b>AACT/EAPCCT:</b> no recomendado de rutina; recupera poco tóxico con riesgo alto. Ipecacuana y catárticos NO se usan.'},
+  {n:'Irrigación intestinal total (WBI)',dur:'Horas, hasta efluente claro',ini:'PEG 1–2 L/h hasta efluente claro',obj:'Liberación prolongada, hierro/litio/plomo, body packers',iv:'VO/sonda',pr:'Polietilenglicol electrolítico',mon:'Distensión, vía aérea',ci:'Íleo, obstrucción, perforación, inestabilidad',ea:'Náusea, distensión',nota:'<b>Uso:</b> cuando el carbón no adsorbe o hay fármacos de liberación prolongada.'}
+ ]},
+ {familia:'Antídotos por receptor / síndrome',color:'#0c3b6e',farmacos:[
+  {n:'Naloxona',dur:'Vigilar re-sedación; infusión si opioide largo',ini:'0.04–0.4 mg IV, titular hasta 2 mg',obj:'Reversión de la depresión respiratoria por opioides',iv:'IV/IM/intranasal',pr:'Naloxona 0.4 mg/mL',mon:'Ventilación, re-sedación',ci:'—',ea:'Abstinencia aguda',nota:'<b>Mecanismo:</b> antagonista opioide. Titular a la respiración; vigilar re-sedación.'},
+  {n:'Flumazenil',dur:'Efecto 20–60 min',ini:'0.2 mg IV (máx 1 mg) — rara vez',obj:'Reversión de benzodiacepinas en casos muy seleccionados',iv:'IV',pr:'Flumazenil 0.5 mg/5 mL',mon:'Convulsiones',ci:'Dependencia, coingesta de TCA/proconvulsivantes, epilepsia',ea:'Convulsiones, arritmias',nota:'<b>Precaución:</b> el manejo de las benzodiacepinas es soporte; puede precipitar crisis.'},
+  {n:'N-acetilcisteína (NAC)',dur:'Protocolo IV ~21 h',ini:'IV 21 h: 150→50→100 mg/kg',obj:'Antídoto de la intoxicación por paracetamol',iv:'IV (preferida) o VO',pr:'NAC 200 mg/mL',mon:'Transaminasas, INR, reacción anafilactoide',ci:'—',ea:'Reacción anafilactoide con infusión rápida',nota:'<b>Mecanismo:</b> repone glutatión. Mejor <8 h; útil incluso tardía. Guíe con Rumack-Matthew.'},
+  {n:'Atropina',dur:'Hasta secar secreciones; puede requerir infusión',ini:'1–3 mg IV, duplicar c/5 min',obj:'Crisis colinérgica (organofosforados/carbamatos)',iv:'IV',pr:'Atropina 1 mg/mL',mon:'Secreciones bronquiales (meta), FC',ci:'—',ea:'Taquicardia, delirium',nota:'<b>Meta:</b> secar la broncorrea, no la FC.'},
+  {n:'Pralidoxima (2-PAM)',dur:'24–48 h o hasta mejoría',ini:'30 mg/kg IV → 8 mg/kg/h',obj:'Reactivar la colinesterasa en organofosforados',iv:'IV',pr:'Pralidoxima 1 g frasco',mon:'Fuerza muscular',ci:'—',ea:'—',nota:'<b>Mecanismo:</b> reactiva la enzima antes del envejecimiento. Complementa a la atropina.'}
+ ]},
+ {familia:'Alcoholes tóxicos y metabólicos',color:'#7a4a00',farmacos:[
+  {n:'Fomepizol',dur:'Hasta niveles seguros/resolución de acidosis',ini:'15 mg/kg IV → 10 mg/kg c/12 h',obj:'Metanol / etilenglicol',iv:'IV',pr:'Fomepizol 1 g/mL',mon:'Brechas, función renal, niveles',ci:'—',ea:'Cefalea, náusea',nota:'<b>Mecanismo:</b> inhibe la alcohol-deshidrogenasa. Coadyuvantes: folato (metanol), tiamina/piridoxina (etilenglicol); diálisis si grave.'},
+  {n:'Bicarbonato de sodio',dur:'Bolos + infusión según QRS/pH',ini:'1–2 mEq/kg IV bolo (QRS ancho)',obj:'Bloqueo de canales de Na; alcalinización urinaria (salicilatos)',iv:'IV',pr:'Bicarbonato 7.5%/8.4%',mon:'ECG, pH, potasio',ci:'Alcalosis, hipokalemia grave sin reponer',ea:'Hipernatremia, hipokalemia',nota:'<b>Mecanismo:</b> sodio + alcalinización revierten el QRS ancho (TCA/cocaína) y atrapan salicilatos en orina.'}
+ ]},
+ {familia:'Cardiovascular y otros',color:'#0a5c45',farmacos:[
+  {n:'Glucagón',dur:'Infusión mientras persista la toxicidad',ini:'3–5 mg IV → 2–5 mg/h',obj:'Sobredosis de betabloqueador',iv:'IV',pr:'Glucagón 1 mg frasco',mon:'FC, PA, glucosa',ci:'—',ea:'Vómito, hiperglucemia',nota:'<b>Mecanismo:</b> ↑ AMPc miocárdico por vía no adrenérgica.'},
+  {n:'Insulina euglucémica a dosis altas',dur:'Infusión hasta recuperación hemodinámica',ini:'1 UI/kg bolo → 0.5–1 UI/kg/h + dextrosa',obj:'Choque por betabloqueador/calcioantagonista',iv:'IV · UCI',pr:'Insulina regular + glucosadas',mon:'Glucemia c/30 min, potasio',ci:'—',ea:'Hipoglucemia, hipokalemia',nota:'<b>Mecanismo:</b> mejora el metabolismo miocárdico. Terapia de elección con calcio/vasopresores.'},
+  {n:'Calcio IV',dur:'Repetir según respuesta',ini:'Gluconato 10% 30–60 mL IV',obj:'Sobredosis de calcioantagonista',iv:'IV',pr:'Gluconato/cloruro de calcio 10%',mon:'Calcio, ECG',ci:'Toxicidad por digoxina (evitar)',ea:'Flebitis, hipercalcemia',nota:'<b>Mecanismo:</b> ↑ calcio extracelular. Coadyuvante de la insulina euglucémica.'},
+  {n:'Fab antidigoxina',dur:'Efecto en minutos–horas',ini:'Empírica 10–20 viales en paro/arritmia grave',obj:'Toxicidad por digoxina',iv:'IV',pr:'DigiFab®',mon:'Potasio, ECG',ci:'—',ea:'Hipokalemia post-reversión',nota:'<b>Mecanismo:</b> secuestra la digoxina. En hiperkalemia digitálica evite el calcio de rutina.'},
+  {n:'Emulsión lipídica 20%',dur:'Bolo(s) + infusión breve',ini:'1.5 mL/kg bolo → 0.25 mL/kg/min',obj:'Anestésico local / rescate en lipofílicos',iv:'IV · UCI',pr:'Emulsión lipídica 20%',mon:'Hemodinámica, triglicéridos',ci:'—',ea:'Pancreatitis, interferencia de laboratorio',nota:'<b>Mecanismo:</b> "lipid sink" que secuestra fármacos lipofílicos.'},
+  {n:'Hidroxocobalamina',dur:'Dosis única (repetir 1 vez si necesario)',ini:'5 g IV en 15 min',obj:'Intoxicación por cianuro (inhalación de humo)',iv:'IV',pr:'Cyanokit® 5 g',mon:'PA, coloración, laboratorios',ci:'—',ea:'Coloración rojiza transitoria, HTA',nota:'<b>Mecanismo:</b> se une al cianuro → cianocobalamina excretable.'},
+  {n:'Oxígeno (100% / hiperbárico)',dur:'Hasta normalizar COHb/clínica',ini:'O₂ alto flujo; hiperbárico en casos graves',obj:'Intoxicación por monóxido de carbono',iv:'Inhalado',pr:'Mascarilla con reservorio · cámara hiperbárica',mon:'Carboxihemoglobina, neuro',ci:'—',ea:'—',nota:'<b>Mecanismo:</b> desplaza al CO de la hemoglobina; acorta su vida media.'}
+ ]}
+];
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+
+/* ---------- INDICACIONES ---------- */
+var IND=[
+ {familia:'Antídotos clave',color:'#1d6b5f',farmacos:[
+  {n:'Naloxona (opioides)',
+   receta:'<b>Naloxona 0.04–0.4 mg IV</b>, repetir y titular c/2–3 min hasta ventilación adecuada (máx 2 mg). Si re-sedación: infusión ≈ ⅔ de la dosis efectiva por hora. IM/IN si no hay acceso.',
+   dosis:['0.04–0.4 mg IV, titular hasta 2 mg','Infusión si opioide de acción larga'],
+   dur:'Vigilancia por re-sedación; infusión si opioide de acción larga',
+   via:'IV, IM o intranasal',
+   enf:'Titular a la respiración (no al despertar total); vigilar re-sedación; preparar manejo de abstinencia.',
+   pac:'A la familia: antídoto que revierte el opioide; puede despertar agitado. Debe quedar en observación porque el efecto puede reaparecer.',
+   nota:'Vida media corta; la re-sedación es el error más frecuente.',
+   al:'Reaparición de somnolencia o respiración lenta → repetir/infusión.'},
+  {n:'N-acetilcisteína (paracetamol)',
+   receta:'<b>N-acetilcisteína IV, esquema 21 h: 150 mg/kg en 1 h → 50 mg/kg en 4 h → 100 mg/kg en 16 h</b>, diluida en glucosa 5%. Decidir con el nomograma de Rumack-Matthew (4–24 h).',
+   dosis:['IV 21 h: 150 → 50 → 100 mg/kg','VO alternativa: 140 mg/kg → 70 mg/kg c/4 h ×17'],
+   dur:'Protocolo IV de ~21 h (o hasta criterios de suspensión)',
+   via:'IV (preferida) diluida en glucosa 5%',
+   enf:'Vigilar reacción anafilactoide en la carga (rubor, broncoespasmo) → enlentecer infusión; controlar transaminasas e INR.',
+   pac:'Antídoto que protege el hígado tras la sobredosis de paracetamol. Cuanto antes, mejor. Puede sentir bochorno al inicio.',
+   nota:'Máxima eficacia &lt;8 h; útil incluso tardía.',
+   al:'Broncoespasmo o exantema durante la infusión.'},
+  {n:'Atropina + Pralidoxima (organofosforados)',
+   receta:'<b>Atropina 1–3 mg IV, DUPLICAR c/5 min hasta secar secreciones</b> (meta: pulmones limpios) + <b>pralidoxima 30 mg/kg IV → 8 mg/kg/h</b>. Descontaminación cutánea y protección del personal.',
+   dosis:['Atropina 1–3 mg IV, duplicar c/5 min','Pralidoxima 30 mg/kg IV → 8 mg/kg/h'],
+   dur:'Repetir/infusión hasta secar secreciones; horas–días',
+   via:'IV, en paralelo, lo antes posible',
+   enf:'La meta de la atropina es secar la broncorrea (auscultar), no la FC; puede requerir dosis muy altas; usar EPP al descontaminar.',
+   pac:'A la familia: antídotos para el envenenamiento por plaguicidas; vigilancia estrecha por dosis repetidas.',
+   nota:'Retirar ropa contaminada; proteja al personal.',
+   al:'Reaparición de secreciones, debilidad o dificultad respiratoria → más atropina.'}
+ ]},
+ {familia:'Descontaminación',color:'#0c3b6e',farmacos:[
+  {n:'Carbón activado',
+   receta:'<b>Carbón activado 1 g/kg VO o por sonda</b> (adulto 25–100 g), dosis única, <b>solo con vía aérea protegida</b> e idealmente &lt;1 h de la ingesta.',
+   dosis:['1 g/kg VO/SNG, dosis única'],
+   dur:'Dosis única (más útil &lt;1 h)',
+   via:'VO/sonda; SOLO con vía aérea protegida',
+   enf:'Confirmar vía aérea protegida y ausencia de contraindicaciones (cáusticos, hidrocarburos, metales/alcoholes); no forzar si somnoliento.',
+   pac:'Polvo negro que atrapa el tóxico en el intestino. Puede teñir las heces de negro.',
+   nota:'Descontaminación de elección cuando está indicada; no de rutina.',
+   al:'Vómito o dificultad respiratoria (broncoaspiración).'}
+ ]},
+ {familia:'Cardiotóxicos y otros antídotos',color:'#7a4a00',farmacos:[
+  {n:'Bicarbonato de sodio (TCA / QRS ancho)',
+   receta:'<b>Bicarbonato de sodio 1–2 mEq/kg IV en bolo</b> si QRS &gt;100–120 ms; repetir hasta estrechar el QRS; infusión para pH 7.45–7.55.',
+   dosis:['1–2 mEq/kg IV bolo, repetir según QRS'],
+   dur:'Bolos hasta estrechar QRS; infusión según pH',
+   via:'IV',
+   enf:'Monitor de ECG (QRS), pH, sodio y potasio.',
+   pac:'Medicamento para proteger el corazón del efecto tóxico.',
+   nota:'También para alcalinización urinaria en salicilatos.',
+   al:'Arritmias, hipokalemia.'},
+  {n:'Betabloqueador / calcioantagonista',
+   receta:'<b>Glucagón 3–5 mg IV → 2–5 mg/h</b> (betabloqueador) y/o <b>insulina euglucémica 1 UI/kg bolo → 0.5–1 UI/kg/h + dextrosa</b>; <b>calcio</b> (gluconato 10% 30–60 mL IV) en calcioantagonista.',
+   dosis:['Glucagón 3–5 mg IV → 2–5 mg/h','Insulina 1 UI/kg → 0.5–1 UI/kg/h + dextrosa','Gluconato de calcio 10% 30–60 mL IV'],
+   dur:'Infusión hasta recuperación hemodinámica',
+   via:'IV · UCI',
+   enf:'Glucemia c/30 min y potasio (insulina); vigilar respuesta hemodinámica.',
+   pac:'Medicamentos de UCI para sostener el corazón intoxicado.',
+   nota:'Insulina euglucémica de elección con calcio/vasopresores.',
+   al:'Hipoglucemia, hipokalemia, hipotensión persistente.'},
+  {n:'Antídotos específicos adicionales',
+   receta:'<b>Fomepizol 15 mg/kg IV → 10 mg/kg c/12 h</b> (metanol/etilenglicol) · <b>Fab antidigoxina</b> (digoxina) · <b>Hidroxocobalamina 5 g IV</b> (cianuro) · <b>O₂ 100%/hiperbárico</b> (monóxido de carbono).',
+   dosis:['Fomepizol 15 → 10 mg/kg c/12 h','Fab antidigoxina según carga','Hidroxocobalamina 5 g IV','O₂ 100% / hiperbárico'],
+   dur:'Según el tóxico (hasta niveles seguros / resolución)',
+   via:'IV / inhalado según antídoto',
+   enf:'Coadyuvantes del fomepizol: folato (metanol), tiamina/piridoxina (etilenglicol); valorar diálisis.',
+   pac:'Antídotos específicos según la sustancia; se vigila de cerca en el hospital.',
+   nota:'Contacte al centro de información toxicológica para dosis exactas.',
+   al:'Según el tóxico; vigilar deterioro.'}
+ ]}
+];
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#e6f2ef;border:1px solid #1d6b5f;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#1d6b5f;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';h+='<div style="background:'+TINT+';border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:'+AC+';">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e6f1fb;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👩‍⚕️ Enfermería / consulta</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.enf+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente y familia</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#f3f4f6;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+
+/* ---------- ESCENARIOS ---------- */
+var ESCEN={
+ 'parac':{t:'Paracetamol (acetaminofén)',pres:'Ingesta &gt;7.5–10 g o &gt;150 mg/kg. Fases: náusea inicial → aparente mejoría → hepatotoxicidad a las 24–72 h.',dx:'Nivel sérico a las 4 h + nomograma de Rumack-Matthew; transaminasas, INR.',tx:'N-acetilcisteína (mejor &lt;8 h; útil incluso tardía). Carbón activado si &lt;1–2 h. Buscar coingesta.',ref:'UCI/hepatología si falla hepática (considerar criterios de trasplante).',cx:'Esperar a los síntomas: para cuando el hígado falla, la ventana ideal de NAC ya pasó. Trate según el nomograma.'},
+ 'opio':{t:'Opioides',pres:'Miosis, depresión respiratoria y coma. Fentanilo puede requerir más naloxona.',dx:'Clínico (toxidrome). Vigilar SatO₂ y ventilación.',tx:'Naloxona titulada a la respiración; soporte ventilatorio; observación por re-sedación.',ref:'UCI si requiere infusión o intubación.',cx:'Dar de alta pronto: los opioides de acción larga (metadona, liberación prolongada) recaen tras la naloxona.'},
+ 'orga':{t:'Organofosforados / carbamatos',pres:'Síndrome colinérgico (SLUDGE/DUMBELS): broncorrea, miosis, fasciculaciones, bradicardia; olor a ajo/solvente.',dx:'Clínico; colinesterasa (eritrocitaria/plasmática) apoya el diagnóstico.',tx:'Atropina hasta secar secreciones + pralidoxima (organofosforados); benzodiacepinas si convulsiona; descontaminación cutánea y protección del personal.',ref:'UCI; toxicología.',cx:'Dosificar la atropina por la frecuencia cardíaca en vez de por la broncorrea; y olvidar protegerse al descontaminar.'},
+ 'benzo':{t:'Benzodiacepinas',pres:'Sedación con signos vitales relativamente conservados; rara la depresión respiratoria aislada salvo coingesta.',dx:'Clínico. Buscar coingesta (alcohol, opioides).',tx:'SOPORTE (observación, vía aérea). Flumazenil solo en casos muy seleccionados por el riesgo de convulsiones.',ref:'Observación; psiquiatría si intencional.',cx:'Usar flumazenil de rutina: puede precipitar convulsiones en dependientes o con coingesta de tricíclicos.'},
+ 'tca':{t:'Antidepresivos tricíclicos',pres:'Anticolinérgico + cardiotoxicidad: QRS ancho, arritmias, hipotensión, convulsiones, coma.',dx:'ECG (QRS &gt;100 ms, onda R en aVR); es el mejor predictor de gravedad.',tx:'Bicarbonato de sodio para QRS ancho/arritmias; benzodiacepinas para convulsiones; líquidos/vasopresores; emulsión lipídica en colapso refractario.',ref:'UCI.',cx:'Usar flumazenil (empeora) o antiarrítmicos de clase IA/IC (contraindicados). El bicarbonato es la piedra angular.'},
+ 'co':{t:'Monóxido de carbono',pres:'Cefalea, náusea, mareo, confusión; en grupos (misma casa/calentador). La oximetría de pulso puede ser falsamente normal.',dx:'Carboxihemoglobina (co-oximetría); gasometría.',tx:'Oxígeno al 100% con reservorio; cámara hiperbárica si pérdida de conciencia, déficit neurológico, isquemia, embarazo o COHb muy alta.',ref:'Centro con cámara hiperbárica en casos graves.',cx:'Confiar en la SpO₂ del pulsioxímetro: no distingue la carboxihemoglobina y puede dar cifras normales engañosas.'}
+};
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+
+/* ---------- INIT ---------- */
+window.addEventListener('load',function(){
+  renderAlgo();
+  setTxc('inicial',document.querySelector('#txc-chips .pchip'));
+  setTxh('soporte',document.querySelector('#txh-chips .pchip'));
+  setEscen('parac',document.querySelector('#escen-chips .pchip'));
+  filtrarFarmacos('');buildInd();
+});
+</script>
+</body>
+</html>
