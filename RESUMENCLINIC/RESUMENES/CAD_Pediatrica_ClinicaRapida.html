@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cetoacidosis diabética · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#1f3a8a;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e6eaf5;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#0f1d4a,#1f3a8a);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#e6eaf5;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#e6eaf5;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0f1d4a,#1f3a8a);">
+  <div class="hdr-top"><div class="hdr-icon">🩸</div><div>
+    <div class="hdr-eye">👶 Medicina crítica PEDIÁTRICA · Endocrino</div>
+    <div class="hdr-title">Cetoacidosis diabética (CAD)</div>
+    <div style="margin:5px 0 2px;"><span style="background:#ff5a7a;color:#fff;font-weight:800;font-size:12px;padding:3px 12px;border-radius:20px;letter-spacing:.6px;box-shadow:0 1px 4px rgba(0,0,0,.25);">👶 PEDIÁTRICO</span></div>
+    <div class="hdr-sub">ISPAD 2022 · sistema de 2 bolsas</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Líquidos ANTES de insulina</span>
+    <span class="badge">NUNCA bolo de insulina</span>
+    <span class="badge">Vigilar edema cerebral</span>
+    <span class="badge">BOHB &lt;1 = resolución</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">&gt;200</div><div class="qs-l">Glucosa mg/dL</div></div>
+  <div class="qs"><div class="qs-v">&lt;7.3</div><div class="qs-l">pH venoso</div></div>
+  <div class="qs"><div class="qs-v">&gt;1</div><div class="qs-l">BOHB mmol/L</div></div>
+  <div class="qs"><div class="qs-v">48 h</div><div class="qs-l">Reponer déficit</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
+  <button class="tab" onclick="showT('dx',this)">🩺 Dx y severidad</button>
+  <button class="tab" onclick="showT('tx',this)">🚑 Tratamiento</button>
+  <button class="tab" onclick="showT('f1',this)">1️⃣ Fase 1 (0–1 h)</button>
+  <button class="tab" onclick="showT('f2',this)">2️⃣ Fase 2 (1–4 h)</button>
+  <button class="tab" onclick="showT('f3',this)">3️⃣ Fase 3 y transición</button>
+  <button class="tab" onclick="showT('elec',this)">⚡ Electrolitos</button>
+  <button class="tab" onclick="showT('edema',this)">🧠 Edema cerebral</button>
+  <button class="tab" onclick="showT('mon',this)">🧪 Monitoreo</button>
+  <button class="tab" onclick="showT('comp',this)">⚠️ Complicaciones</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y epidemiología</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Complicación aguda más frecuente de la <strong>DM1</strong> y forma de debut hasta en ~35%. Incidencia ~4.6–8/1000/año; mortalidad 4–10% (en descenso), dominada por el <strong>edema cerebral</strong> en niños. Resulta de <strong>déficit de insulina + exceso de hormonas contrarreguladoras</strong> (glucagón, catecolaminas, cortisol, GH).</p></div>
+    <div class="alert a-i"><span class="ai">💡</span><div>Tríada: <b>hiperglucemia + cetosis (BOHB) + acidosis metabólica</b> con anión gap elevado.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Factores precipitantes y metas</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Precipitantes</th><th>Metas del tratamiento</th></tr>
+      <tr><td>Debut de DM1; omisión de insulina; infección; falla de bomba; estrés; corticoides; transgresión</td><td>Corregir deshidratación; corregir acidosis y revertir cetosis; evitar complicaciones (del cuadro y del tratamiento); tratar el desencadenante</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Cascada fisiopatológica</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 340" style="width:100%;max-width:440px;display:block;margin:0 auto;background:#fbf7f4;border-radius:8px;">
+      <g font-size="10" text-anchor="middle">
+      <rect x="60" y="14" width="240" height="30" rx="5" fill="#1f3a8a"/><text x="180" y="33" fill="#fff" font-weight="700">↓ Insulina + ↑ contrarreguladoras</text>
+      <!-- ramas -->
+      <line x1="130" y1="44" x2="95" y2="66" stroke="#888" stroke-width="1.5"/><line x1="230" y1="44" x2="265" y2="66" stroke="#888" stroke-width="1.5"/>
+      <rect x="20" y="66" width="150" height="26" rx="5" fill="#e2e8f0"/><text x="95" y="83" fill="#333">↓ uso glucosa · gluco(neo)génesis</text>
+      <rect x="192" y="66" width="150" height="26" rx="5" fill="#fde8c8"/><text x="267" y="83" fill="#8a5a1e">Lipólisis</text>
+      <!-- hiperglucemia -->
+      <line x1="95" y1="92" x2="95" y2="112" stroke="#888" stroke-width="1.5"/>
+      <rect x="35" y="112" width="120" height="28" rx="5" fill="#dbeafe" stroke="#1f3a8a"/><text x="95" y="130" fill="#1f3a8a" font-weight="700">Hiperglucemia</text>
+      <!-- cetogenesis -->
+      <line x1="267" y1="92" x2="267" y2="112" stroke="#888" stroke-width="1.5"/>
+      <rect x="207" y="112" width="120" height="28" rx="5" fill="#fde8c8" stroke="#8a5a1e"/><text x="267" y="130" fill="#8a5a1e" font-weight="700">Cetogénesis (BOHB)</text>
+      <!-- diuresis -->
+      <line x1="95" y1="140" x2="95" y2="160" stroke="#888" stroke-width="1.5"/>
+      <rect x="30" y="160" width="130" height="26" rx="5" fill="#e2e8f0"/><text x="95" y="177" fill="#333">Diuresis osmótica</text>
+      <!-- acidosis -->
+      <line x1="267" y1="140" x2="267" y2="200" stroke="#888" stroke-width="1.5"/>
+      <rect x="207" y="200" width="120" height="28" rx="5" fill="#fde2e2" stroke="#8a2b2b"/><text x="267" y="218" fill="#8a2b2b" font-weight="700">Acidosis metabólica</text>
+      <!-- deshidratacion -->
+      <line x1="95" y1="186" x2="95" y2="200" stroke="#888" stroke-width="1.5"/>
+      <rect x="35" y="200" width="120" height="28" rx="5" fill="#dbeafe" stroke="#1f3a8a"/><text x="95" y="218" fill="#1f3a8a" font-weight="700">Deshidratación</text>
+      <!-- perdida electrolitos -->
+      <line x1="95" y1="228" x2="140" y2="256" stroke="#888" stroke-width="1.5"/><line x1="267" y1="228" x2="222" y2="256" stroke="#888" stroke-width="1.5"/>
+      <rect x="95" y="256" width="172" height="28" rx="5" fill="#ffe9b0"/><text x="181" y="274" fill="#8a5a1e" font-weight="700">Pérdida de agua y electrolitos</text>
+      <line x1="181" y1="284" x2="181" y2="300" stroke="#888" stroke-width="1.5"/>
+      <rect x="70" y="300" width="222" height="28" rx="5" fill="#fde2e2" stroke="#8a2b2b"/><text x="181" y="318" fill="#8a2b2b" font-weight="700">Choque / acidosis fatal si no se trata</text>
+      </g>
+    </svg>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧭</span><div>Al superar el <b>umbral renal (~180 mg/dL)</b> hay glucosuria → diuresis osmótica → deshidratación y pérdida de Na, K y fosfato, agravada por el vómito.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Cuadro clínico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Grupo</th><th>Manifestaciones</th></tr>
+      <tr><td class="dn">Hiperglucemia</td><td>Poliuria, polidipsia, nicturia/enuresis, pérdida de peso, visión borrosa</td></tr>
+      <tr><td class="dn">Acidosis/cetosis</td><td><b>Respiración de Kussmaul</b> (profunda), aliento afrutado (acetona), náusea, vómito, <b>dolor abdominal</b> (puede simular abdomen agudo)</td></tr>
+      <tr><td class="dn">Deshidratación</td><td>Mucosas secas, taquicardia, llenado capilar lento, hipotensión (tardía)</td></tr>
+      <tr><td class="dm">Neurológico</td><td>Desde irritabilidad/letargia hasta <b>coma</b>; deterioro = sospechar edema cerebral</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>El dolor abdominal y el vómito son frecuentes; no atribuirlos a abdomen agudo sin descartar CAD (glucosa + cetonas capilares en todo niño con estos síntomas).</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Criterios diagnósticos (los 3)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Criterio</th><th>Valor</th></tr>
+      <tr><td class="dn">Hiperglucemia</td><td>Glucosa &gt; 200 mg/dL</td></tr>
+      <tr><td class="dn">Cetonemia</td><td>BOHB &gt; 1 mmol/L (o cetonuria)</td></tr>
+      <tr><td class="dn">Acidosis</td><td>pH venoso &lt; 7.3 <b>o</b> HCO₃⁻ &lt; 15 mEq/L</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div><b>CAD euglucémica:</b> la glucosa puede ser &lt;200 mg/dL con <b>iSGLT2</b>, embarazo, ayuno, gestación o enfermedad hepática. Si hay cetosis + acidosis, trátala como CAD aunque la glucosa no esté muy alta.</div></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">⚠️</span><div>Exclusión del protocolo: <b>edad &lt;12 meses</b>. Si el cuadro sugiere <b>EHH</b>, individualizar con endocrinología.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Severidad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Severidad</th><th>pH venoso</th><th>Bicarbonato</th><th>Deshidratación ~</th></tr>
+      <tr><td class="dn">Leve</td><td>7.2 a &lt;7.3</td><td>10 a &lt;15</td><td>~5%</td></tr>
+      <tr><td class="dn">Moderada</td><td>7.1 a &lt;7.2</td><td>5 a &lt;10</td><td>~7%</td></tr>
+      <tr><td class="dm">Severa</td><td>&lt;7.1</td><td>&lt;5</td><td>~10%</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">La severidad define la frecuencia del monitoreo neurológico y el nivel de cuidado.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Evaluar la deshidratación</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>%</th><th>Signos</th></tr>
+      <tr><td class="dn">~5% (leve)</td><td>Mucosas secas, sed; signos sutiles</td></tr>
+      <tr><td class="dn">~7% (moderada)</td><td>Turgencia disminuida, ojos hundidos, oliguria, taquicardia</td></tr>
+      <tr><td class="dm">≥10% (severa)</td><td>Llenado capilar &gt;3 s, pulsos débiles, hipotensión, choque</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">La clínica sobreestima el déficit; el protocolo usa <b>7% fijo</b> si no hay choque para el cálculo.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Laboratorios iniciales</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Para</th></tr>
+      <tr><td class="dn">Gasometría venosa</td><td>pH, HCO₃, pCO₂ (severidad)</td></tr>
+      <tr><td class="dn">Glucosa + BOHB capilar</td><td>Confirmar y seguir</td></tr>
+      <tr><td class="dn">Electrolitos, Ca/Mg/P, BUN/Cr</td><td>Reposición, Na corregido, anión gap, función renal</td></tr>
+      <tr><td class="dn">EGO / cetonuria</td><td>Cetonas</td></tr>
+      <tr><td class="dn">Buscar infección</td><td>BH, PCR, cultivos, EGO, Rx si clínica</td></tr>
+      <tr><td class="dn">Debut (una vez)</td><td>HbA1c, C-péptido, anti-islote (GAD, IA2), TSH/T4L, antitransglutaminasa/IgA</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">CAD vs EHH y diferencial de acidosis</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th></th><th>CAD</th><th>EHH</th></tr>
+      <tr><td class="dn">Glucosa</td><td>&gt;200</td><td>&gt;600 mg/dL</td></tr>
+      <tr><td class="dn">Osmolaridad</td><td>Variable</td><td>&gt;320 mOsm/kg</td></tr>
+      <tr><td class="dn">Cetosis/acidosis</td><td>Marcada (pH&lt;7.3)</td><td>Mínima (pH&gt;7.3, HCO₃&gt;15)</td></tr>
+      <tr><td class="dn">Deshidratación</td><td>Moderada</td><td>Profunda</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">Diferencial de acidosis con anión gap alto (MUDPILES): metanol, uremia, CAD, propilenglicol, isoniazida/hierro, lactato, etilenglicol, salicilatos. También cetosis por ayuno. Puede haber presentaciones <b>mixtas CAD/EHH</b>.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Buscar el precipitante</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p><b>Las 5 "I":</b> Insulina omitida (la más común en DM1 conocida) o falla de bomba, Infección, Isquemia/infarto (menos en niños), Ingesta/transgresión, y debut (<b>I</b>nicio de la diabetes). Interroga adherencia, enfermedad intercurrente y factores psicosociales.</p></div>
+  </div></div>
+</div><div class="panel" id="tab-tx">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">⛔</span><div><div class="at">Reglas de oro</div><b>Líquidos ANTES que insulina · NUNCA bolo de insulina · Vigilar edema cerebral · K antes de que baje.</b></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚑</span><span class="st">Las 4 fases (toca cada pestaña para el detalle)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Fase 1 (0–1 h):</b> ABCD, peso, 2 vías, laboratorios. <b>Bolo SSN 0.9% 10 mL/kg.</b> NO insulina. Estabilidad neurológica y nivel de cuidado.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Fase 2 (1–4 h):</b> <b>sistema de 2 bolsas</b> + <b>infusión de insulina</b> + inicio de <b>potasio</b>. Aquí está la <b>calculadora</b>.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Fase 3 (4 h → resolución):</b> continuar IV, ajustar por riesgo de edema, monitorizar, buscar la resolución.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Transición (BOHB &lt;1):</b> insulina subcutánea; alta.</span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      <button class="copt" onclick="showT('f1',document.querySelectorAll('.tab')[4])" style="background:#1f3a8a;color:#fff;">Ir a Fase 1</button>
+      <button class="copt" onclick="showT('f2',document.querySelectorAll('.tab')[5])" style="background:#1f3a8a;color:#fff;">Ir a Fase 2 🧮</button>
+      <button class="copt" onclick="showT('f3',document.querySelectorAll('.tab')[6])" style="background:#1f3a8a;color:#fff;">Ir a Fase 3</button>
+    </div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Nivel de cuidado (dónde manejarlo)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Nivel</th><th>Criterios</th></tr>
+      <tr><td class="dn">Bajo (alta)</td><td>DM1 establecida, mejorando, tolera VO, maneja en casa</td></tr>
+      <tr><td class="dn">Medio (piso)</td><td>DM nueva o sin criterios de UCI; no maneja en casa</td></tr>
+      <tr><td class="dm">Alto (UCI)</td><td>Edad ≤24 m · pH&lt;7.1 o HCO₃≤5 · GCS≤13/neuro anormal · PCO₂&lt;10 · BUN&gt;30 · recibió bicarbonato o bolo de insulina · mOsm&gt;350</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">Considerar UCI: Na corregido &lt;140 o en descenso, disfunción orgánica, &gt;40 mL/kg iniciales, retraso del desarrollo.</div>
+  </div></div>
+</div><div class="panel" id="tab-f1">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">1️⃣</span><div><div class="at">Fase 1 — Hora 0 a 1</div>Estabilizar, pesar, accesos, laboratorios y <b>bolo de líquidos</b>. <b>NO insulina.</b></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🅰️</span><span class="st">ABCD y estabilización</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">A-B</span><span class="kt">Vía aérea y ventilación; O₂ si precisa. Evaluar Kussmaul.</span></div>
+    <div class="kp"><span class="kn">C</span><span class="kt">Circulación: FC, TA, llenado capilar, pulsos; monitor cardiorrespiratorio.</span></div>
+    <div class="kp"><span class="kn">D</span><span class="kt">Discapacidad: <b>GCS</b>, pupilas, glucosa capilar; evaluar riesgo de edema cerebral.</span></div>
+    <div class="kp"><span class="kn">⚖️</span><span class="kt"><b>Peso</b> (real o estimado): base de TODOS los cálculos de líquidos e insulina.</span></div>
+    <div class="kp"><span class="kn">💉</span><span class="kt"><b>2 accesos IV periféricos</b>: uno para fluidos+insulina, otro para muestras frecuentes; uno de gran calibre si hay choque. <b>Evitar CVC</b> (protrombótico).</span></div>
+    <div class="kp"><span class="kn">🧫</span><span class="kt"><b>Laboratorios iniciales</b> (ver Dx): gaso venosa, glucosa, BOHB, electrolitos, Ca/Mg/P, BUN/Cr, EGO; buscar infección; HbA1c y estudio de debut si aplica.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Bolo de líquidos (toca para desplegar)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="tc-f1"></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">⛔</span><div><b>NO iniciar insulina en la Fase 1.</b> Primero restaurar volumen.</div></div>
+  </div></div>
+</div><div class="panel" id="tab-f2">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">2️⃣</span><div><div class="at">Fase 2 — Hora 1 a 4</div>Sistema de 2 bolsas + infusión de insulina + potasio. Usa la <b>calculadora</b>.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Órdenes de la Fase 2 (tarjetas desplegables)</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="tc-f2"></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚡</span><span class="st">Inicio de electrolitos</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="tc-f2k"></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Calculadora de líquidos + 2 bolsas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="background:var(--tint);border-radius:10px;padding:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <label style="font-size:12px;color:#374151;">Peso (kg)<br><input id="c_peso" type="number" value="20" min="1" step="0.5" oninput="dkaCalc()" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;"></label>
+        <label style="font-size:12px;color:#374151;">% deshidratación<br><input id="c_desh" type="number" value="7" min="3" max="12" step="1" oninput="dkaCalc()" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;"></label>
+        <label style="font-size:12px;color:#374151;">Reanimación ya dada (mL)<br><input id="c_reanim" type="number" value="0" min="0" step="10" oninput="dkaCalc()" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;"></label>
+        <label style="font-size:12px;color:#374151;">Glucosa actual (mg/dL)<br><input id="c_glu" type="number" value="450" min="0" step="10" oninput="dkaCalc()" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;"></label>
+      </div>
+      <div id="c_out" style="margin-top:12px;"></div>
+    </div>
+    <div style="font-size:11px;color:#6b7280;margin-top:8px;">Déficit = %×peso×10 mL · Mantenimiento Holliday-Segar (100/50/20) · Total 48 h = mant×2 + déficit − reanimación · nunca &lt; 1× mantenimiento · insulina a 1 U/mL.</div>
+  </div></div>
+</div><div class="panel" id="tab-f3">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">3️⃣</span><div><div class="at">Fase 3 (hora 4 → resolución) y transición</div>Continuar, ajustar, monitorizar y transicionar a subcutánea.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Fase 3 — mantenimiento hasta resolución</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt">Continuar el sistema de 2 bolsas ajustando el % por glucosa (sin cambiar la insulina).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Ajustar líquidos según riesgo de edema cerebral; vigilancia neurológica.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Monitoreo: glucosa c/1 h, BOHB c/2 h, gaso/electrolitos c/2–4 h (ver 🧪).</span></div>
+    <div class="alert a-g" style="margin-top:6px;"><span class="ai">✔️</span><div><b>Resolución:</b> BOHB &lt;1 mmol/L y/o pH &gt;7.3 · HCO₃ ≥15 con cierre del anión gap, y el paciente puede comer.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Transición a insulina subcutánea</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt">Iniciar cuando <b>BOHB &lt;1</b> y tolera VO.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Dar <b>insulina de acción corta SC 30 min antes</b> de suspender la infusión. Insulina <b>basal precoz</b> &gt;2 h antes del cambio (considerar en &gt;10 años).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Glucosa &gt;100 → basal + acción corta; &lt;100 → solo basal. Iniciar dieta con conteo de carbohidratos.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Coordinar dosis con endocrinología. Glucosa antes de comidas, al acostarse y a las 3 AM; electrolitos c/4 h × 2.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏠</span><span class="st">Criterios de alta</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Acidosis resuelta (pH &gt;7.3 o HCO₃ &gt;15), estado mental basal, causa identificada, seguimiento coordinado (≤3 meses en DM establecida, 4 semanas si debut), educación al paciente/familia (signos de CAD, medir cetonas, manejo en enfermedad, insulina basal, supervisión) y contacto con enfermería de diabetes en 48 h.</p></div>
+  </div></div>
+</div><div class="panel" id="tab-elec">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">⚡</span><div>Reponer tras restaurar volumen e iniciar insulina. Toca cada tarjeta para el detalle.</div></div>
+  <div id="tc-elec"></div>
+</div>
+<div class="panel" id="tab-edema">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🧠</span><div><div class="at">Edema cerebral — principal causa de muerte</div>Sospéchalo ante deterioro neurológico, típicamente en las primeras 4–12 h.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Signos de alarma</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Categoría</th><th>Datos</th></tr>
+      <tr><td class="dn">Precoces</td><td>Cefalea, alteración neurológica/conducta, letargia, incontinencia</td></tr>
+      <tr><td class="dn">Neurológicos</td><td>Anisocoria, postura anormal, parálisis de pares craneales</td></tr>
+      <tr><td class="dm">Triada de Cushing</td><td>↓ FC, ↑ PA, respiración irregular</td></tr>
+    </table></div>
+  </div></div>
+  <div style="font-weight:800;color:#1f3a8a;margin:12px 2px 6px;font-size:13px;">🚨 Fármacos de rescate (toca para desplegar)</div>
+  <div id="tc-edema"></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">📉</span><div><b>Además:</b> reducir los líquidos ⅓, elevar la cabecera 30°, asegurar vía aérea y no retrasar el tratamiento por la TC. Vigilancia neurológica horaria en alto riesgo.</div></div>
+</div>
+<div class="panel" id="tab-mon">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Monitoreo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Frecuencia</th></tr>
+      <tr><td class="dn">Glucosa capilar</td><td>Cada 1 h</td></tr>
+      <tr><td class="dn">BOHB (capilar)</td><td>Cada 2 h hasta &lt;1 mmol/L</td></tr>
+      <tr><td class="dn">Gasometría, electrolitos, Ca/Mg/P</td><td>Cada 2–4 h</td></tr>
+      <tr><td class="dn">Neurológico (GCS)</td><td>Horario si alto riesgo (hasta 24 h)</td></tr>
+      <tr><td class="dn">Una vez</td><td>HbA1c, BUN, creatinina, osmolalidad; si debut: TSH, T4L, C-péptido, anti-islote, antitransglutaminasa/IgA</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏁</span><span class="st">Resolución y fórmulas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">✔️</span><div><b>Resolución de CAD:</b> <b>BOHB &lt; 1 mmol/L</b> y/o <b>pH &gt; 7.3 · HCO₃ ≥ 15</b> con <b>cierre del anión gap</b>, y el paciente puede comer.</div></div>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <tr><th>Fórmula</th><th></th></tr>
+      <tr><td class="dn">Anión gap</td><td>Na − (Cl + HCO₃); normal 8–12</td></tr>
+      <tr><td class="dn">Osmolaridad</td><td>2×Na + glucosa/18 + BUN/2.8</td></tr>
+      <tr><td class="dn">Na corregido</td><td>Na + 1.6 × [(glucosa − 100)/100]</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-comp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Complicación</th><th>Clave</th></tr>
+      <tr><td class="dm">Edema cerebral</td><td>La más temida; ver pestaña dedicada</td></tr>
+      <tr><td class="dn">Hipopotasemia</td><td>Por reposición insuficiente; puede requerir K 0.1–0.3 mEq/kg/h; riesgo de íleo/arritmia</td></tr>
+      <tr><td class="dn">Hipoglucemia</td><td>Por no agregar dextrosa a tiempo (&lt;300); usar dextrosa 5–12.5%</td></tr>
+      <tr><td class="dn">Acidosis hiperclorémica</td><td>Por gran volumen de SS 0.9%; usar acetato/fosfato de K o soluciones balanceadas</td></tr>
+      <tr><td class="dn">EHH / mixto</td><td>Mayor riesgo de trombosis, rabdomiólisis, hipertermia; fluidos más cuidadosos</td></tr>
+      <tr><td class="dn">Trombosis</td><td>CAD es protrombótica; <b>evitar CVC</b> si es posible (usar periféricas)</td></tr>
+      <tr><td class="dn">Otras</td><td>Sepsis, CID, mucormicosis (rinocerebral), pancreatitis (química común)</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>"Puntos a mejorar" del protocolo: <b>no colocar CVC</b> de rutina (protrombótico); la CAD suele resolver en ~48 h con vías periféricas; considerar CVC solo si no hay acceso periférico en multipuncionados.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — CAD pediátrica</h2><p>Guías y evidencia.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Glaser N, et al. <em>ISPAD Clinical Practice Consensus Guidelines 2022: Diabetic ketoacidosis and hyperglycemic hyperosmolar state.</em> Pediatr Diabetes.</div><a class="biblio-link" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/pedi.13406" target="_blank">🔗 ISPAD 2022</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">ECA</span></div><div class="biblio-ref">Kuppermann N, et al. <em>Clinical Trial of Fluid Infusion Rates for Pediatric DKA (PECARN FLUID).</em> N Engl J Med.</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">v9.0</span><span class="biblio-level lv-exp">Protocolo</span></div><div class="biblio-ref">Ruta clínica de CAD pediátrica (sistema de 2 bolsas, fases y calculadora) — base del material.</div></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo; la calculadora es orientativa. Confirme dosis, umbrales y decisiones con su protocolo institucional y endocrinología. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis / pauta')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo',f.emb,'#7a4a00');if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#e6eaf5;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#1f3a8a;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#e6eaf5;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#1f3a8a;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#e6eaf5;border:1px solid #1f3a8a;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#1f3a8a;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#e6eaf5;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#1f3a8a;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#1f3a8a';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+function _num(id){var v=parseFloat((document.getElementById(id)||{}).value);return isNaN(v)?0:v;}
+function _maint(w){if(w<=0)return 0;if(w<=10)return w*100;if(w<=20)return 1000+(w-10)*50;return 1500+(w-20)*20;}
+function dkaCalc(){
+ var w=_num('c_peso'),pct=_num('c_desh'),rea=_num('c_reanim'),glu=_num('c_glu');
+ var out=document.getElementById('c_out');if(!out)return;
+ if(w<=0){out.innerHTML='<div style="color:#7b1c1c;">Ingrese un peso válido.</div>';return;}
+ var wcap=Math.min(w,80);
+ var m=_maint(w);
+ var def=pct*wcap*10;
+ var tot=m*2+def-rea;
+ var rate=tot/48;
+ var floor=m/24;
+ var rateUse=Math.max(rate,floor);
+ var floored=rate<floor;
+ var i05=(w*0.05),i10=(w*0.10),i025=(w*0.025);
+ // two-bag brackets
+ var br=[['≥300',1,0],['250–299',0.75,0.25],['200–249',0.5,0.5],['150–199',0.25,0.75],['100–149',0,1]];
+ var idx=-1;
+ if(glu>=300)idx=0;else if(glu>=250)idx=1;else if(glu>=200)idx=2;else if(glu>=150)idx=3;else if(glu>=100)idx=4;else idx=5;
+ var rows='';
+ for(var k=0;k<br.length;k++){
+   var sal=(rateUse*br[k][1]).toFixed(0),dex=(rateUse*br[k][2]).toFixed(0);
+   var hl=(k===idx)?' style="background:#dff5e6;font-weight:700;"':'';
+   rows+='<tr'+hl+'><td>'+br[k][0]+'</td><td>'+(br[k][1]*100)+'% · '+sal+' mL/h</td><td>'+(br[k][2]*100)+'% · '+dex+' mL/h</td></tr>';
+ }
+ var lt100=(idx===5)?'<div class="alert a-r" style="margin-top:6px;"><span class="ai">⛔</span><div><b>Glucosa &lt;100:</b> suspender el sistema de 2 bolsas e iniciar suero <b>D12.5%</b> con la misma composición salina/electrolítica; revalorar BOHB y transición.</div></div>':'';
+ out.innerHTML=
+  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+  +'<div class="kp" style="margin:0;"><span class="kn">A</span><span class="kt"><b>Déficit:</b> '+def.toFixed(0)+' mL <span style="color:#6b7280;">('+pct+'% × '+wcap+' kg × 10)</span></span></div>'
+  +'<div class="kp" style="margin:0;"><span class="kn">B</span><span class="kt"><b>Mantenimiento:</b> '+m.toFixed(0)+' mL/día</span></div>'
+  +'<div class="kp" style="margin:0;"><span class="kn">C</span><span class="kt"><b>Total 48 h:</b> '+tot.toFixed(0)+' mL <span style="color:#6b7280;">(mant×2 + déficit − reanim)</span></span></div>'
+  +'<div class="kp" style="margin:0;"><span class="kn">D</span><span class="kt"><b>Velocidad IV:</b> '+rateUse.toFixed(0)+' mL/h'+(floored?' <span style="color:#a86a00;">(piso: 1× mant)</span>':'')+'</span></div>'
+  +'</div>'
+  +'<div class="tw" style="margin-top:10px;"><table class="t"><tr><th>Insulina (U/kg/h)</th><th>Ritmo (U/h = mL/h a 1 U/mL)</th></tr>'
+  +'<tr><td class="dn">0.05 (estándar)</td><td><b>'+i05.toFixed(2)+'</b></td></tr>'
+  +'<tr><td class="dn">0.1 (puberal/resistencia)</td><td>'+i10.toFixed(2)+'</td></tr>'
+  +'<tr><td class="dn">0.025 (&lt;5 años)</td><td>'+i025.toFixed(2)+'</td></tr></table></div>'
+  +'<div style="font-weight:700;margin:12px 0 4px;color:#1f3a8a;">Sistema de 2 bolsas (a '+rateUse.toFixed(0)+' mL/h total)</div>'
+  +'<div class="tw"><table class="t"><tr><th>Glucosa</th><th>Bolsa 1 (salina)</th><th>Bolsa 2 (D10)</th></tr>'+rows+'</table></div>'
+  +lt100
+  +'<div style="font-size:11px;color:#6b7280;margin-top:6px;">Ambas bolsas con electrolitos idénticos (p. ej., 40 mEq/L de K = 20 KCl + 20 K-fosfato). La suma de las dos bolsas mantiene la velocidad total; se ajusta el % según la glucosa sin cambiar la insulina.</div>';
+}
+
+/* ---- TARJETAS DESPLEGABLES DE TRATAMIENTO ---- */
+var TFN=0;
+function tcard(f){TFN++;var id='tc'+TFN;var c=f.c||'#1f3a8a';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div>'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-top:2px;">'+f.sub+'</div>':'')+'</div>';
+ h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;padding:11px 13px;">';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+dd+'</div>';}
+ if(f.via)h+='<div style="background:#e6eaf5;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#1f3a8a;">Vía / administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';
+ if(f.pac)h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">Uso / clave</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';
+ if(f.al)h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Precaución</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';
+ h+='</div></div>';return h;}
+function tcards(cid,arr){var el=document.getElementById(cid);if(!el)return;var h='';for(var i=0;i<arr.length;i++)h+=tcard(arr[i]);el.innerHTML=h;}
+
+var TX_LIQ=[
+ {n:'Bolo inicial — SSN 0.9%',sub:'Reanimación, antes de la insulina',dosis:['10 mL/kg en 1 h (ISPAD: 10–20 mL/kg en 20–30 min)','Repetir 10 mL/kg hasta máx 30 mL/kg','Choque franco: 20 mL/kg y reevaluar neuro tras cada bolo'],via:'IV rápida. Asumir 7% de deshidratación si no hay choque.',pac:'Iniciar SIEMPRE antes de la insulina.',al:'Si se dan >40 mL/kg → valorar UCI. Registrar ingresos y egresos.'},
+ {n:'Rehidratación a 48 h',sub:'Déficit + mantenimiento',dosis:['Déficit = % deshidratación × peso × 10 mL','Total 48 h = mantenimiento×2 + déficit − reanimación','Velocidad = total ÷ 48 (nunca < 1× mantenimiento)'],via:'SS 0.9% las primeras 4–6 h; luego valorar 0.45% salvo riesgo de edema/hiponatremia.',pac:'Usa la calculadora (pestaña 🧮) para el ritmo exacto.',al:'Vigilar el Na corregido: su descenso se asocia a edema cerebral.'},
+ {n:'Sistema de 2 bolsas',sub:'Ajuste de glucosa sin tocar la insulina',dosis:['Bolsa 1: salina + K','Bolsa 2: D10 + K (electrolitos idénticos)','≥300: 100/0 · 250–299: 75/25 · 200–249: 50/50 · 150–199: 25/75 · 100–149: 0/100'],via:'Iniciar la bolsa 2 (dextrosa) si glucosa <300 o cae >100 mg/dL/h.',pac:'La suma de las 2 bolsas mantiene la velocidad total; solo cambia el %.',al:'<125 → preparar D12.5%. <100 → suspender el sistema y usar D12.5%.'}
+];
+var TX_INS=[
+ {n:'Infusión de insulina IV',sub:'Tras el bolo · nunca en bolo',c:'#7b1c1c',dosis:['0.05 U/kg/h (estándar)','0.1 U/kg/h (puberal, IMC >p85, resistencia)','0.025 U/kg/h (<5 años)','Mantener hasta BOHB <1 mmol/L'],via:'IV en infusión. Dilución típica 1 U/mL (50 U en 50 mL). Iniciar SOLO tras el primer bolo.',pac:'Sin bomba: SC lispro/aspart 0.3 U/kg y luego 0.1 U/kg c/1 h.',al:'NUNCA en bolo (edema cerebral). Si K <3 → diferir la insulina y reponer K primero.'},
+ {n:'Insulina y glucosa (dextrosa)',sub:'Evitar hipoglucemia sin bajar la insulina',dosis:['Glucosa <300 o caída >100/h → iniciar bolsa 2 (dextrosa)','Glucosa <125 → D12.5%','No suspender la insulina antes de resolver la CAD'],via:'Si la glucosa baja: aumentar la dextrosa, NO reducir la insulina.',pac:'Objetivo de descenso ~50–100 mg/dL/h.',al:'Descenso >100 mg/dL/h → consultar endocrinología.'}
+];
+var TX_ELEC=[
+ {n:'Potasio (K)',sub:'El más importante',dosis:['K <4 → 60 mEq/L','K 4–5.5 → 40 mEq/L','K >5.5 → suspender hasta <5.5 (y que haya diuresis)'],via:'Repartir como KCl + fosfato de potasio. Monitorizar cada 4 h.',pac:'Iniciar K cuando <5.5 y haya diuresis.',al:'K <3.0 → diferir la insulina y reponer K primero (riesgo de arritmia/íleo).'},
+ {n:'Sodio (Na)',sub:'Usar Na corregido',dosis:['Na corregido <140 → mantener SS 0.9%','Na <130 → infusión de NaCl 3%','Na corregido = Na + 1.6 × [(glucosa − 100)/100]'],via:'El Na medido debe ascender conforme baja la glucosa.',pac:'Menos énfasis en "subir" el Na que en versiones antiguas (ISPAD 2022).',al:'Un descenso del Na corregido durante el tratamiento se asocia a edema cerebral.'},
+ {n:'Fosfato · Mg · Bicarbonato',sub:'No de rutina',c:'#6b7280',dosis:['Fosfato y Mg: NO reponer de rutina','Bicarbonato: NO de rutina'],via:'Bicarbonato solo en acidosis muy profunda con compromiso de la contractilidad cardiaca.',pac:'Usar acetato/fosfato de K reduce la carga de cloro (menos acidosis hiperclorémica).',al:'El bicarbonato favorece edema cerebral e hipopotasemia; los ECA no muestran beneficio.'}
+];
+var TX_EDEMA=[
+ {n:'Manitol',sub:'Primera línea del edema cerebral',c:'#7b1c1c',dosis:['0.5–1 g/kg IV en 10–20 min','Repetir si no hay respuesta en 30 min'],via:'IV. Junto con reducir líquidos ⅓ y elevar la cabecera.',pac:'Tener la dosis calculada y lista a la cabecera en pacientes de alto riesgo.',al:'No retrasar el tratamiento para hacer TC.'},
+ {n:'Solución salina hipertónica (NaCl 3%)',sub:'Alternativa / adyuvante',c:'#7b1c1c',dosis:['2.5–5 mL/kg en 10–15 min','Infusión para mantener Na 150–160'],via:'IV. Alternativa al manitol o si este no responde.',pac:'Útil cuando además hay hiponatremia.',al:'Vigilar Na sérico y sobrecarga de volumen.'}
+];
+
+window.addEventListener('load',function(){
+  dkaCalc();
+  tcards('tc-f1',[TX_LIQ[0]]);
+  tcards('tc-f2',[TX_LIQ[2],TX_LIQ[1],TX_INS[0],TX_INS[1]]);
+  tcards('tc-f2k',[TX_ELEC[0],TX_ELEC[1]]);
+  tcards('tc-elec',TX_ELEC);
+  tcards('tc-edema',TX_EDEMA);
+});
+
+</script>
+</body>
+</html>
