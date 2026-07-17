@@ -515,6 +515,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 #inicioView .ini-row-n{font-size:14px;font-weight:700;color:var(--ink);}
 #inicioView .ini-row-s{font-size:11.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 #inicioView .ini-row-cv{color:var(--soft);flex-shrink:0;}
+#inicioView .ttag{font-size:9px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;padding:3px 7px;border-radius:6px;flex-shrink:0;white-space:nowrap;}
+#inicioView .tt-med{background:#fbeee6;color:#c9522a;}
+#inicioView .tt-tema{background:#e9f1fb;color:#2f6fe0;}
+#inicioView .tt-calc{background:#e4f3ec;color:#2e8b6f;}
 #inicioView .ini-empty{padding:16px;text-align:center;color:var(--soft);font-size:13px;}
 @media (min-width:860px){#inicioView .ini-results{margin:12px 42px 0;max-width:660px;}}
 
@@ -30490,11 +30494,11 @@ function pushRecentTool(k){ var to=(typeof TOOLS!=='undefined'?TOOLS:[]).filter(
 function removeRecent(k){ RECENTS=RECENTS.filter(function(x){return recKey(x)!==k;}); saveRecents(); renderRecents(); }
 function recRowHTML(r){
   if(r.t==='d'){ var d=DRUGS[r.i]; if(!d) return ''; var k=gkey(d); var g=GROUPS.filter(function(x){return x.key===k;})[0]||GROUPS[0];
-    return '<button class="rec" onclick="iniOpen('+r.i+')"><span class="rec-ic" style="background:var(--bg-med);color:var(--c-med)">'+(ICON[k]||ICON.shield)+'</span><span class="rec-tx"><span class="rec-t">'+d.name+'</span><span class="rec-s">'+g.label+'</span></span><span class="rec-tm">Ficha</span></button>'; }
+    return '<button class="rec" onclick="iniOpen('+r.i+')"><span class="rec-ic" style="background:var(--bg-med);color:var(--c-med)">'+(ICON[k]||ICON.shield)+'</span><span class="rec-tx"><span class="rec-t">'+d.name+'</span><span class="rec-s">'+g.label+'</span></span><span class="ttag tt-med">Ficha</span></button>'; }
   if(r.t==='m'){
-    return '<button class="rec" onclick="iniOpenTema(&#39;'+r.f+'&#39;)"><span class="rec-ic" style="background:var(--bg-inter);color:var(--c-inter)"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="rec-tx"><span class="rec-t">'+r.n+'</span><span class="rec-s">'+(r.c||'Tema')+'</span></span><span class="rec-tm">Tema</span></button>'; }
+    return '<button class="rec" onclick="iniOpenTema(&#39;'+r.f+'&#39;)"><span class="rec-ic" style="background:var(--bg-inter);color:var(--c-inter)"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="rec-tx"><span class="rec-t">'+r.n+'</span><span class="rec-s">'+(r.c||'Tema')+'</span></span><span class="ttag tt-tema">Tema</span></button>'; }
   if(r.t==='k'){ var to=(typeof TOOLS!=='undefined'?TOOLS:[]).filter(function(x){return x.key===r.k;})[0]; var nm=r.n||(to?to.name:r.k); var sub=r.s||(to?(TYPELABEL[to.type]||''):''); var ty=r.ty||(to?to.type:''); var tag=ty==='escala'?'Escala':(ty==='calculadora'?'Calc.':'Herr.');
-    return '<button class="rec" onclick="iniOpenTool(&#39;'+r.k+'&#39;)"><span class="rec-ic" style="background:var(--bg-rec);color:var(--c-rec)"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 6h8M8 10h2M8 14h2M14 10v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="rec-tx"><span class="rec-t">'+nm+'</span><span class="rec-s">'+sub+'</span></span><span class="rec-tm">'+tag+'</span></button>'; }
+    return '<button class="rec" onclick="iniOpenTool(&#39;'+r.k+'&#39;)"><span class="rec-ic" style="background:var(--bg-rec);color:var(--c-rec)"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 6h8M8 10h2M8 14h2M14 10v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="rec-tx"><span class="rec-t">'+nm+'</span><span class="rec-s">'+sub+'</span></span><span class="ttag tt-calc">'+tag+'</span></button>'; }
   return '';
 }
 function renderRecents(){
@@ -30523,26 +30527,26 @@ function iniSearchRun(q){
   var out=[];
   GROUPS.forEach(function(g){
     if(norm(g.label).indexOf(nq)>=0 || norm(g.sub).indexOf(nq)>=0){
-      out.push('<button class="ini-row" onclick="iniOpenGroup(\''+g.key+'\')"><span class="ini-row-ic">'+(ICON[g.ic]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+g.label+'</span><span class="ini-row-s">Grupo de medicamentos \u00b7 '+groupCount(g.key)+' farmacos</span></span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
+      out.push('<button class="ini-row" onclick="iniOpenGroup(\''+g.key+'\')"><span class="ini-row-ic">'+(ICON[g.ic]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+g.label+'</span><span class="ini-row-s">Grupo de medicamentos \u00b7 '+groupCount(g.key)+' farmacos</span></span><span class="ttag tt-med">Fármacos</span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
     }
   });
   (typeof TOOLS!=='undefined'?TOOLS:[]).forEach(function(t){
     if(norm(t.name).indexOf(nq)>=0 || norm(t.sub||'').indexOf(nq)>=0 || norm(t.kw||'').indexOf(nq)>=0){
-      out.push('<button class="ini-row" onclick="iniOpenTool(\''+t.key+'\')"><span class="ini-row-ic ir-'+t.type+'">'+(TOOLICON[t.type]||'')+'</span><span class="ini-row-tx"><span class="ini-row-n">'+t.name+'</span><span class="ini-row-s">'+TYPELABEL[t.type]+(t.sub?' \u00b7 '+t.sub:'')+'</span></span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
+      out.push('<button class="ini-row" onclick="iniOpenTool(\''+t.key+'\')"><span class="ini-row-ic ir-'+t.type+'">'+(TOOLICON[t.type]||'')+'</span><span class="ini-row-tx"><span class="ini-row-n">'+t.name+'</span><span class="ini-row-s">'+TYPELABEL[t.type]+(t.sub?' \u00b7 '+t.sub:'')+'</span></span><span class="ttag '+(t.type==='resumen'?'tt-tema':'tt-calc')+'">'+(t.type==='escala'?'Escala':(t.type==='calculadora'?'Calc.':'Gu\u00eda'))+'</span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
     }
   });
   DRUGS.map(function(d,i){return {d:d,i:i};}).filter(function(o){
     return norm(o.d.name).indexOf(nq)>=0 || norm(o.d.sub||'').indexOf(nq)>=0;
   }).slice(0,40).forEach(function(o){
     var k=gkey(o.d); var g=GROUPS.filter(function(x){return x.key===k;})[0]||GROUPS[0];
-    out.push('<button class="ini-row" onclick="iniOpen('+o.i+')"><span class="ini-row-ic">'+(ICON[k]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+o.d.name+'</span><span class="ini-row-s">Medicamento \u00b7 '+g.label+'</span></span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
+    out.push('<button class="ini-row" onclick="iniOpen('+o.i+')"><span class="ini-row-ic">'+(ICON[k]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+o.d.name+'</span><span class="ini-row-s">Medicamento \u00b7 '+g.label+'</span></span><span class="ttag tt-med">F\u00e1rmaco</span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
   });
   var temaHits=[];
   (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){ p.items.forEach(function(t){
     if(norm(t.t).indexOf(nq)>=0 || norm(t.kw||'').indexOf(nq)>=0 || norm(p.cat).indexOf(nq)>=0){ temaHits.push({it:t,cat:p.cat}); }
   }); });
   temaHits.slice(0,40).forEach(function(hh){
-    out.push('<button class="ini-row" onclick="iniOpenTema(&#39;'+hh.it.file+'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+hh.it.t+'</span><span class="ini-row-s">Tema \u00b7 '+hh.cat+'</span></span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
+    out.push('<button class="ini-row" onclick="iniOpenTema(&#39;'+hh.it.file+'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+hh.it.t+'</span><span class="ini-row-s">Tema \u00b7 '+hh.cat+'</span></span><span class="ttag tt-tema">Tema</span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
   });
   res.style.display='flex';
   res.innerHTML = out.length ? out.join('') : '<div class="ini-empty">Sin resultados</div>';
