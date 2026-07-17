@@ -1,5 +1,5 @@
 /* VadeMed service worker — cache offline */
-var CACHE = 'vademed-v1';
+var CACHE = 'vademed-v2';
 var SHELL = ['./', 'index.html', 'icon.png', 'manifest.json'];
 
 self.addEventListener('install', function(e){
@@ -28,8 +28,10 @@ self.addEventListener('fetch', function(e){
   try { url = new URL(req.url); } catch(_) { return; }
   if(url.origin !== self.location.origin) return; /* deja pasar fuentes/CDN externos */
 
-  /* Navegación (abrir la app): caché primero para que SIEMPRE abra, y actualiza en segundo plano */
-  if(req.mode === 'navigate'){
+  var esTema = url.pathname.indexOf('/RESUMENCLINIC/') >= 0;
+
+  /* Navegación de la APP (nivel superior). NO aplica a iframes ni a temas */
+  if(req.mode === 'navigate' && req.destination !== 'iframe' && !esTema){
     e.respondWith(
       caches.open(CACHE).then(function(c){
         var upd = fetch(req).then(function(res){ if(res && res.status === 200) c.put('index.html', res.clone()); return res; }).catch(function(){});
