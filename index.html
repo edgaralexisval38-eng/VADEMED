@@ -30581,32 +30581,29 @@ function iniSearchRun(q){
   var res=document.getElementById('iniResults'), cols=document.querySelector('#inicioView .ini-cols');
   if(!nq){ if(res){res.style.display='none';res.innerHTML='';} if(cols) cols.style.display=''; return; }
   if(cols) cols.style.display='none';
-  var out=[];
+  function sc(name,extra){ name=norm(name||''); var ex=norm(extra||''); if(name===nq)return 100; if(name.indexOf(nq)===0)return 82; if((' '+name).indexOf(' '+nq)>=0)return 66; if(name.indexOf(nq)>=0)return 55; if(ex.indexOf(nq)>=0)return 25; return 0; }
+  var hits=[], ord=0;
   GROUPS.forEach(function(g){
-    if(norm(g.label).indexOf(nq)>=0 || norm(g.sub).indexOf(nq)>=0){
-      out.push('<button class="ini-row" onclick="iniOpenGroup(\''+g.key+'\')"><span class="ini-row-ic">'+(ICON[g.ic]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+g.label+'</span><span class="ini-row-s">Grupo de medicamentos \u00b7 '+groupCount(g.key)+' farmacos</span></span><span class="ttag tt-med">Fármacos</span><span class="ini-row-cv">'+ICON.chev+'</span></button>');
-    }
+    var s=sc(g.label,g.sub);
+    if(s>0) hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpenGroup(\''+g.key+'\')"><span class="ini-row-ic">'+(ICON[g.ic]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+g.label+'</span><span class="ini-row-s">Grupo de medicamentos \u00b7 '+groupCount(g.key)+' farmacos</span></span><span class="ttag tt-med">Fármacos</span><span class="ini-row-cv">'+ICON.chev+'</span></button>'});
   });
   (typeof TOOLS!=='undefined'?TOOLS:[]).forEach(function(t){
-    if(norm(t.name).indexOf(nq)>=0 || norm(t.sub||'').indexOf(nq)>=0 || norm(t.kw||'').indexOf(nq)>=0){
-      out.push('<button class="ini-row" onclick="iniOpenTool(\''+t.key+'\')"><span class="ini-row-ic ir-'+t.type+'">'+(TOOLICON[t.type]||'')+'</span><span class="ini-row-tx"><span class="ini-row-n">'+t.name+'</span><span class="ini-row-s">'+TYPELABEL[t.type]+(t.sub?' \u00b7 '+t.sub:'')+'</span></span><span class="ttag '+(t.type==='resumen'?'tt-tema':'tt-calc')+'">'+(t.type==='escala'?'Escala':(t.type==='calculadora'?'Calc.':'Gu\u00eda'))+'</span>'+favStar('favK(&#39;'+t.key+'&#39;,this)',isFav({t:'k',k:t.key}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>');
+    var s=sc(t.name,(t.sub||'')+' '+(t.kw||''));
+    if(s>0) hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpenTool(\''+t.key+'\')"><span class="ini-row-ic ir-'+t.type+'">'+(TOOLICON[t.type]||'')+'</span><span class="ini-row-tx"><span class="ini-row-n">'+t.name+'</span><span class="ini-row-s">'+TYPELABEL[t.type]+(t.sub?' \u00b7 '+t.sub:'')+'</span></span><span class="ttag '+(t.type==='resumen'?'tt-tema':'tt-calc')+'">'+(t.type==='escala'?'Escala':(t.type==='calculadora'?'Calc.':'Gu\u00eda'))+'</span>'+favStar('favK(&#39;'+t.key+'&#39;,this)',isFav({t:'k',k:t.key}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>'});
+  });
+  DRUGS.forEach(function(o,oi){ var o={d:o,i:oi};
+    var s=sc(o.d.name,o.d.sub);
+    if(s>0){ var k=gkey(o.d); var g=GROUPS.filter(function(x){return x.key===k;})[0]||GROUPS[0];
+      hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpen('+o.i+')"><span class="ini-row-ic">'+(ICON[k]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+o.d.name+'</span><span class="ini-row-s">Medicamento \u00b7 '+g.label+'</span></span><span class="ttag tt-med">F\u00e1rmaco</span>'+favStar('favD('+o.i+',this)',isFav({t:'d',i:o.i}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>'});
     }
   });
-  DRUGS.map(function(d,i){return {d:d,i:i};}).filter(function(o){
-    return norm(o.d.name).indexOf(nq)>=0 || norm(o.d.sub||'').indexOf(nq)>=0;
-  }).slice(0,40).forEach(function(o){
-    var k=gkey(o.d); var g=GROUPS.filter(function(x){return x.key===k;})[0]||GROUPS[0];
-    out.push('<button class="ini-row" onclick="iniOpen('+o.i+')"><span class="ini-row-ic">'+(ICON[k]||ICON.shield)+'</span><span class="ini-row-tx"><span class="ini-row-n">'+o.d.name+'</span><span class="ini-row-s">Medicamento \u00b7 '+g.label+'</span></span><span class="ttag tt-med">F\u00e1rmaco</span>'+favStar('favD('+o.i+',this)',isFav({t:'d',i:o.i}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>');
-  });
-  var temaHits=[];
-  (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){ p.items.forEach(function(t){
-    if(norm(t.t).indexOf(nq)>=0 || norm(t.kw||'').indexOf(nq)>=0 || norm(p.cat).indexOf(nq)>=0){ temaHits.push({it:t,cat:p.cat}); }
+  (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){ p.items.forEach(function(t){ var hh={it:t,cat:p.cat};
+    var s=sc(t.t,(t.kw||'')+' '+p.cat);
+    if(s>0) hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpenTema(&#39;'+hh.it.file+'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+hh.it.t+'</span><span class="ini-row-s">Tema \u00b7 '+hh.cat+'</span></span><span class="ttag tt-tema">Tema</span>'+favStar('favM(&#39;'+hh.it.file+'&#39;,this)',isFav({t:'m',f:hh.it.file}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>'});
   }); });
-  temaHits.slice(0,40).forEach(function(hh){
-    out.push('<button class="ini-row" onclick="iniOpenTema(&#39;'+hh.it.file+'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+hh.it.t+'</span><span class="ini-row-s">Tema \u00b7 '+hh.cat+'</span></span><span class="ttag tt-tema">Tema</span>'+favStar('favM(&#39;'+hh.it.file+'&#39;,this)',isFav({t:'m',f:hh.it.file}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>');
-  });
+  hits.sort(function(a,b){ return (b.s-a.s) || (a.o-b.o); });
   res.style.display='flex';
-  res.innerHTML = out.length ? out.join('') : '<div class="ini-empty">Sin resultados</div>';
+  res.innerHTML = hits.length ? hits.slice(0,60).map(function(x){return x.h;}).join('') : '<div class="ini-empty">Sin resultados</div>';
 }
 function iniOpenGroup(key){
   var cols=document.querySelector('#inicioView .ini-cols'); if(cols) cols.style.display='';
@@ -30759,11 +30756,6 @@ var TOOLS=[
      +'<h4>Causas reversibles (4H/4T)</h4><ul><li>Hipoxia, hipovolemia, hipo/hiperpotasemia, hipotermia; neumotorax a Tension, Taponamiento, Toxicos, Trombosis (coronaria/pulmonar).</li></ul>'
      +'<div class="tool-dis">Resumen orientativo basado en guias de soporte vital (AHA/ERC). Seguir el algoritmo vigente y el contexto clinico.</div>'},
 
-  {key:'cad', type:'resumen', name:'Cetoacidosis diabetica (esquema)', sub:'Urgencia metabolica', kw:'cetoacidosis diabetica cad insulina potasio liquidos diabetes acidosis',
-   body:'<h4>Pilares</h4><ul><li><b>Liquidos:</b> suero salino 0,9% para reponer volumen (ajustar segun estado/sodio corregido).</li><li><b>Insulina IV:</b> infusion <b>0,1 U/kg/h</b> (valorar bolo inicial segun protocolo); objetivo de descenso gradual de la glucemia.</li><li><b>Potasio:</b> NO iniciar insulina si K &lt; 3,3; reponer K si &lt; 5,0&ndash;5,3 con diuresis adecuada.</li></ul>'
-     +'<h4>Monitorizacion</h4><ul><li>Glucemia horaria, electrolitos, pH/bicarbonato y anion gap; buscar y tratar el <b>desencadenante</b> (infeccion, omision de insulina, etc.).</li><li>Cuando la glucemia baja (~200 mg/dL), anadir suero glucosado y continuar insulina hasta cerrar el anion gap.</li></ul>'
-     +'<h4>Transicion</h4><ul><li>Pasar a insulina subcutanea solo con criterios de resolucion, solapando con la infusion.</li></ul>'
-     +'<div class="tool-dis">Resumen orientativo basado en guias (ADA). Seguir el protocolo institucional con sus dosis y objetivos exactos.</div>'},
   {key:'mantped', type:'calculadora', name:'Liquidos de mantenimiento (Holliday-Segar)', sub:'Pediatria', kw:'liquidos mantenimiento holliday segar pediatria sueros hidratacion 4-2-1 ml/kg',
    body:'<div class="tool-form">'+tField('Peso',tNum('t_w','kg',12,0.1))+'</div>',
    compute:function(){var w=nv('t_w'); if(!w) return {big:'&mdash;',level:'info'}; var dia=w<=10?w*100:(w<=20?1000+(w-10)*50:1500+(w-20)*20); var hr=w<=10?w*4:(w<=20?40+(w-10)*2:60+(w-20)*1); return {big:Math.round(dia)+' mL/dia',label:Math.round(hr)+' mL/h',level:'info',lines:[{k:'Velocidad (regla 4-2-1)',v:Math.round(hr)+' mL/h'},{k:'Total diario',v:Math.round(dia)+' mL/dia'}],note:'Solo liquidos de MANTENIMIENTO (no incluye deficit ni perdidas). Tope habitual ~2400 mL/dia. 100/50/20 mL/kg/dia (o 4/2/1 mL/kg/h por tramos de peso).'};}},
