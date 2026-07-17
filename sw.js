@@ -1,5 +1,5 @@
 /* VadeMed service worker — cache offline */
-var CACHE = 'vademed-v3';
+var CACHE = 'vademed-v4';
 var SHELL = ['./', 'index.html', 'icon.png', 'manifest.json'];
 
 self.addEventListener('install', function(e){
