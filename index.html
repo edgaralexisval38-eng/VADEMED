@@ -31726,14 +31726,20 @@ function swipeBack(){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var VIEWS=['temaViewer','favsPanel','toolView','toolsPanel','pedCalcView','labsPanel','temasPanel','detailView','homeView','hubView'];
   var ANIM=false;
-  window.addEventListener('load',function(){ setTimeout(function(){ ANIM=true; },350); });
+  window.addEventListener('load',function(){ setTimeout(function(){ ANIM=true; },300); });
   function el(id){ return document.getElementById(id); }
   function topVisible(){ for(var i=0;i<VIEWS.length;i++){ var e=el(VIEWS[i]); if(e && e.style.display!=='none') return e; } return null; }
-  function onEnd(node,cb){ var done=false; function h(){ if(done)return; done=true; node.removeEventListener('animationend',h); cb(); } node.addEventListener('animationend',h); setTimeout(h,520); }
-  function pushIn(node){ if(!node) return; node.classList.remove('nav-push-in'); void node.offsetWidth; node.classList.add('nav-push-in'); onEnd(node,function(){ node.classList.remove('nav-push-in'); }); }
+  function onEnd(node,cb){ var done=false; function h(){ if(done)return; done=true; node.removeEventListener('animationend',h); cb(); } node.addEventListener('animationend',h); setTimeout(h,600); }
+  function clearNav(node){ if(node) node.classList.remove('nav-pop-out','nav-pop-in','nav-push-in','nav-slide-out-fixed'); }
+  function pushIn(node){ if(!node) return; clearNav(node); void node.offsetWidth; node.classList.add('nav-push-in'); onEnd(node,function(){ node.classList.remove('nav-push-in'); }); }
   function popBack(out,dest){
     if(dest){ dest.classList.remove('nav-pop-in'); void dest.offsetWidth; dest.classList.add('nav-pop-in'); onEnd(dest,function(){ dest.classList.remove('nav-pop-in'); }); }
-    if(out && out!==dest){ out.style.display='block'; out.classList.add('nav-pop-out'); onEnd(out,function(){ out.classList.remove('nav-pop-out'); out.style.display='none'; }); }
+    if(out && out!==dest){
+      out.style.display = (out.id==='temaViewer') ? 'flex' : 'block';
+      out.classList.remove('nav-push-in','nav-pop-in');
+      out.classList.add('nav-pop-out');
+      onEnd(out,function(){ if(out.classList.contains('nav-pop-out')){ out.classList.remove('nav-pop-out'); out.style.display='none'; } });
+    }
   }
   function wrapForward(name,destId){ var o=window[name]; if(typeof o!=='function') return; window[name]=function(){ var r=o.apply(this,arguments); if(ANIM) pushIn(el(destId)); return r; }; }
   function wrapBack(name,destId){ var o=window[name]; if(typeof o!=='function') return; window[name]=function(){ var out=ANIM?topVisible():null; var r=o.apply(this,arguments); if(ANIM) popBack(out,el(destId)); return r; }; }
@@ -31744,9 +31750,12 @@ function swipeBack(){
   wrapForward('openTool','toolView');
   wrapForward('openFavs','favsPanel');
   wrapForward('openPedCalc','pedCalcView');
-  wrapForward('openTemaFile','temaViewer');
+  /* Tema abrir: cancela cualquier cierre pendiente y deja el visor en pantalla (evita el bug de "abre el tema anterior") */
+  var _openTema=window.openTemaFile;
+  if(typeof _openTema==='function'){ window.openTemaFile=function(){ var tv=el('temaViewer'); if(tv) tv.classList.remove('nav-slide-out-fixed'); var r=_openTema.apply(this,arguments); if(ANIM) pushIn(tv); return r; }; }
+  /* Tema cerrar: desliza y SOLO ejecuta el cierre real si no se reabrió otro tema mientras corría la animación */
   var _cv=window.closeTemaViewer;
-  if(typeof _cv==='function'){ window.closeTemaViewer=function(){ var tv=el('temaViewer'); if(ANIM && tv && tv.style.display!=='none'){ tv.classList.add('nav-slide-out-fixed'); onEnd(tv,function(){ tv.classList.remove('nav-slide-out-fixed'); _cv(); }); } else { _cv(); } }; }
+  if(typeof _cv==='function'){ window.closeTemaViewer=function(){ var tv=el('temaViewer'); if(ANIM && tv && tv.style.display!=='none'){ tv.classList.add('nav-slide-out-fixed'); onEnd(tv,function(){ if(tv.classList.contains('nav-slide-out-fixed')){ tv.classList.remove('nav-slide-out-fixed'); _cv(); } }); } else { _cv(); } }; }
 })();
 </script>
 <script>if('serviceWorker' in navigator){(function(){var had=!!navigator.serviceWorker.controller;var refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(refreshing)return;refreshing=true;if(had)location.reload();});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});})();}</script>
