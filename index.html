@@ -33,6 +33,15 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;}
 .app{max-width:440px;margin:0 auto;background:var(--app);min-height:100vh;position:relative;padding-bottom:78px;overflow:hidden;}
+/* Animaciones de navegación estilo iOS (push al abrir / pop al regresar) */
+.nav-push-in{animation:navPushIn .30s cubic-bezier(.32,.72,0,1);}
+@keyframes navPushIn{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.nav-pop-in{animation:navPopIn .34s cubic-bezier(.32,.72,0,1);}
+@keyframes navPopIn{from{transform:translateX(-16%);filter:brightness(.92);}to{transform:translateX(0);filter:none;}}
+.nav-pop-out{position:absolute;inset:0;z-index:60;background:var(--app);overflow:hidden;box-shadow:-12px 0 30px rgba(0,0,0,.18);animation:navPopOut .34s cubic-bezier(.32,.72,0,1) forwards;}
+@keyframes navPopOut{from{transform:translateX(0);}to{transform:translateX(100%);}}
+.nav-slide-out-fixed{animation:navPopOut .32s cubic-bezier(.32,.72,0,1) forwards;}
+@media (prefers-reduced-motion:reduce){.nav-push-in,.nav-pop-in,.nav-pop-out,.nav-slide-out-fixed{animation:none!important;}}
 
 .topbar{display:flex;align-items:center;padding:14px 16px 4px;}
 .tb-btn{background:none;border:none;color:var(--navy);cursor:pointer;padding:6px;display:flex;border-radius:10px;}
@@ -31710,6 +31719,34 @@ function swipeBack(){
     x0=null;
     if(dx>60 && Math.abs(dy)<50 && dt<700){ swipeBack(); }
   },{passive:true});
+})();
+</script>
+<script>
+(function(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var VIEWS=['temaViewer','favsPanel','toolView','toolsPanel','pedCalcView','labsPanel','temasPanel','detailView','homeView','hubView'];
+  var ANIM=false;
+  window.addEventListener('load',function(){ setTimeout(function(){ ANIM=true; },350); });
+  function el(id){ return document.getElementById(id); }
+  function topVisible(){ for(var i=0;i<VIEWS.length;i++){ var e=el(VIEWS[i]); if(e && e.style.display!=='none') return e; } return null; }
+  function onEnd(node,cb){ var done=false; function h(){ if(done)return; done=true; node.removeEventListener('animationend',h); cb(); } node.addEventListener('animationend',h); setTimeout(h,520); }
+  function pushIn(node){ if(!node) return; node.classList.remove('nav-push-in'); void node.offsetWidth; node.classList.add('nav-push-in'); onEnd(node,function(){ node.classList.remove('nav-push-in'); }); }
+  function popBack(out,dest){
+    if(dest){ dest.classList.remove('nav-pop-in'); void dest.offsetWidth; dest.classList.add('nav-pop-in'); onEnd(dest,function(){ dest.classList.remove('nav-pop-in'); }); }
+    if(out && out!==dest){ out.style.display='block'; out.classList.add('nav-pop-out'); onEnd(out,function(){ out.classList.remove('nav-pop-out'); out.style.display='none'; }); }
+  }
+  function wrapForward(name,destId){ var o=window[name]; if(typeof o!=='function') return; window[name]=function(){ var r=o.apply(this,arguments); if(ANIM) pushIn(el(destId)); return r; }; }
+  function wrapBack(name,destId){ var o=window[name]; if(typeof o!=='function') return; window[name]=function(){ var out=ANIM?topVisible():null; var r=o.apply(this,arguments); if(ANIM) popBack(out,el(destId)); return r; }; }
+  wrapBack('goInicio','inicioView');
+  wrapBack('goHome','homeView');
+  wrapForward('openDrug','detailView');
+  wrapForward('openGroup','homeView');
+  wrapForward('openTool','toolView');
+  wrapForward('openFavs','favsPanel');
+  wrapForward('openPedCalc','pedCalcView');
+  wrapForward('openTemaFile','temaViewer');
+  var _cv=window.closeTemaViewer;
+  if(typeof _cv==='function'){ window.closeTemaViewer=function(){ var tv=el('temaViewer'); if(ANIM && tv && tv.style.display!=='none'){ tv.classList.add('nav-slide-out-fixed'); onEnd(tv,function(){ tv.classList.remove('nav-slide-out-fixed'); _cv(); }); } else { _cv(); } }; }
 })();
 </script>
 <script>if('serviceWorker' in navigator){(function(){var had=!!navigator.serviceWorker.controller;var refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(refreshing)return;refreshing=true;if(had)location.reload();});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});})();}</script>
