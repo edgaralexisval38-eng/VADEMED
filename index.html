@@ -42,6 +42,26 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 @keyframes navPopOut{from{transform:translateX(0);}to{transform:translateX(100%);}}
 .nav-slide-out-fixed{animation:navPopOut .32s cubic-bezier(.32,.72,0,1) forwards;}
 @media (prefers-reduced-motion:reduce){.nav-push-in,.nav-pop-in,.nav-pop-out,.nav-slide-out-fixed{animation:none!important;}}
+/* Micro-interacciones: efecto de presión al tocar tarjetas/filas */
+.ini-row,.rec,.drow,.qcalc{transition:transform .11s ease,box-shadow .12s ease,background-color .12s ease;}
+.ini-row:active,.rec:active,.drow:active,.qcalc:active{transform:scale(.975);}
+/* Lista escalonada al abrir un grupo */
+@keyframes vmItemIn{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:none;}}
+.vm-stagger>.drow{animation:vmItemIn .30s cubic-bezier(.32,.72,0,1) both;}
+.vm-stagger>.drow:nth-child(1){animation-delay:.02s}.vm-stagger>.drow:nth-child(2){animation-delay:.05s}.vm-stagger>.drow:nth-child(3){animation-delay:.08s}.vm-stagger>.drow:nth-child(4){animation-delay:.11s}.vm-stagger>.drow:nth-child(5){animation-delay:.14s}.vm-stagger>.drow:nth-child(6){animation-delay:.17s}.vm-stagger>.drow:nth-child(7){animation-delay:.20s}.vm-stagger>.drow:nth-child(8){animation-delay:.23s}.vm-stagger>.drow:nth-child(n+9){animation-delay:.26s}
+/* Shimmer mientras carga un tema */
+#temaViewer .tv-bar{position:relative;z-index:4;}
+.tv-skel{position:absolute;inset:0;background:var(--app);z-index:3;padding:66px 18px 18px;display:none;}
+#temaViewer.loading .tv-skel{display:block;}
+.tv-skel .skl{border-radius:9px;background:linear-gradient(90deg,rgba(20,30,60,.06) 25%,rgba(20,30,60,.12) 37%,rgba(20,30,60,.06) 63%);background-size:400% 100%;animation:vmSkl 1.25s ease infinite;margin:0 0 13px;}
+@keyframes vmSkl{from{background-position:100% 0}to{background-position:-100% 0}}
+/* Splash de arranque (solo cuando la app está instalada) */
+#vmSplash{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#2f6fe0,#1f4fa8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:1;transition:opacity .45s ease;}
+#vmSplash.hide{opacity:0;pointer-events:none;}
+#vmSplash img{width:96px;height:96px;border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.32);animation:vmSplashPop .55s cubic-bezier(.22,1,.36,1);}
+#vmSplash .vm-sname{color:#fff;font-weight:800;font-size:20px;letter-spacing:.3px;opacity:.96;animation:vmSplashPop .55s .06s both cubic-bezier(.22,1,.36,1);}
+@keyframes vmSplashPop{from{transform:scale(.72);opacity:0;}to{transform:scale(1);opacity:1;}}
+@media (prefers-reduced-motion:reduce){.vm-stagger>.drow,#vmSplash img,#vmSplash .vm-sname,.tv-skel .skl{animation:none!important;}}
 
 .topbar{display:flex;align-items:center;padding:14px 16px 4px;}
 .tb-btn{background:none;border:none;color:var(--navy);cursor:pointer;padding:6px;display:flex;border-radius:10px;}
@@ -625,6 +645,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 </style>
 </head>
 <body>
+<div id="vmSplash"><img src="icon.png" alt=""><div class="vm-sname">VadeMed</div></div>
+<script>(function(){var sp=document.getElementById('vmSplash');if(!sp)return;var st=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||navigator.standalone;if(!st){sp.style.display='none';return;}window.addEventListener('load',function(){setTimeout(function(){sp.classList.add('hide');setTimeout(function(){sp.style.display='none';},500);},850);});})();</script>
 <div class="app">
 
   <div id="inicioView">
@@ -1043,6 +1065,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
       <button class="tv-back" onclick="closeTemaViewer()"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Volver</button>
       <div class="tv-title" id="tvTitle">Tema</div>
       <button class="tv-ext" onclick="openTemaExternal()" aria-label="Abrir en pestaña nueva"><svg viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-8 8M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="tv-skel" aria-hidden="true">
+      <div class="skl" style="height:26px;width:58%"></div>
+      <div class="skl" style="height:13px;width:100%;margin-top:18px"></div>
+      <div class="skl" style="height:13px;width:93%"></div>
+      <div class="skl" style="height:13px;width:97%"></div>
+      <div class="skl" style="height:78px;width:100%;margin-top:6px"></div>
+      <div class="skl" style="height:13px;width:88%"></div>
+      <div class="skl" style="height:13px;width:72%"></div>
+      <div class="skl" style="height:58px;width:100%;margin-top:6px"></div>
+      <div class="skl" style="height:13px;width:90%"></div>
     </div>
     <iframe id="temaFrame" title="Tema" src="about:blank"></iframe>
   </div>
@@ -30233,6 +30266,7 @@ function renderList(filter){
     if(CURGROUP && gkey(o.d)!==CURGROUP) return false;
     return !filter || norm(o.d.name).indexOf(filter)>=0 || norm(o.d.sub||'').indexOf(filter)>=0;
   });
+  $('drugList').classList.toggle('vm-stagger', !filter);
   $('drugList').innerHTML = rows.length ? rows.map(function(o){
     return '<button class="drow" data-i="'+o.i+'" onclick="openDrug('+o.i+')">'
       +'<span class="drow-ic">'+(ICON[(o.d.badges&&o.d.badges[0]&&o.d.badges[0].ic)||'shield']||ICON.shield)+'</span>'
@@ -31628,7 +31662,8 @@ function openTemaFile(f){
     var name='Tema';
     try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){ if(t.file===f) name=t.t; });}); }catch(e){}
     var tt=document.getElementById('tvTitle'); if(tt) tt.textContent=name;
-    fr.onload=function(){ try{ var d=fr.contentDocument||fr.contentWindow.document; if(d&&d.head&&!d.getElementById('__tvfix')){ var st=d.createElement('style'); st.id='__tvfix'; st.textContent='body>button[onclick*="history.back"]{display:none!important;} html,body{overscroll-behavior-y:contain;} .tabbar,.tabs,.qtabs,[class*="tabbar"],[class*="tab-bar"]{position:static!important;top:auto!important;}'; d.head.appendChild(st); } }catch(e){} };
+    fr.onload=function(){ try{ var d=fr.contentDocument||fr.contentWindow.document; if(d&&d.head&&!d.getElementById('__tvfix')){ var st=d.createElement('style'); st.id='__tvfix'; st.textContent='body>button[onclick*="history.back"]{display:none!important;} html,body{overscroll-behavior-y:contain;} .tabbar,.tabs,.qtabs,[class*="tabbar"],[class*="tab-bar"]{position:static!important;top:auto!important;}'; d.head.appendChild(st); } }catch(e){} tv.classList.remove('loading'); };
+    tv.classList.add('loading'); setTimeout(function(){ tv.classList.remove('loading'); }, 4000);
     fr.src=f; tv.style.display='flex';
     var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
     document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden';
