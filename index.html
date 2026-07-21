@@ -31829,5 +31829,34 @@ function swipeBack(){
 })();
 </script>
 <script>if('serviceWorker' in navigator){(function(){var had=!!navigator.serviceWorker.controller;var refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(refreshing)return;refreshing=true;if(had)location.reload();});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});})();}</script>
+<div id="dlOffline" style="display:none;position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:6000;background:#2f6fe0;color:#fff;padding:9px 18px;border-radius:22px;font-size:12.5px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.22);max-width:88%;text-align:center;">Preparando modo sin internet…</div>
+<script>
+(function(){
+  if(!('serviceWorker' in navigator) || !('caches' in window)) return;
+  function tfiles(){ var a=[]; try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){ (p.items||[]).forEach(function(it){ if(it.file) a.push(it.file); }); }); }catch(e){} a.push('avatar.png'); return a.filter(function(f,i){ return a.indexOf(f)===i; }); }
+  function precache(){
+    var list=tfiles(), total=list.length; if(!total) return;
+    caches.keys().then(function(names){
+      var cn=names.filter(function(n){ return n.indexOf('vademed')===0; }).sort();
+      cn=cn.length?cn[cn.length-1]:null; if(!cn) return;
+      caches.open(cn).then(function(cache){
+        var checks=list.map(function(f){ return cache.match(f).then(function(m){ return m?null:f; }); });
+        Promise.all(checks).then(function(res){
+          var missing=res.filter(Boolean);
+          if(!missing.length || !navigator.onLine) return;
+          var el=document.getElementById('dlOffline'); if(el) el.style.display='block';
+          var done=total-missing.length, idx=0, fin=false;
+          function upd(){ if(el) el.textContent='Descargando para uso offline… '+Math.round(done/total*100)+'%'; }
+          function finish(){ if(fin)return; fin=true; if(el){ el.textContent='✓ Ya funciona sin internet'; el.style.background='#2e8b6f'; setTimeout(function(){ el.style.display='none'; },3500); } }
+          function pump(){ if(idx>=missing.length) return; var f=missing[idx++]; fetch(f).catch(function(){}).then(function(){ done++; upd(); if(done>=total){ finish(); } else if(idx<missing.length){ pump(); } }); }
+          upd(); for(var i=0;i<4 && i<missing.length;i++) pump();
+        });
+      });
+    });
+  }
+  function start(){ if(navigator.serviceWorker.controller) precache(); else navigator.serviceWorker.addEventListener('controllerchange', function(){ setTimeout(precache,800); }); }
+  window.addEventListener('load', function(){ setTimeout(start, 2500); });
+})();
+</script>
 </body>
 </html>
