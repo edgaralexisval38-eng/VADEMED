@@ -1,7 +1,7 @@
 /* VadeMed service worker — cache offline resiliente */
-var CACHE = 'vademed-v16';
+var CACHE = 'vademed-v17';
 var CRITICAL = ['./', 'index.html'];       /* si esto no se cachea, NO aceptamos la version nueva */
-var OPTIONAL = ['icon.png', 'manifest.json'];
+var OPTIONAL = ['icon2.png', 'manifest.json'];
 
 self.addEventListener('install', function(e){
   e.waitUntil(
