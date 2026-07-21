@@ -1,5 +1,5 @@
 /* VadeMed service worker — cache offline resiliente */
-var CACHE = 'vademed-v17';
+var CACHE = 'vademed-v18';
 var CRITICAL = ['./', 'index.html'];       /* si esto no se cachea, NO aceptamos la version nueva */
 var OPTIONAL = ['icon2.png', 'manifest.json'];
 
