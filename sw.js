@@ -1,5 +1,5 @@
 /* VadeMed service worker — cache offline resiliente */
-var CACHE = 'vademed-v23';
+var CACHE = 'vademed-v24';
 var CRITICAL = ['./', 'index.html'];       /* si esto no se cachea, NO aceptamos la version nueva */
 var OPTIONAL = ['icon3.png', 'manifest.json'];
 
@@ -46,13 +46,25 @@ self.addEventListener('fetch', function(e){
 
   var esTema = url.pathname.indexOf('/RESUMENCLINIC/') >= 0;
 
-  /* Navegacion de la APP (nivel superior). NO aplica a iframes ni a temas */
+  /* Navegacion de la APP (nivel superior). NO aplica a iframes ni a temas.
+     RED PRIMERO con limite de 4s: con internet SIEMPRE abre lo fresco (nunca atorado en una
+     copia rota); si la red tarda o no hay, usa la copia guardada. */
   if(req.mode === 'navigate' && req.destination !== 'iframe' && !esTema){
     e.respondWith(
       caches.open(CACHE).then(function(c){
-        var upd = fetch(req).then(function(res){ if(res && res.status === 200) c.put('index.html', res.clone()); return res; }).catch(function(){});
-        /* offline-first para que abra siempre: primero la copia guardada, si no hay, red, si no, './' */
-        return c.match('index.html').then(function(m){ return m || upd.then(function(r){ return r || c.match('./'); }); });
+        var net = fetch(req).then(function(res){
+          if(res && res.status === 200){
+            var cl = res.headers.get('content-length');
+            /* solo guarda si NO parece truncado (el index real pesa ~2.5MB) */
+            if(!cl || parseInt(cl, 10) > 800000){ c.put('index.html', res.clone()); }
+          }
+          return res;
+        }).catch(function(){ return null; });
+        var timeout = new Promise(function(resolve){ setTimeout(function(){ resolve('T'); }, 4000); });
+        return Promise.race([net, timeout]).then(function(r){
+          if(r && r !== 'T') return r;
+          return c.match('index.html').then(function(m){ return m || net.then(function(rr){ return rr || c.match('./'); }); });
+        });
       })
     );
     return;
