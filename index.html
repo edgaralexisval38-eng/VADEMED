@@ -31834,25 +31834,35 @@ function swipeBack(){
 (function(){
   if(!('serviceWorker' in navigator) || !('caches' in window)) return;
   function tfiles(){ var a=[]; try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){ (p.items||[]).forEach(function(it){ if(it.file) a.push(it.file); }); }); }catch(e){} a.push('avatar.png'); return a.filter(function(f,i){ return a.indexOf(f)===i; }); }
-  function precache(){
+  async function precache(){
     var list=tfiles(), total=list.length; if(!total) return;
-    caches.keys().then(function(names){
-      var cn=names.filter(function(n){ return n.indexOf('vademed')===0; }).sort();
-      cn=cn.length?cn[cn.length-1]:null; if(!cn) return;
-      caches.open(cn).then(function(cache){
-        var checks=list.map(function(f){ return cache.match(f).then(function(m){ return m?null:f; }); });
-        Promise.all(checks).then(function(res){
-          var missing=res.filter(Boolean);
-          if(!missing.length || !navigator.onLine) return;
-          var el=document.getElementById('dlOffline'); if(el) el.style.display='block';
-          var done=total-missing.length, idx=0, fin=false;
-          function upd(){ if(el) el.textContent='Descargando para uso offline… '+Math.round(done/total*100)+'%'; }
-          function finish(){ if(fin)return; fin=true; if(el){ el.textContent='✓ Ya funciona sin internet'; el.style.background='#2e8b6f'; setTimeout(function(){ el.style.display='none'; },3500); } }
-          function pump(){ if(idx>=missing.length) return; var f=missing[idx++]; fetch(f).catch(function(){}).then(function(){ done++; upd(); if(done>=total){ finish(); } else if(idx<missing.length){ pump(); } }); }
-          upd(); for(var i=0;i<4 && i<missing.length;i++) pump();
-        });
-      });
-    });
+    var names=await caches.keys();
+    var cn=names.filter(function(n){ return n.indexOf('vademed')===0; }).sort().pop();
+    if(!cn) return;
+    var cache=await caches.open(cn);
+    var missing=[];
+    for(var i=0;i<list.length;i++){ var m=await cache.match(list[i]); if(!m) missing.push(list[i]); }
+    var saved=total-missing.length;
+    var el=document.getElementById('dlOffline');
+    if(!missing.length) return;
+    if(!navigator.onLine) return;
+    if(el){ el.style.display='block'; el.style.background='#2f6fe0'; }
+    function upd(){ if(el) el.textContent='Guardando para uso offline… '+saved+'/'+total; }
+    upd();
+    var idx=0;
+    async function worker(){
+      while(idx<missing.length){
+        var f=missing[idx++];
+        try{ var res=await fetch(f); if(res&&res.ok){ await cache.put(f,res.clone()); var chk=await cache.match(f); if(chk) saved++; } }catch(e){}
+        upd();
+      }
+    }
+    var ws=[]; for(var w=0;w<4;w++) ws.push(worker());
+    await Promise.all(ws);
+    if(el){
+      if(saved>=total){ el.textContent='✓ Todo disponible sin internet ('+total+')'; el.style.background='#2e8b6f'; setTimeout(function(){ el.style.display='none'; },4000); }
+      else { el.textContent='⚠ Solo se guardó '+saved+'/'+total+' — iOS limitó el espacio'; el.style.background='#c0791f'; setTimeout(function(){ el.style.display='none'; },9000); }
+    }
   }
   function start(){ if(navigator.serviceWorker.controller) precache(); else navigator.serviceWorker.addEventListener('controllerchange', function(){ setTimeout(precache,800); }); }
   window.addEventListener('load', function(){ setTimeout(start, 2500); });
