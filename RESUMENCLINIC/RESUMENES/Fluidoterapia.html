@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Fluidoterapia Adulto",
+  "schemaVersion": 1,
+  "description": "Calculadora de fluidoterapia para adulto con cuatro escenarios: mantenimiento/ayuno (Holliday-Segar 4-2-1 y rango NICE 25-30 mL/kg), deshidratación (déficit por % y esquema de reposición), quemado (Parkland 4 mL o ABA/Brooke 2 mL, reparto 8h/16h desde la quemadura, meta de diuresis) y reanimación (choque séptico 30 mL/kg y hipovolémico 10-20 mL/kg en bolos). Con indicación lista, botón de copiar y exportación a PDF profesional (jsPDF incrustado, funciona sin internet).",
+  "mcpTools": [],
+  "mcpServerNames": []
+}
+</script>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -623,40 +632,43 @@ function calcMant(w,out){
   var C=COND[cond_]||COND.std;
   if(C.periop)return calcMantPeriop(w,out,C);
   var r=rate421(w), mlkg=C.mlkg;
-  var volPack=Math.round(w*mlkg/100)*100, ratePack=Math.round(volPack/24);
+  var vol=Math.round(w*mlkg/50)*50;                  // objetivo del día ≈ mlkg × kg (sin snap a litros)
+  var rate=Math.max(1,Math.round(vol/24));           // velocidad real de infusión (mL/h) que entrega el objetivo
   var holdK=!!C.holdK, iso=!!C.iso, KperBag=holdK?0:20;
-  var nBags=Math.max(1,Math.round(volPack/1000));   // nº de bolsas de 1 L al día
-  var hBag=24/nBags;                                 // horas que dura cada bolsa
-  var rBag=Math.round(1000/hBag);                    // mL/h por bolsa de 1 L
-  var Ktot=KperBag*nBags, volSch=nBags*1000;
-  var hTxt=(hBag===Math.round(hBag))?fmt(hBag,0):fmt(hBag,1);
+  var hBag=1000/rate;                                // horas que dura cada bolsa de 1 L a esa velocidad
+  var hTxt=(Math.abs(hBag-Math.round(hBag))<0.06)?fmt(hBag,0):fmt(hBag,1);
+  var nBags=vol/1000;                                // nº de bolsas de 1 L al día (puede ser fraccional)
+  var nBagsTxt=(Math.abs(nBags-Math.round(nBags))<0.06)?fmt(nBags,0):fmt(nBags,1);
+  var Ktot=Math.round(KperBag*vol/1000);             // K total del día (según volumen real)
+  var realMlkg=fmt(vol/w,0);                          // mL/kg realmente entregado (coincide con el objetivo)
   var Kfull=Math.round(1*w/5)*5;
-  // Aporte según líquido base
+  // Aporte de Na/glucosa según líquido base y opción
   var NaPerL=iso?130:77, glucPerL=iso?0:50;
-  var gluc=glucPerL*(volSch/1000), NaTot=NaPerL*(volSch/1000);
+  var gluc=Math.round(glucPerL*vol/1000);
+  var NaA=Math.round(NaPerL*vol/1000);               // opción A: líquido uniforme
+  var NaB=Math.round((NaPerL+154)/2*vol/1000);       // opción B: alterna con NaCl 0.9% (154 mmol/L)
   var bagA=iso?'Ringer lactato o Plasma-Lyte':'Glucosa 5% en NaCl 0.45% (glucosalino)';
   var bag1=iso?'Ringer lactato / Plasma-Lyte':'Glucosa 5%', bag2='NaCl 0.9%';
   var Kseg=holdK?'':(' + KCl '+KperBag+' mEq');
-  var Kfrag=holdK?' · sin KCl inicial':(' · KCl '+KperBag+' mEq c/bolsa');
-  var over=rBag>100;
+  var over=rate>100;
   var h=fBanner(C)+'<div class="kpirow">'
-    +kpi('info','Velocidad',fmt(rBag,0),'mL/h','cada bolsa de 1 L')
-    +kpi('info','Bolsas/día',fmt(nBags,0)+' × 1 L','1 cada '+hTxt+' h','~'+mlkg+' mL/kg')
+    +kpi('info','Velocidad',fmt(rate,0),'mL/h','continuo · '+realMlkg+' mL/kg/día')
+    +kpi('info','Volumen/día',fmt(vol,0),'mL','~'+mlkg+' mL/kg · ≈'+nBagsTxt+' bolsas 1 L')
     +kpi('ok','Alterna 4-2-1',fmt(r,0),'mL/h','Holliday-Segar')
-    +kpi(holdK?'warn':'info','Potasio',holdK?'0':('~'+fmt(Ktot,0)),'mEq/día',holdK?'según labs':KperBag+' mEq/bolsa')
+    +kpi(holdK?'warn':'info','Potasio',holdK?'0':('~'+fmt(Ktot,0)),'mEq/día',holdK?'según labs':KperBag+' mEq/L')
     +'</div>';
-  if(over)h+='<div class="alert a-w"><span class="ai">⚠️</span><div>Ritmo &gt;100 mL/h: NICE sugiere no pasar de 100 mL/h en mantenimiento — si hay riesgo de sobrecarga, repártelo en más bolsas/horas.</div></div>';
+  if(over)h+='<div class="alert a-w"><span class="ai">⚠️</span><div>Ritmo &gt;100 mL/h: NICE sugiere no pasar de 100 mL/h en mantenimiento — si hay riesgo de sobrecarga, reparte en más horas o reduce el volumen.</div></div>';
   h+='<div class="ordc"><div class="ordc-h">'+C.ic+' Mantenimiento · '+C.lbl+' · '+fmt(w,0)+' kg</div><div class="ordc-b">'
-    +row('Objetivo del día','Agua ~'+fmt(volSch,0)+' mL ('+nBags+' × 1 L, '+mlkg+' mL/kg) · Na ~'+fmt(1*w,0)+' mmol · '+(iso?'sin glucosa (añádela aparte si el ayuno es prolongado)':'glucosa 50–100 g')+' · K '+(holdK?'solo si K<5 y diuresis':'a titular por labs'))
+    +row('Objetivo del día','Agua ~'+fmt(vol,0)+' mL ('+realMlkg+' mL/kg · ≈'+nBagsTxt+' bolsas de 1 L) · Na ~'+fmt(1*w,0)+' mmol · '+(iso?'sin glucosa (añádela aparte si el ayuno es prolongado)':'glucosa 50–100 g')+' · K '+(holdK?'solo si K<5 y diuresis':'a titular por labs'))
     +row('Opción A · '+(iso?'isotónico balanceado (preferida)':'con glucosalino (preferida)'),'')
-    +'<div class="vline"><span>'+bagA+' 1000 mL'+Kseg+'</span><b>1 bolsa cada '+hTxt+' h</b></div>'
-    +'<div class="vline"><span>Velocidad de cada bolsa</span><b>'+fmt(rBag,0)+' mL/h</b></div>'
-    +'<div class="vline"><span>Repetir hasta completar</span><b>'+nBags+' bolsas/día ('+fmt(volSch,0)+' mL'+(holdK?'':' · KCl ~'+fmt(Ktot,0)+' mEq')+')</b></div>'
-    +row('Opción B · '+(iso?'alternando isotónicos':'sin glucosalino')+' (intercaladas)','Alterna las dos bolsas: acaba una y cuelga la otra')
-    +'<div class="vline"><span>Bolsa 1 · '+bag1+' 1000 mL'+Kseg+'</span><b>cada '+hTxt+' h · '+fmt(rBag,0)+' mL/h</b></div>'
-    +'<div class="vline"><span>Bolsa 2 · '+bag2+' 1000 mL'+Kseg+'</span><b>cada '+hTxt+' h · '+fmt(rBag,0)+' mL/h</b></div>'
-    +'<div class="vline"><span>Se intercalan 1→2→1→2…</span><b>'+nBags+' bolsas/día ('+fmt(volSch,0)+' mL'+(holdK?'':' · KCl ~'+fmt(Ktot,0)+' mEq')+')</b></div>'
-    +row('Aporta al día',(iso?'Sin glucosa · ':'Glucosa ~'+fmt(gluc,0)+' g · ')+'Na ~'+fmt(NaTot,0)+' mmol · K '+(holdK?'0 (según labs)':'~'+fmt(Ktot,0)+' mEq'))
+    +'<div class="vline"><span>'+bagA+' 1000 mL'+Kseg+'</span><b>'+fmt(rate,0)+' mL/h</b></div>'
+    +'<div class="vline"><span>Cada bolsa de 1 L dura</span><b>~'+hTxt+' h</b></div>'
+    +'<div class="vline"><span>Repetir hasta completar</span><b>~'+fmt(vol,0)+' mL/día (≈'+nBagsTxt+' bolsas'+(holdK?'':' · KCl ~'+fmt(Ktot,0)+' mEq')+')</b></div>'
+    +row('Opción B · '+(iso?'alternando isotónicos':'sin glucosalino')+' (intercaladas)','Alterna las dos bolsas: acaba una y cuelga la otra, todas a '+fmt(rate,0)+' mL/h')
+    +'<div class="vline"><span>Bolsa 1 · '+bag1+' 1000 mL'+Kseg+'</span><b>~'+hTxt+' h · '+fmt(rate,0)+' mL/h</b></div>'
+    +'<div class="vline"><span>Bolsa 2 · '+bag2+' 1000 mL'+Kseg+'</span><b>~'+hTxt+' h · '+fmt(rate,0)+' mL/h</b></div>'
+    +'<div class="vline"><span>Se intercalan 1→2→1→2…</span><b>≈'+nBagsTxt+' bolsas/día ('+fmt(vol,0)+' mL'+(holdK?'':' · KCl ~'+fmt(Ktot,0)+' mEq')+')</b></div>'
+    +row('Aporta al día',(iso?'Sin glucosa · ':'Glucosa ~'+fmt(gluc,0)+' g · ')+'Na ~'+fmt(NaA,0)+' mmol (opción A)'+(NaB!==NaA?' / ~'+fmt(NaB,0)+' mmol (opción B, por el NaCl 0.9%)':'')+' · K '+(holdK?'0 (según labs)':'~'+fmt(Ktot,0)+' mEq'))
     +row('Potasio',holdK
         ?'<b>Inicia SIN potasio.</b> Agrégalo solo si K⁺ <5 mmol/L y hay diuresis; empieza en 10–20 mEq/L y revalora con K sérico. En oliguria/anuria o K⁺ ≥5, no des KCl.'
         :'Inicia en <b>'+KperBag+' mEq/L (~'+fmt(Ktot,0)+' mEq/día)</b> y titula al K sérico. El requerimiento pleno de mantenimiento es ~1 mmol/kg ('+fmt(Kfull,0)+' mEq) — para llegar ahí sube a 30–40 mEq/L (máx 40) solo con función renal normal y diuresis.')
@@ -666,9 +678,10 @@ function calcMant(w,out){
   out.innerHTML=h;
   var bnT=C.banner?('CONSIDERACIÓN: '+C.lbl.toUpperCase()+'\n  - '+C.banner.replace(/<[^>]+>/g,'')+'\n\n'):'';
   var T=SEP()+'LÍQUIDOS DE MANTENIMIENTO (AYUNO)'+(C===COND.std?'':' · '+C.lbl.toUpperCase())+'\n'+SEP()+'Peso '+fmt(w,0)+' kg\n\n'+bnT
-    +'OBJETIVO DEL DÍA\n  - Agua ~'+fmt(volSch,0)+' mL ('+nBags+' bolsas de 1 L, '+mlkg+' mL/kg) · Na ~'+fmt(1*w,0)+' mmol · '+(iso?'sin glucosa':'glucosa 50-100 g')+' · K '+(holdK?'solo si K<5 y diuresis':'a titular')+'\n\n'
-    +'OPCION A · '+(iso?'ISOTONICO BALANCEADO (preferida)':'CON GLUCOSALINO (preferida)')+'\n  - '+bagA+' 1000 mL'+Kseg+'\n  - Pasar cada bolsa en '+hTxt+' h ('+fmt(rBag,0)+' mL/h)\n  - Repetir hasta '+nBags+' bolsas/día ('+fmt(volSch,0)+' mL'+(holdK?'':', KCl ~'+fmt(Ktot,0)+' mEq')+')\n\n'
-    +'OPCION B · '+(iso?'ALTERNANDO ISOTONICOS':'SIN GLUCOSALINO')+' (intercaladas)\n  - Bolsa 1: '+bag1+' 1000 mL'+Kseg+' -> cada '+hTxt+' h ('+fmt(rBag,0)+' mL/h)\n  - Bolsa 2: '+bag2+' 1000 mL'+Kseg+' -> cada '+hTxt+' h ('+fmt(rBag,0)+' mL/h)\n  - Se intercalan 1->2->1->2... hasta '+nBags+' bolsas/día ('+fmt(volSch,0)+' mL'+(holdK?'':', KCl ~'+fmt(Ktot,0)+' mEq')+')\n\n'
+    +'OBJETIVO DEL DÍA\n  - Agua ~'+fmt(vol,0)+' mL ('+realMlkg+' mL/kg, ≈'+nBagsTxt+' bolsas de 1 L) · Na ~'+fmt(1*w,0)+' mmol · '+(iso?'sin glucosa':'glucosa 50-100 g')+' · K '+(holdK?'solo si K<5 y diuresis':'a titular')+'\n\n'
+    +'OPCION A · '+(iso?'ISOTONICO BALANCEADO (preferida)':'CON GLUCOSALINO (preferida)')+'\n  - '+bagA+' 1000 mL'+Kseg+'\n  - Pasar a '+fmt(rate,0)+' mL/h (cada bolsa de 1 L dura ~'+hTxt+' h)\n  - Repetir hasta ~'+fmt(vol,0)+' mL/día (≈'+nBagsTxt+' bolsas'+(holdK?'':', KCl ~'+fmt(Ktot,0)+' mEq')+')\n\n'
+    +'OPCION B · '+(iso?'ALTERNANDO ISOTONICOS':'SIN GLUCOSALINO')+' (intercaladas)\n  - Bolsa 1: '+bag1+' 1000 mL'+Kseg+' -> '+fmt(rate,0)+' mL/h (~'+hTxt+' h)\n  - Bolsa 2: '+bag2+' 1000 mL'+Kseg+' -> '+fmt(rate,0)+' mL/h (~'+hTxt+' h)\n  - Se intercalan 1->2->1->2... hasta ≈'+nBagsTxt+' bolsas/día ('+fmt(vol,0)+' mL'+(holdK?'':', KCl ~'+fmt(Ktot,0)+' mEq')+')\n\n'
+    +'APORTA AL DIA\n  - '+(iso?'Sin glucosa':'Glucosa ~'+fmt(gluc,0)+' g')+' · Na ~'+fmt(NaA,0)+' mmol (opcion A)'+(NaB!==NaA?' / ~'+fmt(NaB,0)+' mmol (opcion B, por el NaCl 0.9%)':'')+' · K '+(holdK?'0 (segun labs)':'~'+fmt(Ktot,0)+' mEq')+'\n\n'
     +'POTASIO\n'+(holdK
         ?'  - Iniciar SIN potasio; agregar solo con K<5 y diuresis (10-20 mEq/L) y revalorar\n  - K>=5 u oliguria/anuria: no dar KCl\n'
         :'  - Iniciar '+KperBag+' mEq/L (~'+fmt(Ktot,0)+' mEq/día) y titular al K sérico\n  - Requerimiento pleno ~1 mmol/kg ('+fmt(Kfull,0)+' mEq): subir a 30-40 mEq/L (max 40) con función renal normal\n')+'\n'
