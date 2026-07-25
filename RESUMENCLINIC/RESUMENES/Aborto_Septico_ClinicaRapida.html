@@ -81,6 +81,12 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 .biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
 .nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
 .nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--gray-900);}
+.algo-qs{font-size:12px;color:var(--gray-600);margin-bottom:10px;line-height:1.5;}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.algo-reset{margin-top:4px;padding:8px 14px;border:none;background:var(--gray-100);color:var(--gray-700);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
 @media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
 </style>
 </head>
@@ -111,6 +117,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
   <button class="tab" onclick="showT('clin',this)">🩺 Clínica</button>
   <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
   <button class="tab" onclick="showT('tx',this)">💊 Manejo</button>
   <button class="tab" onclick="showT('comp',this)">⚠️ Complicaciones</button>
   <button class="tab" onclick="showT('legal',this)">⚖️ Médico-legal</button>
@@ -244,6 +251,15 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   </div></div>
 </div>
 
+<!-- ALGORITMO -->
+<div class="panel" id="tab-alg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo de manejo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🧭</span><div>Responde cada paso: reconoce el <b>aborto séptico</b>, gradúa la <b>gravedad</b> y desemboca en el <b>paquete de manejo de la 1.ª hora</b> con dosis. No sustituye el juicio clínico.</div></div>
+    <div id="alg-box"></div>
+  </div></div>
+</div>
+
 <!-- MANEJO -->
 <div class="panel" id="tab-tx">
   <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Principio — todo EN PARALELO</div>Reanimación + antibiótico de amplio espectro (&lt;1 h) + <b>control del foco (evacuación uterina)</b> son <b>simultáneos</b>, no secuenciales. <b>No esperes a la afebrilidad para evacuar.</b> Toca cada tarjeta para dosis, vía y frecuencia.</div></div>
@@ -341,6 +357,43 @@ function tcard(f,gc){TFN++;var id='ac'+TFN;var c=gc||f.c||'#9d174d';
 function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#9d174d');h+=tcard(f,col);}return h;}
 function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
 var AC='#9d174d';var CO='#0a5c45';var NO='#7b1c1c';
+
+/* ===== ALGORITMO INTERACTIVO (aborto séptico) ===== */
+var ALG={comp:null,sev:null,step:1};
+function algReset(){ALG={comp:null,sev:null,step:1};algRender();}
+function algAns(k,v){ALG[k]=v;
+ if(k==='comp'){ALG.step=v?2:90;}
+ else if(k==='sev'){ALG.step=v?101:100;}
+ algRender();}
+function algB(txt,k,v){return '<button class="algo-btn" onclick="algAns(\''+k+'\','+v+')">'+txt+'</button>';}
+function algQ(t,s,btns){return '<div class="algo-q"><div class="algo-qt">'+t+'</div><div class="algo-qs">'+s+'</div>'+btns.join('')+'</div>';}
+function algCard(color,titulo,cuerpo){return '<div class="algo-q" style="border-left:4px solid '+color+';"><div style="font-size:15px;font-weight:800;color:'+color+';margin-bottom:8px;line-height:1.25;">'+titulo+'</div>'+cuerpo+'</div>';}
+function algRes(sev){
+ var pkg='<div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#374151;margin-top:2px;">Paquete de la 1.ª hora</div>'+
+  '<div style="font-size:12.5px;color:#374151;line-height:1.6;">'+
+  '<b>(1) Cultivos ANTES del antibiótico:</b> hemocultivos ×2 + cultivo endocervical; BH, lactato, PFH, función renal, coagulación, β-hCG.<br>'+
+  '<b>(2) ⭐ Antibiótico IV empírico de amplio espectro:</b> <b>Clindamicina 900 mg IV c/8 h + Gentamicina 5 mg/kg IV c/24 h</b> (± Ampicilina 2 g IV c/6 h); alternativa Ampicilina-sulbactam 3 g IV c/6 h o Piperacilina-tazobactam 4.5 g IV c/6–8 h.<br>'+
+  '<b>(3) EVACUACIÓN UTERINA URGENTE (AMEU/LUI)</b> tras iniciar antibiótico — NO esperar a la afebrilidad.<br>'+
+  '<b>(4) Oxitocina 10–40 UI</b> en 500–1000 mL de cristaloide IV para el sangrado. Anti-D si Rh negativo; profilaxis antitetánica si aborto inseguro.</div>';
+ if(sev==='choque'){
+  var extra='<div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#7b1c1c;margin-top:10px;">Añade por choque</div>'+
+   '<div style="font-size:12.5px;color:#374151;line-height:1.6;">'+
+   'Reanimación con <b>cristaloides 30 mL/kg IV</b>, <b>Norepinefrina 0.05 mcg/kg/min IV titulada</b> a PAM ≥65 mmHg si la hipotensión persiste, O₂ para SpO₂ ≥92%, <b>UCI</b>.<br>'+
+   'La <b>evacuación uterina urgente</b> es el control del foco (prioritaria). Valorar <b>laparotomía/histerectomía</b> si mionecrosis clostridial, perforación o refractariedad. Reponer <b>hemoderivados</b> si CID.</div>';
+  return algCard('#7b1c1c','Aborto séptico con choque — emergencia','<div style="font-size:11px;font-weight:700;color:#7b1c1c;margin-bottom:8px;">Choque séptico: control del foco + soporte hemodinámico en UCI</div>'+pkg+extra);
+ }
+ return algCard('#a16207','Aborto séptico sin choque — actuar en la 1.ª hora','<div style="font-size:11px;font-weight:700;color:#a16207;margin-bottom:8px;">Estable: activar el paquete completo de inmediato</div>'+pkg);
+}
+function algNoComp(){return algCard('#6b7280','Cuadro no compatible','<div style="font-size:12.5px;color:#374151;line-height:1.6;">Reconsidera otras causas de fiebre/dolor pélvico: <b>EPI, apendicitis, ITU/pielonefritis, corioamnionitis</b>. Reevalúa con exploración, laboratorio e imagen antes de asumir aborto séptico.</div>');}
+function algRender(){var s=ALG.step,h='';
+ if(s===1)h+=algQ('Paso 1 · ¿Cuadro compatible con aborto séptico?','Aborto/instrumentación reciente + fiebre + dolor pélvico + flujo/loquios fétidos ± sangrado.',[algB('✓ Sí','comp',true),algB('✗ No / dudoso','comp',false)]);
+ else if(s===2)h+=algQ('Paso 2 · ¿Datos de sepsis grave / choque?','Hipotensión, lactato elevado, alteración de conciencia, oliguria, taquipnea.',[algB('✓ Sí','sev',true),algB('✗ No, estable','sev',false)]);
+ else if(s===90)h+=algNoComp();
+ else if(s===100)h+=algRes('estable');
+ else if(s===101)h+=algRes('choque');
+ h+='<button class="algo-reset" onclick="algReset()">↩ Reiniciar</button>';
+ var box=document.getElementById('alg-box');if(box)box.innerHTML=h;}
+window.addEventListener('load',function(){algReset();});
 
 /* REANIMACION (sepsis) */
 var R_CULT={n:'Hemocultivos + lactato',sub:'Antes del antibiótico, sin retrasarlo',c:AC,lbl:'Acción',dosis:['2 sets de hemocultivos (aerobio/anaerobio) antes de la 1.ª dosis','Cultivo endocervical y de restos/tejido evacuado','Lactato sérico inicial y repetir a las 2–4 h si ≥2 mmol/L'],iv:'Toma de muestras IV/local',mon:'Aclaramiento de lactato como guía de reanimación',nota:'<b>Paquete de la 1.ª hora:</b> medir lactato, tomar cultivos, iniciar antibiótico y cristaloides. No demorar el antibiótico por obtener los cultivos.'};

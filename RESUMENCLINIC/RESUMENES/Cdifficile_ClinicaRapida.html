@@ -83,6 +83,8 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 .algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
 .algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
 .algo-btn:hover{border-color:var(--ac);}
+.algo-qs{font-size:12px;color:var(--gray-600);margin-bottom:10px;line-height:1.5;}
+.algo-reset{margin-top:4px;padding:8px 14px;border:none;background:var(--gray-100);color:var(--gray-700);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
 .farm-b{padding:10px 13px;}
 .farm-f{margin-bottom:8px;}
 .farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
@@ -143,6 +145,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab" onclick="showT('dx',this)">🧫 Diagnóstico</button>
   <button class="tab" onclick="showT('sev',this)">📊 Severidad</button>
   <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
   <button class="tab" onclick="showT('rec',this)">🔁 Recurrencias</button>
   <button class="tab" onclick="showT('ful',this)">🚨 Fulminante</button>
   <button class="tab" onclick="showT('prev',this)">🧼 Prevención</button>
@@ -427,6 +430,15 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   </div></div>
 </div>
 
+<!-- ALGORITMO INTERACTIVO -->
+<div class="panel" id="tab-alg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo → tratamiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🧭</span><div>Responde cada paso: descarta primero la <strong>enfermedad fulminante</strong>, distingue <strong>episodio inicial vs recurrencia</strong> y gradúa la gravedad para llegar al <strong>tratamiento con posología</strong>.</div></div>
+    <div id="alg-box"></div>
+  </div></div>
+</div>
+
 <div class="panel" id="tab-farm">
   <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div>Todos los fármacos del manejo. Toca cada tarjeta para desplegar.</div></div>
   <div id="tc-all"></div>
@@ -556,6 +568,43 @@ window.addEventListener('load',function(){
   tcards('tc-ful',TX_FUL);
   tcards('tc-all',TX_ALL);
 });
+
+/* ===== ALGORITMO INTERACTIVO C. difficile ===== */
+var ALG={ful:null,tipo:null,grave:null,rec:null,step:1};
+function algReset(){ALG={ful:null,tipo:null,grave:null,rec:null,step:1};algRender();}
+function algAns(k,v){ALG[k]=v;
+ if(k==='ful'){ALG.step=v?900:2;}
+ else if(k==='tipo'){ALG.step=(v==='ini')?3:4;}
+ else if(k==='grave'){ALG.step=v?910:920;}
+ else if(k==='rec'){ALG.step=(v==='r1')?930:940;}
+ algRender();}
+function algB(txt,k,v){return '<button class="algo-btn" onclick="algAns(\''+k+'\','+v+')">'+txt+'</button>';}
+function algQ(t,s,btns){return '<div class="algo-q"><div class="algo-qt">'+t+'</div><div class="algo-qs">'+s+'</div>'+btns.join('')+'</div>';}
+function algCard(color,tag,body){return '<div class="algo-q" style="border-left:4px solid '+color+';">'+
+ '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:'+color+';margin-bottom:6px;">'+tag+'</div>'+
+ '<div style="font-size:12.5px;color:#374151;line-height:1.65;">'+body+'</div></div>';}
+function algRes(){
+ var s=ALG.step;
+ if(s===900)return algCard('#7b1c1c','🚨 Enfermedad fulminante',
+   '⭐ <b>Vancomicina 500 mg VO/SNG c/6 h</b> + <b>Metronidazol 500 mg IV c/8 h</b>. Si hay íleo, añadir <b>Vancomicina en enema de retención (500 mg en 100 mL SSN c/6 h)</b>.<br><b>Consultar cirugía desde el inicio.</b> Reanimación hidroelectrolítica; evitar antiperistálticos.');
+ if(s===910)return algCard('#a16207','Episodio inicial · GRAVE',
+   'Grave = leucocitos ≥15,000/mm³ <b>o</b> creatinina ≥1.5 mg/dL.<br>⭐ <b>Fidaxomicina 200 mg VO c/12 h × 10 días</b> o <b>Vancomicina 125 mg VO c/6 h × 10 días</b>. Suspender el antibiótico causal; hidratación; vigilar por progresión a fulminante.');
+ if(s===920)return algCard('#0a5c45','Episodio inicial · NO grave',
+   '⭐ <b>Fidaxomicina 200 mg VO c/12 h × 10 días</b> (preferida) o <b>Vancomicina 125 mg VO c/6 h × 10 días</b>. (Metronidazol 500 mg VO c/8 h solo si no hay alternativa.) Suspender el antibiótico causal y revisar el IBP.');
+ if(s===930)return algCard('#2b6cb0','1.ª recurrencia',
+   '⭐ <b>Fidaxomicina 200 mg VO c/12 h × 10 días</b> (o pauta pulsada-extendida) o <b>Vancomicina en pauta descendente/pulsada</b>. Considerar terapia de microbiota.');
+ if(s===940)return algCard('#6b46a8','≥2 recurrencias',
+   '⭐ <b>Terapia de microbiota (Rebyota / Vowst / FMT)</b> tras un ciclo de antibiótico. Alternativa: <b>Vancomicina en pauta descendente + Rifaximina 400 mg c/8 h × 20 días</b>.');
+ return '';}
+function algRender(){var s=ALG.step,h='';
+ if(s===1)h+=algQ('Paso 1 · ¿Enfermedad FULMINANTE?','Hipotensión o choque, <b>íleo</b> o <b>megacolon tóxico</b>.',[algB('✓ Sí','ful',true),algB('✗ No','ful',false)]);
+ else if(s===2)h+=algQ('Paso 2 · ¿Episodio inicial o recurrencia?','Primer episodio frente a reaparición tras respuesta previa.',[algB('Episodio inicial','tipo','\'ini\''),algB('Recurrencia','tipo','\'rec\'')]);
+ else if(s===3)h+=algQ('Paso 3 · ¿GRAVE?','Leucocitos ≥15,000/mm³ <b>o</b> creatinina ≥1.5 mg/dL.',[algB('✓ Grave','grave',true),algB('✗ No grave','grave',false)]);
+ else if(s===4)h+=algQ('Paso 4 · ¿Primera recurrencia o ≥2 recurrencias?','Número de episodios recurrentes previos.',[algB('1.ª recurrencia','rec','\'r1\''),algB('≥2 recurrencias','rec','\'r2\'')]);
+ else h+=algRes();
+ h+='<button class="algo-reset" onclick="algReset()">↩ Reiniciar</button>';
+ var box=document.getElementById('alg-box');if(box)box.innerHTML=h;}
+window.addEventListener('load',function(){algReset();});
 
 </script>
 </body>

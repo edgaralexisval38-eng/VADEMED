@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Suturas · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#334155;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e2e8f0;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.mk-search{width:100%;padding:11px 14px;border:1.5px solid var(--bd);border-radius:var(--rad);font-size:14px;font-family:inherit;margin-bottom:12px;}
+.mk-search:focus{outline:none;border-color:var(--ac);}
+.biblio-header{background:linear-gradient(135deg,#0f172a,#334155);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#e2e8f0;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#e2e8f0;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.mk-card-body{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0f172a,#334155);">
+  <div class="hdr-top"><div class="hdr-icon">🧵</div><div>
+    <div class="hdr-eye">Cirugía · Material y técnica de sutura</div>
+    <div class="hdr-title">Suturas</div>
+    <div class="hdr-sub">Materiales · propiedades · por tejido · técnicas de puntos · calibres · retiro</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Absorbible vs no absorbible</span>
+    <span class="badge">Mono vs trenzado</span>
+    <span class="badge">Calibre por tejido</span>
+    <span class="badge">USP: más ceros = más fina</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Aproximar</div><div class="qs-l">sin tensión ni isquemia</div></div>
+  <div class="qs"><div class="qs-v">Evertir</div><div class="qs-l">bordes de la herida</div></div>
+  <div class="qs"><div class="qs-v">Mínimo material</div><div class="qs-l">el menor necesario</div></div>
+  <div class="qs"><div class="qs-v">Mono si contaminada</div><div class="qs-l">evita nido de infección</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('princ',this)">📋 Principios</button>
+  <button class="tab" onclick="showT('mat',this)">🔎 Materiales</button>
+  <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
+  <button class="tab" onclick="showT('tejido',this)">🎯 Por tejido</button>
+  <button class="tab" onclick="showT('tec',this)">🧵 Técnicas</button>
+  <button class="tab" onclick="showT('cal',this)">📏 Calibres/agujas</button>
+  <button class="tab" onclick="showT('retiro',this)">🗓️ Retiro</button>
+  <button class="tab" onclick="showT('err',this)">⚠️ Errores</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- PRINCIPIOS -->
+<div class="panel on" id="tab-princ">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🎯</span><div><div class="at">La regla que lo resume todo</div>La sutura debe <b>aproximar los bordes sin tensión ni isquemia</b>, <b>evertir</b> la piel y usar el <b>menor material posible</b>. Elige el material según el <b>tejido, la tensión y si el campo está contaminado</b> — no por costumbre.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Objetivos de una buena sutura</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Aproximar sin tensión ni isquemia</b>: el punto ceñido en exceso estrangula el borde → necrosis, dehiscencia y marcas.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Evertir los bordes</b>: la piel que cicatriza tiende a contraerse hacia dentro; evertir da una cicatriz plana (evita el escalón invertido).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Eliminar el espacio muerto</b> y aproximar por planos: evita seromas/hematomas y abscesos.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Menor material posible</b>: usa el calibre más fino que aguante la tensión y el mínimo número de puntos que cierre bien (menos cuerpo extraño = menos reacción/infección).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Cómo ELEGIR la sutura</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>¿Absorbible o no?</b> Absorbible para planos profundos que no se retiran (subcutáneo <b>Monocryl/Vicryl 3-0/4-0</b>, fascia <b>PDS 0/1</b>, mucosa <b>Vicryl Rapide 4-0</b>). No absorbible para piel a retirar (<b>Nylon/Prolene</b>) o soporte permanente (vascular, malla, esternón).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>¿Mono o multifilamento?</b> Monofilamento (Nylon, Prolene, Monocryl, PDS) desliza mejor, poca reactividad y <b>no alberga bacterias</b> → herida contaminada. Multifilamento trenzado (Vicryl, seda, Ethibond) tiene mejor manejo y anudado pero <b>capilaridad</b> (nido de infección).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Calibre según tejido</b>: cara <b>6-0/5-0</b>; tronco/extremidad <b>4-0/3-0</b>; fascia <b>0/1</b>; vaso <b>5-0 a 7-0</b>; microcirugía <b>9-0 a 11-0</b>. A más ceros, más fina.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Tiempo de soporte</b>: iguala la duración de la fuerza tensil a la cicatrización del tejido (piel ~1–2 sem; fascia necesita <b>meses</b> → PDS/Prolene).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💎</span><span class="st">Reglas de oro</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">El punto se ata para <b>aproximar, no para estrangular</b>: "aprieta hasta juntar, no hasta blanquear".</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">En <b>herida contaminada</b> prefiere <b>monofilamento</b> (Prolene/Monocryl) y evita seda/multifilamento.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">A mayor <b>tensión del tejido</b> → calibre más grueso y material de <b>soporte prolongado</b> (fascia = PDS 0/1).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Toma <b>bocados simétricos</b> a ambos lados y algo más profundos que anchos para <b>evertir</b>.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">El <b>monofilamento requiere más lazadas</b> en el nudo (mayor memoria y deslizamiento).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⛔</span><span class="st">Errores generales</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Cerrar con tensión</b>: si los bordes no juntan sin fuerza → libera/desliza tejido, no compenses con el punto.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Usar <b>calibre demasiado grueso</b> en cara (deja marcas) o demasiado fino en fascia (dehiscencia/eventración).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Invertir los bordes (cicatriz deprimida) por no evertir.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Dejar <b>espacio muerto</b> sin planos profundos → seroma/absceso.</span></div>
+  </div></div>
+</div>
+
+<!-- MATERIALES (BUSCADOR) -->
+<div class="panel" id="tab-mat">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🔎</span><div>Escribe el <b>material</b>, el <b>tipo</b> o el <b>uso</b> (p. ej. "vicryl", "pds", "prolene", "absorbible", "fascia", "3-0"). Toca cada ficha para ver retención de tensión, absorción, calibres, usos, reactividad y perla.</div></div>
+  <input class="mk-search" id="mk-search" type="text" placeholder="Buscar material, tipo o uso…" oninput="filtrar(this.value)">
+  <div id="mk-list"></div>
+</div>
+
+<!-- FISIOPATOLOGIA -->
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">¿Por qué se absorbe una sutura? Dos mecanismos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 210" style="width:100%;max-width:460px;display:block;margin:0 auto;background:#f1f5f9;border-radius:8px;">
+      <line x1="180" y1="10" x2="180" y2="200" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+      <g text-anchor="middle" font-size="9">
+        <!-- IZQUIERDA: HIDROLISIS -->
+        <rect x="14" y="10" width="152" height="24" rx="5" fill="#1d4ed8"/>
+        <text x="90" y="26" fill="#fff" font-weight="700" font-size="9.5">HIDRÓLISIS</text>
+        <text x="90" y="46" fill="#334155" font-size="8">Sintéticos: Vicryl, Monocryl, PDS, Dexon, Maxon</text>
+        <!-- cadena polimero -->
+        <polyline points="24,72 42,60 60,72 78,60 96,72 114,60 132,72 150,60" fill="none" stroke="#334155" stroke-width="2"/>
+        <!-- moleculas de agua rompiendo -->
+        <g fill="#1d4ed8" font-size="8" font-weight="700"><text x="52" y="86">H₂O</text><text x="106" y="86">H₂O</text></g>
+        <line x1="51" y1="66" x2="51" y2="78" stroke="#1d4ed8" stroke-width="1.4"/>
+        <line x1="105" y1="66" x2="105" y2="78" stroke="#1d4ed8" stroke-width="1.4"/>
+        <text x="90" y="104" fill="#334155" font-size="8">el agua rompe los enlaces éster</text>
+        <line x1="90" y1="110" x2="90" y2="122" stroke="#94a3b8" stroke-width="1.3"/><polygon points="86,122 94,122 90,127" fill="#94a3b8"/>
+        <rect x="20" y="128" width="140" height="30" rx="5" fill="#dbeafe" stroke="#1d4ed8"/>
+        <text x="90" y="141" fill="#1e40af" font-size="8">monómeros (ác. glicólico/láctico)</text>
+        <text x="90" y="152" fill="#1e40af" font-size="8">→ CO₂ + H₂O (metabolizados)</text>
+        <text x="90" y="176" fill="#0a7d53" font-size="8" font-weight="700">Reacción inflamatoria MÍNIMA</text>
+        <text x="90" y="188" fill="#64748b" font-size="7.5">predecible; independiente del tejido</text>
+        <!-- DERECHA: ENZIMATICA -->
+        <rect x="194" y="10" width="152" height="24" rx="5" fill="#b45309"/>
+        <text x="270" y="26" fill="#fff" font-weight="700" font-size="9.5">ENZIMÁTICA + FAGOCITOSIS</text>
+        <text x="270" y="46" fill="#334155" font-size="8">Naturales: catgut (colágeno)</text>
+        <!-- fibra de colageno -->
+        <rect x="210" y="62" width="120" height="10" rx="4" fill="#e2c08a" stroke="#b45309"/>
+        <text x="270" y="70" fill="#7a4a00" font-size="7">fibra de colágeno</text>
+        <!-- macrofago -->
+        <circle cx="238" cy="96" r="11" fill="#f6c9a0" stroke="#b45309"/><circle cx="238" cy="96" r="4" fill="#b45309"/>
+        <text x="238" y="116" fill="#7a4a00" font-size="7">macrófago</text>
+        <g fill="#b45309" font-size="7" font-weight="700"><text x="292" y="90">enzimas</text><text x="296" y="100">proteolíticas</text></g>
+        <line x1="270" y1="110" x2="270" y2="122" stroke="#94a3b8" stroke-width="1.3"/><polygon points="266,122 274,122 270,127" fill="#94a3b8"/>
+        <rect x="200" y="128" width="140" height="30" rx="5" fill="#fde8c8" stroke="#b45309"/>
+        <text x="270" y="141" fill="#7a4a00" font-size="8">digestión del colágeno</text>
+        <text x="270" y="152" fill="#7a4a00" font-size="8">por células inflamatorias</text>
+        <text x="270" y="176" fill="#b91c1c" font-size="8" font-weight="700">Reacción inflamatoria INTENSA</text>
+        <text x="270" y="188" fill="#64748b" font-size="7.5">el cromo (crómico) la enlentece</text>
+      </g>
+    </svg>
+    <div class="tw" style="margin-top:10px;"><table class="t">
+      <tr><th></th><th>Hidrólisis (sintéticos)</th><th>Enzimática/fagocitosis (naturales)</th></tr>
+      <tr><td class="dn">Ejemplos</td><td>Vicryl, Monocryl, PDS, Dexon, Maxon</td><td>Catgut simple y crómico</td></tr>
+      <tr><td class="dn">Cómo</td><td>El agua rompe los enlaces éster → monómeros metabolizables</td><td>Enzimas proteolíticas + fagocitosis por macrófagos/neutrófilos</td></tr>
+      <tr><td class="dn">Inflamación</td><td>Mínima y predecible</td><td><strong>Intensa</strong> (más reactividad tisular)</td></tr>
+      <tr><td class="dn">Velocidad</td><td>Constante, casi independiente del tejido</td><td>Variable: acelera con infección/inflamación</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Por eso los <b>sintéticos absorbibles reemplazaron al catgut</b>: absorción <b>predecible</b> y mucha <b>menos reacción</b> tisular. En México, el catgut se retiró de muchos cuadros por su alta reactividad.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📉</span><span class="st">Tensión vs masa: la sutura es un puente temporal</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 175" style="width:100%;max-width:460px;display:block;margin:0 auto;background:#f1f5f9;border-radius:8px;">
+      <line x1="38" y1="18" x2="38" y2="150" stroke="#9aa5b1" stroke-width="1"/>
+      <line x1="38" y1="150" x2="342" y2="150" stroke="#9aa5b1" stroke-width="1"/>
+      <text x="20" y="24" font-size="8" fill="#64748b">%</text>
+      <text x="300" y="164" font-size="8" fill="#64748b">tiempo →</text>
+      <!-- curva sutura (desciende) -->
+      <path d="M44,30 C120,52 210,120 336,142" fill="none" stroke="#b91c1c" stroke-width="2.5"/>
+      <!-- curva herida (asciende) -->
+      <path d="M44,144 C130,124 210,52 336,30" fill="none" stroke="#0a7d53" stroke-width="2.5"/>
+      <!-- punto de cruce -->
+      <circle cx="188" cy="86" r="4" fill="#334155"/>
+      <text x="188" y="78" font-size="7.5" fill="#334155" text-anchor="middle">cruce</text>
+      <text x="70" y="42" font-size="8.5" fill="#b91c1c" font-weight="700">Fuerza de la sutura ↓</text>
+      <text x="238" y="44" font-size="8.5" fill="#0a7d53" font-weight="700" text-anchor="middle">Resistencia de la herida ↑</text>
+      <text x="180" y="172" font-size="8" fill="#64748b" text-anchor="middle">La sutura sostiene mientras la herida cicatriza; luego sobra.</text>
+    </svg>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Son <b>dos relojes distintos</b>: la <b>retención de tensión</b> (cuánto sostiene) se pierde <b>mucho antes</b> que la <b>absorción de masa</b> (cuándo desaparece). Ej.: <b>Monocryl</b> pierde su fuerza a <b>1–2 semanas</b> pero no se absorbe hasta <b>~90–120 días</b>; el <b>PDS</b> sostiene semanas (fascia) y se absorbe en <b>~180–210 días</b>.</div></div>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <tr><th>Fase de cicatrización</th><th>Tiempo</th><th>Qué ocurre</th></tr>
+      <tr><td class="dn">Inflamatoria</td><td>0–5 días</td><td>Neutrófilos y macrófagos rodean la sutura; empieza su degradación. La herida casi no tiene fuerza propia</td></tr>
+      <tr><td class="dn">Proliferativa</td><td>5–14 días</td><td>Fibroblastos y colágeno tipo III, neovascularización; la herida gana resistencia</td></tr>
+      <tr><td class="dn">Remodelación</td><td>Semanas–meses</td><td>Colágeno III → I; la cicatriz alcanza ~<b>70–80%</b> de la fuerza original (nunca el 100%)</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Reactividad, infección y factores que modifican la absorción</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Factor</th><th>Efecto</th></tr>
+      <tr><td class="dn">Multifilamento (trenzado)</td><td>Sus <b>intersticios albergan bacterias</b> por capilaridad → más infección y reacción; mejor manejo y nudo</td></tr>
+      <tr><td class="dn">Monofilamento</td><td>Liso, <b>menos infección</b> (preferido en herida contaminada); más memoria → requiere más nudos</td></tr>
+      <tr><td class="dm">Infección / inflamación</td><td><b>Aceleran</b> la degradación (sobre todo del catgut); pueden hacerla impredecible</td></tr>
+      <tr><td class="dn">Ambiente enzimático / pH</td><td>Mucosa, tubo digestivo y orina degradan más rápido</td></tr>
+      <tr><td class="dn">Estado del paciente</td><td>Fiebre, desnutrición/hipoproteinemia y radiación alteran la cicatrización y la absorción</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧵</span><div><b>Regla práctica:</b> en heridas <b>contaminadas/infectadas</b> prefiere <b>monofilamento</b> (menos nido bacteriano) y evita material trenzado o de alta reactividad.</div></div>
+  </div></div>
+</div>
+
+<!-- POR TEJIDO -->
+<div class="panel" id="tab-tejido">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Qué sutura por tejido / escenario</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Tejido / escenario</th><th>Material y calibre</th><th>Técnica / retiro</th></tr>
+      <tr><td class="dn">Piel de cara</td><td>No absorbible fino: <b>Nylon/Prolene 6-0 o 5-0</b></td><td>Puntos simples finos; retirar a <b>5 días</b></td></tr>
+      <tr><td class="dn">Piel tronco / extremidad</td><td>No absorbible <b>4-0 / 3-0</b> (Nylon/Prolene)</td><td>Simple o colchonero; retirar <b>7–14 d</b></td></tr>
+      <tr><td class="dn">Cuero cabelludo</td><td><b>Nylon 3-0</b> o <b>grapas</b></td><td>Rápido y hemostático; retirar 7–10 d</td></tr>
+      <tr><td class="dn">Subcutáneo / subdérmico</td><td>Absorbible <b>Monocryl o Vicryl 4-0 / 3-0</b></td><td>Punto enterrado (nudo profundo); no se retira</td></tr>
+      <tr><td class="dn">Fascia / aponeurosis (laparotomía)</td><td><b>PDS o Prolene 0 o 1</b></td><td><b>Sutura continua</b>; soporte prolongado</td></tr>
+      <tr><td class="dn">Mucosa oral</td><td><b>Vicryl Rapide / catgut crómico / seda 4-0</b></td><td>Absorbible que no requiera retiro</td></tr>
+      <tr><td class="dn">Intestino / anastomosis</td><td>Absorbible <b>Vicryl o PDS 3-0 / 4-0</b></td><td>Aguja <b>redonda/cónica</b>; continua o discontinua</td></tr>
+      <tr><td class="dn">Vaso</td><td><b>Prolene 5-0 a 7-0</b> (monofilamento inerte)</td><td>Aguja cónica; continua; doble armado</td></tr>
+      <tr><td class="dn">Tendón</td><td><b>Prolene o Ethibond 3-0 / 4-0</b></td><td>Técnicas core (Kessler); alta resistencia</td></tr>
+      <tr><td class="dn">Cierre estético</td><td><b>Subcuticular con Monocryl 4-0 / 5-0</b></td><td>Continuo intradérmico; sin marcas de punto</td></tr>
+      <tr><td class="dn">Pediatría</td><td>Absorbible que <b>no requiera retiro</b> (<b>Vicryl Rapide / Monocryl</b>)</td><td>Evita el trauma del retiro de puntos</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>En <b>herida contaminada</b> desplaza la elección hacia <b>monofilamento</b> (Prolene, Monocryl) y evita seda/trenzados. Detalle de cada material en la pestaña 🔎 Materiales.</div></div>
+  </div></div>
+</div>
+
+<!-- TECNICAS -->
+<div class="panel" id="tab-tec">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧵</span><span class="st">Técnicas de puntos: cuándo y ventaja/desventaja</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Punto</th><th>Cuándo usarlo</th><th>Ventaja / desventaja</th></tr>
+      <tr><td class="dn">Simple discontinuo</td><td>Cierre de piel de uso general; el más versátil</td><td><b>+</b> Si falla un punto, los demás sostienen. <b>−</b> Más lento; deja marcas si se aprieta.</td></tr>
+      <tr><td class="dn">Continuo (surjete) simple</td><td>Cierres largos, poca tensión (fascia, peritoneo)</td><td><b>+</b> Rápido, distribuye la tensión. <b>−</b> Si se rompe el hilo, cede todo el cierre.</td></tr>
+      <tr><td class="dn">Colchonero VERTICAL (Donati)</td><td>Zonas de <b>alta tensión</b>; cuando cuesta evertir</td><td><b>+</b> Excelente <b>eversión</b> y aproximación de planos. <b>−</b> Isquemiante; más marcas ("far-near").</td></tr>
+      <tr><td class="dn">Colchonero HORIZONTAL</td><td>Piel laxa, <b>hemostasia</b> de borde, eversión</td><td><b>+</b> Hemostático y evertidor, reparte tensión. <b>−</b> Riesgo de isquemia del borde si se ciñe.</td></tr>
+      <tr><td class="dn">Subdérmico enterrado</td><td>Aproximar dermis profunda; quitar tensión de la piel</td><td><b>+</b> Nudo enterrado, no palpable; absorbible. <b>−</b> Técnica más exigente (nudo invertido).</td></tr>
+      <tr><td class="dn"><b>Subcuticular continuo</b></td><td>Cierre <b>estético</b> (Monocryl 4-0/5-0)</td><td><b>+</b> Sin marcas transversales, óptimo cosmético. <b>−</b> Solo en heridas limpias y bien afrontadas.</td></tr>
+      <tr><td class="dn">Punto de esquina</td><td>Vértices / <b>colgajos</b> y ángulos (semienterrado)</td><td><b>+</b> Respeta la vascularización de la punta. <b>−</b> Solo para ángulos; requiere buena técnica.</td></tr>
+      <tr><td class="dn">Jareta (bolsa de tabaco)</td><td>Cierre de muñón (apéndice), fijar drenaje/estoma</td><td><b>+</b> Cierra e invagina de forma circular. <b>−</b> Uso muy específico.</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">💡</span><div>El <b>colchonero vertical (Donati)</b> es el punto de referencia para <b>evertir</b> y para <b>alta tensión</b>; el <b>subcuticular</b> es el de mejor resultado estético.</div></div>
+  </div></div>
+</div>
+
+<!-- CALIBRES / AGUJAS / NUDOS -->
+<div class="panel" id="tab-cal">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Calibre (nomenclatura USP)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>El sistema <b>USP</b> mide el diámetro. Los más <b>gruesos</b> son <b>1 y 2</b> (y 0); a partir de ahí se añaden ceros y <b>cada cero adicional = más fina</b>: <b>2-0, 3-0, 4-0 … hasta 10-0/11-0</b> (microcirugía). Regla: <b>a más ceros, hilo más fino</b>.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Calibre</th><th>Grosor</th><th>Uso típico</th></tr>
+      <tr><td class="dn">1 – 2</td><td>Muy grueso</td><td>Fascia gruesa, cierre abdominal de masa, ortopedia</td></tr>
+      <tr><td class="dn">0</td><td>Grueso</td><td>Fascia/aponeurosis (PDS/Prolene 0)</td></tr>
+      <tr><td class="dn">2-0 / 3-0</td><td>Medio</td><td>Subcutáneo, intestino, tronco</td></tr>
+      <tr><td class="dn">4-0 / 5-0</td><td>Fino</td><td>Piel de cara/cuello, mucosa, subcuticular</td></tr>
+      <tr><td class="dn">6-0 / 7-0</td><td>Muy fino</td><td>Cara, vaso pequeño</td></tr>
+      <tr><td class="dn">8-0 a 11-0</td><td>Microcirugía</td><td>Oftalmología, microvascular, nervio</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🪡</span><span class="st">Agujas: curvatura y punta</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><b>Curvatura</b>: la <b>3/8 de círculo</b> es la más usada en superficie (piel); la <b>1/2 círculo</b> sirve en espacios profundos/estrechos (pelvis, cavidad).</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Punta</th><th>Para qué tejido</th><th>Idea clave</th></tr>
+      <tr><td class="dn">CORTANTE (triangular)</td><td>Piel y tejido denso/fibroso</td><td>Atraviesa tejido resistente; convencional o reversa</td></tr>
+      <tr><td class="dn">REDONDA / cónica</td><td>Intestino, vaso, tejido delicado</td><td>Separa las fibras sin cortarlas (menos desgarro/fuga)</td></tr>
+      <tr><td class="dn">ROMA (blunt)</td><td>Hígado, riñón, fascia friable</td><td>Diseca sin cortar; reduce pinchazos accidentales</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🪢</span><span class="st">Nudos y tensión</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Nudo cuadrado</b>: base del anudado seguro (lazadas en direcciones opuestas). El <b>nudo del cirujano</b> (doble primera lazada) evita el deslizamiento bajo tensión.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">El <b>monofilamento</b> (Nylon, Prolene, PDS) tiene memoria y desliza → <b>requiere más lazadas</b> (p. ej. 5–6) para que el nudo no se afloje.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">El <b>multifilamento</b> (Vicryl, seda) anuda con menos lazadas y sostiene mejor, pero tiene capilaridad.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Asienta los nudos <b>planos y sin tensión excesiva</b>; el nudo es el punto más débil del hilo.</span></div>
+  </div></div>
+</div>
+
+<!-- RETIRO -->
+<div class="panel" id="tab-retiro">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗓️</span><span class="st">Retiro de puntos por región</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Región</th><th>Días para retirar</th></tr>
+      <tr><td class="dn">Cara</td><td><b>5 días</b></td></tr>
+      <tr><td class="dn">Cuero cabelludo</td><td>7–10 días</td></tr>
+      <tr><td class="dn">Tronco</td><td>7–10 días</td></tr>
+      <tr><td class="dn">Extremidades</td><td>10–14 días</td></tr>
+      <tr><td class="dn">Superficies articulares / espalda</td><td>12–14 días</td></tr>
+      <tr><td class="dn">Palmas / plantas</td><td>14 días</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Retirar <b>tarde</b> deja marcas ("vías de tren" por epitelización de los trayectos); retirar <b>muy pronto</b> → <b>dehiscencia</b>. En zonas de tensión o mala cicatrización, refuerza con <b>tiras adhesivas</b> tras el retiro.</div></div>
+  </div></div>
+</div>
+
+<!-- ERRORES -->
+<div class="panel" id="tab-err">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Errores y complicaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Tensión excesiva</b> del punto → <b>isquemia del borde, necrosis y dehiscencia</b>. Aproxima, no estrangules.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Material / calibre inadecuado</b>: grueso en cara (marcas), fino en fascia (eventración), absorbible rápido donde se necesita soporte prolongado.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Retiro tardío</b> → marcas transversales ("vías de tren").</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Multifilamento en herida contaminada</b> → capilaridad = <b>nido de infección</b>. Prefiere <b>monofilamento</b>.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>No evertir</b> los bordes → cicatriz deprimida/invertida.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt"><b>Dejar espacio muerto</b> → seroma/hematoma y absceso.</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt"><b>Granuloma / reacción</b> por material muy reactivo (seda, catgut) o exceso de cuerpo extraño.</span></div>
+  </div></div>
+  <div class="alert a-r"><span class="ai">🚩</span><div><div class="at">Señal de alarma</div>Borde <b>blanco/violáceo y tenso</b> tras suturar = punto isquemiante: <b>aflojar o retirar</b> antes de que necrose.</div></div>
+</div>
+
+<!-- BIBLIOGRAFIA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Suturas</h2><p>Manuales de cierre de heridas y referencias de material de sutura.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Referencias</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span></div><div class="biblio-ref">Ethicon (Johnson &amp; Johnson). <em>Wound Closure Manual</em> (características de suturas, perfiles de retención de tensión y absorción, agujas y nudos).</div><a class="biblio-link" href="https://www.epiq-ah.com/wp-content/uploads/2025/01/Wound-Closure-Manual.pdf" target="_blank">🔗 Ethicon</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span></div><div class="biblio-ref">Ethicon. <em>Absorbable and Non-Absorbable Sutures — BSR Profile (in vivo strength retention) &amp; Absorption.</em> (Vicryl 75%/50%/25% a 2/3/4 sem, absorción 56–70 d; Monocryl, PDS II, Vicryl Rapide, gut).</div><a class="biblio-link" href="https://www.epiq-ah.com/wp-content/uploads/2025/02/Absorbable-and-Non-Absorbale-Sutures_US_ETH_WOUN_110937.2-1.pdf" target="_blank">🔗 Perfil BSR</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span></div><div class="biblio-ref"><em>Suture materials comparison chart.</em> Wikipedia (estructura, origen, retención y absorción por material).</div><a class="biblio-link" href="https://en.wikipedia.org/wiki/Suture_materials_comparison_chart" target="_blank">🔗 Wikipedia</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span></div><div class="biblio-ref">Medscape / eMedicine. <em>Materials for Wound Closure: Suture Characteristics and Suture Materials</em> (mono vs multifilamento, USP, agujas).</div><a class="biblio-link" href="https://emedicine.medscape.com/article/1127693-overview" target="_blank">🔗 Medscape</a></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. Los <b>perfiles de retención y absorción</b> varían con el calibre, el color (teñido/no teñido), el tejido y el paciente; sigue las <b>indicaciones del fabricante</b> y el criterio quirúrgico local. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function row(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:104px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;">'+v+'</span></div>';}
+var MK=0;
+function mcard(m){MK++;var id='mk'+MK;var c='#334155';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;"><div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+m.sub+'</div><div style="font-size:14px;font-weight:800;line-height:1.2;">'+m.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" class="mk-card-body" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">Retención de tensión</div>';
+ h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+m.tens+'</div>';
+ h+='<div style="font-size:12px;font-weight:700;color:#7a4a00;margin-top:5px;">⏳ Absorción: '+m.abs+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+=row('Estructura',m.estr,'#334155');
+ h+=row('Origen',m.orig,'#334155');
+ h+=row('Calibres',m.cal,'#334155');
+ h+=row('Usos',m.uso,'#0c3b6e');
+ h+=row('Reactividad',m.react,'#c0392b');
+ h+='</div>';
+ if(m.perla)h+='<div style="padding:10px 14px;background:#e2e8f0;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#334155;margin-bottom:4px;letter-spacing:.5px;">Perla clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+m.perla+'</div></div>';
+ h+='</div></div>';return h;}
+function filtrar(q){q=(q||'').toLowerCase().trim();var h='',n=0;for(var i=0;i<MARK.length;i++){var m=MARK[i];var txt=(m.n+' '+m.sub+' '+(m.aka||'')+' '+m.uso+' '+m.estr+' '+m.cal).toLowerCase();if(!q||txt.indexOf(q)>=0){h+=mcard(m);n++;}}if(!n)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('mk-list').innerHTML=h;}
+
+var MARK=[
+ {n:'Catgut simple',sub:'Absorbible · Monofilamento · Natural',aka:'catgut simple plain gut absorbible natural colageno mucosa ligadura rapida',tens:'Pierde tensión en ~7–10 días',abs:'~70 días (digestión enzimática / fagocitosis)',estr:'Monofilamento (colágeno torcido)',orig:'Natural (colágeno de submucosa/serosa bovina)',cal:'5-0 a 2-0',uso:'Ligaduras superficiales, tejido subcutáneo, mucosa de cicatrización rápida (uso hoy limitado)',react:'Alta (reacción inflamatoria por digestión enzimática)',perla:'Pierde fuerza y se absorbe rápido con reacción tisular marcada; desplazado por sintéticos. No lo uses donde se requiera soporte prolongado.'},
+ {n:'Catgut crómico',sub:'Absorbible · Monofilamento · Natural',aka:'catgut cromico chromic gut absorbible natural mucosa oral perine episiotomia ligadura',tens:'~10–21 días (las sales de cromo prolongan la retención)',abs:'~90 días',estr:'Monofilamento (colágeno torcido, tratado con cromo)',orig:'Natural (colágeno bovino cromado)',cal:'5-0 a 2-0',uso:'Mucosa oral, episiotomía/periné, ligaduras y tejido profundo donde no se retira',react:'Alta, algo menor que el simple gracias al cromado',perla:'El cromado alarga la retención frente al simple. Clásico en mucosa/periné, pero reactivo: prefiere sintéticos si el resultado importa.'},
+ {n:'Poliglactina 910 (Vicryl)',sub:'Absorbible · Multifilamento trenzado · Sintético',aka:'vicryl poliglactina 910 polyglactin absorbible trenzado sintetico mucosa subcutaneo ligadura intestino ginecologia',tens:'~75% a 2 sem · ~50% a 3 sem · ~25% a 4 sem',abs:'56–70 días (hidrólisis)',estr:'Multifilamento trenzado (recubierto)',orig:'Sintético',cal:'9-0 a 1',uso:'Mucosa, tejido subcutáneo, ligaduras, anastomosis intestinal, ginecología',react:'Baja–moderada; trenzado (evitar en herida contaminada)',perla:'Caballo de batalla absorbible: excelente manejo y anudado por el trenzado. En herida contaminada prefiere monofilamento. Vicryl 3-0/4-0 para intestino y subcutáneo.'},
+ {n:'Vicryl Rapide',sub:'Absorbible · Multifilamento trenzado · Sintético',aka:'vicryl rapide poliglactina irradiada absorbible piel superficial perine episiotomia mucosa pediatria sin retiro',tens:'~50% a 5 días · ~0% a 10–14 días',abs:'~42 días; se desprende de la superficie sin necesidad de retiro',estr:'Multifilamento trenzado (irradiado)',orig:'Sintético',cal:'5-0 a 3-0',uso:'Piel superficial, periné/episiotomía, mucosa, pediatría (no requiere retiro)',react:'Baja',perla:'Irradiado para perder fuerza rápido y caer solo: ideal en piel/mucosa y pediatría. No lo uses donde se necesite soporte más de ~1 semana.'},
+ {n:'Poliglecaprone 25 (Monocryl)',sub:'Absorbible · Monofilamento · Sintético',aka:'monocryl poliglecaprone 25 poliglecaprona absorbible monofilamento subdermico subcuticular estetico ligadura',tens:'~50–60% a 1 sem · ~20–30% a 2 sem (teñido algo más)',abs:'~91–119 días (~90–120 d)',estr:'Monofilamento',orig:'Sintético',cal:'6-0 a 1',uso:'Cierre subdérmico y subcuticular (estético), tejido blando, ligaduras',react:'Muy baja (monofilamento, mínimo arrastre)',perla:'Elección para subcuticular estético (4-0/5-0): monofilamento liso, poca reactividad, sin retiro. Pierde fuerza pronto → no para fascia.'},
+ {n:'Polidioxanona (PDS II)',sub:'Absorbible · Monofilamento · Sintético',aka:'pds polidioxanona pdsii absorbible monofilamento fascia aponeurosis laparotomia soporte prolongado intestino',tens:'~70% a 2 sem · ~50% a 4 sem · ~35% a 6 sem (calibres finos algo menos)',abs:'~182–210 días (~6 meses)',estr:'Monofilamento',orig:'Sintético',cal:'9-0 a 1',uso:'Cierre de fascia/aponeurosis (laparotomía), cierres que requieren soporte prolongado, intestino, cardiovascular pediátrico',react:'Muy baja',perla:'Monofilamento absorbible de soporte prolongado: elección para fascia de laparotomía (0 o 1, continuo). Mantiene ~50% de fuerza a 4 semanas.'},
+ {n:'Ácido poliglicólico (Dexon)',sub:'Absorbible · Multifilamento trenzado · Sintético',aka:'dexon acido poliglicolico pga polyglycolic absorbible trenzado subcutaneo mucosa ligadura anastomosis',tens:'~60–65% a 2 sem · ~20% a 4 sem (similar a poliglactina)',abs:'60–90 días (hidrólisis)',estr:'Multifilamento trenzado',orig:'Sintético',cal:'7-0 a 2',uso:'Similar a Vicryl: subcutáneo, mucosa, ligaduras, anastomosis',react:'Baja–moderada; trenzado',perla:'Primer absorbible sintético; comportamiento análogo a la poliglactina 910. Al ser trenzado, evítalo en campo contaminado.'},
+ {n:'Poligliconato (Maxon)',sub:'Absorbible · Monofilamento · Sintético',aka:'maxon poligliconato polyglyconate absorbible monofilamento fascia linea alba biliar urinaria anastomosis',tens:'~70% a 2 sem · ~55% a 3 sem · ~25% a 6 sem',abs:'~180 días (~6 meses)',estr:'Monofilamento',orig:'Sintético (copolímero glicólido + carbonato de trimetileno)',cal:'7-0 a 1',uso:'Fascia/línea alba, tejido blando, anastomosis intestinal, cirugía biliar/urinaria (estable en medio alcalino)',react:'Muy baja',perla:'Alternativa monofilamento a PDS con soporte prolongado y buena flexibilidad; útil en cierre de aponeurosis.'},
+ {n:'Seda (silk)',sub:'No absorbible · Multifilamento trenzado · Natural',aka:'seda silk perma-hand no absorbible natural trenzado ligadura mucosa drenaje fijacion reactividad',tens:'Pierde fuerza lentamente; ~0% hacia 1–2 años (funcionalmente no absorbible)',abs:'No absorbible (degradación muy lenta); en piel se retira',estr:'Multifilamento trenzado',orig:'Natural (fibroína del gusano de seda)',cal:'9-0 a 2',uso:'Ligaduras, fijación de drenajes/catéteres, mucosa oral; excelente para docencia',react:'ALTA (la mayor de las no absorbibles); capilaridad → riesgo de infección',perla:'Manejo y anudado excelentes (blanda, se ata fácil) pero muy reactiva y capilar: evítala en heridas contaminadas. Muy útil para fijar drenajes.'},
+ {n:'Nylon / poliamida (Ethilon, Dermalon)',sub:'No absorbible · Monofilamento · Sintético',aka:'nylon poliamida ethilon dermalon nurolon no absorbible monofilamento piel inerte microcirugia sutura',tens:'Pierde ~15–20% de fuerza por año (hidrólisis lenta); prácticamente permanente en piel',abs:'No absorbible (se retira en piel)',estr:'Monofilamento (también trenzado: Nurolon/Surgilon)',orig:'Sintético (poliamida)',cal:'11-0 a 2',uso:'Cierre de piel percutáneo, microcirugía, tejido inerte',react:'Muy baja (inerte)',perla:'Monofilamento barato e inerte, estándar para piel. Tiene "memoria" (tiende a desenrollarse) → más lazadas en el nudo. Ethilon 5-0/6-0 en cara, 4-0/3-0 en tronco.'},
+ {n:'Polipropileno (Prolene)',sub:'No absorbible · Monofilamento · Sintético',aka:'prolene polipropileno polypropylene no absorbible monofilamento vascular hernia malla contaminada piel subcuticular inerte',tens:'Permanente; no pierde fuerza (no se hidroliza)',abs:'No absorbible',estr:'Monofilamento',orig:'Sintético (polipropileno)',cal:'10-0 a 2',uso:'Sutura vascular (5-0 a 7-0), hernia/fijación de malla, heridas contaminadas, cierre de piel y subcuticular removible',react:'Mínima (el más inerte); no favorece la infección',perla:'Inerte, liso y no se degrada: elección vascular y en herida contaminada. Se desliza mucho (bueno para subcuticular continuo removible) pero por lo mismo requiere nudos extra.'},
+ {n:'Poliéster (Ethibond)',sub:'No absorbible · Multifilamento trenzado · Sintético',aka:'ethibond poliester polyester mersilene no absorbible trenzado cardiaco valvula anillo tendon resistencia',tens:'Permanente',abs:'No absorbible',estr:'Multifilamento trenzado (a menudo recubierto)',orig:'Sintético (poliéster)',cal:'7-0 a 5',uso:'Cirugía cardiaca (anillos valvulares, prótesis), tendón, fijaciones de alta resistencia',react:'Baja (menor que la seda); recubierto para reducir el arrastre',perla:'Muy resistente y con buen manejo por el trenzado; se refuerza con pledgets en cirugía valvular. Al ser trenzado, evítalo en campo contaminado.'},
+ {n:'Polibutéster (Novafil)',sub:'No absorbible · Monofilamento · Sintético',aka:'novafil polibutester polybutester no absorbible monofilamento elastico piel edema plastica tejido blando',tens:'Permanente; monofilamento ELÁSTICO (se estira con el edema y recupera la aproximación)',abs:'No absorbible',estr:'Monofilamento',orig:'Sintético (copolímero poliéster-poliéter)',cal:'7-0 a 2',uso:'Cierre de piel/tejido blando donde se espera edema; cirugía plástica',react:'Muy baja',perla:'Su elasticidad acomoda el edema posoperatorio sin cortar el tejido y luego recupera la aproximación: ventaja sobre nylon/prolene en heridas que se inflaman.'},
+ {n:'Acero inoxidable',sub:'No absorbible · Mono/multifilamento · Metálico',aka:'acero inoxidable stainless steel esternon esternotomia tendon hueso no absorbible metal resistencia',tens:'Permanente; la mayor resistencia de todas',abs:'No absorbible',estr:'Monofilamento o multifilamento (cable)',orig:'Metálico (acero inoxidable)',cal:'6-0 a 7 (incluye calibres gruesos)',uso:'Cierre de esternón (esternotomía), reparación de tendón, fijación ósea, cierre abdominal de refuerzo',react:'Nula (inerte); puede fragmentarse/migrar y es difícil de manejar',perla:'Máxima resistencia y nula reactividad, pero rígido y difícil de anudar (puede cortar guantes/tejido). Estándar para el cierre esternal.'}
+];
+
+window.addEventListener('load',function(){ filtrar(''); });
+</script>
+</body>
+</html>

@@ -81,6 +81,12 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 .biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
 .nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
 .nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--gray-900);}
+.algo-qs{font-size:12px;color:var(--gray-600);margin-bottom:10px;line-height:1.5;}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.algo-reset{margin-top:4px;padding:8px 14px;border:none;background:var(--gray-100);color:var(--gray-700);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
 @media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
 </style>
 </head>
@@ -112,6 +118,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab" onclick="showT('clin',this)">🩺 Clínica</button>
   <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
   <button class="tab" onclick="showT('ddx',this)">🔀 Diferencial</button>
+  <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
   <button class="tab" onclick="showT('tx',this)">💊 Manejo</button>
   <button class="tab" onclick="showT('esp',this)">🧩 Situaciones especiales</button>
   <button class="tab" onclick="showT('seg',this)">📈 Seguimiento</button>
@@ -266,6 +273,15 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   </div></div>
 </div>
 
+<!-- ALGORITMO -->
+<div class="panel" id="tab-alg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Algoritmo interactivo → manejo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">🧭</span><div>Responde cada paso: valora estabilidad, confirma el diagnóstico y elige entre <b>expectante</b>, <b>metotrexato</b> o <b>cirugía</b>, con la posología correspondiente.</div></div>
+    <div id="alg-box"></div>
+  </div></div>
+</div>
+
 <!-- MANEJO -->
 <div class="panel" id="tab-tx">
   <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Principio</div>Tres rutas según estabilidad y β-hCG: <b>expectante</b> (β-hCG baja y en descenso), <b>médico con metotrexato</b> (estable, criterios cumplidos) y <b>quirúrgico</b> (roto/inestable o criterios no cumplidos). Toca cada tarjeta.</div></div>
@@ -396,6 +412,45 @@ var E_NOSEG={n:'No seguir β-hCG tras MTX o salpingostomía',sub:'⛔ Seguimient
 var E_FOLICO={n:'Ácido fólico durante el metotrexato',sub:'⛔ Reduce la eficacia',c:NO,da:'Suspender el ácido fólico oral mientras dure el tratamiento con MTX',nota:'El folato antagoniza el mecanismo del metotrexato. (El <b>leucovorin</b> del esquema multidosis es distinto y sí forma parte del protocolo.)'};
 var E_ALTAPUL={n:'Dar de alta un PUL sin plan de seguimiento',sub:'⛔ Trampa peligrosa',c:NO,da:'Todo PUL egresa con β-hCG seriada programada y datos de alarma por escrito',nota:'Un embarazo de localización desconocida puede ser un ectópico en evolución; el alta sin red de seguridad es causa de rotura y muerte prevenible.'};
 var E_SINFR={n:'Asumir que la ausencia de factores de riesgo lo descarta',sub:'⛔ Falsa tranquilidad',c:NO,da:'Prueba de embarazo + valoración en toda mujer fértil con dolor/sangrado',nota:'Hasta la mitad de los ectópicos ocurren sin factor de riesgo identificable.'};
+
+/* ===== ALGORITMO INTERACTIVO → MANEJO ===== */
+var ALG={estable:null,confirm:null,mtx:null,exp:null,step:1,res:null};
+function algReset(){ALG={estable:null,confirm:null,mtx:null,exp:null,step:1,res:null};algRender();}
+function algAns(k,v){ALG[k]=v;
+ if(k==='estable'){if(!v){ALG.res='A';ALG.step=100;}else ALG.step=2;}
+ else if(k==='confirm'){if(!v){ALG.res='B';ALG.step=100;}else ALG.step=3;}
+ else if(k==='mtx'){if(v){ALG.res='C';ALG.step=100;}else ALG.step=4;}
+ else if(k==='exp'){ALG.res=v?'D':'E';ALG.step=100;}
+ algRender();}
+function algB(txt,k,v){return '<button class="algo-btn" onclick="algAns(\''+k+'\','+v+')">'+txt+'</button>';}
+function algQ(t,s,btns){return '<div class="algo-q"><div class="algo-qt">'+t+'</div><div class="algo-qs">'+s+'</div>'+btns.join('')+'</div>';}
+function algResCard(color,label,title,body){
+ var h='<div class="algo-q" style="border-left:4px solid '+color+';">';
+ h+='<div style="font-size:11px;font-weight:800;text-transform:uppercase;color:'+color+';">'+label+'</div>';
+ h+='<div style="font-size:16px;font-weight:800;color:'+color+';margin-bottom:8px;">'+title+'</div>';
+ h+='<div style="font-size:12.5px;color:#374151;line-height:1.65;">'+body+'</div></div>';
+ return h;}
+function algRes(){var r=ALG.res;
+ if(r==='A')return algResCard('#7b1c1c','Vía obligada','Inestable / rotura → CIRUGÍA URGENTE',
+   '<b>Salpingectomía laparoscópica</b> (o laparotomía si muy inestable) + <b>reanimación</b> con cristaloides/hemoderivados. <b>Anti-D 300 µg</b> (o 50 µg si &lt;12 SDG) IM si Rh negativo. Consulta quirúrgica inmediata. <b>No</b> metotrexato ni manejo expectante.');
+ if(r==='B')return algResCard('#6b7280','Aclarar primero','Diagnóstico no confirmado',
+   '<b>NO</b> iniciar metotrexato ni cirugía destructiva. Aclarar antes con <b>β-hCG seriada (cada 48 h)</b> y <b>US transvaginal</b>: podría ser un embarazo de localización desconocida o un intrauterino viable deseado (riesgo de dañarlo).');
+ if(r==='C')return algResCard('#9d174d','De elección si cumple criterios','⭐ Metotrexato (candidata ideal)',
+   '<b>Metotrexato 50 mg/m² IM, dosis única</b>. Seguir β-hCG días 1, 4 y 7 (esperar <b>caída ≥15% del día 4 al 7</b>); <b>2.ª dosis</b> si no cae. Evitar AINE, ácido fólico, alcohol y sol. <b>Anti-D</b> si Rh negativo.');
+ if(r==='D')return algResCard('#0a5c45','Seleccionada','Manejo expectante',
+   'Vigilancia con <b>β-hCG seriada hasta negativizar</b>; intervenir si la β-hCG asciende o aparecen síntomas. <b>Anti-D</b> si Rh negativo.');
+ if(r==='E')return algResCard('#9d174d','Quirúrgico programado','Cirugía (programada)',
+   '<b>Salpingectomía</b> (si la trompa está dañada o la contralateral está sana) o <b>salpingostomía</b> (conservadora; seguir β-hCG por trofoblasto persistente). <b>Anti-D</b> si Rh negativo.');
+ return '';}
+function algRender(){var s=ALG.step,h='';
+ if(s===1)h+=algQ('Paso 1 · ¿Hemodinámicamente estable, SIN datos de rotura?','Sin síncope, dolor referido al hombro, signos peritoneales, líquido libre abundante ni choque.',[algB('✓ Estable','estable',true),algB('✗ Inestable / rotura','estable',false)]);
+ else if(s===2)h+=algQ('Paso 2 · ¿Diagnóstico de ectópico CONFIRMADO?','No es un embarazo de localización desconocida (PUL) ni un intrauterino viable deseado. β-hCG + US transvaginal concordantes.',[algB('✓ Confirmado','confirm',true),algB('✗ No confirmado','confirm',false)]);
+ else if(s===3)h+=algQ('Paso 3 · ¿Cumple criterios para METOTREXATO?','β-hCG ≤5000 mUI/mL (ideal &lt;1500–2000), SIN actividad cardiaca embrionaria, masa &lt;3.5–4 cm, seguimiento asegurado y SIN contraindicaciones (estable/sin rotura, BH/PFH/función renal normales, no lactancia, sin inmunodeficiencia/úlcera/enf. pulmonar activa).',[algB('✓ Sí, cumple criterios','mtx',true),algB('✗ No los cumple','mtx',false)]);
+ else if(s===4)h+=algQ('Paso 4 · ¿Candidata a manejo EXPECTANTE?','Asintomática, β-hCG baja y EN DESCENSO, masa pequeña y seguimiento asegurado.',[algB('✓ Sí','exp',true),algB('✗ No','exp',false)]);
+ else if(s===100)h+=algRes();
+ h+='<button class="algo-reset" onclick="algReset()">↩ Reiniciar</button>';
+ var box=document.getElementById('alg-box');if(box)box.innerHTML=h;}
+window.addEventListener('load',function(){algReset();});
 
 window.addEventListener('load',function(){
   document.getElementById('tx-body').innerHTML=
