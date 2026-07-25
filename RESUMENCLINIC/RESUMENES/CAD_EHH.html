@@ -79,6 +79,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ordc-row{font-size:13px;color:var(--gray-900);padding:9px 0;border-bottom:1px solid var(--gray-100);line-height:1.5;}
 .ordc-row:last-child{border-bottom:none;}
 .ordc-k{font-size:9.5px;text-transform:uppercase;font-weight:700;color:var(--gray-600);letter-spacing:.3px;display:block;margin-bottom:2px;}
+.ordc-ord{font-weight:700;color:var(--gray-900);line-height:1.5;}
+.ordc-exp{font-style:italic;color:var(--gray-600);font-size:12px;line-height:1.5;margin-top:4px;padding-left:9px;border-left:2px solid var(--gray-200);}
 .vline{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:4px 0;font-size:13px;border-bottom:1px dashed var(--gray-100);}
 .vline span{color:var(--gray-700);}.vline b{font-weight:700;color:var(--gray-900);white-space:nowrap;}
 .pbtn{background:#0369a1;color:#fff;border:none;padding:12px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;width:100%;box-shadow:var(--sh-sm);transition:filter .13s,transform .1s;}
@@ -95,6 +97,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .actb .actl{display:block;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#0369a1;margin-bottom:3px;}
 .actb.bad .actl{color:#b91c1c;}
 .rxb{margin-top:12px;border:1.5px solid #0369a1;border-radius:12px;overflow:hidden;box-shadow:var(--sh-sm);}
+.reqnote{margin-top:12px;background:#eff6ff;border:1px solid #bae6fd;border-left:3px solid #0ea5e9;border-radius:8px;padding:9px 12px;font-size:11.5px;line-height:1.5;color:var(--gray-700);}
 .rxb-h{background:linear-gradient(135deg,#0369a1,#0ea5e9);color:#fff;padding:9px 14px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
 .rxb ol{margin:0;padding:12px 16px 12px 32px;}
 .rxb li{font-size:13px;line-height:1.5;margin-bottom:9px;font-weight:600;color:var(--gray-900);}
@@ -541,14 +544,17 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       <div class="grp-t bt-teal">👤 Datos del paciente y laboratorio</div>
       <div class="igrid i2">
         <div class="icell"><label>Peso (kg)</label><input class="calc-in" id="e-peso" type="number" value="70" oninput="calc()"></div>
+        <div class="icell"><label>Edad (años)</label><input class="calc-in" id="e-edad" type="number" value="55" oninput="calc()"></div>
         <div class="icell"><label>Glucosa (mg/dL)</label><input class="calc-in" id="e-glu" type="number" value="520" oninput="calc()"></div>
         <div class="icell"><label>Sodio (mEq/L)</label><input class="calc-in" id="e-na" type="number" value="134" oninput="calc()"></div>
         <div class="icell"><label>Potasio (mEq/L)</label><input class="calc-in" id="e-k" type="number" value="4.5" oninput="calc()"></div>
         <div class="icell"><label>pH venoso</label><input class="calc-in" id="e-ph" type="number" value="7.1" oninput="calc()"></div>
         <div class="icell"><label>HCO3 (mmol/L)</label><input class="calc-in" id="e-hco3" type="number" value="12" oninput="calc()"></div>
+        <div class="icell"><label>Creatinina (mg/dL) — opc.</label><input class="calc-in" id="e-cr" type="number" placeholder="—" oninput="calc()"></div>
         <div class="icell"><label>&beta;-hidroxibutirato (mmol/L) — opc.</label><input class="calc-in" id="e-bhb" type="number" placeholder="—" oninput="calc()"></div>
         <div class="icell"><label>Cloro (mEq/L) — opc.</label><input class="calc-in" id="e-cl" type="number" placeholder="—" oninput="calc()"></div>
         <div class="icell"><label>Fósforo (mg/dL) — opc.</label><input class="calc-in" id="e-p" type="number" placeholder="—" oninput="calc()"></div>
+        <div class="icell"><label>Albúmina (g/dL) — opc.</label><input class="calc-in" id="e-alb" type="number" placeholder="—" oninput="calc()"></div>
       </div>
       <div id="row-ket"><div class="sub-l">Cetonas urinarias (si no tienes &beta;-OHB)</div>
         <div class="pchips seg" id="ket-row">
@@ -564,6 +570,21 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
           <button class="pchip" data-v="2" onclick="setMent('2',this)">Estupor / coma</button>
         </div>
       </div>
+      <div id="row-diur"><div class="sub-l">Diuresis / función renal</div>
+        <div class="pchips seg" id="diur-row">
+          <button class="pchip on" data-v="0" onclick="setDiur('0',this)">Orina bien</button>
+          <button class="pchip" data-v="1" onclick="setDiur('1',this)">Oligúrico</button>
+          <button class="pchip" data-v="2" onclick="setDiur('2',this)">Anúrico</button>
+        </div>
+      </div>
+      <div id="row-card"><div class="sub-l">Comorbilidad de riesgo para sobrecarga</div>
+        <div class="pchips seg" id="card-row">
+          <button class="pchip on" data-v="0" onclick="setCard('0',this)">Ninguna</button>
+          <button class="pchip" data-v="1" onclick="setCard('1',this)">IC / ERC</button>
+          <button class="pchip" data-v="2" onclick="setCard('2',this)">Diálisis</button>
+        </div>
+      </div>
+      <div class="reqnote"><b>Solo el peso y la glucosa son obligatorios.</b> Todo lo demás es opcional: la calculadora arranca con lo que tengas a la cabecera (glucosa capilar, gasometría, ¿orina?) y <b>el plan se refina solo</b> conforme llega el laboratorio. Sin un dato, esa pieza se omite; no detiene el cálculo.</div>
     </div>
     <div id="f-out"></div>
     <div class="disc">Herramienta de apoyo a la decisión clínica; no sustituye el juicio médico. Basada en el consenso ADA/EASD 2024 de crisis hiperglucémicas. <b>Verifica siempre contra el protocolo de tu unidad</b> y revalora con laboratorio seriado.</div>
@@ -575,19 +596,21 @@ function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseF
 function fmt(x,d){var p=Math.pow(10,d||0);return String(Math.round(x*p)/p);}
 function sv(id){var e=document.getElementById(id);return e?e.value:'';}
 function pOn(row,b){var el=document.getElementById(row);if(!el)return;var c=el.getElementsByClassName('pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');b.classList.add('on');}
-var ket_='2', ment_='0';
+var ket_='2', ment_='0', diur_='0', card_='0';
 function setKet(v,b){ket_=v;pOn('ket-row',b);calc();}
 function setMent(v,b){ment_=v;pOn('ment-row',b);calc();}
+function setDiur(v,b){diur_=v;pOn('diur-row',b);calc();}
+function setCard(v,b){card_=v;pOn('card-row',b);calc();}
 function kpi(cls,l,v,u,s){return '<div class="kpi '+cls+'"><div class="kpi-l">'+l+'</div><div class="kpi-v">'+v+'</div>'+(u?'<div class="kpi-u">'+u+'</div>':'')+(s?'<div class="kpi-s">'+s+'</div>':'')+'</div>';}
-function row(k,v){return '<div class="ordc-row"><span class="ordc-k">'+k+'</span>'+v+'</div>';}
+function row(k,v,e){return '<div class="ordc-row"><span class="ordc-k">'+k+'</span><div class="ordc-ord">'+v+'</div>'+(e?'<div class="ordc-exp">“'+e+'”</div>':'')+'</div>';}
 function vln(a,b){return '<div class="vline"><span>'+a+'</span><b>'+b+'</b></div>';}
 function alrt(cls,ic,t){return '<div class="alert '+cls+'"><span class="ai">'+ic+'</span><div>'+t+'</div></div>';}
 function ohead(ic,t){return '<div class="ordc"><div class="ordc-h">'+ic+' '+t+'</div><div class="ordc-b">';}
 function stp(n,t,x,cls){return '<div class="stp"><div class="stp-n'+(cls?' '+cls:'')+'">'+n+'</div><div class="stp-b">'+(t?'<div class="stp-t">'+t+'</div>':'')+'<div class="stp-x">'+x+'</div></div></div>';}
 function ul(a){var s='<ul style="margin:4px 0 0;padding-left:18px;">';for(var i=0;i<a.length;i++)s+='<li style="margin-bottom:3px;">'+a[i]+'</li>';return s+'</ul>';}
 function patho(body){return '<details style="margin-top:12px;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:0 14px;box-shadow:var(--sh-sm);"><summary style="cursor:pointer;font-weight:700;font-size:12.5px;color:#0369a1;padding:12px 0;list-style:none;">🧠 Fisiopatología y por qué se maneja así</summary><div style="font-size:12.5px;line-height:1.65;color:var(--gray-700);padding:0 0 13px;">'+body+'</div></details>';}
-function rx(a){var s='<div class="rxb"><div class="rxb-h">📋 Indicación lista · para la hoja de enfermería</div><ol>';for(var i=0;i<a.length;i++){var pp=(''+a[i]).split('‖');s+='<li>'+pp[0]+(pp[1]?'<div class="rxn">Nota: '+pp[1]+'</div>':'')+'</li>';}return s+'</ol></div>';}
-function rxTxt(a){var s='';for(var i=0;i<a.length;i++){var pp=(''+a[i]).split('‖');s+='  '+(i+1)+'. '+pp[0].replace(/<[^>]+>/g,'')+'\n'+(pp[1]?'       Nota: '+pp[1].replace(/<[^>]+>/g,'')+'\n':'');}return s;}
+function rx(a){var s='<div class="rxb"><div class="rxb-h">📋 Indicaciones · listo para transcribir</div><ol>';for(var i=0;i<a.length;i++){var pp=(''+a[i]).split('‖');s+='<li>'+pp[0]+'</li>';}return s+'</ol></div>';}
+function rxTxt(a){var s='';for(var i=0;i<a.length;i++){var pp=(''+a[i]).split('‖');s+='  '+(i+1)+'. '+pp[0].replace(/<[^>]+>/g,'')+'\n';}return s;}
 function safe(A){if(!A||!A.length)return '';var s='<div class="safebx"><div class="safebx-h">🚨 Alertas de seguridad · verifica antes de indicar</div>';for(var i=0;i<A.length;i++)s+='<div class="safebx-i '+(A[i].l||'warn')+'"><b>'+A[i].t+'</b>'+(A[i].x?' — '+A[i].x:'')+'</div>';return s+'</div>';}
 function fu(a){if(!a||!a.length)return '';var s='<div class="fub"><div class="fub-h">📈 Seguimiento · cuándo repetir</div><ul>';for(var i=0;i<a.length;i++)s+='<li>'+a[i]+'</li>';return s+'</ul></div>';}
 function buttons(){return '<div style="display:flex;gap:8px;margin-top:12px;"><button class="pbtn" onclick="fCopy()">📋 Copiar</button><button class="pbtn" style="background:#b91c1c;" onclick="fPDF()">📄 PDF</button></div><div id="f-msg" style="text-align:center;font-size:12px;color:var(--g);font-weight:700;margin-top:4px;"></div>';}
@@ -595,22 +618,27 @@ function SEP(){return '═══════════════════
 
 function calc(){
   var out=document.getElementById('f-out');
-  var w=nm('e-peso'), glu=nm('e-glu'), na=nm('e-na'), k=nm('e-k'), ph=nm('e-ph'), hco3=nm('e-hco3'), bhb=nm('e-bhb'), cl=nm('e-cl'), po4=nm('e-p');
+  var w=nm('e-peso'), edad=nm('e-edad'), glu=nm('e-glu'), na=nm('e-na'), k=nm('e-k'), ph=nm('e-ph'), hco3=nm('e-hco3'), cr=nm('e-cr'), bhb=nm('e-bhb'), cl=nm('e-cl'), po4=nm('e-p'), alb=nm('e-alb');
   if(!w||w<=0||glu==null){out.innerHTML=alrt('a-w','✏️','Ingresa al menos el peso y la glucosa.');window._fTxt='';return;}
+
+  // --- Cálculos base ---
   var naCorr = (na!=null)? Math.round((na+1.6*(glu-100)/100)*10)/10 : null;
   var effOsm = (na!=null)? Math.round(2*na+glu/18) : null;
   var maintF = (naCorr==null)? 'NaCl 0.45% u 0.9% (según Na corregido)' : (naCorr>=135?'NaCl 0.45%':'NaCl 0.9%');
   var ag = (na!=null&&cl!=null&&hco3!=null)? Math.round(na-cl-hco3) : null;
+  var agCorr = (ag!=null&&alb!=null)? Math.round((ag+2.5*(4.0-alb))*10)/10 : null;   // corregida por albúmina
+  var agUse = (agCorr!=null)? agCorr : ag;   // la que se usa para decidir cetosis
   var acid = (ph!=null&&ph<7.30)||(hco3!=null&&hco3<18);
   var ketLab = (bhb!=null)? (bhb>=3.0) : (ket_==='2');
-  var ket = ketLab || (ag!=null&&ag>=12&&acid&&glu>=200);
+  var ket = ketLab || (agUse!=null&&agUse>=12&&acid&&glu>=200);
   var ketAny = (bhb!=null)? (bhb>=1.0) : (ket_!=='0');
-  var hyperosm = (effOsm!=null&&effOsm>320);
+  var hyperosm = (effOsm!=null&&effOsm>300);   // ADA/EASD 2024: EHH = osm efectiva >300 (antes >320)
+  var osmHigh  = (effOsm!=null&&effOsm>=320);   // umbral para corrección ultra-lenta
   var isDKA = ket && acid;
   var isHHS = glu>=600 && hyperosm && !acid && !ket;
   var mixed = ket && acid && hyperosm && glu>=600;
   var eugly = isDKA && glu<250;
-  var needKet = (acid&&glu>=250&&!ket&&ag==null);
+  var needKet = (acid&&glu>=250&&!ket&&agUse==null);
   var dkaLike = isDKA||mixed;
   var dx, dxCls='info', sev='';
   if(mixed){dx='CAD + EHH (mixto)';dxCls='bad';}
@@ -620,86 +648,179 @@ function calc(){
   else {dx='No cumple criterios claros de CAD/EHH';dxCls='warn';}
   if(dkaLike){ if((ph!=null&&ph<7.0)||(hco3!=null&&hco3<10)||(bhb!=null&&bhb>6))sev='grave'; else if((ph!=null&&ph<7.25)||(hco3!=null&&hco3<15))sev='moderada'; else sev='leve'; }
 
+  // --- Perfil del paciente (personalización) ---
+  var anciano = (edad!=null&&edad>=65);
+  var oliguria = (diur_==='1'), anuria = (diur_==='2');
+  var dialisis = (card_==='2'), cardioRenal = (card_==='1');
+  var crHigh = (cr!=null&&cr>=1.5);
+  var renalMal = anuria||oliguria||dialisis||crHigh;          // función renal comprometida
+  var sobrecarga = anciano||cardioRenal||dialisis||oliguria||anuria;  // riesgo de sobrecarga hídrica
+
+  // --- Insulina ---
   var insRate = Math.round(((isHHS&&!mixed)?0.05:0.1)*w*10)/10;
   var bolusU = Math.round(0.1*w), hiRate = Math.round(0.15*w*10)/10;
+  var redRate0 = Math.round(0.05*w*10)/10;
+
+  // --- Líquidos: déficit y ritmo PERSONALIZADO ---
   var defL = Math.round(w*0.1*10)/10, defHi = Math.round(w*0.22*10)/10;
-  var firstL = (w>=60)?'1 L':fmt(Math.round(w*15),0)+' mL';
-  var fLo=Math.round(w*15/50)*50, fHi=Math.round(w*20/50)*50;
+  // Déficit de agua libre (para EHH / hipertonía): TBW*(Na/140 - 1)
+  var tbwF = anciano?0.5:0.6;
+  var naForFW = (na!=null)? na : null;
+  var freeWater = (naForFW!=null&&naForFW>140)? Math.round(tbwF*w*(naForFW/140-1)*10)/10 : null;
+  // Ritmo inicial: estándar 15–20 mL/kg/h; conservador si riesgo de sobrecarga
+  var fLo, fHi, firstL, fluidMode;
+  if(dialisis){
+    fluidMode='dialisis';
+    fLo=Math.round(w*5/50)*50; fHi=Math.round(w*8/50)*50;      // 5–8 mL/kg/h muy vigilado
+    firstL=fmt(Math.round(w*7),0)+' mL';
+  } else if(sobrecarga){
+    fluidMode='conservador';
+    fLo=Math.round(w*7/50)*50; fHi=Math.round(w*12/50)*50;     // 7–12 mL/kg/h con reevaluación
+    firstL=fmt(Math.round(w*8),0)+' mL';
+  } else {
+    fluidMode='estandar';
+    fLo=Math.round(w*15/50)*50; fHi=Math.round(w*20/50)*50;    // 15–20 mL/kg/h
+    firstL=(w>=60)?'1 L':fmt(Math.round(w*15),0)+' mL';
+  }
+
+  // --- Potasio: banda + ajuste por función renal ---
   var kBand = (k==null)?'nd':(k<3.5?'low':(k<=5.0?'mid':'high'));
-  var kRate=(k!=null&&k<3.0)?20:10, kVia=(k!=null&&k<3.0)?'vía central + monitor ECG':'vía periférica', kDil=(k!=null&&k<3.0)?100:250;
+  var kRate=(k!=null&&k<3.0)?(renalMal?10:20):10;
+  var kVia=(k!=null&&k<3.0)?'vía central + monitor ECG':(renalMal?'vía periférica + monitor ECG':'vía periférica');
+  var kDil=(k!=null&&k<3.0)?100:250;
   var kNeed=(k!=null)?Math.round(Math.max(0,(3.5-k))*100):null, kHrs=(kNeed!=null&&kNeed>0)?Math.max(1,Math.round(kNeed/kRate*10)/10):1;
+  var kMaint = renalMal ? '5–10 mEq por litro' : '10–20 mEq por litro';
   var glDext = 250;
+
+  // --- Metas numéricas del paciente ---
+  var gDropLo=(isHHS?90:50), gDropHi=(isHHS?120:75);
+  var gTgt1Lo=Math.max(glDext, glu-gDropHi), gTgt1Hi=Math.max(glDext, glu-gDropLo); // glucosa objetivo en 1 h
+  var osmDropMax = 3;                    // ≤3 mOsm/kg/h (rango seguro 3–8)
+  var naDropMax = 10;                    // ≤10 mEq/L en 24 h
+  var osm24floor = (effOsm!=null)? effOsm-8*6 : null; // referencia informal 6 h
+  // Insulina SC (alternativa) sólo si CAD leve/moderada NO complicada, alerta y con buena diuresis
+  var scOK = isDKA && !mixed && !isHHS && (sev==='leve'||sev==='moderada') && ment_==='0' && !anuria && !dialisis && !(ph!=null&&ph<7.0);
+  var scLoad = Math.round(0.3*w), scMain = Math.round(0.2*w), scMainLo=Math.round(0.1*w);
+  // Transición a insulina SC basal-bolo, PERSONALIZADA
+  var ddiFactor=(anciano||renalMal)?0.3:0.5;          // ancianos / fallo renal → dosis conservadora
+  var ddi=Math.round(ddiFactor*w);                    // dosis total diaria (U)
+  var ddiLo=Math.round(0.3*w), ddiHi=Math.round(0.6*w); // rango del paciente
+  var basalU=Math.round(ddi*0.5);                     // 50% basal
+  var prandU=Math.round(ddi*0.5/3);                   // 50% en 3 comidas
+  var ddiConserv=(anciano||renalMal);
 
   // KPIs
   var h=alrt(dxCls,(dxCls==='bad')?'⛔':'⚠️','<b>'+dx+(sev?' · '+sev:'')+'</b>. '+(kBand==='low'?'K &lt;3.5: NO inicies insulina hasta reponer potasio.':(dkaLike?'Empieza líquidos + potasio + insulina en ese orden.':'Rehidrata y corrige la osmolaridad lento.')));
   h+='<div class="kpirow">'
     +kpi(dxCls,'Diagnóstico',(mixed?'Mixto':(isHHS?'EHH':(isDKA?'CAD':'—'))),sev||'',(eugly?'euglucémica':''))
     +kpi('info','Glucosa',glu,'mg/dL',(glu>=600?'≥600':''))
-    +kpi(effOsm&&effOsm>320?'bad':'info','Osm efectiva',(effOsm!=null?'~'+effOsm:'—'),'mOsm/kg',(effOsm&&effOsm>320?'alta':''))
-    +kpi(kBand==='low'?'bad':(kBand==='high'?'warn':'ok'),'Potasio',(k!=null?k:'—'),'mEq/L',(kBand==='low'?'crítico':''))
+    +kpi(hyperosm?'bad':'info','Osm efectiva',(effOsm!=null?'~'+effOsm:'—'),'mOsm/kg',(hyperosm?'>300':''))
+    +kpi(kBand==='low'?'bad':(kBand==='high'?'warn':'ok'),'Potasio',(k!=null?k:'—'),'mEq/L',(kBand==='low'?'crítico':(kBand==='high'?'alto':'')))
     +'</div>';
   h+='<div class="kpirow">'
     +kpi(acid?'bad':'info','pH · HCO3',(ph!=null?ph:'—')+(hco3!=null?' · '+hco3:''),'',acid?'acidosis':'')
     +kpi('info','Na corregido',(naCorr!=null?naCorr:'—'),'mEq/L','por glucosa')
-    +kpi('info','Brecha aniónica',(ag!=null?ag:'—'),'',(ag!=null&&ag>12?'elevada':''))
-    +kpi('info','Insulina',insRate,'U/h','0.1 U/kg/h')
+    +kpi('info',(agCorr!=null?'Brecha corr.':'Brecha aniónica'),(agUse!=null?agUse:'—'),'',(agUse!=null&&agUse>12?'elevada':'')+(agCorr!=null?' · alb':''))
+    +kpi('info','Insulina',insRate,'U/h',((isHHS&&!mixed)?'0.05':'0.1')+' U/kg/h')
+    +'</div>';
+  h+='<div class="kpirow">'
+    +kpi('info','Meta glucosa 1 h','~'+gTgt1Lo+'–'+gTgt1Hi,'mg/dL','−'+gDropLo+' a −'+gDropHi)
+    +kpi(fluidMode==='estandar'?'info':'warn','Líquido inicial',fLo+'–'+fHi,'mL/h',(fluidMode==='dialisis'?'diálisis: mínimo':(fluidMode==='conservador'?'conservador':'15–20 mL/kg/h')))
+    +kpi(renalMal?'warn':'info','Función renal',(dialisis?'Diálisis':(anuria?'Anúrico':(oliguria?'Oligúrico':(crHigh?'Cr '+cr:'Conservada')))),'',(renalMal?'K con cautela':''))
+    +kpi('info','Déficit agua libre',(freeWater!=null?'~'+freeWater:'—'),(freeWater!=null?'L':''),(freeWater!=null?'reponer 24 h':'—'))
     +'</div>';
 
   // SAFETY
   var safety=[];
-  if(kBand==='low')safety.push({l:'bad',t:'K '+k+' <3.5: NO iniciar insulina',x:'La insulina baja aún más el K y puede causar arritmia mortal. Repón KCl '+kRate+' mEq/h ('+kVia+'), ~'+kNeed+' mEq (~'+kHrs+' h), revalorando cada 1 h; inicia la insulina al llegar a ≥3.5.'});
-  if(kBand==='high')safety.push({l:'warn',t:'K >5.0',x:'No agregues potasio todavía; revalora en 2 h (bajará con la insulina y los líquidos).'});
-  if(isHHS||hyperosm)safety.push({l:'bad',t:'Corrige la osmolaridad LENTO',x:'Baja la osmolaridad 3–8 mOsm/kg/h y el Na ≤10 mEq/L en 24 h; el descenso brusco causa edema cerebral (sobre todo en jóvenes).'});
-  if(eugly)safety.push({l:'bad',t:'CAD euglucémica',x:'Glucosa casi normal pero con acidosis y cetonas: sospecha iSGLT2 (dapagliflozina, etc.), embarazo o ayuno. Trátala como CAD e inicia dextrosa pronto.'});
-  safety.push({l:'warn',t:'No suspendas la insulina en infusión sin traslape',x:'Inicia insulina basal SC 1–2 h antes de apagar la bomba; suspenderla sola provoca recaída de la cetoacidosis.'});
-  if(dkaLike)safety.push({l:'warn',t:'Vigila edema cerebral',x:'Cefalea, deterioro neurológico o bradicardia tras mejoría bioquímica: sospecha edema cerebral (más en jóvenes). No bajes la glucosa/osmolaridad demasiado rápido.'});
-
+  if(kBand==='low')safety.push({l:'bad',t:'K '+k+' <3.5: NO iniciar insulina',x:'La insulina baja aún más el K y puede causar arritmia mortal. Repón KCl '+kRate+' mEq/h ('+kVia+'), ~'+kNeed+' mEq (~'+kHrs+' h), revalorando cada 1 h; inicia la insulina al llegar a ≥3.5.'+(renalMal?' <b>Con función renal comprometida, usa el ritmo bajo (10 mEq/h) y ECG continuo.</b>':'')});
+  if(kBand==='high')safety.push({l:'warn',t:'K >5.0',x:'No agregues potasio todavía; revalora en 2 h (bajará con la insulina y los líquidos).'+(renalMal?' <b>Ojo: en fallo renal la hiperkalemia puede persistir o empeorar — vigila el ECG y considera que el descenso será más lento.</b>':'')});
+  if(renalMal&&kBand==='mid')safety.push({l:'warn',t:'Potasio en fallo renal — repón con cautela',x:(dialisis?'Paciente en diálisis':(anuria?'Anúrico':(oliguria?'Oligúrico':'Creatinina '+cr)))+': el déficit corporal de K es menor y el riesgo de hiperkalemia es alto. Repón <b>'+kMaint+'</b> (dosis reducida), con <b>ECG continuo</b> y control de K <b>cada 1–2 h</b>. No uses el esquema estándar a ciegas.'});
+  if(sobrecarga)safety.push({l:'bad',t:'Riesgo de sobrecarga hídrica — ritmo conservador',x:(dialisis?'Paciente en diálisis':(cardioRenal?'IC/ERC conocida':(anciano?'Edad ≥65':'Diuresis reducida')))+': usa <b>'+fLo+'–'+fHi+' mL/h</b> (no el bolo estándar de 15–20 mL/kg/h) y <b>reevalúa clínicamente cada 1–2 h</b> (auscultación pulmonar, ingurgitación yugular, SatO₂, diuresis). El objetivo es corregir el déficit sin causar <b>edema agudo de pulmón</b>.'});
+  if(dialisis)safety.push({l:'bad',t:'Paciente en diálisis — coordina con nefrología',x:'Sin diuresis, los líquidos IV NO se eliminan → riesgo altísimo de sobrecarga. Da volúmenes <b>pequeños y guiados</b>, prioriza el control glucémico con insulina, y <b>avisa a nefrología</b>: puede requerir ultrafiltración/diálisis. La corrección de la glucosa y la osmolaridad la hace la insulina, no el suero.'});
+  if(freeWater!=null&&freeWater>=3)safety.push({l:'warn',t:'Hipernatremia / déficit de agua libre ~'+freeWater+' L',x:'Tras restaurar el volumen con salino, repón el <b>agua libre</b> con NaCl 0.45% o SG5%, distribuida en <b>≥24 h</b>. Baja el Na medido <b>≤10 mEq/L/día</b> y la osmolaridad <b>≤3 mOsm/kg/h</b> para evitar edema cerebral.'});
+  if(isHHS||osmHigh)safety.push({l:'bad',t:'Corrige la osmolaridad LENTO',x:'Osm efectiva ~'+effOsm+': bájala <b>3–8 mOsm/kg/h</b> y el Na medido <b>≤10 mEq/L en 24 h</b>; el descenso brusco causa <b>edema cerebral</b> (sobre todo en jóvenes).'});
+  if(eugly)safety.push({l:'bad',t:'CAD euglucémica',x:'Glucosa casi normal pero con acidosis y cetonas: sospecha <b>iSGLT2</b> (dapagliflozina, empagliflozina, etc.), embarazo o ayuno. Trátala como CAD e <b>inicia dextrosa desde el arranque</b> junto con la insulina.'});
+  if(scOK)safety.push({l:'warn',t:'Opción: insulina SC en vez de infusión',x:'CAD <b>'+sev+'</b>, alerta y sin datos de complicación: puedes tratarla con <b>análogo de acción rápida SC</b> (lispro, aspart o glulisina) en piso, con líquidos adecuados y glucosa capilar frecuente. Esquema típico: <b>'+scLoad+' U SC inicial (0.3 U/kg)</b>, luego <b>'+scMainLo+'–'+scMain+' U cada 1–2 h (0.1–0.2 U/kg)</b>. NO aplica a EHH, mixto, CAD grave, anuria ni inestabilidad.'});
+  safety.push({l:'warn',t:'No suspendas la insulina en infusión sin traslape',x:'Aplica la <b>insulina basal SC</b> (glargina, detemir, degludec o NPH) <b>1–2 h antes</b> de apagar la infusión de <b>insulina regular</b>; suspender la infusión sola provoca recaída de la cetoacidosis.'});
+  if(dkaLike||isHHS)safety.push({l:'warn',t:'Vigila edema cerebral',x:'Cefalea, deterioro neurológico o bradicardia tras mejoría bioquímica: sospecha edema cerebral (más en jóvenes). No bajes la glucosa/osmolaridad demasiado rápido.'});
   if(ph!=null&&ph<7.0)safety.push({l:'warn',t:'pH <7.0',x:'Único escenario donde se considera bicarbonato (100 mmol en 400 mL en 2 h); no de rutina.'});
-  if(po4!=null&&po4<1.0)safety.push({l:'warn',t:'Fósforo <1.0',x:'Repón fosfato de potasio solo si hay debilidad muscular o compromiso cardio-respiratorio; vigila el calcio.'});
+  if(po4!=null&&po4<1.0)safety.push({l:'warn',t:'Fósforo <1.0',x:'Repón fosfato de potasio solo si hay debilidad muscular o compromiso cardio-respiratorio; vigila el calcio.'+(renalMal?' <b>Cuidado en fallo renal: riesgo de hiperfosfatemia e hipocalcemia.</b>':'')});
   // PROTOCOL
   h+=safe(safety);
   var bicInd=(ph!=null&&ph<7.0), po4Ind=(po4!=null&&po4<1.0), redRate=Math.round(0.05*w*10)/10;
   if(needKet)h+=alrt('a-w','❓','Hay acidosis con hiperglucemia pero no confirmas cetosis: <b>marca las cetonas o ingresa el cloro</b> (para la brecha aniónica). Un β-OHB ≥3.0 o una brecha &gt;12 confirman CAD.');
   h+=ohead('🩸','Diagnóstico y criterios');
-  h+=row('Diagnóstico','<b>'+dx+(sev?' · '+sev:'')+'</b>');
-  h+=row('Criterios','CAD = cetosis (β-OHB ≥3.0 o cetonuria ++) + acidosis (pH &lt;7.3 o HCO3 &lt;18). EHH = glucosa ≥600 + osm efectiva &gt;320 sin acidosis ni cetosis'+(mixed?'. Este caso tiene <b>ambos</b> → trátalo como CAD.':'.'));
+  h+=row('Diagnóstico','<b>'+dx+(sev?' · '+sev:'')+'</b>'+(agCorr!=null?' · brecha corregida por albúmina '+agCorr:''));
+  h+=row('Criterios','CAD = cetosis (β-OHB ≥3.0 o cetonuria ++) + acidosis (pH &lt;7.3 o HCO3 &lt;18) + glucosa ≥200 o diabetes conocida. EHH = glucosa ≥600 + <b>osm efectiva &gt;300</b> (ADA/EASD 2024) sin acidosis ni cetosis'+(mixed?'. Este caso tiene <b>ambos</b> → trátalo como CAD.':'.'));
   h+='</div></div>';
 
   h+=ohead('🟥','FASE 1 · Reanimación inicial (0–2 h)');
-  h+=row('1 · Líquidos','<b>NaCl 0.9%:</b> '+firstL+' en la 1ª hora (30–60 min si hay hipotensión), luego <b>'+fLo+'–'+fHi+' mL/h</b> (15–20 mL/kg/h) las primeras 2–4 h. <b>Déficit estimado ~'+defL+' L</b> (CAD ~100 mL/kg; EHH hasta ~'+defHi+' L). Restaura el volumen y ya baja la glucosa.');
-  h+=row('2 · Potasio',(kBand==='low'?'<b>K '+k+' &lt;3.5 → NO inicies insulina.</b> <b>KCl '+kRate+' mEq/h IV</b> ('+kRate+' mEq en '+kDil+' mL de NaCl 0.9% a pasar en 1 h, '+kVia+'). Estimado para llegar a 3.5: ~<b>'+kNeed+' mEq</b> (~<b>'+kHrs+' h</b> a este ritmo). <b>Revalora K cada 1 h</b> e inicia la insulina al alcanzar ≥3.5.':(kBand==='high'?'<b>K &gt;5.0 → no agregues potasio;</b> revalora en 2 h.':'<b>K 3.5–5.0 → agrega KCl 10–20 mEq por litro</b> (meta 4–5 mEq/L).')));
-  h+=row('3 · Insulina',(kBand==='low'?'Inicia al llegar el K a ≥3.5: ':'')+'<b>insulina regular '+insRate+' U/h IV ('+((isHHS&&!mixed)?'0.05':'0.1')+' U/kg/h)</b>, sin bolo de rutina.');
-  if(bicInd)h+=row('4 · Bicarbonato','<b>pH '+ph+' &lt;7.0:</b> bicarbonato de sodio <b>100 mmol + KCl 20 mEq en 400 mL de agua a pasar en 2 h</b>; revalora el pH y repite hasta ≥7.0 (no de rutina).');
-  h+=row('Además','Labs basales (gasometría, electrolitos, cetonas, biometría, EGO, cultivos, ECG) y <b>busca el desencadenante</b> (infección, omisión de insulina, IAM, iSGLT2, pancreatitis).');
+  if(fluidMode==='estandar'){
+    h+=row('1 · Líquidos','<b>'+firstL+' en la 1.ª hora</b> (en 30–60 min si hay hipotensión), luego <b>'+fLo+'–'+fHi+' mL/h</b> (15–20 mL/kg/h) las primeras 2–4 h. Cristaloide <b>balanceado</b> (Ringer lactato o Plasma-Lyte) de preferencia. Déficit estimado <b>~'+defL+'–'+defHi+' L</b>.','Restaurar el volumen ya baja la glucosa por sí solo; el consenso 2024 prefiere balanceados sobre el NaCl 0.9% porque causan menos acidosis hiperclorémica.');
+  } else if(fluidMode==='conservador'){
+    h+=row('1 · Líquidos ⚠️ conservador','Cristaloide balanceado o NaCl 0.9% <b>'+fLo+'–'+fHi+' mL/h</b> (≈7–12 mL/kg/h). Bolos de <b>250–500 mL</b> solo si hay hipotensión. <b>Reevalúa cada 1–2 h</b> (campos pulmonares, yugulares, SatO₂, diuresis). Déficit <b>~'+defL+'–'+defHi+' L</b> a reponer en <b>24–48 h</b>.','Por '+(cardioRenal?'IC/ERC conocida':(anciano?'edad ≥65':'diuresis reducida'))+', el ritmo estándar de 15–20 mL/kg/h puede provocar edema agudo de pulmón: se corrige el déficit sin sobrecargar.');
+  } else {
+    h+=row('1 · Líquidos ⛔ diálisis','Volúmenes <b>pequeños y guiados</b> ('+fLo+'–'+fHi+' mL/h como referencia), solo lo necesario para la perfusión. <b>Interconsulta a Nefrología</b> (puede requerir ultrafiltración).','En diálisis/anuria los líquidos NO se eliminan → riesgo altísimo de sobrecarga; aquí la glucosa y la osmolaridad las corrige la insulina, no el suero.');
+  }
+  var kOrd = (kBand==='low')
+    ? '<b>K '+k+' &lt;3.5:</b> KCl <b>'+kRate+' mEq/h IV</b> ('+kRate+' mEq en '+kDil+' mL en 1 h, '+kVia+'); ~<b>'+kNeed+' mEq</b> (~'+kHrs+' h) para llegar a 3.5. Revalora K cada 1 h. <b>NO inicies insulina hasta K ≥ 3.5.</b>'
+    : (kBand==='high')
+      ? '<b>K &gt;5.0:</b> no agregues potasio; revalora en 2 h.'+(renalMal?' Vigila el ECG.':'')
+      : '<b>K 3.5–5.0:</b> agrega KCl <b>'+kMaint+'</b> (meta 4–5 mEq/L)'+(renalMal?', con ECG y control cada 1–2 h.':'.');
+  var kExp = (kBand==='low')
+    ? 'Con K &lt;3.5 la insulina lo mete a la célula y puede desencadenar una arritmia mortal; por eso se repone antes de iniciarla.'
+    : (kBand==='high')
+      ? 'Bajará con la insulina y los líquidos.'+(renalMal?' En fallo renal puede persistir o incluso subir.':'')
+      : 'La insulina desplomará el potasio; mantenerlo en 4–5 mEq/L previene la hipokalemia.'+(renalMal?' Función renal comprometida: dosis reducida y vigilancia estrecha.':'');
+  h+=row('2 · Potasio',kOrd,kExp);
+  h+=row('3 · Insulina',(kBand==='low'?'<b>Al llegar el K a ≥ 3.5:</b> ':'')+'<b>Insulina regular (cristalina) en infusión IV continua: '+insRate+' U/h</b> ('+((isHHS&&!mixed)?'0.05':'0.1')+' U/kg/h), sin bolo de rutina. Dilución: <b>50 U de regular en 50 mL de NaCl 0.9% = 1 U/mL</b>, en bomba.'+(scOK?' <b>Alternativa (CAD '+sev+' no complicada):</b> análogo de acción rápida SC (lispro, aspart o glulisina) '+scLoad+' U inicial, luego '+scMainLo+'–'+scMain+' U c/1–2 h.':'')+(eugly?' Acompaña con <b>SG 5% desde el inicio</b>.':''),'Solo la insulina regular/cristalina se administra IV; la basal (glargina, detemir, degludec) y la NPH nunca se ponen intravenosas. La infusión frena la cetogénesis y baja la glucosa de forma controlada.');
+  if(bicInd)h+=row('4 · Bicarbonato','<b>pH '+ph+' &lt;7.0:</b> bicarbonato de sodio <b>100 mmol + KCl 20 mEq en 400 mL de agua a pasar en 2 h</b>; revalora el pH y repite hasta ≥ 7.0.','Único escenario donde se considera bicarbonato; no se usa de rutina porque no mejora el desenlace y puede causar hipokalemia y acidosis paradójica del SNC.');
+  h+=row('Además','Toma <b>labs basales</b> (gasometría, electrolitos, cetonas/β-OHB, biometría, EGO, cultivos, ECG) e <b>identifica el desencadenante</b> (infección, omisión de insulina, IAM, iSGLT2, pancreatitis).','Tratar la causa es lo que evita que la crisis se repita o no responda al tratamiento.');
   h+='</div></div>';
 
+  var fMaintLo = (fluidMode==='estandar')?250:(fluidMode==='conservador'?125:75);
+  var fMaintHi = (fluidMode==='estandar')?500:(fluidMode==='conservador'?250:150);
   h+=ohead('🟧','FASE 2 · Estabilización (2 h → glucosa &lt;250)');
-  h+=row('Líquidos',(naCorr!=null?'El <b>Na corregido es '+naCorr+'</b> ('+(naCorr>=135?'normal/alto':'bajo')+') → ':'Según el Na corregido → ')+'<b>'+maintF+' 250–500 mL/h</b> (repón el déficit restante ~'+defL+' L en las siguientes 8–12 h; ajusta a diuresis y volemia).');
-  h+=row('Insulina','Continúa <b>'+insRate+' U/h</b>; meta bajar la glucosa <b>'+(isHHS?'90–120':'50–75')+' mg/dL/h</b>. <b>Si en 1 h no bajó ≥'+(isHHS?'90':'50')+' mg/dL:</b> bolo de insulina 0.1 U/kg (<b>'+bolusU+' U</b>) o sube la infusión a <b>'+hiRate+' U/h</b> (0.15 U/kg/h).');
-  h+=row('Potasio','Mantén el K en <b>4–5 mEq/L</b> (KCl 10–20 mEq por litro); la insulina lo mete a la célula y puede desplomarlo.');
-  h+=row('Monitoreo','Glucosa capilar <b>cada 1 h</b>; electrolitos, gasometría venosa y β-OHB <b>cada 2–4 h</b>; sigue la brecha aniónica.');
+  h+=row('Líquidos','<b>'+maintF+' '+fMaintLo+'–'+fMaintHi+' mL/h</b>; repón el déficit restante ~'+defL+' L en '+(sobrecarga?'24–48 h':'8–12 h')+'.'+(sobrecarga?' <b>Reevalúa la sobrecarga en cada control.</b>':''),(naCorr!=null?'El Na corregido es '+naCorr+' ('+(naCorr>=135?'normal/alto → conviene solución hipotónica':'bajo → mantén isotónica')+'); ':'')+'ajusta según diuresis y volemia.');
+  if(freeWater!=null&&freeWater>=3)h+=row('Agua libre','Repón el déficit de <b>~'+freeWater+' L</b> con <b>'+maintF+' o SG 5%</b> a lo largo de <b>≥ 24 h</b>. Baja el Na medido <b>≤ 10 mEq/L/día</b> y la osmolaridad <b>≤ 3 mOsm/kg/h</b>.','El Na medido de '+na+' indica hipertonía; corregirla demasiado rápido causa edema cerebral, sobre todo en jóvenes.');
+  h+=row('Insulina','Continúa la <b>infusión de insulina regular a '+insRate+' U/h</b>. Objetivo en 1 h ≈ <b>'+gTgt1Lo+'–'+gTgt1Hi+' mg/dL</b>. <b>Si no bajó ≥ '+gDropLo+' mg/dL:</b> bolo 0.1 U/kg (<b>'+bolusU+' U</b>) o sube a <b>'+hiRate+' U/h</b>.','La meta es un descenso de '+gDropLo+'–'+gDropHi+' mg/dL/h: más rápido arriesga edema cerebral, más lento prolonga la cetosis.');
+  h+=row('Potasio','Mantén el K en <b>4–5 mEq/L</b> (KCl '+kMaint+')'+(renalMal?'; con fallo renal, control cada 1–2 h y ECG.':'.'),'La insulina y la corrección de la acidosis meten el potasio a la célula y pueden desplomarlo.');
+  h+=row('Monitoreo','Glucosa capilar <b>cada 1 h</b>; electrolitos, gasometría venosa y β-OHB <b>cada 2–4 h</b>; sigue la brecha aniónica'+(agCorr!=null?' corregida':'')+(sobrecarga?' y el estado de volumen':'')+'.','El β-OHB y la brecha aniónica reflejan la resolución de la cetosis mejor que la glucosa sola.');
   h+='</div></div>';
 
   h+=ohead('🟨','FASE 3 · Glucosa &lt;250 mg/dL — evita hipoglucemia');
-  h+=row('Dextrosa','Cambia a <b>SG 5% en NaCl 0.45%</b> para poder mantener la insulina (que es la que resuelve la cetosis) sin causar hipoglucemia.');
-  h+=row('Insulina',((isHHS&&!mixed)?'Continúa a <b>0.05 U/kg/h</b>':'Reduce a <b>0.05 U/kg/h ('+redRate+' U/h)</b>')+'; mantén la glucosa <b>'+(isHHS?'250–300':'150–200')+' mg/dL</b> hasta la resolución. <b>No suspendas la insulina.</b>');
-  h+=row('Fosfato',(po4Ind?'<b>Fósforo '+po4+' &lt;1.0:</b> fosfato de potasio 20–30 mmol IV lento (aporta ~30–44 mEq de K, cuéntalo); vigila el calcio.':'<b>No indicado</b>'+(po4!=null?' (fósforo '+po4+')':'')+' de rutina; solo si &lt;1.0 mg/dL con debilidad muscular o compromiso cardio-respiratorio.'));
+  h+=row('Dextrosa','Cambia a <b>SG 5% en NaCl 0.45%</b>'+(eugly?' (en euglucémica ya debiste iniciarla desde la Fase 1)':'')+'.','Permite mantener la infusión de insulina —que es la que resuelve la cetosis— sin provocar hipoglucemia.');
+  h+=row('Insulina',((isHHS&&!mixed)?'Continúa la infusión de regular a <b>0.05 U/kg/h ('+redRate0+' U/h)</b>':'Reduce la infusión de regular a <b>0.05 U/kg/h ('+redRate0+' U/h)</b>')+'; mantén la glucosa <b>'+(isHHS?'250–300':'150–200')+' mg/dL</b> hasta la resolución. <b>No suspendas la insulina.</b>','Aún hay cetosis que resolver: suspender la insulina aquí reactiva la producción de cetonas y recae la acidosis.');
+  h+=row('Fosfato',(po4Ind?'<b>Fósforo '+po4+' &lt;1.0:</b> fosfato de potasio <b>20–30 mmol IV lento</b> (aporta ~30–44 mEq de K, cuéntalo); vigila el calcio'+(renalMal?' y el fósforo':'')+'.':'<b>No indicado</b>'+(po4!=null?' (fósforo '+po4+')':'')+'.'),(po4Ind?'Solo se repone en hipofosfatemia grave con debilidad muscular o compromiso cardio-respiratorio.'+(renalMal?' En fallo renal, riesgo de hiperfosfatemia e hipocalcemia.':''):'La reposición de rutina no aporta beneficio; solo si &lt;1.0 mg/dL con debilidad muscular o compromiso cardio-respiratorio.'));
   h+='</div></div>';
 
   h+=ohead('🟩','FASE 4 · Resolución y transición a insulina SC');
-  h+=row('Criterios de resolución','<b>CAD:</b> glucosa &lt;200 y dos de: HCO3 ≥15, pH venoso &gt;7.3, brecha aniónica ≤12 (o β-OHB &lt;0.6). <b>EHH:</b> osmolaridad y estado mental normales, glucosa &lt;250–300.');
-  h+=row('Transición a SC','Inicia <b>insulina basal subcutánea 1–2 h ANTES</b> de apagar la infusión (traslape obligatorio). Dosis total diaria 0.3–0.6 U/kg/día en esquema basal-bolo; reinicia la vía oral.');
-  h+=row('No olvides','Continúa el tratamiento del desencadenante y la educación del paciente para prevenir recaídas.');
+  h+=row('Criterios de resolución','<b>CAD:</b> glucosa &lt;200 y dos de: HCO3 ≥ 15, pH venoso &gt; 7.3, brecha aniónica ≤ 12 (o β-OHB &lt; 0.6). <b>EHH:</b> osmolaridad y estado mental normales, glucosa &lt; 250–300.','No basta con normalizar la glucosa: la CAD se resuelve cuando cede la cetosis/acidosis, no cuando baja el azúcar.');
+  h+=row('Transición a SC · personalizada','<b>DTD ~'+ddi+' U/día</b> ('+ddiFactor+' U/kg'+(ddiConserv?', conservadora':'')+'). Reparte: <b>basal '+basalU+' U/día SC</b> (glargina, detemir, degludec o NPH) <b>+ '+prandU+' U SC con cada alimento</b> de análogo de acción rápida (lispro/aspart) o regular. <b>Aplica la basal 1–2 h ANTES de apagar la infusión de regular</b> y reinicia la vía oral.',(ddiConserv?'Dosis conservadora por '+(anciano&&renalMal?'edad y fallo renal':(anciano?'edad ≥65':'fallo renal'))+' (mayor riesgo de hipoglucemia). ':'')+'El traslape evita que, al apagar la infusión (vida media de minutos), reaparezca la cetoacidosis. Rango 0.3–0.6 U/kg = '+ddiLo+'–'+ddiHi+' U; en insulino-naïve, empieza por el extremo bajo.');
+  h+=row('No olvides','Continúa el <b>tratamiento del desencadenante</b> y la <b>educación del paciente</b> (manejo en días de enfermedad, no suspender insulina, uso de iSGLT2).','La mayoría de las recaídas se deben a la causa no tratada o a la falta de educación, no al manejo hospitalario.');
   h+='</div></div>';
 
   // READY ORDERS
+  var fluidName = (fluidMode==='estandar')?'Cristaloide balanceado (Ringer/Plasma-Lyte) o NaCl 0.9%':'Cristaloide balanceado o NaCl 0.9%';
   var RX=[];
-  RX.push('NaCl 0.9% IV '+fLo+'–'+fHi+' mL/h las primeras 2–4 h‖Reanimación inicial (15–20 mL/kg/h). Luego mantenimiento con '+maintF+' 250–500 mL/h.');
-  if(kBand==='low')RX.push('KCl '+kRate+' mEq/h IV ('+kRate+' mEq en '+kDil+' mL de NaCl 0.9% en 1 h, '+kVia+'), repetir cada hora hasta K ≥3.5 — <b>antes de la insulina</b>‖Estimado ~'+kNeed+' mEq (~'+kHrs+' h) para llegar a 3.5; revalora K cada 1 h. Con K <3.5 la insulina causa arritmia.');
-  else if(kBand==='mid')RX.push('KCl 10–20 mEq por cada litro de líquido (meta K 4–5)');
-  else RX.push('Potasio: no agregar (K >5.0); revalorar en 2 h');
-  RX.push('Insulina regular en infusión '+insRate+' U/h IV'+(kBand==='low'?' (iniciar al llegar K ≥3.5)':'')+'‖0.1 U/kg/h (0.05 en EHH puro), sin bolo. Bajar glucosa '+(isHHS?'90–120':'50–75')+' mg/dL/h.');
-  RX.push('Al llegar glucosa <250 mg/dL: cambiar a SG 5% en NaCl 0.45% y reducir insulina a '+(Math.round(0.05*w*10)/10)+' U/h‖Mantener glucosa '+(isHHS?'250–300':'150–200')+' mg/dL hasta la resolución; no suspender la insulina.');
+  RX.push('Ayuno.');
+  RX.push('Reposo en cama, cabecera a 30°'+(ment_!=='0'?'; vigilancia neurológica estrecha (Glasgow por turno)':'')+'.');
+  RX.push('Signos vitales cada 1 h; glucometría capilar cada 1 h; balance hídrico estricto'+(sobrecarga?'; vigilar sobrecarga (estertores, ingurgitación yugular, SatO₂)':'')+'.');
+  if(fluidMode==='estandar')RX.push(fluidName+': '+firstL+' IV en la 1.ª hora, luego '+fLo+'–'+fHi+' mL/h.');
+  else if(fluidMode==='conservador')RX.push(fluidName+' '+fLo+'–'+fHi+' mL/h IV (ritmo conservador); reevaluar volemia cada 1–2 h.');
+  else RX.push(fluidName+' '+fLo+'–'+fHi+' mL/h IV (volumen mínimo guiado). Interconsulta a Nefrología.');
+  if(kBand==='low')RX.push('KCl '+kRate+' mEq/h IV ('+kRate+' mEq en '+kDil+' mL, '+kVia+'); repetir cada hora hasta K ≥ 3.5. NO iniciar insulina hasta K ≥ 3.5.');
+  else if(kBand==='mid')RX.push('Agregar KCl '+kMaint+' de solución IV (meta K 4–5 mEq/L)'+(renalMal?'; ECG y control de K cada 1–2 h':'')+'.');
+  else RX.push('No agregar potasio (K > 5.0); revalorar en 2 h'+(renalMal?'; vigilar ECG':'')+'.');
+  if(scOK)RX.push('Insulina análogo de acción rápida (lispro o aspart) '+scLoad+' U SC ahora, luego '+scMainLo+'–'+scMain+' U SC cada 1–2 h (alternativa IV: insulina regular '+insRate+' U/h en infusión).');
+  else RX.push('Insulina regular (cristalina) en infusión IV continua '+insRate+' U/h — diluir 50 U en 50 mL de NaCl 0.9% (1 U/mL) en bomba'+(kBand==='low'?' (iniciar al llegar K ≥ 3.5)':'')+', sin bolo. NO usar insulina basal ni NPH por vía IV.');
+  if(eugly)RX.push('Iniciar SG 5% desde el arranque junto con la insulina (CAD euglucémica).');
+  RX.push('Al llegar glucosa < 250 mg/dL: cambiar a SG 5% en NaCl 0.45% y reducir insulina a '+redRate0+' U/h; NO suspender la insulina.');
+  if(bicInd)RX.push('Bicarbonato de sodio 100 mmol + KCl 20 mEq en 400 mL de agua IV en 2 h; revalorar pH.');
+  if(po4Ind)RX.push('Fosfato de potasio 20–30 mmol IV lento; vigilar calcio'+(renalMal?' y fósforo':'')+'.');
+  RX.push('Gasometría venosa, electrolitos (Na, K, Cl) y β-hidroxibutirato cada 2–4 h.');
+  RX.push('EGO, biometría hemática, ECG'+(dxCls==='bad'?', cultivos y radiografía de tórax':'')+'; identificar y tratar el factor desencadenante.');
+  RX.push('Al resolver: insulina basal SC (glargina, detemir o NPH) '+basalU+' U/día'+(ddiConserv?' (dosis conservadora)':'')+' + insulina de acción rápida SC (lispro o aspart) '+prandU+' U con cada alimento; aplicar la basal 1–2 h ANTES de suspender la infusión de insulina regular.');
   h+=rx(RX);
 
   // FOLLOW-UP
@@ -709,12 +830,13 @@ function calc(){
   h+=buttons();
   out.innerHTML=h;
 
-  var T=SEP()+'CRISIS HIPERGLUCÉMICA · '+dx.toUpperCase()+(sev?' · '+sev.toUpperCase():'')+'\n'+SEP()+'Peso '+fmt(w,0)+' kg\n\n'
-    +'LABORATORIO\n  - Glucosa '+glu+' mg/dL'+(effOsm!=null?'; osm efectiva ~'+effOsm+' mOsm/kg':'')+(naCorr!=null?'; Na corregido '+naCorr:'')+(ag!=null?'; brecha anionica '+ag:'')+'\n  - pH '+(ph!=null?ph:'nd')+'; HCO3 '+(hco3!=null?hco3:'nd')+'; K '+(k!=null?k:'nd')+'; b-OHB '+(bhb!=null?bhb:'segun cetonuria')+'\n\n'
+  var perfilTxt='Peso '+fmt(w,0)+' kg'+(edad!=null?'; edad '+fmt(edad,0)+' a':'')+(renalMal?'; funcion renal: '+(dialisis?'dialisis':(anuria?'anurico':(oliguria?'oligurico':'Cr '+cr))):'')+(sobrecarga?'; RIESGO DE SOBRECARGA (ritmo conservador)':'');
+  var fluidTxt=(fluidMode==='estandar')?'Cristaloide balanceado o NaCl 0.9% '+firstL+' en la 1a hora, luego '+fLo+'-'+fHi+' mL/h (15-20 mL/kg/h)':((fluidMode==='conservador')?'CONSERVADOR: cristaloide '+fLo+'-'+fHi+' mL/h, reevaluar sobrecarga cada 1-2 h':'DIALISIS/ANURICO: volumen minimo '+fLo+'-'+fHi+' mL/h + nefrologia');
+  var T=SEP()+'CRISIS HIPERGLUCÉMICA · '+dx.toUpperCase()+(sev?' · '+sev.toUpperCase():'')+'\n'+SEP()+perfilTxt+'\n\n'
+    +'LABORATORIO\n  - Glucosa '+glu+' mg/dL'+(effOsm!=null?'; osm efectiva ~'+effOsm+' mOsm/kg':'')+(naCorr!=null?'; Na corregido '+naCorr:'')+(agUse!=null?'; brecha anionica '+agUse+(agCorr!=null?' (corr. albumina)':''):'')+(freeWater!=null?'; deficit agua libre ~'+freeWater+' L':'')+'\n  - pH '+(ph!=null?ph:'nd')+'; HCO3 '+(hco3!=null?hco3:'nd')+'; K '+(k!=null?k:'nd')+'; b-OHB '+(bhb!=null?bhb:'segun cetonuria')+'\n\n'
     +'INDICACION PARA ENFERMERIA\n'+rxTxt(RX)+'\n'
-    +'FASE 1 - REANIMACION (0-2 h)\n  - Liquidos NaCl 0.9% '+firstL+' en la 1a hora, luego '+fLo+'-'+fHi+' mL/h (15-20 mL/kg/h); deficit ~'+defL+' L\n  - Potasio: '+(kBand==='low'?'K<3.5: KCl '+kRate+' mEq/h ('+kVia+') ~'+kNeed+' mEq (~'+kHrs+' h), revalorar cada 1 h, ANTES de la insulina':(kBand==='high'?'K>5.0 no dar; revalorar 2 h':'K 3.5-5.0 anadir 10-20 mEq/L (meta 4-5)'))+'\n  - Insulina '+insRate+' U/h IV ('+((isHHS&&!mixed)?'0.05':'0.1')+' U/kg/h), sin bolo'+(bicInd?'\n  - Bicarbonato 100 mmol + KCl 20 mEq en 400 mL en 2 h (pH<7.0)':'')+'\n  - Labs basales y buscar desencadenante\n\n'+'FASE 2 - ESTABILIZACION (2 h hasta glucosa <250)\n  - '+maintF+' 250-500 mL/h (deficit restante ~'+defL+' L en 8-12 h)\n  - Insulina '+insRate+' U/h; bajar glucosa '+(isHHS?'90-120':'50-75')+' mg/dL/h; si en 1 h no baja >='+(isHHS?'90':'50')+' mg/dL: bolo 0.1 U/kg ('+bolusU+' U) o subir a '+hiRate+' U/h\n  - K 4-5 mEq/L\n  - Glucosa cada 1 h; electrolitos/gaso/b-OHB cada 2-4 h\n\n'+'FASE 3 - GLUCOSA <250\n  - Dextrosa (SG 5% en NaCl 0.45%); insulina '+((isHHS&&!mixed)?'0.05 U/kg/h':(redRate+' U/h'))+'; mantener glucosa '+(isHHS?'250-300':'150-200')+' mg/dL; NO suspender la insulina'+(po4Ind?'\n  - Fosfato de potasio 20-30 mmol (fosforo <1.0)':'')+'\n\n'+'FASE 4 - RESOLUCION Y TRANSICION\n  - CAD: glucosa <200 y 2 de (HCO3>=15, pH>7.3, brecha<=12 o b-OHB<0.6); EHH: osm/estado mental normales, glucosa <250-300\n  - Insulina basal SC 1-2 h ANTES de suspender la infusion (DTD 0.3-0.6 U/kg/dia)\n\n'
-    +'SEGUIMIENTO\n  - Glucosa capilar cada 1 h\n  - Electrolitos, gasometria venosa y b-OHB cada 2-4 h; brecha anionica\n  - Balance hidrico, diuresis y estado neurologico; tratar el desencadenante\n\n'
-    
+    +'FASE 1 - REANIMACION (0-2 h)\n  - Liquidos: '+fluidTxt+'; deficit ~'+defL+'-'+defHi+' L\n  - Potasio: '+(kBand==='low'?'K<3.5: KCl '+kRate+' mEq/h ('+kVia+') ~'+kNeed+' mEq (~'+kHrs+' h), revalorar cada 1 h, ANTES de la insulina':(kBand==='high'?'K>5.0 no dar; revalorar 2 h'+(renalMal?' (ECG; puede persistir en fallo renal)':''):'K 3.5-5.0 anadir '+kMaint+' (meta 4-5)'+(renalMal?' con ECG y control c/1-2 h':'')))+'\n  - Insulina regular (cristalina) en infusion IV continua '+insRate+' U/h ('+((isHHS&&!mixed)?'0.05':'0.1')+' U/kg/h), diluir 50 U en 50 mL NaCl 0.9% (1 U/mL), sin bolo'+(scOK?' [alt SC: analogo rapido (lispro/aspart) '+scLoad+' U, luego '+scMainLo+'-'+scMain+' U c/1-2 h]':'')+(bicInd?'\n  - Bicarbonato 100 mmol + KCl 20 mEq en 400 mL en 2 h (pH<7.0)':'')+'\n  - Labs basales y buscar desencadenante\n\n'+'FASE 2 - ESTABILIZACION (2 h hasta glucosa <250)\n  - '+maintF+' '+fMaintLo+'-'+fMaintHi+' mL/h (deficit restante ~'+defL+' L en '+(sobrecarga?'24-48 h':'8-12 h')+')'+(freeWater!=null&&freeWater>=3?'; reponer agua libre ~'+freeWater+' L en >=24 h (Na medido <=10 mEq/L/dia)':'')+'\n  - Insulina '+insRate+' U/h; bajar glucosa '+gDropLo+'-'+gDropHi+' mg/dL/h (objetivo 1 h ~'+gTgt1Lo+'-'+gTgt1Hi+' mg/dL); si no baja >='+gDropLo+' mg/dL: bolo 0.1 U/kg ('+bolusU+' U) o subir a '+hiRate+' U/h\n  - K 4-5 mEq/L ('+kMaint+')\n  - Glucosa cada 1 h; electrolitos/gaso/b-OHB cada 2-4 h\n\n'+'FASE 3 - GLUCOSA <250\n  - Dextrosa (SG 5% en NaCl 0.45%); insulina '+((isHHS&&!mixed)?'0.05 U/kg/h':(redRate0+' U/h'))+'; mantener glucosa '+(isHHS?'250-300':'150-200')+' mg/dL; NO suspender la insulina'+(po4Ind?'\n  - Fosfato de potasio 20-30 mmol (fosforo <1.0)':'')+'\n\n'+'FASE 4 - RESOLUCION Y TRANSICION\n  - CAD: glucosa <200 y 2 de (HCO3>=15, pH>7.3, brecha<=12 o b-OHB<0.6); EHH: osm/estado mental normales, glucosa <250-300\n  - Insulina basal SC (glargina/detemir/NPH) '+basalU+' U/dia + rapida SC (lispro/aspart) '+prandU+' U con cada alimento (DTD ~'+ddi+' U = '+ddiFactor+' U/kg'+(ddiConserv?', conservadora':'')+'); aplicar la basal 1-2 h ANTES de suspender la infusion de regular\n\n'
+    +'SEGUIMIENTO\n  - Glucosa capilar cada 1 h\n  - Electrolitos, gasometria venosa y b-OHB cada 2-4 h; brecha anionica\n  - Balance hidrico, diuresis y estado neurologico'+(sobrecarga?' (VIGILAR SOBRECARGA)':'')+'; tratar el desencadenante\n\n'
     +'ALERTAS\n';
   for(var i=0;i<safety.length;i++)T+='  - '+safety[i].t.replace(/<[^>]+>/g,'')+': '+safety[i].x.replace(/<[^>]+>/g,'')+'\n';
   T+=SEP();
