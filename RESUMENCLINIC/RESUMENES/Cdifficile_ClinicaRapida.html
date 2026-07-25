@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>C. difficile · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#6b7a2f;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#eef2dd;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#2a3210,#6b7a2f);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#eef2dd;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#eef2dd;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2a3210,#6b7a2f);">
+  <div class="hdr-top"><div class="hdr-icon">🦠</div><div>
+    <div class="hdr-eye">Infectología · Gastroenterología</div>
+    <div class="hdr-title">Clostridioides difficile</div>
+    <div class="hdr-sub">Colitis asociada a antibióticos · IDSA/SHEA · ACG</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Fidaxomicina preferida</span>
+    <span class="badge">NO probar a asintomáticos</span>
+    <span class="badge">Agua y jabón (esporas)</span>
+    <span class="badge">Sin prueba de curación</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">≥3</div><div class="qs-l">Deposiciones/24 h</div></div>
+  <div class="qs"><div class="qs-v">10 días</div><div class="qs-l">Duración estándar</div></div>
+  <div class="qs"><div class="qs-v">15 000</div><div class="qs-l">Leucos = grave</div></div>
+  <div class="qs"><div class="qs-v">~20%</div><div class="qs-l">Recurrencia</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
+  <button class="tab" onclick="showT('fr',this)">⚠️ Factores de riesgo</button>
+  <button class="tab" onclick="showT('dx',this)">🧫 Diagnóstico</button>
+  <button class="tab" onclick="showT('sev',this)">📊 Severidad</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('rec',this)">🔁 Recurrencias</button>
+  <button class="tab" onclick="showT('ful',this)">🚨 Fulminante</button>
+  <button class="tab" onclick="showT('prev',this)">🧼 Prevención</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">¿Qué es?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Bacilo grampositivo anaerobio formador de esporas</strong>. Sus toxinas dañan el colon tras una <strong>disbiosis</strong> (casi siempre por antibióticos). Es la principal causa de <strong>diarrea infecciosa asociada a la atención sanitaria</strong>.</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">Las 4 reglas</div><b>1)</b> Solo probar a quien tiene diarrea. <b>2)</b> Suspender el antibiótico causal si se puede. <b>3)</b> Fidaxomicina o vancomicina VO (el metronidazol quedó relegado). <b>4)</b> <b>No</b> hacer prueba de curación.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Cifra</th></tr>
+      <tr><td class="dn">Causa n.º 1 de diarrea nosocomial</td><td>Principal patógeno de diarrea asociada a la atención sanitaria</td></tr>
+      <tr><td class="dn">Origen</td><td>Creciente proporción <b>adquirida en la comunidad</b> (jóvenes, sin hospitalización ni antibiótico reciente evidente)</td></tr>
+      <tr><td class="dn">Recurrencia</td><td>~15–25% tras el primer episodio; 40–60% tras ≥2 recurrencias</td></tr>
+      <tr><td class="dn">Portadores asintomáticos</td><td>~3–15% de adultos sanos; hasta 50% de lactantes (colonización, <b>no</b> se trata)</td></tr>
+      <tr><td class="dm">Mortalidad</td><td>~5% global; mucho mayor en fulminante (megacolon/perforación)</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definiciones clave</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Término</th><th>Definición</th></tr>
+      <tr><td class="dn">Colonización</td><td>Presencia del germen <b>sin</b> síntomas → NO probar ni tratar</td></tr>
+      <tr><td class="dn">Infección (CDI)</td><td>Diarrea (≥3 deposiciones no formadas/24 h) + prueba positiva + sin otra causa</td></tr>
+      <tr><td class="dn">Episodio recurrente</td><td>Nuevo cuadro con prueba + <b>2–8 semanas</b> tras resolver el anterior</td></tr>
+      <tr><td class="dm">Enfermedad refractaria</td><td>Sin mejoría pese a ≥3–5 días de tratamiento adecuado</td></tr>
+      <tr><td class="dn">Reinfección vs recaída</td><td>Distinción microbiológica (cepa distinta vs misma); no cambia el manejo clínico inmediato</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Clínica</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Forma</th><th>Datos</th></tr>
+      <tr><td class="dn">Típica</td><td>Diarrea acuosa (≥3 deposiciones no formadas/24 h), dolor abdominal cólico, fiebre, leucocitosis</td></tr>
+      <tr><td class="dn">Laboratorio</td><td>Leucocitosis (a veces reacción leucemoide &gt;30 000), ↑creatinina, hipoalbuminemia, lactato</td></tr>
+      <tr><td class="dm">Grave/fulminante</td><td>Hipotensión, choque, <b>íleo</b> (¡la diarrea puede desaparecer!), megacolon tóxico, perforación</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Un paciente con colitis por C. difficile que <b>deja de tener diarrea</b> y se distiende no está mejorando: sospecha <b>íleo/megacolon</b>.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Cascada</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 320" style="width:100%;max-width:440px;display:block;margin:0 auto;background:#fbf9f2;border-radius:8px;">
+      <g font-size="10" text-anchor="middle">
+      <rect x="70" y="12" width="220" height="28" rx="5" fill="#6b7a2f"/><text x="180" y="30" fill="#fff" font-weight="700">Antibiótico (u otro disruptor)</text>
+      <line x1="180" y1="40" x2="180" y2="56" stroke="#888" stroke-width="1.5"/>
+      <rect x="60" y="56" width="240" height="28" rx="5" fill="#eef2dd" stroke="#6b7a2f"/><text x="180" y="74" fill="#4a5520" font-weight="700">Disbiosis: pérdida de microbiota protectora</text>
+      <line x1="180" y1="84" x2="180" y2="100" stroke="#888" stroke-width="1.5"/>
+      <rect x="45" y="100" width="270" height="30" rx="5" fill="#e2e8f0"/><text x="180" y="112" fill="#333" font-weight="700">↓ ácidos biliares secundarios</text><text x="180" y="124" fill="#555" font-size="9">→ las esporas germinan y colonizan</text>
+      <line x1="180" y1="130" x2="180" y2="146" stroke="#888" stroke-width="1.5"/>
+      <rect x="70" y="146" width="100" height="34" rx="5" fill="#f6e0b0"/><text x="120" y="162" fill="#8a5a1e" font-weight="700">Toxina A</text><text x="120" y="174" fill="#8a5a1e" font-size="9">enterotoxina</text>
+      <rect x="190" y="146" width="100" height="34" rx="5" fill="#f3c9a0"/><text x="240" y="162" fill="#a05a1e" font-weight="700">Toxina B</text><text x="240" y="174" fill="#a05a1e" font-size="9">citotoxina (principal)</text>
+      <line x1="120" y1="180" x2="165" y2="200" stroke="#888" stroke-width="1.5"/><line x1="240" y1="180" x2="195" y2="200" stroke="#888" stroke-width="1.5"/>
+      <rect x="55" y="200" width="250" height="30" rx="5" fill="#fdeaea" stroke="#8a2b2b"/><text x="180" y="212" fill="#8a2b2b" font-weight="700">Destrucción del citoesqueleto del colonocito</text><text x="180" y="224" fill="#8a2b2b" font-size="9">pérdida de uniones estrechas + inflamación</text>
+      <line x1="180" y1="230" x2="180" y2="246" stroke="#888" stroke-width="1.5"/>
+      <rect x="70" y="246" width="220" height="28" rx="5" fill="#7b1c1c"/><text x="180" y="264" fill="#fff" font-weight="700">Colitis · pseudomembranas · diarrea</text>
+      <line x1="180" y1="274" x2="180" y2="288" stroke="#888" stroke-width="1.5"/>
+      <rect x="85" y="288" width="190" height="24" rx="5" fill="#e2e8f0"/><text x="180" y="304" fill="#444" font-size="9">Esporas al ambiente → transmisión fecal-oral</text>
+      </g>
+    </svg>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Las <b>esporas</b> resisten al alcohol, al calor y a muchos desinfectantes: por eso el <b>lavado con agua y jabón</b> y la limpieza con <b>hipoclorito</b>. La cepa hipervirulenta <b>NAP1/BI/027</b> (toxina binaria) produce más toxina y brotes graves.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-fr">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Categoría</th><th>Factores</th></tr>
+      <tr><td class="dn">Antibióticos (el principal)</td><td><b>Clindamicina, cefalosporinas de 3.ª–4.ª, fluoroquinolonas, carbapenémicos</b>, amoxicilina-clavulanato. El riesgo persiste ~3 meses</td></tr>
+      <tr><td class="dn">Huésped</td><td>Edad ≥65 años, comorbilidad, inmunosupresión, EII, ERC, cirugía GI, nutrición enteral</td></tr>
+      <tr><td class="dn">Exposición</td><td>Hospitalización, estancia prolongada, asilo, contacto con caso</td></tr>
+      <tr><td class="dn">Fármacos</td><td><b>IBP</b> (asociación; revisar si son necesarios), quimioterapia</td></tr>
+      <tr><td class="dn">Recurrencia</td><td>Edad, episodio previo, antibiótico concomitante, IBP, inmunosupresión</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-dx">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🚫</span><div><div class="at">Regla de oro del diagnóstico</div><b>Solo se prueba a pacientes con diarrea clínicamente significativa y sin otra causa</b> (≥3 deposiciones no formadas en 24 h, sin laxantes en las últimas 48 h). Probar a asintomáticos detecta <b>portadores</b> y lleva a tratar de más.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Algoritmo de laboratorio</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Prueba</th><th>Qué mide</th><th>Nota</th></tr>
+      <tr><td class="dn">GDH (glutamato deshidrogenasa)</td><td>Presencia del germen</td><td>Muy sensible, no distingue toxigénico</td></tr>
+      <tr><td class="dn">Toxinas A/B (EIA)</td><td>Toxina activa</td><td>Muy específica, poco sensible</td></tr>
+      <tr><td class="dn">NAAT / PCR</td><td>Gen de la toxina</td><td>Sensible; positiva también en <b>portadores</b></td></tr>
+      <tr><td class="dn">Cultivo toxigénico / citotoxicidad</td><td>Referencia</td><td>Lento; epidemiología</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🔀</span><div><b>Estrategia de 2 pasos (preferida):</b> GDH + toxina EIA → si <b>ambas +</b> = CDI; si <b>ambas −</b> = descartada; si <b>discordantes</b> → resolver con NAAT. Si solo hay NAAT, exigir criterios clínicos estrictos.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>Cómo distinguir</th></tr>
+      <tr><td class="dn">Diarrea por antibióticos NO C. difficile</td><td>Sin toxina; cede al suspender el antibiótico; sin colitis</td></tr>
+      <tr><td class="dn">Otras gastroenteritis infecciosas</td><td>Norovirus, Salmonella, Campylobacter, E. coli; contexto epidemiológico, coprocultivo/panel</td></tr>
+      <tr><td class="dm">EII (brote de CUCI/Crohn)</td><td>Puede coexistir y disparar CDI; endoscopia e historia; tratar ambos si hay sobreinfección</td></tr>
+      <tr><td class="dn">Colitis isquémica</td><td>Dolor desproporcionado, sangrado, distribución en zonas de vascularización limítrofe</td></tr>
+      <tr><td class="dn">Colitis microscópica / diarrea por fármacos</td><td>Diarrea acuosa crónica; biopsia; revisar fármacos (metformina, IBP, AINE)</td></tr>
+      <tr><td class="dn">Enterocolitis neutropénica (tiflitis)</td><td>Paciente oncológico neutropénico; TC; manejo distinto</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⛔</span><span class="st">Errores frecuentes</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>No repetir</b> la prueba dentro de 7 días ni tras el tratamiento: <b>no existe prueba de curación</b> (la PCR/toxina persiste semanas en pacientes ya curados).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">No probar heces <b>formadas</b> ni pacientes con laxantes.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">En <b>&lt;1–2 años</b> la colonización asintomática es altísima: interpretar con mucha cautela y buscar otras causas.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Imagen (<b>TC</b>) si se sospecha fulminante/megacolon; <b>colonoscopia</b> (pseudomembranas) solo en casos selectos o duda diagnóstica.</span></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-sev">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Clasificación de severidad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Categoría</th><th>Criterios</th></tr>
+      <tr><td class="dn">No grave</td><td>Leucocitos <b>&lt;15 000</b>/mm³ <b>y</b> creatinina <b>&lt;1.5</b> mg/dL</td></tr>
+      <tr><td class="dn">Grave</td><td>Leucocitos <b>≥15 000</b>/mm³ <b>o</b> creatinina <b>≥1.5</b> mg/dL</td></tr>
+      <tr><td class="dm">Fulminante</td><td><b>Hipotensión/choque</b>, <b>íleo</b> o <b>megacolon tóxico</b></td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Otros marcadores de gravedad: albúmina baja, lactato elevado, fiebre alta, deterioro rápido, edad avanzada.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">Calculadora de severidad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="calc-w">
+      <div class="calc-row"><div class="calc-lbl2">Leucocitos (/mm³)</div><div class="calc-opts">
+        <button class="copt" onclick="sevPick('leu',0,this)">&lt;15 000</button>
+        <button class="copt" onclick="sevPick('leu',1,this)">≥15 000</button></div></div>
+      <div class="calc-row"><div class="calc-lbl2">Creatinina (mg/dL)</div><div class="calc-opts">
+        <button class="copt" onclick="sevPick('cr',0,this)">&lt;1.5</button>
+        <button class="copt" onclick="sevPick('cr',1,this)">≥1.5</button></div></div>
+      <div class="calc-row"><div class="calc-lbl2">¿Hipotensión/choque, íleo o megacolon?</div><div class="calc-opts">
+        <button class="copt" onclick="sevPick('ful',0,this)">No</button>
+        <button class="copt" onclick="sevPick('ful',1,this)">Sí</button></div></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-p" onclick="sevCalc()">Calcular</button>
+        <button class="btn btn-s" onclick="sevReset()">Reiniciar</button>
+      </div>
+      <div id="sev-res" class="calc-res"></div>
+    </div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-tx">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Episodio inicial (no grave o grave)</div>El esquema es el mismo; lo que cambia es el fulminante. Toca cada tarjeta.</div></div>
+  <div id="tc-ini"></div>
+  <div class="sec" style="margin-top:6px;"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Medidas que acompañan SIEMPRE</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Suspender el antibiótico precipitante</b> si es posible (o cambiar a uno de menor riesgo). Es la medida que más impacta.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Hidratación y corrección de electrolitos; vigilar función renal y albúmina.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Revisar el IBP</b>: retirarlo si no tiene indicación clara.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Evitar antiperistálticos</b> (loperamida) en la fase aguda, sobre todo si hay sospecha de íleo/megacolon.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Aislamiento de contacto</b> desde la sospecha (ver pestaña 🧼).</span></div>
+    <div class="alert a-g" style="margin-top:6px;"><span class="ai">✔️</span><div><b>Respuesta esperada:</b> mejoría en 3–5 días. La consistencia de las heces puede tardar; no prolongar el tratamiento solo por eso ni repetir pruebas.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Tratamiento sintomático y coadyuvante</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">💡</span><div>No hay un "sintomático" que cure la CDI: la base es el <b>antibiótico + soporte</b>. Pero los coadyuvantes son clave… y hay varios fármacos que <b>NO</b> deben usarse.</div></div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#0a5c45;letter-spacing:.4px;margin:10px 0 6px;">✔️ Sí — coadyuvantes (toca cada tarjeta)</div>
+    <div id="tc-coad"></div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;color:#7b1c1c;letter-spacing:.4px;margin:14px 0 6px;">⛔ No — evitar o contraindicado</div>
+    <div id="tc-nodar"></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><b>Fulminante:</b> además del antibiótico, <b>reanimación con líquidos, vasopresores si hay choque, cuidados intensivos y cirugía temprana</b>. Evitar todo lo que enlentezca el tránsito.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-rec">
+  <div class="alert a-w" style="margin-bottom:10px;"><span class="ai">🔁</span><div><div class="at">Recurrencia</div>Reaparición de síntomas + prueba positiva <b>dentro de 2–8 semanas</b> tras completar el tratamiento. Ocurre en ~15–25% del primer episodio y hasta 40–60% tras varias.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">1️⃣</span><span class="st">Primera recurrencia</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="tc-rec1"></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔂</span><span class="st">Segunda o más recurrencias</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="tc-rec2"></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">💡</span><div>Las <b>terapias basadas en microbiota fecal</b> (trasplante o productos estandarizados) son muy eficaces en la recurrencia múltiple; requieren centro con experiencia y cribado de donante.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-ful">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🚨</span><div><div class="at">Fulminante = emergencia</div>Hipotensión/choque, íleo o megacolon. <b>Avisar a cirugía desde el inicio</b>, no cuando ya falló todo.</div></div>
+  <div id="tc-ful"></div>
+  <div class="sec" style="margin-top:6px;"><div class="sh" onclick="tog(this)"><span class="si">🔪</span><span class="st">Indicaciones de cirugía</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Indicación</th><th>Procedimiento</th></tr>
+      <tr><td class="dm">Megacolon, perforación, choque refractario, deterioro pese a tratamiento máximo</td><td><b>Colectomía subtotal</b> con ileostomía terminal; alternativa: <b>ileostomía en asa</b> con lavado colónico anterógrado (vancomicina)</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⏱️</span><div>Operar <b>antes</b> del deterioro extremo mejora la supervivencia: lactato &gt;5 mmol/L y leucocitos &gt;50 000 marcan muy mal pronóstico.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-prev">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧼</span><span class="st">Control de infecciones</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🧼</span><div><b>Higiene de manos con AGUA Y JABÓN</b> (arrastre mecánico). El gel alcoholado <b>NO</b> destruye las esporas.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Medida</th><th>Detalle</th></tr>
+      <tr><td class="dn">Aislamiento de contacto</td><td>Desde la <b>sospecha</b>; habitación individual con baño propio si es posible; guantes y bata</td></tr>
+      <tr><td class="dn">Duración</td><td>Al menos hasta 48 h después de resolver la diarrea (prolongar en brote)</td></tr>
+      <tr><td class="dn">Ambiente</td><td>Limpieza con <b>hipoclorito</b> u otro esporicida; equipo dedicado (estetoscopio, termómetro)</td></tr>
+      <tr><td class="dn">Antibióticos</td><td><b>Uso racional (stewardship)</b>: la intervención más eficaz para reducir la incidencia</td></tr>
+      <tr><td class="dn">Probióticos</td><td><b>No</b> se recomiendan de rutina para prevención primaria (evidencia insuficiente)</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-escen">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">⚙️</span><div><div class="at">Escenarios especiales</div>Situaciones donde cambia el diagnóstico o el tratamiento. Toca cada bloque.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Enfermedad inflamatoria intestinal (CUCI/Crohn)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>La CDI es <b>más frecuente y más grave</b> en EII y puede <b>simular o disparar</b> un brote. <b>Probar C. difficile en todo brote</b> de EII con diarrea.</p></div>
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Vancomicina VO</b> (o fidaxomicina) de preferencia sobre metronidazol.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">No escalar bruscamente inmunosupresores durante la infección activa; individualizar con el gastroenterólogo.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Mayor tasa de <b>recurrencia</b> → considerar antes terapias de microbiota.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤰</span><span class="st">Embarazo y lactancia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Fármaco</th><th>Postura</th></tr>
+      <tr><td class="dn">Vancomicina VO</td><td><b>De elección:</b> mínima absorción sistémica; compatible con embarazo y lactancia</td></tr>
+      <tr><td class="dn">Fidaxomicina</td><td>Datos limitados; absorción mínima, probablemente segura (usar si se requiere y hay disponibilidad)</td></tr>
+      <tr><td class="dm">Metronidazol</td><td>Evitar cursos prolongados; controversia en 1.er trimestre → preferir vancomicina VO</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💧</span><div>Prioridad a la hidratación y a la corrección de electrolitos; vigilancia estrecha si hay datos de gravedad.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧒</span><span class="st">Pediatría</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-w"><span class="ai">⚠️</span><div>En <b>&lt;2 años</b> la colonización asintomática es altísima: la prueba positiva rara vez explica la diarrea → <b>buscar otras causas</b> y probar solo con alta sospecha.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Tratamiento</th></tr>
+      <tr><td class="dn">Leve (niño mayor)</td><td>Metronidazol VO 7.5 mg/kg c/8 h <b>o</b> vancomicina VO 10 mg/kg (máx 125 mg) c/6 h × 10 días</td></tr>
+      <tr><td class="dn">Grave / recurrente</td><td>Vancomicina VO; <b>fidaxomicina</b> aprobada desde los <b>6 meses</b> (suspensión disponible)</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Inmunosupresión / oncológico / trasplante</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Mayor <b>incidencia, gravedad y recurrencia</b>. <b>Fidaxomicina preferida</b> (menos recurrencias). Considerar microbiota antes en recurrencias.</p></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">🩸</span><div>En el <b>neutropénico</b>, diferenciar de la <b>enterocolitis neutropénica (tiflitis)</b> con TC; el manejo es distinto.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🫘</span><span class="st">Enfermedad renal crónica / diálisis</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>La <b>creatinina basal elevada</b> distorsiona el criterio de severidad (creat ≥1.5): interpretar según el basal del paciente. La <b>vancomicina VO no requiere ajuste</b> (no se absorbe); en fulminante con vancomicina IV… recordar que la <b>IV no sirve</b> para CDI.</p></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧍</span><span class="st">Portador asintomático y perioperatorio</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Portador asintomático: NO tratar ni descolonizar</b> de rutina; solo higiene y uso racional de antibióticos.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Cirugía electiva: optimizar y resolver la CDI antes; en <b>fulminante</b>, cirugía <b>temprana</b> (no como último recurso).</span></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-seg">
+  <div class="alert a-g" style="margin-bottom:10px;"><span class="ai">✔️</span><div><div class="at">Respuesta esperada</div>Mejoría clínica en <b>3–5 días</b>. La consistencia de las heces puede tardar más; <b>no</b> prolongar el tratamiento ni repetir pruebas solo por eso.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Qué vigilar y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Evaluación</th><th>Meta / acción</th></tr>
+      <tr><td class="dn">Días 1–5</td><td>N.º de deposiciones, hidratación, leucocitos, creatinina, lactato</td><td>Tendencia a la mejoría; si empeora → reclasificar a grave/fulminante</td></tr>
+      <tr><td class="dn">Día 3–5 sin respuesta</td><td>Reconsiderar dx, adherencia, íleo oculto, otra causa</td><td>Enfermedad <b>refractaria</b> → escalar / imagen / cirugía si aplica</td></tr>
+      <tr><td class="dn">Fin del tratamiento</td><td><b>NO</b> prueba de curación</td><td>La toxina/PCR persiste semanas en curados</td></tr>
+      <tr><td class="dn">2–8 semanas</td><td>Vigilar recurrencia</td><td>Si reaparecen síntomas + prueba + → tratar como recurrencia</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛟</span><span class="st">Prevención de recurrencia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Evitar antibióticos innecesarios</b> tras el episodio; si se requieren, elegir los de menor riesgo y el menor tiempo posible.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Revisar el IBP</b> y retirarlo si no tiene indicación clara.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Preferir <b>fidaxomicina</b> en el episodio si hay alto riesgo de recurrencia (respeta la microbiota).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">En alto riesgo o recurrencias, valorar <b>terapias de microbiota</b> (Rebyota / Vowst / FMT).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Cuándo reconsultar (enseñar al paciente)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">🚨</span><div><b>Acudir si:</b> fiebre alta, dolor o distensión abdominal intensa, <b>deja de evacuar</b> con hinchazón (posible íleo), sangre en heces, signos de deshidratación (mareo, orina escasa), o reaparición de la diarrea tras terminar el tratamiento.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-farm">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div>Todos los fármacos del manejo. Toca cada tarjeta para desplegar.</div></div>
+  <div id="tc-all"></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — C. difficile</h2><p>Guías y evidencia.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías y posicionamientos</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">Johnson S, et al. <em>Clinical Practice Guideline by IDSA/SHEA: 2021 Focused Update Guidelines on Management of CDI in Adults.</em> Clin Infect Dis. 2021;73(5):e1029–e1044. (Fidaxomicina preferida; bezlotoxumab.)</div><a class="biblio-link" href="https://doi.org/10.1093/cid/ciab549" target="_blank">🔗 DOI 10.1093/cid/ciab549</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">Kelly CR, et al. <em>ACG Clinical Guideline: Prevention, Diagnosis, and Treatment of CDI.</em> Am J Gastroenterol. 2021;116(6):1124–1147.</div><a class="biblio-link" href="https://doi.org/10.14309/ajg.0000000000001278" target="_blank">🔗 DOI 10.14309/ajg.0000000000001278</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">AGA. <em>Clinical Practice Guideline on Fecal Microbiota-Based Therapies for Select Gastrointestinal Diseases.</em> Gastroenterology.</div><a class="biblio-link" href="https://gastro.org/clinical-guidance/" target="_blank">🔗 AGA Clinical Guidance</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2021</span><span class="biblio-level lv-b">Guía</span></div><div class="biblio-ref">van Prehn J, et al. <em>ESCMID: guidelines on treatment of CDI in adults.</em> Clin Microbiol Infect. 2021;27(Suppl 2):S1–S21.</div><a class="biblio-link" href="https://doi.org/10.1016/j.cmi.2021.09.038" target="_blank">🔗 DOI 10.1016/j.cmi.2021.09.038</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">🧫 Terapias de microbiota y actualizaciones</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Producto</span></div><div class="biblio-ref">FDA aprueba <em>Rebyota (fecal microbiota, live-jslm)</em>, primer producto de microbiota para CDI recurrente (enema).</div><a class="biblio-link" href="https://www.cidrap.umn.edu/antimicrobial-stewardship/fda-approves-fecal-microbiota-product-recurrent-c-difficile" target="_blank">🔗 CIDRAP</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Producto</span></div><div class="biblio-ref">Aprobación FDA de <em>Vowst (fecal microbiota spores, live-brpk / SER-109)</em>, primer producto de microbiota oral.</div><a class="biblio-link" href="https://www.tandfonline.com/doi/full/10.1080/19490976.2023.2232137" target="_blank">🔗 Gut Microbes</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">2025</span><span class="biblio-level lv-exp">Nota</span></div><div class="biblio-ref"><em>Bezlotoxumab (Zinplava) descontinuado por Merck en enero de 2025</em> (decisión comercial; proveedor único).</div><a class="biblio-link" href="https://www.ashp.org/drug-shortages/current-shortages/drug-shortage-detail.aspx?id=1130" target="_blank">🔗 ASHP</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div><div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Observacional / cohortes</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Referencia / nota</div>
+    </div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. <b>Bezlotoxumab fue descontinuado (ene 2025)</b>; la disponibilidad de fidaxomicina y de los productos de microbiota (Rebyota, Vowst, FMT) varía por institución y país —muchos aprobados en EE. UU. pueden no estar disponibles en México—: confirme con su farmacia y protocolo local. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];FPN++;var id='fp'+FPN;var col=f.pri?color:'#374151';if(f.no)col='#7b1c1c';h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';h+='<div onclick="fpTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+f.linea+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,0.78);transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+id+'" style="display:none;">';h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.4px;">'+(f.dlb||'Dosis / pauta')+'</div>';h+='<div style="font-size:13.5px;font-weight:800;color:'+col+';line-height:1.35;">'+f.da+'</div>';if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';if(f.prep)h+='<div style="font-size:12px;font-weight:600;color:#0c3b6e;margin-top:4px;">'+f.prep+'</div>';h+='</div><div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';if(f.iv)h+=poprow('Vía / Ámbito',f.iv,'#1a3a5c');if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');if(f.emb)h+=poprow('Embarazo',f.emb,'#7a4a00');if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');h+='</div>';if(f.nota)h+='<div style="padding:10px 14px;background:#eef2dd;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7a2f;margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.65;">'+f.nota+'</div></div>';h+='</div></div>';}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#eef2dd;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#6b7a2f;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#eef2dd;border:1px solid #6b7a2f;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#6b7a2f;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#eef2dd;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#6b7a2f;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#6b7a2f';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+var TFN=0;
+function tcard(f){TFN++;var id='dc'+TFN;var c=f.c||'#6b7a2f';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">Dosis</div>';
+ h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+(f.da||'')+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+ if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#eef2dd;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#6b7a2f;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function tcards(cid,arr){var el=document.getElementById(cid);if(!el)return;var h='';for(var i=0;i<arr.length;i++)h+=tcard(arr[i]);el.innerHTML=h;}
+
+var F_FDX={n:'Fidaxomicina VO',sub:'⭐ Preferida (IDSA/SHEA) — episodio inicial y 1.ª recurrencia',da:'200 mg VO cada 12 h × 10 días',prep:'Tableta, con o sin alimentos. Suspensión pediátrica 40 mg/mL disponible. No requiere ajuste renal ni hepático.',iv:'VO · acción local en el colon (absorción sistémica mínima)',pres:'Tab 200 mg (Dificid®) · susp 40 mg/mL · disponibilidad y costo limitados en MX',fda:'Cat B · absorción mínima → probablemente segura en embarazo; lactancia compatible',ci:'Hipersensibilidad a fidaxomicina o macrólidos',ea:'Náusea, vómito, dolor abdominal, estreñimiento; hipersensibilidad rara',nota:'<b>Mecanismo:</b> macrólido de espectro muy estrecho; inhibe la ARN-polimerasa bacteriana. Bactericida contra C. difficile <b>respetando la microbiota anaerobia</b> (por eso recurre menos).<br><br><b>Coadyuvantes:</b> hidratación oral/IV según pérdidas · reponer <b>potasio</b> y <b>magnesio</b> (p. ej. sulfato de Mg 1–2 g IV si hay hipomagnesemia) · <b>suspender el antibiótico precipitante</b> · revisar y retirar IBP innecesario · evitar antiperistálticos.<br><br><b>Interacciones:</b> ciclosporina y otros inhibidores de P-gp elevan sus niveles (sin ajuste habitual).<br><br><b>Evidencia:</b> misma curación inicial que vancomicina con <b>menos recurrencias</b> (NNT≈10). IDSA/SHEA 2021, Nivel A.'};
+var F_VAN={n:'Vancomicina oral',sub:'1.ª línea alternativa (o de elección si no hay fidaxomicina)',da:'125 mg VO cada 6 h × 10 días · Fulminante: 500 mg VO/SNG cada 6 h',prep:'Cápsula, o solución oral preparada del vial IV (500 mg en 30 mL de agua; refrigerar, estable ~14 días).',iv:'VO/SNG · NO se absorbe (actúa en la luz). La <b>vancomicina IV NO sirve</b> para CDI',pres:'Cáps 125/250 mg (Vancocin®) · vial IV para uso oral · genérico · IMSS (vial)',fda:'Cat B/C · VO de elección en embarazo y lactancia (absorción mínima)',ci:'Hipersensibilidad a vancomicina',ea:'Náusea, dolor abdominal, disgeusia; selección de enterococo resistente (VRE); en colitis grave/ERC puede haber absorción sistémica → vigilar niveles',mon:'En colitis grave + ERC: valorar niveles séricos',nota:'<b>Mecanismo:</b> glucopéptido; inhibe la síntesis de pared (bloquea D-Ala-D-Ala).<br><br><b>Coadyuvantes:</b> hidratación y electrolitos (K, <b>Mg</b>) · suspender antibiótico causal · revisar IBP · evitar loperamida en fase aguda.<br><br><b>Interacciones:</b> mínimas por vía oral.<br><br><b>Evidencia:</b> equivalente a fidaxomicina en curación inicial, con más recurrencias. IDSA/SHEA y ACG 2021, Nivel A.'};
+var F_MTZ={n:'Metronidazol',sub:'Relegado — solo si no hay alternativa',c:'#8a6d3b',da:'500 mg VO cada 8 h × 10–14 días (solo NO grave) · Fulminante: 500 mg IV cada 8 h + vancomicina',prep:'Tableta VO o solución IV 500 mg/100 mL (infundir en 30–60 min).',iv:'VO o IV · la IV alcanza la luz colónica por secreción biliar/inflamación (útil en íleo)',pres:'Tab 500 mg · susp · sol IV 500 mg/100 mL · genérico · IMSS',fda:'Cat B · evitar cursos prolongados/repetidos; controversia en 1.er trimestre → preferir vancomicina VO',ci:'Hipersensibilidad; 1.er trimestre (relativo); ingesta de alcohol',ea:'Náusea, sabor metálico, <b>neuropatía periférica</b> (dosis acumulada), efecto disulfiram con alcohol',nota:'<b>Mecanismo:</b> nitroimidazol; genera radicales que dañan el ADN bacteriano.<br><br><b>Coadyuvantes:</b> hidratación y electrolitos · <b>evitar alcohol</b> durante y 3 días después.<br><br><b>Interacciones:</b> potencia warfarina (↑INR) · disulfiram con alcohol · litio.<br><br><b>Evidencia:</b> menor eficacia → ya NO de 1.ª línea; solo en NO grave sin acceso a otros, o IV asociado en el fulminante. IDSA/SHEA 2021.'};
+var F_BEZ={n:'Bezlotoxumab',sub:'⚠️ Descontinuado (ene 2025) — anticuerpo anti-toxina B',c:'#9aa0a6',da:'10 mg/kg IV, dosis única, durante el tratamiento antibiótico',prep:'Diluir en SSN 0.9% o glucosa 5% (concentración final 1–10 mg/mL); infundir en 60 min con filtro.',iv:'IV · adyuvante junto al antibiótico (no lo sustituía)',pres:'Zinplava® (Merck) — <b>descontinuado en enero de 2025</b> (proveedor único); sin sustituto genérico',fda:'Datos limitados en embarazo; era terapia de prevención de recurrencia',ci:'Precaución/evitar en insuficiencia cardiaca',ea:'Náusea, cefalea, reacciones de infusión; <b>empeora la insuficiencia cardiaca</b>',nota:'<b>Mecanismo:</b> anticuerpo monoclonal humano que neutraliza la <b>toxina B</b>.<br><br><b>Coadyuvantes:</b> se administraba junto al antibiótico estándar (no en lugar de él).<br><br><b>Interacciones:</b> ninguna relevante.<br><br><b>Evidencia:</b> reducía la recurrencia en alto riesgo (MODIFY I/II). <b>Ya no disponible</b>: su papel lo ocupan las terapias de microbiota. Se conserva como referencia.'};
+var F_REB={n:'Rebyota (fecal microbiota, live-jslm)',sub:'Microbiota estandarizada — recurrencia (FDA nov 2022)',c:'#0a5c45',da:'150 mL en enema, dosis única · 24–72 h tras terminar el antibiótico',prep:'Producto congelado/refrigerado; atemperar según inserto; administrar por vía rectal con el paciente en decúbito lateral y retener.',iv:'Enema rectal (una sola aplicación)',pres:'Rebyota® · aprobado FDA 2022 · disponibilidad principalmente en EE. UU.',fda:'Adultos ≥18 años tras ≥1 recurrencia y antibiótico; datos limitados en embarazo',ci:'Precaución en inmunocompromiso grave; alergia a componentes',ea:'Distensión, dolor abdominal, diarrea, flatulencia; riesgo teórico de transmisión de patógenos',nota:'<b>Mecanismo:</b> restaura la microbiota del colon y los <b>ácidos biliares secundarios</b> que inhiben la germinación de esporas.<br><br><b>Coadyuvantes:</b> completar y luego <b>suspender la vancomicina 24–72 h antes</b>; preparación según protocolo.<br><br><b>Evidencia:</b> reduce la recurrencia (PUNCH CD3). AGA 2024, Nivel A.'};
+var F_VOW={n:'Vowst (fecal microbiota spores, live-brpk)',sub:'Microbiota oral SER-109 — recurrencia (FDA abr 2023)',c:'#0a5c45',da:'4 cápsulas VO una vez al día × 3 días',prep:'<b>Preparación intestinal</b> (laxante) la víspera; ayuno matutino el día de inicio; comenzar 2–4 días tras terminar el antibiótico.',iv:'VO · cápsulas de esporas de Firmicutes purificadas',pres:'Vowst® (SER-109) · aprobado FDA 2023 · disponibilidad principalmente en EE. UU.',fda:'Adultos ≥18 años tras CDI recurrente; datos limitados en embarazo',ci:'Precaución en inmunocompromiso grave',ea:'Distensión, fatiga, estreñimiento, diarrea, dolor abdominal',nota:'<b>Mecanismo:</b> esporas purificadas que restauran la microbiota y los ácidos biliares → resistencia a la colonización.<br><br><b>Coadyuvantes:</b> preparación intestinal previa; completar antes el antibiótico.<br><br><b>Evidencia:</b> ECOSPOR III (SER-109) reduce la recurrencia. AGA 2024, Nivel A.'};
+var F_FMT={n:'Trasplante de microbiota fecal (FMT convencional)',sub:'Recurrencia múltiple — centro con experiencia',c:'#0a5c45',da:'Instilación de microbiota de donante, tras completar el antibiótico',prep:'Donante cribado (serología + coprológico ampliado); producto procesado en banco de heces; suspender antibiótico 12–24 h antes.',iv:'Colonoscopia, enema, sonda nasoentérica o cápsulas',pres:'FMT de banco de heces · Rebyota/Vowst son la versión estandarizada y regulada',fda:'Uso bajo criterio regulatorio (enforcement discretion de la FDA) para CDI recurrente',ci:'Inmunocompromiso grave (individualizar); riesgo de transmisión de patógenos',ea:'Molestias GI transitorias; riesgo de transmisión de infecciones (cribado estricto)',nota:'<b>Mecanismo:</b> restauración global de la microbiota y de los ácidos biliares secundarios.<br><br><b>Coadyuvantes:</b> completar el antibiótico y suspenderlo 12–24 h antes; loperamida el día del procedimiento (según protocolo) para retener.<br><br><b>Evidencia:</b> ~85–90% de resolución en ≥2 recurrencias. AGA 2024, Nivel A.'};
+var F_RIF={n:'Rifaximina',sub:'"Chaser" tras vancomicina — recurrencias',c:'#8a6d3b',da:'400 mg VO cada 8 h × 20 días, después de completar la vancomicina',prep:'Tableta VO; no requiere ajuste (no absorbible).',iv:'VO · no absorbible (acción luminal)',pres:'Rifaximina 200/550 mg (Xifaxan®) · genérico disponible en MX',fda:'Cat C',ci:'Hipersensibilidad a rifamicinas',ea:'Flatulencia, cefalea, náusea; posible selección de resistencia',nota:'<b>Mecanismo:</b> inhibe la ARN-polimerasa (rifamicina), sin absorción sistémica.<br><br><b>Coadyuvantes:</b> se usa como "cierre" inmediatamente tras un ciclo de vancomicina.<br><br><b>Evidencia:</b> limitada; estrategia de rescate en recurrencias múltiples. IDSA/SHEA 2021 (opción).'};
+var F_VANTAP={n:'Vancomicina en pauta descendente y pulsada',sub:'Recurrencias',da:'125 mg c/6 h × 10–14 d → c/12 h × 7 d → c/24 h × 7 d → c/48–72 h × 2–8 semanas',prep:'Igual que la vancomicina oral; entregar el esquema por escrito por su complejidad.',iv:'VO',pres:'Cáps 125/250 mg · vial IV para uso oral · genérico',fda:'Cat B/C · aceptable en embarazo (absorción mínima)',ci:'Hipersensibilidad',ea:'Náusea, disgeusia; selección de VRE con uso prolongado',nota:'<b>Mecanismo:</b> glucopéptido (igual que la vancomicina estándar).<br><br><b>Coadyuvantes:</b> hidratación/electrolitos · <b>entregar el esquema por escrito</b> y reforzar la adherencia.<br><br><b>Evidencia:</b> permite que la microbiota se recupere entre dosis mientras se controlan las esporas que germinan. IDSA/SHEA 2021 (1.ª y 2.ª recurrencia).'};
+var F_FDXP={n:'Fidaxomicina pulsada-extendida',sub:'1.ª recurrencia',da:'200 mg c/12 h días 1–5, luego 200 mg c/48 h días 7–25',prep:'Igual que la fidaxomicina estándar.',iv:'VO · acción luminal',pres:'Tab 200 mg (Dificid®) · costo/disponibilidad limitados',fda:'Cat B',ci:'Hipersensibilidad a fidaxomicina o macrólidos',ea:'Náusea, vómito, dolor abdominal',nota:'<b>Mecanismo:</b> como la fidaxomicina estándar.<br><br><b>Coadyuvantes:</b> hidratación/electrolitos · suspender antibiótico causal · revisar IBP.<br><br><b>Evidencia:</b> alternativa en la 1.ª recurrencia (EXTEND); menos recurrencias que vancomicina. IDSA/SHEA 2021.'};
+var F_VANR={n:'Vancomicina en enema de retención',sub:'Fulminante con íleo',c:'#7b1c1c',da:'500 mg en 100 mL de solución salina, por vía rectal cada 6 h',prep:'Diluir 500 mg (del vial IV) en 100 mL de SSN 0.9%; administrar por sonda rectal con globo y retener.',iv:'Rectal (enema de retención) · añadido a la vía oral/SNG',pres:'Preparado a partir del vial IV de vancomicina',fda:'Uso en el fulminante con íleo',ci:'Riesgo de perforación al colocar la sonda; megacolon a tensión',ea:'Molestia rectal; perforación (rara, técnica-dependiente)',nota:'<b>Mecanismo:</b> igual que la vancomicina oral, pero administrada por vía retrógrada.<br><br><b>Coadyuvantes:</b> se combina con <b>vancomicina 500 mg VO/SNG c/6 h + metronidazol 500 mg IV c/8 h</b>; reanimación y cuidados críticos.<br><br><b>Evidencia:</b> recurso cuando el íleo impide que el fármaco oral llegue al colon. IDSA/SHEA 2021.'};
+var F_QX={n:'Cirugía',sub:'Fulminante refractario',c:'#7b1c1c',da:'Colectomía subtotal + ileostomía terminal · alt.: ileostomía en asa + lavado anterógrado con vancomicina',prep:'Reanimación previa; consultar a cirugía desde el ingreso del fulminante.',iv:'Quirófano',pres:'—',fda:'—',ci:'Riesgo quirúrgico prohibitivo (individualizar)',ea:'Morbimortalidad alta; estoma; complicaciones postquirúrgicas',nota:'<b>Coadyuvantes:</b> reanimación con líquidos, antibióticos dirigidos (vancomicina + metronidazol IV), soporte en cuidados intensivos.<br><br><b>Evidencia:</b> operar <b>antes</b> del deterioro extremo mejora la supervivencia; <b>lactato &gt;5 mmol/L y leucocitos &gt;50 000 = muy alta mortalidad</b>. Consultar a cirugía desde el ingreso, no como último recurso.'};
+
+/* ---- COADYUVANTES / SOPORTE ---- */
+var CO_REH={n:'Rehidratación',sub:'Base del soporte',c:'#0a5c45',da:'Cristaloides IV (SSN 0.9% / Hartmann) o SRO, ajustados a las pérdidas',prep:'Titular el volumen al estado hemodinámico y a la lesión renal; en choque, cargas y reevaluar.',iv:'IV u oral (SRO)',pres:'SSN 0.9% · sol. Hartmann · sobres de SRO · IMSS',nota:'<b>Meta:</b> diuresis &gt;0.5 mL/kg/h, normovolemia y corrección de la creatinina. Vigilar balance hídrico y función renal a diario.'};
+var CO_K={n:'Potasio (KCl)',sub:'Reposición de electrolitos',c:'#0a5c45',da:'Según déficit: VO (jarabe/tab) o IV diluido (máx periférico ~10 mEq/h)',prep:'Diluir bien para la vía IV; nunca en bolo. Monitor ECG si es grave o infusión rápida.',iv:'VO o IV',pres:'KCl sol iny 14.9% (2 mEq/mL) · jarabe · IMSS',mon:'K sérico seriado; ECG si &lt;3.0',ci:'Hiperpotasemia; oliguria grave sin control',nota:'La hipopotasemia <b>no corrige</b> si hay hipomagnesemia → reponer también el <b>Mg</b>.'};
+var CO_MG={n:'Magnesio (sulfato)',sub:'Se agota con la diarrea',c:'#0a5c45',da:'Sulfato de Mg 1–2 g IV si hay hipomagnesemia',prep:'Diluir en 100 mL de SSN e infundir en 1–2 h; más lento si hay ERC.',iv:'IV (el oral se tolera mal y empeora la diarrea)',pres:'Sulfato de Mg iny 1 g/10 mL · IMSS',mon:'Mg sérico; reflejos si dosis altas',ci:'Bloqueo AV; ERC avanzada (ajustar/vigilar)',nota:'Corregir el Mg ayuda a resolver la hipopotasemia y la hipocalcemia refractarias.'};
+var CO_PAR={n:'Paracetamol',sub:'Antipirético / analgésico',c:'#0a5c45',da:'500–1000 mg VO/IV cada 6–8 h (máx 3–4 g/día)',prep:'Reducir dosis en hepatopatía o bajo peso.',iv:'VO o IV',pres:'Tab 500 mg · sol IV 10 mg/mL · genérico · IMSS',fda:'Cat B · seguro en embarazo y lactancia',ci:'Hepatopatía grave',ea:'Hepatotoxicidad por sobredosis',nota:'<b>Preferido sobre los AINE</b>, que dan riesgo renal en depleción de volumen.'};
+var CO_ANTIEM={n:'Ondansetrón',sub:'Antiemético (si náusea)',c:'#0a5c45',da:'4–8 mg VO/IV cada 8 h según necesidad',iv:'VO o IV',pres:'Tab 4/8 mg · sol iny 2 mg/mL · genérico',fda:'Datos tranquilizadores; usar si se requiere',ci:'QT largo; con otros fármacos que prolongan QT',ea:'Cefalea, estreñimiento, prolongación del QT',nota:'Metoclopramida es alternativa pero es procinético (cautela). <b>Evitar sedantes/antiespasmódicos</b> que enlentezcan el tránsito.'};
+var CO_CAUS={n:'Suspender antibiótico causal + retirar IBP',sub:'La medida que más impacta',c:'#0a5c45',da:'Suspender o cambiar el antibiótico precipitante; retirar el IBP sin indicación clara',iv:'Revisión de la prescripción',nota:'Es la intervención con <b>mayor efecto</b> en la curación y en la recurrencia. Si se necesita antibiótico, elegir el de <b>menor riesgo</b> (evitar clindamicina, cefalosporinas, fluoroquinolonas) y el menor tiempo posible.'};
+var CO_NUT={n:'Soporte nutricional',sub:'No ayuno prolongado',c:'#0a5c45',da:'Dieta según tolerancia; nutrición enteral si desnutrición o ingesta insuficiente',nota:'Mantener el aporte enteral cuando se pueda y corregir la albúmina. No existe una dieta "curativa" específica.'};
+var TX_COAD=[CO_REH,CO_K,CO_MG,CO_PAR,CO_ANTIEM,CO_CAUS,CO_NUT];
+
+/* ---- QUÉ NO DAR ---- */
+var NO_LOP={n:'Loperamida / antiperistálticos',sub:'⛔ Evitar en fase aguda',c:'#7b1c1c',da:'No usar en enfermedad aguda; contraindicados si hay datos de gravedad',iv:'—',ci:'<b>Íleo, megacolon tóxico o enfermedad grave</b>',nota:'Retienen la toxina en el colon. Solo se han usado con cautela <b>tras iniciar un antibiótico eficaz y sin datos de gravedad</b> (controvertido, no de rutina).'};
+var NO_OPI={n:'Opioides / anticolinérgicos',sub:'⛔ Precaución',c:'#7b1c1c',da:'Minimizar durante el episodio',iv:'—',nota:'Enlentecen el tránsito → riesgo de <b>íleo y megacolon tóxico</b>. Preferir paracetamol para el dolor.'};
+var NO_PRO={n:'Probióticos',sub:'⛔ No de rutina',c:'#7b1c1c',da:'No recomendados para tratar ni para prevención primaria',iv:'—',ci:'Inmunosupresión o catéter venoso central (riesgo de infección)',nota:'Evidencia insuficiente. Riesgo de <b>fungemia/bacteriemia</b> en inmunosuprimidos o con acceso vascular.'};
+var NO_COL={n:'Colestiramina',sub:'⛔ No en CDI',c:'#7b1c1c',da:'No usar como tratamiento de la CDI',iv:'—',nota:'<b>Secuestra la vancomicina</b> y la inactiva; no mejora los desenlaces.'};
+var NO_AINE={n:'AINE',sub:'⛔ Cautela',c:'#7b1c1c',da:'Evitar de preferencia',iv:'—',nota:'Riesgo renal en depleción de volumen; usar <b>paracetamol</b> en su lugar.'};
+var TX_NODAR=[NO_LOP,NO_OPI,NO_PRO,NO_COL,NO_AINE];
+
+var TX_INI=[F_FDX,F_VAN,F_MTZ];
+var TX_REC1=[F_FDXP,F_FDX,F_VANTAP];
+var TX_REC2=[F_VANTAP,F_REB,F_VOW,F_FMT,F_RIF,F_BEZ];
+var TX_FUL=[F_VAN,F_MTZ,F_VANR,F_QX];
+var TX_ALL=[F_FDX,F_VAN,F_MTZ,F_FDXP,F_VANTAP,F_REB,F_VOW,F_FMT,F_RIF,F_BEZ,F_VANR,F_QX];
+
+var sevState={leu:null,cr:null,ful:null};
+function sevPick(k,v,el){sevState[k]=v;var opts=el.parentNode.querySelectorAll('.copt');for(var i=0;i<opts.length;i++)opts[i].classList.remove('on');el.classList.add('on');}
+function sevReset(){sevState={leu:null,cr:null,ful:null};var o=document.querySelectorAll('#tab-sev .copt');for(var i=0;i<o.length;i++)o[i].classList.remove('on');var r=document.getElementById('sev-res');if(r){r.classList.remove('show');r.innerHTML='';}}
+function sevCalc(){var r=document.getElementById('sev-res');if(!r)return;if(sevState.leu===null||sevState.cr===null||sevState.ful===null){r.className='calc-res show';r.style.background='var(--al)';r.style.color='var(--a)';r.innerHTML='Selecciona las tres opciones para calcular.';return;}var cat,col,bg,tx;if(sevState.ful===1){cat='🚨 Fulminante';col='#7b1c1c';bg='var(--rl)';tx='Vancomicina 500 mg VO/SNG c/6 h + metronidazol 500 mg IV c/8 h. Si hay íleo, añadir vancomicina en enema de retención. <b>Avisar a cirugía desde el inicio.</b>';}else if(sevState.leu===1||sevState.cr===1){cat='Grave';col='#b45309';bg='var(--al)';tx='Fidaxomicina 200 mg VO c/12 h × 10 días (preferida) o vancomicina 125 mg VO c/6 h × 10 días.';}else{cat='No grave';col='#065f46';bg='var(--gl)';tx='Fidaxomicina 200 mg VO c/12 h × 10 días (preferida) o vancomicina 125 mg VO c/6 h × 10 días. Metronidazol solo si no hay alternativa.';}r.className='calc-res show';r.style.background=bg;r.style.color=col;r.innerHTML='<div style="font-size:14px;font-weight:800;margin-bottom:4px;">'+cat+'</div><div style="color:#374151;font-size:12.5px;line-height:1.6;">'+tx+'</div>';}
+window.addEventListener('load',function(){
+  tcards('tc-ini',TX_INI);
+  tcards('tc-coad',TX_COAD);
+  tcards('tc-nodar',TX_NODAR);
+  tcards('tc-rec1',TX_REC1);
+  tcards('tc-rec2',TX_REC2);
+  tcards('tc-ful',TX_FUL);
+  tcards('tc-all',TX_ALL);
+});
+
+</script>
+</body>
+</html>

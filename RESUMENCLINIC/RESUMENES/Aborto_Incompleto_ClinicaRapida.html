@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Aborto incompleto · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#9d174d;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#fce7f0;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;margin-bottom:8px;}
+.biblio-header{background:linear-gradient(135deg,#500724,#9d174d);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#fce7f0;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#fce7f0;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#500724,#9d174d);">
+  <div class="hdr-top"><div class="hdr-icon">🩸</div><div>
+    <div class="hdr-eye">Ginecología y obstetricia · Primer trimestre</div>
+    <div class="hdr-title">Aborto incompleto</div>
+    <div class="hdr-sub">Expulsión PARCIAL + cuello ABIERTO + restos en cavidad · &lt;20 SDG</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Cuello ABIERTO</span>
+    <span class="badge">Restos en cavidad</span>
+    <span class="badge">Sangrado persistente</span>
+    <span class="badge">AMEU / misoprostol</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Abierto</div><div class="qs-l">OCI</div></div>
+  <div class="qs"><div class="qs-v">600 µg</div><div class="qs-l">Misoprostol VO</div></div>
+  <div class="qs"><div class="qs-v">AMEU</div><div class="qs-l">Quirúrgico de elección</div></div>
+  <div class="qs"><div class="qs-v">Anti-D</div><div class="qs-l">Si Rh negativo</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('causas',this)">🔬 Causas y fisiopatología</button>
+  <button class="tab" onclick="showT('clin',this)">🩺 Clínica</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('ddx',this)">🔀 Diferencial</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Manejo</button>
+  <button class="tab" onclick="showT('seg',this)">📈 Complicaciones y seguimiento</button>
+  <button class="tab" onclick="showT('legal',this)">⚖️ Médico-legal</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">¿Qué es?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Expulsión PARCIAL de los productos de la concepción en un embarazo de &lt;20 semanas, con el orificio cervical interno ABIERTO, restos ovulares retenidos en la cavidad uterina y sangrado persistente.</strong> A diferencia de la amenaza, aquí el embarazo <b>ya no es viable</b> y la cavidad debe <b>vaciarse</b> (de forma expectante, médica o quirúrgica).</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">Las 4 reglas</div><b>1)</b> Cuello <b>abierto</b> + tejido en canal/expulsado + útero <b>menor</b> a la amenorrea = incompleto. <b>2)</b> <b>Evalúa la magnitud del sangrado y la estabilidad</b> primero. <b>3)</b> Tres opciones válidas: <b>expectante, misoprostol o AMEU</b> (elección compartida; AMEU si hemorragia/infección/inestabilidad). <b>4)</b> <b>Anti-D si es Rh(D) negativo</b> no sensibilizada.</div></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>El grosor endometrial por US <b>por sí solo NO indica intervención</b>: la decisión se guía por la clínica (sangrado, dolor, estabilidad) y la preferencia de la paciente, no por milímetros.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Cifra</th></tr>
+      <tr><td class="dn">Aborto espontáneo</td><td><b>10–15%</b> de los embarazos clínicos (hasta ~20–25% de todos los reconocidos); <b>&gt;80%</b> en el 1.er trimestre</td></tr>
+      <tr><td class="dn">Aborto incompleto</td><td>Una de las <b>presentaciones más frecuentes</b> del aborto espontáneo que llega a <b>urgencias ginecológicas</b></td></tr>
+      <tr><td class="dn">Motivo de consulta</td><td>El <b>sangrado del 1.er trimestre</b> es una causa mayor de atención urgente en gineco-obstetricia</td></tr>
+      <tr><td class="dn">Causa subyacente más frecuente</td><td><b>Anomalías cromosómicas (~50%)</b> de las pérdidas del 1.er trimestre</td></tr>
+      <tr><td class="dm">Carga global</td><td>El aborto inseguro/incompleto mal atendido es causa importante de <b>morbimortalidad materna</b> (hemorragia y sepsis) en el mundo</td></tr>
+      <tr><td class="dn">Manejo</td><td>Con acceso a AMEU y misoprostol la mortalidad por aborto incompleto es <b>muy baja</b></td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">Cifras de OMS (Abortion care guideline 2022), ACOG PB 200 y Merck Manual (Spontaneous Abortion).</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">Dónde encaja entre los tipos de aborto</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Tipo</th><th>Cuello</th><th>Productos</th><th>Embrión</th></tr>
+      <tr><td class="dn">Amenaza</td><td>Cerrado</td><td>Retenidos</td><td>Vivo</td></tr>
+      <tr><td class="dn">Inevitable / en evolución</td><td>Abierto</td><td>Retenidos</td><td>Vivo o no</td></tr>
+      <tr><td class="dm">Incompleto</td><td><b>Abierto</b></td><td><b>Expulsión parcial</b> (restos)</td><td>No</td></tr>
+      <tr><td class="dn">Completo</td><td>Cerrado</td><td>Expulsión total (cavidad vacía)</td><td>No</td></tr>
+      <tr><td class="dn">Diferido / retenido</td><td>Cerrado</td><td>Retenidos</td><td><b>Muerto</b> (sin expulsión)</td></tr>
+      <tr><td class="dm">Séptico</td><td>Variable</td><td>Con infección</td><td>—</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🔎</span><div>La firma del incompleto: <b>cuello ABIERTO + expulsión parcial con restos + sangrado persistente</b>. Si la cavidad quedó <b>vacía</b> y el cuello se cerró → aborto <b>completo</b> (solo vigilar).</div></div>
+  </div></div>
+</div>
+
+<!-- CAUSAS -->
+<div class="panel" id="tab-causas">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🧭</span><div><div class="at">Marco general</div>El aborto incompleto es el <b>desenlace</b> de un aborto espontáneo (o inducido) en el que el útero <b>expulsa solo una parte</b> de los productos. La causa de fondo de la pérdida es la misma del aborto del 1.er trimestre (~50% <b>cromosómica</b>); la fisiopatología del "incompleto" es la <b>retención de restos</b> que impide la contracción/hemostasia uterina.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — por qué sangra y no cierra</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Tras el desprendimiento del producto, el cuello se dilata y ocurre expulsión <b>parcial</b>. Los <b>restos ovulares/placentarios retenidos</b> mantienen el útero <b>parcialmente ocupado</b>: no logra contraerse por completo, los senos venosos deciduales quedan abiertos y el sangrado <b>persiste</b>. Además, el tejido retenido es un <b>medio de cultivo</b> → riesgo de infección (aborto séptico).</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Eslabón</th><th>Consecuencia clínica</th></tr>
+      <tr><td class="dn">Cuello dilatado (OCI abierto)</td><td>Permite el paso de tejido; especuloscopia con productos en canal</td></tr>
+      <tr><td class="dm">Restos retenidos</td><td>Impiden la contracción → <b>hemorragia persistente</b></td></tr>
+      <tr><td class="dm">Atonía relativa del segmento</td><td>Sangrado que puede ser <b>abundante</b> hasta vaciar la cavidad</td></tr>
+      <tr><td class="dm">Tejido desvitalizado</td><td>Riesgo de <b>endometritis / aborto séptico</b></td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">✅</span><div>Principio terapéutico: <b>vaciar la cavidad</b> permite que el útero se contraiga y cese el sangrado. De ahí que las tres opciones (expectante, misoprostol, AMEU) busquen lo mismo.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Causa de la pérdida — cromosómicas ~50%</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>La <b>razón de fondo</b> de la pérdida es la del aborto del 1.er trimestre: cerca de la mitad tienen <b>cariotipo anormal</b>, casi siempre <b>esporádico</b>.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Alteración</th><th>Proporción</th><th>Nota</th></tr>
+      <tr><td class="dn">Trisomías autosómicas</td><td><b>~50–60%</b></td><td><b>Trisomía 16</b> la más frecuente; también 22, 21, 15, 13, 18</td></tr>
+      <tr><td class="dn">Monosomía X (45,X · Turner)</td><td><b>~15–20%</b></td><td>La aneuploidía única más común</td></tr>
+      <tr><td class="dn">Poliploidías (triploidía, tetraploidía)</td><td><b>~15–20%</b></td><td>Triploidía se asocia a mola parcial</td></tr>
+      <tr><td class="dn">Anomalías estructurales</td><td><b>~5%</b></td><td>Valorar cariotipo de la pareja en aborto recurrente</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Factores de riesgo de la pérdida</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Factor</th><th>Comentario</th></tr>
+      <tr><td class="dn">Edad materna</td><td>Curva en "J": mínimo a los 25–29 años; ~33–40% a los 40–44 y &gt;50% ≥45 años</td></tr>
+      <tr><td class="dn">Abortos previos</td><td>1 previo ~1.5×; 2 ~2×; ≥3 ~4× (estudiar como recurrente)</td></tr>
+      <tr><td class="dn">Endocrinas / metabólicas</td><td>DM mal controlada, disfunción tiroidea (anti-TPO+), obesidad</td></tr>
+      <tr><td class="dn">Anatómicas</td><td>Septo uterino, miomas submucosos, sinequias (Asherman)</td></tr>
+      <tr><td class="dm">Inmunológicas</td><td><b>Síndrome antifosfolípido</b> — causa tratable de pérdida recurrente</td></tr>
+      <tr><td class="dn">Conductuales</td><td>Tabaquismo (dosis-dependiente), alcohol, cocaína, cafeína alta</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">Magnus et al. BMJ 2019; Merck Manual.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores que llevan a "incompleto" (retención de restos)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Por qué retiene restos</th></tr>
+      <tr><td class="dn">Aborto espontáneo en evolución</td><td>Expulsión fisiológica parcial antes de completarse</td></tr>
+      <tr><td class="dn">Aborto inducido / con misoprostol incompleto</td><td>Falla o respuesta parcial al medicamento → restos</td></tr>
+      <tr><td class="dm">Aborto inseguro / instrumentación no estéril</td><td>Evacuación incompleta + infección (contexto global relevante)</td></tr>
+      <tr><td class="dn">Edad gestacional mayor (cercana a 12–20 SDG)</td><td>Mayor volumen trofoblástico → más probabilidad de retención</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>En México considerar el contexto de <b>aborto inseguro</b>: si hay datos de infección o instrumentación, tratar como <b>aborto séptico</b> y cubrir con antibióticos.</div></div>
+  </div></div>
+</div>
+
+<!-- CLINICA -->
+<div class="panel" id="tab-clin">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Cuadro clínico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Hallazgo típico</th></tr>
+      <tr><td class="dm">Sangrado</td><td><b>Persistente, a veces abundante</b>, con coágulos; puede empapar toallas</td></tr>
+      <tr><td class="dn">Dolor</td><td><b>Cólico</b> suprapúbico/lumbar (contracciones expulsivas), tipo "trabajo de parto en miniatura"</td></tr>
+      <tr><td class="dn">Especuloscopia</td><td><b>Tejido/coágulos en el canal cervical</b> o ya expulsados; cuello abierto</td></tr>
+      <tr><td class="dm">Tacto (OCI)</td><td><b>Orificio cervical interno ABIERTO</b> (permeable, con o sin tejido en el canal)</td></tr>
+      <tr><td class="dn">Útero</td><td><b>Menor</b> al esperado por la amenorrea (ya expulsó parte del contenido); poco doloroso salvo infección</td></tr>
+      <tr><td class="dn">Antecedente</td><td>Refiere <b>expulsión de tejido/coágulos</b> antes de la consulta</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">🩹</span><div><b>Maniobra útil:</b> retirar con pinza de anillos el tejido visible en el canal cervical reduce el sangrado y el estímulo vagal (evita el <b>choque vagal cervical</b> por dilatación).</div></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div>Sangrado que empapa una toalla por hora, hipotensión, taquicardia o síncope → <b>hemorragia</b>: estabilizar y valorar <b>AMEU urgente</b>. Fiebre + dolor uterino + flujo fétido → <b>aborto séptico</b>.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNOSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🔎</span><div><div class="at">Objetivo del abordaje</div>El diagnóstico es <b>clínico</b> (cuello abierto + tejido + sangrado); el US <b>confirma restos</b> y descarta ectópico/mola. Recuerda: el <b>grosor endometrial por sí solo NO indica intervención</b>.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📟</span><span class="st">Ultrasonido (idealmente transvaginal)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Hallazgo</th><th>Interpretación</th></tr>
+      <tr><td class="dm">Contenido/restos endometriales heterogéneos</td><td>Material ecogénico mixto en cavidad → <b>restos ovulares retenidos</b> (compatible con incompleto)</td></tr>
+      <tr><td class="dn">Vascularización al Doppler</td><td>Flujo en el material retenido apoya restos con trofoblasto</td></tr>
+      <tr><td class="dm">Grosor endometrial aislado</td><td><b>NO es criterio de intervención</b> por sí solo; no hay umbral validado (p. ej. &gt;15 mm) que obligue a evacuar si la paciente está bien</td></tr>
+      <tr><td class="dn">Cavidad vacía / línea endometrial fina</td><td>Sugiere aborto <b>completo</b> (no requiere evacuación)</td></tr>
+      <tr><td class="dm">Sin saco intrauterino + β-hCG alta</td><td>Descartar <b>ectópico</b>; patrón en "copos de nieve" → <b>mola</b></td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Decide por la <b>clínica</b> (magnitud del sangrado, dolor, estabilidad, preferencia), no por los milímetros del endometrio.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Especuloscopia y exploración</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Hallazgo</th><th>Interpretación</th></tr>
+      <tr><td class="dm">Tejido en canal cervical</td><td>Confirma expulsión parcial; retirar con pinza de anillos reduce sangrado</td></tr>
+      <tr><td class="dm">OCI abierto/permeable</td><td>Signo cardinal del aborto incompleto</td></tr>
+      <tr><td class="dn">Cuantificar sangrado</td><td>Estimar pérdida; valorar signos vitales y ortostatismo</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Laboratorio</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Uso</th></tr>
+      <tr><td class="dn">β-hCG cuantitativa</td><td>En el incompleto está <b>en descenso</b>; útil para seguir el vaciamiento y descartar enfermedad trofoblástica persistente</td></tr>
+      <tr><td class="dm">Grupo y Rh</td><td><b>Definir Rh(D)</b> para decidir la profilaxis anti-D</td></tr>
+      <tr><td class="dn">Biometría hemática (BH)</td><td>Valorar <b>anemia</b> por el sangrado; leucocitosis si infección</td></tr>
+      <tr><td class="dn">Otros (según contexto)</td><td>Pruebas cruzadas si hemorragia importante; cultivos si sospecha de sepsis</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- DIFERENCIAL -->
+<div class="panel" id="tab-ddx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diferencial dentro del espectro del aborto</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>Cómo distinguir del incompleto</th></tr>
+      <tr><td class="dn">Amenaza de aborto</td><td>Cuello <b>cerrado</b> + embrión <b>vivo</b>; no hay expulsión de tejido</td></tr>
+      <tr><td class="dn">Aborto inevitable / en evolución</td><td>Cuello abierto pero <b>aún no</b> ha expulsado tejido; productos íntegros retenidos</td></tr>
+      <tr><td class="dn">Aborto completo</td><td>Cuello <b>cerrado</b>, cavidad <b>vacía</b>, sangrado que cede (expulsión total)</td></tr>
+      <tr><td class="dn">Aborto diferido</td><td>Cuello cerrado, producto muerto <b>retenido</b> sin expulsión</td></tr>
+      <tr><td class="dm">Aborto séptico</td><td>Incompleto <b>+ infección</b> (fiebre, útero doloroso, flujo fétido) → antibióticos + evacuación</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Diferencial del sangrado del 1.er trimestre</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>Cómo distinguir</th></tr>
+      <tr><td class="dm">Embarazo ectópico</td><td>Dolor lateralizado, sin saco intrauterino con β-hCG sobre la zona discriminatoria, inestabilidad → <b>urgencia</b></td></tr>
+      <tr><td class="dm">Enfermedad trofoblástica (mola)</td><td>Útero mayor a la amenorrea, β-hCG muy alta, US en "copos de nieve", hiperémesis</td></tr>
+      <tr><td class="dn">Enfermedad trofoblástica persistente</td><td>β-hCG que <b>no desciende</b> tras evacuación → estudiar</td></tr>
+      <tr><td class="dn">Causas cervicales/vaginales</td><td>Pólipo, ectropión, cervicitis, trauma/coito; cuello <b>cerrado</b></td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- MANEJO -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Principio</div>Objetivo: <b>vaciar la cavidad</b> para detener el sangrado. <b>Tres opciones válidas</b> (ACOG/OMS) — expectante, médica (misoprostol) o quirúrgica (AMEU) — con eficacia comparable en pacientes estables; se elige por magnitud del sangrado, estabilidad y <b>preferencia de la paciente</b>. AMEU si hemorragia, infección o inestabilidad. Toca cada tarjeta.</div></div>
+  <div id="tx-body"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Complicaciones</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Complicación</th><th>Clave</th></tr>
+      <tr><td class="dm">Hemorragia</td><td>Por restos que impiden la contracción; puede requerir <b>AMEU urgente</b>, uterotónicos y transfusión</td></tr>
+      <tr><td class="dm">Infección / aborto séptico</td><td>Fiebre, útero doloroso, flujo fétido → <b>antibióticos IV + evacuación</b>; riesgo de choque séptico</td></tr>
+      <tr><td class="dn">Retención persistente de restos</td><td>Falla del manejo expectante/médico → sangrado prolongado; reevaluar por US y evacuar</td></tr>
+      <tr><td class="dn">Anemia</td><td>Frecuente por el sangrado; suplementar hierro ± transfundir</td></tr>
+      <tr><td class="dm">Perforación uterina / Asherman</td><td>Complicaciones de la instrumentación (más con legrado cortante que con AMEU)</td></tr>
+      <tr><td class="dn">Enfermedad trofoblástica persistente</td><td>Si β-hCG no desciende tras evacuación</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗓️</span><span class="st">Seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Confirmar cavidad vacía</b>: cese del sangrado y del dolor; US de control o <b>β-hCG</b> en descenso hasta negativizar si hay duda de restos.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Anticoncepción:</b> se puede <b>iniciar de inmediato</b> (incluso el mismo día del vaciamiento), incluidos DIU e implante; la fertilidad retorna en ~2 semanas.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Corregir <b>anemia</b> (hierro), apoyo emocional y consejería de <b>duelo</b>; no se requiere espera obligatoria para un nuevo embarazo.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Verificar que se aplicó <b>anti-D</b> si Rh(D) negativo; documentar en el egreso.</span></div>
+    <div class="alert a-r" style="margin-top:6px;"><span class="ai">🚨</span><div><b>Reconsultar de urgencia si:</b> sangrado que empapa una toalla por hora, dolor intenso, <b>fiebre &gt;38 °C</b>, flujo fétido, mareo o desmayo (hemorragia o infección).</div></div>
+  </div></div>
+</div>
+
+<!-- MEDICO-LEGAL -->
+<div class="panel" id="tab-legal">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Aspectos médico-legales (México)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt">El aborto incompleto es una <b>urgencia obstétrica</b>: la atención del vaciamiento y de sus complicaciones (hemorragia/sepsis) es <b>obligatoria e impostergable</b> con independencia de cómo se originó la pérdida.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Consentimiento informado</b> del procedimiento elegido (expectante, misoprostol o AMEU), de sus riesgos y de la profilaxis anti-D; registrar grupo y Rh.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Documentar hallazgos objetivos (cuello abierto, restos, US, sangrado) y el plan en el <b>expediente conforme a la NOM-004</b>; nota de urgencias, indicaciones y egreso con datos de alarma por escrito.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Si hay sospecha de <b>violencia sexual/familiar</b>, activar la <b>NOM-046</b> (atención, anticoncepción de emergencia, aviso al Ministerio Público según proceda) y resguardo de evidencia.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Respetar la <b>confidencialidad</b>; el tratamiento del aborto incompleto no está condicionado a denuncia. Evitar juicios sobre el origen de la pérdida.</span></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">ℹ️</span><div>La normativa (NOMs, causales y plazos de interrupción legal del embarazo) <b>varía por estado y se actualiza</b>: verifica el marco vigente en tu entidad.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFIA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Aborto incompleto</h2><p>Guías y evidencia principales.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías y evidencia</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ACOG Practice Bulletin 200. <em>Early Pregnancy Loss.</em> Obstet Gynecol 2018;132:e197–e207. (Manejo expectante, médico y quirúrgico; anti-D.)</div><a class="biblio-link" href="https://www.acog.org/clinical/clinical-guidance/practice-bulletin/articles/2018/11/early-pregnancy-loss" target="_blank">🔗 ACOG PB 200</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Guía OMS</span></div><div class="biblio-ref">World Health Organization. <em>Abortion care guideline.</em> Ginebra: WHO; 2022. (Manejo del aborto incompleto: misoprostol y aspiración por vacío.)</div><a class="biblio-link" href="https://www.who.int/publications/i/item/9789240039483" target="_blank">🔗 WHO 2022</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Consenso</span></div><div class="biblio-ref">FIGO. <em>Misoprostol-only recommended regimens (2023).</em> Aborto incompleto: <b>600 µg VO dosis única</b> o <b>400–800 µg sublingual/vaginal</b>.</div><a class="biblio-link" href="https://www.figo.org/resources/figo-statements/misoprostol-only-recommended-regimens" target="_blank">🔗 FIGO</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2005</span><span class="biblio-level lv-a">ECA</span></div><div class="biblio-ref">Zhang J, et al. <em>A comparison of medical management with misoprostol and surgical management for early pregnancy failure.</em> N Engl J Med 2005;353:761–769.</div><a class="biblio-link" href="https://doi.org/10.1056/NEJMoa044064" target="_blank">🔗 DOI 10.1056/NEJMoa044064</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">México</span></div><div class="biblio-ref">CENETEC. <em>GPC: Diagnóstico y tratamiento del aborto espontáneo y manejo inicial del aborto recurrente.</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">Ref</span><span class="biblio-level lv-exp">Texto</span></div><div class="biblio-ref">Merck Manual (Professional). <em>Spontaneous Abortion</em> (clasificación, tasas y manejo del aborto incompleto).</div></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div><div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Observacional / criterios</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Referencia / GPC</div>
+    </div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. Las dosis y la disponibilidad de misoprostol, oxitocina e inmunoglobulina anti-D, así como el marco legal, varían por institución y estado: verifica el protocolo local. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+var TFN=0;
+function tcard(f,gc){TFN++;var id='ac'+TFN;var c=gc||f.c||'#9d174d';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">'+(f.lbl||'Dosis / pauta')+'</div>';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:'+c+';padding:2px 0;line-height:1.35;">• '+f.dosis[k]+'</div>';h+=dd;}
+ else if(f.da)h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+f.da+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('Embarazo / seguridad',f.fda,'#7a4a00');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#fce7f0;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9d174d;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#9d174d');h+=tcard(f,col);}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+var AC='#9d174d';var CO='#0a5c45';var NO='#7b1c1c';
+
+var M_EXP={n:'Manejo expectante',sub:'Opción 1 — paciente estable, sangrado tolerable',c:AC,lbl:'Conducta',dosis:['Esperar la expulsión espontánea de los restos durante 1–2 semanas','Control clínico y por ultrasonido para confirmar cavidad vacía','Analgesia con paracetamol y datos de alarma por escrito','Cambiar a médico o quirúrgico si sangrado importante o no resuelve'],iv:'Ambulatorio si estable, sin infección y con acceso a urgencias',mon:'US de control y/o β-hCG en descenso; BH si sangrado importante',ci:'Hemorragia, inestabilidad, infección (aborto séptico), preferencia por resolución rápida',nota:'<b>Mecanismo:</b> el útero completa por sí mismo la expulsión de los restos.<br><br><b>Evidencia:</b> éxito <b>~80–90%</b> a las 1–2 semanas en el aborto incompleto (mayor que en el diferido). Requiere paciente informada y estable (ACOG PB 200).<br><br><b>Coadyuvantes:</b> analgesia, anti-D si Rh−, hierro si anemia.'};
+var M_MISO={n:'Misoprostol (manejo médico)',sub:'Opción 2 — análogo de prostaglandina E1',c:AC,lbl:'Dosis (aborto incompleto)',dosis:['<b>600 µg VO dosis única</b> (régimen OMS/FIGO), o','<b>800 µg vía vaginal dosis única</b> (alternativa)','Puede repetirse una 2.ª dosis si no hay respuesta en 24–48 h'],prep:'Confirmar que es incompleto (no ectópico/mola). Administrar en el servicio o ambulatorio con instrucciones; esperar sangrado y cólico en horas.',iv:'Vía oral (VO) o vaginal',pres:'Misoprostol 200 µg tab (Cytotec®, Misop®, genérico) · MX · en IMSS suele estar como misoprostol 200 µg',fda:'Categoría X en embarazo viable; aquí la pérdida NO es viable, por lo que se usa para evacuar',ci:'Sospecha de ectópico, inestabilidad hemodinámica, alergia a prostaglandinas; precaución en asma grave',ea:'Cólico, sangrado abundante, náusea/vómito, diarrea, fiebre y escalofríos transitorios',mon:'Confirmar vaciamiento por clínica/US a la 1–2 semana; β-hCG si duda',nota:'<b>Mecanismo:</b> prostaglandina E1 → contracción uterina y dilatación cervical que expulsa los restos.<br><br><b>Evidencia:</b> eficacia ~<b>80–90%</b>; evita cirugía en la mayoría. Régimen OMS/FIGO para incompleto: <b>600 µg VO</b> o <b>400–800 µg SL/vaginal</b> dosis única.<br><br><b>Coadyuvantes:</b> analgesia previa (paracetamol ± ibuprofeno), antiemético, anti-D si Rh−.'};
+var M_AMEU={n:'AMEU (aspiración manual endouterina)',sub:'Opción 3 — quirúrgico de elección',c:AC,lbl:'Procedimiento',dosis:['Aspiración por vacío con jeringa de Karman / cánula (AMEU)','De elección: rápida, segura, ambulatoria y con menos sangrado que el legrado','Analgesia/sedación + bloqueo paracervical con lidocaína','Doxiciclina 200 mg VO como profilaxis antibiótica pre-procedimiento'],iv:'Transcervical, con vacío manual o eléctrico',pres:'Kit de AMEU (jeringa de vacío + cánulas 4–12 mm) · disponible en unidades de gineco-obstetricia',fda:'Procedimiento; anestésico local (lidocaína) compatible',ci:'Ninguna absoluta en el incompleto; ajustar en coagulopatía o infección activa (cubrir con antibióticos)',ea:'Dolor, sangrado, rara perforación uterina, infección, sinequias (Asherman)',mon:'Verificar restos aspirados; control clínico; anti-D si Rh−',nota:'<b>Indicaciones de elección quirúrgica:</b> <b>hemorragia importante, infección, inestabilidad hemodinámica o preferencia de la paciente</b>; también si falla el manejo médico/expectante.<br><br><b>Evidencia:</b> la <b>AMEU es más segura que el legrado cortante</b> (menor perforación y sangrado) y es el método recomendado por OMS. Éxito &gt;95%.'};
+var M_PARA={n:'Paracetamol ± ibuprofeno',sub:'Analgesia (pérdida no viable → AINE permitido)',c:CO,lbl:'Dosis',dosis:['Paracetamol 500–1000 mg VO/IV cada 6–8 h (máx 3–4 g/día)','± Ibuprofeno 400–600 mg VO cada 6–8 h con alimentos'],iv:'VO (paracetamol también IV hospitalario)',pres:'Paracetamol tab 500 mg / sol IV 10 mg/mL; ibuprofeno tab 400/600 mg · genérico · IMSS',fda:'Aceptables: como el embarazo ya no es viable, el ibuprofeno (AINE) SÍ está permitido',ci:'Ibuprofeno: úlcera péptica activa, ERC, alergia a AINE; paracetamol: hepatopatía grave',ea:'Paracetamol: hepatotoxicidad por sobredosis. Ibuprofeno: gastritis, nefrotoxicidad',nota:'<b>Coadyuvantes:</b> a diferencia de la amenaza (embarazo viable), aquí el <b>ibuprofeno es permitido</b> porque la pérdida no es viable. Dar analgesia antes del misoprostol o la AMEU.'};
+var M_ONDAN={n:'Ondansetrón',sub:'Antiemético (náusea por misoprostol)',c:CO,lbl:'Dosis',da:'Ondansetrón 4–8 mg VO o IV cada 8 h por razón necesaria',iv:'VO o IV',pres:'Ondansetrón tab 4/8 mg · sol iny 2 mg/mL (Zofran®, genérico) · IMSS',fda:'Ampliamente usado; en general seguro',ci:'Síndrome de QT largo; precaución con otros fármacos que prolongan QT',ea:'Cefalea, estreñimiento, prolongación del QT',nota:'<b>Coadyuvantes:</b> controla la náusea/vómito frecuentes con el misoprostol y mejora la tolerancia.'};
+var M_ANTID={n:'Inmunoglobulina anti-D',sub:'Si la madre es Rh(D) negativo no sensibilizada',c:CO,lbl:'Dosis',da:'50 µg IM si <12 SDG · 300 µg (1500 UI) IM si ≥12 SDG · dentro de las primeras 72 h del evento',prep:'Verificar grupo, Rh y Coombs indirecto antes; aplicar tras el sangrado/evacuación.',iv:'Intramuscular',pres:'Inmunoglobulina anti-D 300 µg / 1500 UI (Rhophylac®, WinRho®) · MX',fda:'Segura y recomendada',ci:'Hipersensibilidad conocida; Rh positivo o ya sensibilizada (no útil)',ea:'Reacción local, febrícula; rara hemólisis',mon:'Confirmar Rh y Coombs indirecto',nota:'<b>Coadyuvantes:</b> previene la aloinmunización Rh que comprometería embarazos futuros. En el aborto incompleto se recomienda si Rh(D) negativo, dentro de <b>72 h</b>.'};
+var M_DOXI={n:'Doxiciclina',sub:'Profilaxis antibiótica pre-AMEU',c:CO,lbl:'Dosis',da:'Doxiciclina 200 mg VO en dosis única antes de la aspiración/AMEU',iv:'VO',pres:'Doxiciclina cáps 100 mg · genérico · IMSS',fda:'Uso puntual periprocedimiento aceptado',ci:'Alergia a tetraciclinas',ea:'Náusea, esofagitis (tomar con agua abundante), fotosensibilidad',mon:'—',nota:'<b>Coadyuvantes:</b> reduce el riesgo de infección posprocedimiento. En <b>aborto séptico</b> se requiere antibioticoterapia IV de amplio espectro (no solo profilaxis).'};
+var M_HIERRO={n:'Hierro (± transfusión)',sub:'Corregir anemia por el sangrado',c:CO,lbl:'Dosis',da:'Hierro elemental 100–200 mg/día VO (sulfato/fumarato) · hierro IV o transfusión si anemia grave/sintomática',iv:'VO o IV',pres:'Sulfato ferroso tab 200 mg · hierro sacarosa IV · concentrado eritrocitario · IMSS',fda:'Recomendado',ci:'Sobrecarga de hierro; alergia a hierro IV',ea:'VO: estreñimiento, intolerancia GI; IV: reacción a la infusión',mon:'BH de control',nota:'<b>Coadyuvantes:</b> el sangrado del incompleto suele causar anemia. Transfundir si hay hemorragia importante o descompensación.'};
+var M_OXI={n:'Oxitocina / uterotónico',sub:'Si sangrado importante',c:CO,lbl:'Dosis',da:'Oxitocina 10–40 UI en 500–1000 mL de cristaloide IV en infusión (según sangrado y respuesta uterina)',prep:'Uso hospitalario junto con evacuación de restos; puede añadirse misoprostol como uterotónico.',iv:'IV en infusión',pres:'Oxitocina 5 UI/mL amp · genérico · IMSS',fda:'Uso obstétrico establecido',ci:'Hipersensibilidad; precaución por hipotensión con bolo rápido',ea:'Hipotensión, taquicardia, hiponatremia con dosis altas prolongadas',mon:'Tono uterino, signos vitales, sangrado',nota:'<b>Coadyuvantes:</b> ayuda a contraer el útero y controlar la hemorragia mientras se vacía la cavidad. La causa del sangrado son los restos → la solución definitiva es la <b>evacuación (AMEU)</b>.'};
+var E_LEG={n:'Legrado cortante (LUI) de rutina',sub:'⛔ Error — preferir AMEU',c:NO,da:'No usar legrado cortante de rutina: la AMEU es más segura',nota:'El legrado instrumental (cureta cortante) tiene <b>más perforación, más sangrado y más sinequias (Asherman)</b> que la AMEU. La OMS recomienda la aspiración por vacío como método quirúrgico de elección.'};
+var E_ENDO={n:'Intervenir por endometrio "engrosado"',sub:'⛔ Error — sin sangrado ni clínica',c:NO,da:'No evacuar solo porque el US muestra endometrio grueso',nota:'El <b>grosor endometrial aislado NO es indicación</b> de intervención. Si la paciente está estable y sin sangrado significativo, se puede vigilar; decidir por la clínica, no por los milímetros.'};
+var E_ANTID={n:'Omitir la profilaxis anti-D',sub:'⛔ Error en Rh(D) negativo',c:NO,da:'Siempre verificar Rh y aplicar anti-D si es negativa no sensibilizada',nota:'Omitir el anti-D expone a <b>aloinmunización</b> y a enfermedad hemolítica en embarazos futuros. Aplicar dentro de 72 h.'};
+var E_ANALG={n:'No dar analgesia adecuada',sub:'⛔ Error de calidad',c:NO,da:'Ofrecer analgesia suficiente (paracetamol ± ibuprofeno; bloqueo/sedación en AMEU)',nota:'El aborto incompleto y su manejo son <b>dolorosos</b>; la analgesia insuficiente es una falla frecuente y evitable. Aquí los AINE están permitidos.'};
+
+window.addEventListener('load',function(){
+  document.getElementById('tx-body').innerHTML=
+    buildLinea('Manejo','Tres opciones: expectante · misoprostol · AMEU (elección compartida)',AC,[M_EXP,M_MISO,M_AMEU],AC)+
+    buildLinea('Coadyuvantes','Analgesia, antiemético, anti-D, profilaxis, hierro y uterotónico',CO,[M_PARA,M_ONDAN,M_ANTID,M_DOXI,M_HIERRO,M_OXI],'#374151')+
+    buildLinea('Errores','Qué NO hacer',NO,[E_LEG,E_ENDO,E_ANTID,E_ANALG],NO);
+});
+</script>
+</body>
+</html>

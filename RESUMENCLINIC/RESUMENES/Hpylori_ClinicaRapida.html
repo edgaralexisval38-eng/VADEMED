@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Helicobacter pylori · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#155e75;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#dcecf2;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#06303d,#155e75);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#dcecf2;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#dcecf2;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#06303d,#155e75);">
+  <div class="hdr-top"><div class="hdr-icon">🦠</div><div>
+    <div class="hdr-eye">Gastroenterología · Infectología</div>
+    <div class="hdr-title">Helicobacter pylori</div>
+    <div class="hdr-sub">ACG 2024 · Maastricht VI · 14 días</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Cuádruple con bismuto</span>
+    <span class="badge">Evitar claritromicina empírica</span>
+    <span class="badge">14 días</span>
+    <span class="badge">SIEMPRE confirmar erradicación</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">14 d</div><div class="qs-l">Duración</div></div>
+  <div class="qs"><div class="qs-v">2 sem</div><div class="qs-l">Sin IBP antes</div></div>
+  <div class="qs"><div class="qs-v">4 sem</div><div class="qs-l">Sin antibiótico</div></div>
+  <div class="qs"><div class="qs-v">Grupo I</div><div class="qs-l">Carcinógeno (OMS)</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
+  <button class="tab" onclick="showT('quien',this)">🎯 A quién buscar</button>
+  <button class="tab" onclick="showT('dx',this)">🧫 Diagnóstico</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento 1.ª línea</button>
+  <button class="tab" onclick="showT('resc',this)">🔁 Rescate</button>
+  <button class="tab" onclick="showT('conf',this)">✅ Confirmar erradicación</button>
+  <button class="tab" onclick="showT('mex',this)">🇲🇽 Contexto México</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('seg',this)">📈 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Lo esencial</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Bacilo gramnegativo espiral, microaerófilo y productor de ureasa</strong> que coloniza la mucosa gástrica. Es la infección crónica más común del mundo y la principal causa de <strong>úlcera péptica</strong> y de <strong>cáncer gástrico</strong> (carcinógeno <strong>grupo I</strong> de la OMS).</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">Las 4 reglas actuales</div><b>1)</b> Si lo buscas y sale positivo, <b>trátalo</b> (aunque no tenga síntomas). <b>2)</b> <b>No</b> uses triple con claritromicina a ciegas. <b>3)</b> <b>14 días</b> de tratamiento. <b>4)</b> <b>Siempre</b> confirma la erradicación.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Consecuencia</th><th>Nota</th></tr>
+      <tr><td class="dn">Gastritis crónica</td><td>Prácticamente en todos los infectados (la mayoría asintomáticos)</td></tr>
+      <tr><td class="dn">Úlcera péptica</td><td>Causa el ~70–90% de las duodenales y la mayoría de las gástricas no por AINE</td></tr>
+      <tr><td class="dm">Cáncer gástrico</td><td>Vía atrofia → metaplasia intestinal → displasia. Erradicar reduce el riesgo</td></tr>
+      <tr><td class="dn">Linfoma MALT</td><td>Puede <b>remitir solo con la erradicación</b> en estadios tempranos</td></tr>
+      <tr><td class="dn">Extradigestivas</td><td>Anemia ferropénica inexplicada, PTI, deficiencia de B12</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Cifra / contexto</th></tr>
+      <tr><td class="dn">Prevalencia mundial</td><td>~50% de la población; mayor en países en desarrollo</td></tr>
+      <tr><td class="dm">México</td><td><b>Alta prevalencia</b> (~50–70% de adultos) y <b>alta resistencia</b> a claritromicina y metronidazol</td></tr>
+      <tr><td class="dn">Transmisión</td><td>Fecal-oral y oral-oral; <b>intrafamiliar</b>, adquirida sobre todo en la infancia</td></tr>
+      <tr><td class="dm">Cáncer gástrico</td><td>Carcinógeno <b>grupo I</b> (OMS); principal causa del adenocarcinoma gástrico no cardial</td></tr>
+      <tr><td class="dn">Curso</td><td>La mayoría de los infectados están <b>asintomáticos</b> de por vida</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definiciones clave</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Término</th><th>Definición</th></tr>
+      <tr><td class="dn">Test and treat</td><td>Probar y tratar sin endoscopia (dispepsia &lt;60 años sin alarma)</td></tr>
+      <tr><td class="dn">Erradicación</td><td>Prueba de infección activa <b>negativa ≥4 semanas</b> tras terminar los antibióticos</td></tr>
+      <tr><td class="dm">Falla / persistencia</td><td>Prueba positiva tras el tratamiento (resistencia o mala adherencia)</td></tr>
+      <tr><td class="dn">Reinfección</td><td>Nueva infección tras erradicación confirmada; poco frecuente en adultos</td></tr>
+      <tr><td class="dn">Resistencia primaria vs secundaria</td><td>Sin exposición previa al antibiótico vs seleccionada por un tratamiento previo</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Cómo sobrevive y daña</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Factor</th><th>Efecto</th></tr>
+      <tr><td class="dn"><b>Ureasa</b></td><td>Convierte urea en amonio → <b>neutraliza el ácido</b> a su alrededor. Es la base de la prueba de aliento y de la prueba rápida de ureasa</td></tr>
+      <tr><td class="dn">Flagelos y forma espiral</td><td>Penetra la capa de moco y se adhiere al epitelio</td></tr>
+      <tr><td class="dn"><b>CagA</b> (isla de patogenicidad)</td><td>Se inyecta al epitelio; se asocia a más inflamación, úlcera y <b>cáncer</b></td></tr>
+      <tr><td class="dn"><b>VacA</b></td><td>Citotoxina vacuolizante: daño celular y evasión inmune</td></tr>
+      <tr><td class="dn">Adhesinas (BabA, SabA)</td><td>Fijación a la mucosa</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧭</span><div><b>El patrón de gastritis define el desenlace:</b> gastritis <b>antral</b> → hipersecreción ácida → <b>úlcera duodenal</b>. Gastritis <b>del cuerpo o extensa</b> → atrofia e hipoclorhidria → <b>úlcera gástrica y cáncer</b>.</div></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">⚠️</span><div>La <b>cascada de Correa</b>: gastritis crónica → atrofia → metaplasia intestinal → displasia → adenocarcinoma. Erradicar es más útil <b>antes</b> de que aparezcan atrofia y metaplasia extensas.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-quien">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🎯</span><div><div class="at">Regla de oro</div><b>No busques lo que no vas a tratar:</b> toda prueba positiva debe recibir tratamiento erradicador.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Indicaciones para buscarlo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Indicación</th><th>Comentario</th></tr>
+      <tr><td class="dn">Úlcera péptica activa o antecedente</td><td>Indicación clásica y más firme</td></tr>
+      <tr><td class="dm">Linfoma MALT gástrico</td><td>La erradicación puede ser curativa en estadios tempranos</td></tr>
+      <tr><td class="dn">Cáncer gástrico temprano resecado</td><td>Reduce el riesgo de lesión metacrónica</td></tr>
+      <tr><td class="dn">Dispepsia no investigada <b>&lt;60 años</b> sin datos de alarma</td><td>Estrategia <b>"test and treat"</b> (probar y tratar sin endoscopia)</td></tr>
+      <tr><td class="dn">Dispepsia funcional</td><td>Erradicar beneficia a un subgrupo</td></tr>
+      <tr><td class="dn">Familiar de primer grado con cáncer gástrico</td><td>Buscar y tratar</td></tr>
+      <tr><td class="dn">Inicio de AINE/AAS a largo plazo</td><td>Sobre todo si hay antecedente de úlcera</td></tr>
+      <tr><td class="dn">Anemia ferropénica inexplicada · PTI · déficit de B12</td><td>Asociaciones extradigestivas reconocidas</td></tr>
+      <tr><td class="dn">Atrofia gástrica o metaplasia intestinal</td><td>Erradicar y programar vigilancia</td></tr>
+      <tr><td class="dn">Uso crónico de IBP</td><td>Considerar (Maastricht VI)</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Cuándo hacer endoscopia primero</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚩</span><div><b>Datos de alarma:</b> edad ≥60 años de inicio, pérdida de peso involuntaria, disfagia u odinofagia, vómito persistente, <b>sangrado</b> o anemia, masa palpable o adenopatía, antecedente familiar de cáncer gástrico. → <b>Endoscopia</b>, no "test and treat".</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-dx">
+  <div class="alert a-r" style="margin-bottom:12px;"><span class="ai">⏸️</span><div><div class="at">El error más frecuente: falsos negativos</div>Suspender <b>IBP 2 semanas</b> y <b>antibióticos/bismuto 4 semanas</b> antes de cualquier prueba que detecte infección <b>activa</b>. Si se necesita control de síntomas, usar antiácidos o antagonistas H2 (suspender 1–2 días antes).</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗓️</span><span class="st">Línea de tiempo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 140" style="width:100%;max-width:440px;display:block;margin:0 auto;background:#f4fafc;border-radius:8px;">
+      <line x1="20" y1="78" x2="340" y2="78" stroke="#9aa5b1" stroke-width="1.5"/>
+      <polygon points="340,72 352,78 340,84" fill="#9aa5b1"/>
+      <!-- ventanas de suspension -->
+      <rect x="20" y="60" width="120" height="16" fill="#fbd6d6"/>
+      <rect x="80" y="60" width="60" height="16" fill="#f6c9a0"/>
+      <g font-size="7.5" fill="#7b1c1c"><text x="24" y="56">◄ 4 semanas sin antibiótico/bismuto ►</text></g>
+      <g font-size="7.5" fill="#8a5a1e"><text x="84" y="94">◄ 2 sem sin IBP ►</text></g>
+      <!-- puntos -->
+      <g font-size="9.5" font-weight="700" text-anchor="middle">
+        <circle cx="150" cy="78" r="11" fill="#155e75"/><text x="150" y="81.5" fill="#fff">1</text>
+        <circle cx="230" cy="78" r="11" fill="#0a7d53"/><text x="230" y="81.5" fill="#fff">2</text>
+        <circle cx="320" cy="78" r="11" fill="#6b46a8"/><text x="320" y="81.5" fill="#fff">3</text>
+      </g>
+      <g font-size="8" text-anchor="middle" fill="#374151">
+        <text x="150" y="112">Prueba</text><text x="150" y="122">diagnóstica</text>
+        <text x="230" y="112">Tratamiento</text><text x="230" y="122">14 días</text>
+        <text x="318" y="112">Confirmar</text><text x="318" y="122">≥4 sem después</text>
+      </g>
+      <text x="180" y="22" font-size="9" font-weight="700" fill="#155e75" text-anchor="middle">Secuencia correcta</text>
+      <text x="180" y="36" font-size="8" fill="#5a7d8a" text-anchor="middle">Sin las ventanas de lavado, la prueba sale falsamente negativa</text>
+    </svg>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Pruebas no invasivas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Prueba</th><th>Utilidad</th></tr>
+      <tr><td class="dn"><b>Aliento con urea marcada (¹³C-UBT)</b></td><td>⭐ La mejor no invasiva; sirve para <b>diagnóstico y confirmación</b>. Alta sensibilidad y especificidad</td></tr>
+      <tr><td class="dn"><b>Antígeno fecal monoclonal</b></td><td>Muy buena alternativa, más barata; también sirve para confirmar</td></tr>
+      <tr><td class="dm">Serología IgG</td><td><b>NO distingue infección activa de pasada</b>: no sirve para confirmar erradicación. Solo útil en situaciones especiales (sangrado agudo, atrofia extensa, uso reciente de IBP/antibiótico) o estudios poblacionales</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Pruebas con endoscopia</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Prueba</th><th>Utilidad</th></tr>
+      <tr><td class="dn">Prueba rápida de ureasa</td><td>Resultado inmediato en sala; falsos negativos con IBP, sangrado o atrofia</td></tr>
+      <tr><td class="dn">Histología</td><td>Detecta el germen y evalúa <b>atrofia/metaplasia</b> (protocolo de Sydney: antro + cuerpo + incisura)</td></tr>
+      <tr><td class="dm">Cultivo con antibiograma</td><td>Único que da <b>susceptibilidad completa</b>; poco disponible, requiere transporte adecuado</td></tr>
+      <tr><td class="dn">PCR / molecular</td><td>Detecta el germen y mutaciones de resistencia (claritromicina, levofloxacino); cada vez más accesible</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Si vas a hacer endoscopia por otra razón, <b>aprovecha para tomar biopsias</b> (y cultivo/PCR si el paciente ya falló a un tratamiento).</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-tx">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">⛔</span><div><div class="at">Lo que cambió</div>La <b>triple clásica con claritromicina</b> (IBP + amoxicilina + claritromicina) <b>ya no se recomienda de forma empírica</b> por la resistencia: solo si se documentó susceptibilidad o la resistencia local es &lt;15%.</div></div>
+  <div id="tx-body"></div>
+  <div class="sec" style="margin-top:6px;"><div class="sh" onclick="tog(this)"><span class="si">🔑</span><span class="st">Claves para que funcione</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>14 días</b>: la duración corta reduce la eficacia.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Supresión ácida potente</b>: IBP a dosis alta cada 12 h (esomeprazol o rabeprazol se afectan menos por el CYP2C19), o un <b>P-CAB</b> (vonoprazán) donde esté disponible.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Dosis optimizadas</b>: metronidazol <b>≥1.5 g/día</b> y bismuto <b>4 veces al día</b>; <b>tetraciclina</b> (no sustituir por doxiciclina).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Adherencia</b>: explicar por escrito, advertir de los efectos adversos y entregar el esquema en una tarjeta. Es el factor modificable más importante.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Pregunta siempre qué antibióticos ha recibido antes</b> (por cualquier motivo): no repetir claritromicina ni levofloxacino ya usados.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Coadyuvantes y manejo de síntomas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">💡</span><div>Lo que cura es el esquema erradicador; los coadyuvantes mejoran la <b>tolerancia y la adherencia</b>… y hay <b>errores</b> que hacen fracasar el tratamiento.</div></div>
+    <div id="tx-coad"></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-resc">
+  <div class="alert a-w" style="margin-bottom:10px;"><span class="ai">🔁</span><div><div class="at">Principios del rescate</div><b>1)</b> No repetir un antibiótico que ya falló (excepto amoxicilina, tetraciclina y rifabutina, cuya resistencia es rara). <b>2)</b> Tras <b>2 fracasos</b>, buscar <b>susceptibilidad</b> (cultivo o PCR). <b>3)</b> Mantener 14 días y supresión ácida potente.</div></div>
+  <div id="resc-body"></div>
+  <div class="sec" style="margin-top:6px;"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Qué elegir según lo que falló</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Falló…</th><th>Siguiente opción razonable</th></tr>
+      <tr><td class="dn">Cuádruple con bismuto</td><td>Triple con <b>rifabutina</b>, o triple/cuádruple con <b>levofloxacino</b> (si es susceptible), o dual con P-CAB + amoxicilina</td></tr>
+      <tr><td class="dn">Triple con claritromicina</td><td><b>Cuádruple con bismuto</b> (evitando claritromicina) o levofloxacino</td></tr>
+      <tr><td class="dn">Dos o más esquemas</td><td>Guiar por <b>susceptibilidad</b>; considerar rifabutina y derivar a gastroenterología</td></tr>
+      <tr><td class="dm">Alergia a penicilina</td><td>Cuádruple con bismuto (no lleva amoxicilina); valorar prueba de alergia, pues la mayoría no es alérgico real</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-conf">
+  <div class="alert a-g" style="margin-bottom:10px;"><span class="ai">✅</span><div><div class="at">Confirmar SIEMPRE</div>En todos los pacientes tratados, sin excepción: los esquemas fallan en 10–30%.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🕐</span><span class="st">Cómo y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Aspecto</th><th>Recomendación</th></tr>
+      <tr><td class="dn">Prueba</td><td><b>Aliento con urea</b> o <b>antígeno fecal monoclonal</b>. <b>Nunca serología</b></td></tr>
+      <tr><td class="dn">Momento</td><td><b>≥4 semanas</b> después de terminar los antibióticos</td></tr>
+      <tr><td class="dn">IBP</td><td>Suspender <b>≥2 semanas</b> antes de la prueba</td></tr>
+      <tr><td class="dn">Con endoscopia</td><td>Si hay que repetirla por otra indicación (úlcera gástrica, MALT), confirmar con histología ± prueba de ureasa</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Confirmar demasiado pronto o sin suspender el IBP produce <b>falsos negativos</b> → se da por curado a un paciente que sigue infectado.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-mex">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🇲🇽</span><span class="st">Por qué importa la resistencia local</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>México es un país de <b>alta prevalencia</b> de H. pylori y de <b>alta resistencia</b> a los antibióticos más usados, lo que explica por qué la triple clásica rinde mal.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Antibiótico</th><th>Panorama general</th><th>Implicación</th></tr>
+      <tr><td class="dm">Metronidazol</td><td>Resistencia muy alta</td><td>Se "vence" parcialmente con <b>dosis altas (≥1.5 g/día), 14 días y bismuto</b></td></tr>
+      <tr><td class="dm">Claritromicina</td><td>Resistencia por encima del umbral del 15% en muchas series</td><td><b>No usarla empíricamente</b></td></tr>
+      <tr><td class="dn">Levofloxacino</td><td>Resistencia en aumento</td><td>Reservar para rescate, idealmente con susceptibilidad</td></tr>
+      <tr><td class="dn">Amoxicilina · Tetraciclina · Rifabutina</td><td>Resistencia baja</td><td>Son los pilares de los esquemas actuales</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">✔️</span><div><b>Conclusión práctica:</b> en México, la <b>cuádruple con bismuto por 14 días</b> es la opción empírica más sólida y con mejor disponibilidad (bismuto, tetraciclina y metronidazol son accesibles y baratos).</div></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">ℹ️</span><div>Los porcentajes de resistencia <b>varían por región y por año</b>: si tu hospital tiene datos locales o acceso a cultivo/PCR, úsalos por encima de cualquier recomendación general.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-escen">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">⚙️</span><div><div class="at">Escenarios especiales</div>Situaciones donde cambia a quién tratar, cómo o con qué. Toca cada bloque.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤰</span><span class="st">Embarazo y lactancia</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Salvo indicación urgente (p. ej., úlcera complicada), lo habitual es <b>diferir la erradicación</b> hasta después del embarazo y la lactancia y controlar los síntomas mientras tanto.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Fármaco</th><th>En embarazo</th></tr>
+      <tr><td class="dn">Amoxicilina</td><td>Segura (Cat B)</td></tr>
+      <tr><td class="dn">Metronidazol</td><td>Aceptable en 2.º–3.er trimestre; evitar en el 1.º si es posible</td></tr>
+      <tr><td class="dm">Tetraciclina</td><td><b>Contraindicada</b> (dientes/huesos)</td></tr>
+      <tr><td class="dm">Claritromicina / levofloxacino / bismuto</td><td>Evitar</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧒</span><span class="st">Pediatría</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-w"><span class="ai">⚠️</span><div>En niños <b>no</b> se hace "test and treat" poblacional: probar solo ante <b>síntomas significativos o úlcera</b>, y con prueba de aliento o antígeno fecal.</div></div>
+    <div class="prose"><p>Tratamiento <b>guiado por susceptibilidad</b> cuando sea posible, con dosis por peso. <b>Sin tetraciclina en &lt;8 años</b> ni fluoroquinolonas. La cuádruple con bismuto o esquemas basados en amoxicilina/metronidazol son opciones habituales.</p></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Alergia a penicilina</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>La <b>cuádruple con bismuto</b> es ideal: <b>no lleva amoxicilina</b>. Alternativas sin penicilina incluyen esquemas con claritromicina (si susceptible) o levofloxacino.</p></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">💡</span><div>La mayoría de las "alergias a penicilina" <b>no se confirman</b>: valorar interrogatorio y prueba de alergia, porque recuperar la amoxicilina amplía mucho las opciones.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🫘</span><span class="st">Enfermedad renal / hepática</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Ajuste</th></tr>
+      <tr><td class="dm">ERC avanzada</td><td><b>Evitar bismuto y tetraciclina</b>; ajustar claritromicina, levofloxacino y metronidazol</td></tr>
+      <tr><td class="dn">Hepatopatía</td><td>Precaución con metronidazol y claritromicina; vigilar</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Úlcera sangrante / HDA</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>En el sangrado agudo, las pruebas de infección activa dan <b>más falsos negativos</b>: aquí la <b>serología</b> o la histología pueden ayudar. Iniciar la erradicación cuando el paciente <b>tolere la vía oral</b> y <b>confirmar siempre</b> después. Mantener IBP según la lesión.</p></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👵</span><span class="st">Ancianos y polifarmacia</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Vigilar <b>interacciones y QT</b> (claritromicina, levofloxacino), función renal, y <b>adherencia</b> (esquemas de 3–4 fármacos). La rifabutina tiene interacciones importantes. Simplificar cuando se pueda (p. ej., dual con P-CAB si está disponible).</p></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-farm">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div>Componentes de los esquemas, con dosis y precauciones. Toca cada tarjeta.</div></div>
+  <div id="tc-all"></div>
+</div>
+
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Después de erradicar</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Conducta</th></tr>
+      <tr><td class="dn">Úlcera duodenal no complicada</td><td>Erradicar suele bastar; no requiere IBP indefinido</td></tr>
+      <tr><td class="dm">Úlcera gástrica</td><td><b>Endoscopia de control</b> para documentar cicatrización y descartar malignidad</td></tr>
+      <tr><td class="dn">Úlcera complicada (sangrado)</td><td>Confirmar erradicación siempre; mantener IBP según el caso</td></tr>
+      <tr><td class="dm">Atrofia / metaplasia intestinal extensa</td><td><b>Vigilancia endoscópica</b> periódica pese a la erradicación (el riesgo no desaparece)</td></tr>
+      <tr><td class="dn">Linfoma MALT</td><td>Seguimiento endoscópico e histológico estrecho con hematología/oncología</td></tr>
+      <tr><td class="dn">Reinfección</td><td>Poco frecuente en adultos; si "reaparece" pronto, casi siempre fue <b>falla del tratamiento</b>, no reinfección</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">👪</span><div>Valorar buscar y tratar a los <b>convivientes/pareja</b> en casos de reinfección o de familiares con cáncer gástrico (la transmisión es intrafamiliar).</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — H. pylori</h2><p>Guías y evidencia.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Chey WD, Howden CW, Moss SF, et al. <em>ACG Clinical Guideline: Treatment of Helicobacter pylori Infection.</em> Am J Gastroenterol (cuádruple con bismuto optimizada de 1.ª línea).</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Consenso</span></div><div class="biblio-ref">Malfertheiner P, et al. <em>Management of Helicobacter pylori infection: the Maastricht VI/Florence Consensus Report.</em> Gut.</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2026</span><span class="biblio-level lv-b">Revisión</span></div><div class="biblio-ref"><em>Practice Tips From the Updated Helicobacter pylori Treatment Guidelines.</em> Gastroenterol Hepatol.</div><a class="biblio-link" href="https://www.gastroenterologyandhepatology.net/archives/february-2026/practice-tips-from-the-updated-helicobacter-pylori-treatment-guidelines/" target="_blank">🔗 Resumen</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">🗂️ México</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">Consenso</span><span class="biblio-level lv-exp">Nacional</span></div><div class="biblio-ref">Consenso mexicano sobre diagnóstico y tratamiento de la infección por <em>H. pylori</em>. Rev Gastroenterol Mex.</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">CENETEC. <em>GPC de enfermedad ácido-péptica / H. pylori.</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div><div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Observacional / cohortes</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Referencia / nota</div>
+    </div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. La disponibilidad de vonoprazán, rifabutina y de las pruebas de susceptibilidad varía; ajuste al cuadro básico y a la resistencia local. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#155e75');h+=tcard(f,col);}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#dcecf2;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#155e75;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#dcecf2;border:1px solid #155e75;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#155e75;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#dcecf2;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#155e75;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#155e75';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+var TFN=0;
+function tcard(f,gc){TFN++;var id='hc'+TFN;var c=gc||f.c||'#155e75';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">'+(f.lbl||'Dosis')+'</div>';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:'+c+';padding:2px 0;line-height:1.35;">• '+f.dosis[k]+'</div>';h+=dd;}
+ else if(f.da)h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+f.da+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+ if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#dcecf2;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#155e75;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function tcards(cid,arr){var el=document.getElementById(cid);if(!el)return;var h='';for(var i=0;i<arr.length;i++)h+=tcard(arr[i]);el.innerHTML=h;}
+
+/* ---- ESQUEMAS ---- */
+var R_BQT={n:'Cuádruple con bismuto (optimizada)',sub:'⭐ 1.ª línea recomendada · 14 días',c:'#0a5c45',lbl:'Esquema (14 días)',dosis:['IBP a dosis alta cada 12 h (esomeprazol 40 mg o rabeprazol 20 mg)','<b>Bismuto</b>: subsalicilato &gt;300 mg <b>4 veces al día</b> (o subcitrato 120–300 mg 4 veces al día)','<b>Tetraciclina</b> 500 mg <b>4 veces al día</b>','<b>Metronidazol</b> 500 mg 3–4 veces al día (<b>≥1.5 g/día</b>)'],prep:'Todo VO. Bismuto y tetraciclina con las comidas y al acostarse; tetraciclina con agua abundante, sin lácteos/calcio/hierro/antiácidos (los quelan).',iv:'VO · 14 días',pres:'Componentes accesibles en MX: IBP genérico · subsalicilato/subcitrato de bismuto · tetraciclina 500 mg cáps · metronidazol 500 mg · algunos coempacados (Pylera® donde exista)',fda:'Contraindicada en embarazo (tetraciclina) y en &lt;8 años; bismuto: evitar en ERC avanzada',ci:'Embarazo/lactancia; niños &lt;8 años; ERC avanzada (bismuto/tetraciclina); alergia a componentes',ea:'Heces y lengua negras (bismuto), náusea, sabor metálico (metronidazol), fotosensibilidad y esofagitis (tetraciclina)',nota:'<b>Por qué es 1.ª línea:</b> no depende de la susceptibilidad a claritromicina y el bismuto vence en parte la resistencia al metronidazol → ideal donde hay alta resistencia (México). <b>No lleva amoxicilina</b> → sirve en alérgicos a penicilina.<br><br><b>Coadyuvantes:</b> IBP/P-CAB a dosis alta · probióticos (S. boulardii) para mejorar tolerancia · tarjeta escrita de adherencia · evitar alcohol (metronidazol).<br><br><b>Evidencia:</b> 1.ª línea recomendada (ACG 2024; Maastricht VI), Nivel A. <b>No sustituir tetraciclina por doxiciclina</b> (menor eficacia).'};
+var R_RIF={n:'Triple con rifabutina',sub:'Sugerida 1.ª línea o rescate · 14 días',lbl:'Esquema (14 días)',dosis:['IBP a dosis alta (p. ej., omeprazol 40 mg) cada 8 h','Amoxicilina 1 g cada 8 h','<b>Rifabutina</b> 50 mg cada 8 h (total 150 mg/día)'],prep:'VO. En algunos países existe cápsula combinada de rifabutina + amoxicilina + omeprazol (Talicia®).',iv:'VO · 14 días',pres:'Rifabutina 150 mg cáps (acceso limitado, uso oncohematológico en MX) · amoxicilina 500 mg/1 g · IBP genérico',fda:'Amoxicilina Cat B; rifabutina con datos limitados → evitar en embarazo salvo necesidad',ci:'Alergia a penicilina; tuberculosis activa no tratada',ea:'<b>Mielosupresión</b> (leucopenia), uveítis, coloración anaranjada de orina/lágrimas, exantema',mon:'Biometría hemática si curso prolongado o repetido',nota:'<b>Por qué:</b> la resistencia a rifabutina es <b>muy rara</b> → excelente opción tras uno o más fracasos, o de inicio si no hay bismuto.<br><br><b>Coadyuvantes:</b> IBP a dosis alta · <b>descartar TB activa</b> antes de usarla.<br><br><b>Interacciones:</b> potentes (antirretrovirales, azoles, warfarina, anticonceptivos).<br><br><b>Evidencia:</b> opción sugerida (ACG 2024). Reservarla ayuda a no seleccionar resistencia en TB.'};
+var R_PCAB={n:'Dual con P-CAB + amoxicilina',sub:'Sugerida 1.ª línea donde haya vonoprazán',lbl:'Esquema (14 días)',dosis:['<b>Vonoprazán</b> 20 mg cada 12 h','Amoxicilina 1 g cada 8 h (o 750 mg cada 6 h)'],prep:'VO, independiente de los alimentos.',iv:'VO · 14 días',pres:'Vonoprazán 20 mg tab (Voquezna®; disponibilidad limitada en MX) · amoxicilina 500 mg/1 g',fda:'Amoxicilina Cat B; vonoprazán con datos limitados en embarazo',ci:'Alergia a penicilina',ea:'Diarrea, náusea, cefalea',nota:'<b>Por qué:</b> la supresión ácida <b>potente y sostenida</b> del P-CAB hace que la amoxicilina funcione mucho mejor; solo <b>2 fármacos</b> → mejor tolerancia y adherencia.<br><br><b>Coadyuvantes:</b> tarjeta de adherencia; probióticos opcionales.<br><br><b>Evidencia:</b> no inferior (dual) a la triple con vonoprazán en ensayos pivotales (ACG 2024). Depende de la disponibilidad de vonoprazán.'};
+var R_PCAB3={n:'Triple con P-CAB + amoxicilina + claritromicina',sub:'Solo si se conoce susceptibilidad',c:'#8a6d3b',lbl:'Esquema (14 días)',dosis:['Vonoprazán 20 mg cada 12 h','Amoxicilina 1 g cada 12 h','Claritromicina 500 mg cada 12 h'],prep:'VO.',iv:'VO · 14 días',pres:'Vonoprazán · amoxicilina · claritromicina 500 mg (todos en MX salvo vonoprazán)',fda:'Amoxicilina/claritromicina Cat B/C; individualizar en embarazo',ci:'Alergia a penicilina; QT largo (claritromicina)',ea:'Disgeusia, prolongación del QT (claritromicina), diarrea',nota:'<b>Por qué:</b> alternativa cuando se documentó sensibilidad a claritromicina.<br><br><b>Interacciones:</b> claritromicina con estatinas, colchicina, anticoagulantes.<br><br><b>Evidencia:</b> eficaz con vonoprazán si hay susceptibilidad. <b>No usar empíricamente</b> en zonas de alta resistencia a claritromicina.'};
+var R_CLA={n:'Triple clásica con claritromicina',sub:'⚠️ Ya no empírica',c:'#8a6d3b',lbl:'Esquema (14 días)',dosis:['IBP dosis alta cada 12 h','Amoxicilina 1 g cada 12 h','Claritromicina 500 mg cada 12 h'],prep:'VO.',iv:'VO · 14 días',pres:'IBP · amoxicilina · claritromicina 500 mg · todos disponibles en MX',fda:'Cat B/C; individualizar',ci:'Alergia a penicilina; QT largo',ea:'Disgeusia, diarrea, prolongación del QT',nota:'<b>Por qué está relegada:</b> su uso a ciegas es la principal causa de fracaso y de más resistencia.<br><br><b>Evidencia:</b> solo aceptable si se demostró <b>susceptibilidad a claritromicina</b> o la resistencia local es &lt;15%. <b>Nunca repetir claritromicina si ya falló.</b>'};
+var R_LEV={n:'Triple/cuádruple con levofloxacino',sub:'Rescate',c:'#c05621',lbl:'Esquema (14 días)',dosis:['IBP dosis alta cada 12 h','Amoxicilina 1 g cada 12 h','<b>Levofloxacino</b> 500 mg al día','± bismuto 4 veces al día (cuádruple)'],prep:'VO. Separar el levofloxacino de antiácidos, hierro, calcio y zinc (quelación).',iv:'VO · 14 días',pres:'Levofloxacino 500 mg · amoxicilina · IBP · bismuto · todos en MX',fda:'Fluoroquinolona: evitar en embarazo y niños',ci:'Embarazo, niños; QT largo; antecedente de tendinopatía por quinolonas',ea:'Tendinitis/rotura tendinosa, neuropatía, disección aórtica, QT largo, disglucemia, efectos en SNC',nota:'<b>Por qué:</b> rescate tras fallar bismuto o claritromicina, idealmente con susceptibilidad documentada.<br><br><b>Coadyuvantes:</b> IBP dosis alta; añadir bismuto mejora la tasa.<br><br><b>Evidencia:</b> útil pero con <b>resistencia en aumento</b> a quinolonas (ACG 2024).'};
+var R_CONC={n:'Cuádruple concomitante (sin bismuto)',sub:'Alternativa si no hay bismuto',c:'#8a6d3b',lbl:'Esquema (14 días)',dosis:['IBP dosis alta cada 12 h','Amoxicilina 1 g cada 12 h','Claritromicina 500 mg cada 12 h','Metronidazol 500 mg cada 12 h'],prep:'VO, los 4 juntos.',iv:'VO · 14 días',pres:'IBP · amoxicilina · claritromicina · metronidazol · todos en MX',fda:'Individualizar; evitar en embarazo si es posible',ci:'Alergia a penicilina; QT largo',ea:'Diarrea, disgeusia, náusea; suma de efectos de 3 antibióticos',nota:'<b>Por qué:</b> útil donde no se consigue bismuto ni tetraciclina.<br><br><b>Evidencia:</b> rinde peor con <b>doble resistencia claritromicina + metronidazol</b> (frecuente en México) y expone a 3 antibióticos a la vez → preferir la cuádruple con bismuto cuando se pueda.'};
+
+/* ---- FÁRMACOS ---- */
+var F_IBP={n:'Inhibidor de bomba de protones (IBP)',sub:'La base de todo esquema',da:'Dosis alta cada 12 h (esomeprazol 40 mg, rabeprazol 20 mg u omeprazol 40 mg)',prep:'VO 30–60 min antes de los alimentos.',iv:'VO',pres:'Omeprazol 20/40 mg · esomeprazol 40 mg · rabeprazol 20 mg · pantoprazol · genérico · IMSS',fda:'Cat B/C · aceptable en embarazo si se requiere',ci:'Hipersensibilidad',ea:'Cefalea, diarrea; uso prolongado: hipomagnesemia, déficit de B12, fracturas',nota:'<b>Mecanismo:</b> inhibe la H⁺/K⁺-ATPasa gástrica. A mayor pH, mejor actúan los antibióticos. <b>Esomeprazol y rabeprazol</b> dependen menos del CYP2C19 (mejor en metabolizadores rápidos).<br><br><b>Clave:</b> suspender <b>2 semanas antes</b> de las pruebas diagnósticas y de confirmación (dan falsos negativos).'};
+var F_VPZ={n:'Vonoprazán (P-CAB)',sub:'Bloqueador ácido competitivo de potasio',da:'20 mg cada 12 h × 14 días',prep:'VO, independiente de los alimentos.',iv:'VO',pres:'Vonoprazán 10/20 mg (Voquezna®/Takecab®; disponibilidad limitada en MX)',fda:'Datos limitados en embarazo',ci:'Hipersensibilidad',ea:'Cefalea, diarrea, nasofaringitis',nota:'<b>Mecanismo:</b> P-CAB — bloquea de forma competitiva la bomba de potasio: supresión ácida <b>más potente, rápida y sostenida</b> que un IBP, sin depender del CYP2C19.<br><br><b>Evidencia:</b> mejora la erradicación en esquemas duales y triples. Suspender antes de las pruebas, igual que el IBP.'};
+var F_BIS={n:'Bismuto',sub:'Subsalicilato o subcitrato',da:'Subsalicilato &gt;300 mg 4 veces/día, o subcitrato 120–300 mg 4 veces/día',prep:'VO con alimentos y al acostarse.',iv:'VO',pres:'Subsalicilato de bismuto (Pepto-Bismol®) · subcitrato de bismuto · MX',fda:'Evitar en embarazo (salicilato); precaución en niños (riesgo de síndrome de Reye)',ci:'ERC avanzada; alergia a salicilatos',ea:'Heces y lengua negras, náusea',nota:'<b>Mecanismo:</b> acción bactericida local y protección de la mucosa; <b>vence en parte la resistencia al metronidazol</b>.<br><br><b>Clave:</b> avisar de las heces/lengua negras para no confundir con melena.'};
+var F_TET={n:'Tetraciclina',sub:'Pilar de la cuádruple',da:'500 mg 4 veces al día × 14 días',prep:'VO con agua abundante y sin acostarse; separar de lácteos, calcio, hierro y antiácidos (quelan el fármaco).',iv:'VO',pres:'Tetraciclina 250/500 mg cáps · MX',fda:'Contraindicada en embarazo y en &lt;8 años',ci:'Embarazo, lactancia, niños &lt;8 años',ea:'Fotosensibilidad, esofagitis, náusea, tinción dental en niños',nota:'<b>Mecanismo:</b> inhibe la síntesis proteica (subunidad 30S). Resistencia muy baja → muy fiable.<br><br><b>Clave:</b> <b>NO sustituir por doxiciclina</b> (menor eficacia frente a H. pylori).'};
+var F_MET={n:'Metronidazol',sub:'Dosis alta vence resistencia parcial',da:'500 mg 3–4 veces al día (≥1.5 g/día) × 14 días',prep:'VO con alimentos.',iv:'VO',pres:'Metronidazol 500 mg tab · susp · MX · IMSS',fda:'Cat B · evitar 1.er trimestre si es posible',ci:'Ingesta de alcohol; 1.er trimestre (relativo)',ea:'Sabor metálico, náusea, neuropatía (uso prolongado), efecto disulfiram',nota:'<b>Mecanismo:</b> nitroimidazol; genera radicales que dañan el ADN. La resistencia in vitro se supera en parte con <b>dosis altas, 14 días y bismuto</b>.<br><br><b>Interacciones:</b> alcohol (disulfiram — prohibir durante y 48 h después); potencia warfarina (↑INR).'};
+var F_AMX={n:'Amoxicilina',sub:'Resistencia rara',da:'1 g cada 12 h (o cada 8 h en esquemas con P-CAB/rifabutina)',prep:'VO.',iv:'VO',pres:'Amoxicilina 500 mg/1 g cáps · susp · MX · IMSS',fda:'Cat B · segura en embarazo y lactancia',ci:'Alergia a penicilina',ea:'Diarrea, exantema; rara vez anafilaxia',nota:'<b>Mecanismo:</b> betalactámico (inhibe las PBP). Resistencia <b>excepcional</b> → puede reutilizarse en esquemas de rescate.<br><br><b>Alergia a penicilina:</b> usar cuádruple con bismuto (no la lleva); la mayoría de las "alergias" no se confirman.'};
+var F_CLR={n:'Claritromicina',sub:'⚠️ Solo con susceptibilidad conocida',c:'#8a6d3b',da:'500 mg cada 12 h × 14 días',prep:'VO.',iv:'VO',pres:'Claritromicina 250/500 mg · susp · MX',fda:'Cat C',ci:'QT largo; uso concomitante con estatinas/colchicina de riesgo',ea:'Disgeusia, náusea, <b>prolongación del QT</b>',nota:'<b>Mecanismo:</b> macrólido (subunidad 50S). Alta resistencia → solo si se documenta sensibilidad.<br><br><b>Interacciones potentes:</b> estatinas, colchicina, anticoagulantes, algunos antiarrítmicos. <b>Nunca repetirla si ya falló.</b>'};
+var F_LVX={n:'Levofloxacino',sub:'Rescate',c:'#c05621',da:'500 mg al día × 14 días',prep:'VO; separar de antiácidos, hierro, calcio y zinc.',iv:'VO',pres:'Levofloxacino 500/750 mg · MX',fda:'Evitar en embarazo y en niños',ci:'Embarazo, niños; QT largo; tendinopatía previa por quinolonas',ea:'Tendinitis/rotura tendinosa, neuropatía, disección aórtica, QT largo, disglucemia, efectos en SNC',nota:'<b>Mecanismo:</b> fluoroquinolona (inhibe la ADN-girasa). Rescate tras fallar bismuto o claritromicina.<br><br><b>Evidencia:</b> resistencia <b>en aumento</b> → usar idealmente con susceptibilidad documentada.'};
+var F_RFB={n:'Rifabutina',sub:'Reserva valiosa',da:'50 mg cada 8 h (150 mg/día) × 14 días',prep:'VO.',iv:'VO',pres:'Rifabutina 150 mg cáps (acceso limitado en MX)',fda:'Datos limitados; evitar en embarazo salvo necesidad',ci:'Tuberculosis activa no tratada',ea:'<b>Mielosupresión</b>, uveítis, coloración anaranjada de orina/lágrimas',mon:'Biometría hemática si curso prolongado o repetido',nota:'<b>Mecanismo:</b> rifamicina (inhibe la ARN-polimerasa). Resistencia muy rara → reserva potente.<br><br><b>Clave:</b> <b>descartar TB activa</b> antes de usarla; muchas interacciones (antirretrovirales, azoles, warfarina, anticonceptivos).'};
+
+/* ---- COADYUVANTES / SOPORTE ---- */
+var CO_PRO={n:'Probióticos',sub:'Reducen efectos adversos',c:'#0a5c45',da:'S. boulardii 250 mg c/12 h (o Lactobacillus) durante el tratamiento',prep:'VO, separado ~2 h de los antibióticos.',iv:'VO',pres:'S. boulardii (Floratil®) · Lactobacillus · MX',ea:'Bien tolerados; precaución con catéter central/inmunosupresión',nota:'<b>Por qué:</b> reducen la <b>diarrea y náusea</b> por antibióticos y mejoran la adherencia; pueden aumentar ligeramente la erradicación. <b>No sustituyen</b> al esquema erradicador.'};
+var CO_ANTIEM={n:'Antiemético (si náusea)',sub:'Ayuda a completar los 14 días',c:'#0a5c45',da:'Ondansetrón 4–8 mg c/8 h, o metoclopramida 10 mg c/8 h',iv:'VO/IV',pres:'Ondansetrón · metoclopramida · genérico · IMSS',ci:'QT largo (ondansetrón); extrapiramidalismo (metoclopramida)',nota:'La náusea es causa frecuente de abandono; tratarla mejora la adherencia, que es el principal determinante del éxito.'};
+var CO_IBP={n:'IBP tras el esquema (si úlcera)',sub:'Cicatrización y síntomas',c:'#0a5c45',da:'IBP estándar 4–8 semanas si hay úlcera (más tiempo en gástrica o complicada)',iv:'VO',nota:'En úlcera <b>duodenal no complicada</b>, la erradicación suele bastar. Recordar <b>suspender el IBP 2 semanas antes</b> de confirmar la erradicación.'};
+var CO_EDU={n:'Educación y adherencia',sub:'El factor modificable más importante',c:'#0a5c45',da:'Entregar el esquema por escrito; explicar duración (14 días) y efectos adversos',nota:'Advertir de <b>heces/lengua negras</b> (bismuto), sabor metálico y <b>evitar alcohol</b> (metronidazol). Preguntar SIEMPRE qué antibióticos ha recibido antes.'};
+var CO_ADM={n:'Medidas de administración',sub:'Para que el esquema funcione',c:'#0a5c45',da:'Tetraciclina con agua abundante sin lácteos/calcio/hierro; IBP 30–60 min antes de alimentos; separar quinolonas de cationes',nota:'La forma de tomar los fármacos influye directamente en la eficacia y en la tolerancia.'};
+var TX_COAD=[CO_PRO,CO_ANTIEM,CO_IBP,CO_EDU,CO_ADM];
+
+/* ---- ERRORES / QUÉ NO HACER ---- */
+var NO_REP={n:'Repetir un antibiótico que ya falló',sub:'⛔ Error frecuente',c:'#7b1c1c',da:'No repetir claritromicina ni levofloxacino ya usados',nota:'<b>Excepciones:</b> amoxicilina, tetraciclina y rifabutina (resistencia rara) sí pueden reutilizarse.'};
+var NO_CLA={n:'Triple con claritromicina a ciegas',sub:'⛔ No empírica',c:'#7b1c1c',da:'No usarla sin susceptibilidad donde la resistencia &gt;15%',nota:'Es la principal causa de fracaso y de más resistencia. En México, preferir cuádruple con bismuto.'};
+var NO_DOX={n:'Sustituir tetraciclina por doxiciclina',sub:'⛔ Menor eficacia',c:'#7b1c1c',da:'Usar tetraciclina 500 mg 4 veces/día',nota:'La doxiciclina rinde menos en la cuádruple con bismuto.'};
+var NO_SER={n:'Confirmar con serología',sub:'⛔ No sirve para confirmar',c:'#7b1c1c',da:'Confirmar con aliento de urea o antígeno fecal',nota:'La serología IgG no distingue infección activa de pasada; sigue positiva tras curar.'};
+var NO_COR={n:'Acortar a 7–10 días',sub:'⛔ Menos eficaz',c:'#7b1c1c',da:'Mantener 14 días',nota:'Las duraciones cortas reducen la erradicación en zonas de alta resistencia.'};
+var NO_VEN={n:'Confirmar sin ventanas de lavado',sub:'⛔ Falsos negativos',c:'#7b1c1c',da:'Suspender IBP ≥2 sem y antibiótico/bismuto ≥4 sem; confirmar ≥4 sem post-tratamiento',nota:'Confirmar demasiado pronto o con IBP puesto da por curado a quien sigue infectado.'};
+var TX_NODAR=[NO_REP,NO_CLA,NO_DOX,NO_SER,NO_COR,NO_VEN];
+
+var TX_1L=[R_BQT,R_RIF,R_PCAB,R_CONC,R_CLA];
+var TX_RESC=[R_RIF,R_LEV,R_PCAB,R_PCAB3,R_BQT];
+var TX_ALL=[F_IBP,F_VPZ,F_BIS,F_TET,F_MET,F_AMX,F_CLR,F_LVX,F_RFB];
+
+window.addEventListener('load',function(){
+  document.getElementById('tx-body').innerHTML=
+    buildLinea('1ª Línea','Esquemas de elección — 14 días',AC,[R_BQT,R_RIF,R_PCAB],AC)+
+    buildLinea('Alternativas','Solo con susceptibilidad conocida o si no hay bismuto','#8a6d3b',[R_CONC,R_PCAB3,R_CLA],'#8a6d3b');
+  document.getElementById('tx-coad').innerHTML=
+    buildLinea('Coadyuvantes','Tolerancia y adherencia',CO,[CO_PRO,CO_ANTIEM,CO_IBP,CO_EDU,CO_ADM],'#374151')+
+    buildLinea('Errores','Qué NO hacer — hacen fracasar el tratamiento',NO,[NO_REP,NO_CLA,NO_DOX,NO_SER,NO_COR,NO_VEN],NO);
+  document.getElementById('resc-body').innerHTML=
+    buildLinea('Rescate','Tras 1–2 fracasos — no repetir lo que ya falló','#c05621',[R_LEV,R_RIF,R_PCAB,R_BQT],'#c05621');
+  tcards('tc-all',TX_ALL);
+});
+
+</script>
+</body>
+</html>

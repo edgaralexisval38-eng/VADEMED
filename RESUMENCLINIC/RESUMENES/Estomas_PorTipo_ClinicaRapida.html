@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Estomas por tipo · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#c05621;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#fbe7dc;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;margin-bottom:8px;}
+.biblio-header{background:linear-gradient(135deg,#4a1d08,#c05621);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#fbe7dc;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#fbe7dc;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#4a1d08,#c05621);">
+  <div class="hdr-top"><div class="hdr-icon">🩹</div><div>
+    <div class="hdr-eye">Cirugía · Nutrición clínica</div>
+    <div class="hdr-title">Estomas — guía por tipo</div>
+    <div class="hdr-sub">Cada estoma con su fisiología · osmolaridad · alimentación · fórmulas MX · cuidados · complicaciones</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Estómago = tolera bolos e hipertónico</span>
+    <span class="badge">Yeyuno = continua e isotónico</span>
+    <span class="badge">Ileostomía = sodio y agua</span>
+    <span class="badge">Colon = rescate de agua</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">300</div><div class="qs-l">mOsm isotónico</div></div>
+  <div class="qs"><div class="qs-v">600–1200</div><div class="qs-l">mL/d ileostomía</div></div>
+  <div class="qs"><div class="qs-v">90–120</div><div class="qs-l">mmol/L Na en SRO</div></div>
+  <div class="qs"><div class="qs-v">>1500</div><div class="qs-l">mL/d = alto gasto</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('comp',this)">🧭 Comparativa</button>
+  <button class="tab" onclick="showT('sng',this)">👃 Nasogástrica</button>
+  <button class="tab" onclick="showT('gast',this)">🔵 Gastrostomía</button>
+  <button class="tab" onclick="showT('sny',this)">🧵 Nasoyeyunal</button>
+  <button class="tab" onclick="showT('yey',this)">🟢 Yeyunostomía</button>
+  <button class="tab" onclick="showT('ileo',this)">🟠 Ileostomía</button>
+  <button class="tab" onclick="showT('colo',this)">🟤 Colostomía</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ COMPARATIVA ============ -->
+<div class="panel on" id="tab-comp">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Cómo usar esta guía</div>Cada pestaña es una <b>monografía completa</b> de un tipo de estoma. Empieza aquí para ubicarte y elegir el acceso; luego entra al tipo que necesites.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">Los tipos de un vistazo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Estoma / acceso</th><th>Función</th><th>Llega / sale de</th><th>Gasto o consistencia</th><th>Modo</th></tr>
+      <tr><td class="dn">Sonda nasogástrica</td><td>Alimenta (in)</td><td>Estómago</td><td>—</td><td>Bolos o continua</td></tr>
+      <tr><td class="dn">Gastrostomía</td><td>Alimenta (in)</td><td>Estómago</td><td>—</td><td>Bolos o continua</td></tr>
+      <tr><td class="dn">Sonda nasoyeyunal</td><td>Alimenta (in)</td><td>Yeyuno</td><td>—</td><td>Continua</td></tr>
+      <tr><td class="dm">Yeyunostomía</td><td>Alimenta (in)</td><td>Yeyuno</td><td>—</td><td>Continua con bomba</td></tr>
+      <tr><td class="dm">Ileostomía</td><td>Deriva (out)</td><td>Íleon</td><td>600–1200 mL/d, líquida-pastosa</td><td>Bolsa drenable</td></tr>
+      <tr><td class="dn">Colostomía</td><td>Deriva (out)</td><td>Colon</td><td>200–800 g/d, pastosa-formada</td><td>Bolsa cerrada/drenable</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div><b>Regla del eje:</b> cuanto más <b>proximal</b> el estoma, mayor el gasto, más agresivo el efluente para la piel y mayor el riesgo de deshidratación.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Qué absorbe cada segmento (mapa base)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Segmento</th><th>Agua / sodio</th><th>Nutriente clave</th></tr>
+      <tr><td class="dn">Estómago</td><td>Regula vaciamiento y osmolaridad → tolera hipertónico</td><td>Ácido, factor intrínseco</td></tr>
+      <tr><td class="dn">Duodeno</td><td>Entra bilis y jugo pancreático</td><td><b>Hierro, calcio, folato</b></td></tr>
+      <tr><td class="dn">Yeyuno</td><td><b>La mayor parte del agua</b>; Na con glucosa (SGLT1). Epitelio permeable, no contra gradiente</td><td>Mayoría de macronutrientes</td></tr>
+      <tr><td class="dn">Íleon</td><td>Absorbe agua y Na lento y eficiente (contra gradiente)</td><td><b>Vitamina B12 + sales biliares</b> (íleon terminal)</td></tr>
+      <tr><td class="dm">Colon</td><td><b>Rescate:</b> 1–2 L/d de agua (reserva 4–5 L) y Na por ENaC; <b>secreta K y HCO₃</b></td><td><b>AGCC</b> (500–1000 kcal/d)</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">🧲</span><div>El <b>magnesio</b> se absorbe en delgado distal y colon → el alto gasto causa <b>hipomagnesemia</b> con frecuencia. El efluente es rico en <b>Na</b> y pobre en K.</div></div>
+    <div class="alert a-g" style="margin-top:6px;"><span class="ai">🌱</span><div><b>Adaptación intestinal:</b> ocurre en <b>1–2 años</b> tras la resección; el estímulo luminal (nutrición enteral) es trófico. Mantener aporte enteral siempre que se pueda.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Cómo elegir el acceso de alimentación</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Acceso</th><th>Cuándo</th></tr>
+      <tr><td class="dn">Sonda nasogástrica</td><td>Soporte <b>&lt;4–6 semanas</b>, estómago funcional</td></tr>
+      <tr><td class="dn">Sonda nasoyeyunal</td><td>Corto plazo con <b>riesgo de aspiración</b>, gastroparesia o pancreatitis</td></tr>
+      <tr><td class="dn">Gastrostomía</td><td><b>&gt;4–6 semanas</b>: neurológico, cáncer de cabeza y cuello, demencia avanzada (individualizar)</td></tr>
+      <tr><td class="dn">Gastro-yeyunostomía</td><td>Alimentar en yeyuno y a la vez <b>descomprimir</b> el estómago</td></tr>
+      <tr><td class="dm">Yeyunostomía</td><td>Gastroparesia grave, aspiración recurrente, obstrucción de la salida gástrica, cirugía esofagogástrica/pancreática mayor, pancreatitis grave</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">✔️</span><div><b>Si el intestino funciona, úsalo:</b> la vía enteral preserva la barrera intestinal y tiene menos complicaciones infecciosas que la parenteral.</div></div>
+    <div class="alert a-r" style="margin-top:6px;"><span class="ai">⛔</span><div><b>Contraindicaciones de la vía enteral:</b> obstrucción distal completa, isquemia mesentérica, íleo grave, perforación, choque no resucitado. Relativas: fístula de alto gasto, HDA activa, vómito incoercible.</div></div>
+  </div></div>
+</div>
+
+<!-- ============ SONDA NASOGÁSTRICA ============ -->
+<div class="panel" id="tab-sng">
+  <span class="pill" style="background:#2b6cb0;">Acceso gástrico · corto plazo</span>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Sonda que llega al <b>estómago</b> por la nariz. Es el acceso de <b>primera elección para soporte enteral de corto plazo</b> (&lt;4–6 semanas) cuando el estómago funciona. También sirve para descompresión.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th></th><th></th></tr>
+      <tr><td class="dn">Indicaciones</td><td>Disfagia neurológica transitoria, postoperatorio, ingesta insuficiente aguda, apoyo perioperatorio</td></tr>
+      <tr><td class="dn">Duración</td><td>&lt;4–6 semanas; si se prevé más largo → gastrostomía</td></tr>
+      <tr><td class="dm">Precauciones</td><td>Traumatismo facial/base de cráneo (riesgo de vía intracraneal → colocar por vía oral o guiada), várices esofágicas, coagulopatía</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiología y osmolaridad</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Al terminar en el estómago, se conservan <b>reservorio, píloro y secreción ácida</b>: el estómago <b>diluye y dosifica</b> la salida al duodeno, así que <b>tolera cargas hipertónicas y bolos</b>. La absorción distal es normal.</p></div>
+    <div class="alert a-g"><span class="ai">💧</span><div><b>Osmolaridad:</b> tolera hasta <b>~500–700 mOsm</b>. Permite fórmulas estándar e hipercalóricas.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Alimentación e infusión</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Modo</th><th>Esquema</th></tr>
+      <tr><td class="dn">Bolos (intermitente)</td><td>Iniciar 100 mL/toma; subir 60–120 mL cada 8–24 h; meta 4–6 tomas de 200–400 mL; pasar cada bolo en 15–30 min a gravedad</td></tr>
+      <tr><td class="dn">Continua</td><td>25–50 mL/h, subir 25 mL/h cada 8–12 h (mejor tolerancia si hay náusea)</td></tr>
+      <tr><td class="dn">Cíclica</td><td>Pasar el total en 12–18 h (p. ej. nocturna) para liberar el día</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⬆️</span><div><b>Cabecera 30–45°</b> durante la toma y 30–60 min después. Lavar con 20–30 mL de agua antes y después de cada toma y de cada medicamento.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥛</span><span class="st">Fórmulas recomendadas (México)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Categoría</th><th>Ejemplos disponibles en MX</th></tr>
+      <tr><td class="dn">Intestino sano (por defecto)</td><td>Polimérica estándar 1 kcal/mL</td><td>Isosource Estándar, Osmolite, Jevity (c/fibra), Nutrison Standard/Multifibra, Fresubin Original, Enterex Estándar</td></tr>
+      <tr><td class="dn">Restricción de volumen</td><td>Hipercalórica 1.5–2 kcal/mL</td><td>Ensure Plus, Fresubin 2 kcal, Nutrison Energy, Enterex Protical</td></tr>
+      <tr><td class="dn">Diabetes</td><td>Bajo índice glucémico + fibra</td><td>Glucerna, Novasource Diabet, Fresubin D</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🏷️</span><div>Las marcas son ejemplos de categoría; verifica el <b>cuadro básico</b> de tu unidad. En la SNG se puede usar cualquier osmolaridad razonable.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧴</span><span class="st">Cuidados</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Confirmar posición antes de usar:</b> el método más fiable es <b>Rx</b> tras la primera colocación; el <b>pH del aspirado ≤5.5</b> apoya posición gástrica. La auscultación NO es fiable.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Marcar y registrar</b> la longitud externa; revisar en cada turno que no se haya desplazado.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Fijar</b> sin tracción sobre el ala nasal; rotar el punto de fijación para evitar úlceras por presión.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Lavados</b> con 20–30 mL de agua; dar medicamentos líquidos, uno a uno, con lavado entre cada uno.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Higiene nasal y oral; cambiar la sonda según el material (poliuretano/silicona duran semanas; PVC, días).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Problema</th><th>Manejo</th></tr>
+      <tr><td class="dm">Mala posición / vía respiratoria</td><td>Confirmar con Rx antes de usar; nunca alimentar si hay duda</td></tr>
+      <tr><td class="dm">Broncoaspiración</td><td>Cabecera elevada; valorar acceso pospilórico si es recurrente</td></tr>
+      <tr><td class="dn">Lesión nasal / sinusitis / epistaxis</td><td>Fijación sin presión, rotar narina, humidificar</td></tr>
+      <tr><td class="dn">Obstrucción de la sonda</td><td>Agua tibia con jeringa 30–60 mL y presión suave; prevenir con lavados</td></tr>
+      <tr><td class="dn">Desplazamiento / retiro accidental</td><td>Recolocar y reconfirmar posición</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ GASTROSTOMÍA ============ -->
+<div class="panel" id="tab-gast">
+  <span class="pill" style="background:#2b6cb0;">Acceso gástrico · largo plazo</span>
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🔵</span><div><div class="at">La idea clave</div>Hay reservorio y píloro: <b>se pueden dar bolos</b> y <b>tolera fórmulas hipertónicas</b>. Es el acceso de largo plazo más fisiológico.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Estoma que comunica el <b>estómago</b> con la pared abdominal para alimentación de <b>largo plazo (&gt;4–6 semanas)</b>. Se coloca por endoscopia (<b>PEG</b>), radiología o cirugía.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th></th><th></th></tr>
+      <tr><td class="dn">Indicaciones</td><td>Disfagia neurológica (EVC, ELA, parálisis cerebral), cáncer de cabeza y cuello, TCE, demencia avanzada (individualizar), fístula esofágica</td></tr>
+      <tr><td class="dm">Contraindicaciones PEG</td><td>Imposible transiluminar, ascitis a tensión, coagulopatía no corregida, interposición de órganos, obstrucción faríngea/esofágica que impida el endoscopio, peritonitis</td></tr>
+      <tr><td class="dn">Variante</td><td><b>Gastro-yeyunostomía (GJ):</b> alimenta en yeyuno y descomprime el estómago (aspiración, gastroparesia)</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiología y osmolaridad</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Al conservar el estómago, se mantienen la <b>regulación del vaciamiento y de la osmolaridad</b>: el estómago diluye lo hipertónico y dosifica la salida. Por eso <b>admite bolos</b> (más fisiológicos, respetan el ciclo ayuno-alimentación).</p></div>
+    <div class="alert a-g"><span class="ai">💧</span><div><b>Osmolaridad tolerada:</b> hasta <b>~500–700 mOsm</b>. Sirven las fórmulas estándar, con fibra e hipercalóricas.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Alimentación y progresión</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Paso</th><th>Esquema</th></tr>
+      <tr><td class="dn">Inicio</td><td>Ya se puede alimentar <b>4–6 h</b> tras la colocación (no se esperan 24 h). ~25% de la meta, o bolos de 100 mL</td></tr>
+      <tr><td class="dn">Progresión</td><td>+60–120 mL por toma cada 8–24 h</td></tr>
+      <tr><td class="dn">Meta</td><td>4–6 tomas de 200–400 mL (bolos) o continua 25–50 mL/h</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">📏</span><div><b>No medir residuo gástrico de rutina;</b> no suspender por residuos &lt;500 mL sin otros signos de intolerancia. Cabecera 30–45°.</div></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">💧</span><div><b>Requerimientos:</b> 25–30 kcal/kg/d · proteína 1.2–1.5 g/kg/d · líquidos 30–35 mL/kg/d. Aportar agua libre en los lavados.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥛</span><span class="st">Fórmulas recomendadas (México)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Categoría</th><th>Ejemplos MX</th></tr>
+      <tr><td class="dn">Por defecto (intestino sano)</td><td>Polimérica estándar 1 kcal/mL, con fibra si el tránsito lo permite</td><td>Isosource Estándar, Osmolite, Jevity (fibra), Nutrison Multifibra, Fresubin Original, Enterex Estándar</td></tr>
+      <tr><td class="dn">Restricción de volumen (ICC, ERC)</td><td>Hipercalórica 1.5–2 kcal/mL</td><td>Ensure Plus, Fresubin 2 kcal, Nutrison Energy, Enterex Protical</td></tr>
+      <tr><td class="dn">Diabetes</td><td>Bajo índice glucémico + fibra</td><td>Glucerna, Novasource Diabet, Fresubin D</td></tr>
+      <tr><td class="dn">Renal en diálisis</td><td>Densa, baja en K/P</td><td>Nepro, Enterex Renal</td></tr>
+      <tr><td class="dn">Estreñimiento</td><td>Polimérica con fibra + líquidos</td><td>Jevity, Nutrison Multifibra</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Las hipercalóricas aportan <b>menos agua libre</b> (~70% vs ~84%): calcula y repón agua. Evita la fibra en íleo, obstrucción o isquemia.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧴</span><span class="st">Cuidados</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Lavar 20–30 mL de agua</b> antes y después de cada toma y de cada medicamento; en continua, cada 4–6 h.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Girar el botón/sonda 360° a diario</b> para prevenir el <b>síndrome del bumper enterrado</b> — excepto en gastrostomías quirúrgicas recientes o si el cirujano lo indica.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Comprobar la <b>marca externa</b> y la movilidad; limpiar el estoma con agua y jabón, secar bien.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Medicamentos: preferir líquidos; <b>no triturar</b> liberación prolongada ni cubierta entérica; separar la <b>fenitoína</b> y la <b>levotiroxina</b> 1–2 h de la fórmula.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Verificar el <b>volumen del balón</b> (si es de balón) cada 1–2 semanas; recambio del dispositivo según fabricante (habitual 3–6 meses).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Problema</th><th>Manejo</th></tr>
+      <tr><td class="dm">Salida accidental</td><td><b>Urgencia relativa:</b> el trayecto se cierra en horas → recolocar pronto (sonda de reemplazo o Foley temporal) y <b>confirmar posición</b> antes de usar</td></tr>
+      <tr><td class="dm">Bumper enterrado</td><td>Dolor, fuga, imposible girar → endoscopia/recambio</td></tr>
+      <tr><td class="dn">Fuga periostomal / granuloma</td><td>Nitrato de plata en el granuloma; revisar tracción y tamaño del disco externo; tratar la piel</td></tr>
+      <tr><td class="dn">Infección del estoma</td><td>Cuidado local; antibiótico si celulitis</td></tr>
+      <tr><td class="dn">Broncoaspiración</td><td>Cabecera elevada; valorar GJ o acceso pospilórico</td></tr>
+      <tr><td class="dn">Obstrucción de la sonda</td><td>Agua tibia, jeringa 30–60 mL; prevenir con lavados</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ SONDA NASOYEYUNAL ============ -->
+<div class="panel" id="tab-sny">
+  <span class="pill" style="background:#0a7d53;">Acceso yeyunal · corto plazo</span>
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🧵</span><div><div class="at">Regla de oro yeyunal</div>Sin reservorio ni píloro que regule: <b>infusión continua</b> y fórmula <b>isotónica</b>. Nunca bolos.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Sonda que cruza el píloro y deja la punta en el <b>yeyuno</b>. Acceso pospilórico de <b>corto plazo</b> cuando el estómago no sirve o hay riesgo de aspiración.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th></th><th></th></tr>
+      <tr><td class="dn">Indicaciones</td><td>Gastroparesia, <b>alto riesgo de aspiración</b>, <b>pancreatitis aguda</b> grave, obstrucción de la salida gástrica, intolerancia gástrica</td></tr>
+      <tr><td class="dn">Colocación</td><td>Endoscópica, por fluoroscopia o a ciegas con guía; <b>confirmar posición con Rx</b></td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiología y osmolaridad</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>El yeyuno es tan permeable ("leaky") que <b>cualquier líquido hipo o hipertónico se equilibra arrastrando agua y sodio a la luz</b> → más gasto y dumping. No hay reservorio que amortigüe un bolo.</p></div>
+    <div class="alert a-w"><span class="ai">💧</span><div><b>Osmolaridad:</b> preferir <b>isotónica ~300–350 mOsm</b>. Ante intolerancia, <b>bajar la velocidad</b>, no diluir la fórmula.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Alimentación e infusión</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Paso</th><th>Esquema</th></tr>
+      <tr><td class="dn">Inicio</td><td>10–25 mL/h continua con bomba</td></tr>
+      <tr><td class="dn">Progresión</td><td>+10–25 mL/h cada 8–24 h</td></tr>
+      <tr><td class="dn">Meta</td><td>Alcanzarla en 48–72 h</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div><b>Dumping / intolerancia:</b> dolor cólico, distensión, diarrea explosiva, taquicardia, sudoración → <b>bajar la velocidad</b>, revisar la osmolaridad de la fórmula.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥛</span><span class="st">Fórmulas recomendadas (México)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Categoría</th><th>Ejemplos MX</th></tr>
+      <tr><td class="dn">Primera opción</td><td>Polimérica <b>isotónica</b> 1 kcal/mL, sin fibra al inicio</td><td>Isosource Estándar, Osmolite, Nutrison Standard</td></tr>
+      <tr><td class="dn">Malabsorción / no tolera polimérica</td><td>Peptídica con TCM</td><td>Peptamen / Peptamen 1.5, Vital, Nutrison Advanced Peptisorb, Enterex IMX, Alitraq</td></tr>
+      <tr><td class="dn">Pancreatitis</td><td>Polimérica o peptídica isotónica, baja en grasa si no tolera</td><td>Según tolerancia</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">⛔</span><div>Las hipercalóricas (1.5–2 kcal/mL, 500–700 mOsm) toleran mal por vía yeyunal: usar solo con restricción de volumen y vigilancia estrecha.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧴</span><span class="st">Cuidados</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Es una sonda <b>fina que se obstruye fácil:</b> lavar 20–30 mL de agua cada 4–6 h y siempre con medicamentos.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Si se obstruye: agua tibia con presión suave y jeringa de <b>30–60 mL</b> (las pequeñas generan demasiada presión). <b>Nunca</b> forzar con guía metálica.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Preferir medicamentos <b>líquidos</b>; marcar la posición externa y confirmar que no migró al estómago.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Cabecera elevada de todos modos (no elimina el riesgo de aspiración, pero lo reduce).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Problema</th><th>Manejo</th></tr>
+      <tr><td class="dm">Obstrucción de la sonda (frecuente)</td><td>Prevenir con lavados; desobstruir con agua tibia</td></tr>
+      <tr><td class="dn">Migración al estómago</td><td>Reconfirmar posición; pierde el beneficio pospilórico</td></tr>
+      <tr><td class="dm">Dumping / diarrea osmótica</td><td>Bajar velocidad, fórmula isotónica/peptídica</td></tr>
+      <tr><td class="dn">Lesión nasal / sinusitis</td><td>Igual que la SNG</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ YEYUNOSTOMÍA ============ -->
+<div class="panel" id="tab-yey">
+  <span class="pill" style="background:#0a7d53;">Acceso yeyunal · largo plazo</span>
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🟢</span><div><div class="at">Yeyunostomía — regla de oro</div><b>NUNCA bolos.</b> Siempre <b>infusión continua con bomba</b> y fórmula <b>isotónica</b>.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Estoma de alimentación directo al <b>yeyuno</b> (quirúrgico tipo Witzel, con aguja-catéter, o PEJ). Se coloca a menudo en el <b>mismo acto</b> de una cirugía esofagogástrica o pancreática mayor.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th></th><th></th></tr>
+      <tr><td class="dn">Indicaciones</td><td>Cirugía esofagogástrica/pancreática mayor, gastroparesia grave, aspiración recurrente, obstrucción de la salida gástrica, pancreatitis grave prolongada</td></tr>
+      <tr><td class="dm">Cuidado quirúrgico</td><td>Si sale accidentalmente en el postoperatorio temprano, <b>no reintroducir a ciegas</b> (riesgo de falsa vía y peritonitis): avisar a cirugía</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiología y osmolaridad</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Se saltan estómago y píloro: <b>sin regulación de osmolaridad ni del vaciamiento</b>. El yeyuno secreta sodio a la luz hasta ~90–100 mmol/L; un líquido sin sodio "roba" sodio del plasma y aumenta el gasto.</p></div>
+    <div class="alert a-w"><span class="ai">💧</span><div><b>Osmolaridad:</b> <b>isotónica ~300–350 mOsm</b> de preferencia; <b>solo infusión continua</b>. La absorción de sodio depende del <b>cotransporte Na-glucosa (SGLT1)</b> → si se hidrata por boca, usar SRO con glucosa + sal.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Alimentación e infusión</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Paso</th><th>Esquema</th></tr>
+      <tr><td class="dn">Inicio</td><td>10–25 mL/h continua (en cirugía mayor, 10–20 mL/h en las primeras 24–48 h)</td></tr>
+      <tr><td class="dn">Progresión</td><td>+10–25 mL/h cada 8–24 h</td></tr>
+      <tr><td class="dn">Meta</td><td>Alcanzarla en 48–72 h; una vez tolerada, se puede pasar a cíclica</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Si aparece dolor cólico, distensión o diarrea: <b>bajar la velocidad, no diluir</b>. Sistema cerrado si es posible (menos contaminación): colgar máx 4–8 h si es abierto, 24–48 h si es cerrado.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥛</span><span class="st">Fórmulas recomendadas (México)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Categoría</th><th>Ejemplos MX</th></tr>
+      <tr><td class="dn">Primera opción</td><td>Polimérica <b>isotónica</b> 1 kcal/mL sin fibra</td><td>Isosource Estándar, Osmolite, Nutrison Standard</td></tr>
+      <tr><td class="dm">Malabsorción / alto gasto / intestino corto</td><td><b>Peptídica con TCM</b>, isotónica</td><td>Peptamen / Peptamen 1.5, Vital, Nutrison Advanced Peptisorb, Enterex IMX</td></tr>
+      <tr><td class="dn">Falla a la peptídica</td><td>Elemental (osmolaridad muy alta, solo continua y lenta)</td><td>Vivonex; pediátricos: Neocate, Alfamino, EleCare</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧩</span><div><b>Módulos:</b> proteína en polvo o fibra soluble (goma guar) para ajustar sin subir volumen — recordar que <b>aumentan la osmolaridad</b> y pueden obstruir la sonda fina.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧴</span><span class="st">Cuidados</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Lavar 20–30 mL cada 4–6 h</b> y siempre con medicamentos; usar jeringas de 30–60 mL.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Nunca</b> desobstruir con guía metálica; fijar bien y marcar la posición externa.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Cuidar la piel del sitio de inserción (fuga de contenido yeyunal es muy irritante): pasta/anillo y polvo hidrocoloide si hay erosión.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Preferir medicamentos líquidos o de liberación inmediata; separar fenitoína/levotiroxina de la fórmula.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Problema</th><th>Manejo</th></tr>
+      <tr><td class="dm">Dumping / diarrea</td><td>Bajar velocidad, fórmula isotónica/peptídica</td></tr>
+      <tr><td class="dm">Salida temprana / falsa vía</td><td>No reintroducir a ciegas; avisar a cirugía (riesgo de peritonitis)</td></tr>
+      <tr><td class="dn">Obstrucción de la sonda fina</td><td>Prevenir con lavados; agua tibia</td></tr>
+      <tr><td class="dn">Neumatosis / isquemia intestinal (rara pero grave)</td><td>Sospechar ante distensión y dolor desproporcionado; suspender e imagen urgente</td></tr>
+      <tr><td class="dn">Fuga periostomal / dermatitis</td><td>Cuidado de piel; revisar fijación</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ============ ILEOSTOMÍA ============ -->
+<div class="panel" id="tab-ileo">
+  <span class="pill" style="background:#c05621;">Estoma de salida · íleon</span>
+  <div class="alert a-w" style="margin-bottom:10px;"><span class="ai">🟠</span><div><div class="at">La idea clave</div>Sale contenido del <b>íleon</b>: líquido-pastoso, rico en <b>sodio y agua</b>, y sin el rescate del colon. El eje del cuidado es <b>hidratación con sodio</b> y <b>protección de la piel</b>.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th></th><th></th></tr>
+      <tr><td class="dn">Indicaciones</td><td>Protección de anastomosis colorrectal baja (en asa, temporal), colectomía total (CUCI, poliposis), enfermedad de Crohn, obstrucción, trauma</td></tr>
+      <tr><td class="dn">Tipos</td><td><b>Terminal</b> (una boca) o <b>en asa</b> (deriva y protege, temporal). Puede ser temporal o definitiva</td></tr>
+      <tr><td class="dn">Gasto habitual</td><td>600–1200 mL/día, consistencia líquida-pastosa ("puré")</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiología: qué se pierde y qué electrolitos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Al derivar en el íleon se pierde el <b>rescate de agua y sodio del colon</b>. La pérdida es <b>obligatoria</b>: ~500–800 mL de agua y 60–100 mmol de sodio al día, aunque el paciente no coma.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Se pierde…</th><th>Consecuencia</th></tr>
+      <tr><td class="dm">Colon (agua y Na)</td><td>Mayor riesgo de <b>deshidratación</b> e hiponatremia; el efluente es rico en Na (~90–140 mmol/L), pobre en K</td></tr>
+      <tr><td class="dm">Íleon terminal (si se resecó &gt;60–100 cm)</td><td><b>Déficit de B12</b> (suplementar de por vida) y de <b>sales biliares</b> → esteatorrea; con colon en continuidad, <b>oxalato</b> → litiasis renal</td></tr>
+      <tr><td class="dn">Magnesio</td><td>Se agota (absorción distal): <b>hipomagnesemia</b> frecuente</td></tr>
+      <tr><td class="dn">Válvula ileocecal</td><td>Tránsito rápido y <b>sobrecrecimiento bacteriano</b></td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">🌱</span><div><b>Adaptación intestinal</b> en 1–2 años: el íleon y el colon remanentes mejoran su capacidad de absorción con el estímulo de la alimentación.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Gasto, osmolaridad e hidratación</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i" style="margin-bottom:8px;"><span class="ai">🧂</span><div>El yeyuno-íleon secreta sodio a la luz hasta ~90–100 mmol/L. Si el paciente bebe <b>agua sola</b>, el intestino "presta" sodio del plasma y lo pierde: <b>bebe más y se deshidrata más</b>. La absorción de Na depende del <b>cotransporte Na-glucosa (SGLT1)</b> → glucosa + sal juntas.</div></div>
+    <div class="alert a-g"><span class="ai">✔️</span><div><b>SRO tipo "St Mark's":</b> 20 g glucosa + 3.5 g NaCl + 2.5 g bicarbonato (o citrato) de sodio en <b>1 L</b> de agua → Na ≈ 90–120 mmol/L. A sorbos durante el día.</div></div>
+    <div class="alert a-r" style="margin-top:6px;"><span class="ai">⛔</span><div><b>Alto gasto (&gt;1500 mL/d):</b> restringir líquidos hipotónicos a &lt;500–1000 mL/d y cubrir el resto con SRO. Los sueros orales comerciales para gastroenteritis tienen <b>poco sodio</b> para una ileostomía.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Dieta y espesamiento del gasto</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estrategia</th><th>Detalle</th></tr>
+      <tr><td class="dn">Espesar</td><td>Plátano, arroz blanco, puré de papa, pan/tostado, avena, compota de manzana, mantequilla de maní, malvaviscos, queso; fibra soluble (psyllium/goma guar)</td></tr>
+      <tr><td class="dn">Técnica</td><td><b>Masticar muy bien</b>, comidas pequeñas y frecuentes, no beber grandes volúmenes con la comida; <b>añadir sal</b> a los alimentos</td></tr>
+      <tr><td class="dm">Evitar (riesgo de obstrucción por bolo)</td><td>Palomitas, nueces, semillas, cáscaras, maíz, champiñones, apio crudo, frutos secos, carnes fibrosas mal masticadas</td></tr>
+      <tr><td class="dn">Si no basta</td><td><b>Loperamida 2–4 mg antes de las comidas</b> (puede requerir 12–24 mg/d) ± codeína; <b>IBP</b> a dosis alta (hipersecreción tras la resección)</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🥛</span><div><b>Fórmula si requiere enteral:</b> polimérica; en alto gasto/intestino corto, <b>peptídica con TCM</b> isotónica. Aprovechar el colon (si está) con carbohidratos complejos.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧴</span><span class="st">Cuidados del estoma y la piel</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Medir el estoma</b> con plantilla en cada cambio las primeras 6–8 semanas (se reduce de tamaño); recortar la barrera <b>2–3 mm más grande</b>.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Bolsa drenable</b> (gasto líquido); <b>vaciar a ⅓–½</b>; cambiar el sistema cada <b>3–5 días</b> o antes si hay fuga.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Limpiar con <b>agua y jabón neutro</b>, secar a toques; <b>no</b> alcohol ni cremas grasas bajo la placa.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Pasta/anillo</b> para pliegues y <b>polvo de hidrocoloide</b> si hay erosión (encostrado); placa <b>convexa + cinturón</b> si el estoma está plano o retraído.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">El efluente ileal es <b>muy enzimático</b> → la dermatitis irritativa es la complicación más común; sellar bien y descartar candidiasis (lesiones satélite → antifúngico en polvo).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones (estomales y metabólicas)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Complicación</th><th>Manejo</th></tr>
+      <tr><td class="dn">Dermatitis periestomal (la más frecuente)</td><td>Casi siempre por fuga: reajustar recorte, pasta/anillo, polvo hidrocoloide; descartar micosis</td></tr>
+      <tr><td class="dm">Alto gasto → deshidratación / IRA</td><td>SRO con sodio, restringir hipotónicos, antimotilidad, IBP; reponer Mg; vigilar Na urinario (&lt;20 = depleción)</td></tr>
+      <tr><td class="dm">Hipomagnesemia / hipopotasemia / acidosis</td><td>Reponer Mg (a veces IV) y K; bicarbonato/citrato; corregir volumen</td></tr>
+      <tr><td class="dm">Déficit de B12 (resección ileal)</td><td>B12 parenteral de por vida</td></tr>
+      <tr><td class="dn">Litiasis renal por oxalato (si hay colon) / biliar</td><td>Dieta baja en oxalato y grasa, calcio con comidas, hidratación, citrato</td></tr>
+      <tr><td class="dm">Isquemia/necrosis (precoz)</td><td>Valorar profundidad; si es profunda → reintervención</td></tr>
+      <tr><td class="dn">Retracción / prolapso / hernia paraestomal / estenosis</td><td>Convexidad y cinturón, faja; cirugía si obstruye, es irreductible o hay isquemia</td></tr>
+      <tr><td class="dn">Obstrucción por bolo alimentario</td><td>Reposo, líquidos, a veces lavado del estoma; educación dietética</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><b>Enseñar al paciente a acudir si:</b> estoma <b>morado/negro</b> · <b>ausencia de gasto</b> con distensión, dolor y vómito · sangrado activo · gasto muy alto con sed, mareo y orina escasa · fiebre · piel muy erosionada.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔗</span><span class="st">Reconexión (si es temporal)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Momento habitual: <b>8–12 semanas</b> (mínimo 6–8). Requisitos: <b>anastomosis íntegra</b> comprobada (enema hidrosoluble ± endoscopia), sin sepsis ni colecciones, <b>nutrición recuperada</b>, enfermedad de base controlada (oncológica sin progresión, a menudo tras la quimio adyuvante).</p>
+    <p>Tras cerrar una ileostomía que protegía una anastomosis baja es común el <b>síndrome de resección anterior baja (LARS)</b>: urgencia, fraccionamiento, incontinencia. Anticiparlo con rehabilitación del piso pélvico y ajuste dietético.</p></div>
+  </div></div>
+</div>
+
+<!-- ============ COLOSTOMÍA ============ -->
+<div class="panel" id="tab-colo">
+  <span class="pill" style="background:#6b46a8;">Estoma de salida · colon</span>
+  <div class="alert a-g" style="margin-bottom:10px;"><span class="ai">🟤</span><div><div class="at">La idea clave</div>Sale contenido del <b>colon</b>: más formado y con <b>menos pérdida de agua y sodio</b> que la ileostomía. La dieta suele ser <b>normal</b>; el reto principal es el <b>estreñimiento y el olor/gases</b>.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Qué es y cuándo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th></th><th></th></tr>
+      <tr><td class="dn">Indicaciones</td><td>Cáncer colorrectal (Hartmann, amputación abdominoperineal), diverticulitis complicada, obstrucción, trauma, incontinencia severa</td></tr>
+      <tr><td class="dn">Según nivel</td><td><b>Descendente/sigmoide:</b> heces formadas, 200–600 g/d. <b>Transversa:</b> semilíquida, 300–800 mL/d</td></tr>
+      <tr><td class="dn">Temporal vs definitiva</td><td>Temporal (protectora, se cierra) o definitiva (amputación, enfermedad avanzada)</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Fisiología: qué se conserva y qué se pierde</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Se conserva la mayor parte de la <b>absorción de agua y sodio</b> (todo el delgado y parte del colon), por eso el gasto es menor y la deshidratación, poco frecuente. Cuanto más distal la colostomía, más formado el efluente y menor la pérdida.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Nivel</th><th>Implicación</th></tr>
+      <tr><td class="dn">Sigmoide/descendente</td><td>Casi normal; incluso admite <b>irrigación</b> para regular las evacuaciones</td></tr>
+      <tr><td class="dn">Transversa</td><td>Efluente más blando; algo más de pérdida de agua</td></tr>
+      <tr><td class="dn">Ascendente (poco común)</td><td>Se comporta más como ileostomía (más líquido)</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧠</span><div>No hay déficit de B12 ni de sales biliares (el delgado está intacto). Rara vez hay problemas hidroelectrolíticos, salvo en colostomías muy proximales o con diarrea.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🍽️</span><span class="st">Dieta, gases y olor</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Objetivo</th><th>Recomendación</th></tr>
+      <tr><td class="dn">Evitar estreñimiento</td><td>Dieta normal con <b>fibra y líquidos suficientes</b>; actividad física</td></tr>
+      <tr><td class="dn">Reducir gases</td><td>Moderar bebidas gaseosas, legumbres, cebolla, col, chicle; comer despacio</td></tr>
+      <tr><td class="dn">Reducir olor</td><td>Moderar pescado, huevo, ajo, espárrago; ayudan yogur y perejil; filtros de carbón en la bolsa</td></tr>
+      <tr><td class="dn">Diarrea del estoma</td><td>Alimentos astringentes; descartar infección/fármacos; hidratar</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🥛</span><div>Si requiere nutrición enteral: <b>polimérica con fibra</b> + líquidos suficientes para mantener el tránsito.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧴</span><span class="st">Cuidados del estoma, piel e irrigación</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Bolsa cerrada</b> si las heces son formadas (colostomía distal); <b>drenable</b> si el efluente es blando.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Medir y recortar la barrera <b>2–3 mm</b> mayor; limpiar con agua y jabón neutro, secar a toques; cambiar cada 3–5 días.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">La piel se irrita <b>menos</b> que en ileostomía (efluente menos enzimático), pero igual sellar bien y usar pasta/polvo si hay erosión.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Irrigación</b> (opción en colostomía descendente/sigmoide): enema programado cada 24–48 h para lograr continencia y usar solo un apósito entre irrigaciones; requiere entrenamiento y buena función.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Placa <b>convexa + cinturón</b> si el estoma está plano/retraído; faja si hay hernia paraestomal.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Complicación</th><th>Manejo</th></tr>
+      <tr><td class="dn">Estreñimiento / obstrucción por fecaloma</td><td>Fibra, líquidos, laxantes suaves; irrigación; descartar estenosis</td></tr>
+      <tr><td class="dm">Hernia paraestomal (muy frecuente a largo plazo)</td><td>Faja; cirugía si obstruye, duele o impide el sellado</td></tr>
+      <tr><td class="dn">Prolapso</td><td>Reducción manual (frío/azúcar para el edema); cirugía si isquemia o irreductible</td></tr>
+      <tr><td class="dn">Estenosis / retracción</td><td>Dilatación cuidadosa / convexidad; revisión si obstruye</td></tr>
+      <tr><td class="dn">Dermatitis, sangrado del borde</td><td>Sellado y cuidado de piel; el sangrado mucoso banal suele ceder con presión; descartar várices en hipertensión portal</td></tr>
+      <tr><td class="dm">Isquemia/necrosis (precoz)</td><td>Valorar profundidad; reintervención si es profunda</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔗</span><span class="st">Reconexión (si es temporal)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Igual que en ileostomía: <b>8–12 semanas</b>, con anastomosis íntegra comprobada (enema hidrosoluble), sin sepsis, buen estado nutricional y enfermedad controlada. Cierre de Hartmann suele ser más laborioso por adherencias. No cerrar si hay progresión oncológica, fuga no resuelta, estenosis severa distal o mala función esfinteriana.</p></div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Estomas y nutrición enteral</h2><p>Guías internacionales, revisiones y fuentes institucionales utilizadas.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías y posicionamientos</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2016/23</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ESPEN. <em>Guidelines on chronic intestinal failure in adults</em> (alto gasto, SRO, adaptación intestinal).</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ESPEN. <em>Practical guideline: Home enteral nutrition / Clinical nutrition in surgery.</em> Clin Nutr.</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">ASPEN</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ASPEN. <em>Safe Practices for Enteral Nutrition Therapy</em> (acceso, administración, lavados, residuo gástrico).</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">WOCN</span><span class="biblio-level lv-exp">Consenso</span></div><div class="biblio-ref">WOCN / ASCRS. <em>Ostomy care and management clinical guideline.</em></div></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📗 Revisiones clave</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Revisión</span></div><div class="biblio-ref">Nightingale J, et al. <em>High-output stoma management: an overview.</em> Br J Surg.</div><a class="biblio-link" href="https://academic.oup.com/bjs/article/112/9/znaf196/8251504" target="_blank">🔗 BJS</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">Texto</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">Nightingale J. <em>Intestinal failure / short bowel physiology</em> (fisiología de la absorción de agua, sodio y magnesio; sales biliares).</div></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">🗂️ México</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">CENETEC. <em>GPC de cuidados de estomas y soporte nutricional enteral.</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Material educativo. Las <b>marcas comerciales</b> se citan solo como ejemplo de categoría; su disponibilidad y composición cambian: verifique la etiqueta y el cuadro básico de su unidad, e involucre a nutrición clínica y al estomaterapeuta. Rangos según guías y textos estándar. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+</script>
+</body>
+</html>

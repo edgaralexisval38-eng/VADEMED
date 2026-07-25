@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>TRALI y TACO · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#7f1d1d;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f7dcdc;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#2d0a0a,#7f1d1d);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#f7dcdc;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#f7dcdc;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2d0a0a,#7f1d1d);">
+  <div class="hdr-top"><div class="hdr-icon">🩸</div><div>
+    <div class="hdr-eye">Medicina transfusional · Cuidados críticos</div>
+    <div class="hdr-title">TRALI y TACO</div>
+    <div class="hdr-sub">Disnea postransfusional · definiciones 2018–2019</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">TRALI ≤6 h</span>
+    <span class="badge">TACO ≤12 h</span>
+    <span class="badge">TRALI: NO diuréticos</span>
+    <span class="badge">TACO: diuréticos</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">≤6 h</div><div class="qs-l">TRALI</div></div>
+  <div class="qs"><div class="qs-v">≤12 h</div><div class="qs-l">TACO</div></div>
+  <div class="qs"><div class="qs-v">↓TA</div><div class="qs-l">TRALI típico</div></div>
+  <div class="qs"><div class="qs-v">↑TA</div><div class="qs-l">TACO típico</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('mec',this)">🔬 Mecanismo</button>
+  <button class="tab" onclick="showT('trali',this)">🫁 TRALI</button>
+  <button class="tab" onclick="showT('taco',this)">💧 TACO</button>
+  <button class="tab" onclick="showT('vs',this)">🔀 TRALI vs TACO</button>
+  <button class="tab" onclick="showT('tx',this)">🚑 Manejo</button>
+  <button class="tab" onclick="showT('prev',this)">🛡️ Prevención</button>
+  <button class="tab" onclick="showT('otras',this)">🩸 Otras reacciones</button>
+  <button class="tab" onclick="showT('rep',this)">🧾 Qué hacer y reportar</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">El problema</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Un paciente se pone <strong>disneico e hipoxémico durante o poco después de una transfusión</strong>. Las dos causas graves que hay que distinguir son <strong>TRALI</strong> (lesión pulmonar aguda, edema por <em>permeabilidad</em>) y <strong>TACO</strong> (sobrecarga circulatoria, edema <em>hidrostático</em>). El tratamiento de una <b>es lo contrario</b> del de la otra.</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">La pregunta que lo resuelve</div>¿Hay <b>sobrecarga de volumen</b>? — Yugulares, S3, edema, balance positivo, HTA y <b>BNP elevado</b> → <b>TACO</b>. Hipotensión, fiebre y sin datos de sobrecarga → <b>TRALI</b>.</div></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Ambas son de las <b>principales causas de muerte relacionada con la transfusión</b>. En muchos sistemas de hemovigilancia el <b>TACO</b> es hoy la primera, y está <b>subdiagnosticado</b>.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">Cómo se clasifica un edema pulmonar postransfusional</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Categoría</th><th>Cuándo</th></tr>
+      <tr><td class="dn">TRALI tipo I</td><td>Sin factor de riesgo para SDRA</td></tr>
+      <tr><td class="dn">TRALI tipo II</td><td>Con factor de riesgo para SDRA o SDRA leve previo, pero <b>estable en las 12 h previas</b></td></tr>
+      <tr><td class="dn">TACO</td><td>Edema hidrostático por sobrecarga</td></tr>
+      <tr><td class="dn">TRALI/TACO indistinguible</td><td>Cuando coexisten o no se puede separar</td></tr>
+      <tr><td class="dn">SDRA</td><td>Factor de riesgo con deterioro <b>progresivo</b> en las 12 h previas</td></tr>
+      <tr><td class="dn">TAD (disnea asociada a transfusión)</td><td>Disnea en 24 h que <b>no cumple</b> TRALI, TACO ni alergia</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">El término "<b>possible TRALI</b>" fue <b>eliminado</b> en la redefinición de 2019.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-mec">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Dos edemas, dos mecanismos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 210" style="width:100%;max-width:440px;display:block;margin:0 auto;background:#fdf6f6;border-radius:8px;">
+      <line x1="180" y1="12" x2="180" y2="200" stroke="#e0d0d0" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="90" y="20" font-size="10" font-weight="700" fill="#7f1d1d" text-anchor="middle">TRALI</text>
+      <text x="270" y="20" font-size="10" font-weight="700" fill="#2b6cb0" text-anchor="middle">TACO</text>
+      <text x="90" y="32" font-size="8" fill="#8a4a4a" text-anchor="middle">lesión / permeabilidad</text>
+      <text x="270" y="32" font-size="8" fill="#4a6a8a" text-anchor="middle">presión hidrostática</text>
+      <!-- ALVEOLOS -->
+      <circle cx="90" cy="72" r="30" fill="#eef6fb" stroke="#a8c4d8" stroke-width="1.5"/>
+      <circle cx="270" cy="72" r="30" fill="#eef6fb" stroke="#a8c4d8" stroke-width="1.5"/>
+      <text x="90" y="76" font-size="8" fill="#5a7a8a" text-anchor="middle">alvéolo</text>
+      <text x="270" y="76" font-size="8" fill="#5a7a8a" text-anchor="middle">alvéolo</text>
+      <!-- CAPILARES -->
+      <rect x="30" y="128" width="120" height="24" rx="6" fill="#fbd6d6" stroke="#c05050" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <rect x="210" y="128" width="120" height="24" rx="6" fill="#cfe0f5" stroke="#2b6cb0" stroke-width="3"/>
+      <text x="90" y="166" font-size="8" fill="#8a4a4a" text-anchor="middle">endotelio DAÑADO</text>
+      <text x="270" y="166" font-size="8" fill="#4a6a8a" text-anchor="middle">endotelio íntegro, presión ALTA</text>
+      <!-- neutrofilos TRALI -->
+      <g fill="#a03030"><circle cx="52" cy="140" r="4.5"/><circle cx="76" cy="140" r="4.5"/><circle cx="104" cy="140" r="4.5"/><circle cx="128" cy="140" r="4.5"/></g>
+      <text x="90" y="180" font-size="7.5" fill="#a03030" text-anchor="middle">neutrófilos activados por anticuerpos del donante</text>
+      <!-- flechas de fuga -->
+      <g stroke="#c05050" stroke-width="1.8" fill="none">
+        <path d="M60,128 L60,106"/><path d="M90,128 L90,106"/><path d="M120,128 L120,106"/>
+      </g>
+      <g fill="#c05050"><polygon points="57,106 63,106 60,100"/><polygon points="87,106 93,106 90,100"/><polygon points="117,106 123,106 120,100"/></g>
+      <g stroke="#2b6cb0" stroke-width="1.8" fill="none">
+        <path d="M240,128 L240,106"/><path d="M270,128 L270,106"/><path d="M300,128 L300,106"/>
+      </g>
+      <g fill="#2b6cb0"><polygon points="237,106 243,106 240,100"/><polygon points="267,106 273,106 270,100"/><polygon points="297,106 303,106 300,100"/></g>
+      <text x="90" y="196" font-size="8" fill="#7f1d1d" text-anchor="middle" font-weight="700">Sale líquido rico en proteína (exudado)</text>
+      <text x="270" y="196" font-size="8" fill="#2b6cb0" text-anchor="middle" font-weight="700">Sale líquido pobre en proteína (trasudado)</text>
+    </svg>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">TRALI: el modelo de los "dos golpes"</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Golpe</th><th>Qué aporta</th></tr>
+      <tr><td class="dn"><b>1.º — el paciente</b></td><td>Estado inflamatorio previo (sepsis, cirugía mayor, quemaduras, ventilación) que <b>ceba</b> los neutrófilos y activa el endotelio pulmonar</td></tr>
+      <tr><td class="dm"><b>2.º — el componente</b></td><td><b>Anticuerpos anti-HLA clase I/II o anti-HNA</b> del donante (más frecuentes en <b>donantes multíparas</b>) o mediadores lipídicos bioactivos acumulados durante el almacenamiento</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Resultado: activación de neutrófilos en el capilar pulmonar → daño endotelial → <b>edema por permeabilidad</b>. Los componentes <b>ricos en plasma</b> (plasma, plaquetas) son los de mayor riesgo.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-trali">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🫁</span><div><div class="at">TRALI — definición de consenso 2019</div>Edema pulmonar <b>no cardiogénico</b> que aparece dentro de las <b>6 horas</b> de la transfusión. Es un <b>diagnóstico clínico</b>: no requiere demostrar anticuerpos.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">1️⃣</span><span class="st">TRALI tipo I (criterios)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">a</span><span class="kt">Sin <b>SDRA</b> preexistente.</span></div>
+    <div class="kp"><span class="kn">b</span><span class="kt">Inicio <b>durante o dentro de las 6 h</b> de la transfusión.</span></div>
+    <div class="kp"><span class="kn">c</span><span class="kt"><b>Hipoxemia</b>: PaO₂/FiO₂ ≤ 300 o SpO₂ &lt; 90% al aire ambiente.</span></div>
+    <div class="kp"><span class="kn">d</span><span class="kt"><b>Infiltrados bilaterales</b> en la radiografía o TC de tórax.</span></div>
+    <div class="kp"><span class="kn">e</span><span class="kt"><b>Sin evidencia de hipertensión auricular izquierda</b> (sobrecarga) como explicación, o si la hay, no es la causa principal.</span></div>
+    <div class="kp"><span class="kn">f</span><span class="kt"><b>Sin factores de riesgo para SDRA</b>.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">2️⃣</span><span class="st">TRALI tipo II</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Cumple los criterios <b>a–e</b>, pero el paciente <b>sí tiene</b> un factor de riesgo para SDRA o un SDRA leve preexistente, con la condición de que su <b>estado respiratorio haya estado estable en las 12 horas previas</b> a la transfusión.</p></div>
+    <div class="alert a-w"><span class="ai">🔀</span><div>Si había factor de riesgo <b>y</b> el deterioro respiratorio ya venía progresando en esas 12 h → se clasifica como <b>SDRA</b>, no como TRALI.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Clínica y evolución</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>TRALI</th></tr>
+      <tr><td class="dn">Síntomas</td><td>Disnea súbita, hipoxemia, tos, a veces espuma rosada</td></tr>
+      <tr><td class="dn">Signos</td><td><b>Hipotensión</b> (típica), <b>fiebre</b>/escalofríos, taquicardia. <b>Sin</b> ingurgitación yugular ni S3</td></tr>
+      <tr><td class="dn">Radiografía</td><td>Infiltrados bilaterales difusos ("tormenta de nieve"), <b>silueta cardiaca normal</b></td></tr>
+      <tr><td class="dn">Laboratorio</td><td><b>BNP no elevado</b>; puede haber <b>leucopenia transitoria</b></td></tr>
+      <tr><td class="dn">Evolución</td><td>Suele mejorar en <b>48–96 h</b>; mortalidad ~5–15%</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-taco">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💧</span><div><div class="at">TACO — definición de vigilancia 2018 (ISBT/IHN/AABB)</div>Edema pulmonar <b>hidrostático</b> por sobrecarga de volumen, en las <b>12 horas</b> siguientes a la transfusión.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Criterios (nuevo o empeoramiento de ≥3)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">A</span><span class="kt"><b>Insuficiencia respiratoria aguda</b>: disnea, ortopnea, tos, taquipnea, hipoxemia.</span></div>
+    <div class="kp"><span class="kn">B</span><span class="kt"><b>Edema pulmonar agudo</b> nuevo o que empeora en la imagen (líneas B/Kerley, redistribución, derrame).</span></div>
+    <div class="kp"><span class="kn">C</span><span class="kt"><b>Datos cardiovasculares alterados</b>: taquicardia, <b>hipertensión</b>, ingurgitación yugular, tercer ruido, edema periférico.</span></div>
+    <div class="kp"><span class="kn">D</span><span class="kt"><b>Evidencia de sobrecarga</b>: balance hídrico positivo, ganancia de peso, respuesta a los diuréticos.</span></div>
+    <div class="kp"><span class="kn">E</span><span class="kt"><b>Elevación del BNP / NT-proBNP</b> (o &gt;1.5 veces el valor previo del paciente).</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Factor</th><th>Comentario</th></tr>
+      <tr><td class="dm">Edades extremas</td><td>&lt;3 años y &gt;70 años</td></tr>
+      <tr><td class="dm">Insuficiencia cardiaca · disfunción del VI</td><td>El principal</td></tr>
+      <tr><td class="dn">Enfermedad renal crónica</td><td>Poca capacidad de manejar volumen</td></tr>
+      <tr><td class="dn"><b>Anemia crónica severa</b></td><td>Corazón adaptado a alto gasto: tolera muy mal el volumen extra</td></tr>
+      <tr><td class="dn">Balance positivo previo · hipoalbuminemia</td><td>Suma de volumen</td></tr>
+      <tr><td class="dn">Transfusión rápida o múltiples unidades</td><td>El factor <b>más modificable</b></td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-vs">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🔀</span><div><div class="at">La tabla que hay que memorizar</div>Si solo recuerdas una cosa: <b>TRALI baja la presión, TACO la sube; TACO responde a diuréticos, TRALI no.</b></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Comparación</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th></th><th style="color:#7f1d1d;">TRALI</th><th style="color:#2b6cb0;">TACO</th></tr>
+      <tr><td class="dn">Mecanismo</td><td>Permeabilidad (lesión)</td><td>Hidrostático (sobrecarga)</td></tr>
+      <tr><td class="dn">Ventana</td><td>≤ 6 h</td><td>≤ 12 h</td></tr>
+      <tr><td class="dn"><b>Presión arterial</b></td><td><b>Hipotensión</b></td><td><b>Hipertensión</b></td></tr>
+      <tr><td class="dn">Temperatura</td><td><b>Fiebre</b> frecuente</td><td>Normal</td></tr>
+      <tr><td class="dn">Yugulares · S3 · edema</td><td>Ausentes</td><td><b>Presentes</b></td></tr>
+      <tr><td class="dn"><b>BNP / NT-proBNP</b></td><td>No elevado</td><td><b>Elevado</b> (&gt;1.5× basal)</td></tr>
+      <tr><td class="dn">Balance hídrico</td><td>Neutro</td><td><b>Positivo</b></td></tr>
+      <tr><td class="dn">Silueta cardiaca</td><td>Normal</td><td>Puede estar aumentada</td></tr>
+      <tr><td class="dn">Radiografía</td><td>Infiltrados bilaterales difusos</td><td>Edema, líneas B, derrame, redistribución</td></tr>
+      <tr><td class="dn">Leucocitos</td><td>Leucopenia transitoria</td><td>Sin cambios</td></tr>
+      <tr><td class="dn">Líquido del edema</td><td><b>Exudado</b> (proteínas altas)</td><td><b>Trasudado</b> (proteínas bajas)</td></tr>
+      <tr><td class="dm"><b>Respuesta a diuréticos</b></td><td><b>NO</b> (pueden empeorar)</td><td><b>SÍ</b>, rápida</td></tr>
+      <tr><td class="dn">Manejo del volumen</td><td>Puede necesitar <b>líquidos</b> y vasopresor</td><td><b>Restringir</b> líquidos</td></tr>
+      <tr><td class="dn">Resolución</td><td>48–96 h</td><td>Rápida (horas) con diuréticos</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">🤝</span><div>Pueden <b>coexistir</b>. Si no se pueden separar, se reporta como "TRALI/TACO indistinguible" y se trata con criterio clínico, dando prioridad a la estabilidad hemodinámica y a la oxigenación.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-tx">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🛑</span><div><div class="at">Paso cero, siempre</div><b>DETENER la transfusión</b>, mantener la vía con solución salina, evaluar ABC y avisar al banco de sangre.</div></div>
+  <div id="tx-body"></div>
+</div>
+
+<div class="panel" id="tab-prev">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Prevención del TACO</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Evaluar el volumen antes</b> de transfundir: peso, edemas, yugulares, función cardiaca y renal.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Una unidad a la vez</b> y reevaluar (la mayoría de las anemias crónicas estables no requieren 2 unidades de golpe).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Transfundir despacio</b> en pacientes de riesgo: ~1 mL/kg/h, o pasar la unidad en 3–4 h (sin exceder las 4 h por unidad).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Valorar <b>furosemida 20 mg IV</b> (o el doble de la dosis oral habitual) antes o entre unidades en pacientes con cardiopatía o ERC.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Umbral transfusional restrictivo</b> y evitar transfusiones innecesarias: la mejor prevención es no transfundir de más.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Prevención del TRALI (banco de sangre)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Estrategia</th><th>Detalle</th></tr>
+      <tr><td class="dn">Mitigación por donante</td><td>Plasma preferentemente de <b>hombres</b>, mujeres nulíparas o donantes con <b>tamizaje negativo</b> de anticuerpos anti-HLA/HNA</td></tr>
+      <tr><td class="dn">Diferir al donante implicado</td><td>Investigar y excluir al donante de un caso confirmado</td></tr>
+      <tr><td class="dn">Uso racional</td><td>Restringir plasma y plaquetas a indicaciones reales</td></tr>
+      <tr><td class="dn">Estudio del caso</td><td>Tipificar anticuerpos anti-HLA I/II y anti-HNA en el donante y el antígeno correspondiente en el receptor</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">Estas medidas han reducido notablemente la incidencia de TRALI en los países que las implementaron.</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-otras">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Otras reacciones transfusionales agudas</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Reacción</th><th>Clave clínica</th><th>Manejo</th></tr>
+      <tr><td class="dn">Febril no hemolítica <span style="color:#6b7280;">(la más común)</span></td><td>Fiebre ≥1 °C, escalofríos, sin hipotensión ni hemólisis</td><td>Detener, <b>paracetamol 500–1000 mg VO/IV</b>; leucorreducción para prevenir</td></tr>
+      <tr><td class="dn">Alérgica / urticaria</td><td>Habones y prurito, sin compromiso sistémico</td><td>Antihistamínico; puede reanudarse si cede y es leve</td></tr>
+      <tr><td class="dm">Anafilaxia</td><td>Broncoespasmo, hipotensión, angioedema. Pensar en <b>déficit de IgA</b></td><td><b>Adrenalina IM</b>, soporte; componentes lavados o IgA-deficientes después</td></tr>
+      <tr><td class="dm">Hemolítica aguda (ABO)</td><td>Fiebre, <b>dolor lumbar</b>, dolor en el sitio de venoclisis, orina oscura, hipotensión, CID. Suele ser <b>error de identificación</b></td><td>Detener, hidratar y mantener diuresis, soporte, avisar de urgencia al banco</td></tr>
+      <tr><td class="dm">Contaminación bacteriana / sepsis</td><td>Fiebre alta y rápida, choque (más con plaquetas)</td><td>Detener, hemocultivos, <b>antibióticos</b>, enviar la bolsa a cultivo</td></tr>
+      <tr><td class="dn">TAD</td><td>Disnea en 24 h que no cumple TRALI, TACO ni alergia</td><td>Soporte; diagnóstico de exclusión</td></tr>
+      <tr><td class="dn">Hemolítica tardía · púrpura postransfusional · EICH asociada a transfusión</td><td>Días a semanas después</td><td>Manejo especializado; irradiar componentes en pacientes de riesgo</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-rep">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧾</span><span class="st">Ante cualquier reacción: los 7 pasos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>DETENER</b> la transfusión de inmediato (no desechar la bolsa ni el equipo).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Mantener la <b>vía permeable con solución salina</b> y equipo nuevo.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Verificar la identidad</b> del paciente y la etiqueta de la unidad (error clerical = causa principal de reacción hemolítica).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Evaluar <b>ABC y signos vitales</b>; oxígeno y tratamiento según el cuadro.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Avisar</b> al banco de sangre y al médico responsable.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt"><b>Enviar</b> la bolsa con el equipo y las muestras del paciente (sangre y orina) al banco.</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt"><b>Documentar y reportar</b> al sistema de hemovigilancia: es lo que permite investigar al donante y prevenir el siguiente caso.</span></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">📣</span><div>Reportar <b>todo</b> edema pulmonar postransfusional aunque no estés seguro de la categoría: la clasificación final (TRALI I/II, TACO, SDRA, TAD) la hace el servicio de transfusión o el comité con la información completa.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — TRALI y TACO</h2><p>Definiciones de consenso.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Definiciones</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Consenso</span></div><div class="biblio-ref">Vlaar APJ, Toy P, Fung M, et al. <em>A consensus redefinition of transfusion-related acute lung injury.</em> Transfusion 2019 (TRALI tipo I y II).</div><a class="biblio-link" href="https://onlinelibrary.wiley.com/doi/full/10.1111/trf.15311" target="_blank">🔗 Transfusion</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Consenso</span></div><div class="biblio-ref">Wiersum-Osselton JC, et al. <em>Revised international surveillance case definition of TACO.</em> Lancet Haematol 2019 (definición 2018 ISBT/IHN/AABB).</div><a class="biblio-link" href="https://www.isbtweb.org/static/19fed2c2-e257-42f5-9b2c2b51df1f87d4/TACO2018definitionMarch2019.pdf" target="_blank">🔗 ISBT</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2018</span><span class="biblio-level lv-b">Revisión</span></div><div class="biblio-ref">Roubinian N. <em>TACO and TRALI: biology, risk factors, and prevention strategies.</em> Hematology ASH Educ Program.</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">SHOT</span><span class="biblio-level lv-exp">Hemovigilancia</span></div><div class="biblio-ref">SHOT (Serious Hazards of Transfusion). <em>Annual Report</em> — definiciones y casuística.</div></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. Siga el protocolo de reacciones transfusionales y el sistema de hemovigilancia de su institución. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#7f1d1d');h+=tcard(f,col);}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#f7dcdc;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#7f1d1d;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#f7dcdc;border:1px solid #7f1d1d;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#7f1d1d;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#f7dcdc;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#7f1d1d;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#7f1d1d';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+var TFN=0;
+function tcard(f,gc){TFN++;var id='tc'+TFN;var c=gc||f.c||'#7f1d1d';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">'+(f.lbl||'Manejo / dosis')+'</div>';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:'+c+';padding:2px 0;line-height:1.35;">• '+f.dosis[k]+'</div>';h+=dd;}
+ else if(f.da)h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+f.da+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+ if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#f7dcdc;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#7f1d1d;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function tcards(cid,arr){var el=document.getElementById(cid);if(!el)return;var h='';for(var i=0;i<arr.length;i++)h+=tcard(arr[i]);el.innerHTML=h;}
+
+// ===== Tarjetas de MANEJO (medidas, f.dosis[]) =====
+var MX_TRALI={n:'TRALI — manejo',sub:'Soporte respiratorio · NO diuréticos',c:'#7f1d1d',lbl:'Medidas',dosis:[
+  'Detener la transfusión; mantener vía con SSN 0.9%',
+  '<b>O₂</b> suplementario para SpO₂ ≥ 92%; escalar a <b>VNI (CPAP/BiPAP)</b> o intubación con ventilación protectora (Vt 6 mL/kg) si insuficiencia',
+  'Si hipotensión: <b>Cristaloides IV (SSN 0.9%) en bolos de 250–500 mL</b> guiados por respuesta',
+  'Si persiste hipotensión: <b>Norepinefrina IV en infusión, iniciar 0.05 mcg/kg/min y titular</b> (UCI)',
+  'Notificar al banco de sangre para estudio del donante'],
+  nota:'<b>Principio:</b> es una lesión pulmonar por permeabilidad; se maneja como un SDRA, con soporte respiratorio y hemodinámico. La mayoría mejora en <b>48–96 h</b> (mortalidad ~5–15%).<br><br><b>Coadyuvantes/fármacos:</b> O₂ para SpO₂ ≥ 92% / VNI (CPAP/BiPAP) o intubación con Vt 6 mL/kg; <b>Cristaloides IV (SSN 0.9%) 250–500 mL en bolos</b> y <b>Norepinefrina IV 0.05 mcg/kg/min titulada</b> si hipotensión; NO furosemida.<br><br><b>Errores a evitar:</b> dar <b>Furosemida</b> a un paciente no sobrecargado y a menudo hipotenso; usar corticoides (sin evidencia); seguir transfundiendo el componente implicado.<br><br><b>Evidencia:</b> consenso de redefinición TRALI 2019 (Vlaar/Toy).'};
+var MX_TACO={n:'TACO — manejo',sub:'Diuréticos y restricción de volumen',c:'#2b6cb0',lbl:'Medidas',dosis:[
+  'Detener la transfusión; mantener vía con SSN 0.9%',
+  'Sentar al paciente (posición erguida)',
+  '<b>O₂</b> suplementario para SpO₂ ≥ 92%; VNI (CPAP/BiPAP) si dificultad respiratoria significativa',
+  '<b>Furosemida 20–40 mg IV</b> (o el doble de la dosis oral habitual); repetir/titular según respuesta',
+  'Si HTA importante: <b>Nitroglicerina IV 5–10 mcg/min titulada</b> (o sublingual 0.4 mg)'],
+  nota:'<b>Principio:</b> es un edema hidrostático por sobrecarga; se maneja como una insuficiencia cardiaca aguda. La respuesta a la furosemida suele ser <b>rápida</b> y ayuda a confirmar el diagnóstico.<br><br><b>Coadyuvantes/fármacos:</b> <b>Furosemida 20–40 mg IV</b> (repetir/titular), <b>Nitroglicerina IV 5–10 mcg/min</b> (o SL 0.4 mg) si HTA, <b>O₂</b> para SpO₂ ≥ 92% / VNI (CPAP/BiPAP) y posición erguida.<br><br><b>Errores a evitar:</b> seguir transfundiendo "porque falta poco"; dar cristaloides IV; retrasar la furosemida.<br><br><b>Evidencia:</b> definición de vigilancia TACO 2018 (ISBT/IHN/AABB).'};
+var MX_IND={n:'Si no puedes distinguirlos',sub:'TRALI/TACO indistinguible',c:'#8a6d3b',lbl:'Enfoque',dosis:[
+  '<b>O₂</b> para SpO₂ ≥ 92% / VNI (CPAP/BiPAP); priorizar oxigenación y estabilidad hemodinámica',
+  'Si hipotensión: <b>Cristaloides IV (SSN 0.9%) 250–500 mL en bolos</b> ± <b>Norepinefrina IV 0.05 mcg/kg/min</b>; evitar furosemida',
+  'Si HTA + sobrecarga clara: <b>Furosemida 20–40 mg IV</b> prudente ± <b>Nitroglicerina IV 5–10 mcg/min</b> si HTA',
+  'Solicitar BNP, radiografía y ecocardiograma/ecografía pulmonar',
+  'Reportar y dejar que el servicio de transfusión clasifique'],
+  nota:'<b>Principio:</b> pueden coexistir; priorizar estabilidad hemodinámica y oxigenación mientras se aclara el cuadro. La ecografía a pie de cama (líneas B, colapsabilidad de la cava, función del VI) ayuda mucho a decidir.<br><br><b>Coadyuvantes/fármacos:</b> <b>O₂</b> para SpO₂ ≥ 92% / VNI (CPAP/BiPAP); <b>Furosemida 20–40 mg IV</b> SOLO si predomina la sobrecarga; <b>Cristaloides IV (SSN 0.9%) 250–500 mL</b> + <b>Norepinefrina IV 0.05 mcg/kg/min</b> si predomina la hipotensión.<br><br><b>Errores a evitar:</b> aplicar el manejo equivocado — <b>Furosemida</b> a un TRALI hipotenso o <b>cristaloides IV</b> a un TACO sobrecargado.<br><br><b>Evidencia:</b> consenso TRALI 2019 y definición TACO 2018.'};
+
+// ===== Fichas de FÁRMACO / soporte reales =====
+var FRM_O2={n:'Oxígeno / VNI',sub:'Soporte respiratorio (no farmacológico)',lbl:'Objetivo / pauta',da:'O₂ suplementario para <b>SpO₂ ≥ 92%</b>; escalar a <b>VNI (CPAP/BiPAP)</b> o intubación con <b>ventilación protectora (Vt 6 mL/kg)</b> si insuficiencia respiratoria.',
+  iv:'Puntas nasales / mascarilla → CPAP/BiPAP → intubación. Aplica igual en TRALI y en TACO.',pres:'Fuente de O₂, interfases de VNI, ventilador.',mon:'SpO₂, gasometría, frecuencia y trabajo respiratorio, tolerancia a la VNI.',
+  ci:'VNI: no cooperación, vómito/aspiración, inestabilidad hemodinámica grave, paro inminente (intubar).',ea:'Distensión gástrica, lesión por presión facial, barotrauma.',
+  nota:'<b>Mecanismo:</b> mejora la oxigenación y reduce el trabajo respiratorio; en TACO la presión positiva también disminuye el retorno venoso.<br><br><b>Precauciones:</b> reevaluar en minutos; si no mejora, intubar.<br><br><b>Evidencia:</b> soporte estándar en ambos cuadros.'};
+var FRM_FURO={n:'Furosemida',sub:'Diurético de asa — TACO',lbl:'Dosis / pauta',da:'20–40 mg IV en bolo (o el <b>doble de la dosis oral</b> habitual en pacientes ya tratados). Repetir/titular según respuesta y diuresis.',dur:'Efecto en minutos; repetir según balance',
+  iv:'IV lenta; ámbito hospitalario. Sentar al paciente.',pres:'Amp 20 mg/2 mL (Lasix® / genérico / cuadro básico IMSS); tab 40 mg.',fda:'Categoría C; usar si el beneficio supera el riesgo.',ped:'1 mg/kg/dosis IV (máx habitual 20 mg), titular.',
+  mon:'Diuresis, TA, <b>K⁺/Na⁺</b>, función renal, estado de volumen.',ci:'Hipovolemia, hipotensión, anuria sin respuesta, hipopotasemia grave, alergia a sulfonamidas.',ea:'<b>Hipopotasemia</b>, hipovolemia, hipotensión, <b>ototoxicidad</b> (dosis altas/rápidas), hiperuricemia.',
+  nota:'<b>Mecanismo:</b> inhibe el cotransportador Na-K-2Cl en el asa de Henle → diuresis rápida que descarga el volumen del TACO.<br><br><b>Precauciones:</b> es el fármaco clave del TACO y está <b>contraindicado como reflejo</b> en TRALI (paciente no sobrecargado, a menudo hipotenso).<br><br><b>Evidencia:</b> pilar del manejo del TACO (definición 2018).'};
+var FRM_NTG={n:'Nitroglicerina',sub:'Vasodilatador — TACO con HTA',lbl:'Dosis / pauta',da:'Infusión IV titulada (inicio ~5–10 µg/min, subir según TA) o <b>0.4 mg SL</b> mientras se prepara la IV, si hay <b>hipertensión importante</b>.',
+  iv:'IV en bomba / SL. Reservada a TACO con HTA marcada.',pres:'Sol iny 5 mg/mL o 50 mg/10 mL; tab/spray SL 0.4–0.5 mg.',fda:'Categoría C.',mon:'TA continua, frecuencia cardiaca, cefalea, respuesta respiratoria.',
+  ci:'Hipotensión, uso de inhibidores de PDE5 (sildenafil, etc.), IAM de VD, estenosis aórtica grave.',ea:'Hipotensión, cefalea, taquicardia refleja, rubor.',
+  nota:'<b>Mecanismo:</b> venodilatación → reduce precarga y presión hidrostática pulmonar; a dosis altas también reduce poscarga.<br><br><b>Precauciones:</b> solo con TA elevada; vigilar caídas bruscas de TA.<br><br><b>Evidencia:</b> coadyuvante en edema pulmonar hidrostático/hipertensivo.'};
+var FRM_NORE={n:'Norepinefrina',sub:'Vasopresor — TRALI hipotenso',lbl:'Dosis / pauta',da:'IV en infusión, <b>iniciar 0.05 mcg/kg/min y titular</b> (hasta ~0.5 mcg/kg/min) para sostener la TA media; junto con <b>Cristaloides IV (SSN 0.9%) 250–500 mL en bolos</b>. Manejo en UCI.',
+  iv:'IV central de preferencia (bomba); vía periférica de gran calibre como puente. UCI.',pres:'Amp 4 mg/4 mL (norepinefrina bitartrato); diluir en SG5%/SS.',fda:'Categoría C; no retrasar en shock.',mon:'TA (idealmente invasiva), perfusión, lactato, sitio de infusión (extravasación).',
+  ci:'No absolutas en shock; precaución si extravasación (necrosis).',ea:'Vasoconstricción excesiva, isquemia distal, arritmias, necrosis por extravasación.',
+  nota:'<b>Mecanismo:</b> agonista α (con algo de β1) → aumenta el tono vascular y la TA en la hipotensión típica del TRALI.<br><br><b>Precauciones:</b> corregir volumen; el TRALI puede necesitar <b>Cristaloides IV (SSN 0.9%) 250–500 mL en bolos</b>, no furosemida.<br><br><b>Evidencia:</b> soporte hemodinámico estándar del TRALI.'};
+var FRM_ADR={n:'Adrenalina IM',sub:'Anafilaxia — reacción a distinguir',lbl:'Dosis / pauta',da:'<b>0.3–0.5 mg IM</b> (1:1000) en cara anterolateral del muslo; repetir cada 5–15 min según respuesta.',dur:'Efecto rápido; repetir prn',
+  iv:'IM (muslo). NO es tratamiento del TRALI/TACO.',pres:'Amp 1 mg/mL (1:1000).',fda:'Categoría C; fármaco de rescate en anafilaxia sin contraindicación absoluta.',ped:'0.01 mg/kg IM (máx 0.3–0.5 mg).',
+  mon:'TA, FC, ritmo, vía aérea, respuesta a las dosis.',ci:'Sin contraindicación absoluta en anafilaxia.',ea:'Taquicardia, HTA, temblor, ansiedad, arritmias.',
+  nota:'<b>Mecanismo:</b> α y β adrenérgico → revierte broncoespasmo, edema de vía aérea y vasodilatación de la anafilaxia.<br><br><b>Precauciones:</b> pensar en <b>déficit de IgA</b>; usar componentes lavados/IgA-deficientes después. Ver pestaña "Otras reacciones".<br><br><b>Evidencia:</b> tratamiento de primera línea de la anafilaxia transfusional.'};
+var FRM_ANTIP={n:'Paracetamol (antipirético)',sub:'Si fiebre acompañante',lbl:'Dosis / pauta',da:'<b>Paracetamol 500–1000 mg VO/IV c/6–8 h</b> si hay fiebre/escalofríos molestos (máx 3–4 g/día).',
+  iv:'VO o IV. Coadyuvante sintomático, no cambia el curso del TRALI/TACO.',pres:'Tab 500 mg; sol iny 1 g/100 mL.',fda:'Seguro en embarazo (categoría B) a dosis terapéuticas.',ped:'10–15 mg/kg/dosis cada 6 h.',
+  mon:'Temperatura; dosis total diaria; función hepática si uso prolongado.',ci:'Hepatopatía grave; alergia.',ea:'Hepatotoxicidad por sobredosis; en general bien tolerado.',
+  nota:'<b>Mecanismo:</b> antipirético central; alivia la fiebre que acompaña al TRALI o a una reacción febril concurrente.<br><br><b>Precauciones:</b> la fiebre obliga a descartar reacción hemolítica y contaminación bacteriana.<br><br><b>Evidencia:</b> manejo sintomático estándar.'};
+
+// ===== Tarjetas de ERROR (pill roja, no:true) =====
+var ERR=[
+ {n:'⛔ Furosemida en TRALI',sub:'Error frecuente',no:true,lbl:'Por qué NO',dosis:['El TRALI NO es sobrecarga: el paciente suele estar <b>hipotenso</b>','La <b>Furosemida</b> agrava la hipovolemia y la hipoperfusión'],
+   nota:'<b>Qué hacer en su lugar:</b> soporte respiratorio (O₂ para SpO₂ ≥ 92% / VNI), <b>Cristaloides IV (SSN 0.9%) 250–500 mL en bolos</b> y <b>Norepinefrina IV 0.05 mcg/kg/min titulada</b> si hay hipotensión.'},
+ {n:'⛔ Cristaloides IV en TACO',sub:'Error frecuente',no:true,lbl:'Por qué NO',dosis:['El TACO YA está sobrecargado: más volumen empeora el edema','Priorizar diurético y restricción hídrica'],
+   nota:'<b>Qué hacer en su lugar:</b> <b>Furosemida 20–40 mg IV</b>, posición erguida, O₂ para SpO₂ ≥ 92% / VNI (CPAP/BiPAP), <b>Nitroglicerina IV 5–10 mcg/min</b> si HTA.'},
+ {n:'⚠️ Corticoides',sub:'Sin evidencia',no:true,lbl:'Por qué NO',dosis:['No hay evidencia de beneficio en TRALI ni en TACO','No deben sustituir al soporte respiratorio/hemodinámico'],
+   nota:'<b>Qué hacer en su lugar:</b> soporte dirigido según el mecanismo (O₂/VNI, Furosemida en TACO, Cristaloides + Norepinefrina en TRALI); reservar esteroides solo para indicaciones propias (p. ej. reacción alérgica grave).'},
+ {n:'⛔ Seguir transfundiendo "porque falta poco"',sub:'Error frecuente',no:true,lbl:'Por qué NO',dosis:['Se sigue exponiendo al paciente al componente implicado','Empeora la sobrecarga (TACO) o mantiene el estímulo (TRALI)'],
+   nota:'<b>Qué hacer en su lugar:</b> detener de inmediato; si aún necesita sangre, después, despacio (~1 mL/kg/h) y con <b>Furosemida 20–40 mg IV</b> en pacientes de riesgo.'}
+];
+
+window.addEventListener('load',function(){
+ document.getElementById('tx-body').innerHTML=
+  buildLinea('TRALI','Soporte respiratorio — NO diuréticos','#7f1d1d',[MX_TRALI,FRM_O2,FRM_NORE],'#7f1d1d')+
+  buildLinea('TACO','Diuréticos y restricción de volumen','#2b6cb0',[MX_TACO,FRM_FURO,FRM_NTG,FRM_O2],'#2b6cb0')+
+  buildLinea('Indistinguible','TRALI/TACO — priorizar estabilidad','#8a6d3b',[MX_IND],'#8a6d3b')+
+  buildLinea('Coadyuvantes/soporte','Medidas de soporte y anafilaxia a distinguir',CO,[FRM_O2,FRM_ANTIP,FRM_ADR],'#374151')+
+  buildLinea('Errores','Qué NO hacer',NO,ERR,NO);
+});
+
+</script>
+</body>
+</html>

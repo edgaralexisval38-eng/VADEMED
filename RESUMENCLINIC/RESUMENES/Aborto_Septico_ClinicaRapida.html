@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Aborto séptico · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#9d174d;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#fce7f0;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;margin-bottom:8px;}
+.biblio-header{background:linear-gradient(135deg,#500724,#9d174d);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#fce7f0;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#fce7f0;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#500724,#9d174d);">
+  <div class="hdr-top"><div class="hdr-icon">🦠</div><div>
+    <div class="hdr-eye">Ginecología y obstetricia · Urgencia obstétrica</div>
+    <div class="hdr-title">Aborto séptico</div>
+    <div class="hdr-sub">Aborto (incompleto/retenido) + infección intrauterina → sepsis · Emergencia</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">URGENCIA</span>
+    <span class="badge">Antibiótico &lt;1 h</span>
+    <span class="badge">Evacuación uterina</span>
+    <span class="badge">Riesgo de choque</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">~5–13%</div><div class="qs-l">Muerte materna por aborto inseguro</div></div>
+  <div class="qs"><div class="qs-v">&lt;1 h</div><div class="qs-l">Antibiótico + cultivos</div></div>
+  <div class="qs"><div class="qs-v">30 mL/kg</div><div class="qs-l">Cristaloide si hipoperfusión</div></div>
+  <div class="qs"><div class="qs-v">Foco</div><div class="qs-l">Evacuación uterina</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
+  <button class="tab" onclick="showT('clin',this)">🩺 Clínica</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Manejo</button>
+  <button class="tab" onclick="showT('comp',this)">⚠️ Complicaciones</button>
+  <button class="tab" onclick="showT('legal',this)">⚖️ Médico-legal</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">¿Qué es?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Aborto —habitualmente incompleto o retenido, con frecuencia tras un aborto inseguro o instrumentación— complicado por infección intrauterina</strong> (endometritis/miometritis) que puede progresar a <b>sepsis y choque séptico</b>. Es una <b>urgencia obstétrica</b> y una causa importante de mortalidad materna asociada al aborto inseguro.</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">Las 4 reglas de oro</div><b>1)</b> <b>Reanima</b> (ABC, cristaloides, O₂) y toma <b>hemocultivos + lactato</b> ANTES del antibiótico. <b>2)</b> <b>Antibiótico IV de amplio espectro con cobertura anaerobia dentro de 1 h.</b> <b>3)</b> <b>Control del foco: evacuación uterina URGENTE</b> tras iniciar antibiótico — no esperar a estar afebril. <b>4)</b> Vigila choque, CID, mionecrosis clostridial y perforación → UCI y cirugía si procede.</div></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><b>Sepsis = emergencia tiempo-dependiente.</b> Aplica el paquete de la primera hora (Surviving Sepsis): medir lactato, cultivos, antibiótico, cristaloides 30 mL/kg si hipotensión o lactato ≥4, y vasopresor si persiste el choque.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Cifra</th></tr>
+      <tr><td class="dm">Muertes maternas por aborto inseguro</td><td><b>~5–13%</b> de toda la mortalidad materna mundial (decenas de miles de muertes/año)</td></tr>
+      <tr><td class="dn">Abortos inseguros</td><td><b>~25 millones/año</b> (≈45% de todos los abortos son inseguros; casi todos en países de ingresos bajos/medios)</td></tr>
+      <tr><td class="dm">Sepsis como causa de muerte</td><td>La <b>infección/sepsis</b> es una de las principales vías de muerte del aborto inseguro (junto a hemorragia y lesión)</td></tr>
+      <tr><td class="dn">Prevenibilidad</td><td>Casi <b>todas</b> las muertes por aborto inseguro son evitables con acceso a aborto seguro y atención de complicaciones</td></tr>
+      <tr><td class="dn">Momento de la infección</td><td>El cuadro suele iniciar <b>24–48 h</b> tras el aborto/instrumentación</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">Cifras de OMS (Abortion, fact sheet; Abortion Care Guideline 2022) y MSD Manual.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">Dónde encaja entre los tipos de aborto</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Tipo</th><th>Cuello</th><th>Productos</th><th>Rasgo clave</th></tr>
+      <tr><td class="dn">Amenaza</td><td>Cerrado</td><td>Retenidos</td><td>Embrión vivo</td></tr>
+      <tr><td class="dn">Inevitable</td><td>Abierto</td><td>Retenidos</td><td>En evolución</td></tr>
+      <tr><td class="dn">Incompleto</td><td>Abierto</td><td>Expulsión parcial</td><td>Restos</td></tr>
+      <tr><td class="dn">Completo</td><td>Cerrado</td><td>Expulsión total</td><td>Vacío</td></tr>
+      <tr><td class="dn">Diferido / retenido</td><td>Cerrado</td><td>Retenidos</td><td>Embrión muerto</td></tr>
+      <tr><td class="dm">Séptico</td><td>Variable</td><td>Con infección</td><td><b>Fiebre + flujo fétido + sepsis</b></td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🔎</span><div>El séptico es una <b>complicación infecciosa</b> superpuesta a cualquier aborto (más a menudo incompleto/retenido o inseguro). Lo define la <b>infección intrauterina con datos sistémicos</b>: fiebre, dolor, <b>loquios/flujo fétidos</b> y potencial sepsis.</div></div>
+  </div></div>
+</div>
+
+<!-- FISIOPATOLOGIA -->
+<div class="panel" id="tab-fisio">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🧭</span><div><div class="at">Idea central</div>Restos ovulares + sangre + cuello permeable o instrumentación = <b>medio de cultivo ideal</b>. La flora vaginal/entérica <b>asciende</b> al útero → endometritis/miometritis <b>polimicrobiana</b> → posible parametritis, peritonitis, bacteriemia y sepsis.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Microbiología: ascenso polimicrobiano</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Grupo</th><th>Gérmenes</th></tr>
+      <tr><td class="dn">Gramnegativos entéricos</td><td><b>E. coli</b>, Klebsiella, Enterobacter, Proteus (los más frecuentes en bacteriemia)</td></tr>
+      <tr><td class="dn">Anaerobios</td><td><b>Bacteroides</b>, Peptostreptococcus, Prevotella (flujo muy fétido)</td></tr>
+      <tr><td class="dn">Estreptococos y otros</td><td>Estreptococos (incl. grupo B), estafilococos, enterococos</td></tr>
+      <tr><td class="dm">Formas graves — Clostridium perfringens</td><td>Produce <b>α-toxina</b> → <b>mionecrosis/gangrena gaseosa</b>, hemólisis intravascular masiva, CID, IRA</td></tr>
+      <tr><td class="dm">Formas graves — Streptococcus del grupo A</td><td><b>S. pyogenes</b> → síndrome de <b>choque tóxico</b> estreptocócico, progresión rápida</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><b>Sospecha Clostridium</b> ante hemólisis (orina "vino oporto"), ictericia, crepitación/gas en útero o pared y choque desproporcionado → considera <b>histerectomía</b> temprana. El grupo A puede dar TSS fulminante.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">De la infección local a la sepsis</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>La invasión bacteriana y sus toxinas desencadenan liberación de mediadores inflamatorios (respuesta del huésped desregulada). Esto produce <b>vasodilatación, fuga capilar y depresión miocárdica</b> → hipoperfusión tisular (<b>lactato elevado</b>), disfunción orgánica y, si progresa, <b>choque séptico</b> (hipotensión que requiere vasopresor + lactato &gt;2 pese a reanimación). La liberación de factor tisular y de toxinas puede activar la coagulación → <b>CID</b>.</p></div>
+    <div class="alert a-w" style="margin-top:4px;"><span class="ai">⚠️</span><div>La <b>persistencia de restos infectados</b> (foco no controlado) mantiene la siembra bacteriana: sin evacuación uterina, el antibiótico solo <b>no basta</b>.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📐</span><span class="st">Graduación por extensión (Grados I–IV)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Grado</th><th>Extensión</th></tr>
+      <tr><td class="dn">I</td><td>Infección limitada al <b>útero</b> (endomiometritis)</td></tr>
+      <tr><td class="dn">II</td><td>Extensión a <b>parametrio, anexos o pelvis</b> (parametritis, salpingitis, absceso tuboovárico)</td></tr>
+      <tr><td class="dm">III</td><td><b>Peritonitis generalizada</b> y/o septicemia</td></tr>
+      <tr><td class="dm">IV</td><td><b>Choque séptico</b>, falla multiorgánica (mionecrosis, CID, IRA)</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">A mayor grado, mayor probabilidad de requerir cirugía (laparotomía/histerectomía) y UCI.</div>
+  </div></div>
+</div>
+
+<!-- CLINICA -->
+<div class="panel" id="tab-clin">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Cuadro clínico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Hallazgo típico</th></tr>
+      <tr><td class="dm">Fiebre / escalofríos</td><td><b>Fiebre &gt;38 °C</b>, ataque al estado general (± hipotermia en sepsis grave)</td></tr>
+      <tr><td class="dm">Flujo / loquios fétidos</td><td><b>Secreción purulenta y de mal olor</b> por el cérvix (dato cardinal)</td></tr>
+      <tr><td class="dn">Dolor</td><td>Pélvico/abdominal bajo; <b>útero muy doloroso</b> a la movilización</td></tr>
+      <tr><td class="dn">Sangrado</td><td>Transvaginal variable, a veces con expulsión de restos/tejido</td></tr>
+      <tr><td class="dn">Exploración</td><td>Útero blando y doloroso; cuello permeable con salida de pus; dolor a la movilización cervical; masa anexial si absceso</td></tr>
+      <tr><td class="dm">Peritonitis</td><td>Defensa, rebote, íleo → sospecha de extensión/perforación</td></tr>
+      <tr><td class="dm">Antecedente</td><td><b>Aborto inseguro/instrumentación reciente</b> (24–48 h), maniobras abortivas, cuerpo extraño</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Datos de sepsis / choque (buscar activamente)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Alarma</th></tr>
+      <tr><td class="dm">Presión arterial</td><td><b>PAS &lt;90</b> o PAM &lt;65 mmHg; choque si requiere vasopresor</td></tr>
+      <tr><td class="dm">Frecuencia cardiaca</td><td><b>Taquicardia &gt;90–100</b> lpm</td></tr>
+      <tr><td class="dm">Frecuencia respiratoria</td><td><b>&gt;22 rpm</b> (criterio qSOFA)</td></tr>
+      <tr><td class="dm">Estado mental</td><td><b>Confusión/alteración</b> (criterio qSOFA)</td></tr>
+      <tr><td class="dm">Perfusión</td><td>Llenado capilar lento, piel marmórea, <b>oliguria</b>, lactato elevado</td></tr>
+      <tr><td class="dm">Temperatura</td><td>&gt;38 °C o <b>&lt;36 °C</b></td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🎯</span><div><b>qSOFA ≥2</b> (PAS ≤100, FR ≥22, alteración mental) o SOFA con disfunción orgánica → activar el protocolo de sepsis de inmediato.</div></div>
+  </div></div>
+</div>
+
+<!-- DIAGNOSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🧪</span><div><div class="at">Regla de oro del diagnóstico</div><b>Toma hemocultivos y cultivo endocervical ANTES del antibiótico</b> — pero <b>sin retrasar</b> el inicio de la primera dosis (dentro de 1 h). El diagnóstico es clínico; los laboratorios estratifican la gravedad.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Laboratorio</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Uso / hallazgo</th></tr>
+      <tr><td class="dn">Biometría hemática</td><td><b>Leucocitosis con neutrofilia y bandemia</b> (o leucopenia en sepsis grave); trombocitopenia sugiere CID/Clostridium</td></tr>
+      <tr><td class="dm">Lactato sérico</td><td><b>≥2 mmol/L</b> = hipoperfusión; <b>≥4</b> = alto riesgo → reanimar y repetir para guiar la respuesta</td></tr>
+      <tr><td class="dn">PCR / procalcitonina</td><td>Apoyan la infección bacteriana y su seguimiento</td></tr>
+      <tr><td class="dm">Hemocultivos ×2 + cultivo endocervical</td><td><b>Antes del antibiótico</b>; incluir cultivo de los restos/tejido evacuado</td></tr>
+      <tr><td class="dn">β-hCG</td><td>Confirma la gestación y ayuda al seguimiento (ectópico/mola en el diferencial)</td></tr>
+      <tr><td class="dm">Coagulación (TP, TTPa, fibrinógeno, dímero-D)</td><td>Detectar <b>CID</b>; fibrinógeno bajo + plaquetas bajas = alarma</td></tr>
+      <tr><td class="dn">Función renal y electrolitos</td><td><b>IRA</b> por hipoperfusión/hemólisis; base para la dosis de gentamicina</td></tr>
+      <tr><td class="dn">Grupo y Rh, pruebas cruzadas</td><td>Definir Rh(D) para anti-D; disponer de hemoderivados</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📟</span><span class="st">Imagen</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Qué buscar</th></tr>
+      <tr><td class="dn">Ultrasonido pélvico/TV</td><td><b>Restos ovulares</b>, colección/<b>absceso</b>, líquido libre, <b>gas intrauterino</b> (Clostridium/instrumentación)</td></tr>
+      <tr><td class="dm">Rx de abdomen de pie</td><td><b>Aire libre subdiafragmático</b> (perforación) o gas en pared/tejidos</td></tr>
+      <tr><td class="dm">TC de abdomen y pelvis</td><td>Si sospecha de <b>perforación</b>, absceso profundo, gas en tejidos o mala evolución</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>La imagen <b>no debe retrasar</b> la reanimación ni el antibiótico. En inestabilidad, prioriza estabilizar y el control del foco.</div></div>
+  </div></div>
+</div>
+
+<!-- MANEJO -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Principio — todo EN PARALELO</div>Reanimación + antibiótico de amplio espectro (&lt;1 h) + <b>control del foco (evacuación uterina)</b> son <b>simultáneos</b>, no secuenciales. <b>No esperes a la afebrilidad para evacuar.</b> Toca cada tarjeta para dosis, vía y frecuencia.</div></div>
+  <div id="tx-body"></div>
+</div>
+
+<!-- COMPLICACIONES -->
+<div class="panel" id="tab-comp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones mayores</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Complicación</th><th>Clave</th></tr>
+      <tr><td class="dm">Choque séptico</td><td>Hipotensión refractaria a volumen que requiere vasopresor + lactato &gt;2 → UCI</td></tr>
+      <tr><td class="dm">CID</td><td>Sangrado difuso, plaquetas y fibrinógeno bajos, dímero-D alto → hemoderivados</td></tr>
+      <tr><td class="dm">Insuficiencia renal aguda</td><td>Por hipoperfusión y hemólisis (Clostridium); vigilar diuresis y creatinina</td></tr>
+      <tr><td class="dm">Síndrome de choque tóxico</td><td>Estreptococo grupo A / estafilococo → colapso rápido, exantema</td></tr>
+      <tr><td class="dm">Mionecrosis clostridial</td><td>Gangrena gaseosa uterina, hemólisis masiva → <b>histerectomía urgente</b></td></tr>
+      <tr><td class="dm">Perforación uterina / lesión visceral</td><td>Frecuente en el aborto inseguro instrumentado → laparotomía</td></tr>
+      <tr><td class="dm">Absceso pélvico / peritonitis</td><td>Requiere drenaje; extensión parametrial</td></tr>
+      <tr><td class="dm">SDRA y falla multiorgánica</td><td>Vía final del choque no controlado</td></tr>
+      <tr><td class="dm">Muerte materna</td><td>Desenlace prevenible; el retraso del control del foco la aumenta</td></tr>
+      <tr><td class="dn">Secuelas tardías</td><td>Síndrome de Asherman, infertilidad, dolor pélvico crónico</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚨</span><div><b>Tríada de mal pronóstico:</b> choque + CID + IRA, sobre todo con <b>Clostridium</b> → decisión temprana de histerectomía y soporte en UCI.</div></div>
+  </div></div>
+</div>
+
+<!-- MEDICO-LEGAL -->
+<div class="panel" id="tab-legal">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Aspectos médico-legales (México)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r" style="margin-bottom:8px;"><span class="ai">🚑</span><div><div class="at">Principio rector</div>La <b>atención de la urgencia NO se condiciona a ninguna denuncia</b> ni a un interrogatorio judicial. Estabilizar y salvar la vida es prioritario e ineludible (obligación de atención médica).</div></div>
+    <div class="kp"><span class="kn">1</span><span class="kt">Documentar de forma <b>objetiva y sin juicios</b>: hallazgos, tratamiento y evolución (expediente conforme a la <b>NOM-004</b>). Evitar consignar conclusiones sobre la causa que no consten clínicamente.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Consentimiento informado</b> para evacuación uterina, anestesia, transfusión y eventual histerectomía; en urgencia con riesgo vital aplica el consentimiento por representación o la excepción por urgencia.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Si hay sospecha de <b>violencia sexual o familiar</b>, activar la <b>NOM-046</b> (atención, anticoncepción de emergencia, profilaxis y aviso al Ministerio Público según corresponda).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">El <b>aviso a la autoridad</b> ante lesiones/aborto de posible origen delictivo se rige por la normativa penal y sanitaria <b>local</b>; su cumplimiento <b>nunca</b> retrasa ni condiciona la atención de la paciente.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Respetar la <b>confidencialidad</b> y el trato digno; el secreto profesional cede solo ante las obligaciones legales de reporte que marque la ley del estado.</span></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">ℹ️</span><div>El marco legal del aborto (causales, plazos y obligaciones de aviso) <b>varía por estado y se actualiza</b>: verifica la normativa vigente en tu entidad. La despenalización avanza de forma heterogénea en México.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFIA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Aborto séptico</h2><p>Guías y evidencia principales.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías y evidencia</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">World Health Organization. <em>Abortion Care Guideline.</em> Geneva: WHO; 2022. (Atención del aborto seguro y manejo de complicaciones, incluido el aborto inseguro.)</div><a class="biblio-link" href="https://www.who.int/publications/i/item/9789240039483" target="_blank">🔗 WHO 2022</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">Ficha</span></div><div class="biblio-ref">World Health Organization. <em>Abortion — Fact sheet.</em> (~25 millones de abortos inseguros/año; peso en la mortalidad materna.)</div><a class="biblio-link" href="https://www.who.int/news-room/fact-sheets/detail/abortion" target="_blank">🔗 WHO fact sheet</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">Evans L, Rhodes A, Alhazzani W, et al. <em>Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021.</em> Crit Care Med / Intensive Care Med. (Paquete de la 1.ª hora: cultivos, lactato, antibiótico, cristaloide 30 mL/kg, norepinefrina.)</div><a class="biblio-link" href="https://www.sccm.org/clinical-resources/guidelines/guidelines/surviving-sepsis-guidelines-2021" target="_blank">🔗 SCCM</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">Ref</span><span class="biblio-level lv-exp">Texto</span></div><div class="biblio-ref">MSD/Merck Manual (Professional). <em>Septic Abortion.</em> (Microbiología, clínica y esquema clindamicina 900 mg IV c/8 h + gentamicina 5 mg/kg IV/día ± ampicilina.)</div><a class="biblio-link" href="https://www.msdmanuals.com/professional/gynecology-and-obstetrics/early-pregnancy-disorders/septic-abortion" target="_blank">🔗 MSD Manual</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ACOG. <em>Early Pregnancy Loss (Practice Bulletin 200)</em> y recursos sobre el manejo del aborto y la sepsis en el embarazo. Obstet Gynecol.</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2011</span><span class="biblio-level lv-b">ECA</span></div><div class="biblio-ref">Ensayo controlado. <em>Antibiotics after clinical improvement in infected/septic abortion — RCT.</em> Am J Obstet Gynecol. (Duración del antibiótico tras evacuación y mejoría clínica.)</div><a class="biblio-link" href="https://www.ajog.org/article/S0002-9378(10)02271-4/fulltext" target="_blank">🔗 AJOG</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">México</span></div><div class="biblio-ref">CENETEC. <em>GPC: Diagnóstico y tratamiento del aborto y sus complicaciones (aborto séptico).</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div><div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Observacional / criterios</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Referencia / GPC</div>
+    </div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. Las dosis, los esquemas antibióticos empíricos y la disponibilidad varían por institución y por resistencia local: <b>ajusta al protocolo y antibiograma locales</b>. El marco legal del aborto varía por estado. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+var TFN=0;
+function tcard(f,gc){TFN++;var id='ac'+TFN;var c=gc||f.c||'#9d174d';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">'+(f.lbl||'Dosis / pauta')+'</div>';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:'+c+';padding:2px 0;line-height:1.35;">• '+f.dosis[k]+'</div>';h+=dd;}
+ else if(f.da)h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+f.da+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('Embarazo / seguridad',f.fda,'#7a4a00');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#fce7f0;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9d174d;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#9d174d');h+=tcard(f,col);}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+var AC='#9d174d';var CO='#0a5c45';var NO='#7b1c1c';
+
+/* REANIMACION (sepsis) */
+var R_CULT={n:'Hemocultivos + lactato',sub:'Antes del antibiótico, sin retrasarlo',c:AC,lbl:'Acción',dosis:['2 sets de hemocultivos (aerobio/anaerobio) antes de la 1.ª dosis','Cultivo endocervical y de restos/tejido evacuado','Lactato sérico inicial y repetir a las 2–4 h si ≥2 mmol/L'],iv:'Toma de muestras IV/local',mon:'Aclaramiento de lactato como guía de reanimación',nota:'<b>Paquete de la 1.ª hora:</b> medir lactato, tomar cultivos, iniciar antibiótico y cristaloides. No demorar el antibiótico por obtener los cultivos.'};
+var R_FLUID={n:'Cristaloide IV — reanimación',sub:'Sepsis con hipoperfusión',c:AC,lbl:'Dosis',da:'Solución salina 0.9% o Hartmann: 30 mL/kg IV en bolos de 250–500 mL en la 1.ª hora (completar en ≤3 h) si hipotensión o lactato ≥4 mmol/L',prep:'Bolos rápidos con reevaluación tras cada uno (respuesta dinámica: TA, diuresis, lactato).',iv:'IV periférico de grueso calibre (2 accesos)',fda:'Reanimación estándar en el embarazo',mon:'PAM ≥65 mmHg, diuresis ≥0.5 mL/kg/h, aclaramiento de lactato',ci:'Cuidado en edema pulmonar/falla cardiaca — titular',ea:'Sobrecarga si excesivo',nota:'<b>Meta:</b> revertir la hipoperfusión. Reevalúa la perfusión tras cada bolo; evita la sobrecarga guiándote por parámetros dinámicos (Surviving Sepsis 2021).'};
+var R_O2={n:'Oxígeno suplementario',sub:'Soporte respiratorio',c:AC,lbl:'Objetivo',da:'O₂ por puntas/mascarilla para mantener SpO₂ ≥92%; considerar ventilación mecánica si insuficiencia respiratoria/SDRA',iv:'Inhalado',mon:'Oximetría continua, gasometría si deterioro',nota:'Mantener la oxigenación tisular. En falla respiratoria o alteración del estado de alerta, asegurar vía aérea temprano.'};
+var R_NOR={n:'Norepinefrina',sub:'Vasopresor de 1.ª línea si choque',c:AC,lbl:'Dosis',da:'Iniciar 0.05 mcg/kg/min IV en infusión y titular a PAM ≥65 mmHg (si la hipotensión persiste pese a los fluidos)',prep:'Infusión continua con bomba; idealmente vía central (puede iniciarse por vía periférica mientras se coloca).',iv:'IV en infusión (bomba)',fda:'Vasopresor de elección en choque séptico, incluido el embarazo',mon:'PAM, ECG, perfusión distal, línea arterial',ci:'Extravasación (necrosis) — usar vía segura',ea:'Taquiarritmias, isquemia distal',nota:'<b>Meta:</b> PAM ≥65 mmHg. Añadir vasopresina si se requieren dosis altas; hidrocortisona 200 mg/día IV si choque refractario a vasopresor. Traslado a <b>UCI</b>.'};
+
+/* ANTIBIOTICOS IV EMPIRICOS */
+var A_CLINDA={n:'Clindamicina + Gentamicina (± Ampicilina)',sub:'Esquema de elección — inicio &lt;1 h',c:AC,lbl:'Dosis',dosis:['Clindamicina 900 mg IV cada 8 h','+ Gentamicina 5 mg/kg IV cada 24 h (dosis única diaria; ajustar a función renal)','± Ampicilina 2 g IV cada 6 h (añade cobertura de enterococo/estreptococo)'],prep:'Iniciar la 1.ª dosis dentro de la primera hora del diagnóstico de sepsis, tras tomar los cultivos.',iv:'IV',pres:'Clindamicina 600–900 mg/amp · Gentamicina 80/160 mg/amp · Ampicilina 1 g fco · IMSS',fda:'Aceptable en el embarazo; gentamicina con vigilancia',mon:'Función renal y niveles de gentamicina; respuesta clínica',ci:'Alergias; ajustar gentamicina en IRA',ea:'Nefro/ototoxicidad (gentamicina), diarrea/C. difficile (clindamicina)',nota:'<b>Cobertura:</b> gramnegativos (gentamicina/ampicilina) + anaerobios y grampositivos incl. Clostridium/estreptococo (clindamicina, que además inhibe la producción de toxinas). Es el esquema clásico del aborto séptico (MSD Manual).'};
+var A_SULBAC={n:'Ampicilina-sulbactam',sub:'Alternativa',c:AC,lbl:'Dosis',da:'Ampicilina-sulbactam 3 g IV cada 6 h',iv:'IV',pres:'Ampicilina/sulbactam 1.5 g y 3 g fco · MX',fda:'Aceptable en el embarazo',mon:'Respuesta clínica; cobertura anaerobia',ci:'Alergia a penicilinas',ea:'Diarrea, exantema',nota:'Cubre grampositivos, gramnegativos y anaerobios. Verifica que la cobertura anaerobia sea adecuada según la gravedad; escala si no mejora.'};
+var A_PIP={n:'Piperacilina-tazobactam',sub:'Amplio espectro / gravedad',c:AC,lbl:'Dosis',da:'Piperacilina-tazobactam 4.5 g IV cada 6–8 h',prep:'Infusión IV; considerar infusión extendida en sepsis grave.',iv:'IV',pres:'Piperacilina/tazobactam 4.5 g fco · MX',fda:'Aceptable en el embarazo',mon:'Función renal (ajuste), respuesta clínica',ci:'Alergia a penicilinas/betalactámicos',ea:'Diarrea, alteración electrolítica',nota:'Buena opción de amplio espectro con cobertura anaerobia y de Pseudomonas cuando se requiere. Ajustar al antibiograma.'};
+var A_CEFTRI={n:'Ceftriaxona + Metronidazol',sub:'Alternativa combinada',c:AC,lbl:'Dosis',dosis:['Ceftriaxona 2 g IV cada 24 h','+ Metronidazol 500 mg IV cada 8 h (cobertura anaerobia)'],iv:'IV',pres:'Ceftriaxona 1 g fco · Metronidazol 500 mg/100 mL sol · IMSS',fda:'Aceptable en el embarazo',mon:'Respuesta clínica',ci:'Alergia a cefalosporinas',ea:'Diarrea, sabor metálico (metronidazol)',nota:'<b>Clave:</b> la ceftriaxona sola NO cubre anaerobios — <b>siempre</b> asociar metronidazol o clindamicina en el aborto séptico. Ajustar a la guía y a la resistencia local.'};
+
+/* CONTROL DEL FOCO */
+var F_EVAC={n:'Evacuación uterina URGENTE (AMEU / LUI)',sub:'Control del foco — pilar del tratamiento',c:AC,lbl:'Conducta',dosis:['AMEU (aspiración manual endouterina) preferente, o LUI si no disponible','Realizar tras iniciar antibiótico y reanimación — NO esperar a "esterilizar" ni a estar afebril','Enviar los restos a cultivo y a anatomía patológica'],iv:'Procedimiento quirúrgico',fda:'Prioritario en el aborto séptico',mon:'Sangrado, signos vitales, respuesta febril posterior',ci:'Estabilizar hemodinámicamente en paralelo (no diferir por ello)',ea:'Perforación, sangrado',nota:'<b>Mecanismo:</b> retirar el tejido infectado elimina el foco; el antibiótico solo no controla la infección si persisten restos. Idealmente en las primeras horas del ingreso.'};
+var F_OXY={n:'Oxitocina',sub:'Control del sangrado / involución',c:AC,lbl:'Dosis',da:'Oxitocina 10–40 UI diluidas en 500–1000 mL de cristaloide IV en infusión (titular al tono/sangrado); puede darse 10 UI IM tras la evacuación',prep:'Infusión IV continua; ajustar al tono uterino y al sangrado.',iv:'IV en infusión (o IM)',pres:'Oxitocina 5 UI/mL, 10 UI/mL · IMSS',fda:'Uterotónico estándar posevacuación',mon:'Tono uterino, sangrado, TA (hipotensión si bolo IV rápido)',ci:'No administrar en bolo IV rápido no diluido',ea:'Hipotensión, taquicardia, hiponatremia a dosis altas',nota:'Favorece la contracción y reduce el sangrado tras la evacuación. Considerar otros uterotónicos (misoprostol) según protocolo si atonía.'};
+var F_CIR={n:'Laparotomía / Histerectomía',sub:'Si mionecrosis, perforación o refractariedad',c:AC,lbl:'Indicaciones',dosis:['Mionecrosis clostridial / gangrena gaseosa uterina','Perforación uterina con lesión visceral o peritonitis','Absceso no drenable por otra vía','Sepsis refractaria pese a antibiótico + evacuación'],iv:'Cirugía',fda:'Salva la vida en la enfermedad grave',mon:'Hemodinamia, hemoderivados, UCI',nota:'<b>Decisión temprana:</b> en la mionecrosis clostridial la histerectomía puede ser la única medida que controla el foco. No retrasar por intentar preservar el útero cuando hay necrosis.'};
+
+/* COADYUVANTES */
+var C_PARA={n:'Paracetamol',sub:'Analgesia / antipirético',c:CO,lbl:'Dosis',da:'Paracetamol 1 g IV cada 6–8 h (máx 4 g/día); pasar a VO al mejorar',iv:'IV (o VO)',pres:'Paracetamol 10 mg/mL sol IV · tab 500 mg · IMSS',fda:'Analgésico/antipirético de elección',ci:'Hepatopatía grave',ea:'Hepatotoxicidad por sobredosis',nota:'Control del dolor y de la fiebre. Evitar AINE si hay disfunción renal/CID. Añadir opioide IV titulado si el dolor es intenso.'};
+var C_ONDA={n:'Ondansetrón',sub:'Antiemético',c:CO,lbl:'Dosis',da:'Ondansetrón 4–8 mg IV cada 8 h por razón necesaria',iv:'IV',pres:'Ondansetrón 4/8 mg amp · IMSS',fda:'Antiemético habitual',ci:'QT prolongado (vigilar)',ea:'Cefalea, estreñimiento, prolongación del QT',nota:'Náusea/vómito frecuentes en la sepsis y posprocedimiento.'};
+var C_ANTID={n:'Inmunoglobulina anti-D',sub:'Si la madre es Rh(D) negativo no sensibilizada',c:CO,lbl:'Dosis',da:'50 µg IM si <12 SDG · 300 µg (1500 UI) IM si ≥12 SDG · dentro de las 72 h de la evacuación',prep:'Confirmar grupo, Rh y Coombs indirecto.',iv:'Intramuscular',pres:'Inmunoglobulina anti-D 300 µg/1500 UI (Rhophylac®, WinRho®) · MX',fda:'Segura y recomendada',ci:'Rh positivo o ya sensibilizada',ea:'Reacción local, febrícula',nota:'Previene la aloinmunización Rh para embarazos futuros; aplicar tras la evacuación en la paciente Rh negativo.'};
+var C_TET={n:'Profilaxis antitetánica',sub:'Si aborto inseguro / herida contaminada',c:CO,lbl:'Dosis',dosis:['Toxoide tetánico (Td) 0.5 mL IM','+ Inmunoglobulina antitetánica humana 250–500 UI IM (en sitio distinto) si esquema incompleto/desconocido o herida sucia'],iv:'Intramuscular',pres:'Td 0.5 mL · Ig antitetánica 250 UI · IMSS',fda:'Segura en el embarazo',mon:'Estado vacunal',ea:'Reacción local',nota:'El aborto inseguro/instrumentado con material no estéril es una herida tetanígena. Decidir toxoide ± inmunoglobulina según el estado vacunal.'};
+var C_HEMO={n:'Reposición de hemoderivados',sub:'Si CID / anemia / sangrado',c:CO,lbl:'Conducta',dosis:['Concentrados eritrocitarios según Hb y sangrado activo','Plasma fresco congelado si coagulopatía/CID con sangrado','Plaquetas si <50 000 con sangrado o procedimiento','Crioprecipitado si fibrinógeno bajo'],iv:'IV',mon:'BH, coagulación y fibrinógeno seriados',nota:'Guiar por la clínica y el laboratorio. El manejo de la CID se centra en <b>controlar el foco</b> (evacuación + antibiótico) además del soporte transfusional.'};
+
+/* ERRORES */
+var E_RETRASO={n:'Retrasar la evacuación esperando afebrilidad',sub:'⛔ Error grave',no:1,da:'Evacuar el útero de forma URGENTE tras iniciar el antibiótico',nota:'El foco infeccioso son los restos: mantenerlos perpetúa la sepsis. La evacuación NO se pospone hasta estar afebril; se hace en paralelo a la reanimación y al antibiótico.'};
+var E_ESTRECHO={n:'Antibiótico de espectro estrecho o sin anaerobios',sub:'⛔ Cobertura insuficiente',no:1,da:'Usar amplio espectro CON cobertura anaerobia desde el inicio',nota:'La ceftriaxona sola o un solo betalactámico dejan sin cubrir anaerobios (Bacteroides) y Clostridium. Asegura clindamicina/metronidazol o un esquema de amplio espectro.'};
+var E_NOCULT={n:'No tomar cultivos antes del antibiótico',sub:'⛔ Pierde el diagnóstico microbiológico',no:1,da:'Hemocultivos ×2 + endocervical + restos ANTES de la 1.ª dosis (sin retrasarla)',nota:'Sin cultivos se pierde la oportunidad de dirigir el tratamiento y ajustar ante resistencia o falla clínica.'};
+var E_NOVOL={n:'No reponer volumen en la hipoperfusión',sub:'⛔ Reanimación insuficiente',no:1,da:'Cristaloide 30 mL/kg si hipotensión o lactato ≥4; vasopresor si persiste',nota:'Subestimar el choque séptico aumenta la mortalidad. Reevalúa perfusión y lactato; escala a norepinefrina y UCI a tiempo.'};
+var E_ALTA={n:'Alta temprana / subestimar la gravedad',sub:'⛔ Riesgo de deterioro',no:1,da:'Ingreso, vigilancia estrecha y valoración de UCI',nota:'La sepsis puede progresar en horas a choque, CID y falla orgánica. No dar de alta hasta el control del foco, la estabilidad y una respuesta clara.'};
+
+window.addEventListener('load',function(){
+  document.getElementById('tx-body').innerHTML=
+    buildLinea('Reanimación (sepsis)','ABC, fluidos, cultivos, vasopresor — paquete de la 1.ª hora',AC,[R_CULT,R_FLUID,R_O2,R_NOR],AC)+
+    buildLinea('Antibióticos IV empíricos','Amplio espectro con cobertura anaerobia · inicio dentro de 1 h',AC,[A_CLINDA,A_SULBAC,A_PIP,A_CEFTRI],AC)+
+    buildLinea('Control del foco','Evacuación uterina urgente · uterotónico · cirugía si procede',AC,[F_EVAC,F_OXY,F_CIR],AC)+
+    buildLinea('Coadyuvantes','Analgesia, anti-D, antitetánica, hemoderivados',CO,[C_PARA,C_ONDA,C_ANTID,C_TET,C_HEMO],'#374151')+
+    buildLinea('Errores','Qué NO hacer',NO,[E_RETRASO,E_ESTRECHO,E_NOCULT,E_NOVOL,E_ALTA],NO);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Síndrome de realimentación · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#a16207;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);font-family:inherit;}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f7efd9;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+.btn{padding:9px 16px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.calc-row:last-of-type{border-bottom:none;}
+.calc-lbl2{font-size:12px;color:var(--gray-700);line-height:1.4;flex:1;}
+.calc-opts{display:flex;gap:4px;flex-wrap:wrap;}
+.copt{padding:4px 9px;border-radius:6px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--gray-700);}
+.copt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-res{margin-top:12px;padding:12px;border-radius:8px;font-size:13px;line-height:1.6;display:none;}
+.calc-res.show{display:block;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:10px;}
+.algo-qt{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gray-900);}
+.algo-btn{display:block;width:100%;text-align:left;padding:11px 14px;margin-bottom:7px;border-radius:8px;border:1.5px solid var(--bd);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--gray-700);font-family:inherit;}
+.algo-btn:hover{border-color:var(--ac);}
+.farm-b{padding:10px 13px;}
+.farm-f{margin-bottom:8px;}
+.farm-l{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-600);margin-bottom:2px;}
+.farm-v{font-size:12.5px;color:var(--gray-900);line-height:1.55;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px;}
+.calc-lbl{font-size:11px;font-weight:700;color:var(--gray-600);text-transform:uppercase;margin-bottom:4px;display:block;}
+.calc-in{width:100%;padding:9px 10px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;}
+.biblio-header{background:linear-gradient(135deg,#33240a,#a16207);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#f7efd9;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#f7efd9;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.pop{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);overflow:hidden;margin-bottom:10px;}
+.pop-h{padding:9px 14px;font-size:12.5px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;}
+.pop-b{padding:12px 14px;font-size:12.5px;line-height:1.7;color:var(--gray-700);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#33240a,#a16207);">
+  <div class="hdr-top"><div class="hdr-icon">🍽️</div><div>
+    <div class="hdr-eye">Nutrición clínica · Medicina interna</div>
+    <div class="hdr-title">Síndrome de realimentación</div>
+    <div class="hdr-sub">Consenso ASPEN 2020 · prevenible y letal</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">Tiamina ANTES de calorías</span>
+    <span class="badge">Iniciar 10–20 kcal/kg</span>
+    <span class="badge">Vigilar P, K, Mg</span>
+    <span class="badge">Primeros 5 días</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">↓ P</div><div class="qs-l">El sello del síndrome</div></div>
+  <div class="qs"><div class="qs-v">10–20</div><div class="qs-l">kcal/kg día 1</div></div>
+  <div class="qs"><div class="qs-v">100–200</div><div class="qs-l">mg tiamina/día</div></div>
+  <div class="qs"><div class="qs-v">c/12 h</div><div class="qs-l">Labs × 3 días</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">🔬 Fisiopatología</button>
+  <button class="tab" onclick="showT('riesgo',this)">⚠️ Quién está en riesgo</button>
+  <button class="tab" onclick="showT('crit',this)">📊 Criterios ASPEN</button>
+  <button class="tab" onclick="showT('prot',this)">🚑 Protocolo de inicio</button>
+  <button class="tab" onclick="showT('rep',this)">💊 Reposición</button>
+  <button class="tab" onclick="showT('mon',this)">🧪 Monitoreo</button>
+  <button class="tab" onclick="showT('comp',this)">⚠️ Complicaciones</button>
+  <button class="tab" onclick="showT('calc',this)">🧮 Calculadora</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">¿Qué es?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Conjunto de alteraciones metabólicas, de electrolitos y de volumen que aparecen al <strong>reintroducir la nutrición</strong> (oral, enteral <em>o</em> parenteral) en un paciente desnutrido o en ayuno prolongado. Su marca es la <strong>hipofosfatemia</strong>.</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">Las 4 reglas</div><b>1)</b> Identifica el riesgo <b>antes</b> de alimentar. <b>2)</b> <b>Tiamina primero</b>, antes de cualquier caloría o suero glucosado. <b>3)</b> Empieza <b>bajo y lento</b> (10–20 kcal/kg). <b>4)</b> Mide <b>P, K y Mg</b> y repón sin suspender la nutrición.</div></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>El error clásico: ver a un paciente muy desnutrido y "compensarlo" con nutrición completa desde el día 1. <b>Alimentar rápido puede matarlo.</b></div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Cascada</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <svg viewBox="0 0 360 330" style="width:100%;max-width:440px;display:block;margin:0 auto;background:#fdfaf2;border-radius:8px;">
+      <g font-size="10" text-anchor="middle">
+      <rect x="80" y="10" width="200" height="26" rx="5" fill="#7a5a10"/><text x="180" y="27" fill="#fff" font-weight="700">Ayuno / desnutrición prolongada</text>
+      <line x1="180" y1="36" x2="180" y2="50" stroke="#999" stroke-width="1.5"/>
+      <rect x="35" y="50" width="290" height="38" rx="5" fill="#f7efd9" stroke="#a16207"/>
+      <text x="180" y="66" fill="#7a5a10" font-weight="700">Catabolismo · ↓ insulina · ↑ glucagón</text>
+      <text x="180" y="80" fill="#7a5a10" font-size="9">Se agotan P, K, Mg y tiamina INTRACELULARES (el suero puede estar normal)</text>
+      <line x1="180" y1="88" x2="180" y2="102" stroke="#999" stroke-width="1.5"/>
+      <rect x="70" y="102" width="220" height="26" rx="5" fill="#166534"/><text x="180" y="119" fill="#fff" font-weight="700">Se reintroducen los carbohidratos</text>
+      <line x1="180" y1="128" x2="180" y2="142" stroke="#999" stroke-width="1.5"/>
+      <rect x="100" y="142" width="160" height="26" rx="5" fill="#c05621"/><text x="180" y="159" fill="#fff" font-weight="700">↑↑ INSULINA</text>
+      <!-- tres ramas -->
+      <line x1="180" y1="168" x2="80" y2="186" stroke="#999" stroke-width="1.2"/>
+      <line x1="180" y1="168" x2="180" y2="186" stroke="#999" stroke-width="1.2"/>
+      <line x1="180" y1="168" x2="285" y2="186" stroke="#999" stroke-width="1.2"/>
+      <rect x="12" y="186" width="118" height="42" rx="5" fill="#dbeafe" stroke="#2b6cb0"/>
+      <text x="71" y="201" fill="#1f4e8a" font-size="9" font-weight="700">P, K y Mg entran</text><text x="71" y="213" fill="#1f4e8a" font-size="9" font-weight="700">a la célula</text><text x="71" y="224" fill="#1f4e8a" font-size="8">+ consumo de P por ATP</text>
+      <rect x="136" y="186" width="88" height="42" rx="5" fill="#fde8c8" stroke="#a16207"/>
+      <text x="180" y="203" fill="#7a5a10" font-size="9" font-weight="700">Demanda de</text><text x="180" y="215" fill="#7a5a10" font-size="9" font-weight="700">TIAMINA</text>
+      <rect x="230" y="186" width="118" height="42" rx="5" fill="#e2d0f0" stroke="#6b46a8"/>
+      <text x="289" y="203" fill="#5b3a8f" font-size="9" font-weight="700">Retención renal</text><text x="289" y="215" fill="#5b3a8f" font-size="9" font-weight="700">de Na y agua</text>
+      <line x1="71" y1="228" x2="130" y2="248" stroke="#999" stroke-width="1.2"/>
+      <line x1="180" y1="228" x2="180" y2="248" stroke="#999" stroke-width="1.2"/>
+      <line x1="289" y1="228" x2="230" y2="248" stroke="#999" stroke-width="1.2"/>
+      <rect x="25" y="248" width="310" height="34" rx="5" fill="#fdeaea" stroke="#8a2b2b"/>
+      <text x="180" y="263" fill="#8a2b2b" font-weight="700" font-size="9.5">↓ Fosfato · ↓ Potasio · ↓ Magnesio · déficit de tiamina · sobrecarga</text>
+      <text x="180" y="276" fill="#8a2b2b" font-size="9">(hipofosfatemia = el sello del síndrome)</text>
+      <line x1="180" y1="282" x2="180" y2="294" stroke="#999" stroke-width="1.5"/>
+      <rect x="55" y="294" width="250" height="26" rx="5" fill="#7b1c1c"/><text x="180" y="311" fill="#fff" font-weight="700">Arritmias · falla cardiaca · convulsiones · muerte</text>
+      </g>
+    </svg>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div><b>Por qué la tiamina:</b> es cofactor de la piruvato deshidrogenasa. Al meter glucosa a un paciente con reservas agotadas, la demanda se dispara → <b>encefalopatía de Wernicke</b>, beriberi y acidosis láctica. Por eso se da <b>antes</b>.</div></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">🩸</span><div>El fosfato sérico <b>normal al ingreso no descarta el riesgo</b>: la reserva intracelular ya está agotada y solo se hace evidente cuando la insulina lo mete a la célula.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-riesgo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Criterios de riesgo (ASPEN 2020)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div style="font-weight:800;color:#a16207;margin:2px 0 4px;">Riesgo MODERADO — se necesitan 2 criterios</div>
+    <div class="tw"><table class="t">
+      <tr><th>Criterio</th><th>Umbral</th></tr>
+      <tr><td class="dn">IMC</td><td>16 – 18.5 kg/m²</td></tr>
+      <tr><td class="dn">Pérdida de peso</td><td>5% en 1 mes</td></tr>
+      <tr><td class="dn">Ingesta</td><td>Nula o insuficiente 5–6 días, <b>o</b> &lt;75% de requerimientos &gt;7 días</td></tr>
+      <tr><td class="dn">Electrolitos (P, K, Mg)</td><td>Mínimamente bajos o en descenso</td></tr>
+      <tr><td class="dn">Composición corporal</td><td>Pérdida moderada de grasa subcutánea o masa muscular</td></tr>
+      <tr><td class="dn">Otros</td><td>Comorbilidad significativa o consumo crónico de alcohol</td></tr>
+    </table></div>
+    <div style="font-weight:800;color:#7b1c1c;margin:14px 0 4px;">Riesgo ALTO — basta 1 criterio</div>
+    <div class="tw"><table class="t">
+      <tr><th>Criterio</th><th>Umbral</th></tr>
+      <tr><td class="dm">IMC</td><td><b>&lt; 16</b> kg/m²</td></tr>
+      <tr><td class="dm">Pérdida de peso</td><td>&gt;7.5% en 3 meses <b>o</b> &gt;10% en 6 meses</td></tr>
+      <tr><td class="dm">Ingesta</td><td>Nula ≥7 días <b>o</b> &lt;50% de requerimientos &gt;5 días</td></tr>
+      <tr><td class="dm">Electrolitos</td><td>Moderada o gravemente bajos</td></tr>
+      <tr><td class="dm">Composición corporal</td><td>Pérdida grave de grasa o músculo</td></tr>
+      <tr><td class="dm">Otros</td><td>Enfermedad crítica o cirrosis</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">👥</span><span class="st">Poblaciones a las que hay que buscarles el riesgo</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Grupo</th><th>Comentario</th></tr>
+      <tr><td class="dm">Trastornos de la conducta alimentaria</td><td>Riesgo clásico y alto; manejar con equipo especializado</td></tr>
+      <tr><td class="dm">Consumo crónico de alcohol</td><td>Depleción de tiamina, P y Mg</td></tr>
+      <tr><td class="dn">Cáncer avanzado · caquexia</td><td>Ingesta baja prolongada</td></tr>
+      <tr><td class="dn">Cirugía bariátrica o GI mayor</td><td>Ayuno posoperatorio prolongado, malabsorción</td></tr>
+      <tr><td class="dn">Adultos mayores frágiles</td><td>Ingesta insuficiente crónica, polifarmacia</td></tr>
+      <tr><td class="dn">Malabsorción · intestino corto · EII</td><td>Pérdidas continuas</td></tr>
+      <tr><td class="dn">Paciente crítico con ayuno prolongado</td><td>Vigilar al reiniciar la nutrición</td></tr>
+      <tr><td class="dn">Situación social</td><td>Personas sin hogar, huelga de hambre, abandono</td></tr>
+      <tr><td class="dn">Fármacos</td><td>Diuréticos, insulina, antiácidos, quimioterapia</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-crit">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">📊</span><div><div class="at">Definición ASPEN 2020</div>Descenso de <b>fósforo, potasio y/o magnesio</b> séricos dentro de los <b>5 días</b> siguientes a reiniciar o aumentar significativamente el aporte calórico.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Gravedad</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Grado</th><th>Descenso de 1, 2 o 3 electrolitos</th><th>Extra</th></tr>
+      <tr><td class="dn"><b>Leve</b></td><td>10 – 20 %</td><td>—</td></tr>
+      <tr><td class="dn"><b>Moderado</b></td><td>20 – 30 %</td><td>—</td></tr>
+      <tr><td class="dm"><b>Grave</b></td><td>&gt; 30 %</td><td><b>o</b> disfunción orgánica atribuible <b>o</b> déficit de tiamina</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧮</span><div>Se mide el <b>porcentaje de caída respecto al valor basal</b>, no un valor absoluto: por eso hay que tener un <b>laboratorio previo al inicio</b> de la nutrición.</div></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">Ojo con la terminología: "<b>en riesgo</b> de síndrome de realimentación" (por los criterios de la pestaña anterior) no es lo mismo que "<b>síndrome de realimentación</b>" establecido (estos criterios).</div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-prot">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">💉</span><div><div class="at">Antes de la primera caloría</div><b>Tiamina 100–200 mg IV al día</b> (o 2 mg/kg, máximo 100–200 mg/día) <b>ANTES</b> de iniciar la nutrición o cualquier suero con dextrosa. Continuar 5–7 días o más.</div></div>
+  <div id="prot-body"></div>
+  <div class="sec" style="margin-top:6px;"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Esquema de avance</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Momento</th><th>Aporte</th></tr>
+      <tr><td class="dn">Primeras 24 h</td><td><b>10–20 kcal/kg/día</b> (o 100–150 g de dextrosa)</td></tr>
+      <tr><td class="dn">Avance</td><td><b>+33% de la meta cada 1–2 días</b></td></tr>
+      <tr><td class="dn">Meta completa</td><td>En 3–5 días (más lento si el riesgo es alto)</td></tr>
+      <tr><td class="dm">Si los electrolitos caen rápido o no se corrigen</td><td><b>Reducir las calorías/dextrosa un 50%</b> y avanzar más despacio</td></tr>
+      <tr><td class="dm">Si están crítica o peligrosamente bajos</td><td>Valorar <b>suspender</b> temporalmente la nutrición hasta corregir</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">💧</span><div><b>Restringir sodio y líquidos</b> al inicio (hay retención por la insulina): vigilar peso diario, balance y signos de sobrecarga. Un aumento de peso rápido es líquido, no masa magra.</div></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">💊</span><div>Añadir <b>multivitamínico IV</b> (1 vial/día × 10 días) + <b>complejo B</b>, <b>ácido fólico 1–5 mg/día VO</b> y <b>solución de oligoelementos IV</b> (o sulfato de zinc 15–30 mg/día VO, selenio 60–100 µg/día); en desnutrición grave suele haber déficits múltiples.</div></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-rep">
+  <div class="alert a-g" style="margin-bottom:10px;"><span class="ai">✔️</span><div><div class="at">Principio clave</div>Ante hipofosfatemia leve o moderada: <b>repón y continúa alimentando</b> — no suspendas la nutrición de entrada, solo ajusta la velocidad.</div></div>
+  <div id="rep-body"></div>
+</div>
+
+<div class="panel" id="tab-mon">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Qué vigilar y cada cuánto</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Parámetro</th><th>Frecuencia</th></tr>
+      <tr><td class="dm">Fósforo, potasio, magnesio</td><td><b>Antes de iniciar</b>, luego <b>cada 12 h los primeros 3 días</b> en alto riesgo; después diario hasta estabilizar</td></tr>
+      <tr><td class="dn">Glucosa</td><td>Cada 6–8 h al inicio (riesgo de hiperglucemia)</td></tr>
+      <tr><td class="dn">Sodio, función renal, balance</td><td>Diario</td></tr>
+      <tr><td class="dn">Peso</td><td>Diario (los aumentos rápidos son volumen)</td></tr>
+      <tr><td class="dn">Signos vitales</td><td>Vigilar taquicardia, taquipnea y datos de sobrecarga</td></tr>
+      <tr><td class="dm">ECG / telemetría</td><td>Si hay alteraciones graves de electrolitos o cardiopatía</td></tr>
+      <tr><td class="dn">Clínica neurológica</td><td>Buscar confusión, oftalmoplejía y ataxia (<b>Wernicke</b>)</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-comp">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Manifestaciones por sistema</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Sistema</th><th>Manifestación</th><th>Mecanismo</th></tr>
+      <tr><td class="dm">Cardiovascular</td><td>Arritmias, <b>paro</b>, insuficiencia cardiaca, hipotensión</td><td>↓P, ↓K, ↓Mg + sobrecarga sobre un miocardio atrofiado</td></tr>
+      <tr><td class="dm">Respiratorio</td><td>Debilidad diafragmática, falla ventilatoria, edema pulmonar</td><td>↓P (falta ATP muscular)</td></tr>
+      <tr><td class="dm">Neurológico</td><td>Confusión, convulsiones, parestesias, <b>Wernicke</b>, coma</td><td>↓P, ↓Mg, déficit de tiamina</td></tr>
+      <tr><td class="dn">Muscular</td><td>Debilidad, <b>rabdomiólisis</b></td><td>↓P</td></tr>
+      <tr><td class="dn">Hematológico</td><td>Hemólisis, disfunción leucocitaria y plaquetaria</td><td>↓P (↓2,3-DPG y ATP eritrocitario)</td></tr>
+      <tr><td class="dn">Metabólico</td><td>Hiperglucemia, acidosis láctica, hipercapnia</td><td>Exceso de carbohidratos + déficit de tiamina</td></tr>
+      <tr><td class="dn">Gastrointestinal</td><td>Náusea, diarrea, íleo</td><td>Atrofia de la mucosa</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<div class="panel" id="tab-calc">
+  <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧮</span><div><div class="at">Calculadora de inicio</div>Estima el aporte calórico inicial, el avance y la dosis de tiamina. <b>Orientativa: ajuste a su protocolo y al criterio de nutrición clínica.</b></div></div>
+  <div style="background:var(--tint);border-radius:10px;padding:14px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <label style="font-size:12px;color:#374151;">Peso (kg)<br><input id="r_peso" type="number" value="45" min="1" step="0.5" oninput="rsCalc()" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;"></label>
+      <label style="font-size:12px;color:#374151;">Meta kcal/kg/día<br><input id="r_meta" type="number" value="25" min="15" max="40" step="1" oninput="rsCalc()" style="width:100%;padding:6px;border:1px solid #cbd5e1;border-radius:6px;font-size:14px;"></label>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:#374151;">Nivel de riesgo:
+      <button class="pchip on" id="r_alto" onclick="rsRiesgo('alto',this)">Alto</button>
+      <button class="pchip" id="r_mod" onclick="rsRiesgo('mod',this)">Moderado</button>
+    </div>
+    <div id="r_out" style="margin-top:12px;"></div>
+  </div>
+  <div style="font-size:11px;color:#6b7280;margin-top:8px;">Alto riesgo: iniciar 10 kcal/kg y avanzar ~33% cada 2 días. Moderado: iniciar 20 kcal/kg y avanzar ~33% cada 1–2 días. En IMC muy bajo o riesgo extremo algunos protocolos inician en 5 kcal/kg.</div>
+</div>
+
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Síndrome de realimentación</h2><p>Consenso y referencias.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Consenso</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Consenso</span></div><div class="biblio-ref">da Silva JSV, et al. <em>ASPEN Consensus Recommendations for Refeeding Syndrome.</em> Nutr Clin Pract 2020;35:178–195.</div><a class="biblio-link" href="https://aspenjournals.onlinelibrary.wiley.com/doi/full/10.1002/ncp.10474" target="_blank">🔗 ASPEN</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">NICE</span><span class="biblio-level lv-b">Guía</span></div><div class="biblio-ref">NICE CG32. <em>Nutrition support for adults</em> (criterios de riesgo clásicos).</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2022</span><span class="biblio-level lv-exp">Referencia</span></div><div class="biblio-ref">StatPearls. <em>Refeeding Syndrome.</em></div><a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK564513/" target="_blank">🔗 StatPearls</a></div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo; la calculadora es orientativa. En trastornos de la conducta alimentaria el manejo debe ser multidisciplinario y con protocolo específico. Revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FPN=0;
+function fpTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#a16207');h+=tcard(f,col);}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+function setTxc(k,el){var c=document.querySelectorAll('#txc-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXC[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txc-body').innerHTML=h;}
+function setTxh(k,el){var c=document.querySelectorAll('#txh-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var d=TXH[k],h='';for(var j=0;j<d.length;j++)h+=buildLinea(d[j][0],d[j][1],d[j][2],d[j][3],d[j][2]);document.getElementById('txh-body').innerHTML=h;}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function famTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(0deg)':'rotate(-90deg)';}
+function farmCard(f,color,abrir){FDN++;var id='fd'+FDN;var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:8px;">';h+='<div onclick="fdTog(\''+id+'\')" style="background:'+color+';color:#fff;padding:9px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';h+='<div style="min-width:0;"><div style="font-size:13.5px;font-weight:800;line-height:1.25;">'+f.n+'</div><div style="font-size:11px;opacity:0.85;margin-top:2px;">'+f.ini+'</div></div>';h+='<span id="'+id+'-arr" style="font-size:19px;color:rgba(255,255,255,0.78);transition:transform .2s;flex-shrink:0;'+(abrir?'transform:rotate(180deg);':'')+'">&#8964;</span></div>';h+='<div id="'+id+'" class="farm-b" style="display:'+(abrir?'block':'none')+';">';h+='<div class="farm-f"><div class="farm-l">Objetivo / pauta</div><div class="farm-v">'+f.obj+'</div></div>';if(f.dur)h+='<div class="farm-f"><div class="farm-l">⏱️ Duración / curso</div><div class="farm-v" style="color:#c0392b;font-weight:600;">'+f.dur+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Vía / ámbito</div><div class="farm-v">'+f.iv+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Presentación MX</div><div class="farm-v">'+f.pr+'</div></div>';if(f.emb)h+='<div class="farm-f"><div class="farm-l">Embarazo</div><div class="farm-v" style="color:#7a4a00;">'+f.emb+'</div></div>';if(f.ped)h+='<div class="farm-f"><div class="farm-l">Niños</div><div class="farm-v" style="color:#0c3b6e;">'+f.ped+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Contraindicaciones</div><div class="farm-v" style="color:#c0392b;">'+f.ci+'</div></div>';h+='<div class="farm-f"><div class="farm-l">Efectos adversos</div><div class="farm-v">'+f.ea+'</div></div>';h+='<div style="background:#f7efd9;border-radius:6px;padding:9px 11px;margin-top:6px;"><div class="farm-l" style="color:#a16207;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.nota+'</div></div>';h+='</div></div>';return h;}
+function filtrarFarmacos(q){q=(q||'').toLowerCase().trim();var h='',hits=0;for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],cards='',n=0,fid='fam'+i;for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];var txt=(f.n+' '+fam.familia+' '+f.nota+' '+f.ini+' '+f.obj).toLowerCase();if(!q||txt.indexOf(q)>=0){cards+=farmCard(f,fam.color,!!q);hits++;n++;}}if(cards){h+='<div style="margin-bottom:12px;">';h+='<div onclick="famTog(\''+fid+'\')" style="display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;margin-bottom:6px;border-left:3px solid '+fam.color+';padding:3px 0 3px 8px;">';h+='<span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+fam.color+';">'+fam.familia+' · '+n+'</span>';h+='<span id="'+fid+'-arr" style="font-size:16px;color:'+fam.color+';transition:transform .2s;">&#8964;</span></div>';h+='<div id="'+fid+'">'+cards+'</div></div>';}}if(!hits)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+function buildInd(){var h='';for(var i=0;i<IND.length;i++){var fam=IND[i];h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j],id='ind'+i+'-'+j;h+='<div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;overflow:hidden;">';h+='<div onclick="indTog(\''+id+'\')" style="padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f9fafb;">';h+='<span style="font-size:13px;font-weight:700;color:'+fam.color+';">'+f.n+'</span>';h+='<span id="'+id+'-t" style="font-size:11px;color:#6b7280;font-weight:600;">► ver</span></div>';h+='<div id="'+id+'" style="display:none;padding:10px 12px;">';if(f.receta)h+='<div style="background:#f7efd9;border:1px solid #a16207;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div class="farm-l" style="color:#a16207;">📝 Indicación (lista para transcribir)</div><div style="font-size:12.5px;color:#111827;line-height:1.6;">'+f.receta+'</div></div>';if(f.dur)h+='<div style="background:#fff5f0;border-left:3px solid #c0392b;border-radius:6px;padding:7px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#c0392b;">⏱️ Duración</div><div style="font-size:12px;color:#374151;line-height:1.5;font-weight:600;">'+f.dur+'</div></div>';var d='';for(var k=0;k<f.dosis.length;k++)d+='<div style="font-size:12.5px;font-weight:700;color:#111827;padding:3px 0;">• '+f.dosis[k]+'</div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Dosis / pauta</div>'+d+'</div>';if(f.pobl)h+='<div style="background:#eef4ff;border-left:3px solid #0c3b6e;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0c3b6e;">👶🤰 Niños y embarazo</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pobl+'</div></div>';h+='<div style="background:#f7efd9;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#a16207;">Vía y administración</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.via+'</div></div>';h+='<div style="background:#e1f5ee;border-radius:6px;padding:8px 10px;margin-bottom:8px;"><div class="farm-l" style="color:#0a5c45;">🧑 Paciente</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.pac+'</div></div>';h+='<div style="background:#fdeaea;border-radius:6px;padding:8px 10px;"><div class="farm-l" style="color:#7b1c1c;">🚨 Alarma</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+f.al+'</div></div>';h+='</div></div>';}h+='</div></div>';}document.getElementById('ind-body').innerHTML=h;}
+function indTog(id){var el=document.getElementById(id),t=document.getElementById(id+'-t');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(t)t.innerHTML=open?'▼ ocultar':'► ver';}
+function setEscen(k,el){var c=document.querySelectorAll('#escen-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=ESCEN[k];var h='<div class="sec"><div class="sh"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">';h+='<div style="margin-bottom:8px;"><div class="farm-l">Presentación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.pres+'</div></div>';h+='<div style="margin-bottom:8px;"><div class="farm-l">Evaluación</div><div style="font-size:12.5px;color:#374151;line-height:1.6;">'+e.dx+'</div></div>';h+='<div class="alert a-g"><span class="ai">💊</span><div><div class="at">Tratamiento</div>'+e.tx+'</div></div>';h+='<div class="alert a-i"><span class="ai">➡️</span><div><div class="at">Referir</div>'+e.ref+'</div></div>';h+='<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampas</div>'+e.cx+'</div></div>';h+='</div></div>';document.getElementById('escen-body').innerHTML=h;}
+var algoState='start';
+function renderAlgo(){var st=ALGO[algoState];if(!st)return;var h='<div class="algo-q"><div class="algo-qt">'+st.q+'</div>';for(var i=0;i<st.a.length;i++){h+='<button class="algo-btn" onclick="algoGo('+i+')">'+st.a[i][0]+'</button>';}h+='</div>';document.getElementById('algo-box').innerHTML=h;}
+function algoGo(i){var st=ALGO[algoState];var nxt=st.a[i][1];if(typeof nxt==='function'){var out=nxt();if(out.indexOf('RES:')===0){document.getElementById('algo-box').innerHTML='<div class="algo-q" style="border-left:4px solid var(--ac);"><div class="algo-qt" style="color:var(--ac);">✅ Conducta recomendada</div><div class="prose">'+out.substring(4)+'</div></div>';return;}}else{algoState=nxt;renderAlgo();}}
+function algoReset(){algoState='start';renderAlgo();}
+var AC='#a16207';var CO='#0a5c45';var C2='#0c3b6e';var C3='#7a4a00';var NO='#7b1c1c';
+
+var TFN=0;
+function tcard(f,gc){TFN++;var id='rc'+TFN;var c=gc||f.c||'#a16207';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">'+(f.lbl||'Dosis')+'</div>';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:'+c+';padding:2px 0;line-height:1.35;">• '+f.dosis[k]+'</div>';h+=dd;}
+ else if(f.da)h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+f.da+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('FDA / Embarazo',f.fda,'#7a4a00');
+ if(f.ped)h+=poprow('Niños',f.ped,'#0c3b6e');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#f7efd9;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#a16207;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function tcards(cid,arr){var el=document.getElementById(cid);if(!el)return;var h='';for(var i=0;i<arr.length;i++)h+=tcard(arr[i]);el.innerHTML=h;}
+
+var TX_PROT=[
+ {n:'1. Tiamina IV — antes de cualquier caloría',sub:'⭐ Primer paso, antes de dextrosa o nutrición',c:'#7b1c1c',lbl:'Dosis',dosis:['100–200 mg IV al día (o 2 mg/kg, máx 100–200 mg/día)','Administrar ANTES de la primera caloría y de cualquier suero glucosado','Continuar 5–7 días (o más si la desnutrición es grave / hay alcoholismo)'],prep:'Diluir en 50–100 mL de SSN 0.9% o glucosa 5% e infundir en 15–30 min; también IM. Añadir multivitamínico IV (1 vial de multivitaminas para infusión/día × 10 días) y complejo B al arranque.',iv:'IV (preferida), <b>antes</b> de iniciar la nutrición y antes de cualquier solución con dextrosa',pres:'Tiamina (vitamina B1) amp 100 mg/mL · sol iny · genérico · IMSS',fda:'Cat A/C · segura y recomendada en embarazo; hidrosoluble',ci:'Hipersensibilidad conocida (rara); precaución con IV rápida (reacción anafilactoide excepcional)',ea:'Muy bien tolerada; raras reacciones de hipersensibilidad con bolo rápido',mon:'Vigilar clínica neurológica (confusión, oftalmoplejía, ataxia) de Wernicke',nota:'<b>Mecanismo:</b> la tiamina es cofactor de la piruvato deshidrogenasa y de la transcetolasa; al reintroducir glucosa la demanda se dispara y, sin reservas, aparecen encefalopatía de Wernicke, beriberi y acidosis láctica.<br><br><b>Coadyuvantes:</b> Multivitamínico IV 1 vial/día × 10 días + complejo B; solución de oligoelementos IV 1 dosis/día (o sulfato de zinc 15–30 mg/día VO y selenio 60–100 µg/día); ácido fólico 1–5 mg/día VO.<br><br><b>Precauciones:</b> dar dextrosa a un paciente depletado <b>sin tiamina previa</b> puede precipitar Wernicke irreversible — por eso la tiamina va SIEMPRE primero.<br><br><b>Evidencia:</b> ASPEN 2020, NICE CG32 — tiamina profiláctica antes de alimentar en todo paciente en riesgo.'},
+ {n:'2. Medir y corregir electrolitos basales',sub:'Laboratorio previo al inicio',c:'#a16207',lbl:'Qué medir',dosis:['Fósforo, potasio y magnesio séricos ANTES de la primera caloría','Corregir si están bajos, en paralelo a la nutrición','Repetir cada 12 h los primeros 3 días en alto riesgo'],prep:'Basal + glucosa, sodio, función renal y balance. El valor basal es la referencia para el % de caída.',iv:'Laboratorio previo al inicio; luego seriado',pres:'Panel de P, K, Mg · glucosa · Na · creatinina',mon:'P/K/Mg cada 12 h × 3 días en alto riesgo; glucosa c/6–8 h',ea:'—',nota:'<b>Mecanismo:</b> las reservas intracelulares de P, K y Mg ya están agotadas aunque el suero esté normal; la insulina las mete a la célula y el suero cae en los primeros 5 días.<br><br><b>Coadyuvantes:</b> repón P/K/Mg <b>sin suspender la nutrición</b> salvo caídas críticas.<br><br><b>Precauciones:</b> no retrasar la nutrición por alteraciones leves — repón en paralelo; solo diferir si están crítica o peligrosamente bajos.<br><br><b>Evidencia:</b> ASPEN 2020 define el síndrome por el % de descenso respecto al basal, no por un valor absoluto.'},
+ {n:'3. Iniciar calorías — bajo y lento',sub:'El principio central',c:'#166534',lbl:'Aporte inicial',dosis:['10–20 kcal/kg/día las primeras 24 h (o 100–150 g de dextrosa)','5–10 kcal/kg/día si riesgo extremo o IMC muy bajo','Avanzar ~33% de la meta cada 1–2 días','Meta completa en 3–5 días (más lento si el riesgo es alto)'],prep:'Da igual la vía: oral, enteral o parenteral — el riesgo es el mismo. Cuanto mayor el riesgo, más bajo el inicio y más lento el avance.',iv:'Oral / enteral / parenteral',pres:'Dextrosa · fórmula enteral · NPT según cálculo',mon:'P/K/Mg y glucosa seriados; peso y balance diarios',ea:'Hiperglucemia si se avanza rápido; sobrecarga de volumen',nota:'<b>Mecanismo:</b> limitar la carga de carbohidratos frena el pico de insulina que precipita la caída de electrolitos y la demanda de tiamina.<br><br><b>Coadyuvantes:</b> tiamina 100–200 mg IV c/24 h y solución de oligoelementos IV 1 dosis/día (zinc 15–30 mg/día, selenio 60–100 µg/día) desde el día 0; reponer fosfato de potasio/sodio, KCl y sulfato de Mg en paralelo.<br><br><b>Precauciones:</b> si los electrolitos caen rápido o no se corrigen → <b>reducir 50%</b> las calorías/dextrosa y avanzar más despacio; suspender solo ante caídas críticas.<br><br><b>Evidencia:</b> ASPEN 2020 / NICE — inicio 10–20 kcal/kg (5–10 en riesgo extremo) con avance gradual.'},
+ {n:'4. Restringir sodio y líquidos · vitaminas',sub:'Evitar la sobrecarga',c:'#a16207',lbl:'Medidas de soporte',dosis:['Restricción relativa de sodio y volumen al inicio','Multivitamínico IV 1 vial/día × 10 días + complejo B','Ácido fólico 1–5 mg/día VO','Solución de oligoelementos IV 1 dosis/día (o sulfato de zinc 15–30 mg/día VO, selenio 60–100 µg/día)'],prep:'Vigilar peso diario, balance y signos de sobrecarga; un aumento rápido de peso es líquido.',iv:'Según la vía de nutrición',pres:'Multivitamínico IV (vial para infusión) · sol de oligoelementos IV · sulfato de zinc 15–30 mg VO · ácido fólico 1–5 mg VO · complejo B',mon:'Peso, balance hídrico, sodio y signos de sobrecarga a diario',ea:'Edema y sobrecarga si no se restringe sodio/líquidos',nota:'<b>Mecanismo:</b> la insulina causa retención renal de sodio y agua; el corazón atrofiado tolera mal la sobrecarga.<br><br><b>Coadyuvantes:</b> multivitamínico IV 1 vial/día × 10 días + complejo B, ácido fólico 1–5 mg/día VO y solución de oligoelementos IV 1 dosis/día (zinc 15–30 mg/día, selenio 60–100 µg/día) para corregir los déficits múltiples de la desnutrición grave.<br><br><b>Precauciones:</b> un aumento rápido de peso en los primeros días es <b>líquido</b>, no recuperación nutricional.<br><br><b>Evidencia:</b> ASPEN 2020 / NICE — restricción de sodio/líquidos y micronutrientes al inicio.'}
+];
+
+var TX_REP=[
+ {n:'Fosfato',sub:'El electrolito estrella — el sello del síndrome',c:'#2b6cb0',lbl:'Reposición orientativa',dosis:['Leve (2.3–3.0 mg/dL): vía oral','Moderada/grave (&lt;2.3 mg/dL): IV 0.08–0.64 mmol/kg según gravedad','Usar fosfato de potasio o de sodio según el K del paciente'],prep:'Diluir en SSN 0.9% e infundir en 6–12 h (nunca en bolo). Fosfato de potasio ~1.5 mmol de fosfato + 1 mEq K por mL; ajustar en insuficiencia renal.',iv:'IV en infusión lenta (varias horas); oral si es leve y tolera',pres:'Fosfato de potasio IV (3 mmol P + 4.4 mEq K/mL) · fosfato de sodio IV · fosfato oral',fda:'Sin restricción específica; ajustar en ERC',ci:'Hipercalcemia, hiperfosfatemia, insuficiencia renal grave (relativa)',ea:'Infusión rápida: hipocalcemia, arritmias, calcificación metastásica; flebitis',mon:'P, calcio y función renal tras cada reposición; ECG si es grave',nota:'<b>Mecanismo:</b> el fósforo entra masivamente a la célula con la insulina y se consume en la fosforilación (ATP, 2,3-DPG); su descenso es el marcador del síndrome.<br><br><b>Coadyuvantes:</b> corregir el Mg con sulfato de magnesio 1–2 g IV (0.2–0.8 mEq/kg) en 1–2 h en paralelo; recontrolar P y calcio tras cada dosis.<br><br><b>Precauciones:</b> repón y <b>sigue alimentando</b> — no suspendas la nutrición por hipofosfatemia leve, solo ajusta la velocidad. Infusión lenta para evitar hipocalcemia y arritmias.<br><br><b>Evidencia:</b> ASPEN 2020 — reponer sin interrumpir la nutrición salvo caídas críticas.'},
+ {n:'Potasio',sub:'Baja al entrar a la célula',c:'#2b6cb0',lbl:'Reposición orientativa',dosis:['Aproximadamente 1–2 mEq/kg/día','IV según protocolo (máx periférico ~10 mEq/h; central con monitor si mayor)','Oral si tolera y el déficit es leve'],prep:'Diluir bien para la vía IV; nunca en bolo. KCl 14.9% = 2 mEq/mL. Monitor ECG si es grave o infusión rápida.',iv:'Oral si tolera; IV con monitorización si es grave o hay arritmia',pres:'KCl sol iny 14.9% (2 mEq/mL) · jarabe/tab · fosfato de potasio · IMSS',fda:'Sin restricción; vigilar en ERC',ci:'Hiperpotasemia; oliguria grave sin control',ea:'Flebitis, dolor por vía periférica; hiperpotasemia si aporte excesivo o ERC',mon:'K sérico seriado; ECG si &lt;3.0 o infusión rápida; función renal',nota:'<b>Mecanismo:</b> la insulina desplaza el potasio al interior celular y el suero cae bruscamente al reintroducir carbohidratos.<br><br><b>Coadyuvantes:</b> corregir <b>siempre con sulfato de magnesio 1–2 g IV en paralelo</b> — con Mg bajo el K no se corrige.<br><br><b>Precauciones:</b> ritmo de infusión limitado por vía periférica; vigilar función renal y ECG. Repón sin suspender la nutrición.<br><br><b>Evidencia:</b> ASPEN 2020 / NICE — reposición según déficit sin interrumpir el aporte calórico.'},
+ {n:'Magnesio',sub:'La corrección que se olvida',c:'#2b6cb0',lbl:'Reposición orientativa',dosis:['Aproximadamente 0.2–0.8 mEq/kg IV','O sulfato de magnesio 4–8 g IV según déficit','Oral se tolera mal (diarrea)'],prep:'Diluir sulfato de Mg en 100 mL de SSN e infundir en 1–2 h (más lento en ERC).',iv:'IV lenta',pres:'Sulfato de magnesio 1 g/10 mL (10%) · amp · IMSS',fda:'Cat A/D según uso; en reposición estándar sin restricción',ci:'Bloqueo AV; insuficiencia renal avanzada (ajustar y vigilar)',ea:'Rubor, hipotensión, depresión de reflejos e hipermagnesemia si dosis altas/ERC',mon:'Mg sérico; reflejos osteotendinosos y TA si dosis altas',nota:'<b>Mecanismo:</b> el magnesio es cofactor de la ATPasa Na/K y necesario para la secreción de PTH; sin corregirlo, la hipopotasemia y la hipocalcemia son refractarias.<br><br><b>Coadyuvantes:</b> corregir el Mg <b>primero</b> para que respondan K y Ca.<br><br><b>Precauciones:</b> precaución en insuficiencia renal (riesgo de hipermagnesemia); vigilar reflejos y TA.<br><br><b>Evidencia:</b> ASPEN 2020 — la corrección del Mg es clave para normalizar el resto de electrolitos.'}
+];
+
+/* ---- COADYUVANTES (verde) ---- */
+var CO_TIA={n:'Tiamina (vitamina B1)',sub:'⭐ Siempre antes de calorías',c:'#0a5c45',lbl:'Dosis',dosis:['100–200 mg IV/día (2 mg/kg, máx 100–200 mg/día)','ANTES de la primera caloría y de todo suero glucosado','Continuar 5–7 días o más'],prep:'Diluir en 50–100 mL de SSN/glucosa 5% e infundir en 15–30 min.',iv:'IV (preferida) o IM',pres:'Tiamina amp 100 mg/mL · genérico · IMSS',fda:'Segura en embarazo (hidrosoluble)',ea:'Muy bien tolerada; reacción anafilactoide excepcional con bolo rápido',nota:'<b>Mecanismo:</b> cofactor de la piruvato deshidrogenasa; su déficit con carga de glucosa causa Wernicke y acidosis láctica.<br><br><b>Evidencia:</b> ASPEN 2020 / NICE — profilaxis obligada en todo paciente en riesgo.'};
+var CO_MVI={n:'Multivitamínico IV + complejo B + ácido fólico',sub:'Déficits múltiples',c:'#0a5c45',lbl:'Dosis',dosis:['Multivitamínico IV: 1 vial de multivitaminas para infusión/día × 10 días','Complejo B: 1 ampolla/día IV/IM','Ácido fólico 1–5 mg/día VO'],iv:'IV o VO según la vía de nutrición',pres:'Multivitamínico IV (vial para infusión) · complejo B amp · ácido fólico tab 5 mg · genérico · IMSS',ea:'Bien tolerado',nota:'<b>Mecanismo:</b> la desnutrición grave cursa con déficits vitamínicos múltiples que se desenmascaran al reanudar el anabolismo.<br><br><b>Evidencia:</b> ASPEN 2020 / NICE — multivitamínico y complejo B desde el inicio × 10 días.'};
+var CO_OLIG={n:'Oligoelementos IV · sulfato de zinc · selenio',sub:'Micronutrientes traza',c:'#0a5c45',lbl:'Dosis',dosis:['Solución de oligoelementos IV: 1 dosis/día','Sulfato de zinc 15–30 mg/día VO (o 5–10 mg elemental IV/día)','Selenio 60–100 µg/día'],iv:'IV (mezcla de oligoelementos) o VO',pres:'Solución de oligoelementos IV · sulfato de zinc cáp/tab 15–30 mg · selenio · genérico',ea:'Bien tolerado a dosis de reposición',nota:'<b>Mecanismo:</b> zinc y selenio son cofactores de reparación tisular e inmunidad, deplecionados en la desnutrición.<br><br><b>Evidencia:</b> ASPEN 2020 — reponer oligoelementos al reiniciar la nutrición.'};
+var CO_AE={n:'Ondansetrón (antiemético si náusea)',sub:'Tolerancia de la nutrición',c:'#0a5c45',lbl:'Dosis',dosis:['Ondansetrón 4–8 mg IV/VO c/8 h según necesidad','Alternativa: metoclopramida 10 mg IV c/8 h'],iv:'IV o VO',pres:'Ondansetrón tab 4/8 mg · sol iny 2 mg/mL · metoclopramida amp 10 mg/2 mL · genérico',ci:'QT largo o fármacos que prolongan el QT (ondansetrón); Parkinson y obstrucción GI (metoclopramida)',ea:'Cefalea, estreñimiento, prolongación del QT (ondansetrón); extrapiramidalismo (metoclopramida)',nota:'<b>Mecanismo:</b> ondansetrón es antagonista 5-HT3; metoclopramida, procinético antagonista D2. Facilitan la tolerancia de la nutrición enteral/oral.<br><br><b>Precauciones:</b> vigilar QT (ondansetrón) en alteraciones electrolíticas concomitantes.'};
+var TX_COAD=[CO_TIA,CO_MVI,CO_OLIG,CO_AE];
+
+/* ---- ERRORES / QUÉ NO HACER (rojo) ---- */
+var NO_RAPIDO={n:'Alimentar rápido o completo desde el día 1',sub:'⛔ Puede matar al paciente',no:true,c:'#7b1c1c',lbl:'Qué NO hacer',dosis:['No dar la meta calórica completa de entrada','No "compensar" la desnutrición con nutrición plena'],nota:'<b>Por qué es un error:</b> la carga brusca de carbohidratos dispara la insulina, hunde P/K/Mg y precipita arritmias, falla cardiaca y muerte.<br><br><b>Hazlo así:</b> inicia 10–20 kcal/kg (5–10 en riesgo extremo) y avanza ~33% cada 1–2 días.'};
+var NO_DEXTRO={n:'Dextrosa / suero glucosado sin tiamina previa',sub:'⛔ Riesgo de Wernicke',no:true,c:'#7b1c1c',lbl:'Qué NO hacer',dosis:['No pasar glucosa IV antes de la tiamina'],nota:'<b>Por qué es un error:</b> la glucosa consume la tiamina residual y puede precipitar una encefalopatía de Wernicke irreversible.<br><br><b>Hazlo así:</b> tiamina 100–200 mg IV <b>antes</b> de cualquier caloría o suero glucosado.'};
+var NO_SUSP={n:'Suspender la nutrición por hipofosfatemia leve',sub:'⛔ Solo repón y ajusta',no:true,c:'#7b1c1c',lbl:'Qué NO hacer',dosis:['No interrumpir la nutrición ante caídas leves-moderadas'],nota:'<b>Por qué es un error:</b> suspender de entrada retrasa la recuperación; la hipofosfatemia leve se maneja reponiendo y ajustando la velocidad.<br><br><b>Hazlo así:</b> repón P/K/Mg en paralelo y solo reduce/suspende ante caídas críticas.'};
+var NO_BASAL={n:'No medir P/K/Mg basales',sub:'⛔ Se pierde la referencia',no:true,c:'#7b1c1c',lbl:'Qué NO hacer',dosis:['No iniciar la nutrición sin laboratorio previo'],nota:'<b>Por qué es un error:</b> el síndrome se define por el % de caída respecto al basal; sin valor previo no se puede graduar ni detectar a tiempo.<br><br><b>Hazlo así:</b> medir P, K, Mg (y glucosa, Na, renal) antes de la primera caloría y seriado c/12 h.'};
+var NO_NA={n:'Sobrecarga de sodio y líquidos',sub:'⛔ Descompensa el corazón',no:true,c:'#7b1c1c',lbl:'Qué NO hacer',dosis:['No administrar sodio/volumen liberalmente al inicio'],nota:'<b>Por qué es un error:</b> la insulina retiene sodio y agua; sobre un miocardio atrofiado se produce edema pulmonar e insuficiencia cardiaca.<br><br><b>Hazlo así:</b> restringe sodio y líquidos al inicio; vigila peso y balance diarios.'};
+var TX_NODAR=[NO_RAPIDO,NO_DEXTRO,NO_SUSP,NO_BASAL,NO_NA];
+
+/* ---- CALCULADORA ---- */
+var RS_RIESGO='alto';
+function rsRiesgo(k,el){RS_RIESGO=k;
+ var a=document.getElementById('r_alto'),m=document.getElementById('r_mod');
+ if(a&&a.classList){if(k==='alto'){a.classList.add('on');}else{a.classList.remove('on');}}
+ if(m&&m.classList){if(k==='mod'){m.classList.add('on');}else{m.classList.remove('on');}}
+ rsCalc();}
+function _n(id){var v=parseFloat((document.getElementById(id)||{}).value);return isNaN(v)?0:v;}
+function _r(v){return Math.round(v);}
+function rsCalc(){
+ var w=_n('r_peso'),meta=_n('r_meta');var out=document.getElementById('r_out');if(!out)return;
+ if(w<=0||meta<=0){out.innerHTML='<div style="color:#7b1c1c;">Ingresa peso y meta válidos.</div>';return;}
+ var ini=(RS_RIESGO==='alto')?10:20;
+ var paso=(RS_RIESGO==='alto')?2:1;
+ var metaKcal=w*meta, iniKcal=w*ini;
+ var tiaMin=Math.min(200,Math.max(100,_r(2*w)));
+ var rows='',kcal=iniKcal,dia=1,inc=metaKcal*0.33;
+ while(kcal<metaKcal&&dia<12){
+   rows+='<tr><td class="dn">Día '+dia+(paso===2&&dia>1?'–'+(dia+1):'')+'</td><td><b>'+_r(kcal)+' kcal/día</b> <span style="color:#6b7280;font-size:11px;">('+(kcal/w).toFixed(1)+' kcal/kg)</span></td></tr>';
+   kcal=Math.min(metaKcal,kcal+inc);dia+=paso;
+ }
+ rows+='<tr style="background:#dcefe1;"><td class="dn">Meta</td><td><b>'+_r(metaKcal)+' kcal/día</b> <span style="color:#6b7280;font-size:11px;">('+meta+' kcal/kg)</span></td></tr>';
+ out.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+  +'<div class="kp" style="margin:0;"><span class="kn">💉</span><span class="kt"><b>Tiamina:</b> '+tiaMin+' mg IV/día <span style="color:#6b7280;">(antes de alimentar)</span></span></div>'
+  +'<div class="kp" style="margin:0;"><span class="kn">▶️</span><span class="kt"><b>Inicio:</b> '+_r(iniKcal)+' kcal/día <span style="color:#6b7280;">('+ini+' kcal/kg)</span></span></div>'
+  +'</div>'
+  +'<div class="tw" style="margin-top:10px;"><table class="t"><tr><th>Momento</th><th>Aporte</th></tr>'+rows+'</table></div>'
+  +'<div style="font-size:11px;color:#6b7280;margin-top:6px;">Avance de ~33% de la meta cada '+paso+' día(s). Medir P, K y Mg antes de iniciar y cada 12 h los primeros 3 días. Si caen &gt;30% o hay disfunción orgánica → reducir calorías 50%.</div>';
+}
+
+window.addEventListener('load',function(){
+  document.getElementById('prot-body').innerHTML=
+    buildLinea('Protocolo','Orden de arranque — bajo y lento',AC,TX_PROT,AC)+
+    buildLinea('Coadyuvantes','Tiamina, multivitamínico IV, oligoelementos y antiemético',CO,TX_COAD,'#374151')+
+    buildLinea('Errores','Qué NO hacer',NO,TX_NODAR,NO);
+  document.getElementById('rep-body').innerHTML=
+    buildLinea('Reposición electrolítica','Repón y sigue alimentando','#2b6cb0',TX_REP,'#2b6cb0');
+  rsCalc();
+});
+
+</script>
+</body>
+</html>

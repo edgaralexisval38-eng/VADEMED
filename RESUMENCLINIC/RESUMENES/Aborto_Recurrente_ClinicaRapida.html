@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Aborto recurrente · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#9d174d;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#fce7f0;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;color:#fff;margin-bottom:8px;}
+.biblio-header{background:linear-gradient(135deg,#500724,#9d174d);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:#fce7f0;padding:8px 14px;font-size:12px;font-weight:700;color:var(--ac);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:#fce7f0;color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--ac);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-c{background:#fef3c7;color:#92400e;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--ac);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#500724,#9d174d);">
+  <div class="hdr-top"><div class="hdr-icon">🔁</div><div>
+    <div class="hdr-eye">Ginecología y obstetricia · Medicina reproductiva</div>
+    <div class="hdr-title">Aborto recurrente (habitual)</div>
+    <div class="hdr-sub">Pérdida gestacional recurrente · ESHRE 2023: ≥2 pérdidas · Buscar SAF (tratable)</div>
+  </div></div>
+  <div class="hdr-badges">
+    <span class="badge">ESHRE ≥2 pérdidas</span>
+    <span class="badge">~50% idiopáticas</span>
+    <span class="badge">SAF: la tratable</span>
+    <span class="badge">Buen pronóstico basal</span>
+  </div>
+</div>
+<div class="qstats">
+  <div class="qs"><div class="qs-v">~1–2%</div><div class="qs-l">Prevalencia (≥3)</div></div>
+  <div class="qs"><div class="qs-v">~50%</div><div class="qs-l">Idiopática / inexplicada</div></div>
+  <div class="qs"><div class="qs-v">SAF 5–15%</div><div class="qs-l">Causa tratable clave</div></div>
+  <div class="qs"><div class="qs-v">&gt;50–60%</div><div class="qs-l">Éxito posterior sin causa</div></div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('causas',this)">🔬 Causas y %</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Estudio</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Manejo</button>
+  <button class="tab" onclick="showT('seg',this)">📈 Pronóstico y seguimiento</button>
+  <button class="tab" onclick="showT('legal',this)">⚖️ Médico-legal</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">¿Qué es?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p><strong>Pérdida de ≥2 embarazos</strong> (pérdida gestacional recurrente / aborto habitual). Las definiciones varían: <b>ESHRE 2023: ≥2 pérdidas</b> de embarazo (clínicas o no visualizadas por ecografía, no necesariamente consecutivas); <b>ACOG/ASRM: ≥2 pérdidas clínicas</b> documentadas por ecografía o histopatología; definición clásica: <b>≥3 pérdidas consecutivas</b>. Se excluyen el embarazo ectópico, la mola y el fallo de implantación.</p></div>
+    <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">Las 4 reglas</div><b>1)</b> La causa más importante es la que <b>SÍ se trata</b>: el <b>síndrome antifosfolípido (SAF)</b> → búscalo siempre. <b>2)</b> Cerca del <b>50% queda inexplicado</b>. <b>3)</b> <b>NO estudies trombofilias hereditarias de rutina</b> (asociación débil). <b>4)</b> El pronóstico basal es <b>bueno</b>: &gt;50–60% logran un embarazo exitoso aun sin causa identificada.</div></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Cada pérdida aislada suele ser <b>esporádica</b> (aneuploidía); el estudio se justifica cuando se acumulan <b>≥2–3 pérdidas</b>. El objetivo del abordaje es hallar y tratar las <b>pocas causas corregibles</b> (SAF, tiroides, cavidad uterina) sin sobre-tratar.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología y definiciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Dato</th><th>Cifra</th></tr>
+      <tr><td class="dn">Prevalencia (≥3 pérdidas consecutivas)</td><td><b>~1–2%</b> de las parejas en edad reproductiva</td></tr>
+      <tr><td class="dn">Prevalencia (≥2 pérdidas)</td><td><b>hasta ~5%</b> (más frecuente con el criterio de ≥2)</td></tr>
+      <tr><td class="dn">Pérdida esporádica única</td><td><b>~10–15%</b> de los embarazos clínicos (referencia poblacional basal)</td></tr>
+      <tr><td class="dm">Inexplicada / idiopática</td><td><b>~50%</b> quedan sin causa tras estudio completo</td></tr>
+      <tr><td class="dn">SAF (causa tratable clave)</td><td>presente en <b>~5–15%</b> de las pérdidas recurrentes</td></tr>
+      <tr><td class="dn">Modulador principal</td><td><b>Edad materna</b> y número de pérdidas previas elevan el riesgo</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px;">ESHRE Guideline Recurrent Pregnancy Loss (update 2022/2023); ASRM Committee Opinion; ACOG.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definiciones comparadas (cítalas)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Fuente</th><th>Umbral</th><th>Detalle</th></tr>
+      <tr><td class="dn">ESHRE 2023</td><td><b>≥2 pérdidas</b></td><td>Clínicas <b>o no visualizadas</b> (bioquímicas); <b>no</b> requiere ser consecutivas; excluye ectópico/molar</td></tr>
+      <tr><td class="dn">ACOG / ASRM</td><td><b>≥2 pérdidas clínicas</b></td><td>Documentadas por ecografía o histopatología</td></tr>
+      <tr><td class="dm">Definición clásica</td><td><b>≥3 consecutivas</b></td><td>Umbral tradicional (aún usado en algunos entornos)</td></tr>
+      <tr><td class="dn">Primaria vs secundaria</td><td>—</td><td><b>Primaria</b>: sin recién nacido vivo previo; <b>secundaria</b>: tras un embarazo llevado a término</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🔎</span><div>La tendencia actual (ESHRE/ASRM) es iniciar la evaluación tras <b>2 pérdidas</b>, sin exigir que sean consecutivas ni esperar a la tercera.</div></div>
+  </div></div>
+</div>
+
+<!-- CAUSAS -->
+<div class="panel" id="tab-causas">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🧭</span><div><div class="at">Marco general por frecuencia</div>Inexplicada <b>~50%</b> · Endocrina <b>~15–20%</b> · Anatómica <b>~10–15%</b> · Inmunológica/SAF <b>~5–15%</b> · Genética parental <b>~2–5%</b> · estilo de vida (modificable). Toca cada bloque para ver la tabla.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❓</span><span class="st">Idiopática / inexplicada — ~50%</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose"><p>Hasta la <b>mitad</b> de las parejas no tienen causa identificable tras un estudio completo. Se atribuye en gran parte a <b>aneuploidías embrionarias esporádicas</b> recurrentes (más probables con la edad materna).</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Punto</th><th>Detalle</th></tr>
+      <tr><td class="dn">Proporción</td><td><b>~50%</b> quedan sin diagnóstico</td></tr>
+      <tr><td class="dn">Mensaje clave</td><td>"Inexplicado" <b>no</b> es mal pronóstico: la mayoría logra un embarazo exitoso posterior</td></tr>
+      <tr><td class="dm">Riesgo</td><td>Evitar tratamientos empíricos no probados en este grupo</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Genéticas — translocación parental ~2–5%; aneuploidía embrionaria</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Alteración</th><th>%</th><th>Nota</th></tr>
+      <tr><td class="dn">Translocación equilibrada parental</td><td><b>~2–5%</b> de las parejas</td><td>Recíproca o Robertsoniana; portador sano, pero produce gametos desequilibrados → cariotipo de la pareja (selectivo)</td></tr>
+      <tr><td class="dn">Aneuploidía embrionaria</td><td>Causa más común de pérdida individual</td><td>Aumenta con la <b>edad materna</b>; cariotipo del producto ayuda a explicar el evento</td></tr>
+      <tr><td class="dm">Otras estructurales</td><td>—</td><td>Inversiones, mosaicismos; menos frecuentes</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>El riesgo de aneuploidía sube con la <b>edad materna</b> (errores meióticos del ovocito): principal modulador del riesgo global.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏛️</span><span class="st">Anatómicas uterinas — ~10–15%</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Alteración</th><th>Relevancia</th></tr>
+      <tr><td class="dm">Septo uterino</td><td><b>La más asociada</b> a pérdida recurrente; corregible por <b>resección histeroscópica</b></td></tr>
+      <tr><td class="dn">Miomas submucosos</td><td>Distorsionan la cavidad → mayor riesgo; valorar miomectomía</td></tr>
+      <tr><td class="dn">Sinequias (síndrome de Asherman)</td><td>Adherencias intrauterinas, a menudo tras legrados; adhesiólisis histeroscópica</td></tr>
+      <tr><td class="dn">Otras Müllerianas (bicorne, unicorne)</td><td>Asociación variable; más ligadas a parto pretérmino</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🔎</span><div>Evaluar la <b>cavidad uterina</b> es parte del estudio estándar (histerosonografía / histeroscopia / RM 3D).</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Endocrinas — ~15–20%</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Trastorno</th><th>Clave</th></tr>
+      <tr><td class="dm">Disfunción tiroidea / anti-TPO +</td><td><b>Hipotiroidismo</b> (incluido subclínico) y <b>autoinmunidad tiroidea (anti-TPO)</b> aumentan el riesgo; tratables con levotiroxina</td></tr>
+      <tr><td class="dn">Diabetes mal controlada</td><td>HbA1c elevada preconcepcional → riesgo; optimizar control glucémico</td></tr>
+      <tr><td class="dn">SOP</td><td>Asociado a mayor pérdida (resistencia a insulina, obesidad)</td></tr>
+      <tr><td class="dn">Hiperprolactinemia</td><td>Altera la fase lútea; tratar con agonista dopaminérgico</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Inmunológica / trombofilia — SAF ~5–15% (la TRATABLE clave)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Entidad</th><th>%</th><th>Nota</th></tr>
+      <tr><td class="dm">Síndrome antifosfolípido (SAF)</td><td><b>~5–15%</b></td><td><b>La causa tratable más importante.</b> Requiere criterio clínico + anticuerpo persistente (a las 12 sem). Se trata con AAS + HBPM</td></tr>
+      <tr><td class="dn">Trombofilias hereditarias</td><td>—</td><td><b>NO estudiar de rutina</b>: asociación débil/controvertida con pérdida temprana; sin beneficio de anticoagular</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Diferencia clave: el <b>SAF sí se busca y se trata</b>; las <b>trombofilias hereditarias (factor V Leiden, protrombina G20210A, etc.) NO</b> se estudian de rutina fuera de otra indicación.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚬</span><span class="st">Estilo de vida (modificables)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Factor</th><th>Comentario</th></tr>
+      <tr><td class="dn">Tabaquismo</td><td>Riesgo <b>dosis-dependiente</b>; suspender</td></tr>
+      <tr><td class="dn">Alcohol</td><td>Aumenta el riesgo; evitar</td></tr>
+      <tr><td class="dn">Peso</td><td>Obesidad (IMC ≥30) y bajo peso elevan el riesgo; optimizar</td></tr>
+      <tr><td class="dn">Cafeína</td><td>Consumo alto (<b>&gt;200–300 mg/día</b>) se asocia a aumento modesto</td></tr>
+    </table></div>
+    <div class="alert a-g" style="margin-top:8px;"><span class="ai">✅</span><div>Optimizar el estilo de vida es una medida <b>de bajo riesgo y alta aceptación</b>, aplicable a todas las parejas.</div></div>
+  </div></div>
+</div>
+
+<!-- ESTUDIO / WORKUP -->
+<div class="panel" id="tab-dx">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🔎</span><div><div class="at">Objetivo del estudio</div>Buscar las <b>causas corregibles</b> (SAF, tiroides, cavidad uterina, endocrino) sin sobre-estudiar. <b>NO</b> incluye trombofilias hereditarias de rutina.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Estudio recomendado (panel básico)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Para qué / cómo</th></tr>
+      <tr><td class="dm">Anticuerpos antifosfolípido</td><td><b>Anticoagulante lúpico</b>, <b>anticardiolipina</b> (IgG/IgM) y <b>anti-β2-glicoproteína I</b> (IgG/IgM). Se <b>confirman a las 12 semanas</b> si son positivos (persistencia)</td></tr>
+      <tr><td class="dm">Función tiroidea</td><td><b>TSH</b> + <b>anti-TPO</b> (autoinmunidad tiroidea)</td></tr>
+      <tr><td class="dm">Evaluación de la cavidad uterina</td><td><b>Histerosonografía</b> / <b>histeroscopia</b> / <b>RM 3D</b> (o eco 3D) para septo, miomas submucosos, sinequias</td></tr>
+      <tr><td class="dn">Cariotipo de la pareja</td><td><b>Selectivo</b> (no universal): valorar según antecedentes / hallazgo en producto. Cariotipo del producto de la pérdida cuando sea posible</td></tr>
+      <tr><td class="dn">Glucosa / HbA1c</td><td>Descartar diabetes; optimizar control preconcepcional</td></tr>
+      <tr><td class="dn">Prolactina</td><td>Si hay datos de disfunción / oligomenorrea</td></tr>
+    </table></div>
+    <div class="alert a-r" style="margin-top:8px;"><span class="ai">⛔</span><div><b>NO estudiar trombofilias hereditarias de rutina</b> (factor V Leiden, protrombina G20210A, proteína C/S, antitrombina): asociación débil con pérdida temprana y sin beneficio terapéutico demostrado.</div></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Criterios de laboratorio del SAF</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Anticuerpo</th><th>Criterio</th></tr>
+      <tr><td class="dn">Anticoagulante lúpico</td><td>Positivo en ≥2 ocasiones separadas <b>≥12 semanas</b></td></tr>
+      <tr><td class="dn">Anticardiolipina (IgG/IgM)</td><td>Título medio-alto, confirmado a <b>≥12 semanas</b></td></tr>
+      <tr><td class="dn">Anti-β2-glicoproteína I (IgG/IgM)</td><td>Confirmado a <b>≥12 semanas</b></td></tr>
+      <tr><td class="dm">Criterio clínico obstétrico</td><td>≥3 pérdidas &lt;10 SDG, ≥1 muerte fetal ≥10 SDG, o parto pretérmino &lt;34 SDG por preeclampsia/insuficiencia placentaria</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Diagnóstico de SAF = <b>1 criterio clínico + 1 criterio de laboratorio persistente</b>. Un solo resultado positivo aislado <b>no</b> establece el diagnóstico.</div></div>
+  </div></div>
+</div>
+
+<!-- MANEJO -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Principio</div>El manejo es <b>dirigido por causa</b>: tratar el SAF (AAS + HBPM), corregir lo endocrino/anatómico, dar asesoría genética, y ofrecer coadyuvantes con evidencia. En la <b>inexplicada</b>: apoyo y buen pronóstico basal, evitando terapias no probadas. Toca cada tarjeta.</div></div>
+  <div id="tx-body"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Pronóstico</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-g"><span class="ai">✅</span><div><div class="at">Mensaje central</div>El pronóstico es <b>favorable</b> incluso en la pérdida recurrente <b>inexplicada</b>: más del <b>50–60%</b> logra un embarazo con recién nacido vivo en el siguiente intento, solo con apoyo y seguimiento.</div></div>
+    <div class="tw" style="margin-top:8px;"><table class="t">
+      <tr><th>Factor</th><th>Efecto en el pronóstico</th></tr>
+      <tr><td class="dm">Edad materna avanzada</td><td>Desfavorable (más aneuploidía); el factor no modificable más fuerte</td></tr>
+      <tr><td class="dm">Número de pérdidas previas</td><td>A más pérdidas, mayor riesgo de la siguiente</td></tr>
+      <tr><td class="dn">SAF tratado (AAS + HBPM)</td><td>Mejora sustancialmente la tasa de nacido vivo</td></tr>
+      <tr><td class="dn">Causa corregible tratada</td><td>Tiroides, septo, control glucémico → mejor desenlace</td></tr>
+      <tr><td class="dn">Inexplicada con apoyo</td><td>Buen pronóstico basal (&gt;50–60%)</td></tr>
+    </table></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗓️</span><span class="st">Seguimiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt">Completar el <b>estudio de causas</b> entre embarazos (SAF, TSH/anti-TPO, cavidad uterina, glucosa).</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Iniciar <b>ácido fólico</b> y optimizar el estilo de vida <b>preconcepcional</b>; corregir la causa hallada.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">En el siguiente embarazo: si SAF, comenzar <b>AAS + HBPM</b> con la <b>prueba de embarazo positiva</b>; ofrecer <b>ecografía temprana</b> y apoyo ("tender loving care").</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Progesterona vaginal</b> en mujeres con <b>sangrado en embarazo temprano + abortos previos</b> (evidencia PRISM).</span></div>
+    <div class="alert a-r" style="margin-top:6px;"><span class="ai">🚨</span><div><b>Reconsulta:</b> sangrado abundante, dolor intenso, expulsión de tejido, fiebre o mareo.</div></div>
+  </div></div>
+</div>
+
+<!-- MEDICO-LEGAL -->
+<div class="panel" id="tab-legal">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Aspectos médico-legales (México)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Asesoría y consejería:</b> documentar la explicación del pronóstico realista (buen pronóstico basal aun sin causa) y el plan de estudio; el aborto recurrente es una condición de <b>evaluación reproductiva</b>, no un evento agudo.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Consentimiento informado</b> para los estudios (anticuerpos antifosfolípido, cariotipo de la pareja, procedimientos histeroscópicos) y para tratamientos como <b>HBPM</b> o <b>resección de septo</b>; registrar riesgos/beneficios.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">El <b>cariotipo de la pareja</b> puede revelar un portador de translocación: informar con <b>asesoría genética</b> y manejar las implicaciones familiares con confidencialidad.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Expediente clínico completo conforme a la <b>NOM-004</b>; atención centrada en la paciente y su pareja, con apoyo psicológico documentado.</span></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">ℹ️</span><div>La normativa (NOMs, causales y plazos) y las guías de estudio <b>varían por estado/institución y se actualizan</b>: verifica el marco y protocolo vigentes en tu entidad.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFIA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Aborto recurrente</h2><p>Guías y evidencia principales.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías y evidencia</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ESHRE Guideline Group on RPL. <em>ESHRE guideline: recurrent pregnancy loss (update).</em> Hum Reprod Open 2023. (Definición ≥2 pérdidas; estudio y manejo; SAF; contra trombofilias hereditarias de rutina.)</div><a class="biblio-link" href="https://www.eshre.eu/Guidelines-and-Legal/Guidelines/Recurrent-pregnancy-loss" target="_blank">🔗 ESHRE</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2026</span><span class="biblio-level lv-a">Guía</span></div><div class="biblio-ref">ASRM Practice Committee. <em>Recurrent pregnancy loss: a committee opinion.</em> Fertil Steril. (Definición ≥2 pérdidas clínicas; evaluación y tratamiento.)</div><a class="biblio-link" href="https://www.asrm.org/practice-guidance/practice-committee-documents/recurrent-pregnancy-loss-a-committee-opinion-2026/" target="_blank">🔗 ASRM</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">ECA</span></div><div class="biblio-ref">Coomarasamy A, et al. <em>A Randomized Trial of Progesterone in Women with Bleeding in Early Pregnancy (PRISM).</em> N Engl J Med 2019;380:1815–1824. (Progesterona vaginal en sangrado + abortos previos.)</div><a class="biblio-link" href="https://doi.org/10.1056/NEJMoa1813730" target="_blank">🔗 DOI 10.1056/NEJMoa1813730</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2010</span><span class="biblio-level lv-a">ECA</span></div><div class="biblio-ref">Empson M, et al. / Cochrane. <em>Aspirin plus heparin for pregnant women with recurrent miscarriage and antiphospholipid syndrome.</em> (Base del AAS + HBPM en SAF obstétrico.)</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2012</span><span class="biblio-level lv-b">Consenso</span></div><div class="biblio-ref">Miyakis S, et al. <em>International consensus statement on classification criteria for definite antiphospholipid syndrome (Sydney).</em> J Thromb Haemost. (Criterios de SAF; confirmación a las 12 semanas.)</div></div>
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">GPC</span><span class="biblio-level lv-exp">México</span></div><div class="biblio-ref">CENETEC. <em>GPC: Diagnóstico y tratamiento del aborto y la pérdida gestacional recurrente.</em></div><a class="biblio-link" href="https://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 CENETEC</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Revisión</span></div><div class="biblio-ref">StatPearls / ACOG. <em>Recurrent Pregnancy Loss.</em> (Epidemiología ~1–2%; distribución de causas.)</div><a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK554460/" target="_blank">🔗 NCBI</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div><div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Observacional / criterios</div>
+      <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso / series</div>
+      <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Referencia / GPC</div>
+    </div>
+  </div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Educativo. Las dosis, la disponibilidad de HBPM, progesterona y estudios inmunológicos/genéticos, así como el marco legal, varían por institución y estado: verifica el protocolo local. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+var FDN=0;
+function fdTog(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
+function poprow(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:118px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;max-width:62%;">'+v+'</span></div>';}
+var TFN=0;
+function tcard(f,gc){TFN++;var id='ac'+TFN;var c=gc||f.c||'#9d174d';
+ var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+ h+='<div onclick="fdTog(\''+id+'\')" style="background:'+c+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+ h+='<div style="min-width:0;">'+(f.sub?'<div style="font-size:11px;opacity:.85;margin-bottom:2px;">'+f.sub+'</div>':'')+'<div style="font-size:14px;font-weight:800;line-height:1.2;">'+f.n+'</div></div>';
+ h+='<span id="'+id+'-arr" style="font-size:20px;color:rgba(255,255,255,.78);transition:transform .2s;flex-shrink:0;">&#8964;</span></div>';
+ h+='<div id="'+id+'" style="display:none;">';
+ h+='<div style="background:'+c+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+ h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;color:'+c+';letter-spacing:.5px;">'+(f.lbl||'Dosis / pauta')+'</div>';
+ if(f.dosis){var dd='';for(var k=0;k<f.dosis.length;k++)dd+='<div style="font-size:12.5px;font-weight:700;color:'+c+';padding:2px 0;line-height:1.35;">• '+f.dosis[k]+'</div>';h+=dd;}
+ else if(f.da)h+='<div style="font-size:13.5px;font-weight:800;color:'+c+';line-height:1.35;">'+f.da+'</div>';
+ if(f.dur)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;margin-top:4px;">⏱️ '+f.dur+'</div>';
+ if(f.prep)h+='<div style="font-size:12px;color:#374151;margin-top:6px;line-height:1.55;"><b style="color:'+c+';">Preparación:</b> '+f.prep+'</div>';
+ h+='</div>';
+ h+='<div style="padding:8px 14px;border-bottom:1px solid #f3f4f6;">';
+ if(f.iv)h+=poprow('Vía / Administración',f.iv,'#1a3a5c');
+ if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+ if(f.fda)h+=poprow('Embarazo / seguridad',f.fda,'#7a4a00');
+ if(f.mon)h+=poprow('Monitoreo',f.mon,'#0a5c45');
+ if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+ if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+ h+='</div>';
+ if(f.nota)h+='<div style="padding:10px 14px;background:#fce7f0;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#9d174d;margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+ h+='</div></div>';return h;}
+function buildSifCards(color,farmacos){var h='';for(var i=0;i<farmacos.length;i++){var f=farmacos[i];var col=f.no?'#7b1c1c':(color||f.c||'#9d174d');h+=tcard(f,col);}return h;}
+function buildLinea(label,sublabel,badgeColor,farmacos,cardColor){var h='<div style="margin-top:12px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span><span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span></div>'+buildSifCards(cardColor||badgeColor,farmacos)+'</div>';return h;}
+var AC='#9d174d';var CO='#0a5c45';var NO='#7b1c1c';
+
+var M_AAS={n:'Ácido acetilsalicílico (AAS) 100 mg',sub:'SAF — antiagregante, base del tratamiento',c:AC,lbl:'Dosis',da:'100 mg (75–100 mg) VO una vez al día, desde la prueba de embarazo positiva',prep:'Idealmente iniciar antes o al confirmar el embarazo; continuar según protocolo obstétrico.',iv:'Oral',pres:'AAS 100 mg tab · genérico / IMSS',fda:'Compatible en el embarazo a dosis bajas',ci:'Alergia a salicilatos, úlcera péptica activa, sangrado activo',ea:'Dispepsia, sangrado leve',mon:'Vigilancia obstétrica; combinar con HBPM',nota:'<b>Mecanismo:</b> antiagregante que mejora la perfusión placentaria en el SAF.<br><br><b>Clave:</b> se usa <b>combinado con HBPM</b> en el SAF obstétrico; no se anticoagula sin diagnóstico confirmado de SAF.'};
+var M_HBPM={n:'Heparina de bajo peso molecular (enoxaparina)',sub:'SAF — dosis profiláctica, con AAS',c:AC,lbl:'Dosis',da:'Enoxaparina 40 mg SC una vez al día (dosis profiláctica), desde la prueba de embarazo positiva',prep:'Aplicación subcutánea diaria; iniciar al confirmar el embarazo y mantener según protocolo (habitualmente hasta el posparto).',iv:'Subcutánea',pres:'Enoxaparina 40 mg / 0.4 mL jeringa precargada · MX',fda:'HBPM no cruza placenta; segura en el embarazo',ci:'Sangrado activo, trombocitopenia inducida por heparina, hipersensibilidad',ea:'Hematoma/dolor en sitio de inyección; rara HIT, osteopenia con uso prolongado',mon:'Plaquetas; ajuste por peso/función renal en dosis terapéutica',nota:'<b>Indicación:</b> SAF obstétrico confirmado (criterio clínico + anticuerpo persistente a 12 sem).<br><br><b>Evidencia:</b> <b>AAS + HBPM profiláctica</b> aumenta la tasa de recién nacido vivo en el SAF. Dosis terapéutica solo si hay antecedente trombótico (SAF trombótico).'};
+var M_LEVO={n:'Levotiroxina',sub:'Endocrino — hipotiroidismo / anti-TPO',c:AC,lbl:'Dosis',da:'Ajustar para lograr TSH objetivo <2.5 mUI/L preconcepcional y en el 1.er trimestre',prep:'En ayuno, 30–60 min antes del desayuno; titular con TSH cada 4–6 semanas.',iv:'Oral',pres:'Levotiroxina 25/50/100 µg tab · genérico / IMSS',fda:'Segura y necesaria en el embarazo',ci:'Tirotoxicosis no tratada',ea:'Síntomas de hipertiroidismo por sobredosis',mon:'TSH seriada',nota:'<b>Indicación:</b> hipotiroidismo (incluido subclínico); en eutiroidea con <b>anti-TPO +</b> el beneficio de tratar es menos claro — individualizar. Meta TSH <2.5 en la periconcepción.'};
+var M_ENDO={n:'Control glucémico e hiperprolactinemia',sub:'Endocrino — optimización preconcepcional',c:AC,lbl:'Medidas',dosis:['Diabetes: optimizar HbA1c preconcepcional (meta cercana a lo normal); metformina/insulina según caso','Hiperprolactinemia: agonista dopaminérgico (cabergolina/bromocriptina) hasta normalizar','Optimizar peso e insulinorresistencia (SOP)'],nota:'<b>Objetivo:</b> corregir el ambiente endocrino <b>antes</b> del embarazo. El buen control glucémico preconcepcional reduce el riesgo de pérdida y de malformaciones.'};
+var M_SEPTO={n:'Resección histeroscópica del septo',sub:'Anatómico — corrección quirúrgica',c:AC,lbl:'Procedimiento',da:'Metroplastia histeroscópica (septoplastia) del septo uterino; valorar miomectomía de miomas submucosos y adhesiólisis de sinequias',prep:'Guiada por histeroscopia; corrección entre embarazos.',iv:'Histeroscópica',fda:'Fuera del embarazo',ci:'Infección pélvica activa',ea:'Sinequias post-quirúrgicas, perforación (raras)',nota:'<b>Indicación:</b> el <b>septo uterino</b> es la anomalía más asociada a pérdida recurrente y la más corregible. Miomas submucosos y sinequias (Asherman) se tratan por histeroscopia según el caso.'};
+var M_GEN={n:'Asesoría genética · PGT · gametos de donante',sub:'Genético — translocación parental / aneuploidía',c:AC,lbl:'Opciones',dosis:['Asesoría genética a la pareja (especialmente si hay translocación equilibrada)','Considerar PGT (diagnóstico genético preimplantación) con FIV para seleccionar embriones euploides','Valorar gametos de donante en casos seleccionados'],nota:'<b>Clave:</b> el portador de <b>translocación equilibrada</b> es sano pero produce gametos desequilibrados. La asesoría explica el riesgo de recurrencia y las opciones; el PGT no garantiza mayor tasa acumulada de nacido vivo frente a la concepción natural con seguimiento.'};
+var C_FOL={n:'Ácido fólico',sub:'Coadyuvante — periconcepcional',c:CO,lbl:'Dosis',da:'0.4 mg (400 µg) VO al día · 5 mg/día si antecedente de defecto del tubo neural, DM o uso de anticonvulsivos',iv:'Oral',pres:'Ácido fólico 0.4 mg y 5 mg · genérico / IMSS',fda:'Recomendado en la periconcepción',ci:'—',ea:'Bien tolerado',nota:'<b>Coadyuvante:</b> parte de la optimización preconcepcional; iniciar antes de la concepción.'};
+var C_PROG={n:'Progesterona vaginal',sub:'Coadyuvante — sangrado + abortos previos (PRISM)',c:CO,lbl:'Dosis',da:'Progesterona micronizada 400 mg vía vaginal cada 12 h, iniciando al presentarse sangrado en el embarazo temprano, hasta ~semana 16',prep:'Óvulo/cápsula vaginal mañana y noche.',iv:'Vaginal',pres:'Progesterona micronizada 100/200 mg (Utrogestan®, Geslutin®) · MX',fda:'Compatible con el embarazo',ci:'Sangrado no aclarado de otra causa; tromboembolia activa (valorar)',ea:'Somnolencia, flujo vaginal, cefalea',nota:'<b>Evidencia (PRISM):</b> beneficio en mujeres con <b>sangrado en el embarazo temprano Y ≥1 aborto previo</b> (mayor con ≥3 previos). No indicada de forma universal en la pérdida recurrente sin sangrado.'};
+var C_APOYO={n:'Apoyo y estilo de vida ("tender loving care")',sub:'Coadyuvante — soporte no farmacológico',c:CO,lbl:'Medidas',dosis:['Apoyo emocional y seguimiento cercano ("tender loving care"): mejora los desenlaces en la inexplicada','Ecografía temprana y de sostén en el siguiente embarazo','Suspender tabaco y alcohol; optimizar peso; limitar cafeína'],nota:'<b>Clave:</b> transmitir el <b>buen pronóstico basal</b> reduce la ansiedad y es parte del tratamiento en la pérdida inexplicada.'};
+var E_TROMBO={n:'Estudiar trombofilias hereditarias de rutina',sub:'⛔ No recomendado',c:NO,da:'No solicitar factor V Leiden, protrombina G20210A, proteína C/S, antitrombina de rutina',nota:'Asociación <b>débil/controvertida</b> con la pérdida temprana y sin beneficio de anticoagular; solo estudiar ante otra indicación clínica (trombosis).'};
+var E_INMUNO={n:'Inmunoterapias no probadas',sub:'⛔ Sin evidencia',c:NO,da:'Evitar inmunoglobulina IV, inmunización con linfocitos paternos y corticoides de rutina',nota:'No han demostrado aumentar la tasa de nacido vivo en la pérdida recurrente inexplicada y conllevan riesgos y costos.'};
+var E_ANTICOAG={n:'Anticoagular sin diagnóstico de SAF',sub:'⛔ Error',c:NO,da:'No usar AAS + HBPM en pérdida recurrente inexplicada sin SAF confirmado',nota:'El beneficio de AAS/HBPM se limita al <b>SAF</b>; en la inexplicada no mejora los desenlaces y expone a sangrado.'};
+var E_PRONOS={n:'Omitir la asesoría del buen pronóstico',sub:'⛔ Error de comunicación',c:NO,da:'Siempre informar que >50–60% logran un embarazo exitoso aun sin causa hallada',nota:'No dar esta información genera ansiedad y sobre-tratamiento. El apoyo y el pronóstico realista son parte del manejo.'};
+
+window.addEventListener('load',function(){
+  document.getElementById('tx-body').innerHTML=
+    buildLinea('Síndrome antifosfolípido','La causa tratable clave — desde prueba de embarazo positiva',AC,[M_AAS,M_HBPM],AC)+
+    buildLinea('Endocrino / anatómico','Corregir tiroides, glucemia, prolactina y cavidad uterina',AC,[M_LEVO,M_ENDO,M_SEPTO],AC)+
+    buildLinea('Genético','Asesoría, PGT y opciones reproductivas',AC,[M_GEN],AC)+
+    buildLinea('Coadyuvantes','Soporte con evidencia y optimización periconcepcional',CO,[C_FOL,C_PROG,C_APOYO],'#374151')+
+    buildLinea('Errores','Qué NO hacer',NO,[E_TROMBO,E_INMUNO,E_ANTICOAG,E_PRONOS],NO);
+});
+</script>
+</body>
+</html>
