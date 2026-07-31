@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Artritis séptica · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#b11226;--acd:#4a0810;--acl:#fdecee;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#4a0810,#b11226);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦵</div>
+    <div>
+      <div class="hdr-eye">Reumatología / Urgencias</div>
+      <div class="hdr-title">Artritis séptica</div>
+      <div class="hdr-sub">SANJO 2023 · PIDS/IDSA 2023 · Margaretten JAMA</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Urgencia médico-quirúrgica</span>
+    <span class="badge">Aspirar antes del antibiótico</span>
+    <span class="badge">Antibiótico + DRENAJE</span>
+    <span class="badge">🚫 solo antibiótico</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Aspirar 1.º</div><div class="qs-l">Gram + cultivo</div></div>
+  <div class="qs"><div class="qs-v">&gt;50 000</div><div class="qs-l">líquido sugerente</div></div>
+  <div class="qs"><div class="qs-v">S. aureus</div><div class="qs-l">agente #1</div></div>
+  <div class="qs"><div class="qs-v">Drenaje</div><div class="qs-l">obligatorio</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('cr',this)">📊 Herramientas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>La <strong>artritis séptica</strong> es la <strong>infección (casi siempre bacteriana) del espacio articular</strong>. Es una <strong>urgencia médico-quirúrgica</strong>: la infección destruye el cartílago en <strong>horas a días</strong> y tiene una letalidad de <strong>~11%</strong>. La vía más frecuente es la <strong>hematógena</strong>.</p></div>
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">La regla que ordena todo</div>Una <strong>monoartritis aguda, caliente y muy dolorosa es artritis séptica hasta demostrar lo contrario</strong>. La conducta: <strong>artrocentesis urgente ANTES del antibiótico</strong> (Gram, cultivo, recuento, cristales) + hemocultivos → <strong>antibiótico empírico + DRENAJE</strong>.</div></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">No te confíes por la ausencia de fiebre</div>Si la sospecha clínica es alta, <strong>trátala como séptica aunque no haya fiebre</strong>. Y ni un Gram ni un cultivo negativos la excluyen.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Cifra</th></tr></thead><tbody>
+    <tr><td class="dm">Incidencia</td><td>~2–10 por 100 000/año; mayor en artritis reumatoide y prótesis</td></tr>
+    <tr><td class="dm">Letalidad</td><td><strong>~11%</strong>; mayor con retraso o comorbilidad</td></tr>
+    <tr><td class="dm">Agente más frecuente</td><td><strong>Staphylococcus aureus</strong> (incluido SARM según contexto)</td></tr>
+    <tr><td class="dn">Estreptococos</td><td>Segunda causa más común</td></tr>
+    <tr><td class="dn">Gonococo</td><td>Causa importante en <strong>jóvenes sexualmente activos</strong></td></tr>
+    <tr><td class="dn">Articulación</td><td>La <strong>rodilla</strong> es la más afectada en el adulto</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — por qué la urgencia</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Llegada del germen a la articulación</strong><br>La mayoría por vía <strong>hematógena</strong> (bacteriemia); también por <strong>inoculación directa</strong> (trauma, infiltración, cirugía) o por <strong>contigüidad</strong> (celulitis, osteomielitis). La sinovial, muy vascularizada y sin membrana basal, es vulnerable.<br><br><strong>Por eso:</strong> siempre <strong>hemocultivos</strong> y buscar el foco de origen (piel, endocarditis).</div>
+  <div class="fp fp-a"><strong>2. Proliferación e inflamación</strong><br>La bacteria se multiplica en el líquido sinovial; llegan <strong>neutrófilos</strong> que liberan enzimas y citocinas. El recuento leucocitario del líquido se dispara (típicamente <strong>&gt;50 000, a menudo &gt;100 000</strong>, con &gt;90% de PMN).<br><br><strong>Por eso:</strong> el <strong>recuento y el Gram del líquido</strong> son la prueba más útil, y el <strong>drenaje</strong> reduce la carga.</div>
+  <div class="fp fp-b"><strong>3. Destrucción del cartílago</strong><br>Las <strong>proteasas y colagenasas</strong> bacterianas y del huésped degradan el cartílago en <strong>horas-días</strong>; el daño es <strong>irreversible</strong>.<br><br><strong>Por eso:</strong> es una <strong>urgencia</strong>: antibiótico + <strong>drenaje sin demora</strong>. El tiempo es cartílago.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Factor</th><th>Comentario</th></tr></thead><tbody>
+    <tr><td class="dm">Artritis reumatoide</td><td><strong>Trampa clásica:</strong> una articulación "de más" puede ser séptica, no un brote. Los biológicos elevan el riesgo</td></tr>
+    <tr><td class="dm">Prótesis / cirugía articular</td><td>Entidad aparte (biofilm) → ortopedia</td></tr>
+    <tr><td class="dm">Diabetes / inmunosupresión</td><td>Mayor riesgo y presentación atenuada</td></tr>
+    <tr><td class="dn">Edad avanzada</td><td>Más frecuente y peor pronóstico</td></tr>
+    <tr><td class="dn">Uso de drogas IV</td><td>Articulaciones axiales; Pseudomonas/Gram negativos; buscar endocarditis</td></tr>
+    <tr><td class="dn">Lesión cutánea / celulitis</td><td>Puerta de entrada y contigüidad</td></tr>
+    <tr><td class="dn">Artropatía por cristales previa</td><td>Puede coexistir; los cristales <strong>no</strong> descartan infección</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Monoartritis aguda</strong>: dolor intenso, calor, eritema, derrame y <strong>limitación marcada del movimiento</strong>. La rodilla es la más frecuente.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Fiebre</strong> frecuente pero <strong>no siempre presente</strong> (sobre todo en ancianos o inmunodeprimidos).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Gonocócica:</strong> joven sexualmente activo con <strong>poliartralgia migratoria, tenosinovitis y dermatitis</strong> (síndrome artritis-dermatitis).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Pediátrica:</strong> cadera irritable, el niño <strong>no apoya la extremidad</strong>; distinguir de la sinovitis transitoria (criterios de Kocher).</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas / referencia</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🏥</span><div><div class="at">Todos ingresan</div>La artritis séptica <strong>requiere hospitalización</strong>. Refiere a quien pueda <strong>aspirar la articulación</strong> (urgencias, ortopedia, reumatología) sin demora.</div></div>
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Articulación protésica</strong> → ortopedia siempre.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Datos de sepsis</strong> (hipotensión, taquicardia, alteración del estado) → reanimación y no retrasar el antibiótico.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Paciente con AR/inmunodepresión</strong> con una articulación desproporcionada → aspira, no asumas brote.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Dar antibiótico antes de aspirar</strong> (negativiza los cultivos), salvo sepsis inestable.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Tratar solo con antibiótico</strong> sin drenar la articulación.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Descartar séptica</strong> porque no hay fiebre o el Gram es negativo.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Atribuir todo a "gota/AR"</strong>: los cristales y la infección pueden coexistir.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Manejar una prótesis</strong> como artritis nativa.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Retrasar el drenaje</strong>: el cartílago se destruye en horas-días.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Artrocentesis — la prueba clave (antes del antibiótico)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Aspira PRIMERO</div>Ante toda sospecha, <strong>aspira la articulación</strong> y pide <strong>Gram, cultivo, recuento con diferencial y microscopía de polarización</strong> (cristales), <strong>antes</strong> de iniciar el antibiótico (salvo sepsis inestable). Toma <strong>hemocultivos</strong>. La warfarina no la contraindica.</div></div>
+  <div class="prose"><p>Ni un <strong>Gram negativo</strong> ni un <strong>cultivo negativo</strong> excluyen la artritis séptica; la microscopía de polarización busca cristales, que <strong>pueden coexistir</strong> con la infección.</p></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Interpretación del líquido sinovial</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Patrón</th><th>Leucocitos (células/mm³)</th><th>Orientación</th></tr></thead><tbody>
+    <tr><td class="dn">Normal</td><td>&lt;200</td><td>Sano</td></tr>
+    <tr><td class="dn">No inflamatorio</td><td>200–2 000</td><td>Artrosis, trauma</td></tr>
+    <tr><td class="dm">Inflamatorio</td><td>2 000–50 000</td><td>Cristales, AR, reactiva — <strong>la séptica puede empezar aquí</strong></td></tr>
+    <tr><td class="dm">Sugerente de séptica</td><td><strong>&gt;50 000 (a menudo &gt;100 000), PMN &gt;90%</strong></td><td>Trata como séptica hasta el cultivo</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">📊</span><div>Hay una <strong>calculadora interactiva</strong> del recuento en la pestaña <em>Herramientas</em>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Estudios complementarios</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Hemocultivos</strong> (positivos en una proporción importante) y <strong>biometría, PCR y VSG</strong> (apoyan, no confirman).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Radiografía basal</strong> (no diagnóstica; puede mostrar condrocalcinosis). <strong>Ecografía</strong> para guiar la aspiración; <strong>RM</strong> si hay sospecha de osteomielitis.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Gonococo:</strong> cultivos en medios especiales o <strong>NAAT</strong> de muestras genitales/faríngeas/rectales.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-cr">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">📊</span><div>Dos herramientas de apoyo: los <strong>criterios de Kocher</strong> (cadera pediátrica: séptica vs sinovitis transitoria) y el <strong>interpretador del líquido sinovial</strong>. Ninguna reemplaza la artrocentesis ni el juicio clínico.</div></div>
+
+<div class="calc-w" id="ko-calc">
+  <div style="font-size:14px;font-weight:800;color:var(--ac);margin-bottom:4px;">Criterios de Kocher (cadera pediátrica)</div>
+  <div style="font-size:11.5px;color:#6b7280;margin-bottom:12px;">Marca los que estén presentes. Diferencia artritis séptica de sinovitis transitoria de la cadera en niños.</div>
+  <div style="margin-bottom:6px;">
+    <button class="opt" onclick="koTog('fiebre',this)">Fiebre &gt;38.5 °C</button>
+    <button class="opt" onclick="koTog('carga',this)">No soporta peso</button>
+    <button class="opt" onclick="koTog('vsg',this)">VSG &gt;40 mm/h</button>
+    <button class="opt" onclick="koTog('leu',this)">Leucocitos &gt;12 000</button>
+  </div>
+  <button class="calc-btn sc" onclick="koReset()">Reiniciar</button>
+  <div class="calc-result" id="ko-res"></div>
+</div>
+
+<div class="calc-w" id="liq-calc">
+  <div style="font-size:14px;font-weight:800;color:var(--ac);margin-bottom:4px;">Interpretador del líquido sinovial</div>
+  <div style="font-size:11.5px;color:#6b7280;margin-bottom:12px;">Escribe el recuento de leucocitos del líquido articular.</div>
+  <label class="calc-lbl">Leucocitos en líquido sinovial (células/mm³)</label>
+  <input class="calc-in" id="liq-leu" type="number" inputmode="numeric" placeholder="p. ej. 60000">
+  <div style="margin-top:6px;">
+    <button class="calc-btn" onclick="liqCalc()">Interpretar</button>
+    <button class="calc-btn sc" onclick="liqReset()">Reiniciar</button>
+  </div>
+  <div class="calc-result" id="liq-res"></div>
+</div>
+</div>
+<div class="panel" id="tab-algo"><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Toca una familia para desplegarla o <strong>busca por nombre</strong>. Cada ficha trae dosis, presentación mexicana y perlas.</div></div>
+<input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (vancomicina, ceftriaxona, drenaje…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;">
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('tipica',this)">Monoartritis típica</button>
+  <button class="pchip" onclick="setEscen('gono',this)">Gonocócica</button>
+  <button class="pchip" onclick="setEscen('ar',this)">Sobre AR / inmunodepresión</button>
+  <button class="pchip" onclick="setEscen('protesica',this)">Protésica</button>
+  <button class="pchip" onclick="setEscen('udiv',this)">Usuario de drogas IV</button>
+  <button class="pchip" onclick="setEscen('pediatrica',this)">Pediátrica</button>
+  <button class="pchip" onclick="setEscen('embarazo',this)">Embarazo</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Respuesta y duración del tratamiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Primeras 24–48 h</td><td>Vigilar respuesta clínica; <strong>repetir el drenaje</strong> si se reacumula líquido</td></tr>
+    <tr><td class="dm">Al tener cultivo</td><td><strong>Desescalar</strong> al antibiótico dirigido (p. ej. SAMS → cefazolina/dicloxacilina)</td></tr>
+    <tr><td class="dn">Paso a vía oral</td><td>Cuando hay mejoría clínica y de reactantes, con buen antibiótico oral guiado por cultivo</td></tr>
+    <tr><td class="dn">Duración total</td><td>Habitual <strong>~3–4 semanas</strong> (gonocócica <strong>7–14 días</strong>); individualiza</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩹</span><span class="st">Rehabilitación y secuelas</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Movilización precoz</strong> una vez controlada la infección para evitar rigidez.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Vigilar <strong>secuelas</strong>: pérdida de cartílago, artrosis secundaria, rigidez; el pronóstico depende de la <strong>rapidez</strong> del tratamiento.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Buscar y tratar el <strong>foco de origen</strong> (piel, endocarditis, foco urinario) para evitar recurrencia.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo referir a ortopedia / especialista</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Acción</th></tr></thead><tbody>
+    <tr><td class="dm">Articulación protésica</td><td><strong>Ortopedia siempre</strong> (manejo quirúrgico específico)</td></tr>
+    <tr><td class="dm">Mala respuesta / reacumulación</td><td>Valorar <strong>lavado artroscópico o artrotomía</strong></td></tr>
+    <tr><td class="dn">Articulaciones axiales / cadera</td><td>Manejo especializado; drenaje guiado por imagen</td></tr>
+    <tr><td class="dn">Gonocócica</td><td>Estudio de ITS, tratar parejas, tamizaje VIH/sífilis</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Artritis séptica</h2>
+  <p>Guías internacionales y estudios clave de diagnóstico y manejo. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Manejo en articulación nativa (adulto)</strong> → <strong>SANJO 2023</strong> [1]. <strong>Enfoque pediátrico</strong> → <strong>PIDS/IDSA 2023</strong> [2].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Diagnóstico y valor de los hallazgos</strong> → <strong>Margaretten, JAMA 2007</strong> [3] y <strong>Mathews, Lancet 2010</strong> [4].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Criterios de Kocher</strong> (calculadora pediátrica) → <strong>Kocher 1999</strong> [5].</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Contexto mexicano y cuadro básico</strong> → <strong>CENETEC</strong> [6].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías de manejo</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Ravn C, Neyt J, Benito N, et al. <em>Guideline for management of septic arthritis in native joints (SANJO).</em> J Bone Jt Infect. 2023;8(1):29-37. [Guía interdisciplinaria (EBJIS) más reciente para artritis séptica de articulación nativa en adultos: diagnóstico, antibiótico y drenaje. Sustenta las pestañas de Diagnóstico y Tratamiento.]</div>
+      <a class="biblio-link" href="https://doi.org/10.5194/jbji-8-29-2023" target="_blank">🔗 DOI 10.5194/jbji-8-29-2023</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Woods CR, Bradley JS, Chatterjee A, et al. <em>Clinical Practice Guideline by PIDS and IDSA: 2023 Guideline on Diagnosis and Management of Acute Bacterial Arthritis in Pediatrics.</em> J Pediatric Infect Dis Soc. 2024;13(1):1-59. [Guía pediátrica reciente; sustenta el escenario pediátrico y el uso de los criterios de Kocher.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1093/jpids/piad089" target="_blank">🔗 DOI 10.1093/jpids/piad089</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Diagnóstico y revisiones</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2007</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Margaretten ME, Kohlwes J, Moore D, Bent S. <em>Does this adult patient have septic arthritis?</em> JAMA. 2007;297(13):1478-1488. [Revisión de examen clínico racional: los hallazgos clínicos y el análisis del líquido sinovial son los mejores predictores. Sustenta la pestaña de Diagnóstico y el interpretador de líquido.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1001/jama.297.13.1478" target="_blank">🔗 DOI 10.1001/jama.297.13.1478</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">2010</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Mathews CJ, Weston VC, Jones A, Field M, Coakley G. <em>Bacterial septic arthritis in adults.</em> Lancet. 2010;375(9717):846-855. [Revisión de referencia: microbiología, diagnóstico, antibiótico y drenaje, y el principio de "séptica hasta demostrar lo contrario". Sustenta Resumen y Tratamiento.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1016/S0140-6736(09)61595-6" target="_blank">🔗 DOI 10.1016/S0140-6736(09)61595-6 · PubMed: 20206778</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📙 Regla de predicción</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">5</span><span class="biblio-year">1999</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Kocher MS, Zurakowski D, Kasser JR. <em>Differentiating between septic arthritis and transient synovitis of the hip in children: an evidence-based clinical prediction algorithm.</em> J Bone Joint Surg Am. 1999;81(12):1662-1670. [Los 4 predictores (fiebre, no carga de peso, VSG y leucocitosis) y sus probabilidades; base de la calculadora de Kocher.]</div>
+      <a class="biblio-link" href="https://doi.org/10.2106/00004623-199912000-00002" target="_blank">🔗 DOI 10.2106/00004623-199912000-00002 · PubMed: 10608376</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">6</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC).</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente de artritis infecciosa y coteja antibióticos y presentaciones con tu cuadro básico institucional (IMSS), incluida la resistencia local.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Estudios observacionales / cohortes</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso de expertos / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Se recomienda verificar actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y adaptar al contexto institucional (incluida la <strong>resistencia antimicrobiana local</strong>). Última revisión: <strong>julio 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#b11226', C1='#b11226', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Tratamiento de elección" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo de acción',f.mec,'#374151');
+  if(f.ind)h+=txrow('Indicación / cobertura',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Dosis máxima / límite',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía / Ámbito',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones MX',f.pres,'#374151');
+  if(f.ci)h+=txrow('Contraindicaciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Monitoreo',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#4a0810')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_VANCO={n:'Vancomicina',elec:true,linea:'Empírico — Gram + cocos (cubre SARM)',
+  dlbl:'Dosis',da:'15–20 mg/kg IV cada 8–12 h (ajustar por niveles/función renal)',
+  dur:'Empírico en enfermo grave o si hay riesgo de SARM, hasta tener el cultivo.',
+  adm:'Infusión lenta (≥1 h) para evitar el síndrome del hombre rojo.',
+  mec:'Glucopéptido: inhibe la síntesis de la pared celular. Cubre <b>S. aureus incluido SARM</b> y estreptococos.',
+  ind:'Cocos Gram positivos en el Gram, o cobertura empírica de SARM.',
+  dmax:'Guiada por niveles (objetivo AUC/MIC).',
+  iv:'IV · hospitalario',
+  pres:'Vial 500 mg y 1 g (genérico, IMSS)',
+  ci:'Hipersensibilidad',
+  ea:'Nefrotoxicidad, ototoxicidad, síndrome del hombre rojo, flebitis',
+  mon:'Niveles séricos, función renal',
+  nota:'⭐ Elección empírica cuando hay cocos Gram + o riesgo de SARM. Si se confirma <b>SAMS</b>, desescalar a <b>cefazolina o dicloxacilina</b> (más eficaces contra SAMS).'};
+var F_CEFTRIAX={n:'Ceftriaxona',elec:true,linea:'Empírico — Gram - cocos (gonococo) y bacilos',
+  dlbl:'Dosis',da:'2 g IV cada 24 h (gonococo: 1 g IV/IM al día)',
+  dur:'Hasta ajustar por cultivo.',
+  adm:'Cómoda por su dosificación única diaria.',
+  mec:'Cefalosporina de 3ª generación: inhibe la síntesis de pared. Cubre gonococo, estreptococos y muchos bacilos Gram negativos.',
+  ind:'Diplococos Gram negativos (gonococo), bacilos Gram negativos, o Gram no concluyente (con vancomicina).',
+  dmax:'2 g/día (dosis mayores en otras indicaciones).',
+  iv:'IV/IM · hospitalario',
+  pres:'Vial 1 g (genérico, IMSS)',
+  ci:'Alergia a cefalosporinas · neonatos con hiperbilirrubinemia',
+  ea:'Exantema, diarrea, reacción, colecistitis por barro biliar',
+  mon:'Clínica; función hepática si prolongado',
+  nota:'⭐ Elección para artritis gonocócica y buena cobertura Gram negativa. En joven sexualmente activo con poliartralgia migratoria/tenosinovitis, piénsalo.'};
+var F_CEFEPIME={n:'Cefepime',linea:'Empírico — cobertura antipseudomonas',
+  dlbl:'Dosis',da:'2 g IV cada 8–12 h',
+  dur:'Cuando se requiere cobertura de Pseudomonas.',
+  adm:'Reservar para UDIV, inmunodeprimidos o sospecha de Pseudomonas.',
+  mec:'Cefalosporina de 4ª generación con actividad antipseudomonas.',
+  ind:'Bacilos Gram negativos con riesgo de Pseudomonas (UDIV, inmunodepresión).',
+  dmax:'6 g/día.',
+  iv:'IV · hospitalario',
+  pres:'Vial 1 y 2 g',
+  ci:'Alergia a cefalosporinas',
+  ea:'Exantema, neurotoxicidad (dosis altas/ERC), diarrea',
+  mon:'Función renal (ajuste)',
+  nota:'Alternativa: ceftazidima o piperacilina-tazobactam. Combinar con vancomicina si el Gram no es concluyente.'};
+var F_CEFAZOL={n:'Cefazolina',linea:'Dirigido — S. aureus sensible (SAMS) / estreptococo',
+  dlbl:'Dosis',da:'2 g IV cada 8 h',
+  dur:'Desescalar aquí si el cultivo muestra SAMS.',
+  adm:'Preferible a vancomicina para SAMS (mayor eficacia).',
+  mec:'Cefalosporina de 1ª generación: cubre SAMS y estreptococos.',
+  ind:'S. aureus sensible a meticilina confirmado.',
+  dmax:'12 g/día.',
+  iv:'IV · hospitalario',
+  pres:'Vial 1 g (genérico, IMSS)',
+  ci:'Alergia a cefalosporinas',
+  ea:'Exantema, diarrea, flebitis',
+  mon:'Clínica',
+  nota:'Objetivo del desescalamiento: apenas se sepa que es SAMS, cambiar de vancomicina a cefazolina o dicloxacilina.'};
+var F_DICLOX={n:'Dicloxacilina / cloxacilina',linea:'Dirigido — SAMS (alternativa)',
+  dlbl:'Dosis',da:'IV según disponibilidad; VO en el paso a oral (500 mg c/6 h)',
+  dur:'Fase oral guiada por evolución y cultivo.',
+  adm:'VO con el estómago vacío.',
+  mec:'Penicilina antiestafilocócica: cubre SAMS.',
+  ind:'S. aureus sensible a meticilina.',
+  dmax:'Según pauta.',
+  iv:'IV/VO',
+  pres:'Cápsulas 500 mg (genérico, IMSS)',
+  ci:'Alergia a penicilinas',
+  ea:'GI, exantema',
+  mon:'Clínica',
+  nota:'Útil en el paso a vía oral una vez controlada la infección por SAMS.'};
+var F_CLINDA={n:'Clindamicina',linea:'Alternativa — alergia / cobertura CGP',
+  dlbl:'Dosis',da:'600 mg IV cada 8 h',
+  dur:'Según cultivo y evolución.',
+  adm:'Buena penetración en hueso y articulación.',
+  mec:'Lincosamida: inhibe la síntesis proteica; cubre CGP y anaerobios.',
+  ind:'Alternativa en alergia a betalactámicos; algunas cepas de SARM comunitario.',
+  dmax:'2.7 g/día IV.',
+  iv:'IV/VO',
+  pres:'Ampolleta 300 y 600 mg · cápsulas 300 mg (IMSS)',
+  ci:'Hipersensibilidad',
+  ea:'<b>Diarrea por C. difficile</b>, exantema',
+  mon:'Vigilar diarrea',
+  nota:'Verifica sensibilidad local; la resistencia inducible (D-test) puede limitar su uso en SARM.'};
+var F_DRENAJE={n:'Drenaje articular (parte esencial del tratamiento)',elec:true,linea:'Control del foco — SIEMPRE',
+  dlbl:'Procedimiento',da:'Aspiración con aguja repetida, lavado artroscópico o artrotomía',
+  dur:'Tan pronto como sea posible; repetir mientras se reacumule líquido.',
+  adm:'La elección (aspiración vs artroscopía vs cirugía abierta) depende de la articulación y del cirujano.',
+  mec:'Elimina el material purulento, las enzimas y la carga bacteriana → protege el cartílago.',
+  ind:'Toda artritis séptica confirmada o muy probable.',
+  dmax:'—',
+  iv:'Procedimiento · ortopedia/reumatología',
+  pres:'—',
+  ci:'—',
+  ea:'Según procedimiento',
+  nota:'⭐ <b>El antibiótico solo no basta:</b> el drenaje es parte del tratamiento. La articulación protésica siempre va con ortopedia.'};
+var F_SOPORTE={n:'Medidas de soporte',linea:'Coadyuvante — siempre',
+  dlbl:'Qué hacer',da:'Analgesia, líquidos, manejo de sepsis, inmovilización breve + movilización precoz',
+  dur:'Durante todo el ingreso.',
+  adm:'Rehabilitación temprana para preservar la función una vez controlada la infección.',
+  mec:'Control del dolor, de la sepsis y prevención de rigidez.',
+  ind:'Todo paciente.',
+  dmax:'—',iv:'—',pres:'Analgésicos, cristaloides',
+  ci:'—',ea:'—',
+  nota:'Trata la sepsis según el protocolo; busca y controla el foco de origen (piel, endocarditis, foco urinario).'};
+var F_NO_ATB={n:'❌ Dar antibiótico ANTES de aspirar',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No inicies el antibiótico antes de la artrocentesis (salvo sepsis con riesgo vital)',
+  dur:'El antibiótico previo negativiza los cultivos y dificulta el diagnóstico.',
+  adm:'Aspira, toma Gram/cultivo/recuento y hemocultivos, y LUEGO inicia el empírico.',
+  mec:'—',ind:'Ninguna.',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Cultivos falsamente negativos, retraso diagnóstico',
+  nota:'Excepción: paciente séptico inestable → no retrases el antibiótico por obtener la muestra.'};
+var F_NO_DELAY={n:'❌ Retrasar el drenaje o el alta sin drenar',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No manejes la artritis séptica solo con antibiótico ni demores el drenaje',
+  dur:'El cartílago se destruye en horas-días.',
+  adm:'Drenaje urgente + referencia a ortopedia; ingreso hospitalario.',
+  mec:'—',ind:'Ninguna.',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Destrucción articular, discapacidad, mortalidad',
+  nota:'Es una <b>urgencia médico-quirúrgica</b> con letalidad ~11%. El tiempo es cartílago.'};
+
+var F_EMB_AB={n:'Antibiótico en el embarazo',elec:true,linea:'Embarazo — betalactámicos preferidos',
+  dlbl:'Esquema',da:'Ceftriaxona 2 g IV c/24 h o cefazolina 2 g IV c/8 h; vancomicina si se requiere SARM',
+  dur:'La urgencia y la duración no cambian por el embarazo.',
+  adm:'Betalactámicos de elección por seguridad; vancomicina con monitoreo cuando se necesita SARM.',
+  mec:'Cefalosporinas: inhiben la síntesis de pared; amplio margen de seguridad en la gestación.',
+  ind:'Artritis séptica en embarazada, tras aspirar y con drenaje.',
+  dmax:'Según fármaco.',iv:'IV · hospitalario',
+  pres:'Ceftriaxona 1 g · cefazolina 1 g · vancomicina (IMSS)',
+  ci:'Alergia a betalactámicos',ea:'Exantema, GI',
+  mon:'Función renal; niveles de vancomicina',
+  nota:'⭐ <b>Evita fluoroquinolonas, tetraciclinas y aminoglucósidos.</b> El abordaje (artrocentesis + drenaje) es igual. Coordina con obstetricia; la sepsis materna es una emergencia.'};
+var F_EMB_DREN={n:'Drenaje en el embarazo',linea:'Embarazo — control del foco (igual)',
+  dlbl:'Procedimiento',da:'Aspiración/artroscopía/artrotomía según la articulación',
+  dur:'Sin demora; el drenaje protege el cartílago.',
+  adm:'La gestación no contraindica el drenaje ni la artrocentesis.',
+  mec:'Elimina la carga bacteriana y las enzimas.',
+  ind:'Toda artritis séptica en el embarazo.',
+  dmax:'—',iv:'Procedimiento · ortopedia',pres:'—',
+  ci:'—',ea:'Según procedimiento',
+  nota:'No retrases el drenaje por el embarazo. Posiciona a la paciente evitando la compresión aortocava en el tercer trimestre.'};
+var F_PED_AB={n:'Antibiótico empírico pediátrico',elec:true,linea:'Pediatría — dosis por peso',
+  dlbl:'Dosis',da:'Cefazolina 100–150 mg/kg/día IV ÷ c/8 h; añadir vancomicina 15 mg/kg IV c/6 h si riesgo de SARM',
+  dur:'Ajustar por cultivo; total individualizado.',
+  adm:'En &lt;5 años considerar <b>Kingella kingae</b> (bien cubierta por betalactámicos/cefalosporinas).',
+  mec:'Cobertura de S. aureus (± SARM) y estreptococos, principales agentes en el niño.',
+  ind:'Artritis séptica pediátrica, tras artrocentesis.',
+  dmax:'Cefazolina hasta 6 g/día; vancomicina por niveles.',
+  iv:'IV · pediatría/ortopedia',
+  pres:'Cefazolina · vancomicina · cefotaxima (IMSS)',
+  ci:'Alergia; ajustar por función renal',
+  ea:'Exantema, nefrotoxicidad (vancomicina)',
+  mon:'BH, función renal, niveles de vancomicina',
+  nota:'⭐ Guíate por la guía pediátrica PIDS/IDSA 2023 y el antibiograma. Cobertura antigonocócica (ceftriaxona) en el recién nacido y el adolescente sexualmente activo.'};
+var F_PED_DREN={n:'Drenaje y apoyo pediátrico',linea:'Pediatría — control del foco',
+  dlbl:'Procedimiento',da:'Drenaje articular (aspiración o quirúrgico), sobre todo en cadera',
+  dur:'Urgente; la cadera y el hombro suelen requerir drenaje quirúrgico.',
+  adm:'Usa los <b>criterios de Kocher</b> para orientar la sospecha en la cadera pediátrica.',
+  mec:'Descomprime y limpia la articulación.',
+  ind:'Artritis séptica pediátrica confirmada o muy probable.',
+  dmax:'—',iv:'Procedimiento · ortopedia pediátrica',pres:'—',
+  ci:'—',ea:'Según procedimiento',
+  nota:'La cadera séptica del niño es una urgencia quirúrgica. Analgesia, líquidos y manejo conjunto con ortopedia pediátrica.'};
+
+var TXSIT={
+ adulto:{label:'🧑 Adulto', calc:null,
+   nota:'<b>Urgencia médico-quirúrgica:</b> antibiótico empírico IV <b>después de aspirar</b> (Gram, cultivo, hemocultivos) <b>+ DRENAJE</b>. El antibiótico solo no cura. La <span style="color:#f5b301;">★</span> marca lo prioritario.',
+   lineas:[
+     ['Empírico IV — según Gram','Iniciar tras aspirar; ajustar con el cultivo',C1,[F_VANCO,F_CEFTRIAX,F_CEFEPIME]],
+     ['Dirigido — según cultivo','Desescalar cuando se identifique el germen',AZ,[F_CEFAZOL,F_DICLOX,F_CLINDA]],
+     ['Control del foco y soporte','Parte esencial del tratamiento',CO,[F_DRENAJE,F_SOPORTE]],
+     ['❌ NO hacer','Errores que cuestan la articulación (o la vida)',RJ,[F_NO_ATB,F_NO_DELAY]]
+   ]},
+ pediatrico:{label:'👶 Pediátrico', calc:'peso',
+   nota:'<b>Mismo abordaje:</b> aspirar + drenaje. Dosis <b>por peso</b>; en el menor de 5 años cubre <b>Kingella kingae</b>. En la cadera, orienta con los <b>criterios de Kocher</b>.',
+   lineas:[
+     ['Pediatría','Dosis por peso; cubrir Kingella en el pequeño',CO,[F_PED_AB,F_PED_DREN]]
+   ]},
+ embarazo:{label:'🤰 Embarazo', calc:null,
+   nota:'<b>La urgencia NO cambia</b> (artrocentesis + drenaje). Antibióticos: <b>betalactámicos preferidos</b>; evita fluoroquinolonas, tetraciclinas y aminoglucósidos. Coordina con obstetricia.',
+   lineas:[
+     ['Embarazo','Mismo abordaje; ajustar antibióticos','#6a1a5a',[F_EMB_AB,F_EMB_DREN]]
+   ]}
+};
+var TXORDER=['adulto','pediatrico','embarazo'];
+function buildTxc(){
+  var h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;font-weight:800;color:var(--gray-900);"><span style="font-size:18px;">🏥</span> Tratamiento por situación — toca un chip</div>';
+  h+='<div class="chips" id="txsit-chips">';
+  for(var i=0;i<TXORDER.length;i++){var k=TXORDER[i];h+='<button class="pchip'+(i===0?' on':'')+'" onclick="setTxSit(\''+k+'\',this)">'+TXSIT[k].label+'</button>';}
+  h+='</div><div id="txsit-body"></div>';
+  document.getElementById('txc-body').innerHTML=h;
+  setTxSit(TXORDER[0],document.querySelector('#txsit-chips .pchip'));
+}
+function setTxSit(k,el){
+  var c=document.querySelectorAll('#txsit-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var s=TXSIT[k],h='';
+  if(s.nota)h+='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">💡</span><div>'+s.nota+'</div></div>';
+  if(s.calc==='peso')h+=calcPesoHTML();
+  TXIDX=0;
+  for(var j=0;j<s.lineas.length;j++)h+=buildLinea(s.lineas[j][0],s.lineas[j][1],s.lineas[j][2],s.lineas[j][3],s.lineas[j][2]);
+  document.getElementById('txsit-body').innerHTML=h;
+}
+function calcPesoHTML(){
+  return '<div class="calc-w"><div style="font-size:14px;font-weight:800;color:var(--ac);margin-bottom:4px;">Calculadora de antibiótico pediátrico por peso</div>'+
+    '<div style="font-size:11.5px;color:#6b7280;margin-bottom:12px;">Dosis empíricas orientativas; ajusta por antibiograma y guía PIDS/IDSA 2023.</div>'+
+    '<label class="calc-lbl">Peso (kg)</label><input class="calc-in" id="tx-peso" type="number" inputmode="decimal" placeholder="kg">'+
+    '<div style="margin-top:6px;"><button class="calc-btn" onclick="calcPeso()">Calcular</button> <button class="calc-btn sc" onclick="calcPesoReset()">Reiniciar</button></div>'+
+    '<div class="calc-result" id="tx-peso-res"></div></div>';
+}
+function calcPeso(){
+  var p=nm('tx-peso'),box=document.getElementById('tx-peso-res');
+  if(p==null||p<=0){box.className='calc-result show res-mid';box.innerHTML='Escribe el peso en kg.';return;}
+  var cefDosisLo=Math.round(p*100/3),cefDosisHi=Math.round(p*150/3);
+  var cefDiaLo=Math.round(p*100),cefDiaHi=Math.round(p*150);
+  var vanco=Math.round(p*15);
+  var ceftriLo=Math.round(p*50),ceftriHi=Math.round(p*100);
+  var capped=(cefDiaHi>6000)?' <span style="opacity:.7;">(no exceder 6 g/día)</span>':'';
+  box.className='calc-result show res-ok';
+  box.innerHTML='<div style="font-size:13px;font-weight:800;margin-bottom:6px;">Dosis para '+p+' kg</div>'+
+    '<div style="font-size:12.5px;line-height:1.7;">'+
+    '<b>Cefazolina:</b> '+cefDosisLo+'–'+cefDosisHi+' mg IV cada 8 h <span style="opacity:.7;">('+cefDiaLo+'–'+cefDiaHi+' mg/día)</span>'+capped+'<br>'+
+    '<b>Vancomicina (si SARM):</b> '+vanco+' mg IV cada 6 h <span style="opacity:.7;">(15 mg/kg/dosis)</span><br>'+
+    '<b>Ceftriaxona:</b> '+ceftriLo+'–'+ceftriHi+' mg IV al día <span style="opacity:.7;">(cobertura de gonococo en RN/adolescente)</span></div>'+
+    '<div style="font-size:11px;margin-top:6px;opacity:0.8;">Empírico orientativo. Cubre Kingella (&lt;5 años) con betalactámicos; ajusta por cultivo y función renal.</div>';
+}
+function calcPesoReset(){var e=document.getElementById('tx-peso');if(e)e.value='';var b=document.getElementById('tx-peso-res');if(b){b.className='calc-result';b.innerHTML='';}}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💉 Empíricos IV',color:'#b11226',farmacos:[
+  {n:'Vancomicina',ini:'15–20 mg/kg IV c/8–12 h',da:'Ajustar por niveles/función renal.',iv:'IV',pres:'Vial 500 mg/1 g (IMSS)',ci:'Hipersensibilidad',ea:'Nefro/ototoxicidad, hombre rojo',nota:'Cubre SARM. Desescalar a cefazolina si SAMS.'},
+  {n:'Ceftriaxona',ini:'2 g IV c/24 h',da:'Gonococo: 1 g IV/IM/día.',iv:'IV/IM',pres:'Vial 1 g (IMSS)',ci:'Alergia a cefalosporinas',ea:'Exantema, barro biliar',nota:'Elección en gonococo y buena cobertura Gram negativa.'},
+  {n:'Cefepime',ini:'2 g IV c/8–12 h',da:'Cobertura antipseudomonas.',iv:'IV',pres:'Vial 1/2 g',ci:'Alergia a cefalosporinas',ea:'Neurotoxicidad en ERC',nota:'UDIV/inmunodeprimidos. Alternativas: ceftazidima, piperacilina-tazobactam.'}]},
+ {familia:'💊 Dirigidos (según cultivo)',color:'#0c3b6e',farmacos:[
+  {n:'Cefazolina',ini:'2 g IV c/8 h',da:'Preferible para SAMS.',iv:'IV',pres:'Vial 1 g (IMSS)',ci:'Alergia a cefalosporinas',ea:'Exantema, flebitis',nota:'Objetivo del desescalamiento en SAMS.'},
+  {n:'Dicloxacilina',ini:'500 mg VO c/6 h',da:'Con estómago vacío; útil en el paso a oral.',iv:'IV/VO',pres:'Cáps 500 mg (IMSS)',ci:'Alergia a penicilinas',ea:'GI, exantema',nota:'SAMS, fase oral.'},
+  {n:'Clindamicina',ini:'600 mg IV c/8 h',da:'Buena penetración articular.',iv:'IV/VO',pres:'Amp 300/600 mg (IMSS)',ci:'Hipersensibilidad',ea:'C. difficile',nota:'Alternativa en alergia; ojo con resistencia inducible.'},
+  {n:'Ciprofloxacino',ini:'400 mg IV/750 mg VO c/12 h',da:'Alternativa en Gram negativos según sensibilidad.',iv:'IV/VO',pres:'Tab 500/750 mg · sol IV (IMSS)',ci:'Embarazo/niños (relativa), tendinopatía',ea:'Tendinitis, prolongación QT',nota:'Buena biodisponibilidad oral para bacilos Gram negativos sensibles.'}]},
+ {familia:'🔧 Control del foco',color:'#0a5c45',farmacos:[
+  {n:'Drenaje articular',ini:'Aspiración / artroscopía / artrotomía',da:'Repetir mientras se reacumule líquido.',iv:'Procedimiento',pres:'—',ci:'—',ea:'Según técnica',nota:'Parte esencial del tratamiento; protésica → ortopedia.'}]},
+ {familia:'🚫 NO hacer',color:'#7b1c1c',farmacos:[
+  {n:'❌ Antibiótico antes de aspirar',ini:'Evitar',da:'Salvo sepsis inestable.',iv:'—',pres:'—',ci:'—',ea:'Cultivos falsos negativos',nota:'Aspira primero, luego trata.'},
+  {n:'❌ Solo antibiótico / retrasar drenaje',ini:'Evitar',da:'—',iv:'—',pres:'—',ci:'—',ea:'Destrucción articular',nota:'El tiempo es cartílago.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Contraindicaciones',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== CALCULADORA 1: KOCHER (cadera pediátrica) ===== */
+var KO={fiebre:false,carga:false,vsg:false,leu:false};
+function koTog(k,el){KO[k]=!KO[k];el.classList.toggle('on');koCalc();}
+function koCalc(){
+  var n=(KO.fiebre?1:0)+(KO.carga?1:0)+(KO.vsg?1:0)+(KO.leu?1:0);
+  var prob=['< 0.2%','3%','40%','93.1%','99.6%'][n];
+  var box=document.getElementById('ko-res'), cls;
+  if(n<=1)cls='res-ok'; else if(n===2)cls='res-mid'; else cls='res-high';
+  box.className='calc-result show '+cls;
+  box.innerHTML='<div style="font-size:15px;font-weight:800;">'+n+' de 4 criterios → probabilidad ~'+prob+'</div>'+
+    '<div style="margin-top:4px;font-size:12px;">'+(n>=3?'<b>Alta probabilidad de artritis séptica de cadera</b> → artrocentesis/quirófano urgente.':(n===2?'Probabilidad intermedia → valorar artrocentesis y observación estrecha.':'Baja probabilidad; más compatible con sinovitis transitoria, pero individualiza.'))+'</div>'+
+    '<div style="font-size:11px;margin-top:6px;opacity:0.8;">Criterios de Kocher (cadera pediátrica): fiebre &gt;38.5 °C, no soporta peso, VSG &gt;40 mm/h, leucocitos &gt;12 000. Es una <b>ayuda</b>, no reemplaza el juicio clínico ni la artrocentesis.</div>';
+}
+function koReset(){KO={fiebre:false,carga:false,vsg:false,leu:false};var o=document.querySelectorAll('#ko-calc .opt');for(var i=0;i<o.length;i++)o[i].classList.remove('on');var b=document.getElementById('ko-res');b.className='calc-result';b.innerHTML='';}
+
+/* ===== CALCULADORA 2: LÍQUIDO SINOVIAL ===== */
+function liqCalc(){
+  var v=nm('liq-leu'), box=document.getElementById('liq-res');
+  if(v==null){box.className='calc-result show res-mid';box.innerHTML='Captura el recuento de leucocitos del líquido sinovial (células/mm³).';return;}
+  var cat,cls,txt;
+  if(v<200){cat='Normal';cls='res-ok';txt='Rango normal.';}
+  else if(v<2000){cat='No inflamatorio';cls='res-ok';txt='Patrón no inflamatorio (p. ej. artrosis).';}
+  else if(v<50000){cat='Inflamatorio';cls='res-mid';txt='Patrón inflamatorio (cristales, AR, reactiva…). <b>La séptica puede empezar en este rango:</b> no la descartes.';}
+  else{cat='Sugerente de séptica';cls='res-high';txt='<b>&gt;50 000 (a menudo &gt;100 000) con PMN &gt;90% sugiere artritis séptica.</b> Trata como séptica hasta el cultivo.';}
+  box.className='calc-result show '+cls;
+  box.innerHTML='<div style="font-size:15px;font-weight:800;">'+v.toLocaleString('es-MX')+' células/mm³ → '+cat+'</div>'+
+    '<div style="margin-top:4px;font-size:12px;">'+txt+'</div>'+
+    '<div style="font-size:11px;margin-top:6px;opacity:0.8;">Rangos orientativos: normal &lt;200 · no inflamatorio &lt;2000 · inflamatorio 2000–50 000 · séptico &gt;50 000. <b>Ni un Gram ni un cultivo negativos excluyen</b> la artritis séptica; la microscopía de polarización busca cristales (que pueden coexistir).</div>';
+}
+function liqReset(){var e=document.getElementById('liq-leu');if(e)e.value='';var b=document.getElementById('liq-res');b.className='calc-result';b.innerHTML='';}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para el paciente / familia',color:'#0a5c45',fichas:[
+  {n:'Entender la urgencia',via:'Al ingreso',
+   enf:'Explicar que requiere ingreso, drenaje y antibiótico intravenoso; preparar para el procedimiento y toma de cultivos.',
+   pac:'Tienes una <b>infección dentro de la articulación</b>. Es urgente: hay que <b>sacar el líquido (drenar)</b> y darte <b>antibiótico por la vena</b>. Si se trata a tiempo se protege la articulación; el retraso puede dejar daño permanente.',
+   nota:'La adherencia al antibiótico completo y la rehabilitación posterior son clave para recuperar la función.',
+   alarma:'Avisa si aumentan el dolor, la fiebre o el enrojecimiento, o si reaparece hinchazón: puede necesitar nuevo drenaje.'}]},
+ {familia:'🧫 Enfermería — antes del antibiótico',color:'#0c3b6e',fichas:[
+  {n:'Muestras primero',via:'Antes de iniciar el antibiótico empírico',
+   enf:'Asegurar <b>artrocentesis con Gram, cultivo, recuento y polarización</b> y <b>hemocultivos</b> ANTES de la primera dosis (salvo sepsis inestable). Enviar muestras frescas al laboratorio de inmediato.',
+   pac:'Te tomaremos una muestra del líquido de la articulación y de sangre antes de empezar el antibiótico.',
+   nota:'El antibiótico previo negativiza los cultivos. La warfarina no contraindica la aspiración.',
+   alarma:'Paciente séptico inestable → no retrasar el antibiótico por obtener la muestra.'}]},
+ {familia:'🔎 Sospecha de gonococo',color:'#7a4a00',fichas:[
+  {n:'Joven sexualmente activo',via:'Cuando el patrón lo sugiere',
+   enf:'Tomar cultivos genitales/faríngeos/rectales o NAAT; notificar y tratar como infección de transmisión sexual.',
+   pac:'En tu caso puede tratarse de una infección relacionada con una <b>infección de transmisión sexual</b>. Es importante tratar también a tu(s) pareja(s) y revisar otras ITS.',
+   nota:'Artritis gonocócica: tríada de dermatitis, tenosinovitis y poliartralgia migratoria; responde bien a ceftriaxona.',
+   alarma:'Buscar y tratar coinfecciones (clamidia); ofrecer tamizaje de VIH/sífilis.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Enfermería</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ tipica:{t:'Monoartritis aguda típica (rodilla)',c:'#b11226',h:
+  '<div class="prose"><p><b>Perfil:</b> una articulación (la <b>rodilla</b> es la más frecuente) <b>caliente, roja, con derrame y muy dolorosa</b>, de instalación en horas-días, con o sin fiebre.</p></div>'
+  +'<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Qué hacer</div><b>Artrocentesis urgente</b> (Gram, cultivo, recuento, polarización) + hemocultivos → <b>antibiótico empírico según Gram + drenaje</b>. Ingreso. Trátala como séptica aunque no haya fiebre si la sospecha es alta.</div></div>'},
+ gono:{t:'Artritis gonocócica',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> joven sexualmente activo con <b>poliartralgia migratoria, tenosinovitis y dermatitis</b> (síndrome artritis-dermatitis), o monoartritis purulenta.</p></div>'
+  +'<div class="alert a-w"><span class="ai">💉</span><div><div class="at">Qué hacer</div><b>Ceftriaxona</b> + tomar cultivos genitales/NAAT; tratar como ITS (incluir cobertura de clamidia), tratar parejas y ofrecer tamizaje de VIH/sífilis. Buen pronóstico.</div></div>'},
+ ar:{t:'Sobre artritis reumatoide (o inmunodepresión)',c:'#0c3b6e',h:
+  '<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Trampa clásica</div>En un paciente con <b>AR</b> o inmunodeprimido, <b>una articulación desproporcionadamente inflamada NO es "solo un brote"</b>: descarta artritis séptica con artrocentesis. Los biológicos (anti-TNF) aumentan el riesgo.</div></div>'
+  +'<div class="alert a-i"><span class="ai">🔎</span><div>La fiebre y los reactantes pueden estar atenuados por la inmunosupresión. Baja el umbral para aspirar.</div></div>'},
+ protesica:{t:'Articulación protésica',c:'#374151',h:
+  '<div class="prose"><p><b>Perfil:</b> dolor, aumento de volumen o mala evolución de una prótesis articular.</p></div>'
+  +'<div class="alert a-w"><span class="ai">➡️</span><div><div class="at">Qué hacer</div><b>Referir SIEMPRE a ortopedia.</b> Es una entidad distinta (biofilm): requiere cirugía especializada (retención vs recambio) y esquemas prolongados, a veces con rifampicina. No la manejes como artritis nativa.</div></div>'},
+ udiv:{t:'Usuario de drogas IV',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> puede afectar articulaciones <b>axiales</b> (esternoclavicular, sacroilíaca, sínfisis).</p></div>'
+  +'<div class="alert a-i"><span class="ai">💉</span><div>Amplía la cobertura empírica para incluir <b>Pseudomonas y Gram negativos</b> (p. ej. cefepime) junto con cobertura de SARM. Busca <b>endocarditis</b> asociada.</div></div>'},
+ pediatrica:{t:'Pediátrica (cadera irritable)',c:'#3a0a3a',h:
+  '<div class="prose"><p><b>Perfil:</b> niño con cadera dolorosa que no apoya. El reto es distinguir <b>artritis séptica</b> de <b>sinovitis transitoria</b>.</p></div>'
+  +'<div class="alert a-w"><span class="ai">📊</span><div>Usa los <b>criterios de Kocher</b> (pestaña Herramientas) como apoyo. Con probabilidad alta → artrocentesis/quirófano. Sigue la guía pediátrica PIDS/IDSA 2023.</div></div>'},
+ embarazo:{t:'Embarazo',c:'#6a1a5a',h:
+  '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">La urgencia NO cambia</div>El abordaje es el mismo: <b>artrocentesis, hemocultivos y drenaje</b> sin demora. La <b>sepsis materna</b> es una emergencia obstétrica: no subtrates por miedo a los fármacos.</div></div>'
+  +'<div class="alert a-g"><span class="ai">✅</span><div><div class="at">Antibióticos preferidos</div><b>Betalactámicos</b> (cefalosporinas como ceftriaxona o cefazolina) son de elección por su seguridad. La <b>vancomicina</b> se usa cuando se requiere cobertura de SARM, con monitoreo de niveles.</div></div>'
+  +'<div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Evitar / precaución</div><b>Fluoroquinolonas (ciprofloxacino), tetraciclinas y aminoglucósidos</b> se evitan salvo que no haya alternativa. Coordina siempre con <b>obstetricia</b>.</div></div>'
+  +'<div class="alert a-i"><span class="ai">🔎</span><div>Si se sospecha <b>gonococo</b>: ceftriaxona, tratar como ITS y a la(s) pareja(s); relevante por el riesgo de transmisión perinatal (oftalmía neonatal).</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Articulación aguda caliente, dolorosa e hinchada. ¿Es una prótesis articular?',o:[
+   ['Sí, es protésica','prot'],['No, articulación nativa','nativa']]},
+ prot:{t:'➡️ Referir a ortopedia',r:'high',x:'La infección de prótesis es una entidad distinta (biofilm). <b>No la manejes como artritis nativa:</b> requiere manejo quirúrgico especializado y esquemas prolongados.'},
+ nativa:{q:'Sospecha de artritis séptica (monoartritis aguda caliente). ¿Paciente séptico/inestable?',o:[
+   ['Estable','aspira'],['Séptico / inestable','sepsis']]},
+ sepsis:{t:'Sepsis: no retrases el antibiótico',r:'high',x:'Toma hemocultivos y, si puedes, aspira <b>de inmediato</b>, pero <b>no retrases el antibiótico empírico</b> ni la reanimación. Drenaje urgente y UCI según estado.'},
+ aspira:{q:'Realiza artrocentesis URGENTE (Gram, cultivo, recuento, cristales) + hemocultivos, antes del antibiótico. ¿Qué muestra el Gram?',o:[
+   ['Cocos Gram positivos','cgp'],['Diplococos Gram negativos','gono'],['Bacilos Gram negativos','bgn'],['Sin organismos / no disponible','empirico']]},
+ cgp:{t:'Vancomicina + drenaje',r:'high',x:'<b>Vancomicina IV</b> (cubre SARM) + <b>drenaje</b>. Desescalar a <b>cefazolina/dicloxacilina</b> si el cultivo muestra SAMS. Ajusta la duración por evolución (habitualmente 3–4 semanas).'},
+ gono:{t:'Ceftriaxona + estudio de ITS',r:'mid',x:'<b>Ceftriaxona</b> + drenaje. Tomar cultivos/NAAT, tratar como ITS (cobertura de clamidia), tratar parejas y tamizar VIH/sífilis. Duración habitual 7–14 días.'},
+ bgn:{t:'Cefalosporina de 3ª generación + drenaje',r:'high',x:'<b>Ceftriaxona/cefotaxima</b> + drenaje. Si hay riesgo de <b>Pseudomonas</b> (UDIV, inmunodepresión), usa <b>cefepime</b> (antipseudomonas). Ajusta por cultivo.'},
+ empirico:{t:'Empírico amplio + drenaje',r:'high',x:'Gram no concluyente: <b>vancomicina + cefalosporina de 3ª generación</b> + drenaje. Un Gram/cultivo negativos <b>no excluyen</b> la artritis séptica: guíate por la clínica y el recuento celular.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('tipica',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>

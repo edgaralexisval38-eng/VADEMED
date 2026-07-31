@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bartolinitis · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#7a2a6e;--acd:#3a0a3a;--acl:#f4ebf4;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#3a0a3a,#7a2a6e);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🩺</div>
+    <div>
+      <div class="hdr-eye">Ginecología</div>
+      <div class="hdr-title">Bartolinitis</div>
+      <div class="hdr-sub">Quiste y absceso de la glándula de Bartholin · WoMan 2017</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Drenaje = pilar</span>
+    <span class="badge">Catéter de Word</span>
+    <span class="badge">Antibiótico NO de rutina</span>
+    <span class="badge">&gt;40 a: descartar Ca</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Drenaje</div><div class="qs-l">el pilar</div></div>
+  <div class="qs"><div class="qs-v">Word</div><div class="qs-l">ambulatorio</div></div>
+  <div class="qs"><div class="qs-v">Pos. 4 y 8</div><div class="qs-l">del introito</div></div>
+  <div class="qs"><div class="qs-v">~2%</div><div class="qs-l">riesgo de por vida</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('proc',this)">🔧 Procedimientos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>Las <strong>glándulas de Bartholin</strong> (vestibulares mayores) están en las posiciones <strong>4 y 8 del reloj</strong> del introito y lubrican el vestíbulo. Si el conducto se <strong>obstruye</strong>, se forma un <strong>quiste</strong> (moco retenido); si se <strong>infecta</strong>, un <strong>absceso</strong>. "Bartolinitis" se refiere sobre todo al <strong>absceso</strong>.</p></div>
+  <div class="alert a-g"><span class="ai">🎯</span><div><div class="at">La idea que ordena todo</div>El tratamiento del absceso es el <strong>drenaje que crea un trayecto permanente</strong> (catéter de Word o marsupialización). El <strong>antibiótico NO es de rutina</strong>. El quiste asintomático solo se observa.</div></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Dos matices que cambian la conducta</div>En la <strong>posmenopáusica</strong>, una masa obliga a descartar el raro <strong>carcinoma</strong>. La <strong>I&amp;D simple aislada</strong> recurre mucho: no es el manejo definitivo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Cifra</th></tr></thead><tbody>
+    <tr><td class="dm">Riesgo de por vida</td><td><strong>~2%</strong> de las mujeres desarrolla un quiste o absceso</td></tr>
+    <tr><td class="dm">Edad</td><td>Sobre todo <strong>edad reproductiva</strong>; el pico de absceso hacia los 20–30 años</td></tr>
+    <tr><td class="dn">Frecuencia</td><td>Uno de los motivos ginecológicos comunes en consulta y urgencias</td></tr>
+    <tr><td class="dn">Lateralidad</td><td>Casi siempre <strong>unilateral</strong></td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — por qué el tratamiento es el que es</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Obstrucción del conducto</strong><br>Inflamación, traumatismo, moco espeso o infección obstruyen el conducto de salida; la secreción se <strong>retiene</strong> y forma un <strong>quiste</strong>.<br><br><strong>Por eso:</strong> el tratamiento busca <strong>restablecer un drenaje permanente</strong>, no solo vaciar una vez.</div>
+  <div class="fp fp-a"><strong>2. Infección → absceso</strong><br>El contenido retenido se infecta con <strong>flora polimicrobiana</strong> (aerobios y anaerobios; a menudo <em>E. coli</em>, a veces SARM); se forma una colección a tensión, dolorosa.<br><br><strong>Por eso:</strong> la microbiología <strong>ya no se asume gonocócica</strong>; el pilar es el drenaje, y el cultivo orienta si no responde.</div>
+  <div class="fp fp-b"><strong>3. Recurrencia si el trayecto se cierra</strong><br>Si solo se incide y drena, el orificio se cierra y el problema <strong>reaparece</strong>.<br><br><strong>Por eso:</strong> el <strong>catéter de Word</strong> (epiteliza un trayecto) o la <strong>marsupialización</strong> (crea una abertura permanente) reducen la recurrencia frente a la I&amp;D sola.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Edad reproductiva</strong> (glándula funcionalmente activa).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Episodios previos</strong> de quiste/absceso de Bartholin.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Trauma o irritación local</strong>, higiene, actividad sexual.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Inmunosupresión / diabetes</strong> (peor evolución, riesgo de celulitis).</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Absceso:</strong> masa <strong>unilateral, dolorosa, fluctuante</strong> en el introito posterior (posición 4 u 8), con eritema, <strong>dispareunia</strong> y dificultad para caminar o sentarse; puede haber fiebre.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Quiste:</strong> tumefacción <strong>no dolorosa</strong>, a menudo hallazgo incidental.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Drenaje espontáneo:</strong> a veces el absceso drena solo, con alivio brusco del dolor.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas / referencia</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Piensa más allá del quiste si…</div>hay <strong>masa dura, irregular, fija o sangrante</strong>, o la paciente es <strong>&gt;40 años/posmenopáusica</strong> → descartar <strong>carcinoma de la glándula de Bartholin</strong> (biopsia/escisión).</div></div>
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Celulitis extensa, fiebre o datos de sepsis</strong> → drenar, antibiótico y valorar hospitalización.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Recurrencias múltiples</strong> → método definitivo (marsupialización) o escisión.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>I&amp;D simple aislada</strong> como manejo definitivo (recurre mucho).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dar antibiótico sin drenar</strong> el absceso.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Antibiótico de rutina</strong> cuando el drenaje fue adecuado y no hay celulitis/sistémico.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>No cubrir SARM</strong> cuando está indicado el antibiótico en zonas de alta prevalencia.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Olvidar la biopsia</strong> en la mujer mayor con masa de Bartholin.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt"><strong>Incidir en la piel externa</strong> en vez de la mucosa del introito (peor cicatrización).</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">El diagnóstico es clínico</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>Se diagnostica por la <strong>exploración</strong>: masa quística o absceso en la posición <strong>4 u 8</strong> del introito. El <strong>absceso</strong> es doloroso y fluctuante; el <strong>quiste</strong>, indoloro. No se requieren estudios de imagen de rutina.</p></div>
+  <div class="alert a-i"><span class="ai">🔎</span><div>Distingue de otras masas vulvares (quiste de inclusión, hidradenoma, lipoma, hernia, y —en la mujer mayor— <strong>carcinoma</strong>).</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧫</span><span class="st">Microbiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="prose"><p>La infección es <strong>polimicrobiana</strong> (aerobios y anaerobios): con frecuencia <strong><em>E. coli</em></strong> y flora mixta; puede haber <strong>SARM</strong>. Aunque históricamente se asociaba a <strong>gonococo/clamidia</strong>, hoy <strong>no se asume que sea una ITS</strong>, aunque conviene valorarla según el riesgo.</p></div>
+  <div class="alert a-i"><span class="ai">🧪</span><div>Toma <strong>cultivo del material drenado</strong> (orienta si no responde) y considera <strong>tamizaje de gonococo/clamidia</strong> (NAAT) según factores de riesgo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Cuándo estudiar más</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>&gt;40 años o posmenopáusica</strong> con masa → <strong>biopsia/escisión</strong> para descartar carcinoma.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Mala respuesta</strong> al drenaje o recurrencia → cultivo dirigido y valorar método definitivo.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Factores de riesgo de ITS</strong> → tamizaje y tratamiento de pareja(s) si procede.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Toca una familia para desplegarla o <strong>busca por nombre</strong>. Incluye procedimientos, antibióticos y coadyuvantes.</div></div>
+<input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (catéter de Word, marsupialización, TMP-SMX…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;">
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-proc">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔧</span><div>Comparativa de los procedimientos de drenaje. En el ECA <strong>WoMan</strong>, catéter de Word y marsupialización tuvieron <strong>recurrencia comparable</strong>; el metaanálisis 2026 señala la marsupialización como el mejor balance global.</div></div>
+<div class="tw"><table class="t"><thead><tr><th>Método</th><th>Cuándo</th><th>Recurrencia</th><th>Ámbito</th></tr></thead><tbody>
+  <tr><td class="dn">Catéter de Word</td><td>Absceso/quiste sintomático (1.ª opción ambulatoria)</td><td>Baja (≈ marsupialización)</td><td>Consultorio, anestesia local</td></tr>
+  <tr><td class="dn">Marsupialización</td><td>Recurrencias, quiste; opción definitiva</td><td>Baja</td><td>Consultorio/quirófano</td></tr>
+  <tr><td class="dm">Incisión y drenaje sola</td><td>Alivio inmediato; NO definitiva</td><td><strong>Alta</strong></td><td>Urgencias</td></tr>
+  <tr><td class="dn">Escisión de la glándula</td><td>Refractaria / sospecha de carcinoma</td><td>Muy baja</td><td>Quirófano (más morbilidad)</td></tr>
+</tbody></table></div>
+<div class="alert a-w"><span class="ai">💡</span><div>Incide en la <strong>mucosa del introito</strong> (por dentro del anillo himeneal), no en la piel externa. Manda a patología toda pieza de escisión.</div></div>
+</div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('absceso',this)">Absceso típico</button>
+  <button class="pchip" onclick="setEscen('quiste',this)">Quiste asintomático</button>
+  <button class="pchip" onclick="setEscen('recurrente',this)">Recurrente</button>
+  <button class="pchip" onclick="setEscen('embarazo',this)">Embarazo</button>
+  <button class="pchip" onclick="setEscen('posmeno',this)">Posmenopáusica</button>
+  <button class="pchip" onclick="setEscen('sarm',this)">SARM / inmunosupresión</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Cuidados y seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Tras el drenaje</td><td><strong>Baños de asiento</strong>, higiene y analgesia; cuidar el catéter de Word si se colocó</td></tr>
+    <tr><td class="dm">Catéter de Word</td><td>Permanece <strong>4–6 semanas</strong> para epitelizar el trayecto; retirar después</td></tr>
+    <tr><td class="dn">Control</td><td>Revisar resolución; si recurre, valorar <strong>marsupialización</strong></td></tr>
+    <tr><td class="dn">Cultivo/ITS</td><td>Revisar resultados; tratar ITS y pareja(s) si se detectan</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo referir</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Recurrencias múltiples</strong> → ginecología para marsupialización/escisión.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>&gt;40 años/posmenopáusica</strong> con masa → estudio histológico.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Sepsis o celulitis extensa</strong> → manejo hospitalario.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Bartolinitis</h2>
+  <p>Revisiones sistemáticas y ensayo clínico sobre el manejo del quiste y absceso de Bartholin. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Elección del procedimiento</strong> (Word vs marsupialización vs I&amp;D) → <strong>Pecorella 2026</strong> [1], <strong>Illingworth 2020</strong> [2] y el ECA <strong>WoMan (Kroese 2017)</strong> [3].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Manejo general, microbiología y antibióticos</strong> → <strong>Wechter 2009</strong> [4] y <strong>Omole 2019</strong> [5].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Contexto mexicano</strong> → <strong>CENETEC</strong> [6].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Revisiones sistemáticas y metaanálisis</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2026</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Pecorella G, et al. <em>Marsupialization for the management of Bartholin's gland abscesses: a systematic review and meta-analysis.</em> Int J Gynecol Obstet. 2026 (en línea). [Metaanálisis reciente que compara marsupialización, catéter de Word e I&amp;D; señala la marsupialización como el mejor balance de recurrencia, cicatrización y satisfacción. Sustenta la pestaña de Procedimientos.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1002/ijgo.70909" target="_blank">🔗 DOI 10.1002/ijgo.70909</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Illingworth B, Stocking K, Showell M, Kirk E, Duffy J. <em>Evaluation of treatments for Bartholin's cyst or abscess: a systematic review.</em> BJOG. 2020;127(6):671-678. [Revisión sistemática de las opciones de tratamiento y sus tasas de recurrencia. Sustenta Tratamiento y Procedimientos.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1111/1471-0528.16079" target="_blank">🔗 DOI 10.1111/1471-0528.16079 · PubMed: 31876985</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2017</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Kroese JA, van der Velde M, Morssink LP, et al. <em>Word catheter and marsupialisation in women with a cyst or abscess of the Bartholin gland (WoMan-trial): a randomised clinical trial.</em> BJOG. 2017;124(2):243-249. [ECA multicéntrico: recurrencia comparable entre catéter de Word y marsupialización. Sustenta la elección de procedimiento.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1111/1471-0528.14281" target="_blank">🔗 DOI 10.1111/1471-0528.14281 · PubMed: 27640367</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Revisiones de manejo</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">2009</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Wechter ME, Wu JM, Marzano D, Haefner H. <em>Management of Bartholin duct cysts and abscesses: a systematic review.</em> Obstet Gynecol Surv. 2009;64(6):395-404. [Revisión sistemática de referencia sobre las opciones de manejo. Sustenta Resumen y Tratamiento.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1097/OGX.0b013e31819f9c76" target="_blank">🔗 DOI 10.1097/OGX.0b013e31819f9c76 · PubMed: 19445813</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">5</span><span class="biblio-year">2019</span><span class="biblio-level lv-c">Nivel C</span></div>
+      <div class="biblio-ref">Omole F, Kelsey RC, Phillips K, Cunningham K. <em>Bartholin duct cyst and gland abscess: office management.</em> Am Fam Physician. 2019;99(12):760-766. [Guía práctica de manejo en consultorio: técnica del catéter de Word, indicaciones de antibiótico y microbiología. Sustenta Indicaciones y Fármacos.]</div>
+      <a class="biblio-link" href="https://www.aafp.org/pubs/afp/issues/2019/0615/p760.html" target="_blank">🔗 aafp.org — AFP 2019;99(12):760-766</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">6</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC).</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente de patología vulvar/absceso de Bartholin y coteja antibióticos y presentaciones con tu cuadro básico institucional (IMSS).]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Estudios observacionales / cohortes</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso de expertos / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Se recomienda verificar actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y adaptar al contexto institucional. Última revisión: <strong>julio 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#7a2a6e', C1='#7a2a6e', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Tratamiento de elección" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis / técnica')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Fundamento / mecanismo',f.mec,'#374151');
+  if(f.ind)h+=txrow('Indicación',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Recurrencia / límite',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía / Ámbito',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Material / presentación',f.pres,'#374151');
+  if(f.ci)h+=txrow('Contraindicaciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Complicaciones / efectos',f.ea,'#374151');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#3a0a3a')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_WORD={n:'Catéter de Word',elec:true,linea:'Absceso — drenaje (procedimiento de elección ambulatorio)',
+  dlbl:'Técnica',da:'Incisión pequeña (~5 mm) en la mucosa del introito → insertar el catéter → inflar el balón con 2–3 mL de agua',
+  dur:'Se deja colocado 4–6 semanas para que epitelice el trayecto.',
+  adm:'Anestesia local, en consultorio. Incisión por dentro del anillo himeneal, no en la piel externa.',
+  mec:'Crea un <b>trayecto epitelizado permanente</b> que mantiene el drenaje y previene la reobstrucción del conducto.',
+  ind:'Absceso o quiste sintomático de Bartholin (primer episodio o recurrencia).',
+  dmax:'Recurrencia comparable a la marsupialización (menor que la I&D sola).',
+  iv:'Procedimiento ambulatorio · consultorio',
+  pres:'Catéter de Word (balón), bisturí, jeringa con agua/solución',
+  ci:'Celulitis extensa no controlada (drenar y tratar primero)',
+  ea:'Dolor, caída prematura del catéter, dispareunia transitoria, recurrencia',
+  nota:'⭐ Opción ambulatoria de elección: rápida, con anestesia local. En el ECA WoMan la recurrencia fue similar a la marsupialización, con menor tiempo hasta el tratamiento.'};
+var F_MARSUP={n:'Marsupialización',elec:true,linea:'Absceso/quiste — recurrente o quiste',
+  dlbl:'Técnica',da:'Incisión, evacuación y <b>sutura de los bordes de la pared del quiste a la mucosa</b> vestibular',
+  dur:'Procedimiento definitivo en una sesión.',
+  adm:'Anestesia local, regional o general; en quirófano o consultorio equipado.',
+  mec:'Crea una <b>nueva abertura permanente</b> de la glándula (la "marsupializa"), evitando la reacumulación.',
+  ind:'Quiste sintomático, <b>recurrencias</b>, o cuando el catéter de Word no es viable.',
+  dmax:'Baja recurrencia; el metaanálisis 2026 la señala como el mejor balance global.',
+  iv:'Procedimiento · consultorio/quirófano',
+  pres:'Material de sutura absorbible, bisturí',
+  ci:'Absceso agudo muy inflamado (a veces se prefiere drenar primero)',
+  ea:'Dispareunia, hematoma, infección, recurrencia (baja)',
+  nota:'⭐ De elección en recurrencias o quistes. Requiere más destreza y anestesia que el catéter de Word, pero es muy efectiva.'};
+var F_ID={n:'Incisión y drenaje (I&D) simple',linea:'Absceso — alivio inmediato (no como único manejo)',
+  dlbl:'Técnica',da:'Incisión y evacuación del pus',
+  dur:'Alivia el dolor de inmediato, pero <b>alta tasa de recurrencia</b> si se usa sola.',
+  adm:'Útil para descompresión urgente; idealmente acompañar de catéter de Word.',
+  mec:'Evacúa la colección a presión.',
+  ind:'Descompresión rápida de un absceso muy doloroso o a tensión.',
+  dmax:'<b>Recurrencia alta</b> si se hace aislada.',
+  iv:'Procedimiento · urgencias/consultorio',
+  pres:'Bisturí, gasas',
+  ci:'—',
+  ea:'Recurrencia, formación de nuevo absceso',
+  nota:'No la uses <b>como tratamiento definitivo aislado</b>: combínala con catéter de Word o programa marsupialización.'};
+var F_ESCIS={n:'Escisión de la glándula de Bartholin',linea:'Casos refractarios / sospecha de neoplasia',
+  dlbl:'Técnica',da:'Extirpación quirúrgica completa de la glándula',
+  dur:'Reservada para recurrencias múltiples o sospecha de carcinoma.',
+  adm:'Quirófano, anestesia regional/general; mayor morbilidad.',
+  mec:'Elimina la glándula por completo.',
+  ind:'Recurrencias múltiples que fallan a otros métodos; <b>sospecha de carcinoma</b> de la glándula.',
+  dmax:'Definitiva, pero con más complicaciones.',
+  iv:'Cirugía · quirófano',
+  pres:'Instrumental quirúrgico',
+  ci:'Infección aguda (diferir hasta enfriar)',
+  ea:'<b>Sangrado (puede ser importante), hematoma, dispareunia, lesión</b>',
+  nota:'Último recurso por su morbilidad. Manda a patología la pieza. En posmenopáusica con masa, la biopsia/escisión ayuda a descartar malignidad.'};
+var F_TMPSMX={n:'Trimetoprima-sulfametoxazol',elec:true,linea:'Antibiótico — si hay indicación (cubre SARM)',
+  dlbl:'Dosis',da:'160/800 mg (1 tableta DS) VO cada 12 h',
+  dur:'7 días; solo si hay indicación de antibiótico.',
+  adm:'Tras el drenaje. Cubre SARM comunitario.',
+  mec:'Inhibe la síntesis de folato bacteriano; buena cobertura de S. aureus incluido SARM.',
+  ind:'Absceso con <b>celulitis, signos sistémicos, embarazo, inmunosupresión o alto riesgo de SARM</b>, o recurrencia.',
+  dmax:'Según pauta.',
+  iv:'VO',
+  pres:'Tableta 160/800 mg (genérico, IMSS)',
+  ci:'<b>Embarazo a término / cerca del parto</b> · alergia a sulfas · déficit de G6PD',
+  ea:'Exantema, GI, hiperpotasemia, citopenias',
+  nota:'⭐ Buena opción cuando se necesita antibiótico y hay riesgo de SARM. El <b>drenaje</b> sigue siendo lo principal; el antibiótico NO es de rutina.'};
+var F_AMOXCLAV={n:'Amoxicilina-clavulanato',linea:'Antibiótico — cobertura amplia',
+  dlbl:'Dosis',da:'875/125 mg VO cada 12 h',
+  dur:'7 días.',
+  adm:'Cobertura de aerobios y anaerobios; segura en embarazo.',
+  mec:'Betalactámico + inhibidor de betalactamasa; cubre flora mixta.',
+  ind:'Alternativa de amplio espectro; <b>preferible en embarazo</b>.',
+  dmax:'Según pauta.',
+  iv:'VO',
+  pres:'Tableta 875/125 mg (genérico, IMSS)',
+  ci:'Alergia a penicilinas · antecedente de colestasis por el fármaco',
+  ea:'Diarrea, exantema, náusea',
+  nota:'No cubre bien SARM; si hay alta sospecha de SARM, combínala con TMP-SMX o clindamicina.'};
+var F_CLINDA={n:'Clindamicina',linea:'Antibiótico — anaerobios / alergia',
+  dlbl:'Dosis',da:'300 mg VO cada 8 h',
+  dur:'7 días.',
+  adm:'Buena cobertura de anaerobios y algunas cepas de SARM comunitario.',
+  mec:'Lincosamida: inhibe la síntesis proteica.',
+  ind:'Alergia a betalactámicos; refuerzo de cobertura anaerobia/SARM.',
+  dmax:'Según pauta.',
+  iv:'VO/IV',
+  pres:'Cápsula 300 mg (genérico, IMSS)',
+  ci:'Hipersensibilidad',
+  ea:'<b>Diarrea por C. difficile</b>, exantema',
+  nota:'Útil combinada cuando se sospecha SARM y flora anaerobia.'};
+var F_SITZ={n:'Baños de asiento + analgesia',elec:true,linea:'Coadyuvante — siempre',
+  dlbl:'Indicación',da:'Baños de asiento con agua tibia varias veces al día + analgésico (paracetamol/AINE)',
+  dur:'Durante la fase aguda y tras el procedimiento.',
+  adm:'Favorecen el drenaje espontáneo, la higiene y el alivio del dolor.',
+  mec:'El calor local mejora el confort y puede favorecer el drenaje; la analgesia controla el dolor.',
+  ind:'Todo absceso/quiste sintomático, como acompañamiento del procedimiento.',
+  dmax:'—',
+  iv:'Medida en casa',
+  pres:'Agua tibia, paracetamol/AINE',
+  ci:'—',
+  ea:'—',
+  nota:'⭐ Coadyuvante simple y útil. Un absceso pequeño puede drenar solo con baños de asiento, pero la mayoría requiere procedimiento.'};
+var F_CULTIVO={n:'Cultivo y tamizaje de ITS',linea:'Coadyuvante — según factores de riesgo',
+  dlbl:'Qué hacer',da:'Cultivo del material drenado; considerar tamizaje de gonococo/clamidia (NAAT) según riesgo',
+  dur:'Al momento del drenaje.',
+  adm:'La microbiología es polimicrobiana; ya no se asume que sea gonocócica, pero valora ITS según el contexto.',
+  mec:'Orienta el antibiótico si no hay respuesta y detecta ITS asociadas.',
+  ind:'Absceso drenado, sobre todo con factores de riesgo de ITS.',
+  dmax:'—',
+  iv:'Laboratorio',
+  pres:'Hisopo de cultivo, NAAT',
+  ci:'—',
+  ea:'—',
+  nota:'Si detectas una ITS, trátala y ofrece estudio/tratamiento a la(s) pareja(s).'};
+var F_NO_IDaislada={n:'❌ I&D simple repetida como único manejo',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No repitas solo incisión y drenaje esperando que "ya no vuelva"',
+  dur:'La I&D aislada tiene alta recurrencia.',
+  adm:'Usa un método que cree un trayecto permanente (Word o marsupialización).',
+  mec:'—',ind:'Ninguna como manejo definitivo.',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Recurrencias repetidas, consultas a urgencias',
+  nota:'Si recurre, escala a marsupialización o valora escisión.'};
+var F_NO_atb={n:'❌ Antibiótico de rutina sin drenar',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No trates el absceso solo con antibiótico',
+  dur:'El pilar es el DRENAJE; el antibiótico es un complemento en casos seleccionados.',
+  adm:'Drena; reserva el antibiótico para celulitis, sistémico, embarazo, inmunosupresión o SARM.',
+  mec:'—',ind:'Ninguna como manejo aislado.',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Persistencia del absceso, resistencia',
+  nota:'Un absceso drena, no se "cura" solo con pastillas.'};
+var F_NO_biopsia={n:'❌ Olvidar la biopsia en la posmenopáusica',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No asumas que una masa de Bartholin en la posmenopáusica es "solo un quiste"',
+  dur:'El carcinoma de la glándula de Bartholin es raro pero posible.',
+  adm:'En mujeres <b>&gt;40 años o posmenopáusicas</b> con masa, valora <b>biopsia/escisión</b> para descartar malignidad.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Diagnóstico tardío de carcinoma',
+  nota:'La edad cambia la conducta: piensa en neoplasia en la mujer mayor.'};
+
+var F_OBSERVA={n:'Observación',elec:true,linea:'Quiste asintomático — no requiere tratamiento',
+  dlbl:'Conducta',da:'Vigilancia; higiene y baños de asiento si molesta',
+  dur:'El quiste asintomático en mujer joven no se trata.',
+  adm:'Trata solo si crece, duele o se infecta.',
+  mec:'Muchos quistes son estables o se resuelven solos.',
+  ind:'Quiste de Bartholin asintomático en mujer en edad reproductiva.',
+  dmax:'—',iv:'Ambulatorio',pres:'—',ci:'—',ea:'—',
+  nota:'⭐ En la mujer joven, observar y reevaluar si aparecen síntomas. En la <b>posmenopáusica NO asumas benignidad</b>: valora biopsia.'};
+var F_EMB_BART_AB={n:'Amoxicilina-clavulanato (embarazo)',elec:true,linea:'Embarazo — antibiótico preferido si se requiere',
+  dlbl:'Dosis',da:'875/125 mg VO cada 12 h × 7 días',
+  dur:'Solo si hay celulitis, datos sistémicos o inmunosupresión; NO de rutina.',
+  adm:'Seguro en el embarazo; cubre flora mixta.',
+  mec:'Betalactámico + inhibidor de betalactamasa.',
+  ind:'Absceso de Bartholin en embarazo con indicación de antibiótico.',
+  dmax:'Según pauta.',iv:'VO',pres:'Tableta 875/125 mg (genérico, IMSS)',
+  ci:'Alergia a penicilinas',ea:'Diarrea, exantema',
+  nota:'⭐ Preferible en el embarazo. <b>Evita trimetoprima-sulfametoxazol cerca del término</b> (riesgo de kernícterus). Si se sospecha SARM, valora clindamicina.'};
+
+var TXSIT={
+ absceso:{label:'💧 Absceso', nota:'<b>El pilar es el drenaje</b> que crea un trayecto permanente (catéter de Word o marsupialización). El antibiótico <b>NO es de rutina</b>. La <span style="color:#f5b301;">★</span> marca lo de elección.',
+   lineas:[
+     ['Drenaje (procedimiento)','El pilar del tratamiento',C1,[F_WORD,F_MARSUP,F_ID,F_ESCIS]],
+     ['Antibióticos — solo si hay indicación','NO de rutina; complementan al drenaje',AZ,[F_TMPSMX,F_AMOXCLAV,F_CLINDA]],
+     ['Coadyuvantes','Acompañan a todo manejo',CO,[F_SITZ,F_CULTIVO]],
+     ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_IDaislada,F_NO_atb]]
+   ]},
+ quiste:{label:'🫧 Quiste asintomático', nota:'<b>Observación:</b> no requiere tratamiento en la mujer joven. Trata solo si crece, duele o se infecta. En la <b>posmenopáusica</b>, descarta malignidad.',
+   lineas:[
+     ['Manejo','Vigilancia',CO,[F_OBSERVA]],
+     ['Si es sintomático o recurrente','Método definitivo',C1,[F_MARSUP]],
+     ['⚠️ Posmenopáusica','Descartar carcinoma',RJ,[F_NO_biopsia]]
+   ]},
+ embarazo:{label:'🤰 Embarazo', nota:'El <b>drenaje (catéter de Word)</b> es seguro y sigue siendo el pilar. Si requiere antibiótico, <b>amoxicilina-clavulanato</b>; evita TMP-SMX cerca del término. Coordina con obstetricia.',
+   lineas:[
+     ['Drenaje','Seguro en el embarazo',C1,[F_WORD,F_MARSUP]],
+     ['Antibiótico — si hay indicación','Preferir amoxicilina-clavulanato',AZ,[F_EMB_BART_AB]],
+     ['Coadyuvantes','',CO,[F_SITZ]]
+   ]},
+ recurrente:{label:'🔁 Recurrente', nota:'Prefiere un <b>método definitivo: marsupialización</b>; si falla de forma repetida, <b>escisión</b> de la glándula. Revisa si los drenajes previos fueron solo I&D.',
+   lineas:[
+     ['Método definitivo','Menor recurrencia',C1,[F_MARSUP,F_ESCIS]],
+     ['❌ NO hacer','No repitas I&D aislada',RJ,[F_NO_IDaislada]]
+   ]},
+ sarm:{label:'🦠 SARM / inmunosupresión', nota:'Drena y añade antibiótico con <b>cobertura de SARM</b> (trimetoprima-sulfametoxazol o clindamicina). Toma <b>cultivo</b> para dirigir el tratamiento.',
+   lineas:[
+     ['Drenaje','El pilar, también aquí',C1,[F_WORD]],
+     ['Antibiótico con cobertura SARM','Dirige por cultivo',AZ,[F_TMPSMX,F_CLINDA]],
+     ['Coadyuvantes','Cultivo dirigido',CO,[F_CULTIVO]]
+   ]}
+};
+var TXORDER=['absceso','quiste','embarazo','recurrente','sarm'];
+function buildTxc(){
+  var h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;font-weight:800;color:var(--gray-900);"><span style="font-size:18px;">🏥</span> Tratamiento por situación — toca un chip</div>';
+  h+='<div class="chips" id="txsit-chips">';
+  for(var i=0;i<TXORDER.length;i++){var k=TXORDER[i];h+='<button class="pchip'+(i===0?' on':'')+'" onclick="setTxSit(\''+k+'\',this)">'+TXSIT[k].label+'</button>';}
+  h+='</div><div id="txsit-body"></div>';
+  document.getElementById('txc-body').innerHTML=h;
+  setTxSit(TXORDER[0],document.querySelector('#txsit-chips .pchip'));
+}
+function setTxSit(k,el){
+  var c=document.querySelectorAll('#txsit-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var s=TXSIT[k],h='';
+  if(s.nota)h+='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">💡</span><div>'+s.nota+'</div></div>';
+  TXIDX=0;
+  for(var j=0;j<s.lineas.length;j++)h+=buildLinea(s.lineas[j][0],s.lineas[j][1],s.lineas[j][2],s.lineas[j][3],s.lineas[j][2]);
+  document.getElementById('txsit-body').innerHTML=h;
+}
+
+/* ===== FÁRMACOS / PROCEDIMIENTOS (acordeón) ===== */
+var FARMACOS=[
+ {familia:'🔧 Procedimientos de drenaje',color:'#7a2a6e',farmacos:[
+  {n:'Catéter de Word',ini:'Balón 4–6 semanas',da:'Incisión ~5 mm, inflar el balón con 2–3 mL, dejar 4–6 semanas.',iv:'Ambulatorio',pres:'Catéter de Word',ci:'Celulitis extensa no controlada',ea:'Caída prematura, dolor',nota:'De elección ambulatorio; recurrencia como la marsupialización.'},
+  {n:'Marsupialización',ini:'Sutura de bordes',da:'Evacuación + sutura de la pared a la mucosa.',iv:'Consultorio/quirófano',pres:'Sutura absorbible',ci:'Absceso muy inflamado (a veces drenar primero)',ea:'Dispareunia, hematoma',nota:'De elección en recurrencias/quiste; mejor balance en metaanálisis 2026.'},
+  {n:'Incisión y drenaje (I&D)',ini:'Alivio inmediato',da:'Incisión y evacuación del pus.',iv:'Urgencias',pres:'Bisturí',ci:'—',ea:'Alta recurrencia si es aislada',nota:'No como único manejo; combina con Word.'},
+  {n:'Escisión de la glándula',ini:'Casos refractarios',da:'Extirpación completa.',iv:'Quirófano',pres:'Instrumental',ci:'Infección aguda',ea:'Sangrado, hematoma',nota:'Último recurso; descartar carcinoma en mayores.'}]},
+ {familia:'💊 Antibióticos (si indicados)',color:'#0c3b6e',farmacos:[
+  {n:'Trimetoprima-sulfametoxazol',ini:'160/800 mg c/12 h',da:'1 tableta DS VO c/12 h × 7 días.',iv:'VO',pres:'Tab 160/800 mg (IMSS)',ci:'Embarazo a término, alergia a sulfas, G6PD',ea:'Exantema, hiperpotasemia',nota:'Cubre SARM. Antibiótico no rutinario.'},
+  {n:'Amoxicilina-clavulanato',ini:'875/125 mg c/12 h',da:'VO × 7 días.',iv:'VO',pres:'Tab 875/125 mg (IMSS)',ci:'Alergia a penicilinas',ea:'Diarrea',nota:'Amplio espectro; preferible en embarazo. No cubre SARM.'},
+  {n:'Clindamicina',ini:'300 mg c/8 h',da:'VO × 7 días.',iv:'VO/IV',pres:'Cáps 300 mg (IMSS)',ci:'Hipersensibilidad',ea:'C. difficile',nota:'Anaerobios y SARM; útil combinada.'}]},
+ {familia:'🤝 Coadyuvantes',color:'#0a5c45',farmacos:[
+  {n:'Baños de asiento',ini:'Agua tibia, varias veces/día',da:'Favorecen drenaje e higiene.',iv:'Casa',pres:'Agua tibia',ci:'—',ea:'—',nota:'Un absceso pequeño puede drenar solo con esto.'},
+  {n:'Analgesia',ini:'Paracetamol / AINE',da:'Según dolor.',iv:'VO',pres:'Paracetamol, ibuprofeno',ci:'Las propias del AINE',ea:'—',nota:'Control del dolor durante la fase aguda.'},
+  {n:'Cultivo / tamizaje ITS',ini:'Según riesgo',da:'Cultivo del drenado; NAAT gonococo/clamidia si riesgo.',iv:'Laboratorio',pres:'Hisopo, NAAT',ci:'—',ea:'—',nota:'Microbiología polimicrobiana; trata ITS y parejas si aplica.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis / técnica',f.da);
+  if(f.iv)h+=poprow('Ámbito',f.iv);
+  if(f.pres)h+=poprow('Material',f.pres);
+  if(f.ci)h+=poprow('Contraindicaciones',f.ci);
+  if(f.ea)h+=poprow('Complicaciones',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para la paciente',color:'#0a5c45',fichas:[
+  {n:'Cuidados tras el drenaje',via:'Al alta del procedimiento',
+   enf:'Explicar el cuidado del catéter de Word (si se colocó), la higiene, los baños de asiento y las señales de alarma.',
+   pac:'Se te drenó el absceso. Haz <b>baños de asiento con agua tibia</b> varias veces al día. Si te colocaron un <b>catéter</b>, no lo jales; puede permanecer varias semanas y es normal cierta molestia. Puedes tener relaciones cuando te sientas cómoda y te lo indiquen.',
+   nota:'La mayoría mejora en pocos días; el trayecto tarda semanas en formarse.',
+   alarma:'Regresa si hay <b>fiebre, aumento del dolor o del enrojecimiento, o si el absceso vuelve</b>.'}]},
+ {familia:'🔎 Cuándo pensar en algo más',color:'#7a4a00',fichas:[
+  {n:'Recurrencia y edad',via:'En cada valoración',
+   enf:'Registrar episodios previos; en mujeres mayores documentar características de la masa.',
+   pac:'Si el problema <b>vuelve varias veces</b>, puede convenir un procedimiento más definitivo (marsupialización).',
+   nota:'En <b>&gt;40 años o posmenopáusicas</b> con una masa de Bartholin, valora biopsia/escisión para descartar malignidad.',
+   alarma:'Masa dura, irregular, fija o que sangra → referir para estudio.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Enfermería</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para la paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ absceso:{t:'Absceso de Bartholin típico',c:'#7a2a6e',h:
+  '<div class="prose"><p><b>Perfil:</b> mujer en edad reproductiva con <b>masa unilateral dolorosa</b> en el introito posterior (posición 4 u 8), fluctuante, con eritema, dispareunia y dificultad para caminar/sentarse.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🎯</span><div><div class="at">Qué hacer</div><b>Drenaje con catéter de Word</b> (o marsupialización) + baños de asiento + analgesia. Antibiótico <b>solo</b> si hay celulitis, signos sistémicos, embarazo, inmunosupresión o riesgo de SARM.</div></div>'},
+ quiste:{t:'Quiste asintomático',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> tumefacción no dolorosa, hallazgo incidental, sin signos inflamatorios.</p></div>'
+  +'<div class="alert a-i"><span class="ai">👁️</span><div><div class="at">Qué hacer</div><b>Observación</b>: el quiste asintomático en mujer joven no requiere tratamiento. Trata solo si crece, duele o se infecta. En la <b>posmenopáusica</b>, valora estudio para descartar malignidad.</div></div>'},
+ recurrente:{t:'Bartolinitis recurrente',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> episodios repetidos pese a drenajes previos.</p></div>'
+  +'<div class="alert a-w"><span class="ai">🔁</span><div><div class="at">Qué hacer</div>Prefiere un método <b>definitivo</b>: <b>marsupialización</b>. Si falla de forma repetida, valora <b>escisión de la glándula</b>. Revisa la técnica de drenajes previos (¿I&D aislada?).</div></div>'},
+ embarazo:{t:'Embarazo',c:'#6a1a5a',h:
+  '<div class="alert a-i"><span class="ai">🤰</span><div><div class="at">Se puede drenar en el embarazo</div>El <b>drenaje (catéter de Word)</b> es seguro y sigue siendo el pilar. La marsupialización también es posible.</div></div>'
+  +'<div class="alert a-w"><span class="ai">💊</span><div>Si se requiere antibiótico, prefiere <b>amoxicilina-clavulanato</b>. <b>Evita trimetoprima-sulfametoxazol cerca del término</b> (riesgo de kernícterus). Coordina con obstetricia.</div></div>'
+  +'<div class="alert a-i"><span class="ai">🔎</span><div>Cerca del parto, una lesión grande puede influir en la vía de nacimiento: valóralo con el equipo obstétrico.</div></div>'},
+ posmeno:{t:'Posmenopáusica — descartar malignidad',c:'#7b1c1c',h:
+  '<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Cambia la conducta</div>Una masa de Bartholin en <b>&gt;40 años o posmenopáusica</b> obliga a pensar en el raro <b>carcinoma de la glándula de Bartholin</b>.</div></div>'
+  +'<div class="alert a-w"><span class="ai">🔬</span><div>Realiza <b>biopsia o escisión</b> para estudio histológico. No la trates simplemente como un quiste benigno.</div></div>'},
+ sarm:{t:'Sospecha de SARM / inmunosupresión',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> celulitis marcada, mala evolución, diabetes/inmunosupresión o alta prevalencia local de SARM.</p></div>'
+  +'<div class="alert a-i"><span class="ai">💊</span><div>Drena y añade antibiótico con <b>cobertura de SARM</b> (<b>trimetoprima-sulfametoxazol</b> o clindamicina). Toma cultivo para dirigir el tratamiento.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Tumefacción en el introito (posición 4 u 8). ¿Duele / hay signos inflamatorios?',o:[
+   ['Sí: absceso (doloroso, fluctuante)','absceso'],['No: quiste (asintomático)','quiste']]},
+ quiste:{q:'Quiste asintomático. ¿Mujer >40 años o posmenopáusica?',o:[
+   ['No (joven)','obs'],['Sí','biopsia']]},
+ obs:{t:'Observación',r:'low',x:'El quiste asintomático en mujer joven <b>no requiere tratamiento</b>. Trata solo si crece, duele o se infecta.'},
+ biopsia:{t:'Descartar malignidad',r:'mid',x:'En &gt;40 años/posmenopáusica, una masa de Bartholin obliga a <b>biopsia o escisión</b> para descartar el raro carcinoma de la glándula.'},
+ absceso:{q:'Absceso confirmado. ¿Hay celulitis extensa, fiebre/sistémico, embarazo, inmunosupresión o riesgo de SARM?',o:[
+   ['No','drenaje'],['Sí','drenaje_atb']]},
+ drenaje:{t:'Drenaje (catéter de Word)',r:'mid',x:'<b>Catéter de Word</b> (o marsupialización) + baños de asiento + analgesia. <b>Sin antibiótico de rutina.</b> Toma cultivo del drenado.'},
+ drenaje_atb:{t:'Drenaje + antibiótico',r:'high',x:'<b>Drenaje</b> + antibiótico con cobertura de SARM (<b>trimetoprima-sulfametoxazol</b> o clindamicina; en embarazo, amoxicilina-clavulanato). Cultivo y tamizaje de ITS según riesgo. Valora hospitalizar si hay sepsis.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('absceso',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>
