@@ -31151,7 +31151,7 @@ function openFavs(){
   var fs=document.getElementById('favSearch'); if(fs) fs.value='';
   renderFavs('');
   var fp=document.getElementById('favsPanel'); if(fp) fp.style.display='block';
-  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
+  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
   window.scrollTo({top:0});
 }
 function iniSearchRun(q){
@@ -31741,7 +31741,7 @@ function renderToolRes(r){
 }
 function toolRecalc(){ if(CURTOOL&&CURTOOL.compute){ renderToolRes(CURTOOL.compute()); } }
 function hideExtras(){['toolView','toolsPanel','pedCalcView','labsPanel','temasPanel','temaViewer','favsPanel'].forEach(function(id){var e=document.getElementById(id); if(e)e.style.display='none';});}
-function openPedCalc(){var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); ['inicioView','hubView','homeView','detailView','toolView','toolsPanel'].forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';}); var v=document.getElementById('pedCalcView'); if(v) v.style.display='block'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; ['pcW','pcDose','pcAmt','pcVolP','pcMaxIn'].forEach(function(id){var e=document.getElementById(id); if(e) e.value='';}); pedCalcRun(); window.scrollTo({top:0});}
+function openPedCalc(){var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); ['inicioView','hubView','homeView','detailView','toolView','toolsPanel'].forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';}); var v=document.getElementById('pedCalcView'); if(v) v.style.display='block'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display=''; ['pcW','pcDose','pcAmt','pcVolP','pcMaxIn'].forEach(function(id){var e=document.getElementById(id); if(e) e.value='';}); pedCalcRun(); window.scrollTo({top:0});}
 function pedCalcRun(){var g=function(id){return document.getElementById(id);}; if(!g('pcW'))return; var w=parseFloat(g('pcW').value)||0,dose=parseFloat(g('pcDose').value)||0,type=g('pcType').value,iv=parseInt(g('pcInt').value)||24,dpd=24/iv,amt=parseFloat(g('pcAmt').value)||0,maxd=parseFloat(g('pcMaxIn').value)||0; if(!w||!dose){['pcTotal','pcPer','pcVol','pcVolDay','pcDrops','pcFreq'].forEach(function(id){var e=g(id);if(e)e.textContent='—';});var _m=g('pcMaxW');if(_m)_m.classList.remove('on');return;} if(g('pcAmtU').value==='g')amt=amt*1000; var volp=parseFloat(g('pcVolP').value)||0,conc=(amt>0&&volp>0)?amt/volp:0; var total,per; if(type==='dosis'){per=w*dose;total=per*dpd;}else{total=w*dose;per=total/dpd;} var capped=false; if(maxd&&total>maxd){total=maxd;per=total/dpd;capped=true;} g('pcTotal').innerHTML=Math.round(total)+' mg <span style="color:rgba(255,255,255,.45);font-weight:600">('+(dose||0)+' mg/kg'+(type==='dosis'?'/dosis':'/día')+')</span>'; g('pcPer').textContent=Math.round(per)+' mg'; g('pcVol').textContent=conc>0?(per/conc).toFixed(1)+' mL':'—'; var _mlp=conc>0?per/conc:0; if(g('pcVolDay'))g('pcVolDay').textContent=conc>0?(_mlp*dpd).toFixed(1)+' mL':'—'; if(g('pcDrops'))g('pcDrops').textContent=conc>0?Math.round(_mlp*20)+' gotas':'—'; g('pcFreq').innerHTML=Math.round(total)+' mg/día &divide; '+dpd+' tomas = <b>'+Math.round(per)+' mg</b> &middot; cada '+iv+' h'; var mx=g('pcMaxW'); if(capped){mx.classList.add('on');mx.innerHTML='⚠ Supera la dosis máxima. Limitado a '+Math.round(maxd)+' mg/día.';}else mx.classList.remove('on');}
 function openTool(key){
   try{pushRecentTool(key);}catch(e){}
@@ -31759,7 +31759,7 @@ function openTool(key){
     body.oninput=toolRecalc; body.onchange=toolRecalc; toolRecalc();
   }
   document.getElementById('toolView').style.display='block';
-  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
+  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
   window.scrollTo({top:0});
 }
 function toolRowHTML(t){
@@ -31963,7 +31963,7 @@ function openLabs(){
   var ls=document.getElementById('labSearch'); if(ls) ls.value='';
   renderLabsPanel('');
   var lp=document.getElementById('labsPanel'); if(lp) lp.style.display='block';
-  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
+  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
   window.scrollTo({top:0});
 }
 
@@ -32194,7 +32194,7 @@ function openTemas(){
   var ts=document.getElementById('temaSearch'); if(ts) ts.value='';
   renderTemasPanel('');
   var tp=document.getElementById('temasPanel'); if(tp) tp.style.display='block';
-  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
+  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
   window.scrollTo({top:0});
 }
 var _temaCurrent='';
@@ -32214,7 +32214,7 @@ function openTemaFile(f){
     window.scrollTo({top:0});
   } else { try{ window.open(f,'_blank'); }catch(e){ location.href=f; } }
 }
-function closeTemaViewer(){ var fr=document.getElementById('temaFrame'); if(fr) fr.src='about:blank'; var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none'; document.documentElement.style.overflow=''; document.body.style.overflow=''; }
+function closeTemaViewer(){ var fr=document.getElementById('temaFrame'); if(fr) fr.src='about:blank'; var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none'; document.documentElement.style.overflow=''; document.body.style.overflow=''; var iv=document.getElementById('inicioView'); var onIni=iv&&getComputedStyle(iv).display!=='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display=onIni?'none':''; }
 function openTemaExternal(){ if(_temaCurrent){ try{ window.open(_temaCurrent,'_blank'); }catch(e){ location.href=_temaCurrent; } } }
 function temaItemHTML(t, op){
   if(t.file){ return '<div class="lab-item"><button class="lab-ihead" style="cursor:pointer" onclick="openTemaFile(&#39;'+t.file+'&#39;)"><span class="lab-name">'+t.t+'</span><span class="lab-iright"><svg class="lab-chev" viewBox="0 0 24 24" fill="none" style="transform:rotate(-90deg)"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div>'; }
@@ -32260,7 +32260,7 @@ function goTools(){
   var ts=document.getElementById('toolSearch'); if(ts) ts.value='';
   renderToolsPanel();
   document.getElementById('toolsPanel').style.display='block';
-  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
+  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
   window.scrollTo({top:0});
 }
 function iniOpenTool(key){
