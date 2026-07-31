@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Úlcera arterial · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#be123c;--acd:#881337;--acl:#fff1f2;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.kt b,.kt strong{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);text-align:right;}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:104px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:10px;background:#fff;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+.crumb{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.crumb .cb{background:var(--acl);color:var(--ac);border-radius:20px;padding:2px 9px;font-size:10.5px;font-weight:600;}
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ffe4e6;color:#881337;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#881337,#e11d48);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦵</div>
+    <div>
+      <div class="hdr-eye">Angiología / Heridas</div>
+      <div class="hdr-title">Úlcera arterial (isquémica)</div>
+      <div class="hdr-sub">Úlcera de pierna por enfermedad arterial periférica</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Isquemia = revascularizar</span>
+    <span class="badge">NO comprimir</span>
+    <span class="badge">Dejar de fumar</span>
+    <span class="badge">CLTI = urgente</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Distal / dedos</div><div class="qs-l">puntos de presión</div></div>
+  <div class="qs"><div class="qs-v">Dolor en reposo</div><div class="qs-l">empeora al elevar</div></div>
+  <div class="qs"><div class="qs-v">ITB &lt;0.9</div><div class="qs-l">EAP</div></div>
+  <div class="qs"><div class="qs-v">Revascularizar</div><div class="qs-l">+ factores de riesgo</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📌 Resumen</button>
+  <button class="tab" onclick="showT('dif',this)">🔍 Diferencial</button>
+  <button class="tab" onclick="showT('algo',this)">🧭 Algoritmo</button>
+  <button class="tab" onclick="showT('itb',this)">🧮 ITB</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">🩹 Cuidado</button>
+  <button class="tab" onclick="showT('frx',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>La <strong>úlcera arterial (isquémica)</strong> es una pérdida de piel en la pierna/pie por <strong>hipoperfusión</strong> secundaria a <strong>enfermedad arterial periférica (EAP)</strong>: el tejido no recibe el oxígeno que necesita para cicatrizar.</p></div>
+  <div class="alert a-r"><span class="ai">🎯</span><div><div class="at">La idea que ordena todo</div>Es un problema de <strong>flujo</strong>: sin restaurar la perfusión no cicatriza. La prioridad es <strong>revascularizar</strong> (referir a angiología) + modificar factores de riesgo. <strong>NO se comprime</strong> y se evita el desbridamiento agresivo de la gangrena seca.</div></div>
+  <div class="alert a-i"><span class="ai">💡</span><div><div class="at">Dato clave</div>Úlcera <strong>distal</strong> (dedos, talón, puntos de presión), <strong>"en sacabocados"</strong>, base pálida/necrótica, <strong>seca</strong> y poco exudativa, <strong>muy dolorosa</strong>; el dolor <strong>mejora al colgar la pierna</strong> y empeora al elevarla. Pulsos <strong>ausentes</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología y factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Factor</th><th>—</th></tr></thead><tbody>
+    <tr><td class="dm">Tabaquismo</td><td>El factor modificable más importante</td></tr>
+    <tr><td class="dm">Diabetes</td><td>EAP más distal y agresiva; suele coexistir con neuropatía</td></tr>
+    <tr><td class="dn">Aterosclerosis</td><td>HTA, dislipidemia, edad, ERC, enfermedad coronaria/cerebrovascular</td></tr>
+    <tr><td class="dn">Frecuencia</td><td>~10–25% de las úlceras de pierna (a menudo <strong>mixtas</strong> con componente venoso)</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — por qué el tratamiento es el que es</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Aterosclerosis → estenosis → isquemia</strong><br>La obstrucción arterial reduce el flujo por debajo de la demanda tisular.<br><br><strong>Por eso:</strong> el tratamiento definitivo es <b>revascularizar</b> (endovascular o bypass); sin flujo, la herida no cierra.</div>
+  <div class="fp fp-a"><strong>2. Hipoxia en las zonas más distales</strong><br>El tejido más lejano y los puntos de presión son los primeros en morir.<br><br><strong>Por eso:</strong> la úlcera es <b>distal, en sacabocados</b> y muy dolorosa; hay que descargar la presión y proteger.</div>
+  <div class="fp fp-b"><strong>3. Cicatrización nula e infección peligrosa</strong><br>Cualquier trauma menor no cura y la infección avanza rápido en tejido isquémico.<br><br><strong>Por eso:</strong> cuidado conservador, no desbridar la gangrena seca hasta valorar flujo, y tratar la infección de forma urgente.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Signos de isquemia (reconócelos)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Pulsos ausentes</strong>, pierna <strong>fría, pálida</strong>, sin vello, uñas engrosadas, piel brillante/atrófica.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dolor en reposo</strong> (sobre todo nocturno) que <strong>mejora al colgar la pierna</strong>; <strong>rubor en declive</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Llenado capilar lento</strong>; antecedente de <strong>claudicación intermitente</strong>.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Úlcera <strong>seca, en sacabocados</strong>, en dedos/talón/cara lateral; poco exudado.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">CLTI e isquemia aguda (banderas rojas)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Isquemia crónica que amenaza la extremidad (CLTI)</div><strong>Dolor isquémico en reposo &gt;2 semanas</strong>, úlcera que no cura o <strong>gangrena</strong> → <strong>revascularización urgente</strong> (referir angiología). Estratifica el riesgo con <strong>WIfI</strong> (Wound, Ischemia, foot Infection).</div></div>
+  <div class="alert a-r"><span class="ai">⏱️</span><div><div class="at">Isquemia arterial AGUDA — emergencia</div><strong>Las 6 P:</strong> Pain (dolor), Pallor (palidez), Pulselessness (sin pulso), Paresthesia, Paralysis, Poikilothermia (frialdad). Inicio súbito → <strong>emergencia vascular</strong> (ventana de horas): anticoagular y referir de inmediato.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Comprimir</strong> una úlcera arterial (empeora la isquemia → necrosis).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Desbridar la gangrena seca</strong> o la escara isquémica antes de valorar/restaurar el flujo.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Elevar</strong> la pierna (aumenta el dolor isquémico) o aplicar <strong>calor directo</strong> (riesgo de quemadura en piel insensible).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">No medir <strong>ITB</strong> ni buscar pulsos; tratar como "venosa" y retrasar la referencia.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt">Olvidar los <strong>factores de riesgo</strong>: no suspender el tabaco, no dar antiagregante ni estatina.</div></div>
+  <div class="kp"><div class="kn">6</div><div class="kt">Subestimar el <strong>dolor</strong> (suele requerir analgesia potente) o una <strong>infección</strong> (amenaza la extremidad).</div></div>
+</div></div>
+</div>
+
+<div class="panel" id="tab-dif">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔍</span><div>Confirma el <strong>tipo</strong> de úlcera de pierna antes de tratar. Toca cada una.</div></div>
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Comparativa rápida (arterial · venosa · neuropática)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Rasgo</th><th>Arterial</th><th>Venosa</th><th>Neuropática</th></tr></thead><tbody>
+    <tr><td class="dn">Localización</td><td>Distal: dedos, talón, lateral</td><td>Polaina (maléolo medial)</td><td>Puntos de presión plantar</td></tr>
+    <tr><td class="dn">Bordes</td><td>Netos, "en sacabocados"</td><td>Irregulares, planos</td><td>"En sacabocados" con callo</td></tr>
+    <tr><td class="dn">Lecho</td><td>Pálido/necrótico, seco</td><td>Fibrina/granulación, húmedo</td><td>Variable; puede ser profundo</td></tr>
+    <tr><td class="dn">Exudado</td><td>Escaso</td><td><b>Abundante</b></td><td>Variable</td></tr>
+    <tr><td class="dn">Dolor</td><td><b>Intenso;</b> mejora al colgar</td><td>Leve; mejora al elevar</td><td><b>Indolora</b></td></tr>
+    <tr><td class="dn">Piel de la pierna</td><td>Fría, pálida, sin vello</td><td>Estasis, edema, pigmentación</td><td>Seca, fisuras; pie diabético</td></tr>
+    <tr><td class="dn">Pulsos</td><td><b>Ausentes</b></td><td>Presentes</td><td>Variables</td></tr>
+    <tr><td class="dn">ITB</td><td>&lt;0.9 (grave &lt;0.5)</td><td>≥0.8</td><td>Variable (puede ser mixta)</td></tr>
+    <tr><td class="dn">Clave</td><td>Revascularizar; no comprimir</td><td>Compresión (tras ITB)</td><td>Descarga + control glucémico</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div>En el diabético son frecuentes las úlceras <b>mixtas / neuroisquémicas</b>: predomina el manejo de la isquemia.</div></div>
+</div></div>
+<div class="chips" id="dif-chips"></div>
+<div id="dif-body"></div>
+</div>
+
+<div class="panel" id="tab-algo"><div class="an"><div class="crumb" id="algo-crumb"></div><div id="algo-box"></div></div>
+  <div class="alert a-w" style="margin-top:12px;"><span class="ai">⚠️</span><div>Apoyo diagnóstico. Ante dolor isquémico en reposo, úlcera que no cura o gangrena, <strong>refiere a angiología</strong>; el inicio súbito con las 6 P es una <strong>emergencia</strong>.</div></div>
+</div>
+
+<div class="panel" id="tab-itb">
+<div class="calc-w">
+  <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:var(--gray-900);">🧮 Índice tobillo-brazo (ITB)</div>
+  <div class="prose" style="margin-bottom:8px;">Cuantifica la EAP y orienta la urgencia de la referencia. Toma la <b>presión sistólica</b> (Doppler) del <b>tobillo</b> (la más alta entre pedia y tibial posterior) y de la <b>arteria braquial</b> (la más alta de ambos brazos).</div>
+<div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve? · ITB</div>Confirma y gradúa la EAP y <b>marca la urgencia de la referencia</b> (&lt;0.5 = isquemia crítica). Es el primer estudio objetivo ante una úlcera de pierna; un ITB normal <b>no descarta</b> isquemia si la clínica es clara (usar IDB).</div></div>  <label class="calc-lbl">Presión sistólica en el tobillo (mmHg)</label>
+  <input class="calc-in" id="itb-ankle" type="number" inputmode="decimal" placeholder="p. ej. 70" oninput="calcITB()">
+  <label class="calc-lbl">Presión sistólica braquial más alta (mmHg)</label>
+  <input class="calc-in" id="itb-brachial" type="number" inputmode="decimal" placeholder="p. ej. 130" oninput="calcITB()">
+  <button class="calc-btn" onclick="calcITB()">Calcular</button><button class="calc-btn sc" onclick="resetITB()">Reiniciar</button>
+  <div id="itb-res" class="calc-result"></div>
+  <div class="calc-note">En diabéticos/ERC el ITB puede ser falsamente alto (arterias calcificadas): usa el <b>índice dedo-brazo (IDB)</b> o presiones digitales. El ITB normal no descarta isquemia si la clínica es clara.</div>
+</div>
+</div>
+
+<div class="panel" id="tab-esc">
+<div class="calc-w">
+  <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:var(--gray-900);">📊 WIfI — Wound · Ischemia · foot Infection</div>
+  <div class="prose" style="margin-bottom:6px;">Estratifica el riesgo de amputación y el beneficio de revascularizar en la extremidad amenazada. Puntúa <b>cada eje de 0 a 3</b>.</div>
+<div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve? · WIfI</div>Estima el <b>riesgo de amputación a 1 año</b> y el <b>beneficio de revascularizar</b>, integrando herida (W), isquemia (I) e infección (fI). Ayuda a <b>priorizar</b> la extremidad amenazada y a decidir qué tan agresivo ser.</div></div>
+    <div id="wifi-box"></div>
+</div>
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔢</span><span class="st">Fontaine (EAP crónica)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve? · Fontaine</div>Estadifica la EAP crónica <b>por síntomas</b> de forma sencilla (I–IV). <b>III–IV = isquemia que amenaza la extremidad (CLTI)</b>. Útil para comunicar la etapa y decidir la referencia.</div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Estadio</th><th>Clínica</th></tr></thead><tbody>
+    <tr><td class="dn">I</td><td>Asintomático</td></tr>
+    <tr><td class="dn">IIa</td><td>Claudicación leve (&gt;200 m)</td></tr>
+    <tr><td class="dn">IIb</td><td>Claudicación moderada-grave (&lt;200 m)</td></tr>
+    <tr><td class="dm">III</td><td>Dolor isquémico en reposo</td></tr>
+    <tr><td class="dm">IV</td><td>Úlcera o gangrena (pérdida tisular)</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>Fontaine III–IV ≈ isquemia crónica que amenaza la extremidad (CLTI).</div></div>
+</div></div>
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔢</span><span class="st">Rutherford (EAP crónica)</span><span class="sg">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve? · Rutherford crónica</div>Lo mismo que Fontaine pero con <b>más detalle</b> (grados/categorías 0–6). Muy usada en cirugía vascular para clasificar con precisión y comparar entre pacientes y estudios.</div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Grado / Cat.</th><th>Clínica</th></tr></thead><tbody>
+    <tr><td class="dn">0 · 0</td><td>Asintomático</td></tr>
+    <tr><td class="dn">I · 1–3</td><td>Claudicación leve / moderada / grave</td></tr>
+    <tr><td class="dm">II · 4</td><td>Dolor isquémico en reposo</td></tr>
+    <tr><td class="dm">III · 5</td><td>Pérdida tisular menor (úlcera focal)</td></tr>
+    <tr><td class="dm">III · 6</td><td>Pérdida tisular mayor (gangrena extensa)</td></tr>
+  </tbody></table></div>
+</div></div>
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Rutherford — isquemia AGUDA</span><span class="sg">&#8964;</span></div>
+<div class="sb">
+  <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">¿Para qué sirve? · Rutherford aguda</div>Clasifica la <b>VIABILIDAD</b> de la extremidad en la isquemia aguda (I viable → III irreversible). <b>Define la urgencia y si aún es salvable</b>: orienta entre revascularizar de inmediato (IIb) o amputar (III).</div></div>
+  <div class="tw"><table class="t"><thead><tr><th>Cat.</th><th>Viabilidad</th><th>Datos</th></tr></thead><tbody>
+    <tr><td class="dn">I</td><td>Viable</td><td>Sin amenaza inmediata; sensibilidad y motricidad conservadas; Doppler audible</td></tr>
+    <tr><td class="dm">IIa</td><td>Amenazada, recuperable</td><td>Salvable si se trata; leve déficit sensitivo; Doppler arterial inaudible</td></tr>
+    <tr><td class="dm">IIb</td><td>Amenaza inmediata</td><td>Salvable si revascularización <b>inmediata</b>; déficit sensitivomotor</td></tr>
+    <tr><td class="dm">III</td><td>Irreversible</td><td>Pérdida tisular mayor / daño nervioso permanente → amputación</td></tr>
+  </tbody></table></div>
+  <div class="alert a-r"><span class="ai">⏱️</span><div>La isquemia aguda es tiempo-dependiente (ventana de horas): categoriza y refiere de inmediato.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-txc">
+<div class="chips" id="txsit-chips"></div>
+<div id="txc-body"></div>
+</div>
+
+<div class="panel" id="tab-farm">
+<div class="alert a-w" style="margin-bottom:12px;"><span class="ai">🔎</span><div>El cuidado de la herida es <strong>secundario a restaurar el flujo</strong>. Toca una familia o <strong>busca por nombre</strong>. La úlcera arterial es seca: apósito no adherente y NO comprimir.</div></div>
+<input class="opt" id="farm-q" type="text" placeholder="🔎 Buscar (no adherente, plata, gangrena seca…)" oninput="filtrarFarmacos(this.value)" style="display:block;width:100%;border-radius:var(--rs);margin-bottom:12px;padding:9px 11px;cursor:text;">
+<div id="farm-body"></div>
+</div>
+
+<div class="panel" id="tab-frx">
+<div class="alert a-w" style="margin-bottom:12px;"><span class="ai">💊</span><div>Base médica de la EAP: <strong>antiagregante + estatina + dejar de fumar</strong>, control de PA/glucemia, y analgesia (a menudo potente). Antibióticos solo si hay <strong>infección</strong>. Dosis para adulto con función renal normal.</div></div>
+<div id="frx-body"></div>
+</div>
+
+<div class="panel" id="tab-bib">
+<div class="biblio-header"><h2>📚 Bibliografía — Úlcera arterial</h2><p>Guías vasculares, clasificación WIfI, ITB y referencias de primer nivel.</p></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Isquemia crónica que amenaza la extremidad (CLTI)</strong> → <strong>Global Vascular Guidelines, Conte 2019</strong> [1].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Estratificación de la extremidad amenazada</strong> → <strong>WIfI, Mills 2014</strong> [2].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>ITB</strong> → <strong>AHA Aboyans 2012</strong> [3]; <strong>heridas crónicas / diferencial</strong> → <strong>AAFP</strong> [4][5].</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Contexto mexicano</strong> → <strong>CENETEC</strong> [6].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías vasculares</div>
+  <div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Conte MS, Bradbury AW, Kolh P, et al. <em>Global vascular guidelines on the management of chronic limb-threatening ischemia.</em> J Vasc Surg. 2019;69(6S):3S–125S. [Diagnóstico, estadificación y revascularización de la CLTI.]</div><a class="biblio-link" href="https://doi.org/10.1016/j.jvs.2019.02.016" target="_blank">🔗 DOI 10.1016/j.jvs.2019.02.016</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2014</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Mills JL Sr, Conte MS, Armstrong DG, et al. <em>The SVS Lower Extremity Threatened Limb Classification System: Wound, Ischemia, and foot Infection (WIfI).</em> J Vasc Surg. 2014;59(1):220–234. [Estratifica el riesgo de amputación y el beneficio de revascularizar.]</div><a class="biblio-link" href="https://doi.org/10.1016/j.jvs.2013.08.003" target="_blank">🔗 DOI 10.1016/j.jvs.2013.08.003</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2012</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Aboyans V, Criqui MH, Abraham P, et al. <em>Measurement and Interpretation of the Ankle-Brachial Index: AHA Scientific Statement.</em> Circulation. 2012;126(24):2890–2909. [Medición e interpretación del ITB.]</div><a class="biblio-link" href="https://doi.org/10.1161/CIR.0b013e318276fbcb" target="_blank">🔗 DOI 10.1161/CIR.0b013e318276fbcb</a></div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Referencias de primer nivel</div>
+  <div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2020</span><span class="biblio-level lv-c">Nivel C</span></div><div class="biblio-ref">Bowers S, Franco E. <em>Chronic Wounds: Evaluation and Management.</em> Am Fam Physician. 2020;101(3):159–166. [Evaluación de la herida crónica, ITB y diferencial venosa/arterial/neuropática.]</div><a class="biblio-link" href="https://www.aafp.org/pubs/afp/issues/2020/0201/p159.html" target="_blank">🔗 aafp.org/…/2020/0201/p159</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2019</span><span class="biblio-level lv-c">Nivel C</span></div><div class="biblio-ref">Bonkemeyer Millan S, Gan R, Townsend PE. <em>Venous Ulcers: Diagnosis and Treatment.</em> Am Fam Physician. 2019;100(5):298–305. [Diferencial de la úlcera de pierna y papel del ITB antes de comprimir.]</div><a class="biblio-link" href="https://www.aafp.org/pubs/afp/issues/2019/0901/p298.html" target="_blank">🔗 aafp.org/…/2019/0901/p298</a></div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div><div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de GPC (enfermedad arterial periférica / isquemia crítica / pie diabético).</em> Sistema Nacional de Salud, México. [Coteja fármacos y presentaciones con el cuadro básico (IMSS).]</div><a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a></div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body"><div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / meta-análisis</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> ECA / cohorte</div>
+    <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Revisión</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Fuente institucional</div>
+  </div></div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div><strong>Material de apoyo educativo;</strong> verifica contra la GPC vigente (<strong>CENETEC/IMSS</strong>) y el protocolo de tu unidad. Ante isquemia que amenaza la extremidad, referencia vascular urgente. Última revisión: julio 2026.</div></div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#be123c', C_REV='#be123c', C_RISK='#0c3b6e', C_HERIDA='#0a5c45', C_DOLOR='#b45309', C_ANTI='#7c3aed', RJ='#7b1c1c';
+/* ===== NAV ===== */
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var tabs=document.querySelectorAll('.tab');for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="De elección" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Qué hacer')+'</div><div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Fundamento',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.iv)h+=txrow('Frecuencia',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones MX',f.pres,'#374151');
+  if(f.ci)h+=txrow('No usar / cautela',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Precauciones',f.ea,'#374151');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#881337')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel&&sublabel.trim())h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';return h;
+}
+/* ===== FICHAS DE MANEJO / CUIDADO ===== */
+var F_REVASC={n:'Revascularización (referir angiología)',linea:'Tratamiento — la prioridad',elec:true,dlbl:'Qué hacer',da:'Referir a angiología para valorar revascularización endovascular (angioplastia/stent) o bypass. Urgente si CLTI.',dur:'Sin flujo la úlcera NO cicatriza.',adm:'Estudios: eco-Doppler, angio-TC/RM o arteriografía.',mec:'Restaura la perfusión: es lo único que permite cicatrizar la úlcera isquémica.',ind:'Úlcera arterial / CLTI.',iv:'—',pres:'Procedimiento (angiología / cirugía vascular).',ci:'—',ea:'—',nota:'Es el tratamiento definitivo. Todo lo demás (curación, dolor, factores de riesgo) lo acompaña, no lo sustituye.'};
+var F_ANTIAGREG={n:'Antiagregante',linea:'Factores de riesgo — base médica',elec:true,dlbl:'Fármaco',da:'Aspirina 75–100 mg/día O clopidogrel 75 mg/día.',dur:'Crónico.',adm:'Reduce eventos cardiovasculares en EAP.',mec:'Antiagregación plaquetaria.',ind:'EAP sintomática / úlcera arterial.',iv:'c/24 h',pres:'AAS 100 mg; clopidogrel 75 mg (IMSS).',ci:'Sangrado activo, alergia.',ea:'Sangrado, gastrolesión.',nota:'Parte del tratamiento médico de base de toda EAP.'};
+var F_ESTATINA={n:'Estatina de alta intensidad',linea:'Factores de riesgo — base médica',elec:true,dlbl:'Fármaco',da:'Atorvastatina 40–80 mg/día o rosuvastatina 20–40 mg/día.',dur:'Crónico.',adm:'Reduce eventos y mejora la permeabilidad y los síntomas.',mec:'Estabiliza la placa; efecto pleiotrópico vascular.',ind:'EAP / aterosclerosis.',iv:'c/24 h',pres:'Atorvastatina 40/80 mg; rosuvastatina 20 mg (IMSS/privado).',ci:'Hepatopatía activa, embarazo.',ea:'Mialgias, ↑ transaminasas.',nota:'Indicada en toda EAP aunque el colesterol sea "normal".'};
+var F_FUMAR={n:'Dejar de fumar (+ ayuda)',linea:'Factores de riesgo — lo más importante',elec:true,dlbl:'Qué hacer',da:'Suspensión total del tabaco; ofrecer terapia de reemplazo de nicotina, bupropión o vareniclina.',dur:'Permanente.',adm:'Es la intervención con mayor impacto en EAP.',mec:'Frena la progresión de la aterosclerosis y mejora la cicatrización.',ind:'Todo fumador con EAP.',iv:'—',pres:'Parches/chicles de nicotina; vareniclina; bupropión.',ci:'Según fármaco de apoyo.',ea:'—',nota:'Ningún tratamiento funciona bien si el paciente sigue fumando.'};
+var F_CILOSTAZOL={n:'Cilostazol',linea:'Claudicación (no para cicatrizar la úlcera)',dlbl:'Dosis',da:'100 mg c/12 h.',dur:'Evaluar a las 8–12 semanas.',adm:'Mejora la distancia de claudicación; efecto sintomático.',mec:'Inhibidor de la fosfodiesterasa III: vasodilata y antiagrega.',ind:'Claudicación intermitente (no en CLTI para curar la úlcera).',iv:'c/12 h',pres:'Tab 100 mg (Pletal®, genéricos).',ci:'<b>Insuficiencia cardiaca (contraindicado)</b>.',ea:'Cefalea, palpitaciones, diarrea.',nota:'Alivia la claudicación; no sustituye la revascularización en la úlcera isquémica.'};
+var F_NONADH={n:'Apósito no adherente (herida seca)',linea:'Cuidado local — úlcera seca',elec:true,dlbl:'Uso',da:'Apósito no adherente simple sobre la úlcera; proteger sin macerar.',dur:'Cambios espaciados (herida seca, poco exudado).',adm:'Evitar apósitos oclusivos húmedos si el tejido está isquémico.',mec:'Protege el lecho sin dañar al retirar.',ind:'Úlcera arterial seca/poco exudativa.',iv:'Según herida',pres:'Mallas de silicona/lipidocoloides no adherentes.',ci:'—',ea:'—',nota:'El cuidado local es secundario a restaurar el flujo. Mantén seco y protegido.'};
+var F_ESCARA_SECA={n:'Dejar seca la gangrena/escara isquémica',linea:'Cuidado local — NO desbridar aún',elec:true,dlbl:'Qué hacer',da:'Gangrena seca o escara estable en pie isquémico: mantenerla SECA (antiséptico secante), proteger y NO desbridar hasta valorar/restaurar el flujo.',dur:'Hasta valoración vascular.',adm:'Vigila signos de infección (humedad, eritema, mal olor, fluctuación).',mec:'La momificación seca limita el daño mientras se decide la revascularización.',ind:'Gangrena seca / escara isquémica sin infección.',iv:'—',pres:'Antiséptico secante (p. ej. povidona en el borde), gasa protectora.',ci:'Signos de gangrena húmeda/infección → urgente.',ea:'—',nota:'Desbridar tejido isquémico sin flujo puede ampliar la pérdida y precipitar amputación mayor.'};
+var F_PLATA={n:'Apósito de plata (si infección local)',linea:'Antimicrobiano — solo si infección',dlbl:'Uso',da:'Carga bacteriana local; junto con antibiótico sistémico si hay infección (amenaza la extremidad).',dur:'Reevaluar pronto.',mec:'Iones de plata antimicrobianos.',ind:'Signos de infección local en úlcera isquémica.',iv:'Según producto',pres:'Aquacel Ag®, Mepilex Ag®.',ci:'Uso indiscriminado.',ea:'—',nota:'La infección en tejido isquémico es urgente: valora referencia y antibiótico sistémico.'};
+var F_OFFLOAD={n:'Descarga y protección',linea:'Cuidado — proteger la extremidad',elec:true,dlbl:'Qué hacer',da:'Descargar puntos de presión (talón flotando, calzado adecuado), proteger de traumatismos, cuidado meticuloso del pie.',dur:'Permanente.',mec:'Evita nuevas lesiones en un pie que no cicatriza.',ind:'Toda úlcera arterial / pie en riesgo.',iv:'—',pres:'Protectores de talón, calzado.',ci:'—',ea:'—',nota:'No elevar la pierna (aumenta el dolor isquémico); posición neutra o ligeramente en declive para el confort.'};
+var F_NO_COMPRESION={n:'❌ Compresión',no:true,linea:'❌ NO hacer',dlbl:'Por qué no',da:'No apliques compresión en una úlcera arterial.',mec:'Reduce aún más el flujo de una extremidad isquémica → necrosis/amputación.',ind:'—',iv:'—',ci:'EAP / ITB bajo.',ea:'—',nota:'La compresión es de la úlcera venosa (con ITB ≥0.8), no de la arterial.'};
+var F_NO_DEBRIDE={n:'❌ Desbridar gangrena seca sin flujo',no:true,linea:'❌ NO hacer',dlbl:'Por qué no',da:'No desbrides la gangrena seca/escara isquémica antes de valorar la perfusión.',mec:'Sin flujo, el desbridamiento amplía la herida y puede precipitar amputación mayor.',ind:'—',iv:'—',ci:'Pie isquémico sin revascularizar.',ea:'—',nota:'Excepción: gangrena húmeda/infección → urgencia quirúrgica.'};
+var F_NO_CALOR={n:'❌ Calor directo / elevar la pierna',no:true,linea:'❌ NO hacer',dlbl:'Por qué no',da:'No apliques calor directo ni eleves la pierna isquémica.',mec:'El calor quema piel insensible; elevar disminuye el flujo y aumenta el dolor en reposo.',ind:'—',iv:'—',ci:'Extremidad isquémica.',ea:'—',nota:'Para el dolor: posición en ligero declive y analgesia adecuada.'};
+var F_DUAL={n:'Doble vía antitrombótica (AAS + rivaroxabán dosis baja)',linea:'Base médica — reduce eventos',dlbl:'Esquema',da:'Aspirina 100 mg/día + rivaroxabán 2.5 mg cada 12 h.',dur:'Crónico, en pacientes seleccionados.',mec:'Reduce eventos cardiovasculares y de la extremidad (MACE/MALE) en EAP sintomática y tras revascularización.',ind:'EAP sintomática / post-revascularización con bajo riesgo de sangrado.',iv:'AAS c/24 h + rivaroxabán c/12 h',pres:'AAS 100 mg; rivaroxabán 2.5 mg.',ci:'Alto riesgo de sangrado, anticoagulación plena.',ea:'Sangrado.',nota:'Estrategia de "doble vía" (ensayos COMPASS/VOYAGER PAD). Valora el riesgo hemorrágico.'};
+var F_PROSTANOID={n:'Prostanoide (iloprost IV)',linea:'CLTI no revascularizable',dlbl:'Uso',da:'Infusión IV en ciclos (hospitalario), cuando NO es posible revascularizar.',dur:'Ciclos según protocolo.',mec:'Vasodilatador/antiagregante: reduce el dolor isquémico y puede disminuir amputaciones en casos seleccionados.',ind:'CLTI sin opción de revascularización.',iv:'Infusión IV',pres:'Iloprost (hospitalario).',ci:'Sangrado, cardiopatía inestable.',ea:'Cefalea, rubor, hipotensión.',nota:'Opción de rescate; no sustituye a la revascularización cuando es factible.'};
+var F_FOOTCARE={n:'Cuidado del pie / podología',linea:'Coadyuvante (siempre)',elec:true,dlbl:'Qué hacer',da:'Inspección diaria, calzado adecuado, evitar traumatismos y calor, hidratar; podología para uñas/callos (en diabético, indispensable).',dur:'Permanente.',mec:'Previene nuevas lesiones en un pie que no cicatriza.',ind:'Toda EAP / pie en riesgo.',iv:'Diario',pres:'—',ci:'No cortar callos por cuenta propia en isquémico/diabético.',ea:'—',nota:'La educación y el cuidado del pie reducen amputaciones.'};
+var F_EXERCISE={n:'Ejercicio supervisado (claudicación)',linea:'Coadyuvante — claudicación',dlbl:'Qué hacer',da:'Programa de marcha supervisado 30–45 min, 3 veces/semana, ≥12 semanas.',dur:'Programa estructurado.',mec:'Mejora la distancia de claudicación y la calidad de vida.',ind:'Claudicación intermitente (NO en pérdida tisular activa).',iv:'3×/semana',pres:'—',ci:'CLTI / pérdida tisular / isquemia crítica.',ea:'—',nota:'Primera línea de la claudicación junto con los fármacos; no aplica a la úlcera isquémica activa.'};
+var F_PAIN_PARAC_A={n:'Paracetamol ± AINE',linea:'Dolor — base',dlbl:'Dosis',da:'Paracetamol 500–1000 mg c/6–8 h (máx 3–4 g/día); AINE con cautela.',dur:'Base multimodal.',mec:'Analgesia de base; suele ser insuficiente en dolor isquémico.',ind:'Dolor leve.',iv:'c/6–8 h',pres:'Paracetamol 500 mg (IMSS).',ci:'AINE: ERC/cardiopatía (frecuentes en EAP).',ea:'—',nota:'El dolor isquémico casi siempre requiere escalar a opioide.'};
+var F_PAIN_OPIO_A={n:'Opioide (dolor isquémico)',linea:'Dolor — moderado-intenso',elec:true,dlbl:'Dosis',da:'Tramadol 50 mg c/6–8 h (máx 400 mg/día); morfina si dolor severo (titular).',dur:'Hasta revascularizar / controlar.',mec:'Analgesia potente del dolor isquémico en reposo.',ind:'Dolor moderado-intenso.',iv:'Tramadol c/6–8 h',pres:'Tramadol 50 mg (Tradol®); morfina (control).',ci:'Riesgo convulsivo (tramadol), IMAO.',ea:'Náusea, estreñimiento, sedación.',nota:'El dolor en reposo suele necesitar opioide hasta restaurar el flujo.'};
+var F_PAIN_GABA_A={n:'Gabapentina / pregabalina',linea:'Dolor — componente neuroisquémico',dlbl:'Dosis',da:'Gabapentina 300 mg titulable (hasta 1800–3600 mg/día); pregabalina 75 mg c/12 h.',dur:'Si dolor neuropático asociado.',mec:'Modula el dolor neuropático (frecuente en el diabético).',ind:'Dolor neuroisquémico.',iv:'Gabapentina c/8 h',pres:'Gabapentina 300/400 mg; pregabalina 75 mg (IMSS).',ci:'Ajuste renal.',ea:'Somnolencia, mareo.',nota:'Añádelo si hay componente neuropático; ajusta a función renal.'};
+/* ===== WIfI (escala) ===== */
+var WIFI=[
+ {k:'W',t:'Wound — herida',o:['0 · sin úlcera (solo dolor en reposo)','1 · úlcera pequeña y superficial, sin gangrena','2 · más profunda ± gangrena limitada a dedos','3 · úlcera extensa / gangrena extensa']},
+ {k:'I',t:'Ischemia — por ITB',o:['0 · ITB ≥0.80','1 · ITB 0.60–0.79','2 · ITB 0.40–0.59','3 · ITB &lt;0.40']},
+ {k:'fI',t:'foot Infection — infección',o:['0 · sin infección','1 · leve (local)','2 · moderada (&gt;2 cm / profunda)','3 · grave / SIRS (sepsis)']}
+];
+var WI={};
+function renderWIFI(){var h='';for(var i=0;i<WIFI.length;i++){var g=WIFI[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+g.t+'</div><div id="wig-'+g.k+'">';for(var j=0;j<g.o.length;j++){h+='<button class="opt" onclick="wiSet(\''+g.k+'\','+j+',this)">'+g.o[j]+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="wiReset()">Reiniciar</button></div><div id="wi-res" class="calc-result"></div>';document.getElementById('wifi-box').innerHTML=h;}
+function wiSet(k,v,btn){WI[k]=v;var g=btn.parentNode.querySelectorAll('.opt');for(var i=0;i<g.length;i++)g[i].classList.remove('on');btn.classList.add('on');wiCalc();}
+function wiReset(){WI={};var b=document.querySelectorAll('#wifi-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById('wi-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function wiCalc(){var box=document.getElementById('wi-res');if(!box)return;if(WI.W==null||WI.I==null||WI.fI==null){box.className='calc-result show res-mid';box.innerHTML='Selecciona los 3 ejes (W, I, fI).';return;}
+ var mx=Math.max(WI.W,WI.I,WI.fI),cls,riesgo;
+ if(mx<=1){cls='res-ok';riesgo='BAJO';}else if(mx===2){cls='res-mid';riesgo='MODERADO';}else{cls='res-high';riesgo='ALTO';}
+ var acc='';
+ if(WI.fI===3)acc+='<div style="margin-top:6px;color:#7b1c1c;"><b>Infección grave (fI3):</b> urgencia — control del foco + antibiótico IV.</div>';
+ if(WI.I>=1)acc+='<div style="margin-top:4px;"><b>Isquemia (I'+WI.I+'):</b> el beneficio de <b>revascularizar</b> aumenta con el grado de isquemia.</div>';
+ if(WI.I===3)acc+='<div style="margin-top:4px;color:#7b1c1c;"><b>I3:</b> isquemia crítica → referencia vascular urgente.</div>';
+ box.className='calc-result show '+cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">WIfI  W'+WI.W+' I'+WI.I+' fI'+WI.fI+' · riesgo '+riesgo+'</div>'+acc+'<div class="calc-note">Estimación orientativa del riesgo de amputación/beneficio de revascularización. Consulta la matriz WIfI para el estadio clínico 1–4.</div>';}
+/* ===== DIFERENCIAL (chips) ===== */
+var DIF={
+ art:{t:'Arterial',c:'#be123c',h:'<div class="tw"><table class="t"><tbody>'
+  +'<tr><td class="dn">Localización</td><td>Distal: dedos, talón, puntos de presión, cara lateral</td></tr>'
+  +'<tr><td class="dn">Aspecto</td><td>"En sacabocados", bordes netos, pálida/necrótica, <b>seca</b>, poco exudado</td></tr>'
+  +'<tr><td class="dn">Dolor</td><td><b>Intenso</b>; en reposo, <b>empeora al elevar</b>, mejora al colgar la pierna</td></tr>'
+  +'<tr><td class="dn">Piel/pulsos</td><td>Fría, pálida, sin vello; pulsos <b>ausentes</b></td></tr>'
+  +'<tr><td class="dn">ITB</td><td>&lt;0.9 (grave &lt;0.5)</td></tr></tbody></table></div>'
+  +'<div class="alert a-r"><span class="ai">🚑</span><div><b>Clave:</b> NO comprimir; revascularizar → referir angiología.</div></div>'},
+ ven:{t:'Venosa',c:'#0891b2',h:'<div class="tw"><table class="t"><tbody>'
+  +'<tr><td class="dn">Localización</td><td>Región de la polaina (supramaleolar medial)</td></tr>'
+  +'<tr><td class="dn">Aspecto</td><td>Superficial, bordes irregulares, <b>exudativa</b></td></tr>'
+  +'<tr><td class="dn">Dolor</td><td>Leve-moderado; <b>mejora al elevar</b></td></tr>'
+  +'<tr><td class="dn">Piel/pulsos</td><td>Cambios de estasis, edema; pulsos <b>presentes</b></td></tr>'
+  +'<tr><td class="dn">ITB</td><td>≥0.8</td></tr></tbody></table></div>'
+  +'<div class="alert a-g"><span class="ai">🎯</span><div><b>Clave:</b> compresión (tras ITB). Ver la ficha de úlcera venosa.</div></div>'},
+ neu:{t:'Neuropática (pie diabético)',c:'#b45309',h:'<div class="tw"><table class="t"><tbody>'
+  +'<tr><td class="dn">Localización</td><td>Puntos de presión plantar (cabezas metatarsianas, talón)</td></tr>'
+  +'<tr><td class="dn">Aspecto</td><td>"En sacabocados" con <b>callo</b> alrededor</td></tr>'
+  +'<tr><td class="dn">Dolor</td><td><b>Indolora</b> (neuropatía)</td></tr>'
+  +'<tr><td class="dn">Piel/pulsos</td><td>Pie diabético; pulsos variables (puede coexistir isquemia → neuroisquémica)</td></tr>'
+  +'<tr><td class="dn">Clave</td><td>Descarga de presión, control glucémico, valorar isquemia (ITB) e infección</td></tr></tbody></table></div>'},
+ mix:{t:'Mixta / neuroisquémica',c:'#6b21a8',h:'<div class="prose"><p>Coexisten isquemia y otro componente (venoso o neuropático). Frecuente en el diabético.</p></div>'
+  +'<div class="alert a-w"><span class="ai">⚠️</span><div>Predomina el manejo de la <b>isquemia</b>: no comprimir, valorar revascularización, y añadir descarga/control glucémico si hay neuropatía.</div></div>'}
+};
+var DIFORDER=['art','ven','neu','mix'];
+var DIFLAB={art:'🩸 Arterial',ven:'🦵 Venosa',neu:'🦶 Neuropática',mix:'🔀 Mixta'};
+function buildDif(){var ch='';for(var i=0;i<DIFORDER.length;i++){var k=DIFORDER[i];ch+='<button class="pchip'+(i===0?' on':'')+'" onclick="setDif(\''+k+'\',this)">'+DIFLAB[k]+'</button>';}document.getElementById('dif-chips').innerHTML=ch;setDif(DIFORDER[0],document.querySelector('#dif-chips .pchip'));}
+function setDif(k,el){var c=document.querySelectorAll('#dif-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var e=DIF[k];document.getElementById('dif-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;border-left:4px solid '+e.c+';"><span class="si">🔍</span><span class="st">Úlcera '+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';}
+/* ===== TRATAMIENTO (chips) ===== */
+var TXSIT={
+  revasc:{label:'⭐ Revascularizar',nota:'<b>La prioridad.</b> Sin flujo la úlcera no cicatriza → referir a angiología (urgente si CLTI).',
+    lineas:[['Restaurar el flujo','',C_REV,[F_REVASC]]]},
+  riesgo:{label:'❤️ Factores de riesgo',nota:'Base médica de la EAP: <b>antiagregante + estatina + dejar de fumar</b>, control de PA y glucemia. En casos seleccionados, doble vía (AAS + rivaroxabán 2.5 mg).',
+    lineas:[['Base médica','',C_RISK,[F_FUMAR,F_ANTIAGREG,F_ESTATINA]],['Optimización','Seleccionados',C_RISK,[F_DUAL,F_CILOSTAZOL,F_PROSTANOID]]]},
+  coady:{label:'🦶 Coadyuvantes',nota:'Cuidado del pie y ejercicio (este último para la <b>claudicación</b>, no para la úlcera isquémica activa).',
+    lineas:[['Medidas (siempre)','',C_HERIDA,[F_FOOTCARE,F_OFFLOAD]],['Claudicación','',C_RISK,[F_EXERCISE]]]},
+  herida:{label:'🩹 Cuidado local',nota:'Secundario al flujo. Úlcera seca → apósito no adherente, descarga y protección. <b>Gangrena seca: no desbridar</b> hasta valorar perfusión.',
+    lineas:[['Cuidado de la herida','',C_HERIDA,[F_NONADH,F_ESCARA_SECA,F_OFFLOAD]],['Si infección local','',C_ANTI,[F_PLATA]],['❌ NO hacer','',RJ,[F_NO_COMPRESION,F_NO_DEBRIDE,F_NO_CALOR]]]},
+  dolor:{label:'💥 Dolor',nota:'El dolor isquémico en reposo suele ser intenso: escala hasta opioides; añade gabapentinoide si hay componente neuropático. Posición en ligero declive.',
+    lineas:[['Escalón analgésico','',C_DOLOR,[F_PAIN_PARAC_A,F_PAIN_OPIO_A,F_PAIN_GABA_A]]]},
+  urgente:{label:'🚨 CLTI / urgente',nota:'Dolor en reposo &gt;2 sem, úlcera que no cura o gangrena = <b>CLTI</b> → revascularización urgente. Inicio súbito con las 6 P = <b>isquemia aguda</b> (emergencia): anticoagular y referir de inmediato.',
+    lineas:[['Referencia urgente','',C_REV,[F_REVASC]]]}
+};
+var TXORDER=['revasc','riesgo','coady','herida','dolor','urgente'];
+function buildTxc(){var ch='';for(var i=0;i<TXORDER.length;i++){var k=TXORDER[i];ch+='<button class="pchip'+(i===0?' on':'')+'" onclick="setTxSit(\''+k+'\',this)">'+TXSIT[k].label+'</button>';}document.getElementById('txsit-chips').innerHTML=ch;setTxSit(TXORDER[0],document.querySelector('#txsit-chips .pchip'));}
+function setTxSit(k,el){var c=document.querySelectorAll('#txsit-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');var s=TXSIT[k],h='';TXIDX=0;if(s.nota)h+='<div class="alert a-i" style="margin-bottom:4px;"><span class="ai">💡</span><div>'+s.nota+'</div></div>';for(var j=0;j<s.lineas.length;j++)h+=buildLinea(s.lineas[j][0],s.lineas[j][1],s.lineas[j][2],s.lineas[j][3],s.lineas[j][2]);document.getElementById('txc-body').innerHTML=h;}
+/* ===== CUIDADO (acordeon + busqueda) ===== */
+var FARMACOS=[
+ {familia:'❤️ Base médica (EAP)',color:C_RISK,farmacos:[F_FUMAR,F_ANTIAGREG,F_ESTATINA,F_DUAL,F_CILOSTAZOL,F_PROSTANOID]},
+ {familia:'🩹 Cuidado local',color:C_HERIDA,farmacos:[F_NONADH,F_ESCARA_SECA,F_OFFLOAD]},
+ {familia:'🦶 Coadyuvantes (pie / ejercicio)',color:C_HERIDA,farmacos:[F_FOOTCARE,F_EXERCISE]},
+ {familia:'💥 Control del dolor',color:C_DOLOR,farmacos:[F_PAIN_PARAC_A,F_PAIN_OPIO_A,F_PAIN_GABA_A]},
+ {familia:'🧫 Antimicrobiano (si infección)',color:C_ANTI,farmacos:[F_PLATA]},
+ {familia:'❌ Qué NO hacer',color:RJ,farmacos:[F_NO_COMPRESION,F_NO_DEBRIDE,F_NO_CALOR]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+(f.elec?'★ ':'')+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+(f.linea||'')+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Qué hacer',f.da);
+  if(f.mec)h+=poprow('Fundamento',f.mec);
+  if(f.ind)h+=poprow('Cuándo',f.ind);
+  if(f.iv)h+=poprow('Frecuencia',f.iv);
+  if(f.pres)h+=poprow('Presentación MX',f.pres);
+  if(f.ci)h+=poprow('Cautela',f.ci);
+  if(f.ea)h+=poprow('Precaución',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){var fam=FARMACOS[i],fis=[];for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+(f.linea||'')+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}if(!fis.length)continue;
+   h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';cursor:pointer;" onclick="famTog('+i+')">'+fam.familia+' · '+fis.length+'</div>';var abierta=q?true:!!FAM_OPEN[i];for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}h+='</div>';}
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+/* ===== FARMACOS SISTEMICOS ===== */
+var DRUGS=[
+ {familia:'❤️ Base médica de la EAP',color:'#0c3b6e',drugs:[
+  {n:'Aspirina (AAS)',fr:'c/24 h',da:'75–100 mg',dur:'Crónico',via:'VO',ind:'Antiagregación en EAP',pres:'Tab 100 mg (IMSS)',ci:'Sangrado activo, alergia',ea:'Gastrolesión, sangrado',nota:'Antiagregante de base; clopidogrel si intolerancia/indicación.'},
+  {n:'Clopidogrel',fr:'c/24 h',da:'75 mg',dur:'Crónico',via:'VO',ind:'Alternativa/antiagregante en EAP',pres:'Tab 75 mg (IMSS)',ci:'Sangrado activo',ea:'Sangrado',nota:'Opción a la aspirina.'},
+  {n:'Rivaroxabán dosis baja (+ AAS)',fr:'c/12 h',da:'2.5 mg (con AAS 100 mg/día)',dur:'Crónico, seleccionados',via:'VO',ind:'EAP sintomática / post-revascularización (doble vía)',pres:'Rivaroxabán 2.5 mg',ci:'Alto riesgo de sangrado, anticoagulación plena',ea:'Sangrado',nota:'Reduce MACE/MALE (COMPASS/VOYAGER); valora el riesgo hemorrágico.'},
+  {n:'Atorvastatina (alta intensidad)',fr:'c/24 h',da:'40–80 mg',dur:'Crónico',via:'VO',ind:'Aterosclerosis / EAP',pres:'Tab 40/80 mg (IMSS)',ci:'Hepatopatía activa, embarazo',ea:'Mialgias, ↑ transaminasas',nota:'Indicada aunque el LDL sea "normal".'},
+  {n:'Cilostazol',fr:'c/12 h',da:'100 mg',dur:'Evaluar 8–12 sem',via:'VO',ind:'Claudicación intermitente',pres:'Tab 100 mg (Pletal®)',ci:'Insuficiencia cardiaca (contraindicado)',ea:'Cefalea, palpitaciones',nota:'Síntomas de claudicación; no cura la úlcera isquémica.'}]},
+ {familia:'💥 Analgesia (dolor isquémico)',color:'#b45309',drugs:[
+  {n:'Paracetamol',fr:'c/6–8 h',da:'500–1000 mg (máx 3–4 g/día)',dur:'Base',via:'VO',ind:'Dolor leve; base multimodal',pres:'Tab 500 mg (IMSS)',ci:'Hepatopatía grave',ea:'Hepatotoxicidad por sobredosis',nota:'Suele ser insuficiente solo; el dolor isquémico es intenso.'},
+  {n:'Tramadol / opioide',fr:'Tramadol c/6–8 h',da:'Tramadol 50 mg (máx 400 mg/día); morfina si dolor severo',dur:'Según dolor',via:'VO / SC',ind:'Dolor moderado-intenso en reposo',pres:'Tramadol 50 mg (Tradol®); morfina (control)',ci:'Riesgo de convulsiones (tramadol), IMAO',ea:'Náusea, mareo, estreñimiento',nota:'El dolor isquémico frecuentemente requiere opioide hasta revascularizar.'},
+  {n:'Gabapentina / pregabalina',fr:'Gabapentina c/8 h',da:'Gabapentina 300 mg titulable; pregabalina 75 mg c/12 h',dur:'Si componente neuropático',via:'VO',ind:'Dolor neuroisquémico (diabético)',pres:'Gabapentina 300/400 mg; pregabalina 75 mg (IMSS)',ci:'Ajuste renal',ea:'Somnolencia, mareo',nota:'Útil si hay componente neuropático asociado.'}]},
+ {familia:'🧫 Antibióticos (SOLO si infección)',color:'#7c3aed',drugs:[
+  {n:'Dicloxacilina / Cefalexina',fr:'c/6 h',da:'500 mg',dur:'7–14 días',via:'VO',ind:'Infección leve de piel (grampositivos)',pres:'Cáps 500 mg (IMSS)',ci:'Alergia a betalactámicos',ea:'GI',nota:'La infección en pie isquémico amenaza la extremidad: valora referencia.'},
+  {n:'Amoxicilina-clavulanato',fr:'c/12 h',da:'875/125 mg',dur:'7–14 días',via:'VO',ind:'Infección polimicrobiana (pie)',pres:'Tab 875/125 mg',ci:'Anafilaxia a betalactámicos',ea:'Diarrea',nota:'Cobertura más amplia; infección grave → IV y hospital.'}]}
+];
+function drugCard(f,color,idx){
+  var id='dx-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+(f.fr||'')+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:none;">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.fr)h+=poprow('Frecuencia',f.fr);
+  if(f.dur)h+=poprow('Duración',f.dur);
+  if(f.via)h+=poprow('Vía',f.via);
+  if(f.ind)h+=poprow('Indicación',f.ind);
+  if(f.pres)h+=poprow('Presentación MX',f.pres);
+  if(f.ci)h+=poprow('Contraindicaciones',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFrx(){var h='',idx=0;for(var i=0;i<DRUGS.length;i++){var fam=DRUGS[i];h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.drugs.length+'</div>';for(var j=0;j<fam.drugs.length;j++){h+=drugCard(fam.drugs[j],fam.color,idx);idx++;}h+='</div>';}document.getElementById('frx-body').innerHTML=h;}
+/* ===== ITB ===== */
+function resetITB(){var a=document.getElementById('itb-ankle'),b=document.getElementById('itb-brachial');if(a)a.value='';if(b)b.value='';var r=document.getElementById('itb-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function calcITB(){
+  var a=nm('itb-ankle'),b=nm('itb-brachial'),box=document.getElementById('itb-res');if(box==null)return;
+  if(a==null||b==null||b<=0){box.className='calc-result show res-mid';box.innerHTML='Escribe la presión sistólica del <b>tobillo</b> y la <b>braquial</b> (mmHg).';return;}
+  var abi=a/b,r=Math.round(abi*100)/100,band,cls,txt;
+  if(abi>1.40){band='No compresible (&gt;1.40)';cls='res-mid';txt='Arterias calcificadas (diabetes/ERC): el ITB <b>no es fiable</b>. Usa el <b>índice dedo-brazo</b> o presiones digitales. Si la clínica es de isquemia, refiere igual.';}
+  else if(abi>=0.90){band='Normal (0.90–1.40)';cls='res-ok';txt='EAP poco probable por ITB. Si la úlcera y la clínica sugieren isquemia (pulsos ausentes, dolor en reposo), pide <b>IDB/eco-Doppler</b> — el ITB normal no la descarta.';}
+  else if(abi>=0.80){band='EAP leve (0.80–0.89)';cls='res-mid';txt='EAP leve. Optimiza factores de riesgo; correlaciona con la clínica.';}
+  else if(abi>=0.50){band='EAP moderada (0.50–0.79)';cls='res-mid';txt='EAP moderada (suele haber claudicación). Base médica + <b>referencia programada a angiología</b>; si hay úlcera que no cura, prioriza.';}
+  else {band='EAP grave / isquemia crítica (&lt;0.50)';cls='res-high';txt='Compatible con <b>isquemia crítica (CLTI)</b> → <b>referencia vascular URGENTE</b> para revascularización. NO comprimir; controla el dolor.';}
+  box.className='calc-result show '+cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">ITB = '+r.toFixed(2)+' · '+band+'</div><div style="margin-top:6px;">'+txt+'</div><div class="calc-note">ITB = tobillo ÷ braquial (la más alta de cada lado). El ITB no sustituye a la valoración vascular ante una úlcera isquémica.</div>';
+}
+/* ===== ALGORITMO ===== */
+var ALGO={
+  start:{q:'¿La úlcera es distal, "en sacabocados", pálida/seca y muy dolorosa, con pulsos ausentes?',o:[
+    ['Sí — sugiere isquemia','q_acute'],
+    ['No — polaina, exudativa, pulsos presentes (venosa)','ven'],
+    ['Punto de presión plantar, con callo, indolora (pie diabético)','neu']]},
+  q_acute:{q:'¿Inicio SÚBITO con las 6 P (dolor, palidez, sin pulso, parestesia, parálisis, frialdad)?',o:[
+    ['Sí — inicio agudo','aguda'],['No — cuadro crónico','q_clti']]},
+  aguda:{t:'Isquemia arterial AGUDA — emergencia',r:'high',x:'<b>Emergencia vascular</b> (ventana de horas). Anticoagula (heparina) si no hay contraindicación, analgesia, y <b>referencia inmediata</b> a cirugía vascular para revascularización/embolectomía.'},
+  q_clti:{q:'¿Hay dolor isquémico en reposo &gt;2 semanas, úlcera que no cicatriza o gangrena?',o:[
+    ['Sí — pérdida tisular / dolor en reposo','clti'],['No — solo claudicación al caminar','claud']]},
+  clti:{t:'Isquemia crónica que amenaza la extremidad (CLTI)',r:'high',x:'<b>Revascularización urgente</b> (referir angiología). Mide ITB/presiones, estadifica con <b>WIfI</b>, controla dolor e infección. NO comprimir; no desbridar gangrena seca sin flujo. Base médica (antiagregante, estatina, dejar de fumar).'},
+  claud:{t:'EAP con claudicación (sin pérdida tisular)',r:'mid',x:'<b>Tratamiento médico y ejercicio supervisado</b>: dejar de fumar, antiagregante, estatina, control de PA/glucemia; cilostazol para síntomas. Referencia <b>programada</b>; revascularización si limita mucho o progresa.'},
+  ven:{t:'Sugiere úlcera VENOSA',r:'ok',x:'Región de la polaina, exudativa, pulsos presentes. Mide ITB y, si ≥0.8, <b>compresión</b> + cura húmeda. Ver la ficha de úlcera venosa.'},
+  neu:{t:'Sugiere úlcera NEUROPÁTICA (pie diabético)',r:'mid',x:'Indolora, en punto de presión, con callo. <b>Descarga de presión</b>, control glucémico, valorar <b>isquemia</b> (ITB) e infección — a menudo es neuroisquémica.'}
+};
+var CRUMB=[];
+function algoStart(){CRUMB=[];algoGo('start');}
+function algoGo(k){var n=ALGO[k],b=document.getElementById('algo-box'),h='';if(!n)return;var cb=document.getElementById('algo-crumb');if(cb){var ch='';for(var i=0;i<CRUMB.length;i++)ch+='<span class="cb">'+CRUMB[i]+'</span>';cb.innerHTML=ch;}
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoPick(\''+n.o[i][1]+'\',\''+n.o[i][0].replace(/'/g,"").replace(/<[^>]+>/g,'')+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div><div style="margin-top:10px;"><button class="opt" onclick="algoStart()">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;}
+function algoPick(k,label){CRUMB.push(label);algoGo(k);}
+/* ===== INIT ===== */
+function initAll(){buildDif();algoStart();buildTxc();renderFarm('');renderFrx();renderWIFI();}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>
