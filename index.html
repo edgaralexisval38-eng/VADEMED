@@ -541,6 +541,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
     #inicioView .cc-s{font-size:11px;color:var(--soft);margin-top:2px;}
     #inicioView .cc-u{width:26px;height:3px;border-radius:3px;margin-top:10px;}
     #inicioView .cont-empty{flex:1;font-size:12.5px;color:var(--soft);line-height:1.45;background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:16px;}
+    #inicioView .lect-h{font-size:12px;font-weight:800;color:var(--ink2);text-transform:uppercase;letter-spacing:.5px;margin:16px 16px 9px;}
+    #inicioView #lecturas{padding:0 16px;display:flex;flex-direction:column;gap:9px;}
+    #inicioView .lect-row{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 13px;text-decoration:none;box-shadow:0 2px 10px rgba(10,25,60,.05);}
+    #inicioView .lect-ic{width:36px;height:36px;border-radius:10px;background:#eef3fb;color:#2f6fe0;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    #inicioView .lect-tx{display:flex;flex-direction:column;flex:1;min-width:0;}
+    #inicioView .lect-t{font-size:13px;font-weight:700;color:var(--ink);line-height:1.25;}
+    #inicioView .lect-s{font-size:11px;color:var(--ink2);margin-top:2px;}
+    #inicioView .lect-doi{font-size:10.5px;color:var(--soft);margin-top:3px;font-family:ui-monospace,Menlo,monospace;word-break:break-all;}
+    #inicioView .lect-cv{color:var(--soft);flex-shrink:0;}
+    html.dark #inicioView .lect-ic{background:rgba(47,111,224,.18);}
     /* ---- Quiz del día ---- */
     #quizView{position:fixed;inset:0;z-index:120;background:var(--bg);display:none;flex-direction:column;}
     #quizView.on{display:flex;}
@@ -828,6 +838,8 @@ function toggleTheme(){var d=!document.documentElement.classList.contains('dark'
           <span class="today-il"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg></span>
           <span class="today-cv">&rsaquo;</span>
         </button>
+        <div class="lect-h" id="lecturasH">Lecturas recomendadas</div>
+        <div id="lecturas"></div>
       </div>
     </div>
     <nav class="nav">
@@ -30860,7 +30872,7 @@ function setTip(){
   var d=new Date(); var start=new Date(d.getFullYear(),0,0); var day=Math.floor((d-start)/86400000);
   el.textContent=TIPS[((day%TIPS.length)+TIPS.length)%TIPS.length];
 }
-function goInicio(){var iv=$('inicioView'); if(!iv) return; hideExtras(); var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); iv.style.display='block'; $('hubView').style.display='none'; $('homeView').style.display='none'; $('detailView').style.display='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; var iqs=$('iniSearch'); if(iqs) iqs.value=''; var irr=$('iniResults'); if(irr){irr.style.display='none';irr.innerHTML='';} var icc=document.querySelector('#inicioView .ini-cols'); if(icc) icc.style.display=''; renderRecents(); renderContinue(); renderQuizCard(); setTip(); window.scrollTo({top:0});}
+function goInicio(){var iv=$('inicioView'); if(!iv) return; hideExtras(); var ap=document.querySelector('.app'); ap.classList.add('mode-inicio'); ap.classList.remove('mode-hub'); iv.style.display='block'; $('hubView').style.display='none'; $('homeView').style.display='none'; $('detailView').style.display='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none'; var iqs=$('iniSearch'); if(iqs) iqs.value=''; var irr=$('iniResults'); if(irr){irr.style.display='none';irr.innerHTML='';} var icc=document.querySelector('#inicioView .ini-cols'); if(icc) icc.style.display=''; renderRecents(); renderContinue(); renderQuizCard(); renderLecturas(); setTip(); window.scrollTo({top:0});}
 function openSearch(){exitInicio(); goGroups(); var s=$('hubSearch'); if(s){try{s.focus();}catch(e){}}}
 function goMedsCalc(){exitInicio(); goGroups(); showToast('Elige un farmaco para ver su calculadora');}
 function openDrugByName(nm){exitInicio(); var t=(nm||'').toLowerCase(); for(var i=0;i<DRUGS.length;i++){if(DRUGS[i].name.toLowerCase().indexOf(t)>=0){openDrugFromHub(i); return;}} goGroups();}
@@ -30935,7 +30947,11 @@ function renderDailyRead(){
 }
 /* ---- QUIZ DEL DÍA ---- */
 var QUIZ_TOPICS=[
- {topic:"Neumonía (NAC)", tema:"RESUMENCLINIC/RESUMENES/05_NAC_NeumoniaAdquiridaComunidad.html", questions:[
+ {topic:"Neumonía (NAC)", tema:"RESUMENCLINIC/RESUMENES/05_NAC_NeumoniaAdquiridaComunidad.html", biblio:[
+  {t:"ATS/IDSA — Neumonía adquirida en la comunidad", src:"Am J Respir Crit Care Med 2019;200:e45-e67", doi:"10.1164/rccm.201908-1581ST"},
+  {t:"ATS — Actualización de NAC 2025", src:"Am J Respir Crit Care Med 2025;212:24-32", doi:"10.1164/rccm.202507-1692ST"},
+  {t:"CAPE COD — Hidrocortisona en NAC severa", src:"NEJM 2023;388:1931-1941", doi:"10.1056/NEJMoa2215145"}
+ ], questions:[
   {q:"Según ATS 2025, ¿cuál es la duración del antibiótico en NAC estable?", opts:["5 días","3 días","7 días","10–14 días"], a:0, exp:"ATS 2025: 5 días si hay estabilidad clínica; prolongar no mejora el resultado y aumenta resistencias."},
   {q:"Paciente sano con NAC ambulatoria de bajo riesgo (ATS 2025). ¿Opción de primera línea?", opts:["Amoxicilina 1 g VO c/8h","Azitromicina 500 mg VO c/24h en monoterapia","Levofloxacino 750 mg VO c/24h","Ceftriaxona 1 g IM c/24h"], a:0, exp:"ATS 2025 prefiere amoxicilina 1 g c/8h (o doxiciclina 100 mg c/12h). El macrólido en monoterapia ya NO es 1ª línea (resistencia >25%); quinolona/ceftriaxona se reservan para comorbilidad o mayor gravedad."},
   {q:"NAC que requiere hospitalización en piso. ¿Esquema empírico combinado típico?", opts:["Ceftriaxona 1–2 g IV c/24h + Azitromicina 500 mg IV c/24h","Vancomicina 1 g IV c/12h + Piperacilina-tazobactam 4.5 g IV c/6h","Amoxicilina 1 g VO c/8h en monoterapia","Ciprofloxacino 500 mg VO c/12h"], a:0, exp:"β-lactámico (ceftriaxona) + macrólido, o monoterapia con fluoroquinolona respiratoria. Vanco + pip-tazo es sobretratamiento (MRSA/Pseudomonas) sin factores de riesgo; el ciprofloxacino no cubre bien neumococo."},
@@ -30947,7 +30963,12 @@ var QUIZ_TOPICS=[
   {q:"Sospecha de NAC por Legionella. ¿Tratamiento y duración razonable?", opts:["Levofloxacino 750 mg c/24h, 7–14 días","Ceftriaxona 1–2 g IV c/24h por 7 días","Amoxicilina 1 g VO c/8h por 7 días","Nitrofurantoína 100 mg c/12h, 5 días"], a:0, exp:"Legionella es intracelular: cubre fluoroquinolona respiratoria (levofloxacino 750 mg) o macrólido, 7–14 días. Los β-lactámicos (amoxicilina, ceftriaxona) NO la cubren."},
   {q:"Sobre el diagnóstico e inicio del antibiótico en NAC, ¿cuál es correcto?", opts:["La radiografía confirma el dx; el antibiótico inicia pronto (~4 h)","El diagnóstico es clínico; la radiografía no es necesaria de rutina","El antibiótico puede diferirse 24–48 h sin afectar el pronóstico","La TC de tórax es obligatoria para confirmar todos los casos"], a:0, exp:"La NAC se define por infiltrado radiográfico; iniciar antibiótico de forma precoz (meta ~4 h del diagnóstico)."}
  ]},
- {topic:"Sepsis y choque séptico", tema:"RESUMENCLINIC/RESUMENES/04_Sepsis_ChoqueSeptico_v2.html", questions:[
+ {topic:"Sepsis y choque séptico", tema:"RESUMENCLINIC/RESUMENES/04_Sepsis_ChoqueSeptico_v2.html", biblio:[
+  {t:"Surviving Sepsis Campaign 2021", src:"Crit Care Med 2021;49:e1063-e1143", doi:"10.1097/CCM.0000000000005337"},
+  {t:"Sepsis-3 — Definiciones de consenso", src:"JAMA 2016;315:801-810", doi:"10.1001/jama.2016.0287"},
+  {t:"SOAP II — Noradrenalina vs dopamina", src:"NEJM 2010;362:779-789", doi:"10.1056/NEJMoa0907118"},
+  {t:"APROCCHSS — Corticoides en choque séptico", src:"NEJM 2018;378:809-818", doi:"10.1056/NEJMoa1705716"}
+ ], questions:[
   {q:"Según Sepsis-3, ¿qué define el choque séptico?", opts:["Vasopresor para PAM ≥65 con lactato >2 pese a fluidos","Hipotensión que corrige con fluidos y lactato normal","Aumento de SOFA ≥2 sin hipotensión ni lactato alto","Fiebre con leucocitosis y taquicardia, sin hipotensión"], a:0, exp:"Choque séptico = necesidad de vasopresor para PAM ≥65 y lactato >2 mmol/L pese a reanimación adecuada con líquidos."},
   {q:"¿Qué integra el qSOFA?", opts:["FR ≥22/min, PAS ≤100 mmHg y alteración mental","FR ≥30/min, PAS ≤90 mmHg y fiebre >38 °C","FC ≥100/min, PAS ≤100 mmHg y SpO₂ <90%","Glasgow <13, lactato >4 y diuresis <0.5 mL/kg/h"], a:0, exp:"qSOFA: FR ≥22, presión sistólica ≤100 y alteración mental; ≥2/3 sugiere mayor riesgo (es tamizaje, no diagnóstico)."},
   {q:"Reanimación inicial con cristaloides en sepsis con hipoperfusión:", opts:["30 mL/kg IV en las primeras 1–3 h","10 mL/kg IV en la primera hora","50 mL/kg IV en bolo en 30 min","500 mL IV repartidos en 24 h"], a:0, exp:"SSC 2021: ≥30 mL/kg de cristaloide en las primeras 3 h, reevaluando con parámetros dinámicos."},
@@ -30959,7 +30980,9 @@ var QUIZ_TOPICS=[
   {q:"Nivel de lactato que indica hipoperfusión tisular:", opts:[">2 mmol/L",">1 mmol/L",">4 mmol/L únicamente",">6 mmol/L"], a:0, exp:"Lactato >2 mmol/L indica hipoperfusión; >4 marca peor pronóstico. Repetir a las 2 h para evaluar depuración (meta >10%)."},
   {q:"¿Qué corresponde al paquete de la primera hora (Hour-1)?", opts:["Lactato, hemocultivos, antibiótico y fluidos en 1 h","Dar antibiótico solo tras confirmar el foco por imagen","Corticoide IV de rutina en todo paciente séptico","Diferir los fluidos hasta obtener el lactato"], a:0, exp:"Hour-1 bundle: medir lactato, tomar hemocultivos, dar antibiótico, iniciar fluidos y vasopresor si PAM <65."}
  ]},
- {topic:"Cetoacidosis diabética", tema:"RESUMENCLINIC/RESUMENES/CAD_CetoacidosisDiabetica_COMPLETA_v2.html", questions:[
+ {topic:"Cetoacidosis diabética", tema:"RESUMENCLINIC/RESUMENES/CAD_CetoacidosisDiabetica_COMPLETA_v2.html", biblio:[
+  {t:"Crisis hiperglucémicas en adultos — Consenso ADA/EASD 2024", src:"Diabetes Care 2024;47:1257-1275", doi:"10.2337/dci24-0032"}
+ ], questions:[
   {q:"¿Cuál es una tríada diagnóstica compatible con CAD?", opts:["Glucosa >250, pH <7.30 y HCO₃ <18 con cetonas","Glucosa >600, pH normal y sin cuerpos cetónicos","Glucosa <250 con pH <7.0 y cetonas negativas","Glucosa >250, pH >7.40 y HCO₃ >20 normal"], a:0, exp:"CAD: glucosa >250, pH <7.30, HCO₃ <18 y cetonas (β-hidroxibutirato >3 mmol/L)."},
   {q:"Primera medida terapéutica en la CAD:", opts:["Salina 0.9%, 1 L en la primera hora","Bolo de insulina IV de inmediato","Bicarbonato 100 mEq IV de entrada","Insulina SC 0.3 U/kg de inicio"], a:0, exp:"Primero reponer volumen: SSN 0.9% 1 L en la 1ª hora (luego 500 mL/h ×2 h → 250 mL/h). Insulina tras el volumen y verificando el K."},
   {q:"Esquema de insulina en la CAD:", opts:["Regular IV 0.1 U/kg bolo y luego 0.1 U/kg/h","Regular IV 0.5 U/kg bolo y luego 0.5 U/kg/h","NPH 0.1 U/kg SC cada 8 horas fijas","Glargina 0.3 U/kg SC en dosis única"], a:0, exp:"Insulina regular IV 0.1 U/kg en bolo y luego 0.1 U/kg/h. Meta: bajar la glucosa 50–70 mg/dL/h. Si K <3.5: no dar el bolo."},
@@ -30971,7 +30994,9 @@ var QUIZ_TOPICS=[
   {q:"Criterios de resolución para pasar a insulina SC:", opts:["Anión gap cerrado, pH >7.30, HCO₃ >15 y tolera VO","Solo con glucosa menor de 200 mg/dL sostenida","pH >7.0 aunque persista la cetonuria intensa","Cuando desaparece la cetonuria en la orina"], a:0, exp:"Resolución: AG cerrado + pH >7.30 + HCO₃ >15 + tolera VO. Dar la insulina SC 15–30 min antes de suspender la IV."},
   {q:"Secuencia de líquidos IV al inicio de la CAD:", opts:["1 L en la 1ª h, 500 mL/h ×2 h y 250 mL/h","250 mL/h fijo desde el inicio del cuadro","3 L IV en bolo en los primeros 30 min","Restricción hídrica estricta inicial"], a:0, exp:"SSN 0.9% 1 L la 1ª hora, luego 500 mL/h por 2 h y después 250 mL/h; ajustar según Na corregido y estado hemodinámico."}
  ]},
- {topic:"Fibrilación auricular", tema:"RESUMENCLINIC/RESUMENES/FibrilacionAuricular.html", questions:[
+ {topic:"Fibrilación auricular", tema:"RESUMENCLINIC/RESUMENES/FibrilacionAuricular.html", biblio:[
+  {t:"Guía ESC 2024 de fibrilación auricular (AF-CARE)", src:"Eur Heart J 2024;45:3314-3414", doi:"10.1093/eurheartj/ehae176"}
+ ], questions:[
   {q:"Dosis estándar de apixabán en FA no valvular:", opts:["5 mg c/12h; 2.5 mg c/12h si ≥2 criterios","10 mg c/12h fijo, sin ajuste por edad ni renal","2.5 mg c/24h en todos los pacientes","20 mg c/24h junto con los alimentos"], a:0, exp:"Apixabán 5 mg c/12h; se reduce a 2.5 mg c/12h si ≥2 de: edad ≥80, peso ≤60 kg o creatinina ≥1.5 mg/dL."},
   {q:"Dosis de rivaroxabán en FA:", opts:["20 mg c/24h con alimentos (15 mg si Cl<50)","20 mg c/12h en ayuno, sin ajuste renal ni hepático","10 mg c/24h fijo, sin ajuste por peso","5 mg c/12h con alimentos, sin ajuste"], a:0, exp:"Rivaroxabán 20 mg c/24h con la comida; 15 mg c/24h si depuración de creatinina 15–50 mL/min."},
   {q:"Control de frecuencia por vía oral con metoprolol:", opts:["Tartrato 25–100 mg c/12h","Tartrato 400 mg c/24h en toma única","Tartrato 5 mg c/24h como dosis fija","Tartrato 500 mg c/8h de mantenimiento"], a:0, exp:"Metoprolol tartrato 25–100 mg c/12h para control de frecuencia."},
@@ -30999,6 +31024,18 @@ function quizNext(){ if(!QZ.answered) return; if(QZ.idx<QZ.qs.length-1){ QZ.idx+
 function quizVerTema(){ var f=QZ&&QZ.set?QZ.set.tema:''; closeQuiz(); if(f&&typeof iniOpenTema==='function') iniOpenTema(f); }
 function quizFinish(){ var total=QZ.qs.length, sc=QZ.correct; var q=quizData(); var today=ymd(); var y=new Date(); y.setDate(y.getDate()-1); var yest=ymd(y); if(q.last!==today){ if(q.last===yest) q.streak=(q.streak||0)+1; else q.streak=1; q.last=today; } if(!q.best||sc>q.best) q.best=sc; quizSave(q); var pct=sc/total; var col=pct>=0.8?'#1f9d6b':(pct>=0.5?'#d99a15':'#d9534f'); var bg=pct>=0.8?'#e7f6ee':(pct>=0.5?'#fdf3e0':'#fbeceb'); var msg=pct>=0.8?'¡Excelente!':(pct>=0.5?'¡Bien! Sigue repasando':'A repasar el tema'); var res=document.getElementById('quizResult'); res.innerHTML='<div class="qz-ring" style="background:'+bg+';color:'+col+'"><span class="n">'+sc+'</span><span class="d">de '+total+'</span></div><h2>'+msg+'</h2><p>'+qzEsc(QZ.set.topic)+'</p><div class="qz-streak">🔥 Racha: '+(q.streak||1)+' día'+((q.streak||1)>1?'s':'')+'</div><button class="qz-next" onclick="startQuiz()">Reintentar</button><button class="qz-ghost" onclick="closeQuiz()">Volver al inicio</button>'; document.getElementById('quizPlay').style.display='none'; res.style.display='flex'; renderQuizCard(); }
 function closeQuiz(){ var v=document.getElementById('quizView'); if(v)v.classList.remove('on'); }
+function renderLecturas(){
+  var el=document.getElementById('lecturas'); var hd=document.getElementById('lecturasH'); if(!el) return;
+  var t=quizTopicOfDay(); var b=(t&&t.biblio)||[];
+  if(!b.length){ el.innerHTML=''; el.style.display='none'; if(hd)hd.style.display='none'; return; }
+  el.style.display=''; if(hd)hd.style.display='';
+  el.innerHTML=b.map(function(r){
+    return '<a class="lect-row" href="https://doi.org/'+r.doi+'" target="_blank" rel="noopener noreferrer">'+
+      '<span class="lect-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h4" stroke-linecap="round"/></svg></span>'+
+      '<span class="lect-tx"><span class="lect-t">'+qzEsc(r.t)+'</span><span class="lect-s">'+qzEsc(r.src)+'</span><span class="lect-doi">DOI: '+qzEsc(r.doi)+'</span></span>'+
+      '<span class="lect-cv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span></a>';
+  }).join('');
+}
 /* ---- FAVORITOS ---- */
 var FAVS=[];
 function loadFavs(){ try{ var s=window.localStorage.getItem('vademed_favs'); if(s){ FAVS=JSON.parse(s)||[]; } }catch(e){} if(!Array.isArray(FAVS)) FAVS=[]; FAVS=FAVS.map(function(x){ return (typeof x==='number')?{t:'d',i:x}:x; }).filter(function(x){ return x&&x.t; }); }
