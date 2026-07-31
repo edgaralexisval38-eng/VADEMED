@@ -586,6 +586,18 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
     #quizView .qz-streak{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:800;color:#c9522a;background:#fbeee6;border-radius:12px;padding:10px 16px;margin:14px 0 24px;}
     #quizView .qz-res .qz-next{max-width:320px;}
     #quizView .qz-ghost{background:none;color:var(--ink2);font-weight:700;border:none;padding:14px;font-family:inherit;font-size:14px;cursor:pointer;margin-top:4px;}
+    #quizView .qz-ring{animation:qzRingPop .55s cubic-bezier(.2,1.35,.4,1) both;}
+    @keyframes qzRingPop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+    #quizView .qz-res h2{animation:qzFadeUp .45s ease .12s both;}
+    #quizView .qz-res p{animation:qzFadeUp .45s ease .2s both;}
+    #quizView .qz-streak{animation:qzPopIn .5s cubic-bezier(.2,1.4,.4,1) .3s both;}
+    #quizView .qz-res .qz-next{animation:qzFadeUp .4s ease .42s both;}
+    #quizView .qz-res .qz-ghost{animation:qzFadeUp .4s ease .5s both;}
+    @keyframes qzFadeUp{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+    @keyframes qzPopIn{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}
+    #quizView .confetti-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:60;}
+    #quizView .confetti-wrap i{position:absolute;top:-18px;display:block;opacity:0;animation-name:qzConf;animation-timing-function:linear;animation-fill-mode:forwards;will-change:transform,opacity;}
+    @keyframes qzConf{0%{opacity:0;transform:translateY(-10px) translateX(0) rotate(0deg)}8%{opacity:1}100%{opacity:.85;transform:translateY(106vh) translateX(var(--xd)) rotate(var(--rot))}}
     html.dark #quizView .qz-topic{background:rgba(47,111,224,.18);}
     html.dark #quizView .qz-opt.correct{background:rgba(31,157,107,.16);color:#5fd6a2;}
     html.dark #quizView .qz-opt.wrong{background:rgba(217,83,79,.16);color:#f0a19e;}
@@ -31029,8 +31041,56 @@ function renderQ(){ var q=QZ.qs[QZ.idx]; document.getElementById('qzTopic').text
 function quizAnswer(i){ if(QZ.answered) return; QZ.answered=true; var q=QZ.qs[QZ.idx]; var opts=document.querySelectorAll('#qzOpts .qz-opt'); Array.prototype.forEach.call(opts,function(b){ var bi=+b.getAttribute('data-i'); b.style.pointerEvents='none'; if(bi===q.a) b.classList.add('correct'); else if(bi===i) b.classList.add('wrong'); else b.classList.add('dim'); }); var ok=(i===q.a); if(ok)QZ.correct++; var tema=QZ.set.tema?('<button class="qz-fb-tema" onclick="quizVerTema()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2z"/></svg>Ver tema completo</button>'):''; var fb=document.getElementById('qzFb'); fb.innerHTML='<div class="qz-fb-h '+(ok?'ok':'no')+'">'+(ok?'¡Correcto!':'Respuesta incorrecta')+'</div><div class="qz-fb-x">'+qzEsc(q.exp)+'</div>'+tema; fb.style.display='block'; document.getElementById('qzBar').style.width=Math.round((QZ.idx+1)/QZ.qs.length*100)+'%'; document.getElementById('qzNext').disabled=false; try{ fb.scrollIntoView({behavior:'smooth',block:'nearest'}); }catch(e){} }
 function quizNext(){ if(!QZ.answered) return; if(QZ.idx<QZ.qs.length-1){ QZ.idx++; renderQ(); var b=document.querySelector('#quizView .qz-body'); if(b)b.scrollTop=0; } else { quizFinish(); } }
 function quizVerTema(){ var f=QZ&&QZ.set?QZ.set.tema:''; closeQuiz(); if(f&&typeof iniOpenTema==='function') iniOpenTema(f); }
-function quizFinish(){ var total=QZ.qs.length, sc=QZ.correct; var q=quizData(); var today=ymd(); var y=new Date(); y.setDate(y.getDate()-1); var yest=ymd(y); if(q.last!==today){ if(q.last===yest) q.streak=(q.streak||0)+1; else q.streak=1; q.last=today; } if(!q.best||sc>q.best) q.best=sc; quizSave(q); var pct=sc/total; var col=pct>=0.8?'#1f9d6b':(pct>=0.5?'#d99a15':'#d9534f'); var bg=pct>=0.8?'#e7f6ee':(pct>=0.5?'#fdf3e0':'#fbeceb'); var msg=pct>=0.8?'¡Excelente!':(pct>=0.5?'¡Bien! Sigue repasando':'A repasar el tema'); var res=document.getElementById('quizResult'); res.innerHTML='<div class="qz-ring" style="background:'+bg+';color:'+col+'"><span class="n">'+sc+'</span><span class="d">de '+total+'</span></div><h2>'+msg+'</h2><p>'+qzEsc(QZ.set.topic)+'</p><div class="qz-streak">🔥 Racha: '+(q.streak||1)+' día'+((q.streak||1)>1?'s':'')+'</div><button class="qz-next" onclick="startQuiz()">Reintentar</button><button class="qz-ghost" onclick="closeQuiz()">Volver al inicio</button>'; document.getElementById('quizPlay').style.display='none'; res.style.display='flex'; renderQuizCard(); }
-function closeQuiz(){ var v=document.getElementById('quizView'); if(v)v.classList.remove('on'); }
+function quizFinish(){
+  var total=QZ.qs.length, sc=QZ.correct;
+  var q=quizData(); var today=ymd(); var y=new Date(); y.setDate(y.getDate()-1); var yest=ymd(y);
+  var newDay=(q.last!==today);
+  if(newDay){ if(q.last===yest) q.streak=(q.streak||0)+1; else q.streak=1; q.last=today; }
+  if(!q.best||sc>q.best) q.best=sc; quizSave(q);
+  var pct=sc/total, perfect=(sc===total);
+  var col=pct>=0.8?'#1f9d6b':(pct>=0.5?'#d99a15':'#d9534f');
+  var bg=pct>=0.8?'#e7f6ee':(pct>=0.5?'#fdf3e0':'#fbeceb');
+  var msg=perfect?'¡Perfecto! 🎉':(pct>=0.8?'¡Excelente!':(pct>=0.5?'¡Bien! Sigue repasando':'A repasar el tema'));
+  var strk=q.streak||1;
+  var res=document.getElementById('quizResult');
+  res.innerHTML='<div class="qz-ring" style="background:'+bg+';color:'+col+'"><span class="n">0</span><span class="d">de '+total+'</span></div>'+
+    '<h2>'+msg+'</h2><p>'+qzEsc(QZ.set.topic)+'</p>'+
+    '<div class="qz-streak">🔥 Racha: '+strk+' día'+(strk>1?'s':'')+(newDay?' &nbsp;·&nbsp; +1 hoy':'')+'</div>'+
+    '<button class="qz-next" onclick="startQuiz()">Reintentar</button>'+
+    '<button class="qz-ghost" onclick="closeQuiz()">Volver al inicio</button>';
+  document.getElementById('quizPlay').style.display='none';
+  res.style.display='flex';
+  var nEl=res.querySelector('.qz-ring .n');
+  if(nEl){ if(sc>0){ var cur=0; var stepMs=Math.max(70, Math.round(650/sc)); var tick=function(){ cur++; nEl.textContent=cur; if(cur<sc) setTimeout(tick, stepMs); }; setTimeout(tick, 320); } else { nEl.textContent='0'; } }
+  var n= perfect?150 : (pct>=0.8?110 : (pct>=0.5?60 : 24));
+  launchConfetti(n);
+  renderQuizCard();
+}
+function launchConfetti(n){
+  var host=document.getElementById('quizView'); if(!host||!n) return;
+  var old=host.querySelector('.confetti-wrap'); if(old) old.parentNode.removeChild(old);
+  var wrap=document.createElement('div'); wrap.className='confetti-wrap';
+  var colors=['#2f6fe0','#1f9d6b','#d99a15','#c9522a','#7c5cbf','#e0457b','#4f8be6','#ffd34d'];
+  var frag=document.createDocumentFragment();
+  for(var i=0;i<n;i++){
+    var p=document.createElement('i');
+    var c=colors[i%colors.length];
+    var size=6+Math.random()*7;
+    var left=Math.random()*100;
+    var delay=Math.random()*0.7;
+    var dur=2.2+Math.random()*1.8;
+    var xd=(Math.random()*2-1)*90;
+    var rot=(360+Math.random()*720);
+    p.style.cssText='left:'+left+'%;background:'+c+';width:'+size.toFixed(1)+'px;height:'+(size*0.6).toFixed(1)+'px;'+
+      'animation-duration:'+dur.toFixed(2)+'s;animation-delay:'+delay.toFixed(2)+'s;'+
+      '--xd:'+xd.toFixed(0)+'px;--rot:'+rot.toFixed(0)+'deg;'+(Math.random()<0.4?'border-radius:50%;':'');
+    frag.appendChild(p);
+  }
+  wrap.appendChild(frag);
+  host.appendChild(wrap);
+  setTimeout(function(){ if(wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 5200);
+}
+function closeQuiz(){ var v=document.getElementById('quizView'); if(v)v.classList.remove('on'); var c=v&&v.querySelector('.confetti-wrap'); if(c) c.parentNode.removeChild(c); }
 function renderLecturas(){
   var el=document.getElementById('lecturas'); var hd=document.getElementById('lecturasH'); if(!el) return;
   var t=quizTopicOfDay(); var b=(t&&t.biblio)||[];
