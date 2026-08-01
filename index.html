@@ -31256,6 +31256,10 @@ function iniSearchRun(q){
     var s=sc(t.t,(t.kw||'')+' '+p.cat);
     if(s>0) hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpenTema(&#39;'+hh.it.file+'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+hh.it.t+'</span><span class="ini-row-s">Tema \u00b7 '+hh.cat+'</span></span><span class="ttag tt-tema">Tema</span>'+favStar('favM(&#39;'+hh.it.file+'&#39;,this)',isFav({t:'m',f:hh.it.file}))+'<span class="ini-row-cv">'+ICON.chev+'</span></button>'});
   }); });
+  (typeof LABS!=='undefined'?LABS:[]).forEach(function(p){ p.tests.forEach(function(t){
+    var s=sc(t.n,(t.kw||'')+' '+p.panel+' laboratorio');
+    if(s>0) hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpenLab(&#39;'+(t.n.replace(/["']/g,'')) +'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M9 3h6M10 3v6l-5 9a2 2 0 001.8 3h10.4a2 2 0 001.8-3l-5-9V3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 15h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+t.n+'</span><span class="ini-row-s">Laboratorio · '+p.panel+' · ref '+t.ref+'</span></span><span class="ttag tt-calc">Lab</span><span class="ini-row-cv">'+ICON.chev+'</span></button>'});
+  }); });
   hits.sort(function(a,b){ return (b.s-a.s) || (a.o-b.o); });
   res.style.display='flex';
   res.innerHTML = hits.length ? hits.slice(0,60).map(function(x){return x.h;}).join('') : '<div class="ini-empty">Sin resultados</div>';
@@ -31277,6 +31281,14 @@ function iniOpenTema(f){
   var res=document.getElementById('iniResults'); if(res){res.style.display='none';res.innerHTML='';}
   var s=document.getElementById('iniSearch'); if(s) s.value='';
   if(typeof openTemaFile==='function') openTemaFile(f); else window.open(f,'_blank');
+}
+function iniOpenLab(name){
+  var cols=document.querySelector('#inicioView .ini-cols'); if(cols) cols.style.display='';
+  var res=document.getElementById('iniResults'); if(res){res.style.display='none';res.innerHTML='';}
+  var s=document.getElementById('iniSearch'); if(s) s.value='';
+  if(typeof openLabs==='function') openLabs();
+  var ls=document.getElementById('labSearch'); if(ls) ls.value=name;
+  if(typeof renderLabsPanel==='function') renderLabsPanel(name);
 }
 function focusIniSearch(){var s=document.getElementById('iniSearch'); if(s){try{s.focus();}catch(e){}}}
 (function(){var s=document.getElementById('iniSearch'); if(s){s.addEventListener('input',function(){iniSearchRun(this.value);});}})();
@@ -31922,7 +31934,7 @@ var LABS=[
  {panel:'Coagulacion', tests:[
    {n:'TP / INR', ref:'INR 0.8&ndash;1.2', hi:'Anticoagulacion con cumarinicos (objetivo habitual 2&ndash;3), hepatopatia, deficit de vitamina K, CID.', lo:'', note:'Con warfarina el objetivo terapeutico suele ser INR 2&ndash;3.', kw:'tp inr protrombina warfarina', grades:[{r:'0.8&ndash;1.2',l:'Normal (sin AVK)',lv:'ok'},{r:'2.0&ndash;3.0',l:'Terapeutico habitual',lv:'info'},{r:'2.5&ndash;3.5',l:'Terapeutico (valvula mecanica)',lv:'info'},{r:'&lt;2.0 en AVK',l:'Infraterapeutico',lv:'warn'},{r:'3.0&ndash;4.5',l:'Supraterapeutico',lv:'warn'},{r:'&gt;4.5',l:'Alto riesgo de sangrado',lv:'danger'}]},
    {n:'TTPa', ref:'25&ndash;35 s', hi:'Heparina no fraccionada, hemofilia, anticoagulante lupico, CID.', lo:'', kw:'ttpa tpt cefalina heparina'},
-   {n:'Dimero D', ref:'&lt;0.5 &micro;g/mL', hi:'Elevado en TVP/TEP (poco especifico), CID, infeccion, cirugia.', lo:'', note:'Un valor normal con baja probabilidad clinica ayuda a descartar TVP/TEP.', kw:'dimero d tvp tep trombosis embolia'}
+   {n:'Dimero D', ref:'&lt; 500 ng/mL FEU (&lt; 0.5 &micro;g/mL)', hi:'Producto de degradacion de la fibrina: se eleva en TVP y TEP, pero tambien en CID, sepsis o infeccion, cirugia o trauma reciente, cancer, embarazo, edad avanzada y hospitalizacion. Por eso un valor ALTO NO confirma trombosis (muy sensible pero poco especifico): obliga a imagen solo si la sospecha clinica lo justifica.', lo:'', note:'Su utilidad esta en DESCARTAR, no en confirmar. NEGATIVO (&lt; 500 ng/mL, o ajustado por edad = edad &times; 10 ng/mL en &gt; 50 anos) + probabilidad clinica BAJA o INTERMEDIA (Wells) descarta TVP/TEP sin necesidad de imagen. Con Wells ALTO no se pide dimero: se va directo a la imagen. En embarazo el corte pierde fiabilidad (usar el algoritmo YEARS).', grades:[{r:'&lt; 500 ng/mL (o edad&times;10 si &gt; 50 a) + Wells bajo/interm.',l:'Descarta TVP/TEP',lv:'ok'},{r:'&ge; 500 ng/mL (elevado)',l:'No especifico: imagen si hay sospecha',lv:'warn'},{r:'Wells alto (TVP &ge; 2 / TEP &gt; 4)',l:'Directo a imagen (no pedir dimero)',lv:'danger'}], next:'NEGATIVO con probabilidad baja/intermedia: TVP/TEP descartada, no requiere imagen. POSITIVO o probabilidad alta: eco-doppler venoso (TVP) o angio-TC pulmonar (TEP).', kw:'dimero d dimero-d tvp tep trombosis embolia pulmonar wells feu tromboembolia'}
  ]},
  {panel:'Gasometria arterial', tests:[
    {n:'pH', ref:'7.35&ndash;7.45', hi:'Alcalemia (&gt;7.45): valorar PaCO2 (respiratoria) o HCO3 (metabolica).', lo:'Acidemia (&lt;7.35): valorar PaCO2 y HCO3.', kw:'ph gasometria acidosis alcalosis', grades:[{r:'7.35&ndash;7.45',l:'Normal',lv:'ok'},{r:'7.30&ndash;7.34',l:'Acidemia leve',lv:'warn'},{r:'7.20&ndash;7.29',l:'Moderada',lv:'warn'},{r:'&lt;7.20',l:'Acidemia grave',lv:'danger'},{r:'7.46&ndash;7.55',l:'Alcalemia',lv:'warn'},{r:'&gt;7.55',l:'Alcalemia grave',lv:'danger'}]},
