@@ -604,6 +604,12 @@ html.dark .nav-b.on svg{background:rgba(47,111,224,.22);}
     #quizView .confetti-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:60;}
     #quizView .confetti-wrap i{position:absolute;top:-18px;display:block;opacity:0;animation-name:qzConf;animation-timing-function:linear;animation-fill-mode:forwards;will-change:transform,opacity;}
     @keyframes qzConf{0%{opacity:0;transform:translateY(-10px) translateX(0) rotate(0deg)}8%{opacity:1}100%{opacity:.85;transform:translateY(106vh) translateX(var(--xd)) rotate(var(--rot))}}
+    #quizView .qz-newbadge{margin-top:12px;font-size:13px;font-weight:800;color:#c9622e;background:#fbeee6;border:1px solid #f2d5b8;border-radius:12px;padding:9px 14px;animation:qzPopIn .5s cubic-bezier(.2,1.4,.4,1) .4s both;}
+    #quizView .qz-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0 6px;max-width:320px;}
+    #quizView .qz-badge{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--card);border:1px solid var(--line);filter:grayscale(1) opacity(.35);}
+    #quizView .qz-badge.on{filter:none;background:#fff7ee;border-color:#f2d5b8;}
+    html.dark #quizView .qz-newbadge{background:rgba(201,98,46,.16);border-color:rgba(201,98,46,.35);color:#f0a678;}
+    html.dark #quizView .qz-badge.on{background:rgba(217,153,21,.16);border-color:rgba(217,153,21,.3);}
     html.dark #quizView .qz-topic{background:rgba(47,111,224,.18);}
     html.dark #quizView .qz-opt.correct{background:rgba(31,157,107,.16);color:#5fd6a2;}
     html.dark #quizView .qz-opt.wrong{background:rgba(217,83,79,.16);color:#f0a19e;}
@@ -31064,12 +31070,25 @@ function renderQ(){ var q=QZ.qs[QZ.idx]; document.getElementById('qzTopic').text
 function quizAnswer(i){ if(QZ.answered) return; QZ.answered=true; var q=QZ.qs[QZ.idx]; var opts=document.querySelectorAll('#qzOpts .qz-opt'); Array.prototype.forEach.call(opts,function(b){ var bi=+b.getAttribute('data-i'); b.style.pointerEvents='none'; if(bi===q.a) b.classList.add('correct'); else if(bi===i) b.classList.add('wrong'); else b.classList.add('dim'); }); var ok=(i===q.a); if(ok)QZ.correct++; var tema=QZ.set.tema?('<button class="qz-fb-tema" onclick="quizVerTema()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2z"/></svg>Ver tema completo</button>'):''; var fb=document.getElementById('qzFb'); fb.innerHTML='<div class="qz-fb-h '+(ok?'ok':'no')+'">'+(ok?'¡Correcto!':'Respuesta incorrecta')+'</div><div class="qz-fb-x">'+qzEsc(q.exp)+'</div>'+tema; fb.style.display='block'; document.getElementById('qzBar').style.width=Math.round((QZ.idx+1)/QZ.qs.length*100)+'%'; document.getElementById('qzNext').disabled=false; try{ fb.scrollIntoView({behavior:'smooth',block:'nearest'}); }catch(e){} }
 function quizNext(){ if(!QZ.answered) return; if(QZ.idx<QZ.qs.length-1){ QZ.idx++; renderQ(); var b=document.querySelector('#quizView .qz-body'); if(b)b.scrollTop=0; } else { quizFinish(); } }
 function quizVerTema(){ var f=QZ&&QZ.set?QZ.set.tema:''; closeQuiz(); if(f&&typeof iniOpenTema==='function') iniOpenTema(f); }
+var LOGROS=[
+ {id:'first', emoji:'🎯', name:'Primer reto', desc:'Completa tu primer quiz', cond:function(q){return (q.done||0)>=1;}},
+ {id:'perf', emoji:'💯', name:'Perfecto', desc:'Saca 10/10 una vez', cond:function(q){return (q.perf||0)>=1;}},
+ {id:'s3', emoji:'🔥', name:'Racha x3', desc:'3 días seguidos', cond:function(q){return (q.maxs||0)>=3;}},
+ {id:'s7', emoji:'⚡', name:'Racha x7', desc:'7 días seguidos', cond:function(q){return (q.maxs||0)>=7;}},
+ {id:'s30', emoji:'🏆', name:'Racha x30', desc:'30 días seguidos', cond:function(q){return (q.maxs||0)>=30;}},
+ {id:'q100', emoji:'🎓', name:'Centenario', desc:'Responde 100 preguntas', cond:function(q){return (q.ans||0)>=100;}},
+ {id:'perf5', emoji:'⭐', name:'5 perfectos', desc:'Cinco quizzes de 10/10', cond:function(q){return (q.perf||0)>=5;}},
+ {id:'all', emoji:'🗺️', name:'Explorador', desc:'Juega todos los temas', cond:function(q){return q.tk && typeof QUIZ_TOPICS!=='undefined' && Object.keys(q.tk).length>=QUIZ_TOPICS.length;}}
+];
 function quizFinish(){
   var total=QZ.qs.length, sc=QZ.correct;
   var q=quizData(); var today=ymd(); var y=new Date(); y.setDate(y.getDate()-1); var yest=ymd(y);
   var newDay=(q.last!==today);
   if(newDay){ if(q.last===yest) q.streak=(q.streak||0)+1; else q.streak=1; q.last=today; }
-  if(!q.best||sc>q.best) q.best=sc; quizSave(q);
+  if(!q.best||sc>q.best) q.best=sc;
+  q.done=(q.done||0)+1; q.ans=(q.ans||0)+total; q.corr=(q.corr||0)+sc; if(sc===total)q.perf=(q.perf||0)+1; q.maxs=Math.max(q.maxs||0,q.streak||1); q.tk=q.tk||{}; q.tk[QZ.set.topic]=true; q.badges=q.badges||[];
+  var newBadges=[]; LOGROS.forEach(function(L){ if(q.badges.indexOf(L.id)<0 && L.cond(q)){ q.badges.push(L.id); newBadges.push(L); } });
+  quizSave(q);
   var pct=sc/total, perfect=(sc===total);
   var col=pct>=0.8?'#1f9d6b':(pct>=0.5?'#d99a15':'#d9534f');
   var bg=pct>=0.8?'#e7f6ee':(pct>=0.5?'#fdf3e0':'#fbeceb');
@@ -31079,6 +31098,8 @@ function quizFinish(){
   res.innerHTML='<div class="qz-ring" style="background:'+bg+';color:'+col+'"><span class="n">0</span><span class="d">de '+total+'</span></div>'+
     '<h2>'+msg+'</h2><p>'+qzEsc(QZ.set.topic)+'</p>'+
     '<div class="qz-streak">🔥 Racha: '+strk+' día'+(strk>1?'s':'')+(newDay?' &nbsp;·&nbsp; +1 hoy':'')+'</div>'+
+    (newBadges.length?'<div class="qz-newbadge">🎉 ¡Nuevo logro! '+newBadges.map(function(b){return b.emoji+' '+b.name;}).join(' · ')+'</div>':'')+
+    '<div class="qz-badges">'+LOGROS.map(function(L){var on=q.badges.indexOf(L.id)>=0; return '<span class="qz-badge'+(on?' on':'')+'" title="'+L.name+' — '+L.desc+'">'+L.emoji+'</span>';}).join('')+'</div>'+
     '<button class="qz-next" onclick="startQuiz()">Reintentar</button>'+
     '<button class="qz-ghost" onclick="closeQuiz()">Volver al inicio</button>';
   document.getElementById('quizPlay').style.display='none';
