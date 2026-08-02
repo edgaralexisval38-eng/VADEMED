@@ -56,6 +56,7 @@ html.dark .bnav{background:rgba(18,20,26,.94)!important;}
 html.dark .tt-med{background:#33241d!important;color:#e69068!important;}
 html.dark .tt-tema{background:#17222f!important;color:#7fa4ff!important;}
 html.dark .tt-calc{background:#16281f!important;color:#48bd93!important;}
+.tt-dx{background:#241a2e!important;color:#b39cf0!important;}
 html.dark, html.dark #inicioView{--bg-med:#4a2e22!important;--bg-calc:#153a2b!important;--bg-inter:#3d331c!important;--bg-rec:#1d3552!important;--bg-fav:#3a3018!important;--bg-lab:#123a30!important;--c-lab:#3fb795!important;--bg-semio:#2b2440!important;--c-semio:#b79bec!important;}
 html.dark #inicioView .nav, html.dark .bnav{background:rgba(18,20,26,.96)!important;}
 html.dark .qcalc{background:#17222f!important;border-color:#243346!important;}
@@ -724,6 +725,7 @@ html.dark #inicioView .nv{color:#aeb6c6;}
 #inicioView .tt-med{background:#fbeee6;color:#c9522a;}
 #inicioView .tt-tema{background:#e9f1fb;color:#2f6fe0;}
 #inicioView .tt-calc{background:#e4f3ec;color:#2e8b6f;}
+.tt-dx{background:#efeaf8;color:#7c5cbf;}
 #inicioView .frow-star{color:#c7cdd8;cursor:pointer;padding:4px;display:flex;flex-shrink:0;}
 #inicioView .frow-star svg{width:19px;height:19px;}
 #inicioView .frow-star.on{color:#f5b301;}
@@ -750,6 +752,7 @@ html.dark #inicioView .nv{color:#aeb6c6;}
 #favsPanel .tt-med{background:#fbeee6;color:#c9522a;}
 #favsPanel .tt-tema{background:#e9f1fb;color:#2f6fe0;}
 #favsPanel .tt-calc{background:#e4f3ec;color:#2e8b6f;}
+.tt-dx{background:#efeaf8;color:#7c5cbf;}
 #favsPanel .ini-rec-empty{padding:13px 4px;color:var(--soft);font-size:12.5px;line-height:1.4;}
 
 
@@ -31290,6 +31293,10 @@ function iniSearchRun(q){
     var s=sc(t.n,(t.kw||'')+' '+p.panel+' laboratorio');
     if(s>0) hits.push({s:s,o:ord++,h:'<button class="ini-row" onclick="iniOpenLab(&#39;'+(t.n.replace(/["']/g,'')) +'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M9 3h6M10 3v6l-5 9a2 2 0 001.8 3h10.4a2 2 0 001.8-3l-5-9V3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 15h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+t.n+'</span><span class="ini-row-s">Laboratorio · '+p.panel+' · ref '+t.ref+'</span></span><span class="ttag tt-calc">Lab</span><span class="ini-row-cv">'+ICON.chev+'</span></button>'});
   }); });
+  (typeof CONDITIONS!=='undefined'?CONDITIONS:[]).forEach(function(c){
+    var s2=sc(c.name,(c.kw||'')+' diagnostico tratamiento');
+    if(s2>0) hits.push({s:s2,o:ord++,h:'<button class="ini-row" onclick="iniOpenCond(&#39;'+c.id+'&#39;)"><span class="ini-row-ic"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3v4a4 4 0 008 0V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 11a5 5 0 0010 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="8" r="2" stroke="currentColor" stroke-width="2"/></svg></span><span class="ini-row-tx"><span class="ini-row-n">'+c.name+'</span><span class="ini-row-s">Diagnóstico · tratamiento de 1.ª línea</span></span><span class="ttag tt-dx">Dx</span><span class="ini-row-cv">'+ICON.chev+'</span></button>'});
+  });
   hits.sort(function(a,b){ return (b.s-a.s) || (a.o-b.o); });
   res.style.display='flex';
   res.innerHTML = hits.length ? hits.slice(0,60).map(function(x){return x.h;}).join('') : '<div class="ini-empty">Sin resultados</div>';
@@ -32549,6 +32556,86 @@ function goTools(){
   var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
   window.scrollTo({top:0});
 }
+
+var CONDITIONS=[
+  {id:'itu', name:'ITU / cistitis no complicada', kw:'itu cistitis infeccion urinaria vias urinarias disuria orina', first:[{t:'Nitrofurantoína',d:'100 mg c/12 h VO × 5 días',drug:'Nitrofurantoína'},{t:'Fosfomicina',d:'3 g VO en dosis única',drug:'Fosfomicina'}], alt:[{t:'TMP-SMX',d:'160/800 mg c/12 h × 3 días (si resistencia local < 20%)',drug:'Trimetoprima'}], note:'Evita fluoroquinolonas como 1.ª línea. Embarazo: nitrofurantoína (no cerca del término) o fosfomicina; evita TMP-SMX en 1.er y 3.er trimestre.'},
+  {id:'pielo', name:'Pielonefritis aguda', kw:'pielonefritis rinon fiebre lumbar puno percusion infeccion renal', first:[{t:'Ceftriaxona',d:'1 g IV/IM c/24 h (inicio); completar VO según urocultivo',drug:'Ceftriaxona'},{t:'Ciprofloxacino',d:'500 mg c/12 h VO × 7 días (ambulatorio, si sensible)',drug:'Ciprofloxacino'}], note:'Pide urocultivo. Ingreso si sepsis, vómito o embarazo. Embarazo: ceftriaxona (evita quinolonas).', tema:'RESUMENCLINIC/RESUMENES/13_Pielonefritis.html'},
+  {id:'nac', name:'Neumonía adquirida en la comunidad', kw:'nac neumonia pulmon tos fiebre consolidacion crb curb', first:[{t:'Amoxicilina',d:'1 g c/8 h VO × 5 días (previamente sano)',drug:'Amoxicilina'},{t:'Amoxicilina/clavulánico + macrólido',d:'o levofloxacino 750 mg c/24 h (con comorbilidad)',drug:'Amoxicilina'}], note:'Usa CURB-65/CRB-65 para decidir ingreso. Cubrir atípicos con macrólido si hay comorbilidad o factores de riesgo.', tema:'RESUMENCLINIC/RESUMENES/05_NAC_NeumoniaAdquiridaComunidad.html'},
+  {id:'faringitis', name:'Faringoamigdalitis estreptocócica', kw:'faringitis amigdalitis garganta odinofagia estreptococo centor mcisaac', first:[{t:'Penicilina V',d:'500 mg c/12 h VO × 10 días',drug:'Fenoximetilpenicilina'},{t:'Amoxicilina',d:'500 mg c/8-12 h (o 50 mg/kg/día) × 10 días',drug:'Amoxicilina'}], alt:[{t:'Azitromicina',d:'500 mg día 1, luego 250 mg × 4 días (alergia a penicilina)',drug:'Azitromicina'}], note:'Aplica Centor/McIsaac; trata solo si alta probabilidad o prueba positiva. Objetivo: prevenir fiebre reumática.', tema:'RESUMENCLINIC/RESUMENES/06_Faringoamigdalitis_v2.html', tool:'centor'},
+  {id:'sinusitis', name:'Sinusitis bacteriana aguda', kw:'sinusitis rinosinusitis senos paranasales congestion facial', first:[{t:'Amoxicilina/clavulánico',d:'875/125 mg c/12 h VO × 5-7 días',drug:'Amoxicilina'}], alt:[{t:'Doxiciclina',d:'100 mg c/12 h (alergia a betalactámicos)',drug:'Doxiciclina'}], note:'La mayoría es viral: antibiótico solo si > 10 días sin mejorar, síntomas graves o empeoramiento tras mejorar.', tema:'RESUMENCLINIC/RESUMENES/07_Sinusitis_v2.html'},
+  {id:'otitis', name:'Otitis media aguda', kw:'otitis oido otalgia timpano nino', first:[{t:'Amoxicilina',d:'80-90 mg/kg/día c/12 h VO × 5-10 días (dosis alta)',drug:'Amoxicilina'}], alt:[{t:'Amoxicilina/clavulánico',d:'si falla en 48-72 h o uso reciente de antibiótico',drug:'Amoxicilina'}], note:'Valora conducta expectante (analgesia) en > 2 años con síntomas leves. Analgesia siempre.'},
+  {id:'celulitis', name:'Celulitis / erisipela', kw:'celulitis erisipela piel infeccion tejidos blandos eritema', first:[{t:'Cefalexina',d:'500 mg c/6 h VO × 5-7 días (no purulenta, estreptococo)',drug:'Cefalexina'},{t:'Dicloxacilina',d:'500 mg c/6 h VO',drug:'Dicloxacilina'}], alt:[{t:'TMP-SMX o clindamicina',d:'si purulenta/absceso: cubrir SARM + drenaje',drug:'Clindamicina'}], note:'Purulenta o absceso → drenaje + cobertura de SARM. Marca el borde y reevalúa a las 48 h.'},
+  {id:'gea', name:'Gastroenteritis / diarrea aguda', kw:'diarrea gastroenteritis gea deshidratacion vomito', first:[{t:'Hidratación oral (VSO)',d:'base del tratamiento; suero de rehidratación',drug:''}], alt:[{t:'Azitromicina',d:'500 mg/día × 3 días (solo disentería/fiebre alta/viajero)',drug:'Azitromicina'}], note:'Sin antibiótico de rutina. Evita antimotilidad si hay fiebre o sangre. Zinc en niños. Plan A/B/C de hidratación.', tool:'hidratacion'},
+  {id:'its', name:'Uretritis / cervicitis (gono + clamidia)', kw:'uretritis cervicitis its gonorrea clamidia secrecion flujo', first:[{t:'Ceftriaxona',d:'500 mg IM en dosis única (gonorrea)',drug:'Ceftriaxona'},{t:'Doxiciclina',d:'100 mg c/12 h VO × 7 días (clamidia)',drug:'Doxiciclina'}], note:'Trata ambos gérmenes. Doxiciclina 7 días desplazó a la azitromicina 1 g. Trata a la pareja y estudia otras ITS.'},
+  {id:'vb', name:'Vaginosis bacteriana', kw:'vaginosis flujo vaginal olor pescado gardnerella', first:[{t:'Metronidazol',d:'500 mg c/12 h VO × 7 días (o gel intravaginal)',drug:'Metronidazol'}], note:'Evita alcohol con metronidazol. Clindamicina vaginal como alternativa (debilita el condón de látex).'},
+  {id:'candidiasis', name:'Candidiasis vulvovaginal', kw:'candidiasis vaginal hongos prurito flujo blanco', first:[{t:'Fluconazol',d:'150 mg VO en dosis única',drug:'Fluconazol'}], note:'Embarazo: solo azol tópico (evita fluconazol oral). Recurrente: esquema inductor + mantenimiento.'},
+  {id:'crisisHTA', name:'Urgencia / emergencia hipertensiva', kw:'crisis hipertensiva urgencia emergencia presion alta has tension', first:[{t:'Urgencia (sin daño de órgano)',d:'reanudar/ajustar VO: captopril, amlodipino o losartán; bajar de forma gradual',drug:'Captopril'}], alt:[{t:'Emergencia (con daño de órgano)',d:'IV en UCI: labetalol, nicardipino o nitroprusiato',drug:'Labetalol'}], note:'No bajar la PA de forma brusca en la urgencia. Emergencia = daño agudo de órgano (SCA, EAP, disección, encefalopatía, eclampsia).', tema:'RESUMENCLINIC/RESUMENES/01_HAS_HipertensionArterial_v2.html'},
+  {id:'fa', name:'Fibrilación auricular', kw:'fibrilacion auricular fa arritmia palpitaciones control frecuencia', first:[{t:'Control de frecuencia',d:'betabloqueador o verapamilo/diltiazem (evita el CCB no-DHP en IC-FEr)',drug:'Metoprolol'}], alt:[{t:'Anticoagulación',d:'según CHA2DS2-VASc → ACOD de 1.ª línea (apixabán, etc.)',drug:'Apixabán'}], note:'Decide anticoagular con CHA2DS2-VASc y valora el sangrado con HAS-BLED. Válvula mecánica/estenosis mitral → warfarina.', tema:'RESUMENCLINIC/RESUMENES/FibrilacionAuricular.html', tool:'chadsvasc'},
+  {id:'cad', name:'Cetoacidosis diabética', kw:'cad cetoacidosis diabetica hiperglucemia cetonas acidosis', first:[{t:'Líquidos IV',d:'salino 0.9% (déficit); luego según Na y glucemia',drug:''},{t:'Insulina IV',d:'infusión 0.1 U/kg/h (tras confirmar K ≥ 3.3)',drug:'Insulina rápida'}], note:'Repón K antes/junto con la insulina; añade dextrosa cuando la glucosa < 200-250. Busca el desencadenante.', tema:'RESUMENCLINIC/RESUMENES/CAD_CetoacidosisDiabetica_COMPLETA_v2.html'},
+  {id:'hiperk', name:'Hiperkalemia aguda', kw:'hiperkalemia hiperpotasemia potasio alto ecg', first:[{t:'Gluconato de calcio',d:'estabiliza la membrana (si cambios en ECG)',drug:'Gluconato de calcio'},{t:'Insulina + glucosa y salbutamol',d:'introducen el K a la célula',drug:'Insulina rápida'}], note:'Calcio protege pero NO baja el K. Elimina el K: diuréticos, resinas o diálisis. Retira aportes y fármacos que lo suben.', tool:'hiperkalemia'},
+  {id:'anafilaxia', name:'Anafilaxia', kw:'anafilaxia alergia adrenalina shock urticaria reaccion alergica', first:[{t:'Adrenalina IM',d:'0.01 mg/kg (1 mg/mL); máx 0.5 mg adulto / 0.3 mg niño; repetir c/5-15 min',drug:'Adrenalina'}], note:'La adrenalina IM es lo PRIMERO, sin demora. Luego O2, líquidos y decúbito con piernas elevadas. Antihistamínico/corticoide NO sustituyen la adrenalina.', tool:'anafilaxia'},
+  {id:'asma', name:'Crisis asmática', kw:'asma crisis broncoespasmo sibilancias exacerbacion respiratoria', first:[{t:'Salbutamol inhalado',d:'con cámara o nebulizado, repetir la 1.ª hora',drug:'Salbutamol'},{t:'Corticoide sistémico',d:'prednisona VO o equivalente IV, precoz',drug:'Prednisona'}], alt:[{t:'Ipratropio / Mg IV',d:'ipratropio en mod-grave; sulfato de Mg IV en grave',drug:'Bromuro de ipratropio'}], note:'O2 si SatO2 < 94%. Reevalúa la respuesta; valora ingreso/UCI si no mejora.', tool:'crisisasma'},
+  {id:'epoc', name:'Exacerbación de EPOC', kw:'epoc exacerbacion broncodilatador disnea esputo agudizacion', first:[{t:'Broncodilatadores',d:'salbutamol + ipratropio inhalados',drug:'Salbutamol'},{t:'Corticoide sistémico',d:'prednisona 40 mg/día × 5 días',drug:'Prednisona'}], alt:[{t:'Antibiótico',d:'si esputo purulento o ventilación mecánica (amoxi/clav, macrólido)',drug:'Amoxicilina'}], note:'O2 controlado (meta SatO2 88-92%). Valora VMNI si acidosis respiratoria.'},
+  {id:'migrana', name:'Migraña aguda', kw:'migrana cefalea jaqueca dolor cabeza aura', first:[{t:'AINE',d:'naproxeno o ibuprofeno (leve-moderada)',drug:'Naproxeno'},{t:'Triptán',d:'sumatriptán (moderada-grave o sin respuesta a AINE)',drug:'Sumatriptán'}], alt:[{t:'Antiemético',d:'metoclopramida (añade control del vómito y potencia)',drug:'Metoclopramida'}], note:'Trata pronto. Limita analgésicos a < 10-15 días/mes para evitar cefalea por abuso. Triptán contraindicado en cardiopatía isquémica.'},
+  {id:'gota', name:'Gota aguda', kw:'gota artritis urica podagra acido urico monoartritis', first:[{t:'AINE',d:'naproxeno/indometacina a dosis plena hasta 24 h tras ceder',drug:'Naproxeno'},{t:'Colchicina',d:'1 mg y luego 0.5 mg a la hora (precoz)',drug:'Colchicina'}], alt:[{t:'Corticoide',d:'prednisona si contraindicación a AINE/colchicina o ERC',drug:'Prednisona'}], note:'NO inicies ni suspendas el alopurinol durante la crisis; si ya lo toma, contínualo. Trata cuanto antes.'}
+];
+function condDrugIdx(name){ if(!name) return -1; var nq=norm(name); for(var i=0;i<DRUGS.length;i++){ if(norm(DRUGS[i].name).indexOf(nq)>=0) return i; } return -1; }
+function condItem(it){
+  var di=condDrugIdx(it.drug);
+  var head = di>=0
+    ? '<button class="cond-drug" data-idx="'+di+'" onclick="condDrug(this)">'+it.t+'<span class="cd-go">›</span></button>'
+    : '<span class="cond-t">'+it.t+'</span>';
+  return '<div class="cond-item">'+head+'<div class="cond-d">'+it.d+'</div></div>';
+}
+function condBody(c){
+  var links='';
+  if(c.tema) links+='<button class="cond-link" data-tema="'+c.tema+'" onclick="condTema(this)"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 8h8M8 11.5h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Ver tema completo</button>';
+  if(c.tool) links+='<button class="cond-link" data-tool="'+c.tool+'" onclick="condTool(this)"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Abrir herramienta</button>';
+  return '<style>'
+    +'.cond-wrap{font-size:13.5px;color:var(--ink);}'
+    +'.cond-sec{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin:16px 0 9px;}'
+    +'.cond-item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:9px;}'
+    +'.cond-drug{display:flex;align-items:center;gap:5px;font-size:14.5px;font-weight:800;color:var(--coral);background:none;border:none;padding:0;font-family:inherit;cursor:pointer;text-align:left;}'
+    +'.cond-drug .cd-go{font-size:17px;line-height:1;}'
+    +'.cond-t{font-size:14.5px;font-weight:800;color:var(--ink);}'
+    +'.cond-d{font-size:12.5px;color:var(--ink);line-height:1.45;margin-top:3px;}'
+    +'.cond-note{font-size:12.5px;color:#6a5a2a;background:#fbf3df;border-left:3px solid #d9a441;border-radius:8px;padding:10px 12px;line-height:1.5;margin-top:12px;}'
+    +'.cond-links{display:flex;flex-direction:column;gap:8px;margin-top:14px;}'
+    +'.cond-link{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:700;color:var(--navy);font-family:inherit;cursor:pointer;text-align:left;}'
+    +'.cond-link svg{width:19px;height:19px;color:var(--coral);flex-shrink:0;}'
+    +'</style>'
+    +'<div class="cond-wrap">'
+    +'<div class="cond-sec">Primera línea</div>'+c.first.map(condItem).join('')
+    +(c.alt&&c.alt.length?('<div class="cond-sec">Alternativas / según el caso</div>'+c.alt.map(condItem).join('')):'')
+    +(c.note?'<div class="cond-note">'+c.note+'</div>':'')
+    +(links?'<div class="cond-links">'+links+'</div>':'')
+    +'<div class="tool-dis">Orientación de PRIMERA línea. Individualiza según alergias, embarazo, función renal, gravedad y resistencias locales. No sustituye la guía vigente ni el juicio clínico.</div>'
+    +'</div>';
+}
+function condDrug(el){ var i=parseInt(el.getAttribute('data-idx')); if(!isNaN(i)) openDrugFromHub(i); }
+function condTema(el){ var f=el.getAttribute('data-tema'); if(typeof openTemaFile==='function') openTemaFile(f); else window.open(f,'_blank'); }
+function condTool(el){ openTool(el.getAttribute('data-tool')); }
+function openCond(c){
+  if(!c) return;
+  var ap=document.querySelector('.app'); if(ap){ap.classList.add('mode-inicio');ap.classList.remove('mode-hub');}
+  ['inicioView','hubView','homeView','detailView','toolsPanel','pedCalcView','labsPanel','temasPanel','temaViewer','favsPanel'].forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';});
+  document.getElementById('toolName').innerHTML=c.name;
+  document.getElementById('toolSub').textContent='Diagnóstico · tratamiento inicial';
+  var ic=document.getElementById('toolIc'); ic.className='tool-ic ti-resumen'; ic.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M6 3v4a4 4 0 008 0V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 11a5 5 0 0010 0v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="8" r="2" stroke="currentColor" stroke-width="2"/></svg>';
+  document.getElementById('toolBody').innerHTML='<div class="tool-doc">'+condBody(c)+'</div>';
+  document.getElementById('toolView').style.display='block';
+  var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
+  window.scrollTo({top:0});
+  try{ if(typeof CURTOOL!=='undefined') CURTOOL=null; }catch(e){}
+}
+function iniOpenCond(id){
+  var cols=document.querySelector('#inicioView .ini-cols'); if(cols) cols.style.display='';
+  var res=document.getElementById('iniResults'); if(res){res.style.display='none';res.innerHTML='';}
+  var sb=document.getElementById('iniSearch'); if(sb) sb.value='';
+  var c=CONDITIONS.filter(function(x){return x.id===id;})[0];
+  openCond(c);
+}
+
 function iniOpenTool(key){
   var cols=document.querySelector('#inicioView .ini-cols'); if(cols) cols.style.display='';
   var res=document.getElementById('iniResults'); if(res){res.style.display='none';res.innerHTML='';}
