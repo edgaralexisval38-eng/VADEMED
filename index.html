@@ -31342,6 +31342,104 @@ function togOn(id){var e=document.getElementById(id);return !!(e&&e.classList.co
 function nv(id){var e=document.getElementById(id);return e?(parseFloat(e.value)||0):0;}
 function sv(id){var e=document.getElementById(id);return e?e.value:'';}
 
+function intxData(){
+  return {
+    cats:[
+      {c:'Antibióticos y antifúngicos', a:[['macrolido','Macrólidos'],['quinolona','Quinolonas'],['metronidazol','Metronidazol'],['tmpsmx','TMP-SMX'],['azol','Azoles (fluco/itra/keto)'],['linezolid','Linezolid'],['rifampicina','Rifampicina']]},
+      {c:'Anticoagulación y antiagregación', a:[['warfarina','Warfarina'],['doac','ACOD (apix/riva/dabi)'],['aine','AINE'],['antiplaq','Antiagregantes (AAS/clopi)']]},
+      {c:'Cardiología', a:[['iecaara','IECA / ARA-II'],['espirono','Espironolactona'],['ksupp','Potasio (suplemento)'],['tiazida','Diuréticos (tiazida/asa)'],['digoxina','Digoxina'],['amiodarona','Amiodarona'],['ccbnd','Verapamilo / diltiazem'],['betabloq','Betabloqueadores'],['nitrato','Nitratos'],['estatina','Estatinas'],['sildenafil','Sildenafil (IPDE-5)'],['sulfonilurea','Sulfonilureas']]},
+      {c:'SNC y psiquiatría', a:[['isrs','ISRS / IRSN'],['imao','IMAO'],['tramadol','Tramadol'],['triptan','Triptanes'],['litio','Litio'],['opioide','Opioides']]},
+      {c:'Otros', a:[['ondansetron','Ondansetrón'],['haloperidol','Haloperidol'],['metformina','Metformina'],['contraste','Contraste yodado IV'],['azatioprina','Azatioprina'],['alopurinol','Alopurinol'],['alcohol','Alcohol']]}
+    ],
+    flags:{
+      qt:{ids:['macrolido','quinolona','amiodarona','ondansetron','haloperidol'],sev:'warn',txt:'Suma de prolongación del QT &rarr; riesgo de torsades de pointes. Evita combinarlos; si es inevitable, haz ECG y corrige K y Mg.'},
+      sero:{ids:['isrs','imao','tramadol','triptan','linezolid'],sev:'danger',txt:'Riesgo de síndrome serotoninérgico. Evita la combinación (sobre todo con IMAO); vigila agitación, clonus, hipertermia y rigidez.'},
+      bleed:{ids:['warfarina','doac','aine','antiplaq'],sev:'danger',txt:'Suma de riesgo de sangrado. Evita combinarlos; si es imprescindible, añade gastroprotección y vigila de cerca.'},
+      hyperK:{ids:['iecaara','espirono','ksupp','tmpsmx'],sev:'warn',txt:'Riesgo de hiperkalemia. Vigila K y la función renal; evita la combinación en ERC.'}
+    },
+    pairs:[
+      ['macrolido','estatina','danger','&uarr; estatina (inhibe CYP3A4) &rarr; riesgo de rabdomiólisis. Suspende simva/lovastatina o usa prava/rosuvastatina.'],
+      ['azol','estatina','danger','&uarr; estatina (inhibe CYP3A4) &rarr; riesgo de rabdomiólisis. Ajusta o cambia de estatina.'],
+      ['nitrato','sildenafil','danger','Hipotensión grave. Combinación contraindicada (separar al menos 24-48 h).'],
+      ['metronidazol','alcohol','danger','Efecto disulfiram (náusea, rubor, taquicardia). Evita el alcohol durante y 3 días después.'],
+      ['betabloq','ccbnd','danger','Bradicardia, bloqueo AV e hipotensión (verapamilo/diltiazem + betabloqueador). Evita o vigila estrechamente.'],
+      ['alopurinol','azatioprina','danger','&uarr;&uarr; azatioprina &rarr; mielotoxicidad grave. Evita; si es imprescindible, reduce la azatioprina ~75%.'],
+      ['rifampicina','doac','danger','Inductor potente &rarr; &darr; ACOD (fallo anticoagulante). Evita; prefiere warfarina con control de INR.'],
+      ['warfarina','azol','danger','&uarr;&uarr; INR &rarr; sangrado. Evita o ajusta con control estrecho de INR.'],
+      ['warfarina','metronidazol','danger','&uarr;&uarr; INR &rarr; sangrado. Evita o ajusta con control de INR.'],
+      ['warfarina','tmpsmx','danger','&uarr;&uarr; INR &rarr; sangrado. Evita o ajusta con control de INR.'],
+      ['digoxina','amiodarona','warn','&uarr; digoxina &rarr; toxicidad. Reduce la digoxina ~50% y vigila niveles.'],
+      ['digoxina','ccbnd','warn','Verapamilo &uarr; digoxina &rarr; toxicidad. Vigila niveles.'],
+      ['digoxina','tiazida','warn','La hipokalemia potencia la toxicidad digitálica. Vigila K.'],
+      ['litio','aine','warn','&uarr; litio &rarr; toxicidad. Evita el AINE o vigila la litemia.'],
+      ['litio','iecaara','warn','&uarr; litio &rarr; toxicidad. Vigila litemia y función renal.'],
+      ['litio','tiazida','warn','&uarr; litio &rarr; toxicidad. Vigila la litemia.'],
+      ['metformina','contraste','warn','Riesgo de acidosis láctica. Suspende la metformina el día del contraste y 48 h (según función renal).'],
+      ['warfarina','macrolido','warn','&uarr; INR &rarr; sangrado. Vigila el INR.'],
+      ['warfarina','quinolona','warn','&uarr; INR &rarr; sangrado. Vigila el INR.'],
+      ['rifampicina','warfarina','warn','&darr; efecto de la warfarina. Ajusta la dosis con INR.'],
+      ['rifampicina','azol','warn','&darr; niveles del azol. Evita la combinación.'],
+      ['rifampicina','estatina','warn','&darr; niveles de estatina.'],
+      ['sulfonilurea','quinolona','warn','Riesgo de hipoglucemia. Vigila la glucemia.'],
+      ['sulfonilurea','tmpsmx','warn','Riesgo de hipoglucemia. Vigila la glucemia.']
+    ]
+  };
+}
+function intxBody(){
+  var d=intxData();
+  var chips=d.cats.map(function(g){
+    return '<div class="intx-cat">'+g.c+'</div><div class="intx-row">'+g.a.map(function(x){
+      return '<button type="button" class="intx-chip" data-id="'+x[0]+'" onclick="intxTog(this)">'+x[1]+'</button>';
+    }).join('')+'</div>';
+  }).join('');
+  return '<style>'
+    +'.intx-wrap{font-size:13.5px;color:var(--ink);}'
+    +'.intx-hint{font-size:12.5px;color:var(--gray);line-height:1.5;margin:2px 0 8px;}'
+    +'.intx-cat{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);margin:13px 0 7px;}'
+    +'.intx-row{display:flex;flex-wrap:wrap;gap:7px;}'
+    +'.intx-chip{font-size:12.5px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:8px 12px;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}'
+    +'.intx-chip.on{background:var(--coral);border-color:var(--coral);color:#fff;}'
+    +'.intx-lab{font-size:12px;font-weight:800;color:var(--ink);margin:18px 0 9px;padding-top:13px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}'
+    +'.intx-count{font-size:11px;font-weight:800;border-radius:20px;padding:2px 9px;background:var(--line);color:var(--gray);}'
+    +'.intx-empty{font-size:13px;color:var(--gray);}'
+    +'.intx-ok{font-size:13px;font-weight:700;color:#1f7a5c;background:#e4f3ec;border-radius:10px;padding:11px 13px;}'
+    +'.intx-alert{border-radius:11px;padding:10px 12px;margin-bottom:9px;border-left:4px solid;}'
+    +'.intx-at{font-weight:800;font-size:13.5px;margin-bottom:3px;}'
+    +'.intx-ab{font-size:12.5px;line-height:1.5;color:var(--ink);}'
+    +'.intx-danger{background:var(--danger-b);border-color:var(--danger);} .intx-danger .intx-at{color:var(--danger);}'
+    +'.intx-warn{background:var(--warn-b);border-color:var(--warn);} .intx-warn .intx-at{color:var(--warn);}'
+    +'</style>'
+    +'<div class="intx-wrap">'
+    +'<div class="intx-hint">Marca los fármacos que toma el paciente. Te avisa de las interacciones de ALTO RIESGO más frecuentes.</div>'
+    +'<div id="intxChips">'+chips+'</div>'
+    +'<div class="intx-lab"><span>Alertas</span><span class="intx-count" id="intxCount">0</span></div>'
+    +'<div id="intxOut"><div class="intx-empty">Selecciona al menos 2 fármacos.</div></div>'
+    +'<div class="tool-dis">Lista CURADA de interacciones frecuentes de alto riesgo &mdash; no es una base de datos completa. La ausencia de alerta no garantiza que no exista interacción: verifica siempre y usa el juicio clínico.</div>'
+    +'</div>';
+}
+function intxTog(el){ el.classList.toggle('on'); intxRender(); }
+function intxRender(){
+  var out=document.getElementById('intxOut'); if(!out) return;
+  var d=intxData(), lab={};
+  d.cats.forEach(function(g){ g.a.forEach(function(x){ lab[x[0]]=x[1]; }); });
+  var sel=[].slice.call(document.querySelectorAll('#intxChips .intx-chip.on')).map(function(b){ return b.getAttribute('data-id'); });
+  var S={}; sel.forEach(function(x){ S[x]=1; });
+  var cEl=document.getElementById('intxCount');
+  if(sel.length<2){ out.innerHTML='<div class="intx-empty">Selecciona al menos 2 fármacos.</div>'; if(cEl){cEl.textContent='0';cEl.style.background='';cEl.style.color='';} return; }
+  var alerts=[];
+  Object.keys(d.flags).forEach(function(k){
+    var f=d.flags[k], hit=f.ids.filter(function(id){ return S[id]; });
+    if(hit.length>=2){ alerts.push({sev:f.sev, title:hit.map(function(id){ return lab[id]; }).join(' + '), txt:f.txt}); }
+  });
+  d.pairs.forEach(function(p){ if(S[p[0]]&&S[p[1]]){ alerts.push({sev:p[2], title:lab[p[0]]+' + '+lab[p[1]], txt:p[3]}); } });
+  if(cEl){ cEl.textContent=alerts.length; var dg=alerts.some(function(a){return a.sev==='danger';}); cEl.style.background=alerts.length?(dg?'var(--danger-b)':'var(--warn-b)'):''; cEl.style.color=alerts.length?(dg?'var(--danger)':'var(--warn)'):''; }
+  if(!alerts.length){ out.innerHTML='<div class="intx-ok">&#10003; Sin interacciones de alto riesgo entre lo seleccionado (lista curada, no exhaustiva).</div>'; return; }
+  var order={danger:0,warn:1};
+  alerts.sort(function(a,b){ return order[a.sev]-order[b.sev]; });
+  out.innerHTML=alerts.map(function(a){
+    return '<div class="intx-alert intx-'+a.sev+'"><div class="intx-at">'+(a.sev==='danger'?'&#9940; ':'&#9888; ')+a.title+'</div><div class="intx-ab">'+a.txt+'</div></div>';
+  }).join('');
+}
 var TOOLS=[
 {key:'daniels', type:'escala', name:'Escala de Daniels (fuerza muscular)', sub:'Balance muscular manual', desc:'Gradúa la fuerza muscular en el balance manual, de 0 (sin contracción) a 5 (fuerza normal contra resistencia).', act:'0–1: parálisis o vestigio → rehabilitación y estudiar la causa. 2–3: debilidad significativa → fisioterapia y ayudas. 4–5: fuerza conservada. Documentar por grupo muscular para seguir la evolución.', kw:'daniels oxford fuerza muscular balance grado mmt paresia paralisis 0 5 miembro debilidad',
    body:'<div class="tool-form">'+tField('Grado observado',tSel('t_g',[['0','0 &mdash; Sin contraccion'],['1','1 &mdash; Contraccion sin movimiento'],['2','2 &mdash; Movimiento con gravedad eliminada'],['3','3 &mdash; Movimiento contra gravedad'],['4','4 &mdash; Contra resistencia moderada'],['5','5 &mdash; Fuerza normal']],'3'))+'</div>',
@@ -31520,6 +31618,8 @@ var TOOLS=[
      } else { lines.push({k:'Peres',v:'Introduce la altura'}); }
      return {big:m.fijo,label:m.n+' · valor fijo',level:'info',lines:lines,note:'Valor fijo por sitio: 91.5% de colocacion optima en la union cavoatrial, superior a la formula de Peres (77.4%). Ajusta a la talla del paciente y confirma la posicion de la punta con imagen.'};
    }},
+
+  {key:'interacciones', type:'resumen', name:'Interacciones farmacológicas (alertas clave)', sub:'Marca lo que toma el paciente', kw:'interacciones farmacos interaccion medicamentosa qt sangrado serotoninergico hiperkalemia cyp3a4 rabdomiolisis contraindicacion combinar chequeo checker', body:intxBody()},
 
   {key:'mantped', type:'calculadora', name:'Liquidos de mantenimiento (Holliday-Segar)', sub:'Pediatria', desc:'Calcula los líquidos de mantenimiento en pediatría por peso (Holliday-Segar).', act:'Sumar a las pérdidas o al déficit; reevaluar según diuresis, estado y electrolitos.', kw:'liquidos mantenimiento holliday segar pediatria sueros hidratacion 4-2-1 ml/kg',
    body:'<div class="tool-form">'+tField('Peso',tNum('t_w','kg',12,0.1))+'</div>',
