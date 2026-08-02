@@ -230,6 +230,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .hst-h svg{width:14px;height:14px;flex-shrink:0;}
 .hst-k{font-size:8.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--gray);}
 .hst-v{font-size:13px;font-weight:800;color:var(--coral);margin-top:8px;line-height:1.2;}
+.hst-sub{font-size:10.5px;font-weight:600;color:var(--gray);margin-top:6px;line-height:1.35;}
 .hst-sub{font-size:9.5px;color:var(--gray);margin-top:5px;font-weight:600;}
 
 .kv{background:var(--card);border:1px solid var(--line);border-radius:var(--rad);padding:4px 14px;box-shadow:0 1px 2px rgba(27,43,74,.03);}
@@ -18553,11 +18554,11 @@ const DRUGS = [
   banner:'Anticoagulante oral directo (ACOD) que inhibe el factor Xa: ofrece una anticoagulación predecible en dosis fijas, SIN necesidad de controlar el INR ni de la mayoría de las restricciones dietéticas de la warfarina. Es de primera elección en la fibrilación auricular no valvular y en la enfermedad tromboembólica venosa, con menor riesgo de hemorragia intracraneal que la warfarina y, entre los ACOD, de los de menor sangrado digestivo. NO se usa en válvulas mecánicas ni en el síndrome antifosfolípido. Ajustar la dosis según edad, peso y función renal; existe antídoto específico (andexanet).',
   badges:[{t:'ACOD (anti-Xa)', cls:'b-wine', ic:'clot'}],
   adult:[
-    {n:'Fibrilación auricular no valvular', dose:'5 mg c/12 h (2,5 mg c/12 h si ≥2 de: edad ≥80 a, peso ≤60 kg o Cr ≥1,5 mg/dL)', max:'según criterios', du:'Indefinida (mientras persista la FA o el riesgo embólico)', via:'Vía oral'},
+    {n:'Fibrilación auricular no valvular', dose:'5 mg c/12 h', doseSub:'Reducir a 2,5 mg c/12 h si ≥2 de: edad ≥80 a · peso ≤60 kg · Cr ≥1,5 mg/dL', max:'2,5 mg c/12 h (si criterios)', du:'Indefinida (mientras persista la FA o el riesgo embólico)', via:'Vía oral'},
     {n:'TVP — tratamiento', dose:'10 mg c/12 h los primeros 7 días, luego 5 mg c/12 h', max:'—', du:'Mínimo 3 meses (provocada); 6 meses o más si no provocada', via:'Vía oral'},
     {n:'TEP — tratamiento', dose:'10 mg c/12 h los primeros 7 días, luego 5 mg c/12 h', max:'—', du:'Mínimo 3–6 meses (según causa y riesgo de recurrencia)', via:'Vía oral'},
     {n:'TVP/TEP — prevención secundaria (extendida)', dose:'2,5 mg c/12 h', max:'—', du:'Tras completar ≥6 meses de tratamiento, si el riesgo persiste (prolongada/indefinida)', via:'Vía oral'},
-    {n:'FA en diálisis / ERC terminal', dose:'5 mg c/12 h (2,5 mg c/12 h si edad ≥80 a o peso ≤60 kg)', max:'según criterios', du:'Indefinida — evidencia limitada, decisión individualizada', via:'Vía oral'}
+    {n:'FA en diálisis / ERC terminal', dose:'5 mg c/12 h', doseSub:'Reducir a 2,5 mg c/12 h si edad ≥80 a o peso ≤60 kg', max:'2,5 mg c/12 h (si criterios)', du:'Indefinida — evidencia limitada, decisión individualizada', via:'Vía oral'}
   ],
   aduKv:[
     {l:'Mecanismo', v:'Inhibidor directo del factor Xa', hl:true},
@@ -30519,7 +30520,7 @@ function viaCell(via){
 function heroStats(x){
   if(x.max!==undefined){
     return '<div class="hstats n4">'
-      + cell(ICON.dose,'Dosis',x.dose,'')
+      + cell(ICON.dose,'Dosis',x.dose,x.doseSub?'<div class="hst-sub">'+x.doseSub+'</div>':'')
       + cell(ICON.max,'Dosis máx.',x.max,'')
       + cell(ICON.clock,'Intervalo',x.iv,'')
       + cell(ICON.cal,'Duración',x.du,'')
@@ -30527,7 +30528,7 @@ function heroStats(x){
       + '</div>';
   }
   return '<div class="hstats n2">'
-    + cell(ICON.dose,'Dosis',x.dose,'')
+    + cell(ICON.dose,'Dosis',x.dose,x.doseSub?'<div class="hst-sub">'+x.doseSub+'</div>':'')
     + cell(ICON.cal,'Duración',x.du,'')
     + viaCell(x.via)
     + '</div>';
@@ -30813,7 +30814,7 @@ function togglePcard(){ $('pcard').classList.toggle('open'); }
 function toggleCoad(){ $('coadCard').classList.toggle('open'); }
 function heroStatsAdu(x){
   return '<div class="hstats n3">'
-    + cell(ICON.dose,'Dosis',x.dose,'')
+    + cell(ICON.dose,'Dosis',x.dose,x.doseSub?'<div class="hst-sub">'+x.doseSub+'</div>':'')
     + cell(ICON.max,'Dosis máx.',x.max||'—','')
     + cell(ICON.cal,'Duración',x.du,'')
     + viaCell(x.via||'Oral')
