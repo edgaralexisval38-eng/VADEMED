@@ -11,8 +11,6 @@ create table if not exists public.perfiles (
   nombre text,
   rol text,
   especialidad text,
-  cedula text,
-  institucion text,
   genero text,
   favoritos jsonb default '[]'::jsonb,
   quiz jsonb default '{}'::jsonb,
