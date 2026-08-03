@@ -1,5 +1,5 @@
 /* VadeMed service worker — cache offline resiliente */
-var CACHE = 'vademed-v108';
+var CACHE = 'vademed-v109';
 var CRITICAL = ['./', 'index.html'];       /* si esto no se cachea, NO aceptamos la version nueva */
 var OPTIONAL = ['icon3.png', 'icon-180.png', 'manifest.json', 'med_capsule.png', 'ic_guias.png', 'ic_calc.png', 'ic_atlas.png', 'ic_labs.png', 'ic_calc_ped.png', 'avatar_hombre.png', 'avatar_mujer.png', 'temas_extra.txt'];
 
@@ -20,7 +20,7 @@ self.addEventListener('install', function(e){
       }));
       return crit.then(function(){ return opt; })
         .then(function(){ return c.match('index.html'); })
-        .then(function(m){ if(!m) throw new Error('shell incompleto'); return self.skipWaiting(); });
+        .then(function(m){ if(!m) throw new Error('shell incompleto'); });
     })
   );
 });
