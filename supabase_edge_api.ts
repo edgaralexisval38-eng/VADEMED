@@ -132,6 +132,33 @@ Deno.serve(async (req: Request): Promise<Response> => {
       return json({ ok: false, error: "Código inválido" });
     }
 
+    // ---------- ACCION: perfil_get (traer perfil+favoritos por codigo) ----------
+    if (action === "perfil_get") {
+      const codigo = String(body?.codigo ?? "").trim();
+      if (!codigo) return json({ ok: false, error: "Falta código" });
+      // el codigo debe estar activo
+      const { data: ver } = await supabase.rpc("verificar_codigo", { p_codigo: codigo });
+      const fila = Array.isArray(ver) ? ver[0] : ver;
+      if (!fila?.ok) return json({ ok: false, error: "Código inválido" });
+      const { data, error } = await supabase.rpc("perfil_get", { p_codigo: codigo });
+      if (error) throw error;
+      return json({ ok: true, datos: data ?? null });
+    }
+
+    // ---------- ACCION: perfil_set (guardar perfil+favoritos por codigo) ----------
+    if (action === "perfil_set") {
+      const codigo = String(body?.codigo ?? "").trim();
+      const datos = body?.datos ?? {};
+      if (!codigo) return json({ ok: false, error: "Falta código" });
+      const { data: ver } = await supabase.rpc("verificar_codigo", { p_codigo: codigo });
+      const fila = Array.isArray(ver) ? ver[0] : ver;
+      if (!fila?.ok) return json({ ok: false, error: "Código inválido" });
+      if (JSON.stringify(datos).length > 60000) return json({ ok: false, error: "Datos demasiado grandes" });
+      const { error } = await supabase.rpc("perfil_set", { p_codigo: codigo, p_datos: datos });
+      if (error) throw error;
+      return json({ ok: true });
+    }
+
     // ---------- ACCION: sugerencia ----------
     if (action === "sugerencia") {
       const tipo    = String(body?.tipo ?? "sugerencia").trim().toLowerCase();
