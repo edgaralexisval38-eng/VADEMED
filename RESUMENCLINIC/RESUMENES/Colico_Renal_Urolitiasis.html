@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cólico renal · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#1f6f8b;--acd:#0d3a49;--acl:#e8f2f5;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0d3a49,#1f6f8b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🪨</div>
+    <div>
+      <div class="hdr-eye">Urología</div>
+      <div class="hdr-title">Cólico renal / urolitiasis</div>
+      <div class="hdr-sub">AUA 2026 · terapia expulsiva · urgencia obstructiva</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">AINE = analgesia de elección</span>
+    <span class="badge">Distal ≤10 mm: tamsulosina</span>
+    <span class="badge">Infección = urgencia</span>
+    <span class="badge">TC sin contraste</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">AINE</div><div class="qs-l">1.ª analgesia</div></div>
+  <div class="qs"><div class="qs-v">≤10 mm</div><div class="qs-l">MET distal</div></div>
+  <div class="qs"><div class="qs-v">Fiebre</div><div class="qs-l">= drenar</div></div>
+  <div class="qs"><div class="qs-v">TC</div><div class="qs-l">sin contraste</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>El <strong>cólico renoureteral</strong> es el dolor agudo por el paso de un <strong>cálculo (litiasis)</strong> por la vía urinaria, con obstrucción y distensión. Es una de las urgencias urológicas más frecuentes.</p></div>
+  <div class="alert a-g"><span class="ai">🎯</span><div><div class="at">La idea que ordena todo</div>Tres decisiones: <strong>controlar el dolor</strong> (AINE de elección), <strong>decidir por tamaño/localización</strong> (los cálculos distales ≤10 mm se manejan conservadores con tamsulosina) y <strong>vigilar la infección</strong> (el cálculo obstructivo infectado es una emergencia).</div></div>
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">La bandera roja que no puedes perder</div><strong>Cálculo obstructivo + fiebre/infección = urosepsis</strong>: requiere <strong>drenaje urgente</strong> (stent o nefrostomía) + antibiótico, no solo analgesia.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología y composición</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Comentario</th></tr></thead><tbody>
+    <tr><td class="dm">Frecuencia</td><td>Alta y en aumento; pico en adultos jóvenes-medios; predominio masculino</td></tr>
+    <tr><td class="dm">Recurrencia</td><td>Elevada a lo largo de la vida sin prevención</td></tr>
+    <tr><td class="dn">Oxalato de calcio</td><td><strong>El más frecuente</strong></td></tr>
+    <tr><td class="dn">Ácido úrico</td><td>Radiolúcido; puede disolverse alcalinizando la orina</td></tr>
+    <tr><td class="dn">Estruvita</td><td>Asociado a <strong>infección</strong> (gérmenes ureasa +); cálculos "coraliformes"</td></tr>
+    <tr><td class="dn">Cistina</td><td>Raro, hereditario</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología — por qué el tratamiento es el que es</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Obstrucción y distensión</strong><br>El cálculo obstruye el uréter; la orina se acumula y <strong>distiende la vía y la cápsula renal</strong>, generando el dolor cólico.<br><br><strong>Por eso:</strong> el dolor es intenso e intermitente, y forzar líquidos no lo alivia.</div>
+  <div class="fp fp-a"><strong>2. Prostaglandinas y espasmo</strong><br>La obstrucción libera <strong>prostaglandinas</strong> que aumentan la presión y el espasmo ureteral.<br><br><strong>Por eso:</strong> los <strong>AINE</strong> (antiprostaglandínicos) son la analgesia de elección, más que el opioide.</div>
+  <div class="fp fp-b"><strong>3. Paso del cálculo</strong><br>Los cálculos <strong>pequeños y distales</strong> tienden a pasar solos; los grandes o proximales, no.<br><br><strong>Por eso:</strong> la <strong>tamsulosina</strong> relaja el uréter distal y facilita el paso de cálculos ≤10 mm distales; los &gt;10 mm suelen requerir intervención.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Baja ingesta de líquidos</strong> / deshidratación (clima cálido, como el norte de México).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dieta</strong>: alto sodio, alta proteína animal, bajo citrato.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Antecedente previo</strong> de litiasis; historia familiar.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Obesidad, diabetes, gota, hiperparatiroidismo</strong>, acidosis tubular renal.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Dolor cólico</strong> lumbar/flanco que <strong>irradia</strong> hacia la ingle y los genitales según desciende el cálculo.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Paciente inquieto</strong>, que no encuentra postura (a diferencia del abdomen agudo peritoneal, que se queda quieto).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Náusea, vómito</strong> y a menudo <strong>hematuria</strong> (micro o macroscópica).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Síntomas urinarios bajos (urgencia, disuria) si el cálculo está en el uréter distal.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Urgencia si…</div><strong>fiebre/infección</strong> (urosepsis obstructiva), <strong>lesión renal aguda</strong>, <strong>riñón único u obstrucción bilateral</strong>, o <strong>dolor/vómito intratables</strong> → drenaje o intervención.</div></div>
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Primer "cólico" en &gt;50 años</strong> → descarta <strong>aneurisma de aorta abdominal</strong> antes de asumir litiasis.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Anuria (obstrucción bilateral o de riñón único) → urgencia.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Tratar la pielonefritis obstructiva solo con antibiótico</strong> sin drenar.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Usar opioide de primera línea</strong> en vez del AINE.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Forzar "diuresis a chorro"</strong>: no acelera el paso y puede empeorar el dolor.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Etiquetar todo dolor lumbar como cólico</strong> (aneurisma, ectópico, apendicitis lo simulan).</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>No analizar el cálculo</strong> ni estudiar al recurrente.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Enfoque diagnóstico</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>Clínica típica + <strong>imagen</strong>. La <strong>TC de abdomen sin contraste (baja dosis)</strong> es el estándar: confirma el cálculo, su <strong>tamaño y localización</strong>, y descarta otras causas. La <strong>ecografía</strong> es la imagen inicial de elección <strong>en el embarazo</strong> y útil de tamizaje.</p></div>
+  <div class="alert a-i"><span class="ai">🧪</span><div>Complementa con <strong>examen de orina</strong> (hematuria, piuria, nitritos), <strong>función renal</strong> y, si hay fiebre, <strong>biometría y urocultivo</strong>.</div></div>
+</div></div>
+
+<div class="calc-w" id="paso-calc">
+  <div style="font-size:14px;font-weight:800;color:var(--ac);margin-bottom:4px;">Probabilidad de paso espontáneo por tamaño</div>
+  <div style="font-size:11.5px;color:#6b7280;margin-bottom:12px;">Escribe el tamaño del cálculo (por TC). Orienta la conducta; la localización distal mejora el paso.</div>
+  <label class="calc-lbl">Tamaño del cálculo (mm)</label>
+  <input class="calc-in" id="paso-mm" type="number" inputmode="decimal" placeholder="p. ej. 6">
+  <div style="margin-top:6px;">
+    <button class="calc-btn" onclick="pasoCalc()">Calcular</button>
+    <button class="calc-btn sc" onclick="pasoReset()">Reiniciar</button>
+  </div>
+  <div class="calc-result" id="paso-res"></div>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩻</span><span class="st">Imagen: qué pedir</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Estudio</th><th>Papel</th></tr></thead><tbody>
+    <tr><td class="dm">TC sin contraste (baja dosis)</td><td><strong>Estándar</strong>: tamaño, localización, densidad; descarta diferenciales</td></tr>
+    <tr><td class="dm">Ecografía</td><td><strong>Primera línea en embarazo</strong>; detecta hidronefrosis y cálculos grandes</td></tr>
+    <tr><td class="dn">Radiografía simple</td><td>Poco sensible; no ve cálculos radiolúcidos (ácido úrico)</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Toca una familia para desplegarla o <strong>busca por nombre</strong>. Incluye analgesia, terapia expulsiva y prevención.</div></div>
+<input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (ketorolaco, tamsulosina, citrato…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;">
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('tipico',this)">Cólico típico</button>
+  <button class="pchip" onclick="setEscen('infectado',this)">Obstructivo infectado</button>
+  <button class="pchip" onclick="setEscen('embarazo',this)">Embarazo</button>
+  <button class="pchip" onclick="setEscen('monorreno',this)">Riñón único / LRA</button>
+  <button class="pchip" onclick="setEscen('recurrente',this)">Recurrente</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Seguimiento del episodio</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Manejo conservador</td><td>Analgesia + tamsulosina (si aplica); <strong>colador</strong> para recuperar el cálculo</td></tr>
+    <tr><td class="dm">Control</td><td>Reevaluar en ~1–4 semanas; imagen si no pasa o hay síntomas</td></tr>
+    <tr><td class="dn">Recuperación del cálculo</td><td>Enviarlo a <strong>análisis de composición</strong></td></tr>
+    <tr><td class="dn">Señales de alarma</td><td>Fiebre, vómito incoercible o dolor intratable → regresar</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Prevención de recurrencias</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Hidratación</strong>: la medida más importante (meta de diuresis ~2–2.5 L/día).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Dieta</strong>: menos sodio y proteína animal; calcio dietético normal (no restringir); moderar oxalato.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Fármacos según composición (uso prolongado/crónico):</strong> <strong>citrato de potasio</strong> 20–30 mEq/día VO en 2–3 tomas (hipocitraturia / ácido úrico); <strong>tiazida</strong> (hidroclorotiazida 25–50 mg/día o clortalidona 25 mg/día) para hipercalciuria; <strong>alopurinol</strong> 100–300 mg/día (ácido úrico / hiperuricosuria). Se mantienen mientras persista el riesgo, ajustando por el estudio metabólico.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Estudio metabólico</strong> en litiasis recurrente, múltiple o compleja.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo referir a urología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Urgente:</strong> obstrucción infectada, LRA, riñón único, dolor intratable.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Programada:</strong> cálculo &gt;10 mm, fracaso del manejo conservador, cálculos complejos/coraliformes.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Cólico renal / urolitiasis</h2>
+  <p>Guías de asociaciones urológicas y revisiones comparativas. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Evaluación, imagen y manejo (MET, intervención)</strong> → <strong>AUA 2026</strong> Partes I y III [1,2].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Consenso AUA/EAU/CUA y algoritmo</strong> → revisión de guías [3] y comparativa práctica [4].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Contexto mexicano y cuadro básico</strong> → <strong>CENETEC</strong> [5].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías de asociaciones urológicas</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2026</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Pearle MS, Matlaga BR, et al. <em>Surgical Management of Kidney and Ureteral Stones: AUA Guideline (2026). Part I: Evaluation and Treatment.</em> J Urol. 2026. [Guía más reciente: evaluación, imagen (TC baja dosis) y principios de tratamiento. Sustenta Diagnóstico y Tratamiento.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1097/JU.0000000000004842" target="_blank">🔗 DOI 10.1097/JU.0000000000004842</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2026</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Pearle MS, Matlaga BR, et al. <em>Surgical Management of Kidney and Ureteral Stones: AUA Guideline (2026). Part III: Treatment.</em> J Urol. 2026. [Recomienda terapia expulsiva médica (alfabloqueadores) para cálculos ureterales distales ≤10 mm y define las opciones de intervención. Sustenta la tamsulosina y la línea de intervención.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1097/JU.0000000000004844" target="_blank">🔗 DOI 10.1097/JU.0000000000004844</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Consenso y comparativas de guías</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2020</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Qualitative Review of Clinical Guidelines for Medical and Surgical Management of Urolithiasis: Consensus and Controversy. <em>J Urol.</em> 2020. [Compara las 5 guías más citadas (AUA, EAU, CUA…): coincidencias en observación de cálculos ≤10 mm y MET. Sustenta la conducta por tamaño.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1097/JU.0000000000001478" target="_blank">🔗 DOI 10.1097/JU.0000000000001478</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">2020</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Guideline of guidelines for kidney and bladder stones. [Comparativa práctica AUA vs EAU con algoritmo por escenarios clínicos, incluidos pacientes embarazadas y pediátricos. Sustenta el algoritmo y los escenarios.]</div>
+      <a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7731951/" target="_blank">🔗 PMC7731951</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">5</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): cólico renoureteral / litiasis urinaria.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja analgésicos y presentaciones con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA de alta calidad</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso de expertos / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Se recomienda verificar actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y adaptar al contexto institucional. Última revisión: <strong>julio 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#1f6f8b', C1='#1f6f8b', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Tratamiento de elección" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo de acción',f.mec,'#374151');
+  if(f.ind)h+=txrow('Indicación',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Dosis máxima / límite',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía / Ámbito',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones MX',f.pres,'#374151');
+  if(f.ci)h+=txrow('Contraindicaciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Monitoreo',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#0d3a49')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_AINE={n:'AINE (ketorolaco / diclofenaco)',elec:true,linea:'Analgesia — primera línea',
+  dlbl:'Dosis',da:'Ketorolaco 30 mg IV/IM; diclofenaco 75 mg IM',
+  dur:'Es la analgesia de elección: más eficaz y con menos rescate que el opioide.',
+  adm:'Administra pronto; reevalúa a los 20–30 min.',
+  mec:'Inhibe la ciclooxigenasa → reduce el dolor y la presión intraureteral (menos edema y espasmo).',
+  ind:'Cólico renoureteral agudo sin contraindicación.',
+  dmax:'Ketorolaco ≤90 mg/día (≤60 en ancianos), máximo 5 días.',
+  iv:'IV/IM · urgencias',
+  pres:'Ketorolaco 30 mg · diclofenaco 75 mg (genéricos)',
+  ci:'ERC / LRA, úlcera o sangrado GI, deshidratación grave, embarazo (3.er trimestre)',
+  ea:'Gastrolesión, nefrotoxicidad, retención hídrica',
+  mon:'Función renal si se repite',
+  nota:'⭐ Primera línea: superior al opioide en el cólico renal. Cuidado en LRA por obstrucción o riñón único.'};
+var F_OPIO={n:'Opioide (rescate)',linea:'Analgesia — rescate o si AINE contraindicado',
+  dlbl:'Dosis',da:'Morfina 0.05–0.1 mg/kg IV (bolos de 2–4 mg IV cada 5–10 min, titulando) · o tramadol 50–100 mg IV/IM lento y diluido',
+  dur:'Cuando el AINE no basta o está contraindicado; titular hasta la analgesia.',
+  adm:'Diluye y administra lento; añade antiemético si náusea.',
+  mec:'Analgesia central por receptores opioides μ.',
+  ind:'Dolor persistente pese al AINE, o contraindicación al AINE.',
+  dmax:'Morfina: titular por respuesta. Tramadol: máximo 400 mg/día.',iv:'IV/IM · urgencias',pres:'Morfina ampolleta 10 mg · tramadol ampolleta 100 mg',
+  ci:'Depresión respiratoria, hipotensión, alergia',ea:'Náusea, sedación, estreñimiento, depresión respiratoria',
+  mon:'Sedación, frecuencia respiratoria y presión arterial',
+  nota:'Combina bien con el AINE. No acelera el paso del cálculo; solo controla el dolor. La morfina se titula en bolos pequeños; el tramadol se pasa lento para evitar la náusea.'};
+var F_ANTIE={n:'Antiemético',linea:'Sintomático',
+  dlbl:'Dosis',da:'Metoclopramida 10 mg IV u ondansetrón 4–8 mg IV',
+  dur:'Para la náusea/vómito que acompaña al cólico.',
+  adm:'Añade según síntomas.',
+  mec:'Antagonismo dopaminérgico (metoclopramida) o de 5-HT3 (ondansetrón).',
+  ind:'Náusea y vómito.',dmax:'Según fármaco.',iv:'IV',pres:'Metoclopramida 10 mg · ondansetrón 4/8 mg',
+  ci:'Obstrucción GI (metoclopramida), QT largo (ondansetrón)',ea:'Extrapiramidales; cefalea',mon:'—',
+  nota:'La metoclopramida también ayuda a la náusea del propio AINE/opioide.'};
+var F_MET={n:'Tamsulosina (terapia expulsiva médica, MET)',elec:true,linea:'Facilitar el paso — cálculo ureteral distal ≤10 mm',
+  dlbl:'Dosis',da:'0.4 mg VO al día, ~4 semanas',
+  dur:'Recomendación fuerte para cálculos ureterales distales ≤10 mm.',
+  adm:'Ambulatorio, con analgesia de rescate y colador para recuperar el cálculo.',
+  mec:'Alfabloqueador: relaja el músculo liso del uréter distal → facilita el paso.',
+  ind:'Cálculo ureteral <b>distal ≤10 mm</b> no complicado en manejo conservador.',
+  dmax:'0.4 mg/día.',iv:'VO · ambulatorio',pres:'Tamsulosina 0.4 mg (genérico)',
+  ci:'Hipersensibilidad; cautela con hipotensión',ea:'Hipotensión ortostática, eyaculación retrógrada, mareo',
+  mon:'Presión arterial; síntomas',
+  nota:'⭐ Mayor beneficio en cálculos distales cercanos a 10 mm. Menos útil en cálculos pequeños (&lt;5 mm) que pasan solos.'};
+var F_HIDRA={n:'Hidratación y observación',linea:'Manejo conservador',
+  dlbl:'Conducta',da:'Hidratación para euvolemia; colador urinario para recuperar el cálculo',
+  dur:'La mayoría de los cálculos ≤10 mm no complicados pasan solos.',
+  adm:'No fuerces "diuresis a chorro": no acelera el paso y puede aumentar el dolor.',
+  mec:'Mantiene la diuresis y el estado de hidratación.',
+  ind:'Cálculo no complicado en observación.',dmax:'Euvolemia.',iv:'VO/IV',pres:'—',
+  ci:'—',ea:'—',mon:'Dolor, fiebre, función renal',
+  nota:'Hidrata para mantener euvolemia; recupera el cálculo (colador) para analizarlo.'};
+var F_DRENAJE={n:'Drenaje urgente (stent JJ / nefrostomía) + antibiótico',elec:true,linea:'Urgencia — cálculo obstructivo INFECTADO',
+  dlbl:'Conducta',da:'Descompresión urgente del sistema (catéter doble J o nefrostomía percutánea) + antibiótico IV',
+  dur:'⚠️ Es una EMERGENCIA: la obstrucción + infección es una urosepsis potencial.',
+  adm:'No se litotricia/extrae el cálculo en agudo si hay infección: primero se drena y se trata la sepsis.',
+  mec:'Descomprime la vía urinaria infectada y obstruida.',
+  ind:'Cálculo obstructivo con <b>fiebre/infección/urosepsis</b>, LRA obstructiva, riñón único o dolor intratable.',
+  dmax:'—',iv:'Procedimiento · urología/urgencias',pres:'Stent JJ, nefrostomía, antibiótico IV',
+  ci:'—',ea:'Según procedimiento',mon:'Signos de sepsis, función renal',
+  nota:'⭐ La pielonefritis obstructiva es una urgencia urológica: <b>drena primero, trata la sepsis, y difiere la extracción del cálculo</b>.'};
+var F_INTERV={n:'Litotricia extracorpórea / ureteroscopia',linea:'Intervención programada',
+  dlbl:'Conducta',da:'LEOC o ureteroscopia (URS) según tamaño, localización y disponibilidad',
+  dur:'Cuando el cálculo no pasa, es grande o hay indicación de retirarlo.',
+  adm:'La URS con láser tiene altas tasas de éxito; la nefrolitotomía percutánea para cálculos renales grandes.',
+  mec:'Fragmenta o extrae el cálculo.',
+  ind:'Fracaso del manejo conservador, cálculo &gt;10 mm, o indicación específica.',
+  dmax:'—',iv:'Procedimiento · urología',pres:'LEOC, URS, NLP',
+  ci:'Según técnica',ea:'Hematuria, dolor, infección, lesión',mon:'—',
+  nota:'La elección depende del tamaño y la localización; la deriva el urólogo.'};
+var F_NO_ATB={n:'❌ No drenar el cálculo obstructivo infectado',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No manejes la pielonefritis obstructiva solo con antibiótico',
+  dur:'La obstrucción + infección progresa a urosepsis y shock si no se descomprime.',
+  adm:'Drenaje urgente (stent/nefrostomía) + antibiótico. Es una emergencia.',
+  mec:'—',ind:'Ninguna.',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Urosepsis, shock, muerte',
+  nota:'El antibiótico no llega bien a un sistema obstruido: hay que descomprimir.'};
+var F_NO_MISS={n:'❌ Asumir cólico sin descartar otras causas',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No etiquetes todo dolor lumbar como "cólico renal"',
+  dur:'El aneurisma aórtico roto, el ectópico y la apendicitis pueden simularlo.',
+  adm:'En &gt;50 años con primer episodio, o clínica atípica, piensa en <b>aneurisma de aorta</b>. Confirma con imagen.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Diagnóstico tardío de patología letal',
+  nota:'Cuidado con el primer "cólico" en el adulto mayor: descarta aneurisma aórtico.'};
+
+var TXC=[
+ ['Analgesia y sintomático','Alivio del dolor: lo primero',C1,[F_AINE,F_OPIO,F_ANTIE]],
+ ['Manejo conservador','Cálculo no complicado ≤10 mm',CO,[F_HIDRA,F_MET]],
+ ['Intervención / urgencia','Cuando no pasa o hay complicación',AZ,[F_DRENAJE,F_INTERV]],
+ ['❌ NO hacer','Errores que cuestan caro',RJ,[F_NO_ATB,F_NO_MISS]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">Calma el dolor, decide por tamaño, vigila la infección</div><b>AINE</b> como analgesia de elección; los cálculos <b>distales ≤10 mm</b> se manejan conservadores con <b>tamsulosina</b>; el cálculo <b>obstructivo infectado es una urgencia</b> (drenar). La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== FÁRMACOS (acordeón) ===== */
+var FARMACOS=[
+ {familia:'💊 Analgesia',color:'#1f6f8b',farmacos:[
+  {n:'Ketorolaco',ini:'30 mg IV/IM',da:'AINE de elección; ≤90 mg/día, máx 5 días.',iv:'IV/IM',pres:'Amp 30 mg',ci:'ERC/LRA, úlcera, deshidratación',ea:'Nefrotoxicidad, gastrolesión',nota:'Primera línea, superior al opioide.'},
+  {n:'Diclofenaco',ini:'75 mg IM',da:'Alternativa AINE.',iv:'IM/VO',pres:'Amp 75 mg',ci:'ERC, úlcera',ea:'Gastrolesión, CV',nota:'Igual de eficaz que otros AINE en el cólico.'},
+  {n:'Tramadol',ini:'50–100 mg IV/IM',da:'Lento y diluido; puede repetirse. Máximo 400 mg/día.',iv:'IV/IM',pres:'Ampolleta 100 mg',ci:'Depresión respiratoria, convulsiones',ea:'Náusea, mareo, sedación',nota:'Rescate; combina con AINE. Pásalo lento para evitar la náusea.'},
+  {n:'Morfina',ini:'0.05–0.1 mg/kg IV',da:'Bolos de 2–4 mg IV cada 5–10 min, titulando hasta analgesia.',iv:'IV',pres:'Ampolleta 10 mg',ci:'Depresión respiratoria, hipotensión',ea:'Sedación, náusea, estreñimiento',nota:'Titular en bolos pequeños; vigila la respiración.'},
+  {n:'Metoclopramida',ini:'10 mg IV',da:'Antiemético; también ayuda a la náusea de los analgésicos.',iv:'IV',pres:'Ampolleta 10 mg',ci:'Obstrucción GI',ea:'Extrapiramidales',nota:'Cauteloso en jóvenes por distonía.'},
+  {n:'Ondansetrón',ini:'4–8 mg IV',da:'Antiemético alternativo.',iv:'IV',pres:'Ampolleta 4/8 mg',ci:'QT largo',ea:'Cefalea, estreñimiento',nota:'Útil si la metoclopramida está contraindicada.'}]},
+ {familia:'🔄 Terapia expulsiva',color:'#0a5c45',farmacos:[
+  {n:'Tamsulosina',ini:'0.4 mg/día ~4 sem',da:'MET para cálculo ureteral distal ≤10 mm.',iv:'VO',pres:'Tab 0.4 mg',ci:'Hipotensión (cautela)',ea:'Hipotensión ortostática, eyaculación retrógrada',nota:'Mayor beneficio cerca de 10 mm distales.'}]},
+ {familia:'🛡️ Prevención (según composición)',color:'#7a4a00',farmacos:[
+  {n:'Citrato de potasio',ini:'20–30 mEq/día VO',da:'10–20 mEq VO 2–3 veces al día (30–60 mEq/día en hipocitraturia marcada). Ajustar según citrato urinario y pH.',iv:'VO',pres:'Tableta/solución de citrato de potasio',ci:'Hiperpotasemia, ERC avanzada',ea:'Molestia gastrointestinal, hiperpotasemia',nota:'Duración: PROLONGADA (crónica) mientras persista el riesgo. Alcaliniza la orina; también disuelve cálculos de ácido úrico.'},
+  {n:'Tiazida',ini:'25 mg/día VO',da:'Hidroclorotiazida 25 mg 1–2 veces/día (25–50 mg/día) o clortalidona 25 mg/día o indapamida 1.5 mg/día.',iv:'VO',pres:'Hidroclorotiazida 25 mg · clortalidona 25 mg',ci:'Hipopotasemia, gota, hiponatremia',ea:'Hipopotasemia, hiperuricemia, hiperglucemia',nota:'Duración: PROLONGADA (crónica) para hipercalciuria. Vigila el potasio; suele combinarse con citrato de potasio.'},
+  {n:'Alopurinol',ini:'100–300 mg/día VO',da:'Habitual 300 mg VO una vez al día; iniciar bajo (100 mg) y titular.',iv:'VO',pres:'Tableta 100/300 mg',ci:'Hipersensibilidad (riesgo de reacción grave)',ea:'Exantema (suspender si aparece), elevación de transaminasas',nota:'Duración: PROLONGADA (crónica). Para cálculos de ácido úrico y de oxalato de calcio con hiperuricosuria.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Contraindicaciones',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== CALCULADORA: paso espontáneo por tamaño ===== */
+function pasoCalc(){
+  var mm=nm('paso-mm'), box=document.getElementById('paso-res');
+  if(mm==null||mm<=0){box.className='calc-result show res-mid';box.innerHTML='Escribe el tamaño del cálculo en milímetros (por TC).';return;}
+  var cat,cls,txt;
+  if(mm<5){cat='Alta probabilidad de paso espontáneo';cls='res-ok';txt='Los cálculos &lt;5 mm suelen pasar solos. Manejo conservador con analgesia; la tamsulosina aporta poco a este tamaño.';}
+  else if(mm<=10){cat='Probabilidad intermedia';cls='res-mid';txt='Cálculos de 5–10 mm: valora <b>manejo conservador con tamsulosina</b> (MET), sobre todo si es <b>distal</b>. Muchos pasan; otros requieren intervención.';}
+  else{cat='Baja probabilidad — suele requerir intervención';cls='res-high';txt='Cálculos &gt;10 mm rara vez pasan solos: <b>referir a urología</b> (litotricia/ureteroscopia). Descarta obstrucción e infección.';}
+  box.className='calc-result show '+cls;
+  box.innerHTML='<div style="font-size:15px;font-weight:800;">'+mm+' mm → '+cat+'</div><div style="margin-top:4px;font-size:12.5px;">'+txt+'</div>'+
+    '<div style="font-size:11px;margin-top:6px;opacity:0.8;">La probabilidad de paso disminuye con el tamaño y mejora en localización <b>distal</b>. Independientemente del tamaño: si hay <b>fiebre/infección, LRA o riñón único</b>, es urgencia (drenaje).</div>';
+}
+function pasoReset(){var e=document.getElementById('paso-mm');if(e)e.value='';var b=document.getElementById('paso-res');b.className='calc-result';b.innerHTML='';}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para el paciente',color:'#0a5c45',fichas:[
+  {n:'Cólico renal y cómo cuidarte',via:'Al alta de urgencias',
+   enf:'Explicar el uso del colador urinario, los analgésicos, la hidratación para euvolemia y las señales de alarma.',
+   pac:'Tienes una "piedra" en la vía urinaria. Toma los <b>analgésicos</b> como se indicó, <b>hidrátate</b> normalmente (sin exagerar) y <b>orina en un colador</b> para atrapar la piedra y traerla a análisis. La mayoría de las piedras pequeñas salen solas en días o semanas.',
+   nota:'Si te dieron tamsulosina, ayuda a que baje la piedra; puede causar mareo al levantarte.',
+   alarma:'Regresa URGENTE si tienes <b>fiebre o escalofríos</b> (infección), <b>vómito que impide tomar líquidos</b>, o <b>dolor incontrolable</b>.'}]},
+ {familia:'🔬 Estudio y prevención',color:'#7a4a00',fichas:[
+  {n:'Analizar la piedra y prevenir recurrencias',via:'Tras el episodio',
+   enf:'Enviar el cálculo a análisis; en recurrentes, estudio metabólico (bioquímica sérica y orina de 24 h).',
+   pac:'Guarda la piedra: analizarla nos dice de qué está hecha y cómo evitar que vuelvas a formarla. Beber suficiente agua todos los días es la medida más importante.',
+   nota:'Prevención según composición: hidratación siempre; citrato, tiazida o alopurinol según el tipo y el estudio metabólico.',
+   alarma:'Cálculos recurrentes o múltiples → valoración por urología/nefrología.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Enfermería</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ tipico:{t:'Cólico renoureteral típico',c:'#1f6f8b',h:
+  '<div class="prose"><p><b>Perfil:</b> dolor lumbar <b>cólico intenso</b> que irradia a flanco, ingle o genitales; el paciente está <b>inquieto</b> (no encuentra postura), con náusea/vómito y a veces hematuria.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🎯</span><div><div class="at">Qué hacer</div><b>AINE</b> de inmediato + antiemético; <b>TC sin contraste</b> para confirmar tamaño y localización; manejo conservador con <b>tamsulosina</b> si ≤10 mm distal y sin complicación.</div></div>'},
+ infectado:{t:'Cálculo obstructivo INFECTADO (urgencia)',c:'#7b1c1c',h:
+  '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Emergencia urológica</div>Cálculo obstructivo + <b>fiebre/infección</b> = pielonefritis obstructiva / urosepsis. <b>Drenaje urgente (stent JJ o nefrostomía) + antibiótico IV.</b> No difieras la descompresión.</div></div>'
+  +'<div class="alert a-w"><span class="ai">⚠️</span><div>La extracción del cálculo se difiere: primero drenar y controlar la sepsis. Vigila datos de choque.</div></div>'},
+ embarazo:{t:'Embarazo',c:'#6a1a5a',h:
+  '<div class="prose"><p><b>Perfil:</b> cólico en gestante; cambia la imagen y algunos fármacos.</p></div>'
+  +'<div class="alert a-w"><span class="ai">🤰</span><div><b>Ecografía</b> como imagen inicial (evitar radiación); analgesia con <b>paracetamol</b> y opioide si se requiere (<b>evitar AINE</b>, sobre todo en el 3.er trimestre). La mayoría se maneja conservadora; si hay obstrucción/infección, drenaje (stent/nefrostomía). Coordinar con obstetricia y urología.</div></div>'},
+ monorreno:{t:'Riñón único / bilateral / LRA',c:'#0c3b6e',h:
+  '<div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Baja el umbral para intervenir</div>La obstrucción en <b>riñón único, bilateral o con lesión renal aguda</b> compromete la función: <b>drenaje/derivación temprana</b> aunque no haya infección.</div></div>'},
+ recurrente:{t:'Litiasis recurrente',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> episodios repetidos o cálculos múltiples.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🔬</span><div><b>Estudio metabólico</b> (bioquímica sérica y orina de 24 h) y <b>análisis del cálculo</b>; prevención dirigida: hidratación siempre, y <b>citrato, tiazida o alopurinol</b> según el tipo.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Dolor lumbar cólico con sospecha de litiasis. ¿Hay FIEBRE, datos de infección o de sepsis?',o:[
+   ['Sí (fiebre/infección)','infect'],['No','func']]},
+ infect:{t:'🚨 Urgencia: pielonefritis obstructiva',r:'high',x:'Cálculo obstructivo + infección = <b>urosepsis potencial</b>. <b>Drenaje urgente (stent JJ o nefrostomía) + antibiótico IV</b> y reanimación. Difiere la extracción del cálculo.'},
+ func:{q:'Sin infección. ¿Función renal comprometida, riñón único, obstrucción bilateral o dolor intratable?',o:[
+   ['Sí','urg2'],['No','imagen']]},
+ urg2:{t:'Derivación temprana',r:'high',x:'Aunque no haya infección, la obstrucción en <b>riñón único, bilateral, con LRA o dolor incontrolable</b> requiere <b>drenaje/intervención temprana</b> (urología).'},
+ imagen:{q:'Analgesia (AINE) y TC sin contraste. Según el tamaño del cálculo:',o:[
+   ['≤10 mm, ureteral distal','conserv'],['>10 mm o proximal complejo','interv']]},
+ conserv:{t:'Manejo conservador + MET',r:'ok',x:'<b>Analgesia + tamsulosina</b> (MET, cálculo distal ≤10 mm), hidratación para euvolemia y colador urinario. Reevalúa; la mayoría pasa en semanas. Cita de control y señales de alarma.'},
+ interv:{t:'Referir a urología',r:'mid',x:'Cálculo <b>&gt;10 mm</b> o complejo: rara vez pasa solo. Referir para <b>litotricia (LEOC) o ureteroscopia</b> según tamaño/localización. Mantén analgesia y vigila infección.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('tipico',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>
