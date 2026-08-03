@@ -124,6 +124,17 @@ Deno.serve(async (req: Request): Promise<Response> => {
       if (verErr) throw verErr;
       const fila = Array.isArray(ver) ? ver[0] : ver;
       if (fila?.ok) {
+        // 2b) límite de dispositivos (el código dueño offline queda exento)
+        const device = String(body?.device ?? "").trim();
+        if (device && !fila.offline) {
+          const { data: dev, error: devErr } = await supabase.rpc("registrar_dispositivo", {
+            p_codigo: codigo, p_device: device, p_max: 2,
+          });
+          if (devErr) throw devErr;
+          if (dev === false) {
+            return json({ ok: false, limite: true, error: "Este código ya está activo en 2 dispositivos." });
+          }
+        }
         return json({ ok: true, nombre: fila.nombre ?? null, offline: !!fila.offline });
       }
 
