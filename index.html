@@ -32543,29 +32543,7 @@ renderHub();
 goInicio();
 
 /* ---- Deslizar desde el borde izquierdo para retroceder (gesto de celular) ---- */
-function swipeBack(){
-  function vis(id){var e=document.getElementById(id);return e&&getComputedStyle(e).display!=='none';}
-  if(vis('temaViewer')){ if(typeof closeTemaViewer==='function') closeTemaViewer(); return; }
-  if(vis('toolView')){ if(typeof goTools==='function') goTools(); else if(typeof goInicio==='function') goInicio(); return; }
-  if(vis('detailView')){ if(typeof goHome==='function') goHome(); else if(typeof goInicio==='function') goInicio(); return; }
-  if(vis('homeView')||vis('hubView')||vis('toolsPanel')||vis('labsPanel')||vis('temasPanel')||vis('pedCalcView')){ if(typeof goInicio==='function') goInicio(); return; }
-}
-(function(){
-  var x0=null,y0=null,t0=0;
-  document.addEventListener('touchstart',function(e){
-    if(!e.touches||e.touches.length!==1){x0=null;return;}
-    var t=e.touches[0];
-    if(t.clientX>34){x0=null;return;}            /* solo si empieza pegado al borde izquierdo */
-    x0=t.clientX; y0=t.clientY; t0=Date.now();
-  },{passive:true});
-  document.addEventListener('touchend',function(e){
-    if(x0===null) return;
-    var t=(e.changedTouches&&e.changedTouches[0]); if(!t){x0=null;return;}
-    var dx=t.clientX-x0, dy=t.clientY-y0, dt=Date.now()-t0;
-    x0=null;
-    if(dx>60 && Math.abs(dy)<50 && dt<700){ swipeBack(); }
-  },{passive:true});
-})();
+function swipeBack(){ if(typeof window.navGoBack==='function'){ window.navGoBack(); } }
 </script>
 <script>
 (function(){
@@ -32596,6 +32574,21 @@ function swipeBack(){
   wrapForward('openTool','toolView');
   wrapForward('openFavs','favsPanel');
   wrapForward('openPedCalc','pedCalcView');
+  /* ---- Historial REAL de navegacion (para el gesto Atras) ---- */
+window.NAVHIST = window.NAVHIST || [];
+var CURVIEW={v:'inicio'}, restoring=false;
+function tokenOf(name,args){switch(name){case 'goInicio':return {v:'inicio'};case 'goGroups':return {v:'meds'};case 'openGroup':return {v:'group',a:args[0]};case 'goHome':return {v:'home'};case 'openDrug':return {v:'drug',a:args[0]};case 'openTool':return {v:'tool',a:args[0]};case 'goTools':return {v:'tools'};case 'openLabs':return {v:'labs'};case 'openTemas':return {v:'temas'};case 'openFavs':return {v:'favs'};case 'openPedCalc':return {v:'ped'};case 'openPerfil':return {v:'perfil'};case 'openTemaFile':return {v:'tema',a:args[0]};}return null;}
+function sameTok(a,b){return a&&b&&a.v===b.v&&a.a===b.a;}
+function recordNav(name){var o=window[name];if(typeof o!=='function')return;window[name]=function(){var nw=tokenOf(name,arguments);if(!restoring&&nw&&CURVIEW&&!sameTok(nw,CURVIEW)){NAVHIST.push(CURVIEW);if(NAVHIST.length>60)NAVHIST.shift();}if(nw)CURVIEW=nw;return o.apply(this,arguments);};}
+['goInicio','goGroups','openGroup','goHome','openDrug','openTool','goTools','openLabs','openTemas','openFavs','openPedCalc','openPerfil','openTemaFile'].forEach(recordNav);
+function applyTok(t){if(!t){goInicio();return;}switch(t.v){case 'inicio':goInicio();break;case 'meds':goGroups();break;case 'group':openGroup(t.a);break;case 'home':goHome();break;case 'drug':openDrug(t.a);break;case 'tool':openTool(t.a);break;case 'tools':goTools();break;case 'labs':openLabs();break;case 'temas':openTemas();break;case 'favs':openFavs();break;case 'ped':openPedCalc();break;case 'perfil':openPerfil();break;case 'tema':openTemaFile(t.a);break;default:goInicio();}}
+window.navGoBack=function(){var tv=el('temaViewer');if(tv&&tv.style.display!=='none'&&(!CURVIEW||CURVIEW.v==='tema')){if(typeof closeTemaViewer==='function')closeTemaViewer();CURVIEW=NAVHIST.length?NAVHIST.pop():{v:'inicio'};return;}var t=NAVHIST.length?NAVHIST.pop():{v:'inicio'};restoring=true;try{applyTok(t);}finally{restoring=false;}CURVIEW=t;};
+window.swipeBack=function(){window.navGoBack();};
+/* ---- Gesto: arrastrar desde el borde izquierdo con seguimiento en vivo ---- */
+(function(){var x0=null,y0=null,t0=0,node=null,dragging=false;function rst(){if(node){node.style.transition='';node.style.transform='';node.style.boxShadow='';}x0=null;node=null;dragging=false;}
+document.addEventListener('touchstart',function(e){if(!e.touches||e.touches.length!==1){rst();return;}var t=e.touches[0];if(t.clientX>28){rst();return;}x0=t.clientX;y0=t.clientY;t0=Date.now();node=topVisible();dragging=false;if(node)node.style.transition='none';},{passive:true});
+document.addEventListener('touchmove',function(e){if(x0===null||!node||!e.touches||!e.touches.length)return;var t=e.touches[0];var dx=t.clientX-x0,dy=t.clientY-y0;if(!dragging){if(Math.abs(dy)>Math.abs(dx)+6){rst();return;}if(dx>8)dragging=true;else return;}if(dx<0)dx=0;if(dx>innerWidth)dx=innerWidth;node.style.transform='translateX('+dx+'px)';node.style.boxShadow='-16px 0 36px rgba(0,0,0,.22)';},{passive:true});
+document.addEventListener('touchend',function(e){if(x0===null)return;var t=(e.changedTouches&&e.changedTouches[0]);var dx=t?(t.clientX-x0):0,dy=t?(t.clientY-y0):0,dt=Date.now()-t0;var nd=node;var go=(dragging&&dx>Math.min(120,innerWidth*0.30)&&Math.abs(dy)<90)||(dx>55&&dt<400&&Math.abs(dy)<60);node=null;x0=null;dragging=false;if(!nd){if(go)window.navGoBack();return;}if(go){nd.style.transition='';nd.style.transform='';nd.style.boxShadow='';window.navGoBack();}else{nd.style.transition='transform .2s cubic-bezier(.22,.61,.36,1),box-shadow .2s';nd.style.transform='';nd.style.boxShadow='';setTimeout(function(){if(nd)nd.style.transition='';},240);}},{passive:true});})();
   /* Tema abrir: cancela cualquier cierre pendiente y deja el visor en pantalla (evita el bug de "abre el tema anterior") */
   var _openTema=window.openTemaFile;
   if(typeof _openTema==='function'){ window.openTemaFile=function(){ var tv=el('temaViewer'); if(tv) tv.classList.remove('nav-slide-out-fixed'); var r=_openTema.apply(this,arguments); if(ANIM) pushIn(tv); return r; }; }
