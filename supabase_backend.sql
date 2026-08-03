@@ -9,6 +9,7 @@ create table if not exists public.codigos_acceso (
   codigo  text unique not null,
   nombre  text,
   activo  boolean not null default true,
+  offline boolean not null default false,   -- true = puede abrir sin internet (uso personal del dueño)
   vence   timestamptz,
   creado  timestamptz not null default now()
 );
@@ -38,10 +39,10 @@ alter table public.sugerencias     enable row level security;
 
 -- Verifica un codigo: valido si activo y no vencido
 create or replace function public.verificar_codigo(p_codigo text)
-returns table (ok boolean, nombre text)
+returns table (ok boolean, nombre text, offline boolean)
 language sql
 as $$
-  select true as ok, c.nombre
+  select true as ok, c.nombre, coalesce(c.offline,false) as offline
   from public.codigos_acceso c
   where c.codigo = p_codigo
     and c.activo = true

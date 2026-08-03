@@ -124,7 +124,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       if (verErr) throw verErr;
       const fila = Array.isArray(ver) ? ver[0] : ver;
       if (fila?.ok) {
-        return json({ ok: true, nombre: fila.nombre ?? null });
+        return json({ ok: true, nombre: fila.nombre ?? null, offline: !!fila.offline });
       }
 
       // 3) fallo -> cuenta el intento
