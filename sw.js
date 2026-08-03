@@ -1,5 +1,5 @@
 /* VadeMed service worker — cache offline resiliente */
-var CACHE = 'vademed-v100';
+var CACHE = 'vademed-v101';
 var CRITICAL = ['./', 'index.html'];       /* si esto no se cachea, NO aceptamos la version nueva */
 var OPTIONAL = ['icon3.png', 'icon-180.png', 'manifest.json', 'med_capsule.png', 'ic_guias.png', 'ic_calc.png', 'ic_atlas.png', 'ic_labs.png', 'ic_calc_ped.png', 'avatar_hombre.png', 'avatar_mujer.png'];
 
@@ -70,11 +70,26 @@ self.addEventListener('fetch', function(e){
     return;
   }
 
-  /* Resto (temas, icono, etc.): cache primero, si no, red y se guarda para la proxima */
+  /* Resto (temas, icono, etc.): cache primero, si no, red y se guarda para la proxima.
+     OJO: si el host RE-DIRIGE (Netlify manda .html -> minuscula sin extension), una
+     respuesta "redirected" NO se puede entregar a un iframe (es una navegacion) y el
+     tema queda en blanco. La reconstruimos como respuesta limpia 200 para que abra y se
+     pueda cachear para offline. */
   e.respondWith(
     caches.open(CACHE).then(function(c){
       return c.match(req).then(function(cached){
-        var net = fetch(req).then(function(res){ if(res && res.status === 200) c.put(req, res.clone()); return res; }).catch(function(){ return cached; });
+        var net = fetch(req).then(function(res){
+          if(res && res.redirected){
+            return res.blob().then(function(b){
+              var ct = res.headers.get('content-type') || 'text/html; charset=utf-8';
+              var clean = new Response(b, {status:200, statusText:'OK', headers:{'content-type':ct}});
+              try{ c.put(req, clean.clone()); }catch(e){}
+              return clean;
+            });
+          }
+          if(res && res.status === 200){ try{ c.put(req, res.clone()); }catch(e){} }
+          return res;
+        }).catch(function(){ return cached; });
         return cached || net;
       });
     })
