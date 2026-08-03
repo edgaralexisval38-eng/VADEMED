@@ -32742,7 +32742,7 @@ function obOfflineOwner(cod){var acc=getAcceso();if(acc&&acc.codigo===cod&&acc.o
 var VM_IDLE_MS=15*60*1000,VM_lastAct=Date.now();
 function vmIdleReset(){VM_lastAct=Date.now();}
 function vmLocked(){return document.documentElement.classList.contains('vmgate');}
-function lockApp(){if(esMovil())return;if(vmLocked())return;document.documentElement.classList.add('vmgate');var v=document.getElementById('obView');if(v)v.style.display='block';obShow('code');try{obMsg('obCodeMsg','Sesión bloqueada por inactividad. Ingresa tu código para continuar.','info');}catch(e){}}
+function lockApp(){if(esMovil())return;if(vmLocked())return;try{var _a=getAcceso();if(!(_a&&_a.offline===true)){localStorage.removeItem('vademed_acceso');try{CURRENT_PROFILE=null;}catch(e){}}}catch(e){}document.documentElement.classList.add('vmgate');var v=document.getElementById('obView');if(v)v.style.display='block';obShow('code');try{obMsg('obCodeMsg','Sesión bloqueada por inactividad. Ingresa tu código para continuar.','info');}catch(e){}}
 (function(){try{['click','keydown','mousemove','wheel','scroll','touchstart'].forEach(function(ev){document.addEventListener(ev,vmIdleReset,{passive:true});});setInterval(function(){if(!vmLocked()&&(Date.now()-VM_lastAct)>=VM_IDLE_MS){lockApp();}},15000);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible'&&!vmLocked()&&(Date.now()-VM_lastAct)>=VM_IDLE_MS){lockApp();}});}catch(e){}})();
 function welcomeInit(){obStats();resolveAccess();}
 function obExplorar(){try{localStorage.setItem('vademed_onboarded','1');}catch(e){}var v=document.getElementById('obView');if(v)v.style.display='none';try{goInicio();}catch(e){}}
