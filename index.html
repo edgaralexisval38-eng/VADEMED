@@ -32499,6 +32499,7 @@ function temaGroupHTML(p, items, op){
     +'<div class="lab-gbody">'+items.map(function(t){return temaItemHTML(t, op);}).join('')+'</div>'
     +'</div>';
 }
+function mergeTemasExtra(){try{fetch('temas_extra.txt').then(function(r){return r.ok?r.text():'';}).then(function(txt){if(!txt||typeof TEMAS==='undefined')return;txt.split(/\r?\n/).forEach(function(line){line=line.trim();if(!line||line.charAt(0)==='#')return;var p=line.split('|').map(function(x){return x.trim();});if(p.length<4)return;var cat=p[0],t=p[1],kw=p[2],file=p[3];if(!t||!file)return;if(file.indexOf('/')<0)file='RESUMENCLINIC/RESUMENES/'+file;var g=null;for(var i=0;i<TEMAS.length;i++){if(TEMAS[i].cat===cat){g=TEMAS[i];break;}}if(!g){g={cat:cat,items:[]};TEMAS.push(g);}if(!g.items.some(function(z){return z.file===file;}))g.items.push({t:t,kw:kw,file:file});});try{var el=document.getElementById('temasList');if(el&&typeof renderTemasPanel==='function'&&el.offsetParent!==null)renderTemasPanel('');}catch(e){}}).catch(function(){});}catch(e){}}
 function renderTemasPanel(q){
   var el=document.getElementById('temasList'); if(!el) return;
   if(!TEMAS.length){ el.innerHTML='<div class="tema-empty"><b>A&uacute;n no hay temas.</b><br>Sube tu material (texto, notas o documentos) y lo organizo aqu&iacute; por categor&iacute;as, con buscador y cada tema desplegable.</div>'; return; }
@@ -32750,7 +32751,7 @@ function obGuardar(){var nombre=(document.getElementById('obNombre').value||'').
 function obFinish(){try{localStorage.setItem('vademed_onboarded','1');}catch(e){}document.documentElement.classList.remove('vmgate');var v=document.getElementById('obView');if(v)v.style.display='none';try{if(typeof renderPerfil==='function')renderPerfil();if(typeof perfilHero==='function')perfilHero();goInicio();}catch(e){}try{vmIdleReset();}catch(e){}try{vmPerfilPush();}catch(e){}}
 
 
-try{ perfilBoot(); }catch(e){}
+try{ mergeTemasExtra(); }catch(e){} try{ perfilBoot(); }catch(e){}
 try{ welcomeInit(); }catch(e){}
 </script>
 
