@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Incontinencia urinaria · Clínica Rápida</title>
+<style>
+
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0f766e;--acd:#0a4a45;--acl:#e3f2f0;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0a4a45,#0f766e);">
+  <div class="hdr-top">
+    <div class="hdr-icon">💧</div>
+    <div>
+      <div class="hdr-eye">Urología / uroginecología</div>
+      <div class="hdr-title">Incontinencia urinaria</div>
+      <div class="hdr-sub">Primero el tipo · conductual antes que fármaco</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Esfuerzo / urgencia / mixta</span>
+    <span class="badge">Suelo pélvico</span>
+    <span class="badge">Mirabegrón 50 mg/día</span>
+    <span class="badge">DIAPPERS</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Tipo</div><div class="qs-l">define el manejo</div></div>
+  <div class="qs"><div class="qs-v">Conductual</div><div class="qs-l">1.ª línea</div></div>
+  <div class="qs"><div class="qs-v">DIAPPERS</div><div class="qs-l">causas reversibles</div></div>
+  <div class="qs"><div class="qs-v">Residuo</div><div class="qs-l">antes de tratar</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>La <strong>incontinencia urinaria</strong> es la <strong>pérdida involuntaria de orina</strong> que constituye un problema para la persona. No es una enfermedad única: el manejo depende del <strong>tipo</strong>.</p></div>
+  <div class="alert a-g"><span class="ai">🎯</span><div><div class="at">La idea que ordena todo</div>Primero define el <strong>tipo</strong> (esfuerzo, urgencia, mixta, rebosamiento, funcional). Empieza siempre por lo <strong>conductual + suelo pélvico</strong> y escala según el tipo. Descarta antes las <strong>causas reversibles</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Muy <strong>prevalente</strong> y aumenta con la <strong>edad</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Más frecuente en <strong>mujeres</strong> (esfuerzo y mixta); en varones suele relacionarse con HPB o cirugía prostática.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Está <strong>infradiagnosticada</strong> por pudor: conviene preguntar de forma activa.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Tipos y mecanismos</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Tipo</th><th>Mecanismo</th></tr></thead><tbody>
+    <tr><td class="dm">Esfuerzo</td><td>Debilidad del suelo pélvico / hipermovilidad uretral o deficiencia esfinteriana (partos, menopausia, posprostatectomía)</td></tr>
+    <tr><td class="dn">Urgencia</td><td>Hiperactividad del detrusor (vejiga hiperactiva)</td></tr>
+    <tr><td class="dm">Mixta</td><td>Combinación de esfuerzo y urgencia</td></tr>
+    <tr><td class="dn">Rebosamiento</td><td>Vejiga sobredistendida: obstrucción (HPB) o detrusor hipoactivo (neuropatía)</td></tr>
+    <tr><td class="dm">Funcional</td><td>Tracto urinario intacto, pero barreras de movilidad o cognición impiden llegar al baño</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Edad</strong>, <strong>sexo femenino</strong>, <strong>embarazo/parto vaginal</strong>, <strong>menopausia</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Obesidad</strong>, cirugía pélvica/prostática.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Enfermedad neurológica</strong>, <strong>diabetes</strong>, deterioro <strong>cognitivo/funcional</strong>.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Algunos <strong>fármacos</strong>, <strong>estreñimiento</strong> e <strong>infección urinaria</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Continencia normal</strong><br>Depende del equilibrio entre la <strong>presión uretral</strong> (esfínter y soporte del suelo pélvico) y la <strong>presión vesical</strong> (detrusor relajado en el llenado).<br><br><strong>Por eso:</strong> el tratamiento actúa sobre uno de los dos lados.</div>
+  <div class="fp fp-a"><strong>2. Esfuerzo</strong><br>Falla el <strong>soporte uretral</strong>: al subir la presión abdominal, la orina escapa.<br><br><strong>Por eso:</strong> se refuerza el suelo pélvico (o se corrige con cirugía).</div>
+  <div class="fp fp-b"><strong>3. Urgencia</strong><br>El <strong>detrusor</strong> se contrae de forma involuntaria durante el llenado.<br><br><strong>Por eso:</strong> se usan antimuscarínicos o beta-3 y entrenamiento vesical.</div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Evaluación</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Historia dirigida</strong> para definir el <strong>tipo</strong> (¿fuga con esfuerzo o con urgencia?) y su repercusión.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Diario miccional</strong> (frecuencia, volúmenes, escapes) y <strong>prueba de esfuerzo</strong> (tos con vejiga llena).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Examen de orina</strong> (descartar infección/hematuria) y <strong>residuo posmiccional</strong>.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Exploración pélvica/genital y neurológica básica; considerar urodinamia en casos complejos o antes de cirugía.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Causas transitorias reversibles — DIAPPERS</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Letra</th><th>Causa</th></tr></thead><tbody>
+    <tr><td class="dm">D</td><td>Delirium / estado confusional</td></tr>
+    <tr><td class="dn">I</td><td>Infección urinaria</td></tr>
+    <tr><td class="dm">A</td><td>Atrofia uretral/vaginal (posmenopausia)</td></tr>
+    <tr><td class="dn">P</td><td>Fármacos (Pharmaceuticals: diuréticos, sedantes, anticolinérgicos…)</td></tr>
+    <tr><td class="dm">P</td><td>Causa Psicológica (depresión)</td></tr>
+    <tr><td class="dn">E</td><td>Exceso de diuresis / causas Endocrinas (diabetes, hipercalcemia)</td></tr>
+    <tr><td class="dm">R</td><td>Restricción de la movilidad</td></tr>
+    <tr><td class="dn">S</td><td>Impactación fecal (Stool)</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>Muchos casos agudos se resuelven al corregir la causa transitoria. Búscalas <b>antes</b> de etiquetar el tipo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">🚨</span><div><b>Hematuria</b>, dolor, masa pélvica, <b>retención</b>, <b>déficit neurológico</b> (sospecha de causa neurógena) o incontinencia de inicio brusco → estudio/derivación.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo interactivo</div>Define el tipo y escala desde lo conductual.</div></div><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Fármacos con dosis. Toca para desplegar o <strong>busca por nombre</strong>.</div></div><input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (solifenacina, mirabegrón, oxibutinina…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;"><div id="farm-body"></div></div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('esfuerzo',this)">Esfuerzo</button>
+  <button class="pchip" onclick="setEscen('urgencia',this)">Urgencia</button>
+  <button class="pchip" onclick="setEscen('mixta',this)">Mixta</button>
+  <button class="pchip" onclick="setEscen('rebosamiento',this)">Rebosamiento</button>
+  <button class="pchip" onclick="setEscen('transitoria',this)">Transitoria (DIAPPERS)</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Conductual/suelo pélvico</td><td>Reevaluar a las semanas–meses (el suelo pélvico tarda ≥3 meses)</td></tr>
+    <tr><td class="dn">Fármacos</td><td>Reevaluar eficacia y tolerancia a las 4–8 semanas; vigilar residuo y cognición</td></tr>
+    <tr><td class="dm">Refractaria</td><td>Escalar a terapias avanzadas o cirugía según el tipo</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>El diario miccional es útil para objetivar la mejoría y ajustar el plan.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Esfuerzo</strong> refractaria a lo conservador → uroginecología/urología (cirugía).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Urgencia</strong> refractaria a conductual + fármacos → terapias avanzadas.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Banderas rojas</strong> (hematuria, dolor, masa, déficit neurológico, retención) → estudio.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Incontinencia urinaria</h2>
+  <p>Urología / uroginecología. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Vejiga hiperactiva: conductual, antimuscarínicos, mirabegrón, terapias avanzadas</strong> → guía AUA/SUFU [1].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Tipos, DIAPPERS, esfuerzo (suelo pélvico/cirugía), evaluación</strong> → revisión clínica [2].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Contexto mexicano</strong> → CENETEC [3].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías y revisiones</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2019/2024</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">AUA/SUFU. <em>Diagnosis and Treatment of Idiopathic Overactive Bladder (OAB) Guideline</em> (amendment 2019; actualización 2024). J Urol / Neurourol Urodyn. [Escalonamiento de la vejiga hiperactiva: 1.ª conductual, 2.ª antimuscarínicos o beta-3 (mirabegrón), 3.ª terapias avanzadas (toxina botulínica, neuromodulación, tibial posterior). Sustenta el algoritmo de urgencia y las fichas.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1097/JU.0000000000000309" target="_blank">🔗 DOI 10.1097/JU.0000000000000309</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">Ref.</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Revisión clínica de incontinencia urinaria en el adulto (tipos, causas transitorias DIAPPERS, evaluación, incontinencia de esfuerzo: suelo pélvico y cirugía; estrógeno vaginal). [Sustenta el Resumen, el Diagnóstico y las fichas de esfuerzo. Coteja con ACOG/AUA y guías locales.]</div>
+      <a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK559095/" target="_blank">🔗 StatPearls · Urinary Incontinence</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): incontinencia urinaria.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja fármacos y presentaciones con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Verifica actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y de AUA/SUFU/ACOG, y adapta al contexto institucional. Última revisión: <strong>agosto 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#0f766e', C1='#0f766e', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Punto clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Pauta')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / base',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones',f.pres,'#374151');
+  if(f.ci)h+=txrow('Contraindicaciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Seguimiento',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#0a4a45')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_CONDUCTUAL={n:'Medidas conductuales',elec:true,linea:'Primer escalón — todos los tipos',
+  dlbl:'Intervención',da:'Entrenamiento vesical (micción programada con intervalos crecientes), ajuste de líquidos y de cafeína/alcohol, pérdida de peso si sobrepeso, tratar el estreñimiento',
+  dur:'Continuado; primera línea antes y junto a los fármacos.',
+  adm:'Es la base del tratamiento de cualquier tipo de incontinencia. El entrenamiento vesical es especialmente útil en la urgencia; la pérdida de peso mejora la de esfuerzo.',
+  mec:'Reduce desencadenantes y reeduca el reflejo miccional.',
+  ind:'Todos los tipos de incontinencia.',
+  dmax:'Combinar siempre con el resto de medidas.',iv:'No farmacológico',pres:'—',
+  ci:'—',ea:'—',mon:'Diario miccional, episodios',
+  nota:'⭐ La pérdida de peso y el ajuste de líquidos/cafeína tienen efecto real; empieza por aquí.'};
+var F_KEGEL={n:'Ejercicios del suelo pélvico (Kegel)',elec:true,linea:'Primer escalón — esfuerzo y urgencia',
+  dlbl:'Intervención',da:'Contracciones del suelo pélvico: series de 8–12 contracciones sostenidas ~6–8 s, 3 veces al día, durante al menos 3 meses; idealmente con fisioterapia guiada',
+  dur:'≥3 meses para ver beneficio; mantener a largo plazo.',
+  adm:'Primera línea en la incontinencia de esfuerzo y útil también en la de urgencia. La técnica correcta (verificada por fisioterapia) mejora los resultados.',
+  mec:'Fortalece el soporte uretral y ayuda a inhibir la urgencia.',
+  ind:'Esfuerzo (1.ª línea) y urgencia.',
+  dmax:'La fisioterapia con biorretroalimentación mejora la adherencia.',iv:'No farmacológico',pres:'—',
+  ci:'—',ea:'—',mon:'Episodios de fuga',
+  nota:'⭐ Pilar del manejo de la incontinencia de esfuerzo; requiere constancia (meses).'};
+var F_OXI={n:'Oxibutinina (antimuscarínico)',linea:'Vejiga hiperactiva (urgencia)',
+  dlbl:'Dosis',da:'Liberación inmediata 5 mg VO 2–3 veces al día; liberación prolongada 5–10 mg VO una vez al día',
+  dur:'Reevaluar a las 4–8 semanas; uso crónico si hay beneficio.',
+  adm:'Antimuscarínico clásico y económico, pero con más boca seca/estreñimiento y peor tolerancia; la formulación prolongada o transdérmica se tolera mejor.',
+  mec:'Antagonista muscarínico: ↓ contracciones del detrusor.',
+  ind:'Incontinencia de urgencia / vejiga hiperactiva.',
+  dmax:'Cautela en ancianos (carga anticolinérgica, cognición).',iv:'VO / transdérmico',pres:'Tableta 5 mg; ER 5–10 mg',
+  ci:'Glaucoma de ángulo cerrado, retención, íleo',ea:'Boca seca, estreñimiento, visión borrosa, confusión',mon:'Cognición, residuo, síntomas',
+  nota:'Evita o minimiza la carga anticolinérgica en el adulto mayor; prefiere beta-3 si hay deterioro cognitivo.'};
+var F_SOLI={n:'Solifenacina (antimuscarínico)',linea:'Vejiga hiperactiva (urgencia)',
+  dlbl:'Dosis',da:'5 mg VO una vez al día; puede aumentarse a 10 mg/día',
+  dur:'Reevaluar a las 4–8 semanas; uso crónico si hay beneficio.',
+  adm:'Antimuscarínico uroselectivo, mejor tolerado que la oxibutinina de liberación inmediata.',
+  mec:'Antagonista muscarínico (uroselectivo).',
+  ind:'Incontinencia de urgencia / vejiga hiperactiva.',
+  dmax:'Ajustar en insuficiencia renal/hepática.',iv:'VO',pres:'Tableta 5/10 mg',
+  ci:'Glaucoma de ángulo cerrado, retención',ea:'Boca seca, estreñimiento',mon:'Residuo, síntomas',
+  nota:'Puede combinarse con mirabegrón si la monoterapia es insuficiente.'};
+var F_TOLTE={n:'Tolterodina (antimuscarínico)',linea:'Vejiga hiperactiva (urgencia)',
+  dlbl:'Dosis',da:'Liberación inmediata 2 mg VO 2 veces al día; liberación prolongada 4 mg VO una vez al día',
+  dur:'Reevaluar a las 4–8 semanas.',
+  adm:'Alternativa antimuscarínica con algo menos de boca seca que la oxibutinina.',
+  mec:'Antagonista muscarínico.',
+  ind:'Incontinencia de urgencia / vejiga hiperactiva.',
+  dmax:'Reducir dosis en insuficiencia renal/hepática.',iv:'VO',pres:'Cápsula 2 mg; ER 4 mg',
+  ci:'Glaucoma de ángulo cerrado, retención',ea:'Boca seca, estreñimiento',mon:'Residuo, síntomas',
+  nota:'Otras opciones: fesoterodina 4–8 mg/día, darifenacina, trospio.'};
+var F_MIRA={n:'Mirabegrón (agonista beta-3)',elec:true,linea:'Vejiga hiperactiva — alternativa preferente en ancianos',
+  dlbl:'Dosis',da:'50 mg VO una vez al día (25 mg/día en insuficiencia renal/hepática)',
+  dur:'Reevaluar a las 4–8 semanas; uso crónico si hay beneficio.',
+  adm:'Para la urgencia sin la carga anticolinérgica: útil en el adulto mayor o cuando los antimuscarínicos no se toleran. Vigila la presión arterial.',
+  mec:'Agonista beta-3 adrenérgico: relaja el detrusor en el llenado.',
+  ind:'Incontinencia de urgencia / vejiga hiperactiva.',
+  dmax:'Vibegrón 75 mg/día es otra opción beta-3.',iv:'VO',pres:'Tableta 25/50 mg',
+  ci:'Hipertensión no controlada',ea:'Hipertensión, cefalea, nasofaringitis',mon:'Presión arterial, síntomas',
+  nota:'⭐ Preferible a los antimuscarínicos en el adulto mayor (no empeora la cognición).'};
+var F_ESTROGENO={n:'Estrógeno vaginal tópico',linea:'Esfuerzo/urgencia con atrofia (mujer posmenopáusica)',
+  dlbl:'Pauta',da:'Crema/óvulo/anillo vaginal; inducción a diario 2 semanas y luego 2 veces por semana de mantenimiento',
+  dur:'Mantenimiento a largo plazo mientras haya beneficio.',
+  adm:'Mejora la atrofia genitourinaria posmenopáusica y los síntomas de urgencia/esfuerzo asociados. El estrógeno vaginal (tópico), no el sistémico.',
+  mec:'Restaura el trofismo del epitelio uretral/vaginal.',
+  ind:'Síndrome genitourinario de la menopausia.',
+  dmax:'El estrógeno sistémico NO mejora (puede empeorar) la incontinencia.',iv:'Vaginal (tópico)',pres:'Crema/óvulo/anillo',
+  ci:'Sangrado vaginal no estudiado; valorar antecedente de cáncer hormonodependiente',ea:'Irritación local',mon:'Síntomas, atrofia',
+  nota:'Distingue tópico de sistémico: solo el vaginal ayuda.'};
+var F_SLING={n:'Cirugía de la incontinencia de esfuerzo (cabestrillo)',linea:'Esfuerzo — tras fallar lo conservador',
+  dlbl:'Conducta',da:'Cabestrillo mediouretral (sling) u otras técnicas; se ofrece cuando fallan las medidas conservadoras',
+  dur:'Definitivo; valoración por especialista.',
+  adm:'Opción eficaz en la incontinencia de esfuerzo que no responde a suelo pélvico/medidas. Requiere evaluación por uroginecología/urología.',
+  mec:'Restaura el soporte uretral.',
+  ind:'Esfuerzo refractaria a lo conservador.',
+  dmax:'En el varón posprostatectomía existen cabestrillos y esfínter artificial.',iv:'Quirúrgico',pres:'Sling mediouretral · esfínter artificial',ci:'—',ea:'Retención, erosión, dolor',mon:'Uroginecología',
+  nota:'Ofrécela tras un intento conservador adecuado; deriva a especialista.'};
+var F_AVANZADO={n:'Terapias avanzadas (urgencia refractaria)',linea:'Urgencia — 3.ª línea',
+  dlbl:'Conducta',da:'Toxina botulínica intravesical, neuromodulación sacra o estimulación del nervio tibial posterior, cuando fallan conductual y fármacos',
+  dur:'La toxina botulínica se repite cada varios meses; neuromodulación es implantable.',
+  adm:'Para la vejiga hiperactiva que no responde a conductual + fármacos. Manejo por urología/uroginecología.',
+  mec:'Modula la actividad del detrusor.',
+  ind:'Urgencia refractaria.',
+  dmax:'La toxina botulínica puede aumentar el residuo y requerir autocateterismo.',iv:'Intravesical/neuromodulación',pres:'—',ci:'—',ea:'Retención (botox), infección',mon:'Residuo, síntomas',
+  nota:'Deriva antes de considerarlas; requieren evaluación especializada.'};
+var F_NO_ANTICOL={n:'❌ Antimuscarínico en el anciano frágil sin valorar',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No cargues de anticolinérgicos al adulto mayor sin valorar cognición, residuo y carga anticolinérgica total',
+  dur:'Aumentan el riesgo de confusión, caídas y retención.',
+  adm:'En el adulto mayor, prefiere conductual y beta-3 (mirabegrón) y minimiza la carga anticolinérgica.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Deterioro cognitivo, retención, caídas',
+  nota:'Revisa la carga anticolinérgica acumulada de toda la medicación.'};
+var F_NO_CAUSAS={n:'❌ Omitir las causas reversibles (DIAPPERS)',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No trates la incontinencia sin descartar antes causas transitorias reversibles (regla DIAPPERS) ni infección/residuo',
+  dur:'Muchos casos, sobre todo agudos, se resuelven al corregir la causa.',
+  adm:'Descarta infección urinaria, impactación fecal, fármacos, atrofia, poliuria, delirium y movilidad reducida.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Tratamiento innecesario o inefectivo',
+  nota:'Un EGO y la revisión de fármacos y del residuo evitan errores.'};
+var F_NO_REBOSA={n:'❌ Antimuscarínico en el rebosamiento con residuo alto',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No des antimuscarínicos si hay retención/rebosamiento con residuo elevado (obstrucción o detrusor hipoactivo)',
+  dur:'Empeoran el vaciado y agravan la retención.',
+  adm:'En el rebosamiento, trata la causa: obstrucción (p. ej. HPB) o cateterismo si el detrusor es hipoactivo.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Retención aguda de orina',
+  nota:'Confirma el tipo con el residuo posmiccional antes de tratar.'};
+
+var TXC=[
+ ['🧘 Conductual','Primer escalón — todos los tipos',C1,[F_CONDUCTUAL,F_KEGEL]],
+ ['💊 Vejiga hiperactiva (urgencia)','Antimuscarínico o beta-3',AZ,[F_OXI,F_SOLI,F_TOLTE,F_MIRA]],
+ ['🌸 Incontinencia de esfuerzo','Suelo pélvico → estrógeno / cirugía',C2,[F_ESTROGENO,F_SLING]],
+ ['⚡ Urgencia refractaria','Terapias avanzadas',CO,[F_AVANZADO]],
+ ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_ANTICOL,F_NO_CAUSAS,F_NO_REBOSA]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">Primero el tipo, luego escalona desde lo conductual</div>Identifica el <b>tipo</b> (esfuerzo, urgencia, mixta, rebosamiento, funcional). Empieza por lo <b>conductual + suelo pélvico</b>; en urgencia añade <b>antimuscarínico o beta-3</b>; en esfuerzo, suelo pélvico y luego estrógeno/cirugía. Descarta antes causas reversibles. La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💊 Antimuscarínicos',color:'#0c3b6e',farmacos:[
+  {n:'Oxibutinina',ini:'IR 5 mg 2–3×/día; ER 5–10 mg/día',da:'Clásica; más boca seca. Cautela en ancianos.',iv:'VO/transdérmico',pres:'Tab 5 mg; ER',ci:'Glaucoma, retención',ea:'Boca seca, confusión',nota:'Minimiza carga anticolinérgica.'},
+  {n:'Solifenacina',ini:'5–10 mg/día',da:'Uroselectiva; mejor tolerada.',iv:'VO',pres:'Tab 5/10 mg',ci:'Glaucoma, retención',ea:'Boca seca',nota:'Combinable con mirabegrón.'},
+  {n:'Tolterodina',ini:'IR 2 mg 2×/día; ER 4 mg/día',da:'Algo menos boca seca que oxibutinina.',iv:'VO',pres:'Cáp 2 mg; ER 4 mg',ci:'Glaucoma, retención',ea:'Boca seca',nota:'Fesoterodina 4–8 mg alternativa.'}]},
+ {familia:'🫁 Agonista beta-3',color:'#0f766e',farmacos:[
+  {n:'Mirabegrón',ini:'50 mg/día (25 si ERC/hepática)',da:'Sin carga anticolinérgica; preferible en ancianos.',iv:'VO',pres:'Tab 25/50 mg',ci:'HTA no controlada',ea:'Hipertensión, cefalea',nota:'Vigila presión arterial.'}]},
+ {familia:'🌸 Esfuerzo / atrofia',color:'#7a4a00',farmacos:[
+  {n:'Estrógeno vaginal tópico',ini:'Diario 2 sem → 2×/sem',da:'Atrofia genitourinaria posmenopáusica. Solo tópico.',iv:'Vaginal',pres:'Crema/óvulo/anillo',ci:'Sangrado no estudiado',ea:'Irritación',nota:'El sistémico NO ayuda.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Pauta',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Cautela',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para el paciente',color:'#0a5c45',fichas:[
+  {n:'Qué puedes hacer tú',via:'Al iniciar',
+   enf:'Explicar el diario miccional, el entrenamiento vesical, los ejercicios de suelo pélvico y el ajuste de líquidos/cafeína/peso.',
+   pac:'Lleva un diario de cuándo y cuánto orinas. Haz los ejercicios del suelo pélvico a diario (tardan semanas en notarse). Reduce cafeína y alcohol, evita el estreñimiento y baja de peso si te sobra. No dejes de tomar líquidos, solo ordénalos.',
+   nota:'La constancia con el suelo pélvico y el peso da resultados reales.',
+   alarma:'Consulta si hay sangre en la orina, fiebre, dolor, o si de pronto no puedes orinar.'}]},
+ {familia:'🔎 Para el equipo',color:'#0c3b6e',fichas:[
+  {n:'Valoración y tipo',via:'Siempre',
+   enf:'Definir el tipo, diario miccional, EGO (descartar infección), residuo posmiccional y prueba de esfuerzo; revisar causas reversibles (DIAPPERS) y fármacos.',
+   pac:'El médico determinará el tipo de incontinencia y descartará causas corregibles.',
+   nota:'Antes de antimuscarínico/beta-3 valora el residuo; en el anciano, minimiza la carga anticolinérgica.',
+   alarma:'Hematuria, dolor, masa pélvica, retención o síntomas neurológicos → estudio/derivación.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ esfuerzo:{t:'Incontinencia de esfuerzo',c:'#0f766e',h:
+  '<div class="prose"><p><b>Perfil:</b> fugas con la tos, la risa o el esfuerzo; sin urgencia. Debilidad del suelo pélvico/soporte uretral.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🌸</span><div><b>Ejercicios de suelo pélvico</b> (1.ª línea) + pérdida de peso; <b>estrógeno vaginal</b> si atrofia; <b>cirugía (cabestrillo)</b> si no responde.</div></div>'},
+ urgencia:{t:'Incontinencia de urgencia (vejiga hiperactiva)',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> deseo súbito e incontrolable, frecuencia y nicturia. Hiperactividad del detrusor.</p></div>'
+  +'<div class="alert a-i"><span class="ai">💊</span><div><b>Conductual + suelo pélvico</b>; luego <b>antimuscarínico</b> (solifenacina) o <b>mirabegrón 50 mg/día</b> (preferible en ancianos). Refractaria → terapias avanzadas.</div></div>'},
+ mixta:{t:'Incontinencia mixta',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> combina esfuerzo y urgencia.</p></div>'
+  +'<div class="alert a-i"><span class="ai">⚖️</span><div>Trata primero el <b>componente predominante</b> (el que más molesta) y suma medidas conductuales y de suelo pélvico.</div></div>'},
+ rebosamiento:{t:'Incontinencia por rebosamiento',c:'#7b1c1c',h:
+  '<div class="prose"><p><b>Perfil:</b> goteo continuo con vejiga sobredistendida; residuo alto. Obstrucción (HPB) o detrusor hipoactivo.</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚠️</span><div>Trata la <b>obstrucción</b> (p. ej. HPB) o realiza <b>cateterismo</b> si el detrusor es hipoactivo. <b>Evita antimuscarínicos</b> (empeoran el vaciado).</div></div>'},
+ transitoria:{t:'Causas transitorias (DIAPPERS)',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> incontinencia de inicio agudo o reversible.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🔁</span><div>Busca y corrige: <b>D</b>elirium, <b>I</b>nfección urinaria, <b>A</b>trofia, <b>P</b>fármacos, causa <b>P</b>sicológica, <b>E</b>xceso de diuresis/endocrinas, <b>R</b>estricción de movilidad, <b>S</b> impactación fecal.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Incontinencia urinaria. Tras descartar causas reversibles (DIAPPERS), EGO e infección: ¿qué patrón predomina?',o:[
+   ['Fugas con esfuerzo (tos/risa), sin urgencia','esfuerzo'],['Urgencia súbita, frecuencia, nicturia','urgencia'],['Mezcla de ambas','mixta'],['Goteo con residuo alto / retención','rebosa']]},
+ esfuerzo:{t:'Incontinencia de esfuerzo',r:'ok',x:'<b>Ejercicios de suelo pélvico</b> (1.ª línea, ≥3 meses) + pérdida de peso. <b>Estrógeno vaginal</b> si atrofia. Si no responde → <b>cirugía (cabestrillo)</b>, derivando a uroginecología/urología.'},
+ urgencia:{q:'Urgencia (vejiga hiperactiva). ¿Respondió a las medidas conductuales + suelo pélvico?',o:[
+   ['No lo he iniciado / probando conductual','conductual'],['Conductual insuficiente','farmaco'],['Falló conductual + fármacos','avanzado']]},
+ conductual:{t:'Conductual primero',r:'ok',x:'<b>Entrenamiento vesical</b>, suelo pélvico, ajuste de líquidos/cafeína y peso. Es la 1.ª línea antes de los fármacos.'},
+ farmaco:{t:'Antimuscarínico o beta-3',r:'ok',x:'<b>Solifenacina 5 mg/día</b> u otro antimuscarínico, o <b>mirabegrón 50 mg/día</b> (preferible en el adulto mayor: sin carga anticolinérgica). Reevaluar en 4–8 semanas.'},
+ avanzado:{t:'Terapias avanzadas',r:'mid',x:'Refractaria a conductual + fármacos → <b>toxina botulínica intravesical</b>, <b>neuromodulación sacra</b> o <b>estimulación del tibial posterior</b>. Deriva a urología/uroginecología.'},
+ mixta:{t:'Incontinencia mixta',r:'ok',x:'Trata primero el <b>componente predominante</b> (el más molesto) y combina conductual + suelo pélvico. Escala según la respuesta de cada componente.'},
+ rebosa:{t:'Rebosamiento — trata la causa',r:'high',x:'Residuo alto: descarta <b>obstrucción</b> (p. ej. HPB) o <b>detrusor hipoactivo</b>. Trata la obstrucción o realiza <b>cateterismo</b>. <b>No</b> uses antimuscarínicos. Deriva si es preciso.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('esfuerzo',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>
