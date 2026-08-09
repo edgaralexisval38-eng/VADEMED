@@ -123,6 +123,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab" onclick="showT('alg',this)">🔀 Algoritmo</button>
   <button class="tab" onclick="showT('comp',this)">🧦 Compresión</button>
   <button class="tab" onclick="showT('far',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
   <button class="tab" onclick="showT('int',this)">🛠️ Intervención</button>
   <button class="tab" onclick="showT('esc2',this)">⚙️ Escenarios</button>
   <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
@@ -317,7 +318,14 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 <!-- FÁRMACOS -->
 <div class="panel" id="tab-far">
   <div class="alert a-i"><span class="ai">💊</span><div>Los <strong>venoactivos</strong> son coadyuvantes para síntomas y edema; no sustituyen a la compresión ni al tratamiento del reflujo. Dosis y presentación en cada ficha (toca para desplegar).</div></div>
+  <div style="margin-bottom:10px;"><input oninput="filtrarFarVen(this.value)" placeholder="🔍 Buscar fármaco…" style="width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:13px;font-family:inherit;"></div>
   <div id="far-content"></div>
+</div>
+
+<!-- INDICACIONES -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div>Cómo <strong>indicar y explicar</strong> cada tratamiento — guía práctica de <strong>enfermería</strong> y para el <strong>paciente</strong>. Los venoactivos son coadyuvantes: la <strong>compresión</strong> es la base.</div></div>
+  <div id="ind-content"></div>
 </div>
 
 <!-- INTERVENCIÓN -->
@@ -486,21 +494,82 @@ function renderRaResult(s){function blk(t,v,c,bg){return '<div style="background
 </script>
 <script>
 /* ===== FÁRMACOS VENOACTIVOS ===== */
-function VEN_FARMACOS(){
-  return buildLinea('🥇 Primera línea venoactiva','la mejor evidencia','#b45309',[
+var VEN_GRUPOS=[
+  {label:'🥇 Primera línea venoactiva',sub:'la mejor evidencia',color:'#b45309',farmacos:[
     {n:'Fracción flavonoide purificada micronizada (MPFF)',linea:'Diosmina 900 + hesperidina 100',da:'1000 mg/día (1 comprimido de 1000 mg · o 500 mg cada 12 h)',prep:'Tomar con los alimentos. Es el venoactivo más estudiado.',iv:'Oral',pres:'Comprimidos de 500 mg y de 1000 mg (confirmar cuadro básico IMSS)',fda:'Evitar en embarazo/lactancia por datos limitados',ci:'Hipersensibilidad',ea:'Molestias gastrointestinales leves, cefalea',nota:'Mejora pesadez, dolor, calambres y edema; coadyuvante en la cicatrización de la úlcera. No sustituye a la compresión.'}
-  ])
-  +buildLinea('🥈 Segunda línea / alternativas','según disponibilidad y tolerancia','#1a6bbd',[
+  ]},
+  {label:'🥈 Segunda línea / alternativas',sub:'según disponibilidad y tolerancia',color:'#1a6bbd',farmacos:[
     {n:'Diosmina (no micronizada)',linea:'Flavonoide',da:'600 mg/día',prep:'Eficacia comparable a la MPFF sobre los síntomas.',iv:'Oral',pres:'Tabletas de 600 mg',fda:'Evitar en embarazo/lactancia',ci:'Hipersensibilidad',ea:'Molestias GI leves',nota:'No hay beneficio claro en aumentar la dosis por encima de 600 mg/día.'},
     {n:'Castaño de Indias (escina)',linea:'Extracto estandarizado',da:'Equivalente a 50 mg de escina cada 12 h (≈100 mg/día)',prep:'Usar extracto estandarizado por su contenido de escina.',iv:'Oral',pres:'Cápsulas de extracto estandarizado (≈50 mg de escina)',fda:'Evitar en embarazo',ci:'Insuficiencia renal/hepática grave',ea:'Molestias GI, prurito',nota:'Reduce el edema y los síntomas en enfermedad venosa leve-moderada.'},
     {n:'Dobesilato de calcio',linea:'Protector capilar',da:'500 mg cada 12 h (1000-1500 mg/día)',prep:'Tomar con alimentos.',iv:'Oral',pres:'Cápsulas/tabletas de 500 mg',fda:'Evitar en embarazo',ci:'Hipersensibilidad',ea:'GI; raramente agranulocitosis',nota:'Mejora el edema y la microcirculación.'},
     {n:'Hidroxietilrutósidos (oxerutinas)',linea:'Rutósidos',da:'500 mg cada 12 h (1000 mg/día)',prep:'—',iv:'Oral',pres:'Cápsulas de 500 mg',fda:'Evitar 1.er trimestre',ci:'Hipersensibilidad',ea:'GI leves',nota:'Alivian síntomas y edema.'},
     {n:'Sulodexida',linea:'Glicosaminoglicano',da:'250 LSU cada 12 h vía oral (tras fase parenteral opcional)',prep:'Acción antitrombótica/profibrinolítica; útil en úlcera como coadyuvante.',iv:'Oral (± IM/IV inicial)',pres:'Cápsulas de 250 LSU',fda:'Evitar en embarazo',ci:'Diátesis hemorrágica, anticoagulación',ea:'GI; sangrado (raro)',nota:'Coadyuvante con compresión en la úlcera venosa.'}
-  ])
-  +buildLinea('➕ Coadyuvante','para la úlcera y la piel','#0f7a5a',[
+  ]},
+  {label:'➕ Coadyuvante',sub:'para la úlcera y la piel',color:'#0f7a5a',farmacos:[
     {n:'Pentoxifilina',linea:'Para úlcera venosa',da:'400 mg cada 8 h con alimentos',prep:'Añadir a la compresión para acelerar la cicatrización de la úlcera.',iv:'Oral',pres:'Tabletas de liberación prolongada de 400 mg',fda:'Evitar en embarazo',ci:'Hemorragia reciente, IAM reciente, intolerancia a metilxantinas',ea:'Náusea, dispepsia, mareo',nota:'Mejora la cicatrización de la úlcera venosa, con o sin insuficiencia añadida.'},
     {n:'Cuidado de la piel',linea:'Dermatitis de estasis / eccema',da:'Emolientes a diario · corticoide tópico de potencia media por ciclos cortos para el eccema activo',prep:'Evitar sensibilizantes tópicos (neomicina, fragancias). Tratar la infección si la hay.',iv:'Tópica',pres:'Emolientes; corticoide tópico',fda:'Según producto',ci:'—',ea:'Atrofia cutánea con uso prolongado de corticoide',nota:'La piel sana tolera mejor la compresión y previene la úlcera.'}
-  ]);
+  ]}
+];
+function VEN_FARMACOS(q){
+  q=(q||'').toLowerCase().trim();
+  var h='';
+  VEN_GRUPOS.forEach(function(g){
+    var fs=g.farmacos.filter(function(f){return !q||f.n.toLowerCase().indexOf(q)!==-1||(f.linea||'').toLowerCase().indexOf(q)!==-1||(f.nota||'').toLowerCase().indexOf(q)!==-1;});
+    if(!fs.length)return;
+    h+=buildLinea(g.label,g.sub,g.color,fs);
+  });
+  return h||'<div style="text-align:center;color:#6b7280;font-size:12.5px;padding:24px;">Sin resultados para esa búsqueda.</div>';
+}
+function filtrarFarVen(q){var fc=document.getElementById('far-content');if(fc)fc.innerHTML=VEN_FARMACOS(q);}
+/* ===== INDICACIONES (enfermería / paciente) ===== */
+var IND_VEN=[
+  {familia:'Venoactivos orales (coadyuvantes)',color:'#b45309',farmacos:[
+    {n:'MPFF · diosmina · escina · dobesilato · rutósidos',
+     dosis:[{label:'MPFF 1000 mg/día (o 500 mg c/12 h) con los alimentos'},{label:'Tratamiento por semanas–meses; reevaluar síntomas y edema'}],
+     via:'Vía oral, con los alimentos',
+     enfermeria:'Explicar que ALIVIAN síntomas (pesadez, dolor, edema) pero NO sustituyen la compresión ni corrigen el reflujo. Verificar tolerancia digestiva; suspender y avisar si hay reacción alérgica. Evitar en embarazo/lactancia salvo indicación.',
+     paciente:'Tómelo con la comida, todos los días. Sirve para las molestias y la hinchazón, pero la MEDIA de compresión sigue siendo lo más importante. Si le cae mal al estómago o le sale sarpullido, avise. No lo use en el embarazo sin indicación médica.'}
+  ]},
+  {familia:'Pentoxifilina — coadyuvante de la úlcera venosa',color:'#0f7a5a',farmacos:[
+    {n:'Pentoxifilina',
+     dosis:[{label:'400 mg cada 8 h con los alimentos'},{label:'Añadida a la compresión, acelera la cicatrización de la úlcera'}],
+     via:'Vía oral (tableta de liberación prolongada)',
+     enfermeria:'Administrar con alimentos para reducir la náusea. Vigilar sangrado (contraindicada tras hemorragia o infarto reciente y con intolerancia a metilxantinas). No sustituye a la compresión ni al cuidado de la herida.',
+     paciente:'Tome la tableta completa (no la parta) con la comida. Ayuda a que la llaga cierre más rápido junto con las medias o vendajes. Avise si tiene mareo, náusea o cualquier sangrado.'}
+  ]},
+  {familia:'Terapia de compresión (la base del tratamiento)',color:'#0e6b7a',farmacos:[
+    {n:'Medias graduadas / vendaje multicapa',
+     dosis:[{label:'20-30 mmHg (varices C2 / edema C3) · 30-40 mmHg (C4 cambios cutáneos, C5-C6 úlcera)'},{label:'Colocar en la mañana; retirar por la noche · reemplazar cada 3-6 meses'}],
+     via:'Externa (media graduada o vendaje multicapa)',
+     enfermeria:'SIEMPRE medir el ITB antes (NO comprimir si ITB <0.5; reducida y vigilada si 0.5-0.8). Enseñar a colocar la media en la mañana antes del edema. Vigilar la piel bajo el vendaje (dolor, palidez, marcas, hormigueo). Para úlcera activa: vendaje multicapa que logre ~30-40 mmHg en el tobillo.',
+     paciente:'Póngase la media apenas se levante, antes de que se hinche la pierna; quítesela para dormir. Debe apretar sin doler ni dejar la piel morada, fría o dormida — si eso pasa, quítesela y avise. Cámbielas cada 3-6 meses. Es el tratamiento MÁS importante: úsela a diario.'}
+  ]},
+  {familia:'Cuidado de la piel (dermatitis de estasis / eccema)',color:'#0a5c45',farmacos:[
+    {n:'Emolientes + corticoide tópico',
+     dosis:[{label:'Emoliente en toda la pierna a diario'},{label:'Corticoide tópico de potencia media en ciclos cortos solo sobre el eccema activo'}],
+     via:'Tópica',
+     enfermeria:'Aplicar emoliente a diario. Corticoide solo sobre el eccema activo y por ciclos cortos (riesgo de atrofia). EVITAR sensibilizantes (neomicina, fragancias). Diferenciar el eccema de la celulitis (esta da fiebre, calor y dolor).',
+     paciente:'Hidrate la piel de la pierna todos los días con crema. Use la pomada con cortisona solo en las zonas irritadas y pocos días. Evite cremas perfumadas o con antibiótico sin indicación. Si la pierna se pone roja, caliente y con fiebre, acuda pronto.'}
+  ]}
+];
+function renderIndVen(){
+  var d=document.getElementById('ind-content');if(!d)return;
+  var h='';
+  IND_VEN.forEach(function(g){
+    h+='<div style="border-radius:10px;overflow:hidden;margin-bottom:12px;border:1px solid #e2e8f0;background:#fff;">';
+    h+='<div style="background:'+g.color+';color:#fff;padding:10px 14px;font-size:13px;font-weight:700;">'+g.familia+'</div>';
+    g.farmacos.forEach(function(f){
+      h+='<div style="padding:12px 14px;">';
+      h+='<div style="font-size:14px;font-weight:800;color:'+g.color+';margin-bottom:8px;">'+f.n+'</div>';
+      if(f.dosis&&f.dosis.length){h+='<div style="margin-bottom:8px;">';f.dosis.forEach(function(x){h+='<div style="font-size:12.5px;color:#374151;padding:3px 0 3px 10px;border-left:3px solid '+g.color+';margin-bottom:4px;line-height:1.5;">'+x.label+'</div>';});h+='</div>';}
+      if(f.via)h+='<div style="font-size:12px;color:#6b7280;margin-bottom:8px;">🧭 <strong>Vía:</strong> '+f.via+'</div>';
+      if(f.enfermeria)h+='<div style="background:#e6f1fb;border-left:3px solid #1a6bbd;border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:3px;">👩‍⚕️ Enfermería</div><div style="font-size:12.5px;color:#374151;line-height:1.65;">'+f.enfermeria+'</div></div>';
+      if(f.paciente)h+='<div style="background:#e1f5ee;border-left:3px solid #0f7a5a;border-radius:6px;padding:9px 11px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0a5c45;margin-bottom:3px;">🗣️ Para el paciente</div><div style="font-size:12.5px;color:#374151;line-height:1.65;">'+f.paciente+'</div></div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  });
+  d.innerHTML=h;
 }
 /* ===== ESCENARIOS ===== */
 var ESC_VEN={
@@ -536,6 +605,7 @@ function showEsc2(k){var s=ESC_VEN[k],d=document.getElementById('esc2-content');
 window.addEventListener('load',function(){
   var t=document.getElementById('tab-res');if(t)t.classList.add('on');
   var fc=document.getElementById('far-content');if(fc)fc.innerHTML=VEN_FARMACOS();
+  renderIndVen();
   initEsc2();renderRaStep('start');
 });
 </script>
