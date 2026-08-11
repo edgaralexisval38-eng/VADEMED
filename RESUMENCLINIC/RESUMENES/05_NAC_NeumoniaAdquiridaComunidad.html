@@ -141,6 +141,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab" onclick="showT('dx',this)">&#129514; Diagnostico</button>
   <button class="tab" onclick="showT('txc',this)">&#127973; Tx Consulta</button>
   <button class="tab" onclick="showT('txh',this)">&#127973; Tx Hospitalizado</button>
+  <button class="tab" onclick="showT('va',this)">&#129440; Viral / Aspiracion</button>
   <button class="tab" onclick="showT('algo',this)">&#128260; Algoritmo</button>
   <button class="tab" onclick="showT('esc',this)">&#128202; Escalas</button>
   <button class="tab" onclick="showT('aj',this)">&#9878; Ajustes</button>
@@ -334,6 +335,21 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
         <tr><td class="dn">Legionella pneumophila</td><td style="color:var(--a);font-weight:700;">7-14 dias</td><td>Estabilidad clinica · Levofloxacino 750 mg oral completa el curso</td></tr>
       </tbody>
     </table></div>
+  </div></div>
+</div>
+
+<!-- VIRAL / ASPIRACION -->
+<div class="panel" id="tab-va">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#129440;</span><span class="st">Influenza / neumonia viral</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">&#128161;</span><div><div class="at">Sospecha en temporada de influenza</div>Inicio brusco, fiebre alta, mialgias, cefalea, contactos enfermos. En NAC severa hospitalizada durante temporada: agregar oseltamivir empirico y NO suspender el antibiotico -- la coinfeccion bacteriana (neumococo, Staphylococcus aureus) es frecuente y grave.</div></div>
+    <div id="va1"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">&#129729;</span><span class="st">Neumonia por aspiracion</span><span class="sg open">&#8964;</span></div>
+  <div class="sb">
+    <div class="alert a-w"><span class="ai">&#9888;</span><div><div class="at">Cobertura anaerobia YA NO es de rutina (IDSA 2019)</div>Solo agregar anaerobicida si hay absceso pulmonar, empiema, neumonia necrosante o enfermedad periodontal severa / mala higiene bucal. Distinguir neumonitis quimica (aspiracion de contenido acido, puede no requerir antibiotico) de neumonia por aspiracion (infeccion establecida).</div></div>
+    <div id="va2"></div>
   </div></div>
 </div>
 
@@ -1161,12 +1177,30 @@ function filtrarFarmacos(q){
   list.innerHTML=html||'<div style="text-align:center;padding:20px;color:#9ca3af;font-size:13px;">Sin resultados</div>';
   if(count)count.textContent=found+(found===1?' farmaco':' farmacos');
 }
+function renderVA(){
+  var a=document.getElementById('va1');
+  if(a)a.innerHTML=mkM('Iniciar oseltamivir lo antes posible -- no esperar la PCR en el hospitalizado o grave','Idealmente en menos de 48h del inicio, pero en hospitalizados o NAC grave se indica aunque hayan pasado mas de 48h.')
+    +mkE('Antiviral','Influenza confirmada o sospecha alta','e1',
+      mkCard('Primera eleccion','Oseltamivir (Tamiflu)','75 mg c/12h via oral','75 mg c/12h -- 5 dias (prolongar a 10 dias en grave o inmunosupresion)','c/12h con alimentos','Cap 30 / 45 / 75 mg -- Suspension 6 mg/mL','Mayor beneficio si se inicia en menos de 48h, pero en hospitalizado o NAC grave se indica sin importar el tiempo transcurrido. Ajustar dosis si TFG menor de 60. En paciente critico sin via oral: administrar por sonda.','e1')
+      +mkCard('Alternativa inhalada (ambulatorio no grave)','Zanamivir','10 mg (2 inhalaciones) c/12h','10 mg c/12h -- 5 dias','Inhalado c/12h','Polvo para inhalar 5 mg/dosis','Evitar en asma y EPOC (riesgo de broncoespasmo). No usar en ventilados. Baloxavir (dosis unica via oral) es otra opcion donde este disponible.','alt'),'Elegir segun disponibilidad')
+    +mkN('COVID-19: si hay sospecha, aislar y valorar antiviral segun protocolo local (nirmatrelvir/ritonavir en riesgo alto ambulatorio; remdesivir + dexametasona 6 mg/dia si hay hipoxemia hospitalizado). En todos: mantener el antibiotico empirico de NAC hasta descartar coinfeccion bacteriana.');
+  var b=document.getElementById('va2');
+  if(b)b.innerHTML=mkM('Cubrir flora oral y gramnegativos -- anaerobios SOLO si absceso, empiema o necrosante','La mayoria de las aspiraciones comunitarias se cubren con amoxicilina-clavulanato o el esquema estandar de NAC.')
+    +mkE('Primera linea','Aspiracion comunitaria','e1',
+      mkCard('Ambulatorio / via oral','Amoxicilina-Clavulanato','875/125 mg c/12h','875/125 mg c/12h -- 5 a 7 dias','c/12h con alimentos','Tab 875/125 mg','Cubre flora oral incluidos muchos anaerobios. Primera eleccion oral en aspiracion sin criterios de absceso.','e1')
+      +mkCard('Hospitalizado / intravenoso','Ampicilina-Sulbactam','1.5 a 3 g IV c/6h','3 g IV c/6h -- paso a amoxicilina-clavulanato oral al estabilizar','c/6h IV','Frasco 1.5 g y 3 g','Betalactamico + inhibidor de betalactamasa con buena cobertura de flora oral y anaerobios. Equivalente IV de amoxicilina-clavulanato.','e1'),'Elegir segun la via')
+    +mkE('Alergia a penicilina','Alternativa','e2',
+      mkCard('Alergico a betalactamicos','Clindamicina','600 mg IV c/8h (o 300 a 450 mg via oral c/6-8h)','600 mg IV c/8h','c/8h IV','Ampolleta 300 / 600 mg -- Cap 300 mg','Buena cobertura anaerobia; alternativa clasica en alergia a penicilina. Vigilar diarrea por Clostridioides difficile.','e2')
+      +mkCard('Si ademas hay que cubrir gramnegativos','Moxifloxacino','400 mg c/24h','400 mg c/24h','c/24h via oral o IV','Tab 400 mg -- Frasco 400 mg/250 mL','Quinolona respiratoria con actividad anaerobia; util como monoterapia en alergicos. Precaucion: prolongacion del QT.','alt'),'Elegir UNO')
+    +mkN('Absceso pulmonar, empiema o neumonia necrosante: prolongar a 2-3 semanas o hasta resolucion radiologica y asegurar cobertura anaerobia; valorar drenaje si empiema. Corregir factores predisponentes: disfagia, alteracion del estado de conciencia e higiene bucal deficiente.');
+}
 window.addEventListener('load',function(){
   var b=document.querySelector('#tab-txc .pchip.on');
   showP('sano',b);
   var b2=document.querySelector('#tab-txh .pchip.on');
   showH('modsin',b2);
   filtrarFarmacos('');
+  renderVA();
 });
 </script>
 </body>
