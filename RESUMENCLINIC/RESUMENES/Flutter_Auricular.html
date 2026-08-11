@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Flutter auricular · Clínica Rápida</title>
+<style>
+
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0891b2;--acd:#0c4a5e;--acl:#e2f3f8;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0c4a5e,#0891b2);">
+  <div class="hdr-top">
+    <div class="hdr-icon">📐</div>
+    <div>
+      <div class="hdr-eye">Cardiología · arritmias</div>
+      <div class="hdr-title">Flutter auricular</div>
+      <div class="hdr-sub">Dientes de sierra · frecuencia + anticoagulación + ablación</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> I48.3</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Ondas F ~300/min</span>
+    <span class="badge">2:1 → ~150/min</span>
+    <span class="badge">CHA₂DS₂-VASc</span>
+    <span class="badge">Ablación del istmo</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Dientes de sierra</div><div class="qs-l">ondas F</div></div>
+  <div class="qs"><div class="qs-v">~150/min</div><div class="qs-l">flutter 2:1</div></div>
+  <div class="qs"><div class="qs-v">CHA₂DS₂-VASc</div><div class="qs-l">anticoagular</div></div>
+  <div class="qs"><div class="qs-v">Ablación</div><div class="qs-l">curativa (típico)</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🖥️ Reconocer</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="alert a-i"><span class="ai">📐</span><div><div class="at">Flutter auricular en una frase</div>Taquiarritmia auricular por <strong>macro-reentrada</strong> (típicamente el <strong>istmo cavotricuspídeo</strong>): la aurícula late ~<strong>300/min</strong> y el nodo conduce solo una fracción. El plan: <strong>frecuencia/ritmo + anticoagulación (CHA₂DS₂-VASc) + ablación</strong>.</div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definición y clasificación</span><span class="sg open">&#8964;</span></div>
+<div class="sb"><div class="prose"><ul><li><strong>Típico (dependiente del istmo cavotricuspídeo):</strong> el más frecuente; ondas F en dientes de sierra negativas en derivaciones inferiores; excelente candidato a ablación.</li><li><strong>Atípico (no dependiente del istmo):</strong> otros circuitos (a menudo aurícula izquierda/cicatrices); mapeo más complejo.</li><li><strong>Conducción AV:</strong> 2:1 (~150/min, la más típica), 3:1 (~100), 4:1 (~75) o variable (respuesta irregular).</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li>Incidencia ≈ <strong>88/100 000</strong> personas-año; aumenta con la edad.</li><li><strong>Coexiste con frecuencia con la fibrilación auricular</strong> y con cardiopatía estructural.</li><li>Más frecuente en <strong>varones</strong> y en pacientes con <strong>EPOC</strong>, insuficiencia cardíaca o poscirugía cardíaca.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Fisiopatología y consecuencias</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Macro-reentrada:</strong> un circuito grande y estable gira en la aurícula derecha (istmo cavotricuspídeo). <em>Por eso la ablación del istmo cura el flutter típico.</em></li><li><strong>Riesgo embólico</strong> similar al de la fibrilación auricular. <em>Por eso se anticoagula según CHA₂DS₂-VASc.</em></li><li><strong>Conducción 1:1</strong> (rara, o facilitada por antiarrítmicos de clase IC) → frecuencia ventricular ~300/min. <em>Por eso la clase IC se usa siempre con un bloqueador del nodo.</em></li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo / causas</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Cardiopatía</strong> (isquémica, valvular, insuficiencia cardíaca) y <strong>poscirugía cardíaca</strong>.</li><li><strong>EPOC</strong> y otras neumopatías; <strong>hipertiroidismo</strong>; <strong>alcohol</strong>.</li><li>Hipertensión arterial, edad avanzada, apnea del sueño.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento rápido</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Ondas F en dientes de sierra</strong> (~300/min), continuas y sin línea isoeléctrica; mejor en <strong>II, III y aVF</strong>.</li><li>Respuesta ventricular <strong>regular</strong> (2:1 → ~150/min) o variable.</li><li>Una taquicardia <strong>regular a ~150/min</strong> es flutter 2:1 hasta demostrar lo contrario; <strong>vagales/adenosina</strong> desenmascaran las ondas F.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li>Usar <strong>clase IC (flecainida/propafenona) sin bloquear el nodo AV</strong> (riesgo de conducción 1:1).</li><li><strong>Cardiovertir</strong> un flutter &gt;48 h o de duración desconocida <strong>sin anticoagulación</strong> adecuada o ecocardiograma transesofágico.</li><li>Controlar solo la frecuencia y <strong>olvidar la anticoagulación, la causa y la ablación</strong>.</li></ul></div></div></div>
+</div>
+<div class="panel" id="tab-dx"><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">📈 ECG de ejemplo (dientes de sierra)</span><span class="sg open">&#8964;</span></div><div class="sb"><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,98.0 L 8,98.9 L 10,99.8 L 12,100.7 L 14,101.6 L 16,102.5 L 18,103.4 L 20,104.3 L 22,105.2 L 24,106.1 L 26,109.9 L 28,83.1 L 30,91.4 L 32,114.6 L 34,110.6 L 36,111.5 L 38,111.9 L 40,109.6 L 42,107.3 L 44,105.0 L 46,102.6 L 48,100.3 L 50,98.0 L 52,98.9 L 54,99.8 L 56,100.7 L 58,101.6 L 60,102.5 L 62,103.4 L 64,104.3 L 66,105.2 L 68,106.1 L 70,107.0 L 72,107.9 L 74,108.8 L 76,109.7 L 78,110.6 L 80,111.5 L 82,111.9 L 84,109.6 L 86,107.3 L 88,105.0 L 90,102.6 L 92,100.3 L 94,98.0 L 96,98.9 L 98,99.8 L 100,100.7 L 102,101.6 L 104,102.5 L 106,103.4 L 108,104.3 L 110,105.2 L 112,106.1 L 114,109.9 L 116,83.1 L 118,91.4 L 120,114.6 L 122,110.6 L 124,111.5 L 126,111.9 L 128,109.6 L 130,107.3 L 132,105.0 L 134,102.6 L 136,100.3 L 138,98.0 L 140,98.9 L 142,99.8 L 144,100.7 L 146,101.6 L 148,102.5 L 150,103.4 L 152,104.3 L 154,105.2 L 156,106.1 L 158,107.0 L 160,107.9 L 162,108.8 L 164,109.7 L 166,110.6 L 168,111.5 L 170,111.9 L 172,109.6 L 174,107.3 L 176,105.0 L 178,102.6 L 180,100.3 L 182,98.0 L 184,98.9 L 186,99.8 L 188,100.7 L 190,101.6 L 192,102.5 L 194,103.4 L 196,104.3 L 198,105.2 L 200,106.1 L 202,109.9 L 204,83.1 L 206,91.4 L 208,114.6 L 210,110.6 L 212,111.5 L 214,111.9 L 216,109.6 L 218,107.3 L 220,105.0 L 222,102.6 L 224,100.3 L 226,98.0 L 228,98.9 L 230,99.8 L 232,100.7 L 234,101.6 L 236,102.5 L 238,103.4 L 240,104.3 L 242,105.2 L 244,106.1 L 246,107.0 L 248,107.9 L 250,108.8 L 252,109.7 L 254,110.6 L 256,111.5 L 258,111.9 L 260,109.6 L 262,107.3 L 264,105.0 L 266,102.6 L 268,100.3 L 270,98.0 L 272,98.9 L 274,99.8 L 276,100.7 L 278,101.6 L 280,102.5 L 282,103.4 L 284,104.3 L 286,105.2 L 288,106.1 L 290,109.9 L 292,83.1 L 294,91.4 L 296,114.6 L 298,110.6 L 300,111.5 L 302,111.9 L 304,109.6 L 306,107.3 L 308,105.0 L 310,102.6 L 312,100.3 L 314,98.0 L 316,98.9 L 318,99.8 L 320,100.7 L 322,101.6 L 324,102.5 L 326,103.4 L 328,104.3 L 330,105.2 L 332,106.1 L 334,107.0 L 336,107.9 L 338,108.8 L 340,109.7 L 342,110.6 L 344,111.5 L 346,111.9 L 348,109.6 L 350,107.3 L 352,105.0 L 354,102.6 L 356,100.3 L 358,98.0 L 360,98.9 L 362,99.8 L 364,100.7 L 366,101.6 L 368,102.5 L 370,103.4 L 372,104.3 L 374,105.2 L 376,106.1 L 378,109.9 L 380,83.1 L 382,91.4 L 384,114.6 L 386,110.6 L 388,111.5 L 390,111.9 L 392,109.6 L 394,107.3 L 396,105.0 L 398,102.6 L 400,100.3 L 402,98.0 L 404,98.9 L 406,99.8 L 408,100.7 L 410,101.6 L 412,102.5 L 414,103.4 L 416,104.3 L 418,105.2 L 420,106.1 L 422,107.0 L 424,107.9 L 426,108.8 L 428,109.7 L 430,110.6 L 432,111.5 L 434,111.9 L 436,109.6 L 438,107.3 L 440,105.0 L 442,102.6 L 444,100.3 L 446,98.0 L 448,98.9 L 450,99.8 L 452,100.7 L 454,101.6 L 456,102.5 L 458,103.4 L 460,104.3 L 462,105.2 L 464,106.1 L 466,109.9 L 468,83.1 L 470,91.4 L 472,114.6 L 474,110.6 L 476,111.5 L 478,111.9 L 480,109.6 L 482,107.3 L 484,105.0 L 486,102.6 L 488,100.3 L 490,98.0 L 492,98.9 L 494,99.8 L 496,100.7 L 498,101.6 L 500,102.5 L 502,103.4 L 504,104.3 L 506,105.2 L 508,106.1 L 510,107.0 L 512,107.9 L 514,108.8 L 516,109.7 L 518,110.6 L 520,111.5 L 522,111.9 L 524,109.6 L 526,107.3 L 528,105.0 L 530,102.6 L 532,100.3 L 534,98.0 L 536,98.9 L 538,99.8 L 540,100.7 L 542,101.6 L 544,102.5 L 546,103.4 L 548,104.3 L 550,105.2 L 552,106.1 L 554,109.9 L 556,83.1 L 558,91.4 L 560,114.6 L 562,110.6 L 564,111.5 L 566,111.9 L 568,109.6 L 570,107.3 L 572,105.0 L 574,102.6 L 576,100.3 L 578,98.0 L 580,98.9 L 582,99.8 L 584,100.7 L 586,101.6 L 588,102.5 L 590,103.4 L 592,104.3 L 594,105.2 L 596,106.1 L 598,107.0 L 600,107.9 L 602,108.8 L 604,109.7 L 606,110.6 L 608,111.5 L 610,111.9 L 612,109.6 L 614,107.3 L 616,105.0 L 618,102.6 L 620,100.3 L 622,98.0 L 624,98.9 L 626,99.8 L 628,100.7 L 630,101.6 L 632,102.5 L 634,103.4 L 636,104.3 L 638,105.2 L 640,106.1 L 642,109.9 L 644,83.1 L 646,91.4 L 648,114.6 L 650,110.6 L 652,111.5 L 654,111.9 L 656,109.6 L 658,107.3 L 660,105.0 L 662,102.6 L 664,100.3 L 666,98.0 L 668,98.9 L 670,99.8 L 672,100.7 L 674,101.6 L 676,102.5 L 678,103.4 L 680,104.3 L 682,105.2 L 684,106.1 L 686,107.0 L 688,107.9 L 690,108.8 L 692,109.7 L 694,110.6 L 696,111.5 L 698,111.9 L 700,109.6 L 702,107.3 L 704,105.0 L 706,102.6 L 708,100.3 L 710,98.0 L 712,98.9 L 714,99.8 L 716,100.7 L 718,101.6 L 720,102.5 L 722,103.4 L 724,104.3 L 726,105.2 L 728,106.1 L 730,109.9 L 732,83.1 L 734,91.4 L 736,114.6 L 738,110.6 L 740,111.5 L 742,111.9 L 744,109.6 L 746,107.3 L 748,105.0 L 750,102.6 L 752,100.3 L 754,98.0" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Flutter auricular típico (conducción 2:1)</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">Ondas F en "dientes de sierra" (~300/min); QRS regular a ~150/min.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,98.0 L 8,98.8 L 10,99.5 L 12,100.3 L 14,101.1 L 16,101.8 L 18,102.6 L 20,103.3 L 22,104.1 L 24,104.9 L 26,105.6 L 28,106.6 L 30,110.6 L 32,83.1 L 34,84.0 L 36,116.7 L 38,111.0 L 40,111.0 L 42,111.7 L 44,111.7 L 46,109.8 L 48,107.8 L 50,105.8 L 52,103.9 L 54,101.9 L 56,100.0 L 58,98.0 L 60,98.8 L 62,99.5 L 64,100.3 L 66,101.1 L 68,101.8 L 70,102.6 L 72,103.3 L 74,104.1 L 76,104.9 L 78,105.6 L 80,106.4 L 82,107.2 L 84,107.9 L 86,108.7 L 88,109.4 L 90,110.2 L 92,111.0 L 94,111.7 L 96,111.7 L 98,109.8 L 100,107.8 L 102,105.8 L 104,103.9 L 106,101.9 L 108,100.0 L 110,98.0 L 112,98.8 L 114,99.5 L 116,100.3 L 118,101.1 L 120,101.8 L 122,102.6 L 124,103.3 L 126,104.1 L 128,104.9 L 130,105.6 L 132,106.6 L 134,110.6 L 136,83.1 L 138,84.0 L 140,116.7 L 142,111.0 L 144,111.0 L 146,111.7 L 148,111.7 L 150,109.8 L 152,107.8 L 154,105.8 L 156,103.9 L 158,101.9 L 160,100.0 L 162,98.0 L 164,98.8 L 166,99.5 L 168,100.3 L 170,101.1 L 172,101.8 L 174,102.6 L 176,103.3 L 178,104.1 L 180,104.9 L 182,105.6 L 184,106.4 L 186,107.2 L 188,107.9 L 190,108.7 L 192,109.4 L 194,110.2 L 196,111.0 L 198,111.7 L 200,111.7 L 202,109.8 L 204,107.8 L 206,105.8 L 208,103.9 L 210,101.9 L 212,100.0 L 214,98.0 L 216,98.8 L 218,99.5 L 220,100.3 L 222,101.1 L 224,101.8 L 226,102.6 L 228,103.3 L 230,104.1 L 232,104.9 L 234,105.6 L 236,106.6 L 238,110.6 L 240,83.1 L 242,84.0 L 244,116.7 L 246,111.0 L 248,111.0 L 250,111.7 L 252,111.7 L 254,109.8 L 256,107.8 L 258,105.8 L 260,103.9 L 262,101.9 L 264,100.0 L 266,98.0 L 268,98.8 L 270,99.5 L 272,100.3 L 274,101.1 L 276,101.8 L 278,102.6 L 280,103.3 L 282,104.1 L 284,104.9 L 286,105.6 L 288,106.4 L 290,107.2 L 292,107.9 L 294,108.7 L 296,109.4 L 298,110.2 L 300,111.0 L 302,111.7 L 304,111.7 L 306,109.8 L 308,107.8 L 310,105.8 L 312,103.9 L 314,101.9 L 316,100.0 L 318,98.0 L 320,98.8 L 322,99.5 L 324,100.3 L 326,101.1 L 328,101.8 L 330,102.6 L 332,103.3 L 334,104.1 L 336,104.9 L 338,105.6 L 340,106.6 L 342,110.6 L 344,83.1 L 346,84.0 L 348,116.7 L 350,111.0 L 352,111.0 L 354,111.7 L 356,111.7 L 358,109.8 L 360,107.8 L 362,105.8 L 364,103.9 L 366,101.9 L 368,100.0 L 370,98.0 L 372,98.8 L 374,99.5 L 376,100.3 L 378,101.1 L 380,101.8 L 382,102.6 L 384,103.3 L 386,104.1 L 388,104.9 L 390,105.6 L 392,106.4 L 394,107.2 L 396,107.9 L 398,108.7 L 400,109.4 L 402,110.2 L 404,111.0 L 406,111.7 L 408,111.7 L 410,109.8 L 412,107.8 L 414,105.8 L 416,103.9 L 418,101.9 L 420,100.0 L 422,98.0 L 424,98.8 L 426,99.5 L 428,100.3 L 430,101.1 L 432,101.8 L 434,102.6 L 436,103.3 L 438,104.1 L 440,104.9 L 442,105.6 L 444,106.6 L 446,110.6 L 448,83.1 L 450,84.0 L 452,116.7 L 454,111.0 L 456,111.0 L 458,111.7 L 460,111.7 L 462,109.8 L 464,107.8 L 466,105.8 L 468,103.9 L 470,101.9 L 472,100.0 L 474,98.0 L 476,98.8 L 478,99.5 L 480,100.3 L 482,101.1 L 484,101.8 L 486,102.6 L 488,103.3 L 490,104.1 L 492,104.9 L 494,105.6 L 496,106.4 L 498,107.2 L 500,107.9 L 502,108.7 L 504,109.4 L 506,110.2 L 508,111.0 L 510,111.7 L 512,111.7 L 514,109.8 L 516,107.8 L 518,105.8 L 520,103.9 L 522,101.9 L 524,100.0 L 526,98.0 L 528,98.8 L 530,99.5 L 532,100.3 L 534,101.1 L 536,101.8 L 538,102.6 L 540,103.3 L 542,104.1 L 544,104.9 L 546,105.6 L 548,106.6 L 550,110.6 L 552,83.1 L 554,84.0 L 556,116.7 L 558,111.0 L 560,111.0 L 562,111.7 L 564,111.7 L 566,109.8 L 568,107.8 L 570,105.8 L 572,103.9 L 574,101.9 L 576,100.0 L 578,98.0 L 580,98.8 L 582,99.5 L 584,100.3 L 586,101.1 L 588,101.8 L 590,102.6 L 592,103.3 L 594,104.1 L 596,104.9 L 598,105.6 L 600,106.4 L 602,107.2 L 604,107.9 L 606,108.7 L 608,109.4 L 610,110.2 L 612,111.0 L 614,111.7 L 616,111.7 L 618,109.8 L 620,107.8 L 622,105.8 L 624,103.9 L 626,101.9 L 628,100.0 L 630,98.0 L 632,98.8 L 634,99.5 L 636,100.3 L 638,101.1 L 640,101.8 L 642,102.6 L 644,103.3 L 646,104.1 L 648,104.9 L 650,105.6 L 652,106.6 L 654,110.6 L 656,83.1 L 658,84.0 L 660,116.7 L 662,111.0 L 664,111.0 L 666,111.7 L 668,111.7 L 670,109.8 L 672,107.8 L 674,105.8 L 676,103.9 L 678,101.9 L 680,100.0 L 682,98.0 L 684,98.8 L 686,99.5 L 688,100.3 L 690,101.1 L 692,101.8 L 694,102.6 L 696,103.3 L 698,104.1 L 700,104.9 L 702,105.6 L 704,106.4 L 706,107.2 L 708,107.9 L 710,108.7 L 712,109.4 L 714,110.2 L 716,111.0 L 718,111.7 L 720,111.7 L 722,109.8 L 724,107.8 L 726,105.8 L 728,103.9 L 730,101.9 L 732,100.0 L 734,98.0 L 736,98.8 L 738,99.5 L 740,100.3 L 742,101.1 L 744,101.8 L 746,102.6 L 748,103.3 L 750,104.1 L 752,104.9 L 754,105.6" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Flutter con dientes de sierra marcados</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">Actividad auricular continua sin línea isoeléctrica entre las ondas F.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><div class="alert a-i"><span class="ai">💡</span><div>Las <b>ondas F</b> (dientes de sierra) se ven mejor en las derivaciones inferiores (II, III, aVF). Las <b>maniobras vagales o la adenosina</b> frenan el nodo y <b>desenmascaran</b> el flutter al aumentar el bloqueo AV.</div></div></div></div>
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento en el ECG</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Ondas F en dientes de sierra</strong> (~300/min), continuas, sin línea isoeléctrica entre ellas; mejor visibles en <strong>II, III y aVF</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Respuesta ventricular <strong>regular</strong> (2:1 → ~150/min) o variable.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Las <strong>maniobras vagales o la adenosina</strong> aumentan el bloqueo AV y <strong>desenmascaran</strong> las ondas F.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Diferénciala de…</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Ritmo</th><th>Pistas</th></tr></thead><tbody>
+    <tr><td class="dm">Fibrilación auricular</td><td>Irregularmente irregular, sin ondas organizadas (no hay dientes de sierra)</td></tr>
+    <tr><td class="dn">Taquicardia supraventricular (reentrada nodal)</td><td>QRS estrecho muy rápido sin ondas F; la adenosina suele terminarla (en el flutter, solo la enlentece/desenmascara)</td></tr>
+    <tr><td class="dm">Taquicardia sinusal</td><td>Onda P normal; frecuencia acorde a la causa</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Datos de inestabilidad</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">⚡</span><div><b>Hipotensión</b>, <b>alteración del estado mental</b>, <b>dolor torácico isquémico</b> o <b>insuficiencia cardíaca aguda</b> → <b>cardioversión sincronizada</b> (baja energía).</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo interactivo</div>Estable vs inestable; luego frecuencia + anticoagulación (CHA₂DS₂-VASc) y valorar ritmo/ablación.</div></div><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Fármacos con dosis. Toca para desplegar o <strong>busca por nombre</strong>.</div></div><input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (metoprolol, diltiazem, ibutilida, apixabán…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;"><div id="farm-body"></div></div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('dos1',this)">Flutter 2:1 (~150)</button>
+  <button class="pchip" onclick="setEscen('inestable',this)">Inestable</button>
+  <button class="pchip" onclick="setEscen('conversion',this)">Control de ritmo</button>
+  <button class="pchip" onclick="setEscen('recurrente',this)">Recurrente</button>
+  <button class="pchip" onclick="setEscen('claseic',this)">Riesgo 1:1</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Anticoagulación</td><td>Reevaluar CHA₂DS₂-VASc y el riesgo hemorrágico; adherencia; función renal si anticoagulante oral directo</td></tr>
+    <tr><td class="dn">Frecuencia/ritmo</td><td>Vigilar control de frecuencia (puede ser difícil) y síntomas; valorar ablación</td></tr>
+    <tr><td class="dm">Ablación</td><td>Flutter típico recurrente → ablación del istmo (curativa en la mayoría)</td></tr>
+    <tr><td class="dn">Causas/coexistencia</td><td>Buscar y tratar desencadenantes (tiroides, alcohol, enfermedad pulmonar) y fibrilación auricular asociada</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>Tras la ablación del flutter puede aparecer/persistir fibrilación auricular: mantén la vigilancia y la anticoagulación según el riesgo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Flutter típico recurrente o sintomático</strong> → electrofisiología (ablación del istmo).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Control de frecuencia difícil</strong> o mala tolerancia → valoración especializada.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Flutter atípico</strong> → centro con mapeo avanzado.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Flutter auricular</h2>
+  <p>Cardiología / arritmias. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Manejo del flutter (frecuencia, ritmo, cardioversión, ablación del istmo)</strong> → guía ACC/AHA/HRS 2015 de taquicardia supraventricular [1].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Anticoagulación y CHA₂DS₂-VASc (igual que en fibrilación auricular)</strong> → guía ACC/AHA 2023 de fibrilación auricular [2].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Contexto mexicano</strong> → CENETEC [3].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2015/16</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Page RL, Joglar JA, Caldwell MA, et al. <em>2015 ACC/AHA/HRS Guideline for the Management of Adult Patients With Supraventricular Tachycardia (incluye flutter auricular).</em> Circulation. 2016;133(14):e506-e574. [Control de frecuencia (betabloqueadores, diltiazem/verapamilo), cardioversión sincronizada en el inestable, ibutilida para conversión, ablación del istmo cavotricuspídeo como tratamiento del flutter típico recurrente. Sustenta el Tratamiento y el algoritmo.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000311" target="_blank">🔗 DOI 10.1161/CIR.0000000000000311</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2023/24</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Joglar JA, Chung MK, Armbruster AL, et al. <em>2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation.</em> Circulation. 2024;149(1):e1-e156. [Anticoagulación guiada por CHA₂DS₂-VASc y anticoagulantes orales directos; principios de periconversión aplicables al flutter, que comparte el riesgo embólico. Sustenta la anticoagulación y la calculadora.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000001193" target="_blank">🔗 DOI 10.1161/CIR.0000000000001193</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): fibrilación y flutter auricular.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja fármacos, dosis y presentaciones con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Verifica actualizaciones de guías (<strong>ACC/AHA/HRS, ESC</strong>) y locales (<strong>CENETEC, SSa México</strong>), y adapta al contexto institucional. Última revisión: <strong>agosto 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#0891b2', C1='#0891b2', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Punto clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / base',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones',f.pres,'#374151');
+  if(f.ci)h+=txrow('Precauciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Monitorización',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#0c4a5e')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== CALCULADORA CHA2DS2-VASc ===== */
+var CHV=[
+ {k:'ic',lbl:'Insuficiencia cardíaca / disfunción del ventrículo izquierdo',pts:1},
+ {k:'hta',lbl:'Hipertensión arterial',pts:1},
+ {k:'e75',lbl:'Edad ≥ 75 años',pts:2},
+ {k:'dm',lbl:'Diabetes mellitus',pts:1},
+ {k:'acv',lbl:'ACV / AIT / tromboembolia previa',pts:2},
+ {k:'vasc',lbl:'Enfermedad vascular (infarto, arteriopatía periférica, placa aórtica)',pts:1},
+ {k:'e65',lbl:'Edad 65–74 años',pts:1},
+ {k:'sexo',lbl:'Sexo femenino',pts:1}
+];
+var CHV_V={};
+function chvBuild(){
+  var h='';
+  for(var i=0;i<CHV.length;i++){
+    var f=CHV[i];
+    h+='<button class="pchip" id="chv-'+f.k+'" onclick="chvSet(\''+f.k+'\',this)">'+f.lbl+' <b>(+'+f.pts+')</b></button>';
+  }
+  document.getElementById('chv-chips').innerHTML=h;
+  chvCalc();
+}
+function chvSet(k,el){
+  CHV_V[k]=!CHV_V[k];
+  // edad: ≥75 y 65–74 son mutuamente excluyentes
+  if(k==='e75'&&CHV_V['e75']&&CHV_V['e65']){CHV_V['e65']=false;var b=document.getElementById('chv-e65');if(b)b.classList.remove('on');}
+  if(k==='e65'&&CHV_V['e65']&&CHV_V['e75']){CHV_V['e75']=false;var c=document.getElementById('chv-e75');if(c)c.classList.remove('on');}
+  if(el)el.classList.toggle('on');
+  chvCalc();
+}
+function chvCalc(){
+  var s=0;for(var i=0;i<CHV.length;i++){if(CHV_V[CHV[i].k])s+=CHV[i].pts;}
+  var muj=!!CHV_V['sexo'];
+  var cls,txt;
+  // interpretación por sexo (el punto de sexo solo cuenta con otro factor)
+  if((!muj&&s>=2)||(muj&&s>=3)){cls='res-high';txt='<b>Riesgo alto (puntaje '+s+').</b> Anticoagulación oral recomendada, salvo contraindicación. Valora el riesgo hemorrágico y las preferencias del paciente.';}
+  else if((!muj&&s===1)||(muj&&s===2)){cls='res-mid';txt='<b>Riesgo intermedio (puntaje '+s+').</b> Considera anticoagulación oral (decisión compartida). En la mujer, el punto por sexo solo suma riesgo cuando hay otro factor.';}
+  else{cls='res-ok';txt='<b>Riesgo bajo (puntaje '+s+').</b> En general no se recomienda anticoagulación por el puntaje. Reevalúa periódicamente.';}
+  var r=document.getElementById('chv-res');
+  r.className='calc-result show '+cls;
+  r.innerHTML='<div style="font-size:22px;font-weight:800;margin-bottom:4px;">CHA₂DS₂-VASc = '+s+'</div><div>'+txt+'</div>'
+    +'<div style="margin-top:8px;font-size:11.5px;color:#475569;">El flutter comparte el riesgo embólico de la fibrilación auricular: la decisión de anticoagular sigue el mismo puntaje. Este cálculo es orientativo; individualiza según el riesgo hemorrágico y las guías vigentes.</div>';
+}
+function chvReset(){
+  CHV_V={};
+  var c=document.querySelectorAll('#chv-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  chvCalc();
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_BB={n:'Betabloqueador (control de frecuencia)',elec:true,linea:'Control de frecuencia — 1.ª opción',
+  dlbl:'Dosis',da:'Metoprolol 2.5–5 mg IV cada 5 minutos hasta 15 mg (agudo); mantenimiento oral 25–100 mg cada 12 horas. Esmolol en infusión titulable como alternativa intravenosa',
+  dur:'Mantenimiento mientras persista el flutter o el riesgo de recurrencia.',
+  adm:'Preferido para el control de frecuencia, sobre todo si hay insuficiencia cardíaca (compensada). El control de frecuencia en el flutter suele ser más difícil que en la fibrilación auricular.',
+  mec:'Bloqueo beta → enlentece la conducción del nodo auriculoventricular.',
+  ind:'Control de frecuencia en el flutter.',
+  dmax:'Evitar en broncoespasmo grave y en insuficiencia cardíaca descompensada.',iv:'IV / VO',pres:'Metoprolol · esmolol',
+  ci:'Broncoespasmo grave, IC descompensada, bradicardia/bloqueo AV avanzado',ea:'Hipotensión, bradicardia',mon:'Frecuencia, presión, ECG',
+  nota:'⭐ Primera opción para bajar la frecuencia; el flutter es "terco" para el control de frecuencia.'};
+var F_CCB={n:'Diltiazem o verapamilo (control de frecuencia)',linea:'Control de frecuencia — alternativa',
+  dlbl:'Dosis',da:'Diltiazem 0.25 mg/kg IV (aprox. 15–20 mg) en 2 minutos; si es necesario, 0.35 mg/kg; infusión 5–15 mg/h. Verapamilo 2.5–5 mg IV. Mantenimiento oral según respuesta',
+  dur:'Mantenimiento según respuesta.',
+  adm:'Calcioantagonistas no dihidropiridínicos para el control de frecuencia. Evítalos en insuficiencia cardíaca con fracción de eyección reducida. No los combines con betabloqueador intravenoso.',
+  mec:'Bloqueo de canales de calcio → enlentece el nodo auriculoventricular.',
+  ind:'Control de frecuencia si el betabloqueador no es adecuado.',
+  dmax:'No en insuficiencia cardíaca con FE reducida ni en fibrilación auricular preexcitada.',iv:'IV / VO',pres:'Diltiazem · verapamilo',
+  ci:'IC con FE reducida, hipotensión, preexcitación (WPW)',ea:'Hipotensión, bradicardia',mon:'Frecuencia, presión',
+  nota:'No combinar con betabloqueador intravenoso; cuidado en insuficiencia cardíaca.'};
+var F_AMIO={n:'Amiodarona',linea:'Control de frecuencia/ritmo — casos seleccionados',
+  dlbl:'Dosis',da:'300 mg IV en 1 hora, seguido de 10–50 mg/h en infusión, cuando los betabloqueadores/calcioantagonistas están contraindicados o son ineficaces (p. ej. insuficiencia cardíaca)',
+  dur:'Según el objetivo (frecuencia/ritmo) y la respuesta.',
+  adm:'Útil para el control de frecuencia cuando otros fármacos no se pueden usar, y puede ayudar a la conversión a ritmo sinusal. Considera el riesgo de conversión (embolia) según la anticoagulación.',
+  mec:'Antiarrítmico de clase III (con efecto sobre el nodo).',
+  ind:'IC o contraindicación a betabloqueador/calcioantagonista.',
+  dmax:'Efectos adversos a largo plazo (tiroides, pulmón, hígado); vigila QT.',iv:'IV / VO',pres:'Ampolla / tableta',
+  ci:'QT largo; precaución en enfermedad tiroidea/pulmonar',ea:'Hipotensión con la infusión, bradicardia, toxicidad crónica',mon:'ECG/QT, presión',
+  nota:'Opción cuando hay insuficiencia cardíaca; puede convertir a sinusal (considera la anticoagulación).'};
+var F_CARDIO={n:'Cardioversión eléctrica sincronizada',elec:true,linea:'Inestable, o control de ritmo',
+  dlbl:'Energía',da:'Sincronizada; el flutter es muy sensible y suele convertir con energías bajas (frecuentemente 50 J), escalando si no responde. Inmediata si el paciente está inestable',
+  dur:'Inmediata ante inestabilidad; electiva para control de ritmo.',
+  adm:'Es el tratamiento del paciente hemodinámicamente inestable y una opción muy eficaz de control de ritmo. Respeta la anticoagulación periconversión (ver más abajo).',
+  mec:'Choque sincronizado con el QRS → restaura el ritmo sinusal.',
+  ind:'Flutter inestable, o control de ritmo electivo.',
+  dmax:'Debe ser SINCRONIZADA. Cuida la anticoagulación si el flutter dura más de 48 horas o es de duración desconocida.',iv:'Eléctrico',pres:'Sincronizada',
+  ci:'—',ea:'Quemadura, sedación',mon:'Anticoagulación periconversión, ECG',
+  nota:'⭐ Muy eficaz a baja energía; inestable = cardioversión sincronizada sin demora.'};
+var F_IBU={n:'Ibutilida (cardioversión farmacológica)',linea:'Control de ritmo — conversión aguda',
+  dlbl:'Dosis',da:'1 mg IV en 10 minutos (peso ≥ 60 kg; 0.01 mg/kg si es menor); puede repetirse una vez tras 10 minutos. Monitorización electrocardiográfica continua durante al menos 4 horas',
+  dur:'Dosis puntual para conversión.',
+  adm:'Antiarrítmico intravenoso eficaz para convertir el flutter reciente a ritmo sinusal. Requiere vigilancia por riesgo de prolongación del QT y torsades de pointes.',
+  mec:'Antiarrítmico de clase III (prolonga la repolarización).',
+  ind:'Conversión aguda del flutter (con anticoagulación adecuada).',
+  dmax:'No usar en insuficiencia cardíaca grave, hipokalemia ni QT largo basal. Corrige potasio/magnesio antes.',iv:'IV',pres:'Ampolla',
+  ci:'Insuficiencia cardíaca grave, hipokalemia, QT largo',ea:'Prolongación del QT, torsades de pointes',mon:'ECG/QT ≥ 4 horas; potasio y magnesio',
+  nota:'Eficaz para convertir el flutter; vigila el QT/torsades en un entorno monitorizado.'};
+var F_ANTICO={n:'Anticoagulación (según CHA₂DS₂-VASc)',elec:true,linea:'Prevención de embolia — como en la fibrilación auricular',
+  dlbl:'Opciones',da:'Anticoagulante oral directo: apixabán 5 mg cada 12 horas · rivaroxabán 20 mg al día · dabigatrán 150 mg cada 12 horas · edoxabán 60 mg al día. Alternativa: warfarina con INR objetivo 2–3 (ajusta las dosis según función renal, peso, edad e interacciones)',
+  dur:'Crónica según el riesgo (CHA₂DS₂-VASc); indefinida si el riesgo persiste.',
+  adm:'El flutter conlleva riesgo embólico similar al de la fibrilación auricular: la decisión de anticoagular se toma con el puntaje CHA₂DS₂-VASc (ver la calculadora). Periconversión: si el flutter dura más de 48 horas o es de duración desconocida, anticoagula al menos 3 semanas antes (o realiza ecocardiograma transesofágico) y al menos 4 semanas después.',
+  mec:'Prevención de la formación/embolización de trombos auriculares.',
+  ind:'Según el puntaje CHA₂DS₂-VASc y la periconversión.',
+  dmax:'Valora el riesgo hemorrágico; ajusta el anticoagulante oral directo según función renal y otros factores.',iv:'VO',pres:'Anticoagulante oral directo · warfarina',
+  ci:'Hemorragia activa, contraindicaciones específicas de cada fármaco',ea:'Hemorragia',mon:'Función renal, hemoglobina; INR si warfarina',
+  nota:'⭐ Usa la calculadora CHA₂DS₂-VASc para decidir; respeta la anticoagulación periconversión.'};
+var F_ABLA={n:'Ablación del istmo cavotricuspídeo',elec:true,linea:'Definitivo — flutter típico recurrente',
+  dlbl:'Cuándo',da:'Ablación con catéter del istmo cavotricuspídeo (por electrofisiología); tratamiento de elección del flutter típico recurrente o sintomático',
+  dur:'Definitivo (tasas de éxito superiores al 90% en el flutter típico).',
+  adm:'Interrumpe el circuito de macro-reentrada en la aurícula derecha. Alta eficacia y baja tasa de complicaciones; derivación temprana en el flutter típico recurrente.',
+  mec:'Bloqueo de la conducción a través del istmo cavotricuspídeo.',
+  ind:'Flutter típico recurrente o sintomático; preferencia del paciente.',
+  dmax:'El flutter atípico (no dependiente del istmo) requiere mapeo más complejo.',iv:'Procedimiento',pres:'—',
+  ci:'Según el caso',ea:'Complicaciones poco frecuentes',mon:'Electrofisiología',
+  nota:'⭐ Solución de fondo del flutter típico: alta tasa de curación.'};
+var F_NO_1A1={n:'❌ Antiarrítmico de clase IC sin bloquear el nodo AV',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No uses flecainida ni propafenona solas: al enlentecer la frecuencia auricular pueden facilitar una conducción 1:1 (frecuencia ventricular ~300/min), potencialmente catastrófica',
+  dur:'Si se usan, hazlo junto con un bloqueador del nodo auriculoventricular.',
+  adm:'Da siempre un betabloqueador o calcioantagonista antes/junto al antiarrítmico de clase IC. Evita la clase IC en cardiopatía estructural/isquémica.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Conducción 1:1 con colapso',
+  nota:'Clase IC + bloqueador del nodo; nunca la clase IC sola en el flutter.'};
+var F_NO_ANTICO={n:'❌ Cardiovertir sin considerar la anticoagulación',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No cardioviertas (eléctrica o farmacológica) un flutter de más de 48 horas o de duración desconocida sin la anticoagulación adecuada o un ecocardiograma transesofágico: riesgo de embolia',
+  dur:'Anticoagula ≥ 3 semanas antes (o ecocardiograma transesofágico) y ≥ 4 semanas después.',
+  adm:'Respeta el protocolo periconversión; individualiza según el riesgo.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Evento embólico (ictus)',
+  nota:'Antes de convertir: revisa duración y anticoagulación.'};
+var F_NO_OLVIDO={n:'❌ Tratar la frecuencia y olvidar la causa y la anticoagulación',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No te limites a controlar la frecuencia: valora la anticoagulación (CHA₂DS₂-VASc), busca desencadenantes/causas (hipertiroidismo, enfermedad pulmonar, alcohol, cardiopatía) y ofrece la ablación en el recurrente',
+  dur:'Manejo integral: frecuencia/ritmo + anticoagulación + causa + ablación.',
+  adm:'El flutter suele coexistir con fibrilación auricular y con cardiopatía: trata el conjunto.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Recurrencias, embolia, insuficiencia cardíaca',
+  nota:'Frecuencia/ritmo + anticoagulación + causa + ablación: el paquete completo.'};
+
+
+var F_SED_ETO={n:'Etomidato (sedante)',elec:true,linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'0.1–0.15 mg/kg IV en bolo (inicio ~30–60 s, duración 3–5 min)',
+ dur:'Dosis única para el procedimiento; repite solo si es necesario.',
+ adm:'Hipnótico de acción corta con buena estabilidad hemodinámica: opción habitual para la cardioversión. No produce analgesia, combínalo con un opioide. Puede dar mioclonías.',
+ mec:'Hipnótico de acción corta (facilita GABA).',
+ ind:'Sedación procedimental para cardioversión sincronizada en paciente con pulso.',
+ dmax:'Si está muy inestable o inconsciente, NO retrases el choque por sedar.',
+ iv:'IV',pres:'Ampolla',ci:'Alergia conocida',
+ ea:'Mioclonías, dolor a la inyección, supresión suprarrenal transitoria',
+ mon:'SpO₂, ECG, presión, capnografía; oxígeno, vía aérea y reversores (flumazenil, naloxona) listos',
+ nota:'⭐ Preferido por muchos en cardioversión por su estabilidad hemodinámica; combínalo con analgésico si hay dolor.'};
+var F_SED_PRO={n:'Propofol (sedante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'0.5–1 mg/kg IV titulado en bolos de 10–20 mg (inicio rápido, duración corta)',
+ dur:'Titula al efecto; acción muy corta.',
+ adm:'Hipnótico de acción corta muy manejable. Vigila hipotensión y depresión respiratoria, sobre todo si hay inestabilidad o hipovolemia. No da analgesia.',
+ mec:'Hipnótico de acción corta (facilita GABA).',
+ ind:'Sedación procedimental para cardioversión.',
+ dmax:'Reduce la dosis en el paciente inestable/anciano.',
+ iv:'IV',pres:'Ampolla',ci:'Inestabilidad hemodinámica marcada (relativa)',
+ ea:'Hipotensión, apnea, dolor a la inyección',
+ mon:'SpO₂, ECG, presión, capnografía; vía aérea lista',
+ nota:'Titula despacio; precaución hemodinámica y respiratoria.'};
+var F_SED_MID={n:'Midazolam (sedante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'1–2.5 mg IV, titular cada 2–3 min (aprox. 0.02–0.03 mg/kg); inicio 1–2 min',
+ dur:'Titula al efecto; acción intermedia.',
+ adm:'Benzodiacepina sedante y amnésica; a menudo se combina con fentanilo. Reversible con flumazenil. Mayor depresión respiratoria si se asocia a opioides.',
+ mec:'Benzodiacepina (facilita GABA), amnésica.',
+ ind:'Sedación procedimental para cardioversión.',
+ dmax:'Reduce la dosis y titula si es anciano o hay opioides asociados.',
+ iv:'IV',pres:'Ampolla',ci:'—',
+ ea:'Depresión respiratoria, hipotensión',
+ mon:'SpO₂, ECG, presión; flumazenil disponible como reversor',
+ nota:'Amnésico y reversible con flumazenil; suele combinarse con un analgésico.'};
+var F_SED_KET={n:'Ketamina (sedante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'1–2 mg/kg IV (sedación disociativa; inicio ~1 min)',
+ dur:'Duración ~10–15 min.',
+ adm:'Mantiene el impulso respiratorio y la estabilidad hemodinámica: útil si hay hipotensión. Aporta analgesia. Puede aumentar la frecuencia cardíaca, la presión y las secreciones.',
+ mec:'Anestésico disociativo (antagonista NMDA); analgésico.',
+ ind:'Sedación procedimental, en especial si hay inestabilidad hemodinámica.',
+ dmax:'Puede elevar frecuencia y presión; considera esto en la taquiarritmia.',
+ iv:'IV',pres:'Ampolla',ci:'—',
+ ea:'Hipertensión, taquicardia, sialorrea, fenómenos de emergencia',
+ mon:'SpO₂, ECG, presión',
+ nota:'Opción si hay hipotensión; da analgesia pero puede subir frecuencia/presión.'};
+var F_SED_FEN={n:'Fentanilo (analgésico adyuvante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'0.5–1 mcg/kg IV (aprox. 25–100 mcg), titular (inicio 1–2 min)',
+ dur:'Complementa al sedante durante el procedimiento.',
+ adm:'Opioide de acción rápida para el dolor del choque; se suma a un sedante (midazolam/propofol/etomidato). Reversible con naloxona. Suma depresión respiratoria con el sedante.',
+ mec:'Opioide de acción rápida (analgesia).',
+ ind:'Analgesia adyuvante en la cardioversión.',
+ dmax:'Titula lento; el bolo rápido en dosis altas puede dar rigidez torácica.',
+ iv:'IV',pres:'Ampolla',ci:'—',
+ ea:'Depresión respiratoria, hipotensión, rigidez torácica (dosis altas rápidas)',
+ mon:'SpO₂, ECG, presión; naloxona disponible como reversor',
+ nota:'La cardioversión duele: un analgésico complementa al sedante. Reversible con naloxona.'};
+
+var TXC=[
+ ['💓 Control de frecuencia','Bajar la respuesta ventricular',C1,[F_BB,F_CCB,F_AMIO]],
+ ['🔄 Control de ritmo','Convertir a sinusal',AZ,[F_CARDIO,F_IBU]],
+ ['🩸 Anticoagulación','Prevención de embolia',CO,[F_ANTICO]],
+ ['🎯 Definitivo','Flutter típico recurrente',C2,[F_ABLA]],
+ ['💤 Sedación para la cardioversión','Con pulso y consciente — la cardioversión duele; sedación/analgesia procedimental',C3,[F_SED_ETO,F_SED_PRO,F_SED_MID,F_SED_KET,F_SED_FEN]],
+ ['❌ NO hacer','Errores peligrosos',RJ,[F_NO_1A1,F_NO_ANTICO,F_NO_OLVIDO]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">Frecuencia/ritmo + anticoagulación + (ablación)</div>Si está <b>inestable</b> → <b>cardioversión sincronizada</b> (¡el flutter convierte con poca energía!). Si está <b>estable</b> → <b>control de frecuencia</b> (betabloqueador o calcioantagonista), decide <b>anticoagulación</b> con <b>CHA₂DS₂-VASc</b>, y valora <b>control de ritmo</b> y <b>ablación del istmo</b> (curativa en el típico). La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  h+='<div class="calc-w"><div class="calc-h">🧮 Calculadora CHA₂DS₂-VASc (riesgo embólico → anticoagulación)</div>';
+  h+='<div style="font-size:12px;color:#475569;margin:2px 0 8px;">Toca los factores presentes. El puntaje orienta la anticoagulación (igual que en la fibrilación auricular).</div>';
+  h+='<div class="chips" id="chv-chips"></div>';
+  h+='<div style="margin-top:8px;"><button class="calc-btn sc" onclick="chvReset()">Reiniciar</button></div>';
+  h+='<div id="chv-res" class="calc-result"></div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+  chvBuild();
+}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💓 Control de frecuencia',color:'#0891b2',farmacos:[
+  {n:'Metoprolol (betabloqueador)',ini:'2.5–5 mg IV c/5 min (máx 15 mg)',da:'VO 25–100 mg c/12 h. Preferido en IC compensada. No con calcioantagonista IV.',iv:'IV/VO',pres:'Ampolla/tab',ci:'Broncoespasmo grave, IC descompensada',ea:'Hipotensión, bradicardia',nota:'1.ª opción de frecuencia.'},
+  {n:'Diltiazem / verapamilo',ini:'Diltiazem 0.25 mg/kg IV; inf 5–15 mg/h',da:'Verapamilo 2.5–5 mg IV. No en IC con FE reducida ni con BB IV.',iv:'IV/VO',pres:'Ampolla/tab',ci:'IC FE reducida, preexcitación',ea:'Hipotensión, bradicardia',nota:'Alternativa de frecuencia.'},
+  {n:'Amiodarona',ini:'300 mg IV en 1 h → 10–50 mg/h',da:'Si BB/CCB contraindicados o IC. Puede convertir a sinusal. Vigila QT/tiroides.',iv:'IV/VO',pres:'Ampolla/tab',ci:'QT largo',ea:'Hipotensión, toxicidad crónica',nota:'Útil en insuficiencia cardíaca.'}]},
+ {familia:'🔄 Control de ritmo',color:'#0c3b6e',farmacos:[
+  {n:'Cardioversión sincronizada',ini:'~50 J (sincronizada)',da:'Muy eficaz a baja energía. Inmediata si inestable. Cuida la anticoagulación periconversión.',iv:'Eléctrico',pres:'Sincronizada',ci:'—',ea:'Quemadura, sedación',nota:'Inestable = ya.'},
+  {n:'Ibutilida',ini:'1 mg IV en 10 min (repetible ×1)',da:'Conversión aguda. Monitorización ECG ≥4 h. No en IC grave/hipokalemia/QT largo.',iv:'IV',pres:'Ampolla',ci:'IC grave, hipokalemia, QT largo',ea:'QT, torsades',nota:'Corrige K/Mg antes.'}]},
+ {familia:'🩸 Anticoagulación',color:'#0a5c45',farmacos:[
+  {n:'Anticoagulante oral directo',ini:'Apixabán 5 mg c/12 h; rivaroxabán 20 mg/día',da:'Dabigatrán 150 mg c/12 h; edoxabán 60 mg/día. Ajusta por función renal/peso/edad.',iv:'VO',pres:'—',ci:'Hemorragia activa',ea:'Hemorragia',nota:'Según CHA₂DS₂-VASc.'},
+  {n:'Warfarina',ini:'INR objetivo 2–3',da:'Alternativa; requiere control de INR e interacciones.',iv:'VO',pres:'Tab',ci:'Hemorragia activa',ea:'Hemorragia',nota:'Si no hay ACOD o está indicada.'}]},
+ {familia:'🎯 Definitivo',color:'#7a4a00',farmacos:[
+  {n:'Ablación del istmo cavotricuspídeo',ini:'Flutter típico recurrente',da:'Éxito >90% en el típico. Derivación temprana. Interrumpe la macro-reentrada.',iv:'Procedimiento',pres:'—',ci:'Según caso',ea:'Complicaciones poco frecuentes',nota:'Curativa en el típico.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres&&f.pres!=='—')h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Precaución',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para el paciente',color:'#0a5c45',fichas:[
+  {n:'Qué es y qué esperar',via:'Al diagnóstico / seguimiento',
+   enf:'Explicar que es una arritmia auricular rápida y organizada; que se controla la frecuencia, se valora recuperar el ritmo normal y, según el riesgo, se usa anticoagulante para prevenir el ictus; y que la ablación puede curarlo.',
+   pac:'Es un ritmo auricular rápido. Controlaremos la frecuencia, valoraremos regularizar el ritmo y, según tu riesgo, un anticoagulante para prevenir un derrame. Si se repite, un procedimiento (ablación) suele curarlo. No suspendas el anticoagulante por tu cuenta.',
+   nota:'Comenta desencadenantes (alcohol, tiroides, enfermedad pulmonar) y adherencia al anticoagulante.',
+   alarma:'Consulta urgente si hay desmayo, dolor de pecho, falta de aire intensa o palpitación muy rápida y sostenida.'}]},
+ {familia:'🔎 Para el equipo',color:'#0c3b6e',fichas:[
+  {n:'Enfoque',via:'Siempre',
+   enf:'Inestable → cardioversión sincronizada (baja energía). Estable → control de frecuencia + anticoagulación (CHA₂DS₂-VASc) + valorar ritmo/ablación. Buscar causas y coexistencia con fibrilación auricular.',
+   pac:'El equipo valorará la estabilidad y el riesgo embólico.',
+   nota:'Clase IC solo con bloqueador del nodo (riesgo de 1:1). Respeta la anticoagulación periconversión.',
+   alarma:'Frecuencia ventricular ~150 y regular → sospecha flutter 2:1; usa vagales/adenosina para desenmascarar.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ dos1:{t:'Flutter 2:1 a ~150/min',c:'#0891b2',h:
+  '<div class="prose"><p><b>Perfil:</b> taquicardia regular a ~150/min; el flutter 2:1 es una causa clásica y a veces se pasa por alto.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🔎</span><div><b>Maniobras vagales o adenosina</b> aumentan el bloqueo AV y <b>desenmascaran</b> las ondas F en dientes de sierra. Luego, control de frecuencia y anticoagulación según CHA₂DS₂-VASc.</div></div>'},
+ inestable:{t:'Flutter inestable',c:'#7b1c1c',h:
+  '<div class="prose"><p><b>Perfil:</b> hipotensión, alteración del estado mental, dolor torácico isquémico o insuficiencia cardíaca aguda.</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚡</span><div><b>Cardioversión eléctrica sincronizada</b> de inmediato; el flutter suele convertir con <b>energía baja (~50 J)</b>.</div></div>'},
+ conversion:{t:'Control de ritmo / periconversión',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> se busca recuperar el ritmo sinusal.</p></div>'
+  +'<div class="alert a-w"><span class="ai">🩸</span><div>Si dura &gt;48 h o es de duración desconocida, <b>anticoagula ≥3 semanas antes (o ecocardiograma transesofágico)</b> y <b>≥4 semanas después</b>. Opciones: <b>cardioversión eléctrica</b> o <b>ibutilida</b> (monitorizada).</div></div>'},
+ recurrente:{t:'Flutter típico recurrente',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> episodios repetidos o sintomáticos, dependientes del istmo.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🎯</span><div><b>Ablación del istmo cavotricuspídeo</b>: tratamiento de elección, con éxito &gt;90%. Deriva a electrofisiología.</div></div>'},
+ claseic:{t:'Riesgo de conducción 1:1',c:'#7b1c1c',h:
+  '<div class="prose"><p><b>Perfil:</b> uso de antiarrítmicos de clase IC (flecainida/propafenona).</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚠️</span><div>Pueden enlentecer la frecuencia auricular y facilitar una <b>conducción 1:1</b> (frecuencia ventricular ~300/min). Úsalos <b>siempre con un bloqueador del nodo AV</b> y evítalos en cardiopatía estructural.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Taquicardia regular con ondas F en dientes de sierra (flutter auricular). ¿El paciente está estable o inestable (hipotensión, alteración del estado mental, dolor torácico isquémico, insuficiencia cardíaca aguda)?',o:[
+   ['Inestable','inest'],['Estable','estable']]},
+ inest:{t:'Cardioversión sincronizada YA',r:'high',x:'Paciente inestable → <b>cardioversión eléctrica sincronizada</b>; el flutter suele convertir con <b>energía baja (~50 J)</b>. Sincronizada, no desfibrilación.'},
+ estable:{t:'Control de frecuencia + anticoagulación',r:'ok',x:'<b>Control de frecuencia</b>: betabloqueador (metoprolol) o calcioantagonista no dihidropiridínico (diltiazem/verapamilo). Decide <b>anticoagulación</b> con <b>CHA₂DS₂-VASc</b> (ver calculadora). Si la frecuencia es ~150 regular, usa vagales/adenosina para confirmar el flutter 2:1.',n:'ritmo'},
+ ritmo:{q:'¿Buscas recuperar el ritmo sinusal (control de ritmo)?',o:[
+   ['Sí, control de ritmo','conv'],['No, solo frecuencia + anticoagulación','mant']]},
+ conv:{t:'Control de ritmo (cuida la anticoagulación)',r:'ok',x:'Si dura &gt;48 h o duración desconocida: <b>anticoagula ≥3 semanas antes (o ecocardiograma transesofágico)</b> y ≥4 semanas después. Opciones: <b>cardioversión eléctrica sincronizada</b> (muy eficaz a baja energía) o <b>ibutilida</b> en entorno monitorizado. Evita clase IC sin bloqueador del nodo.',n:'ablacion'},
+ mant:{t:'Mantener frecuencia + anticoagulación',r:'ok',x:'Continúa el control de frecuencia y la anticoagulación según el riesgo. Busca y trata desencadenantes/causas. Reevalúa síntomas y la opción de ablación.',n:'ablacion'},
+ ablacion:{t:'¿Recurrente o sintomático?',r:'mid',x:'En el <b>flutter típico recurrente o sintomático</b>, ofrece <b>ablación del istmo cavotricuspídeo</b> (éxito &gt;90%): tratamiento de elección y potencialmente curativo. Deriva a electrofisiología.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div>';
+    if(n.n)h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\''+n.n+'\')">→ Continuar</button></div>';
+    h+='</div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('dos1',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>

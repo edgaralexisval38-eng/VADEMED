@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bradicardia con pulso · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#145374;--acd:#0a2f43;--acl:#e6eef4;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#0a2f43,#145374);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫀</div>
+    <div>
+      <div class="hdr-eye">Cardiología · ACLS</div>
+      <div class="hdr-title">Bradicardia con pulso</div>
+      <div class="hdr-sub">La inestabilidad manda · atropina → marcapasos / infusión</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> R00.1</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">FC típicamente &lt;50/min</span>
+    <span class="badge">Atropina 1 mg (máx 3 mg)</span>
+    <span class="badge">Dopamina 5–20 mcg/kg/min</span>
+    <span class="badge">Bloqueo alto grado → marcapasos</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">¿Inestable?</div><div class="qs-l">decide todo</div></div>
+  <div class="qs"><div class="qs-v">1 mg</div><div class="qs-l">atropina</div></div>
+  <div class="qs"><div class="qs-v">3 mg</div><div class="qs-l">máx atropina</div></div>
+  <div class="qs"><div class="qs-v">MTC</div><div class="qs-l">si falla</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>La <strong>bradicardia con pulso</strong> es una frecuencia cardiaca <strong>típicamente &lt;50/min</strong> que puede o no causar síntomas. Lo que decide la conducta <strong>no es el número</strong>, sino si la bradicardia <strong>compromete la perfusión</strong>.</p></div>
+  <div class="alert a-g"><span class="ai">🎯</span><div><div class="at">El árbol de decisión</div><strong>1)</strong> Identifica y trata la causa + soporte (ABC, O₂ si hipoxémico, monitor, IV, ECG). <strong>2)</strong> ¿Hay compromiso? Si <strong>NO</strong> → observar. Si <strong>SÍ</strong> → <strong>atropina 1 mg</strong> y, si falla o hay bloqueo de alto grado, <strong>marcapasos transcutáneo</strong> o <strong>infusión</strong>.</div></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">La trampa clásica</div>En <strong>Mobitz II o bloqueo de tercer grado</strong> (infranodal), la <strong>atropina probablemente no funcione</strong>: no te demores y pasa a marcapasos/infusión.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Signos de inestabilidad (compromiso)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Hipotensión</strong> / signos de shock.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Alteración aguda del estado mental.</strong></div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Dolor torácico isquémico.</strong></div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Insuficiencia cardiaca aguda.</strong></div></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>La presencia de <b>cualquiera</b> de estos, atribuible a la bradicardia, define al paciente como <b>inestable</b> y activa el tratamiento.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Por qué el algoritmo es el que es</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Trata al paciente, no al monitor</strong><br>Una FC baja bien tolerada no requiere tratamiento agudo.<br><br><strong>Por eso:</strong> el punto de decisión es la <strong>perfusión</strong>, no un número aislado.</div>
+  <div class="fp fp-a"><strong>2. Atropina = quitar el freno vagal</strong><br>Funciona cuando el problema es el tono vagal o el nodo (suprahisiano).<br><br><strong>Por eso:</strong> es inútil en el <strong>bloqueo infranodal</strong> (Mobitz II / tercer grado), donde se va directo a marcapasos.</div>
+  <div class="fp fp-b"><strong>3. Buscar la causa</strong><br>Fármacos, isquemia, hipoxia y electrolitos causan bradicardia.<br><br><strong>Por eso:</strong> el <strong>antídoto correcto</strong> (glucagón, calcio, Fab, corregir K⁺) puede ser el tratamiento definitivo.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Causas reversibles</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Causa</th><th>Pista / tratamiento</th></tr></thead><tbody>
+    <tr><td class="dm">Fármacos</td><td>Betabloqueador (glucagón), calcioantagonista (calcio), digoxina (Fab)</td></tr>
+    <tr><td class="dm">Isquemia / IAM inferior</td><td>Reperfusión; a menudo transitorio</td></tr>
+    <tr><td class="dn">Hipoxia</td><td>Oxígeno, soporte ventilatorio</td></tr>
+    <tr><td class="dn">Hiperkalemia</td><td>Calcio, insulina-glucosa, etc.</td></tr>
+    <tr><td class="dn">Otras</td><td>Hipotiroidismo, hipotermia, tono vagal aumentado</td></tr>
+  </tbody></table></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Reconocer el ritmo en el ECG</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Ritmo</th><th>Clave ECG</th><th>Nivel / conducta</th></tr></thead><tbody>
+    <tr><td class="dm">Bradicardia sinusal</td><td>P sinusal normal, FC &lt;50; PR normal</td><td>Nodal; atropina si inestable</td></tr>
+    <tr><td class="dm">Bloqueo AV 1.º grado</td><td>PR &gt;200 ms constante; no cae QRS</td><td>Benigno; no tratar</td></tr>
+    <tr><td class="dn">Bloqueo AV 2.º Mobitz I (Wenckebach)</td><td>PR se alarga progresivamente hasta que cae un QRS</td><td>Suele ser nodal/benigno; atropina si inestable</td></tr>
+    <tr><td class="dn">Bloqueo AV 2.º Mobitz II</td><td>Cae un QRS <strong>sin</strong> alargamiento previo del PR</td><td><strong>Infranodal</strong>; atropina poco útil → marcapasos</td></tr>
+    <tr><td class="dn">Bloqueo AV 3.er grado (completo)</td><td><strong>Disociación AV</strong>: P y QRS independientes</td><td><strong>Infranodal</strong>; marcapasos</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div>Distinguir <b>Mobitz I vs II</b> cambia la conducta: el I suele responder a atropina; el II y el tercer grado <b>no</b> y necesitan marcapasos.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Evaluación dirigida</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>ABC</strong>, oxígeno si hipoxémico, monitor, oximetría, presión arterial.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Acceso IV</strong> y <strong>ECG de 12 derivaciones</strong> (sin retrasar el tratamiento si está inestable).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Revisa <strong>medicamentos</strong> (BB, BCC, digoxina) y busca isquemia/electrolitos.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Decide <strong>estable vs inestable</strong>: ese es el punto de bifurcación.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo interactivo (ACLS)</div>Sigue el árbol: ¿inestable? → ¿bloqueo de alto grado? → atropina / marcapasos / infusión.</div></div>
+<div class="an"><div id="algo-box"></div></div>
+</div>
+<div class="panel" id="tab-txc">
+<div class="calc-w" id="inf-calc">
+  <div style="font-size:14px;font-weight:800;color:var(--ac);margin-bottom:4px;">Calculadora de infusiones por peso</div>
+  <div style="font-size:11.5px;color:#6b7280;margin-bottom:12px;">Goteo de dopamina y adrenalina con las diluciones estándar. Titula siempre a la respuesta.</div>
+  <label class="calc-lbl">Peso (kg)</label>
+  <input class="calc-in" id="inf-kg" type="number" inputmode="decimal" placeholder="p. ej. 70">
+  <div style="margin-top:6px;">
+    <button class="calc-btn" onclick="infCalc()">Calcular</button>
+    <button class="calc-btn sc" onclick="infReset()">Reiniciar</button>
+  </div>
+  <div class="calc-result" id="inf-res"></div>
+</div>
+<div id="txc-body"></div>
+</div>
+<div class="panel" id="tab-farm">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Fármacos del algoritmo y antídotos por causa, con dosis. Toca para desplegar o <strong>busca por nombre</strong>.</div></div>
+<input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (atropina, dopamina, glucagón…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;">
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('bloqueo',this)">Bloqueo alto grado</button>
+  <button class="pchip" onclick="setEscen('betabloq',this)">Intox. betabloqueador</button>
+  <button class="pchip" onclick="setEscen('calcioant',this)">Intox. calcioantagonista</button>
+  <button class="pchip" onclick="setEscen('digoxina',this)">Intox. digoxina</button>
+  <button class="pchip" onclick="setEscen('iam',this)">IAM inferior</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Tras estabilizar</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Respondió a atropina</td><td>Monitorizar, tratar la causa, marcapasos preparado por si recae</td></tr>
+    <tr><td class="dm">Con marcapasos/infusión</td><td>Confirmar captura mecánica (pulso); consulta para transvenoso/definitivo</td></tr>
+    <tr><td class="dn">Bloqueo de alto grado</td><td>Valorar marcapasos <strong>definitivo</strong> (cardiología/electrofisiología)</td></tr>
+    <tr><td class="dn">Causa reversible</td><td>Corregirla (antídoto, K⁺, reperfusión) suele ser lo definitivo</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔌</span><span class="st">Marcapasos transcutáneo — recordatorios</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Frecuencia de demanda <strong>60–80/min</strong>; sube la corriente (mA) hasta lograr <strong>captura</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Confirma la <strong>captura mecánica</strong> palpando el pulso, no solo el trazo eléctrico.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Duele</strong>: administra analgesia/sedación.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Es un <strong>puente</strong> al marcapasos transvenoso/definitivo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo consultar / derivar</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Bloqueo de alto grado</strong> (Mobitz II / tercer grado) → cardiología/electrofisiología.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Bradicardia sintomática <strong>recurrente</strong> → valorar marcapasos definitivo.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Necesidad de <strong>marcapasos transvenoso</strong> → especialista.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Bradicardia con pulso (ACLS)</h2>
+  <p>Guías de reanimación y de bradicardia. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Algoritmo, atropina 1 mg (máx 3 mg), dopamina 5–20 mcg/kg/min, adrenalina 2–10 mcg/min</strong> → guías <strong>AHA de RCP/ACLS</strong> [1].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Clasificación de bloqueos y manejo (Mobitz II / tercer grado → marcapasos)</strong> → guía <strong>ACC/AHA/HRS</strong> de bradicardia [2].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Resumen práctico del algoritmo</strong> → material educativo [3]; <strong>contexto MX</strong> → CENETEC [4].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías de reanimación y de bradicardia</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Panchal AR, Bartos JA, Cabañas JG, et al. <em>Part 3: Adult Basic and Advanced Life Support: 2020 American Heart Association Guidelines for CPR and ECC.</em> Circulation. 2020;142(16 Suppl 2):S366-S468. [Algoritmo de bradicardia con pulso: atropina 1 mg (repetir c/3–5 min, máx 3 mg); si falla, marcapasos transcutáneo o infusión de dopamina (5–20 mcg/kg/min) o adrenalina (2–10 mcg/min). Sustenta el algoritmo, el Tratamiento y la calculadora.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000916" target="_blank">🔗 DOI 10.1161/CIR.0000000000000916</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Kusumoto FM, Schoenfeld MH, Barrett C, et al. <em>2018 ACC/AHA/HRS Guideline on the Evaluation and Management of Patients With Bradycardia and Cardiac Conduction Delay.</em> Circulation. 2019;140(8):e382-e482. [Clasificación de los bloqueos AV y su manejo; el bloqueo infranodal (Mobitz II / tercer grado) requiere marcapasos. Sustenta el Diagnóstico y los escenarios de bloqueo.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000628" target="_blank">🔗 DOI 10.1161/CIR.0000000000000628</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Material educativo del algoritmo</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2020+</span><span class="biblio-level lv-c">Nivel C</span></div>
+      <div class="biblio-ref">American Heart Association. <em>Adult Bradycardia With a Pulse Algorithm (ACLS).</em> AHA / cpr.heart.org. [Reproduce los pasos y las dosis del algoritmo (atropina 1 mg, dopamina/adrenalina, marcapasos) usados en este archivo. Material de referencia rápida.]</div>
+      <a class="biblio-link" href="https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/algorithms" target="_blank">🔗 cpr.heart.org · algoritmos ACLS</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): bradiarritmias / trastornos de la conducción.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja fármacos y presentaciones con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía internacional / consenso mayor</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Material educativo / referencia rápida</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Se recomienda verificar actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y de reanimación (AHA/ILCOR), y adaptar al contexto institucional. Última revisión: <strong>julio 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#145374', C1='#145374', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Paso clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / cómo',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo usarlo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Dosis máx / nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Preparación / presentación',f.pres,'#374151');
+  if(f.ci)h+=txrow('Contraindicaciones / cautela',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Seguimiento',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#0a2f43')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_OBSERVA={n:'Observar y tratar la causa (paciente estable)',elec:true,linea:'Si NO hay inestabilidad',
+  dlbl:'Conducta',da:'Monitorizar; buscar y corregir la causa (fármacos, isquemia, hipoxia, electrolitos). No dar atropina ni marcapasos',
+  dur:'Vigilancia continua; reevaluar ante cualquier deterioro.',
+  adm:'La mayoría de las bradicardias asintomáticas no requieren tratamiento agudo: soporte de ABC, oxígeno si hipoxémico, ECG de 12 derivaciones.',
+  mec:'La conducta depende de la perfusión, no solo del número.',
+  ind:'Bradicardia sin hipotensión, sin alteración del estado mental, sin shock, sin dolor isquémico ni insuficiencia cardíaca.',
+  dmax:'—',iv:'—',pres:'Monitor, oxígeno, acceso IV, ECG 12 derivaciones',ci:'—',ea:'—',mon:'Monitor continuo',
+  nota:'⭐ "Trata al paciente, no al monitor": una FC de 45 en un deportista dormido no es lo mismo que 45 con hipotensión y confusión.'};
+var F_ATROPINA={n:'Atropina',elec:true,linea:'Primera línea si hay inestabilidad',
+  dlbl:'Dosis',da:'1 mg IV en bolo, repetir cada 3–5 min. Dosis máxima total 3 mg',
+  dur:'Efecto rápido y breve; prepara el marcapasos mientras la administras.',
+  adm:'Actualización 2020: la primera dosis pasó de 0.5 mg a 1 mg. Mientras se da atropina, prepara el marcapasos transcutáneo.',
+  mec:'Bloquea el tono vagal → acelera el nodo sinusal y la conducción AV.',
+  ind:'Bradicardia sintomática/inestable con perfusión comprometida.',
+  dmax:'Máximo 3 mg en total.',iv:'IV/IO',pres:'Ampolleta 1 mg',
+  ci:'Poco eficaz en bloqueo infranodal (ver nota)',ea:'Taquicardia, midriasis, retención urinaria, boca seca',mon:'FC, ritmo, perfusión',
+  nota:'⭐ Primera línea, PERO poco probable que funcione en Mobitz II, bloqueo de tercer grado o tercer grado con QRS ancho (infranodal): en esos casos, no te demores y pasa a marcapasos/infusión.'};
+var F_MTC={n:'Marcapasos transcutáneo (MTC)',elec:true,linea:'Si la atropina falla o hay bloqueo de alto grado',
+  dlbl:'Conducta',da:'Colocar parches, ajustar frecuencia (60–80/min) y subir la corriente (mA) hasta lograr captura eléctrica y mecánica (pulso)',
+  dur:'Medida puente hasta el tratamiento definitivo (marcapasos transvenoso/definitivo).',
+  adm:'DUELE: administra analgesia/sedación. Verifica la captura mecánica palpando el pulso, no solo el trazo.',
+  mec:'Estimula el miocardio desde la superficie para imponer la frecuencia.',
+  ind:'Atropina inefectiva, o bloqueo de alto grado (Mobitz II / tercer grado) desde el inicio.',
+  dmax:'—',iv:'Transcutáneo',pres:'Desfibrilador con función de marcapasos',ci:'—',ea:'Dolor, captura fallida',mon:'Captura eléctrica y mecánica (pulso), perfusión',
+  nota:'⭐ Alternativa equivalente a las infusiones cuando la atropina no funciona. Confirma la captura mecánica (pulso palpable) y sedа/analgesia al paciente.'};
+var F_DOPA={n:'Dopamina (infusión)',linea:'Alternativa a marcapasos si atropina falla',
+  dlbl:'Dosis',da:'5–20 mcg/kg/min IV en infusión, titular a respuesta',
+  dur:'Titular al efecto; al suspender, retirar de forma gradual.',
+  adm:'Preparación habitual: 400 mg en 250 mL. Usa la calculadora de arriba para el goteo por peso.',
+  mec:'Agonista adrenérgico: aumenta la frecuencia y la contractilidad (efecto β) y la presión (efecto α a dosis altas).',
+  ind:'Atropina inefectiva; útil si además hay hipotensión.',
+  dmax:'Titular; retirar gradual.',iv:'IV en infusión',pres:'400 mg en 250 mL de solución',ci:'Taquiarritmias',ea:'Taquicardia, arritmias, isquemia',mon:'FC, presión, ritmo',
+  nota:'Equivalente al marcapasos como opción de segunda línea. Buena elección si coexiste hipotensión.'};
+var F_ADRE={n:'Adrenalina (epinefrina, infusión)',linea:'Alternativa a marcapasos si atropina falla',
+  dlbl:'Dosis',da:'2–10 mcg/min IV en infusión, titular a respuesta',
+  dur:'Titular al efecto; retirar gradual.',
+  adm:'Preparación habitual: 1 mg en 500 mL. Dosis por minuto (no por peso). Usa la calculadora de arriba.',
+  mec:'Agonista adrenérgico potente: aumenta frecuencia, contractilidad y presión.',
+  ind:'Atropina inefectiva, sobre todo con hipotensión marcada.',
+  dmax:'Titular; retirar gradual.',iv:'IV en infusión',pres:'1 mg en 500 mL de solución',ci:'Taquiarritmias',ea:'Taquicardia, arritmias, isquemia',mon:'FC, presión, ritmo',
+  nota:'Alternativa a la dopamina; se dosifica en mcg/min (fija), no por peso.'};
+var F_GLUCA={n:'Glucagón (intoxicación por betabloqueador)',linea:'Antídoto según la causa',
+  dlbl:'Dosis',da:'3–10 mg IV en bolo, seguido de infusión si responde',
+  dur:'Continuar según la respuesta; puede requerir infusión sostenida.',
+  adm:'Para bradicardia/hipotensión por betabloqueadores. Prepara antiemético (provoca vómito).',
+  mec:'Aumenta el AMPc independiente del receptor β → efecto crono/inotrópico.',
+  ind:'Sospecha de intoxicación por betabloqueador.',
+  dmax:'Según respuesta.',iv:'IV',pres:'Vial de glucagón',ci:'—',ea:'Náusea, vómito, hiperglucemia',mon:'FC, presión, glucemia',
+  nota:'Antídoto de elección en la intoxicación por betabloqueador; asocia medidas de soporte.'};
+var F_CALCIO={n:'Calcio (intoxicación por calcioantagonista / hiperkalemia)',linea:'Antídoto según la causa',
+  dlbl:'Dosis',da:'Gluconato de calcio 10% 10–20 mL IV (o cloruro de calcio 10% 10 mL por vía central), repetir según respuesta',
+  dur:'Repetir según la respuesta hemodinámica y el calcio ionizado.',
+  adm:'Para intoxicación por calcioantagonistas y para estabilizar la membrana en hiperkalemia.',
+  mec:'Restaura el gradiente de calcio para la contracción/conducción.',
+  ind:'Intoxicación por calcioantagonista; hiperkalemia con cambios en el ECG.',
+  dmax:'Según calcio ionizado.',iv:'IV',pres:'Gluconato de calcio 10% · cloruro de calcio 10%',ci:'Intoxicación digitálica (cautela)',ea:'Flebitis (cloruro), bradicardia si rápido',mon:'ECG, calcio ionizado',
+  nota:'En la intoxicación por calcioantagonista suele combinarse con insulina a dosis altas + glucosa. En sospecha de intoxicación por digoxina, usa el calcio con cautela.'};
+var F_NO_ASINT={n:'❌ Tratar la bradicardia asintomática',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No des atropina ni marcapasos a una bradicardia bien tolerada',
+  dur:'Si no hay compromiso de la perfusión, el tratamiento hace más daño que bien.',
+  adm:'Observa, monitoriza y busca la causa.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Taquicardia/arritmias innecesarias',
+  nota:'La conducta la marca la inestabilidad, no un número aislado.'};
+var F_NO_ATRO={n:'❌ Confiar en atropina en bloqueo de alto grado',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No te demores con atropina en Mobitz II o bloqueo de tercer grado (infranodal)',
+  dur:'La atropina es poco probable que funcione y retrasa el marcapasos.',
+  adm:'Pasa pronto al marcapasos transcutáneo o a la infusión beta-adrenérgica.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Retraso del tratamiento eficaz',
+  nota:'El bloqueo infranodal no depende del tono vagal: la atropina no lo revierte.'};
+var F_NO_CAUSA={n:'❌ Olvidar la causa reversible',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No trates solo la frecuencia sin buscar por qué',
+  dur:'Fármacos (BB, BCC, digoxina), hipoxia, hiperkalemia, isquemia, hipotiroidismo/hipotermia.',
+  adm:'El antídoto correcto (glucagón, calcio, Fab, corregir potasio) puede ser lo definitivo.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Fracaso terapéutico si no se corrige la causa',
+  nota:'Identificar y tratar la causa subyacente es el primer paso del algoritmo.'};
+
+var TXC=[
+ ['Estable — observar','Si NO hay inestabilidad',CO,[F_OBSERVA]],
+ ['Inestable — atropina','Primera línea',C1,[F_ATROPINA]],
+ ['Si atropina falla / bloqueo alto grado','Marcapasos o infusiones',AZ,[F_MTC,F_DOPA,F_ADRE]],
+ ['Antídotos según la causa','Tóxicos / electrolitos',C2,[F_GLUCA,F_CALCIO]],
+ ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_ASINT,F_NO_ATRO,F_NO_CAUSA]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">La inestabilidad manda</div>Si el paciente está <b>estable</b> → observa y trata la causa. Si está <b>inestable</b> → <b>atropina 1 mg</b> (c/3–5 min, máx 3 mg) y, si falla o hay <b>bloqueo de alto grado</b>, <b>marcapasos transcutáneo</b> o <b>infusión</b> (dopamina/adrenalina). La <span style="color:#f5b301;">★</span> marca los pasos clave.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== CALCULADORA: infusiones por peso ===== */
+function infCalc(){
+  var p=nm('inf-kg'), box=document.getElementById('inf-res');
+  if(p==null||p<=0){box.className='calc-result show res-mid';box.innerHTML='Escribe el peso en kilogramos.';return;}
+  // Dopamina 400 mg / 250 mL = 1600 mcg/mL ; mL/h = dosis*peso*60/1600
+  var d5=(5*p*60/1600), d10=(10*p*60/1600), d20=(20*p*60/1600);
+  // Adrenalina 1 mg / 500 mL = 2 mcg/mL ; mL/h = dosis*60/2 (no depende del peso)
+  var a2=(2*60/2), a10=(10*60/2);
+  box.className='calc-result show res-ok';
+  box.innerHTML='<div style="font-size:15px;font-weight:800;">Goteo para '+p+' kg</div>'+
+    '<div style="margin-top:6px;font-size:12.5px;line-height:1.9;">'+
+    '<b>Dopamina</b> (400 mg en 250 mL = 1600 mcg/mL):<br>'+
+    '&nbsp;&nbsp;5 mcg/kg/min → <b>'+d5.toFixed(1)+' mL/h</b> · 10 → <b>'+d10.toFixed(1)+' mL/h</b> · 20 → <b>'+d20.toFixed(1)+' mL/h</b><br>'+
+    '<b>Adrenalina</b> (1 mg en 500 mL = 2 mcg/mL, dosis fija por minuto):<br>'+
+    '&nbsp;&nbsp;2 mcg/min → <b>'+a2.toFixed(0)+' mL/h</b> · 10 mcg/min → <b>'+a10.toFixed(0)+' mL/h</b></div>'+
+    '<div style="font-size:11px;margin-top:8px;opacity:0.85;">Cifras con las diluciones indicadas; ajusta si tu preparación es distinta. Titula siempre a la respuesta (FC, presión, perfusión) y retira de forma gradual.</div>';
+}
+function infReset(){var e=document.getElementById('inf-kg');if(e)e.value='';var b=document.getElementById('inf-res');b.className='calc-result';b.innerHTML='';}
+
+/* ===== FÁRMACOS (acordeón) ===== */
+var FARMACOS=[
+ {familia:'💉 Fármacos del algoritmo',color:'#145374',farmacos:[
+  {n:'Atropina',ini:'1 mg IV c/3–5 min (máx 3 mg)',da:'Primera línea si hay inestabilidad. Poco útil en bloqueo infranodal.',iv:'IV/IO',pres:'Ampolleta 1 mg',ci:'Bloqueo infranodal (poco eficaz)',ea:'Taquicardia, midriasis, retención',nota:'Prepara el marcapasos mientras la das.'},
+  {n:'Dopamina',ini:'5–20 mcg/kg/min',da:'Infusión si atropina falla; útil con hipotensión. 400 mg/250 mL.',iv:'IV infusión',pres:'400 mg en 250 mL',ci:'Taquiarritmias',ea:'Taquicardia, arritmias',nota:'Titular; retirar gradual.'},
+  {n:'Adrenalina (epinefrina)',ini:'2–10 mcg/min',da:'Infusión si atropina falla; dosis por minuto (no por peso). 1 mg/500 mL.',iv:'IV infusión',pres:'1 mg en 500 mL',ci:'Taquiarritmias',ea:'Taquicardia, isquemia',nota:'Alternativa a dopamina.'}]},
+ {familia:'🧪 Antídotos según la causa',color:'#7a4a00',farmacos:[
+  {n:'Glucagón',ini:'3–10 mg IV',da:'Intoxicación por betabloqueador; seguir con infusión si responde.',iv:'IV',pres:'Vial de glucagón',ci:'—',ea:'Vómito, hiperglucemia',nota:'Antídoto del betabloqueador.'},
+  {n:'Gluconato/cloruro de calcio',ini:'Gluconato 10% 10–20 mL',da:'Intoxicación por calcioantagonista; también estabiliza membrana en hiperkalemia.',iv:'IV',pres:'Gluconato 10% · cloruro 10%',ci:'Intoxicación digitálica (cautela)',ea:'Flebitis (cloruro)',nota:'Combinar con insulina a dosis altas en intoxicación por calcioantagonista.'},
+  {n:'Fab antidigoxina',ini:'Según protocolo',da:'Anticuerpos antidigoxina en la intoxicación digitálica grave con bradiarritmia.',iv:'IV',pres:'Fab antidigoxina',ci:'—',ea:'Reacción, hipopotasemia',nota:'Tratamiento específico de la intoxicación por digoxina.'}]},
+ {familia:'⚠️ Con cautela',color:'#7b1c1c',farmacos:[
+  {n:'Isoproterenol',ini:'Infusión',da:'Cronotrópico; usar con cautela/evitar si hipotensión.',iv:'IV infusión',pres:'Infusión titulada',ci:'Hipotensión, isquemia',ea:'Taquicardia, isquemia, hipotensión',nota:'Alternativa de rescate en contextos seleccionados.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Preparación',f.pres);
+  if(f.ci)h+=poprow('Cautela',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'🩺 Para el equipo',color:'#0a5c45',fichas:[
+  {n:'Secuencia rápida frente a bradicardia inestable',via:'En la urgencia',
+   enf:'ABC + oxígeno si hipoxémico + monitor + acceso IV + ECG 12 derivaciones. Si inestable: atropina 1 mg y preparar el marcapasos en paralelo.',
+   pac:'Se le vigilará el ritmo del corazón y, si es necesario, se le darán medicamentos o un marcapasos temporal.',
+   nota:'Confirma la captura mecánica del marcapasos palpando el pulso; sedа/analgesia porque el marcapasos transcutáneo duele.',
+   alarma:'En bloqueo de alto grado (Mobitz II / tercer grado), no te demores con atropina: marcapasos o infusión pronto.'}]},
+ {familia:'🔎 Buscar la causa',color:'#0c3b6e',fichas:[
+  {n:'Causas reversibles a descartar',via:'Siempre',
+   enf:'Fármacos (betabloqueador, calcioantagonista, digoxina), hipoxia, hiperkalemia, isquemia (IAM inferior), hipotiroidismo, hipotermia, tono vagal aumentado.',
+   pac:'A veces la causa es un medicamento o un desajuste que, al corregirlo, resuelve la bradicardia.',
+   nota:'El antídoto correcto (glucagón, calcio, Fab antidigoxina, corregir potasio) puede ser el tratamiento definitivo.',
+   alarma:'Bradicardia + hiperkalemia con cambios en el ECG es una urgencia (calcio, etc.).'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Clave</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ bloqueo:{t:'Bloqueo AV de alto grado (Mobitz II / tercer grado)',c:'#7b1c1c',h:
+  '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">La atropina probablemente NO sirve</div>El bloqueo <b>infranodal</b> no depende del tono vagal. No te demores: <b>marcapasos transcutáneo</b> o <b>infusión</b> (dopamina/adrenalina), y consulta para <b>marcapasos transvenoso/definitivo</b>.</div></div>'
+  +'<div class="prose"><p><b>Pista ECG:</b> Mobitz II = cae un QRS sin alargamiento previo del PR; tercer grado = disociación AV completa.</p></div>'},
+ betabloq:{t:'Intoxicación por betabloqueador',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> bradicardia + hipotensión; puede haber hipoglucemia.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🧪</span><div><b>Glucagón 3–10 mg IV</b> (antídoto) + soporte; considera <b>insulina a dosis altas + glucosa</b> y vasopresores. Atropina suele ser insuficiente.</div></div>'},
+ calcioant:{t:'Intoxicación por calcioantagonista',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> bradicardia/hipotensión; hiperglucemia frecuente.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🧪</span><div><b>Gluconato de calcio 10% 10–20 mL IV</b> (repetir) + <b>insulina a dosis altas + glucosa</b> + vasopresores. Marcapasos si es preciso.</div></div>'},
+ digoxina:{t:'Intoxicación por digoxina',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> bradiarritmias/bloqueos + síntomas GI/visuales; vigila el potasio.</p></div>'
+  +'<div class="alert a-i"><span class="ai">💉</span><div><b>Fab antidigoxina</b> en la intoxicación grave con bradiarritmia. Usa el calcio con <b>cautela</b>. Corrige el potasio.</div></div>'},
+ iam:{t:'IAM inferior con bradicardia/bloqueo',c:'#145374',h:
+  '<div class="prose"><p><b>Perfil:</b> bradicardia o bloqueo AV por isquemia/tono vagal (arteria coronaria derecha).</p></div>'
+  +'<div class="alert a-i"><span class="ai">❤️</span><div><b>Atropina</b> si inestable + <b>reperfusión</b> (la clave). Muchos bloqueos del IAM inferior son transitorios; marcapasos si es de alto grado o persistente.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Bradicardia (FC típicamente <50/min). Primero: identifica y trata la causa, da soporte (ABC, O₂ si hipoxémico, monitor, IV, ECG). ¿Hay compromiso por la bradicardia?',o:[
+   ['Sí: hipotensión, alteración del estado mental, shock, dolor isquémico o insuficiencia cardíaca','inestable'],
+   ['No: bien perfundido, sin síntomas graves','estable']]},
+ estable:{t:'Observar y monitorizar',r:'ok',x:'Paciente estable: <b>observa y monitoriza</b>, busca y corrige la causa. No des atropina ni marcapasos. Reevalúa ante cualquier deterioro.'},
+ inestable:{q:'Es inestable. ¿El ritmo es un bloqueo de alto grado (Mobitz II o tercer grado / infranodal)?',o:[
+   ['No (bradicardia sinusal, Mobitz I, etc.)','atropina'],
+   ['Sí (Mobitz II / tercer grado)','altogrado']]},
+ atropina:{q:'Da atropina 1 mg IV (repetir c/3–5 min, máx 3 mg). ¿Respondió?',o:[
+   ['Sí, mejoró la perfusión','resuelve'],['No respondió','escala']]},
+ resuelve:{t:'Respondió a la atropina',r:'ok',x:'Mejoró la perfusión: <b>monitoriza</b>, sigue tratando la causa y ten preparado el marcapasos por si recae. Considera consulta si el ritmo es preocupante.'},
+ altogrado:{t:'Bloqueo de alto grado — no te demores con atropina',r:'mid',x:'La atropina es <b>poco probable</b> que funcione (infranodal). Ve directo a <b>marcapasos transcutáneo</b> o <b>infusión</b> (dopamina 5–20 mcg/kg/min o adrenalina 2–10 mcg/min) y consulta para <b>marcapasos transvenoso/definitivo</b>.'},
+ escala:{t:'Atropina inefectiva → marcapasos o infusión',r:'mid',x:'<b>Marcapasos transcutáneo</b> (60–80/min, subir mA hasta captura; analgesia/sedación) <b>y/o infusión</b>: <b>dopamina 5–20 mcg/kg/min</b> o <b>adrenalina 2–10 mcg/min</b>. Considera <b>consulta con experto</b> y <b>marcapasos transvenoso</b>. No olvides la causa (antídotos).'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('bloqueo',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>

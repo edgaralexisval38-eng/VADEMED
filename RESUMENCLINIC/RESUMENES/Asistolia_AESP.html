@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Asistolia / AESP · Clínica Rápida</title>
+<style>
+
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#4a5568;--acd:#2d3748;--acl:#edf0f4;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2d3748,#4a5568);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫀</div>
+    <div>
+      <div class="hdr-eye">Urgencias · ACLS</div>
+      <div class="hdr-title">Asistolia / AESP</div>
+      <div class="hdr-sub">Ritmo NO desfibrilable · RCP + adrenalina + causa</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> I46.9</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">No se desfibrila</span>
+    <span class="badge">Adrenalina 1 mg lo antes posible</span>
+    <span class="badge">Busca las H y T</span>
+    <span class="badge">Sin atropina de rutina</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">No desfibrilable</div><div class="qs-l">asistolia / AESP</div></div>
+  <div class="qs"><div class="qs-v">RCP</div><div class="qs-l">alta calidad</div></div>
+  <div class="qs"><div class="qs-v">Adrenalina</div><div class="qs-l">precoz, c/3–5 min</div></div>
+  <div class="qs"><div class="qs-v">H y T</div><div class="qs-l">la clave</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🖥️ Reconocer</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Posparo</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="alert a-i"><span class="ai">🫀</span><div><div class="at">Asistolia / AESP en una frase</div><strong>Asistolia</strong> = ausencia de actividad eléctrica (línea plana). <strong>AESP</strong> = ritmo organizado en el monitor <strong>pero sin pulso</strong>. Son <strong>ritmos NO desfibrilables</strong>: RCP de alta calidad + <strong>adrenalina precoz</strong> + <strong>buscar y tratar las H y T</strong>. No se desfibrila.</div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definición y clasificación</span><span class="sg open">&#8964;</span></div>
+<div class="sb"><div class="prose"><ul><li><strong>Asistolia:</strong> sin actividad eléctrica ventricular (confirma en más de una derivación).</li><li><strong>AESP (actividad eléctrica sin pulso):</strong> hay ritmo organizado pero no genera gasto/pulso.</li><li>Ambos son <strong>no desfibrilables</strong> (rama derecha del algoritmo), frente a FV/TV sin pulso.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li>En conjunto, <strong>peor pronóstico</strong> que los ritmos desfibrilables.</li><li>Cada vez más frecuentes como <strong>ritmo inicial</strong> del paro intrahospitalario.</li><li>El pronóstico mejora cuando se identifica y trata pronto una <strong>causa reversible</strong>.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Asistolia:</strong> cese de la actividad eléctrica → ni despolarización ni contracción. <em>Por eso no hay nada que desfibrilar.</em></li><li><strong>AESP:</strong> hay actividad eléctrica organizada pero <strong>fallo mecánico o de llenado/vaciado</strong> (disociación electromecánica). <em>Por eso el tratamiento se dirige a la causa.</em></li><li><strong>Ventana de reversibilidad:</strong> corregir la causa a tiempo puede restaurar el gasto. <em>Por eso la búsqueda de H y T es parte del tratamiento, no se pospone.</em></li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Causas — las H y las T</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>H:</strong> Hipovolemia · Hipoxia · Hidrogeniones (acidosis) · Hipo/Hiperkalemia · Hipotermia.</li><li><strong>T:</strong> neumotórax a Tensión · Taponamiento cardíaco · Toxinas · Trombosis pulmonar · Trombosis coronaria.</li><li>En la <strong>AESP</strong>, encontrar la causa suele ser lo que revierte el paro.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento rápido</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Asistolia:</strong> línea prácticamente plana; <strong>confírmala</strong> (ganancia, derivaciones) para no perder una <strong>FV fina</strong>.</li><li><strong>AESP:</strong> ritmo organizado en el monitor (puede parecer casi normal) <strong>sin pulso</strong> palpable.</li><li>Apóyate en <strong>ecografía a pie de cama</strong>, gasometría e historia para orientar la causa.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Desfibrilar</strong> la asistolia o la AESP (no aportan beneficio; interrumpen las compresiones).</li><li>Usar <strong>atropina de rutina</strong> (retirada del algoritmo de paro).</li><li><strong>Reanimar sin buscar la causa</strong> reversible (clave en la AESP).</li></ul></div></div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">📈 ECG de ejemplo (asistolia y AESP)</span><span class="sg open">&#8964;</span></div><div class="sb"><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,97.8 L 8,97.7 L 10,97.7 L 12,97.6 L 14,97.6 L 16,97.8 L 18,97.8 L 20,97.4 L 22,97.7 L 24,97.7 L 26,97.3 L 28,97.5 L 30,97.3 L 32,97.5 L 34,97.4 L 36,97.6 L 38,97.4 L 40,97.2 L 42,97.4 L 44,97.3 L 46,97.3 L 48,97.6 L 50,97.3 L 52,97.3 L 54,97.5 L 56,97.6 L 58,97.2 L 60,97.4 L 62,97.3 L 64,97.2 L 66,97.3 L 68,97.2 L 70,97.4 L 72,97.2 L 74,97.4 L 76,97.2 L 78,97.2 L 80,97.6 L 82,97.6 L 84,97.6 L 86,97.2 L 88,97.5 L 90,97.4 L 92,97.6 L 94,97.5 L 96,97.6 L 98,97.6 L 100,97.5 L 102,97.5 L 104,97.4 L 106,97.5 L 108,97.4 L 110,97.5 L 112,97.4 L 114,97.6 L 116,97.9 L 118,97.6 L 120,97.5 L 122,97.6 L 124,97.8 L 126,97.7 L 128,98.0 L 130,97.7 L 132,97.9 L 134,98.1 L 136,98.2 L 138,97.8 L 140,97.8 L 142,98.3 L 144,97.9 L 146,98.1 L 148,98.3 L 150,98.3 L 152,98.0 L 154,98.0 L 156,98.5 L 158,98.2 L 160,98.5 L 162,98.2 L 164,98.4 L 166,98.1 L 168,98.1 L 170,98.4 L 172,98.1 L 174,98.5 L 176,98.6 L 178,98.4 L 180,98.7 L 182,98.6 L 184,98.5 L 186,98.5 L 188,98.7 L 190,98.8 L 192,98.4 L 194,98.7 L 196,98.3 L 198,98.4 L 200,98.7 L 202,98.6 L 204,98.6 L 206,98.5 L 208,98.6 L 210,98.6 L 212,98.6 L 214,98.4 L 216,98.6 L 218,98.7 L 220,98.5 L 222,98.8 L 224,98.7 L 226,98.4 L 228,98.6 L 230,98.6 L 232,98.8 L 234,98.6 L 236,98.5 L 238,98.8 L 240,98.5 L 242,98.5 L 244,98.8 L 246,98.5 L 248,98.5 L 250,98.4 L 252,98.6 L 254,98.4 L 256,98.3 L 258,98.7 L 260,98.6 L 262,98.3 L 264,98.1 L 266,98.5 L 268,98.3 L 270,98.3 L 272,98.4 L 274,98.3 L 276,98.3 L 278,98.3 L 280,98.1 L 282,98.3 L 284,98.2 L 286,98.0 L 288,98.3 L 290,98.0 L 292,97.9 L 294,98.1 L 296,98.1 L 298,97.8 L 300,98.1 L 302,98.1 L 304,97.9 L 306,97.8 L 308,98.0 L 310,97.9 L 312,97.9 L 314,97.6 L 316,97.8 L 318,97.5 L 320,97.9 L 322,97.8 L 324,97.6 L 326,97.4 L 328,97.6 L 330,97.7 L 332,97.8 L 334,97.5 L 336,97.7 L 338,97.4 L 340,97.3 L 342,97.7 L 344,97.6 L 346,97.3 L 348,97.4 L 350,97.3 L 352,97.5 L 354,97.6 L 356,97.5 L 358,97.3 L 360,97.5 L 362,97.5 L 364,97.4 L 366,97.4 L 368,97.4 L 370,97.2 L 372,97.5 L 374,97.6 L 376,97.1 L 378,97.2 L 380,97.1 L 382,97.4 L 384,97.2 L 386,97.2 L 388,97.5 L 390,97.3 L 392,97.2 L 394,97.3 L 396,97.4 L 398,97.5 L 400,97.5 L 402,97.6 L 404,97.7 L 406,97.5 L 408,97.6 L 410,97.4 L 412,97.8 L 414,97.4 L 416,97.5 L 418,97.4 L 420,97.4 L 422,97.4 L 424,97.6 L 426,97.9 L 428,97.6 L 430,97.9 L 432,97.9 L 434,97.7 L 436,97.8 L 438,97.9 L 440,97.6 L 442,97.8 L 444,98.0 L 446,98.0 L 448,97.8 L 450,98.0 L 452,97.9 L 454,98.1 L 456,98.2 L 458,98.1 L 460,97.9 L 462,98.3 L 464,98.0 L 466,98.0 L 468,98.0 L 470,98.1 L 472,98.5 L 474,98.2 L 476,98.1 L 478,98.5 L 480,98.4 L 482,98.5 L 484,98.4 L 486,98.4 L 488,98.4 L 490,98.3 L 492,98.7 L 494,98.7 L 496,98.7 L 498,98.7 L 500,98.7 L 502,98.3 L 504,98.4 L 506,98.8 L 508,98.6 L 510,98.7 L 512,98.7 L 514,98.7 L 516,98.5 L 518,98.6 L 520,98.7 L 522,98.8 L 524,98.7 L 526,98.8 L 528,98.6 L 530,98.5 L 532,98.7 L 534,98.8 L 536,98.8 L 538,98.7 L 540,98.6 L 542,98.5 L 544,98.7 L 546,98.4 L 548,98.5 L 550,98.6 L 552,98.6 L 554,98.6 L 556,98.4 L 558,98.6 L 560,98.4 L 562,98.5 L 564,98.6 L 566,98.5 L 568,98.4 L 570,98.7 L 572,98.5 L 574,98.4 L 576,98.2 L 578,98.1 L 580,98.4 L 582,98.1 L 584,98.2 L 586,98.4 L 588,98.3 L 590,98.4 L 592,98.1 L 594,98.1 L 596,98.0 L 598,98.0 L 600,98.0 L 602,98.0 L 604,98.0 L 606,98.2 L 608,98.0 L 610,98.2 L 612,98.1 L 614,97.8 L 616,98.1 L 618,98.1 L 620,98.1 L 622,97.7 L 624,98.0 L 626,98.0 L 628,97.6 L 630,97.9 L 632,97.6 L 634,97.6 L 636,97.5 L 638,97.4 L 640,97.6 L 642,97.5 L 644,97.8 L 646,97.4 L 648,97.6 L 650,97.4 L 652,97.7 L 654,97.4 L 656,97.3 L 658,97.7 L 660,97.6 L 662,97.4 L 664,97.3 L 666,97.6 L 668,97.6 L 670,97.5 L 672,97.3 L 674,97.3 L 676,97.4 L 678,97.4 L 680,97.4 L 682,97.4 L 684,97.4 L 686,97.6 L 688,97.4 L 690,97.1 L 692,97.4 L 694,97.3 L 696,97.5 L 698,97.3 L 700,97.3 L 702,97.3 L 704,97.4 L 706,97.4 L 708,97.3 L 710,97.2 L 712,97.6 L 714,97.7 L 716,97.3 L 718,97.3 L 720,97.5 L 722,97.5 L 724,97.4 L 726,97.7 L 728,97.7 L 730,97.7 L 732,97.6 L 734,97.7 L 736,97.8 L 738,97.6 L 740,97.5 L 742,97.8 L 744,97.6 L 746,97.8 L 748,97.6 L 750,97.8 L 752,97.9 L 754,98.0" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Asistolia</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">Línea prácticamente plana, sin actividad eléctrica; confírmala en más de una derivación.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,98.0 L 8,98.0 L 10,98.0 L 12,98.0 L 14,98.0 L 16,98.0 L 18,98.0 L 20,97.8 L 22,97.5 L 24,96.9 L 26,95.7 L 28,94.1 L 30,92.4 L 32,91.4 L 34,91.5 L 36,92.6 L 38,94.3 L 40,95.9 L 42,97.0 L 44,97.6 L 46,97.9 L 48,98.0 L 50,98.0 L 52,98.0 L 54,98.0 L 56,98.0 L 58,99.4 L 60,101.1 L 62,102.8 L 64,84.8 L 66,63.7 L 68,56.6 L 70,77.1 L 72,97.5 L 74,108.1 L 76,104.1 L 78,100.1 L 80,97.9 L 82,97.8 L 84,97.6 L 86,97.3 L 88,96.8 L 90,96.0 L 92,95.0 L 94,93.7 L 96,92.1 L 98,90.4 L 100,88.7 L 102,87.2 L 104,86.0 L 106,85.5 L 108,85.5 L 110,86.2 L 112,87.4 L 114,89.0 L 116,90.8 L 118,92.5 L 120,94.0 L 122,95.2 L 124,96.2 L 126,96.9 L 128,97.3 L 130,97.6 L 132,97.8 L 134,97.9 L 136,98.0 L 138,98.0 L 140,98.0 L 142,98.0 L 144,98.0 L 146,98.0 L 148,98.0 L 150,98.0 L 152,98.0 L 154,98.0 L 156,98.0 L 158,98.0 L 160,98.0 L 162,98.0 L 164,98.0 L 166,98.0 L 168,98.0 L 170,98.0 L 172,98.0 L 174,98.0 L 176,98.0 L 178,98.0 L 180,98.0 L 182,98.0 L 184,98.0 L 186,98.0 L 188,97.8 L 190,97.5 L 192,96.9 L 194,95.7 L 196,94.1 L 198,92.4 L 200,91.4 L 202,91.5 L 204,92.6 L 206,94.3 L 208,95.9 L 210,97.0 L 212,97.6 L 214,97.9 L 216,98.0 L 218,98.0 L 220,98.0 L 222,98.0 L 224,98.0 L 226,99.4 L 228,101.1 L 230,102.8 L 232,84.8 L 234,63.7 L 236,56.6 L 238,77.1 L 240,97.5 L 242,108.1 L 244,104.1 L 246,100.1 L 248,97.9 L 250,97.8 L 252,97.6 L 254,97.3 L 256,96.8 L 258,96.0 L 260,95.0 L 262,93.7 L 264,92.1 L 266,90.4 L 268,88.7 L 270,87.2 L 272,86.0 L 274,85.5 L 276,85.5 L 278,86.2 L 280,87.4 L 282,89.0 L 284,90.8 L 286,92.5 L 288,94.0 L 290,95.2 L 292,96.2 L 294,96.9 L 296,97.3 L 298,97.6 L 300,97.8 L 302,97.9 L 304,98.0 L 306,98.0 L 308,98.0 L 310,98.0 L 312,98.0 L 314,98.0 L 316,98.0 L 318,98.0 L 320,98.0 L 322,98.0 L 324,98.0 L 326,98.0 L 328,98.0 L 330,98.0 L 332,98.0 L 334,98.0 L 336,98.0 L 338,98.0 L 340,98.0 L 342,98.0 L 344,98.0 L 346,98.0 L 348,98.0 L 350,98.0 L 352,98.0 L 354,98.0 L 356,97.8 L 358,97.5 L 360,96.9 L 362,95.7 L 364,94.1 L 366,92.4 L 368,91.4 L 370,91.5 L 372,92.6 L 374,94.3 L 376,95.9 L 378,97.0 L 380,97.6 L 382,97.9 L 384,98.0 L 386,98.0 L 388,98.0 L 390,98.0 L 392,98.0 L 394,99.4 L 396,101.1 L 398,102.8 L 400,84.8 L 402,63.7 L 404,56.6 L 406,77.1 L 408,97.5 L 410,108.1 L 412,104.1 L 414,100.1 L 416,97.9 L 418,97.8 L 420,97.6 L 422,97.3 L 424,96.8 L 426,96.0 L 428,95.0 L 430,93.7 L 432,92.1 L 434,90.4 L 436,88.7 L 438,87.2 L 440,86.0 L 442,85.5 L 444,85.5 L 446,86.2 L 448,87.4 L 450,89.0 L 452,90.8 L 454,92.5 L 456,94.0 L 458,95.2 L 460,96.2 L 462,96.9 L 464,97.3 L 466,97.6 L 468,97.8 L 470,97.9 L 472,98.0 L 474,98.0 L 476,98.0 L 478,98.0 L 480,98.0 L 482,98.0 L 484,98.0 L 486,98.0 L 488,98.0 L 490,98.0 L 492,98.0 L 494,98.0 L 496,98.0 L 498,98.0 L 500,98.0 L 502,98.0 L 504,98.0 L 506,98.0 L 508,98.0 L 510,98.0 L 512,98.0 L 514,98.0 L 516,98.0 L 518,98.0 L 520,98.0 L 522,98.0 L 524,97.8 L 526,97.5 L 528,96.9 L 530,95.7 L 532,94.1 L 534,92.4 L 536,91.4 L 538,91.5 L 540,92.6 L 542,94.3 L 544,95.9 L 546,97.0 L 548,97.6 L 550,97.9 L 552,98.0 L 554,98.0 L 556,98.0 L 558,98.0 L 560,98.0 L 562,99.4 L 564,101.1 L 566,102.8 L 568,84.8 L 570,63.7 L 572,56.6 L 574,77.1 L 576,97.5 L 578,108.1 L 580,104.1 L 582,100.1 L 584,97.9 L 586,97.8 L 588,97.6 L 590,97.3 L 592,96.8 L 594,96.0 L 596,95.0 L 598,93.7 L 600,92.1 L 602,90.4 L 604,88.7 L 606,87.2 L 608,86.0 L 610,85.5 L 612,85.5 L 614,86.2 L 616,87.4 L 618,89.0 L 620,90.8 L 622,92.5 L 624,94.0 L 626,95.2 L 628,96.2 L 630,96.9 L 632,97.3 L 634,97.6 L 636,97.8 L 638,97.9 L 640,98.0 L 642,98.0 L 644,98.0 L 646,98.0 L 648,98.0 L 650,98.0 L 652,98.0 L 654,98.0 L 656,98.0 L 658,98.0 L 660,98.0 L 662,98.0 L 664,98.0 L 666,98.0 L 668,98.0 L 670,98.0 L 672,98.0 L 674,98.0 L 676,98.0 L 678,98.0 L 680,98.0 L 682,98.0 L 684,98.0 L 686,98.0 L 688,98.0 L 690,98.0 L 692,97.8 L 694,97.5 L 696,96.9 L 698,95.7 L 700,94.1 L 702,92.4 L 704,91.4 L 706,91.5 L 708,92.6 L 710,94.3 L 712,95.9 L 714,97.0 L 716,97.6 L 718,97.9 L 720,98.0 L 722,98.0 L 724,98.0 L 726,98.0 L 728,98.0 L 730,99.4 L 732,101.1 L 734,102.8 L 736,84.8 L 738,63.7 L 740,56.6 L 742,77.1 L 744,97.5 L 746,108.1 L 748,104.1 L 750,100.1 L 752,97.9 L 754,97.8" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">AESP — ritmo organizado SIN pulso</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">Hay complejos organizados en el monitor, pero el paciente no tiene pulso.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><div class="alert a-w"><span class="ai">🫀</span><div>Ambos son <b>no desfibrilables</b>. En la <b>AESP</b> el trazo puede verse casi normal: el diagnóstico es clínico (sin pulso) y la clave es buscar y tratar la causa (H y T).</div></div></div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento en el monitor</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Asistolia:</strong> línea prácticamente <strong>plana</strong>, sin QRS. Confirma en más de una derivación.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>AESP:</strong> ritmo <strong>organizado</strong> en el monitor (puede parecer casi normal) pero <strong>sin pulso</strong> palpable.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Confirma el paro clínicamente: inconsciencia, sin pulso ni respiración normal (comprobación &lt;10 s).</div></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Antes de asumir asistolia, descarta <b>FV fina</b>: revisa conexiones/derivaciones y sube la ganancia.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">No desfibrilable vs desfibrilable</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>No desfibrilable</th><th>Desfibrilable</th></tr></thead><tbody>
+    <tr><td class="dm">Asistolia · AESP</td><td class="dn">FV · TV sin pulso</td></tr>
+    <tr><td class="dm">RCP + adrenalina precoz + causa (NO choque)</td><td class="dn">Choque + RCP + adrenalina + antiarrítmico</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>Este archivo cubre la <b>rama no desfibrilable</b> (asistolia/AESP). Si el ritmo cambia a FV/TV, pasa a la rama desfibrilable.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">AESP: piensa en la causa</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-i"><span class="ai">🩺</span><div>La <b>ecografía a pie de cama</b> ayuda a orientar la causa (hipovolemia, taponamiento, neumotórax, tromboembolia, contractilidad). Combínala con la gasometría y la historia.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="alert a-w" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo ACLS interactivo — rama no desfibrilable</div>RCP + adrenalina precoz + causas (H y T); reevaluar cada 2 minutos. No se desfibrila.</div></div><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Fármacos del paro no desfibrilable. Toca para desplegar o <strong>busca por nombre</strong>.</div></div><input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (adrenalina, atropina…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;"><div id="farm-body"></div></div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('asistolia',this)">Asistolia</button>
+  <button class="pchip" onclick="setEscen('aesp',this)">AESP</button>
+  <button class="pchip" onclick="setEscen('causa',this)">Causa identificada</button>
+  <button class="pchip" onclick="setEscen('cambio',this)">Cambia a desfibrilable</button>
+  <button class="pchip" onclick="setEscen('rosc',this)">ROSC</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💗</span><span class="st">Cuidados posparo (tras el retorno de la circulación)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Prioridad</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Causa</td><td>Tratar la causa que provocó el paro (H y T): a menudo lo determinante</td></tr>
+    <tr><td class="dn">Oxigenación/ventilación</td><td>Titular O2 (evita hiperoxia); evitar hiperventilación</td></tr>
+    <tr><td class="dm">Hemodinamia</td><td>Soporte de la presión (líquidos/vasopresores según el caso)</td></tr>
+    <tr><td class="dn">ECG 12 derivaciones</td><td>Buscar isquemia; valorar reperfusión si procede</td></tr>
+    <tr><td class="dm">Temperatura</td><td>Manejo dirigido de la temperatura en el comatoso</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>El ascenso brusco del ETCO2 en capnografía puede ser el primer signo del retorno de la circulación.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Duración y decisiones</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Continúa mientras haya causas tratables o factores de buen pronóstico; la decisión de terminar es <strong>clínica e individualizada</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Un <strong>ETCO2 persistentemente muy bajo</strong> pese a RCP de calidad es un dato de mal pronóstico (un elemento más, no único).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Considera contextos especiales (hipotermia, intoxicación, embarazo) antes de suspender.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Asistolia / AESP</h2>
+  <p>Soporte vital cardiovascular avanzado (ACLS). Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Ritmos no desfibrilables: RCP, adrenalina precoz, H y T, sin atropina de rutina, cuidados posparo</strong> → guías AHA 2020 [1] y actualización [2].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Contexto mexicano</strong> → CENETEC [3].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías ACLS</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Panchal AR, Bartos JA, Cabañas JG, et al. <em>Part 3: Adult Basic and Advanced Life Support: 2020 AHA Guidelines for CPR and ECC.</em> Circulation. 2020;142(16 suppl 2):S366-S468. [Asistolia y AESP como ritmos no desfibrilables: RCP de alta calidad; adrenalina 1 mg lo antes posible y cada 3–5 min; identificar y tratar causas reversibles (H y T); atropina retirada del algoritmo; cuidados posparo. Sustenta el Tratamiento y el algoritmo.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000916" target="_blank">🔗 DOI 10.1161/CIR.0000000000000916</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">American Heart Association. <em>2023 AHA Focused Update on Advanced Cardiovascular Life Support.</em> Circulation. 2023. [Actualización de ACLS; reafirma la adrenalina precoz en ritmos no desfibrilables y el manejo de causas reversibles. Complementa las guías de 2020.]</div>
+      <a class="biblio-link" href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000001194" target="_blank">🔗 AHA · 2023 Focused Update ACLS</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): reanimación cardiopulmonar / paro cardíaco.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja fármacos, dosis y presentaciones con los recursos y el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Verifica actualizaciones de las guías de reanimación (<strong>AHA / ILCOR</strong>) y locales (<strong>CENETEC, SSa México</strong>), y adapta a los recursos de tu unidad. Última revisión: <strong>agosto 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#4a5568', C1='#4a5568', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Punto clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / base',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones',f.pres,'#374151');
+  if(f.ci)h+=txrow('Precauciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Durante la reanimación',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#2d3748')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_RCP={n:'RCP de alta calidad',elec:true,linea:'La base — no se detiene',
+  dlbl:'Cómo',da:'Compresiones a 100–120/min, profundidad 5–6 cm, permitir la reexpansión completa del tórax, minimizar las interrupciones (<10 s) y relevar al compresor cada 2 minutos',
+  dur:'Continua; se reanaliza el ritmo cada 2 minutos.',
+  adm:'Es lo que mantiene la perfusión. En los ritmos no desfibrilables (asistolia/AESP) es, junto con la adrenalina y el tratamiento de la causa, la intervención principal. Ventilación 30:2 sin vía aérea avanzada; con vía aérea avanzada, cada 6 segundos.',
+  mec:'Perfusión coronaria y cerebral por las compresiones.',
+  ind:'Todo paro cardíaco.',
+  dmax:'Minimiza las pausas; usa capnografía para vigilar la calidad.',iv:'—',pres:'—',
+  ci:'—',ea:'—',mon:'ETCO2 (capnografía)',
+  nota:'⭐ En asistolia/AESP, la supervivencia depende de RCP de calidad + adrenalina precoz + tratar la causa.'};
+var F_ADRE={n:'Adrenalina (epinefrina)',elec:true,linea:'Cuanto antes, mejor',
+  dlbl:'Dosis',da:'1 mg IV/IO lo ANTES POSIBLE y repetir cada 3–5 minutos durante la reanimación',
+  dur:'Repetir cada 3–5 minutos hasta el retorno de la circulación o el fin de la reanimación.',
+  adm:'En los ritmos no desfibrilables, administrar la adrenalina precozmente se asocia a mejores resultados. No interrumpas las compresiones para darla. La vía intravenosa se prefiere sobre la intraósea.',
+  mec:'Agonista alfa/beta (vasoconstricción → ↑ presión de perfusión).',
+  ind:'Asistolia y actividad eléctrica sin pulso (AESP).',
+  dmax:'No usar dosis altas de rutina.',iv:'IV / IO',pres:'Ampolla 1 mg',
+  ci:'—',ea:'Taquiarritmias tras el retorno de la circulación',mon:'Ritmo, retorno de la circulación',
+  nota:'⭐ Diferencia clave con los desfibrilables: aquí la adrenalina va LO ANTES POSIBLE, no tras un choque.'};
+var F_CAUSAS={n:'Causas reversibles — H y T',elec:true,linea:'La clave, sobre todo en AESP',
+  dlbl:'Regla',da:'H: Hipovolemia · Hipoxia · Hidrogeniones (acidosis) · Hipo/Hiperkalemia · Hipotermia. T: neumotórax a Tensión · Taponamiento cardíaco · Toxinas · Trombosis pulmonar · Trombosis coronaria',
+  dur:'Búsqueda activa desde el inicio y en cada ciclo de 2 minutos.',
+  adm:'En la AESP (y a menudo en la asistolia) el pronóstico depende de encontrar y tratar la causa. Usa la historia, la ecografía a pie de cama y la gasometría. Ejemplos: volumen en hipovolemia, descompresión en neumotórax a tensión, calcio/insulina-glucosa en hiperkalemia, calentamiento en hipotermia.',
+  mec:'—',
+  ind:'Todo paro no desfibrilable; imprescindible en AESP.',
+  dmax:'Sin corregir la causa, difícilmente habrá retorno de la circulación.',iv:'—',pres:'—',
+  ci:'—',ea:'—',mon:'Ecografía, gasometría, historia',
+  nota:'⭐ En AESP, "trata la causa" es el tratamiento: recorre sistemáticamente las H y las T.'};
+var F_CONFIRMA={n:'Confirmar la asistolia (no es FV fina)',elec:true,linea:'Antes de asumir asistolia',
+  dlbl:'Cómo',da:'Comprueba que no sea un artefacto ni una FV fina: revisa las conexiones/derivaciones, sube la ganancia y confirma en más de una derivación',
+  dur:'Verificación rápida sin interrumpir la RCP más de lo necesario.',
+  adm:'Una FV fina puede parecer una línea casi plana. Si hay duda razonable de FV, se prioriza RCP de calidad; no se desfibrila una asistolia verdadera, pero sí una FV. Verifica antes de etiquetar.',
+  mec:'—',
+  ind:'Ritmo aparentemente plano en el monitor.',
+  dmax:'La desfibrilación "por si acaso" en asistolia verdadera no aporta beneficio.',iv:'—',pres:'—',
+  ci:'—',ea:'—',mon:'Ganancia, derivaciones',
+  nota:'⭐ Confirma en más de una derivación y sube la ganancia antes de asumir asistolia.'};
+var F_VIA={n:'Vía aérea y capnografía',linea:'Soporte durante la reanimación',
+  dlbl:'Cómo',da:'Ventilación con bolsa-mascarilla (30:2) o vía aérea avanzada; con vía aérea avanzada, ventilar cada 6 segundos (10/min) sin pausar las compresiones. Monitoriza con capnografía (ETCO2)',
+  dur:'Durante toda la reanimación.',
+  adm:'La capnografía ayuda a vigilar la calidad de la RCP y a detectar el retorno de la circulación. Un ETCO2 persistentemente muy bajo pese a buena técnica orienta el pronóstico.',
+  mec:'Oxigenación/ventilación; ETCO2 refleja el gasto por compresiones.',
+  ind:'Todo paro.',
+  dmax:'Evita la hiperventilación (reduce el retorno venoso).',iv:'—',pres:'Bolsa-mascarilla · supraglótica · intubación',
+  ci:'—',ea:'Hiperventilación perjudicial',mon:'ETCO2',
+  nota:'El ETCO2 sostenido muy bajo (<10 mmHg) sugiere RCP de baja calidad o mal pronóstico.'};
+var F_NO_DESFIB={n:'❌ Desfibrilar la asistolia o la AESP',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No desfibriles: la asistolia y la actividad eléctrica sin pulso son ritmos NO desfibrilables; el choque no aporta beneficio y solo interrumpe las compresiones',
+  dur:'RCP + adrenalina precoz + tratar la causa.',
+  adm:'Reserva la desfibrilación para FV/TV sin pulso. Si el ritmo cambia a desfibrilable, pasa a esa rama.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Interrupción inútil de las compresiones',
+  nota:'No desfibrilable = no se choca; comprime y da adrenalina.'};
+var F_NO_ATRO={n:'❌ Atropina de rutina en la asistolia',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No uses atropina de rutina en el paro por asistolia/AESP: se retiró del algoritmo por falta de beneficio',
+  dur:'La adrenalina es el fármaco del paro no desfibrilable.',
+  adm:'La atropina tiene su lugar en la bradicardia con pulso, no en el paro por asistolia.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Retraso de intervenciones útiles',
+  nota:'Atropina: para la bradicardia con pulso, no para la asistolia.'};
+var F_NO_CAUSA={n:'❌ Reanimar sin buscar la causa reversible',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No te limites a comprimir y dar adrenalina: en la AESP (y la asistolia) el retorno de la circulación suele depender de corregir una H o una T',
+  dur:'Recorre sistemáticamente las H y las T en cada ciclo.',
+  adm:'Apóyate en la ecografía a pie de cama, la gasometría y la historia (p. ej. hiperkalemia, hipovolemia, neumotórax a tensión, tromboembolia).',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Paro irreversible por causa no tratada',
+  nota:'La causa reversible es, muchas veces, la única salida del paro no desfibrilable.'};
+
+var TXC=[
+ ['🫀 Base','RCP de calidad + confirmar el ritmo',C1,[F_RCP,F_CONFIRMA]],
+ ['💉 Fármaco','Adrenalina precoz',AZ,[F_ADRE]],
+ ['🔎 La clave','Causas reversibles y soporte',CO,[F_CAUSAS,F_VIA]],
+ ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_DESFIB,F_NO_ATRO,F_NO_CAUSA]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-w" style="margin-bottom:12px;"><span class="ai">🫀</span><div><div class="at">Asistolia / AESP = ritmo NO desfibrilable</div>Lo que ayuda: <b>RCP de alta calidad</b> + <b>adrenalina 1 mg lo antes posible</b> (y cada 3–5 min) + <b>buscar y tratar las H y T</b>. <b>No se desfibrila</b>. En la AESP, encontrar la causa suele ser lo que revierte el paro. La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💉 Fármaco del paro no desfibrilable',color:'#4a5568',farmacos:[
+  {n:'Adrenalina (epinefrina)',ini:'1 mg IV/IO lo antes posible',da:'Repetir c/3–5 min. En no desfibrilables va precoz (no tras choque). IV preferido sobre IO.',iv:'IV/IO',pres:'Ampolla 1 mg',ci:'Dosis altas no',ea:'Taquiarritmia post-retorno',nota:'Único fármaco de rutina aquí.'}]},
+ {familia:'🚫 Ya NO se usan de rutina',color:'#7b1c1c',farmacos:[
+  {n:'Atropina',ini:'No en asistolia/AESP',da:'Retirada del algoritmo de paro por falta de beneficio. Su lugar es la bradicardia con pulso.',iv:'—',pres:'—',ci:'—',ea:'—',nota:'Solo bradicardia con pulso.'},
+  {n:'Bicarbonato / calcio',ini:'No de rutina',da:'Solo en situaciones específicas (p. ej. hiperkalemia, intoxicación), no de rutina en el paro.',iv:'IV/IO',pres:'—',ci:'—',ea:'—',nota:'Dirigido a la causa, no de rutina.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci&&f.ci!=='—')h+=poprow('Precaución',f.ci);
+  if(f.ea&&f.ea!=='—')h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'🚑 Para el equipo de reanimación',color:'#0a5c45',fichas:[
+  {n:'Prioridades',via:'Desde el inicio',
+   enf:'RCP de alta calidad sin interrupciones + adrenalina 1 mg lo antes posible (cada 3–5 min) + búsqueda sistemática de H y T. No desfibrilar. Confirmar que no sea FV fina.',
+   pac:'—',
+   nota:'Asigna a alguien la búsqueda activa de causas (ecografía, gasometría, historia).',
+   alarma:'Si el ritmo cambia a FV/TV sin pulso, pasa a la rama desfibrilable (choque).'}]},
+ {familia:'🔎 Secuencia mental',color:'#0c3b6e',fichas:[
+  {n:'Ciclo de 2 minutos',via:'Cada ciclo',
+   enf:'Comprimir 2 min → analizar ritmo (no desfibrilable) → adrenalina precoz y luego cada 3–5 min → recorrer H y T → reevaluar. Buscar y tratar la causa es el eje.',
+   pac:'—',
+   nota:'AESP = hay actividad eléctrica organizada en el monitor pero sin pulso: casi siempre hay una causa tratable.',
+   alarma:'ETCO2 persistentemente <10 mmHg orienta calidad de RCP y pronóstico.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—'&&f.pac!=='')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ asistolia:{t:'Asistolia',c:'#4a5568',h:
+  '<div class="prose"><p><b>Perfil:</b> línea prácticamente plana en el monitor, sin actividad eléctrica organizada.</p></div>'
+  +'<div class="alert a-w"><span class="ai">🫀</span><div><b>Confirma</b> que no sea FV fina (ganancia, derivaciones). <b>RCP de calidad</b> + <b>adrenalina 1 mg lo antes posible</b> y cada 3–5 min. Busca H y T. <b>No desfibrilar.</b></div></div>'},
+ aesp:{t:'Actividad eléctrica sin pulso (AESP)',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> hay un ritmo organizado en el monitor pero <b>no hay pulso</b>.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🔎</span><div>RCP + adrenalina precoz, y sobre todo <b>encuentra la causa</b>: recorre las <b>H y T</b> (hipovolemia, hipoxia, hiper/hipokalemia, hipotermia, acidosis; neumotórax a tensión, taponamiento, toxinas, tromboembolia, trombosis coronaria). Corregirla es la vía al retorno de la circulación.</div></div>'},
+ causa:{t:'AESP con causa identificada',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> se identifica una causa reversible (ecografía/gasometría/historia).</p></div>'
+  +'<div class="alert a-g"><span class="ai">✅</span><div><b>Trátala de inmediato:</b> volumen en hipovolemia, descompresión en neumotórax a tensión, pericardiocentesis en taponamiento, calcio + insulina/glucosa en hiperkalemia, calentamiento en hipotermia, antídoto/medidas en tóxicos, y valoración de trombólisis/reperfusión en tromboembolia/isquemia.</div></div>'},
+ cambio:{t:'Cambia a ritmo desfibrilable',c:'#7b1c1c',h:
+  '<div class="prose"><p><b>Perfil:</b> en un análisis, el ritmo pasa a FV o TV sin pulso.</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚡</span><div>Cambia a la <b>rama desfibrilable</b>: <b>desfibrila</b> y sigue el algoritmo de FV/TV sin pulso (choque + RCP + adrenalina + amiodarona).</div></div>'},
+ rosc:{t:'Retorno de la circulación (ROSC)',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> se recupera pulso/circulación.</p></div>'
+  +'<div class="alert a-g"><span class="ai">💗</span><div>Cuidados posparo: oxigenación/ventilación (evita hiperoxia), soporte de presión, ECG de 12 derivaciones y manejo dirigido de la temperatura. Sobre todo, <b>trata la causa</b> que provocó el paro.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ACLS (rama no desfibrilable) ===== */
+var ALGO={
+ start:{q:'Paro cardíaco. Inicia RCP y conecta el monitor. ¿El ritmo es desfibrilable (FV/TV sin pulso) o no desfibrilable (asistolia/AESP)?',o:[
+   ['No desfibrilable (asistolia / AESP)','c1'],['Desfibrilable (FV / TV sin pulso)','desf']]},
+ desf:{t:'Rama DESFIBRILABLE',r:'mid',x:'FV o TV sin pulso → <b>desfibrila</b> y sigue el algoritmo de FV/TV sin pulso (choque + RCP 2 min + adrenalina tras el 2.º choque + amiodarona tras el 3.º). (Ver la ficha correspondiente.)'},
+ c1:{t:'RCP 2 min + adrenalina + acceso',r:'ok',x:'<b>RCP de alta calidad</b> y <b>adrenalina 1 mg IV/IO lo antes posible</b> (repetir cada 3–5 min). Consigue acceso IV/IO y vía aérea/capnografía sin interrumpir compresiones. Si el ritmo parece plano, <b>confirma que no sea FV fina</b>.',n:'causas'},
+ causas:{t:'Busca y trata las H y T',r:'ok',x:'Recorre las <b>H</b> (hipovolemia, hipoxia, hidrogeniones/acidosis, hipo/hiperkalemia, hipotermia) y las <b>T</b> (neumotórax a tensión, taponamiento, toxinas, trombosis pulmonar, trombosis coronaria). Apóyate en ecografía, gasometría e historia.',n:'reeval'},
+ reeval:{q:'A los 2 minutos, reanaliza el ritmo. ¿Qué ves?',o:[
+   ['Sigue no desfibrilable (asistolia/AESP)','sigue'],['Pasó a desfibrilable (FV/TV)','desf'],['Ritmo organizado + pulso','rosc']]},
+ sigue:{t:'Continúa el ciclo',r:'mid',x:'Sigue con <b>RCP de calidad</b>, <b>adrenalina cada 3–5 min</b> y <b>tratamiento de la causa</b> (H y T). Reevalúa cada 2 minutos. En la AESP, insiste en la causa reversible: suele ser la clave del retorno de la circulación.'},
+ rosc:{t:'Retorno de la circulación (ROSC)',r:'ok',x:'Confirma pulso. Inicia <b>cuidados posparo</b>: oxigenación/ventilación (evita hiperoxia), soporte de presión, <b>ECG de 12 derivaciones</b> y <b>manejo dirigido de la temperatura</b>. Trata la causa del paro.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div>';
+    if(n.n)h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\''+n.n+'\')">→ Continuar</button></div>';
+    h+='</div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('asistolia',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Taquicardia supraventricular · Clínica Rápida</title>
+<style>
+
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#d84315;--acd:#7a2410;--acl:#fbe9e3;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#7a2410,#d84315);">
+  <div class="hdr-top">
+    <div class="hdr-icon">💓</div>
+    <div>
+      <div class="hdr-eye">Cardiología · arritmias</div>
+      <div class="hdr-title">Taquicardia supraventricular</div>
+      <div class="hdr-sub">Con pulso · estable vs inestable</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> I47.1</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Estrecho regular ~150–250/min</span>
+    <span class="badge">Vagales → adenosina</span>
+    <span class="badge">Inestable → cardioversión</span>
+    <span class="badge">Cuidado con WPW</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">¿Inestable?</div><div class="qs-l">1.ª decisión</div></div>
+  <div class="qs"><div class="qs-v">Vagales</div><div class="qs-l">primer paso</div></div>
+  <div class="qs"><div class="qs-v">Adenosina</div><div class="qs-l">6 → 12 mg</div></div>
+  <div class="qs"><div class="qs-v">Ablación</div><div class="qs-l">definitivo</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🖥️ Reconocer</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="alert a-i"><span class="ai">💓</span><div><div class="at">TSV en una frase</div>Taquicardia <strong>rápida, regular y de complejo estrecho</strong>, casi siempre por <strong>reentrada</strong> dependiente del nodo AV, <strong>con pulso</strong>. La primera decisión es <strong>estable vs inestable</strong>: inestable → cardioversión sincronizada; estable → vagales → adenosina → nodal.</div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definición y clasificación</span><span class="sg open">&#8964;</span></div>
+<div class="sb"><div class="prose"><ul><li><strong>Reentrada nodal (AVNRT):</strong> la más frecuente; circuito en el nodo AV.</li><li><strong>Reentrada auriculoventricular (AVRT):</strong> por una <strong>vía accesoria</strong> (relacionada con WPW).</li><li><strong>Taquicardia auricular</strong> (focal o multifocal) y <strong>flutter</strong> (suele considerarse aparte).</li><li>En el episodio agudo, complejo estrecho regular a <strong>~150-250/min</strong>.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li>Frecuente, a menudo en personas <strong>jóvenes y sin cardiopatía estructural</strong>.</li><li>La <strong>AVNRT</strong> predomina en mujeres; la <strong>AVRT</strong> se asocia a vías accesorias.</li><li>Suele ser <strong>paroxística</strong> (inicio y fin súbitos) y recurrente.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Circuito de reentrada:</strong> dos vías con velocidades/refractariedades distintas se autoperpetúan. <em>Por eso vagales y adenosina, que frenan el nodo, pueden cortarla.</em></li><li><strong>Dependencia del nodo AV:</strong> en AVNRT/AVRT el nodo es parte del circuito. <em>Por eso funcionan los bloqueadores del nodo.</em></li><li><strong>Preexcitación (WPW):</strong> una vía accesoria conduce fuera del nodo. <em>Por eso, en FA preexcitada, NO se bloquea el nodo (riesgo de FV).</em></li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Desencadenantes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Estimulantes:</strong> cafeína, alcohol, nicotina, drogas simpaticomiméticas.</li><li><strong>Estrés, fiebre, hipertiroidismo</strong> y algunos fármacos.</li><li>Con frecuencia <strong>sin desencadenante identificable</strong> (episodios paroxísticos).</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento rápido</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>QRS estrecho, regular</strong>, muy rápido (~150-250/min).</li><li>Ondas P <strong>no visibles</strong> o retrógradas; inicio y fin <strong>súbitos</strong>.</li><li>Un <strong>QRS ancho</strong> obliga a pensar en taquicardia ventricular; un <strong>ancho irregular</strong>, en WPW.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Bloquear el nodo AV</strong> (adenosina/verapamilo/betabloqueador/digoxina) en <strong>FA preexcitada (WPW)</strong>.</li><li>Dar <strong>verapamilo/diltiazem</strong> en una taquicardia de <strong>complejo ancho</strong> de origen incierto.</li><li><strong>Demorar la cardioversión</strong> sincronizada en el paciente inestable.</li></ul></div></div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">📈 ECG de ejemplo (TSV vs sinusal)</span><span class="sg open">&#8964;</span></div><div class="sb"><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,98.0 L 8,98.0 L 10,98.0 L 12,98.0 L 14,98.0 L 16,98.0 L 18,98.0 L 20,98.0 L 22,98.0 L 24,98.0 L 26,103.2 L 28,52.9 L 30,99.4 L 32,99.9 L 34,98.0 L 36,98.0 L 38,98.0 L 40,97.9 L 42,97.6 L 44,96.5 L 46,94.2 L 48,91.8 L 50,91.5 L 52,93.7 L 54,96.1 L 56,97.5 L 58,97.9 L 60,98.0 L 62,98.0 L 64,98.0 L 66,98.0 L 68,98.0 L 70,98.0 L 72,98.0 L 74,98.0 L 76,98.0 L 78,98.0 L 80,98.0 L 82,98.0 L 84,98.0 L 86,103.2 L 88,52.9 L 90,99.4 L 92,99.9 L 94,98.0 L 96,98.0 L 98,98.0 L 100,97.9 L 102,97.6 L 104,96.5 L 106,94.2 L 108,91.8 L 110,91.5 L 112,93.7 L 114,96.1 L 116,97.5 L 118,97.9 L 120,98.0 L 122,98.0 L 124,98.0 L 126,98.0 L 128,98.0 L 130,98.0 L 132,98.0 L 134,98.0 L 136,98.0 L 138,98.0 L 140,98.0 L 142,98.0 L 144,98.0 L 146,103.2 L 148,52.9 L 150,99.4 L 152,99.9 L 154,98.0 L 156,98.0 L 158,98.0 L 160,97.9 L 162,97.6 L 164,96.5 L 166,94.2 L 168,91.8 L 170,91.5 L 172,93.7 L 174,96.1 L 176,97.5 L 178,97.9 L 180,98.0 L 182,98.0 L 184,98.0 L 186,98.0 L 188,98.0 L 190,98.0 L 192,98.0 L 194,98.0 L 196,98.0 L 198,98.0 L 200,98.0 L 202,98.0 L 204,98.0 L 206,103.2 L 208,52.9 L 210,99.4 L 212,99.9 L 214,98.0 L 216,98.0 L 218,98.0 L 220,97.9 L 222,97.6 L 224,96.5 L 226,94.2 L 228,91.8 L 230,91.5 L 232,93.7 L 234,96.1 L 236,97.5 L 238,97.9 L 240,98.0 L 242,98.0 L 244,98.0 L 246,98.0 L 248,98.0 L 250,98.0 L 252,98.0 L 254,98.0 L 256,98.0 L 258,98.0 L 260,98.0 L 262,98.0 L 264,98.0 L 266,103.2 L 268,52.9 L 270,99.4 L 272,99.9 L 274,98.0 L 276,98.0 L 278,98.0 L 280,97.9 L 282,97.6 L 284,96.5 L 286,94.2 L 288,91.8 L 290,91.5 L 292,93.7 L 294,96.1 L 296,97.5 L 298,97.9 L 300,98.0 L 302,98.0 L 304,98.0 L 306,98.0 L 308,98.0 L 310,98.0 L 312,98.0 L 314,98.0 L 316,98.0 L 318,98.0 L 320,98.0 L 322,98.0 L 324,98.0 L 326,103.2 L 328,52.9 L 330,99.4 L 332,99.9 L 334,98.0 L 336,98.0 L 338,98.0 L 340,97.9 L 342,97.6 L 344,96.5 L 346,94.2 L 348,91.8 L 350,91.5 L 352,93.7 L 354,96.1 L 356,97.5 L 358,97.9 L 360,98.0 L 362,98.0 L 364,98.0 L 366,98.0 L 368,98.0 L 370,98.0 L 372,98.0 L 374,98.0 L 376,98.0 L 378,98.0 L 380,98.0 L 382,98.0 L 384,98.0 L 386,103.2 L 388,52.9 L 390,99.4 L 392,99.9 L 394,98.0 L 396,98.0 L 398,98.0 L 400,97.9 L 402,97.6 L 404,96.5 L 406,94.2 L 408,91.8 L 410,91.5 L 412,93.7 L 414,96.1 L 416,97.5 L 418,97.9 L 420,98.0 L 422,98.0 L 424,98.0 L 426,98.0 L 428,98.0 L 430,98.0 L 432,98.0 L 434,98.0 L 436,98.0 L 438,98.0 L 440,98.0 L 442,98.0 L 444,98.0 L 446,103.2 L 448,52.9 L 450,99.4 L 452,99.9 L 454,98.0 L 456,98.0 L 458,98.0 L 460,97.9 L 462,97.6 L 464,96.5 L 466,94.2 L 468,91.8 L 470,91.5 L 472,93.7 L 474,96.1 L 476,97.5 L 478,97.9 L 480,98.0 L 482,98.0 L 484,98.0 L 486,98.0 L 488,98.0 L 490,98.0 L 492,98.0 L 494,98.0 L 496,98.0 L 498,98.0 L 500,98.0 L 502,98.0 L 504,98.0 L 506,103.2 L 508,52.9 L 510,99.4 L 512,99.9 L 514,98.0 L 516,98.0 L 518,98.0 L 520,97.9 L 522,97.6 L 524,96.5 L 526,94.2 L 528,91.8 L 530,91.5 L 532,93.7 L 534,96.1 L 536,97.5 L 538,97.9 L 540,98.0 L 542,98.0 L 544,98.0 L 546,98.0 L 548,98.0 L 550,98.0 L 552,98.0 L 554,98.0 L 556,98.0 L 558,98.0 L 560,98.0 L 562,98.0 L 564,98.0 L 566,103.2 L 568,52.9 L 570,99.4 L 572,99.9 L 574,98.0 L 576,98.0 L 578,98.0 L 580,97.9 L 582,97.6 L 584,96.5 L 586,94.2 L 588,91.8 L 590,91.5 L 592,93.7 L 594,96.1 L 596,97.5 L 598,97.9 L 600,98.0 L 602,98.0 L 604,98.0 L 606,98.0 L 608,98.0 L 610,98.0 L 612,98.0 L 614,98.0 L 616,98.0 L 618,98.0 L 620,98.0 L 622,98.0 L 624,98.0 L 626,103.2 L 628,52.9 L 630,99.4 L 632,99.9 L 634,98.0 L 636,98.0 L 638,98.0 L 640,97.9 L 642,97.6 L 644,96.5 L 646,94.2 L 648,91.8 L 650,91.5 L 652,93.7 L 654,96.1 L 656,97.5 L 658,97.9 L 660,98.0 L 662,98.0 L 664,98.0 L 666,98.0 L 668,98.0 L 670,98.0 L 672,98.0 L 674,98.0 L 676,98.0 L 678,98.0 L 680,98.0 L 682,98.0 L 684,98.0 L 686,103.2 L 688,52.9 L 690,99.4 L 692,99.9 L 694,98.0 L 696,98.0 L 698,98.0 L 700,97.9 L 702,97.6 L 704,96.5 L 706,94.2 L 708,91.8 L 710,91.5 L 712,93.7 L 714,96.1 L 716,97.5 L 718,97.9 L 720,98.0 L 722,98.0 L 724,98.0 L 726,98.0 L 728,98.0 L 730,98.0 L 732,98.0 L 734,98.0 L 736,98.0 L 738,98.0 L 740,98.0 L 742,98.0 L 744,98.0 L 746,103.2 L 748,52.9 L 750,99.4 L 752,99.9 L 754,98.0" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Taquicardia supraventricular (TSV)</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">QRS estrecho, regular y rápido (~150–250/min); ondas P no visibles.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,98.0 L 8,98.0 L 10,98.0 L 12,98.0 L 14,98.0 L 16,98.0 L 18,98.0 L 20,97.9 L 22,97.7 L 24,97.3 L 26,96.5 L 28,95.3 L 30,93.7 L 32,92.2 L 34,91.4 L 36,91.5 L 38,92.5 L 40,94.1 L 42,95.6 L 44,96.7 L 46,97.4 L 48,97.8 L 50,97.9 L 52,98.0 L 54,98.0 L 56,98.0 L 58,98.0 L 60,98.0 L 62,99.6 L 64,101.2 L 66,102.8 L 68,86.2 L 70,66.5 L 72,52.6 L 74,71.6 L 76,90.7 L 78,109.8 L 80,106.0 L 82,102.3 L 84,98.5 L 86,97.9 L 88,97.7 L 90,97.5 L 92,97.2 L 94,96.7 L 96,96.0 L 98,95.1 L 100,93.9 L 102,92.5 L 104,90.9 L 106,89.3 L 108,87.7 L 110,86.5 L 112,85.7 L 114,85.4 L 116,85.7 L 118,86.5 L 120,87.7 L 122,89.3 L 124,90.9 L 126,92.5 L 128,93.9 L 130,95.1 L 132,96.0 L 134,96.7 L 136,97.2 L 138,97.5 L 140,97.7 L 142,97.9 L 144,97.9 L 146,98.0 L 148,98.0 L 150,98.0 L 152,98.0 L 154,98.0 L 156,98.0 L 158,98.0 L 160,98.0 L 162,98.0 L 164,98.0 L 166,98.0 L 168,98.0 L 170,98.0 L 172,98.0 L 174,98.0 L 176,98.0 L 178,98.0 L 180,98.0 L 182,98.0 L 184,98.0 L 186,98.0 L 188,98.0 L 190,98.0 L 192,98.0 L 194,98.0 L 196,98.0 L 198,98.0 L 200,97.9 L 202,97.7 L 204,97.3 L 206,96.5 L 208,95.3 L 210,93.7 L 212,92.2 L 214,91.4 L 216,91.5 L 218,92.5 L 220,94.1 L 222,95.6 L 224,96.7 L 226,97.4 L 228,97.8 L 230,97.9 L 232,98.0 L 234,98.0 L 236,98.0 L 238,98.0 L 240,98.0 L 242,99.6 L 244,101.2 L 246,102.8 L 248,86.2 L 250,66.5 L 252,52.6 L 254,71.6 L 256,90.7 L 258,109.8 L 260,106.0 L 262,102.3 L 264,98.5 L 266,97.9 L 268,97.7 L 270,97.5 L 272,97.2 L 274,96.7 L 276,96.0 L 278,95.1 L 280,93.9 L 282,92.5 L 284,90.9 L 286,89.3 L 288,87.7 L 290,86.5 L 292,85.7 L 294,85.4 L 296,85.7 L 298,86.5 L 300,87.7 L 302,89.3 L 304,90.9 L 306,92.5 L 308,93.9 L 310,95.1 L 312,96.0 L 314,96.7 L 316,97.2 L 318,97.5 L 320,97.7 L 322,97.9 L 324,97.9 L 326,98.0 L 328,98.0 L 330,98.0 L 332,98.0 L 334,98.0 L 336,98.0 L 338,98.0 L 340,98.0 L 342,98.0 L 344,98.0 L 346,98.0 L 348,98.0 L 350,98.0 L 352,98.0 L 354,98.0 L 356,98.0 L 358,98.0 L 360,98.0 L 362,98.0 L 364,98.0 L 366,98.0 L 368,98.0 L 370,98.0 L 372,98.0 L 374,98.0 L 376,98.0 L 378,98.0 L 380,97.9 L 382,97.7 L 384,97.3 L 386,96.5 L 388,95.3 L 390,93.7 L 392,92.2 L 394,91.4 L 396,91.5 L 398,92.5 L 400,94.1 L 402,95.6 L 404,96.7 L 406,97.4 L 408,97.8 L 410,97.9 L 412,98.0 L 414,98.0 L 416,98.0 L 418,98.0 L 420,98.0 L 422,99.6 L 424,101.2 L 426,102.8 L 428,86.2 L 430,66.5 L 432,52.6 L 434,71.6 L 436,90.7 L 438,109.8 L 440,106.0 L 442,102.3 L 444,98.5 L 446,97.9 L 448,97.7 L 450,97.5 L 452,97.2 L 454,96.7 L 456,96.0 L 458,95.1 L 460,93.9 L 462,92.5 L 464,90.9 L 466,89.3 L 468,87.7 L 470,86.5 L 472,85.7 L 474,85.4 L 476,85.7 L 478,86.5 L 480,87.7 L 482,89.3 L 484,90.9 L 486,92.5 L 488,93.9 L 490,95.1 L 492,96.0 L 494,96.7 L 496,97.2 L 498,97.5 L 500,97.7 L 502,97.9 L 504,97.9 L 506,98.0 L 508,98.0 L 510,98.0 L 512,98.0 L 514,98.0 L 516,98.0 L 518,98.0 L 520,98.0 L 522,98.0 L 524,98.0 L 526,98.0 L 528,98.0 L 530,98.0 L 532,98.0 L 534,98.0 L 536,98.0 L 538,98.0 L 540,98.0 L 542,98.0 L 544,98.0 L 546,98.0 L 548,98.0 L 550,98.0 L 552,98.0 L 554,98.0 L 556,98.0 L 558,98.0 L 560,97.9 L 562,97.7 L 564,97.3 L 566,96.5 L 568,95.3 L 570,93.7 L 572,92.2 L 574,91.4 L 576,91.5 L 578,92.5 L 580,94.1 L 582,95.6 L 584,96.7 L 586,97.4 L 588,97.8 L 590,97.9 L 592,98.0 L 594,98.0 L 596,98.0 L 598,98.0 L 600,98.0 L 602,99.6 L 604,101.2 L 606,102.8 L 608,86.2 L 610,66.5 L 612,52.6 L 614,71.6 L 616,90.7 L 618,109.8 L 620,106.0 L 622,102.3 L 624,98.5 L 626,97.9 L 628,97.7 L 630,97.5 L 632,97.2 L 634,96.7 L 636,96.0 L 638,95.1 L 640,93.9 L 642,92.5 L 644,90.9 L 646,89.3 L 648,87.7 L 650,86.5 L 652,85.7 L 654,85.4 L 656,85.7 L 658,86.5 L 660,87.7 L 662,89.3 L 664,90.9 L 666,92.5 L 668,93.9 L 670,95.1 L 672,96.0 L 674,96.7 L 676,97.2 L 678,97.5 L 680,97.7 L 682,97.9 L 684,97.9 L 686,98.0 L 688,98.0 L 690,98.0 L 692,98.0 L 694,98.0 L 696,98.0 L 698,98.0 L 700,98.0 L 702,98.0 L 704,98.0 L 706,98.0 L 708,98.0 L 710,98.0 L 712,98.0 L 714,98.0 L 716,98.0 L 718,98.0 L 720,98.0 L 722,98.0 L 724,98.0 L 726,98.0 L 728,98.0 L 730,98.0 L 732,98.0 L 734,98.0 L 736,98.0 L 738,98.0 L 740,97.9 L 742,97.7 L 744,97.3 L 746,96.5 L 748,95.3 L 750,93.7 L 752,92.2 L 754,91.4" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Ritmo sinusal normal (comparación)</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">Onda P antes de cada QRS estrecho, a frecuencia normal.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><div class="alert a-i"><span class="ai">💡</span><div>Compara: en la <b>TSV</b> el ritmo es muy rápido y sin P visibles; en el <b>sinusal</b> hay P antes de cada QRS. Un <b>QRS ancho</b> obliga a pensar en taquicardia ventricular.</div></div></div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento en el ECG</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>QRS estrecho, regular</strong>, a frecuencia rápida (habitualmente <strong>~150–250/min</strong>).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Ondas P a menudo <strong>no visibles</strong> o retrógradas (ocultas en el QRS/onda T).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Inicio y terminación <strong>súbitos</strong> (paroxística).</div></div>
+  <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Registra un ECG de 12 derivaciones durante el episodio y tras revertir: ayuda a definir el tipo.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Diferénciala de…</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Ritmo</th><th>Pistas</th></tr></thead><tbody>
+    <tr><td class="dm">Taquicardia sinusal</td><td>Onda P normal antes de cada QRS; frecuencia variable con la causa (fiebre, dolor, hipovolemia)</td></tr>
+    <tr><td class="dn">Flutter auricular</td><td>Ondas en "dientes de sierra"; la adenosina desenmascara el flutter</td></tr>
+    <tr><td class="dm">Fibrilación auricular</td><td>Irregularmente irregular, sin ondas P</td></tr>
+    <tr><td class="dn">Taquicardia ventricular</td><td>QRS ancho; ante la duda, trátala como TV</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Datos de inestabilidad</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-r"><span class="ai">⚡</span><div><b>Hipotensión</b>, <b>alteración del estado mental</b>, <b>dolor torácico isquémico</b> o <b>insuficiencia cardíaca aguda</b> → <b>cardioversión sincronizada</b> sin demora.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo interactivo</div>Primero estable vs inestable; luego estrecho regular → vagales → adenosina → nodal.</div></div><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Fármacos con dosis. Toca para desplegar o <strong>busca por nombre</strong>.</div></div><input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (adenosina, verapamilo, diltiazem…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;"><div id="farm-body"></div></div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('estable',this)">Estable típica</button>
+  <button class="pchip" onclick="setEscen('inestable',this)">Inestable</button>
+  <button class="pchip" onclick="setEscen('ancho',this)">Complejo ancho</button>
+  <button class="pchip" onclick="setEscen('recurrente',this)">Recurrente</button>
+  <button class="pchip" onclick="setEscen('mat',this)">Multifocal</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Tras revertir</td><td>ECG de 12 derivaciones; buscar preexcitación (WPW) en ritmo sinusal</td></tr>
+    <tr><td class="dn">Recurrente</td><td>Derivar a electrofisiología para valorar ablación con catéter (curativa en muchos casos)</td></tr>
+    <tr><td class="dm">Episodios ocasionales</td><td>Enseñar maniobras vagales; valorar "pastilla en el bolsillo" según el caso</td></tr>
+    <tr><td class="dn">Desencadenantes</td><td>Revisar estimulantes/cafeína; tratar causas (fiebre, anemia, tiroides) si contribuyen</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>La ablación con catéter ofrece altas tasas de curación en AVNRT y AVRT.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Recurrente o mal tolerada</strong> → electrofisiología (ablación).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Preexcitación (WPW)</strong> en el ECG → valoración especializada.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Complejo ancho</strong> de origen incierto → manejar como taquicardia ventricular y estudiar.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Taquicardia supraventricular</h2>
+  <p>Cardiología / arritmias. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Vagales, adenosina, betabloqueador/calcioantagonista, cardioversión, ablación, tipos</strong> → guía ACC/AHA/HRS 2015 [1].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Manejo agudo estable/inestable y cardioversión sincronizada</strong> → algoritmo de taquicardia ACLS (AHA 2020) [2].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Contexto mexicano</strong> → CENETEC [3].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2015/16</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Page RL, Joglar JA, Caldwell MA, et al. <em>2015 ACC/AHA/HRS Guideline for the Management of Adult Patients With Supraventricular Tachycardia.</em> Circulation. 2016;133(14):e506-e574. [Maniobras vagales y adenosina de primera línea (clase I) en la TSV aguda; betabloqueadores o diltiazem/verapamilo si persiste y está estable; cardioversión sincronizada en el inestable; ablación con catéter para el manejo definitivo; tipos (AVNRT, AVRT, taquicardia auricular). Sustenta el Tratamiento y el algoritmo.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000311" target="_blank">🔗 DOI 10.1161/CIR.0000000000000311</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Panchal AR, et al. <em>Part 3: Adult Basic and Advanced Life Support: 2020 AHA Guidelines for CPR and ECC (algoritmo de taquicardia con pulso).</em> Circulation. 2020;142(16 suppl 2):S366-S468. [Manejo de la taquicardia con pulso: valorar estabilidad; cardioversión sincronizada en el inestable; adenosina si es de complejo estrecho regular. Sustenta el enfoque agudo.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000916" target="_blank">🔗 DOI 10.1161/CIR.0000000000000916</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): taquiarritmias supraventriculares.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja fármacos, energías y presentaciones con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Verifica actualizaciones de guías (<strong>ACC/AHA/HRS, ESC</strong>) y locales (<strong>CENETEC, SSa México</strong>), y adapta al contexto institucional. Última revisión: <strong>agosto 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#d84315', C1='#d84315', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Punto clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / base',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones',f.pres,'#374151');
+  if(f.ci)h+=txrow('Precauciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Monitorización',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#7a2410')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_VAGAL={n:'Maniobras vagales',elec:true,linea:'Primer paso si está estable',
+  dlbl:'Cómo',da:'Maniobra de Valsalva (preferir la modificada: soplar 15 s y luego recostar al paciente y elevarle las piernas) o masaje del seno carotídeo (evitarlo si hay soplo carotídeo o antecedente cerebrovascular)',
+  dur:'Intento breve; si no revierte, pasar a adenosina.',
+  adm:'Aumentan el tono vagal y pueden terminar la taquicardia por reentrada nodal. La Valsalva modificada es más eficaz que la clásica. Registra un ECG durante la maniobra: ayuda al diagnóstico.',
+  mec:'↑ tono vagal → enlentece la conducción del nodo AV.',
+  ind:'TSV estable de complejo estrecho regular.',
+  dmax:'Evita el masaje carotídeo en ancianos con enfermedad carotídea.',iv:'—',pres:'—',
+  ci:'Masaje carotídeo: soplo carotídeo, antecedente cerebrovascular',ea:'Raros',mon:'ECG continuo',
+  nota:'⭐ Primer paso, seguro y a veces resolutivo; hazlo bien (Valsalva modificada) antes de la adenosina.'};
+var F_ADENO={n:'Adenosina',elec:true,linea:'Fármaco de elección (estable, estrecho regular)',
+  dlbl:'Dosis',da:'6 mg IV en bolo RÁPIDO por una vía proximal, seguido de un lavado con 20 mL de solución y elevación del brazo; si no revierte en 1–2 minutos, 12 mg IV; puede repetirse una vez 12 mg',
+  dur:'Efecto muy breve (segundos); vida media ultracorta.',
+  adm:'Bloquea transitoriamente el nodo AV y termina las taquicardias por reentrada nodal. Advierte al paciente de una sensación breve de opresión/rubor/"vacío". Ten el desfibrilador cerca. También ayuda al diagnóstico (desenmascara flutter/taquicardia auricular).',
+  mec:'Bloqueo transitorio del nodo AV.',
+  ind:'TSV estable de complejo estrecho regular que no cedió con vagales.',
+  dmax:'Precaución en asma/broncoespasmo. NO usar en fibrilación auricular preexcitada (WPW). Efecto reducido por teofilina/cafeína y aumentado por dipiridamol.',iv:'IV rápido',pres:'Ampolla',
+  ci:'Asma grave/broncoespasmo; fibrilación auricular preexcitada (WPW)',ea:'Rubor, opresión torácica, disnea, bradicardia/pausa transitorias',mon:'ECG continuo, desfibrilador disponible',
+  nota:'⭐ Bolo rápido + lavado inmediato; si no, no funciona. Registra tira de ritmo.'};
+var F_DILTI={n:'Diltiazem (calcioantagonista no dihidropiridínico)',linea:'Estable, si adenosina/vagales fallan',
+  dlbl:'Dosis',da:'0.25 mg/kg IV (aprox. 15–20 mg) en 2 minutos; si es necesario, segunda dosis de 0.35 mg/kg. Para control de frecuencia puede seguirse infusión de 5–15 mg/h',
+  dur:'Según respuesta; infusión para control de frecuencia sostenido.',
+  adm:'Enlentece el nodo AV; útil si la adenosina no termina la taquicardia o para control de frecuencia. Evita combinarlo con betabloqueador intravenoso (riesgo de bradicardia/hipotensión).',
+  mec:'Bloqueo de canales de calcio (nodal).',
+  ind:'TSV estable refractaria a vagales/adenosina; control de frecuencia.',
+  dmax:'Evitar en insuficiencia cardíaca con fracción de eyección reducida y en QRS ancho de origen incierto.',iv:'IV',pres:'Ampolla',
+  ci:'Insuficiencia cardíaca con FE reducida, hipotensión, QRS ancho dudoso, fibrilación auricular preexcitada',ea:'Hipotensión, bradicardia',mon:'Presión, ECG',
+  nota:'No lo combines con betabloqueador IV; cuidado en insuficiencia cardíaca.'};
+var F_VERAP={n:'Verapamilo (calcioantagonista no dihidropiridínico)',linea:'Estable, alternativa a diltiazem',
+  dlbl:'Dosis',da:'2.5–5 mg IV en 2 minutos; puede repetirse 5–10 mg cada 15–30 minutos según respuesta (máximo ~20–30 mg)',
+  dur:'Según respuesta.',
+  adm:'Alternativa al diltiazem para terminar o controlar la TSV estable. Mismas precauciones: no con betabloqueador IV, no en insuficiencia cardíaca con fracción reducida ni en QRS ancho dudoso.',
+  mec:'Bloqueo de canales de calcio (nodal).',
+  ind:'TSV estable refractaria a vagales/adenosina.',
+  dmax:'Contraindicado en QRS ancho de origen incierto (posible TV) y en fibrilación auricular preexcitada.',iv:'IV',pres:'Ampolla',
+  ci:'Insuficiencia cardíaca con FE reducida, hipotensión, QRS ancho dudoso, fibrilación auricular preexcitada',ea:'Hipotensión, bradicardia',mon:'Presión, ECG',
+  nota:'Igual que diltiazem: no combinar con betabloqueador IV.'};
+var F_BB={n:'Betabloqueador intravenoso',linea:'Estable, alternativa',
+  dlbl:'Dosis',da:'Metoprolol 2.5–5 mg IV cada 5 minutos hasta 15 mg; o esmolol IV titulable en infusión',
+  dur:'Según respuesta.',
+  adm:'Alternativa para terminar o controlar la TSV estable. No combinar con calcioantagonista no dihidropiridínico intravenoso.',
+  mec:'Bloqueo beta → enlentece el nodo AV.',
+  ind:'TSV estable; control de frecuencia.',
+  dmax:'Evitar en broncoespasmo grave, insuficiencia cardíaca descompensada, fibrilación auricular preexcitada y QRS ancho dudoso.',iv:'IV',pres:'Ampolla',
+  ci:'Broncoespasmo grave, IC descompensada, fibrilación auricular preexcitada',ea:'Hipotensión, bradicardia, broncoespasmo',mon:'Presión, ECG',
+  nota:'No lo combines con diltiazem/verapamilo IV.'};
+var F_CARDIO={n:'Cardioversión eléctrica sincronizada',elec:true,linea:'Si está INESTABLE',
+  dlbl:'Energía',da:'Sincronizada, iniciar con 50–100 J (complejo estrecho regular) y escalar si es necesario. Sedación/analgesia si el estado lo permite',
+  dur:'Inmediata ante inestabilidad.',
+  adm:'Es el tratamiento del paciente hemodinámicamente inestable (hipotensión, alteración del estado mental, dolor torácico isquémico o insuficiencia cardíaca aguda). También en la TSV estable que no cede con fármacos.',
+  mec:'Choque sincronizado con el QRS → restaura el ritmo.',
+  ind:'TSV inestable, o estable refractaria a fármacos.',
+  dmax:'Debe ser SINCRONIZADA (no desfibrilación); en taquicardias que se autolimitan/recurren no aplica.',iv:'Eléctrico',pres:'Sincronizada',
+  ci:'—',ea:'Quemadura cutánea, sedación',mon:'ECG, sincronización con QRS',
+  nota:'⭐ Inestable = cardioversión sincronizada YA; no pierdas tiempo con fármacos.'};
+var F_ABLA={n:'Ablación con catéter',linea:'Tratamiento definitivo (recurrente)',
+  dlbl:'Cuándo',da:'Estudio electrofisiológico y ablación con catéter del circuito/vía responsable, por cardiología/electrofisiología',
+  dur:'Definitivo (curativo en muchos casos).',
+  adm:'Opción de elección para la TSV recurrente o sintomática (AVNRT, AVRT por vía accesoria, taquicardia auricular): altas tasas de curación. Deriva para valoración electrofisiológica.',
+  mec:'Elimina el sustrato de la reentrada/vía accesoria.',
+  ind:'TSV recurrente o mal tolerada; preferencia del paciente.',
+  dmax:'Riesgos según el tipo/localización (poco frecuentes).',iv:'Procedimiento',pres:'—',
+  ci:'Según el caso',ea:'Complicaciones del procedimiento (poco frecuentes)',mon:'Electrofisiología',
+  nota:'Solución de fondo; combínala con "pastilla en el bolsillo" para episodios ocasionales según el caso.'};
+var F_NO_WPW={n:'❌ Bloquear el nodo AV en fibrilación auricular preexcitada (WPW)',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No uses adenosina, verapamilo, diltiazem, betabloqueador ni digoxina en una taquicardia irregular de complejo ancho por preexcitación (WPW): pueden acelerar la respuesta ventricular y desencadenar fibrilación ventricular',
+  dur:'Usa cardioversión sincronizada o un antiarrítmico específico; deriva.',
+  adm:'La fibrilación auricular preexcitada se ve como una taquicardia irregular de QRS ancho con morfología variable → cardioversión (inestable) o antiarrítmico (p. ej. procainamida) y valoración especializada.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Fibrilación ventricular',
+  nota:'Taquicardia irregular de complejo ancho → piensa en WPW y NO bloquees el nodo.'};
+var F_NO_ANCHO={n:'❌ Verapamilo/diltiazem en taquicardia de complejo ancho de origen incierto',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No des calcioantagonistas en una taquicardia de QRS ancho de causa dudosa: si es taquicardia ventricular, pueden causar colapso',
+  dur:'Trátala como taquicardia ventricular hasta demostrar lo contrario.',
+  adm:'Ante un complejo ancho regular de origen incierto, trata como TV; si está inestable, cardioversión sincronizada.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Colapso hemodinámico',
+  nota:'QRS ancho dudoso = trátalo como taquicardia ventricular.'};
+var F_NO_DEMORA={n:'❌ Retrasar la cardioversión en el paciente inestable',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No insistas en maniobras/fármacos si hay inestabilidad (hipotensión, alteración del estado mental, dolor torácico isquémico, insuficiencia cardíaca aguda): cardioversión sincronizada de inmediato',
+  dur:'Inmediata.',
+  adm:'La inestabilidad manda: sincroniza y cardiovierte sin demora.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Deterioro/paro',
+  nota:'Inestable = cardioversión sincronizada, no más fármacos.'};
+
+
+var F_SED_ETO={n:'Etomidato (sedante)',elec:true,linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'0.1–0.15 mg/kg IV en bolo (inicio ~30–60 s, duración 3–5 min)',
+ dur:'Dosis única para el procedimiento; repite solo si es necesario.',
+ adm:'Hipnótico de acción corta con buena estabilidad hemodinámica: opción habitual para la cardioversión. No produce analgesia, combínalo con un opioide. Puede dar mioclonías.',
+ mec:'Hipnótico de acción corta (facilita GABA).',
+ ind:'Sedación procedimental para cardioversión sincronizada en paciente con pulso.',
+ dmax:'Si está muy inestable o inconsciente, NO retrases el choque por sedar.',
+ iv:'IV',pres:'Ampolla',ci:'Alergia conocida',
+ ea:'Mioclonías, dolor a la inyección, supresión suprarrenal transitoria',
+ mon:'SpO₂, ECG, presión, capnografía; oxígeno, vía aérea y reversores (flumazenil, naloxona) listos',
+ nota:'⭐ Preferido por muchos en cardioversión por su estabilidad hemodinámica; combínalo con analgésico si hay dolor.'};
+var F_SED_PRO={n:'Propofol (sedante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'0.5–1 mg/kg IV titulado en bolos de 10–20 mg (inicio rápido, duración corta)',
+ dur:'Titula al efecto; acción muy corta.',
+ adm:'Hipnótico de acción corta muy manejable. Vigila hipotensión y depresión respiratoria, sobre todo si hay inestabilidad o hipovolemia. No da analgesia.',
+ mec:'Hipnótico de acción corta (facilita GABA).',
+ ind:'Sedación procedimental para cardioversión.',
+ dmax:'Reduce la dosis en el paciente inestable/anciano.',
+ iv:'IV',pres:'Ampolla',ci:'Inestabilidad hemodinámica marcada (relativa)',
+ ea:'Hipotensión, apnea, dolor a la inyección',
+ mon:'SpO₂, ECG, presión, capnografía; vía aérea lista',
+ nota:'Titula despacio; precaución hemodinámica y respiratoria.'};
+var F_SED_MID={n:'Midazolam (sedante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'1–2.5 mg IV, titular cada 2–3 min (aprox. 0.02–0.03 mg/kg); inicio 1–2 min',
+ dur:'Titula al efecto; acción intermedia.',
+ adm:'Benzodiacepina sedante y amnésica; a menudo se combina con fentanilo. Reversible con flumazenil. Mayor depresión respiratoria si se asocia a opioides.',
+ mec:'Benzodiacepina (facilita GABA), amnésica.',
+ ind:'Sedación procedimental para cardioversión.',
+ dmax:'Reduce la dosis y titula si es anciano o hay opioides asociados.',
+ iv:'IV',pres:'Ampolla',ci:'—',
+ ea:'Depresión respiratoria, hipotensión',
+ mon:'SpO₂, ECG, presión; flumazenil disponible como reversor',
+ nota:'Amnésico y reversible con flumazenil; suele combinarse con un analgésico.'};
+var F_SED_KET={n:'Ketamina (sedante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'1–2 mg/kg IV (sedación disociativa; inicio ~1 min)',
+ dur:'Duración ~10–15 min.',
+ adm:'Mantiene el impulso respiratorio y la estabilidad hemodinámica: útil si hay hipotensión. Aporta analgesia. Puede aumentar la frecuencia cardíaca, la presión y las secreciones.',
+ mec:'Anestésico disociativo (antagonista NMDA); analgésico.',
+ ind:'Sedación procedimental, en especial si hay inestabilidad hemodinámica.',
+ dmax:'Puede elevar frecuencia y presión; considera esto en la taquiarritmia.',
+ iv:'IV',pres:'Ampolla',ci:'—',
+ ea:'Hipertensión, taquicardia, sialorrea, fenómenos de emergencia',
+ mon:'SpO₂, ECG, presión',
+ nota:'Opción si hay hipotensión; da analgesia pero puede subir frecuencia/presión.'};
+var F_SED_FEN={n:'Fentanilo (analgésico adyuvante)',linea:'Sedación para la cardioversión',
+ dlbl:'Dosis',da:'0.5–1 mcg/kg IV (aprox. 25–100 mcg), titular (inicio 1–2 min)',
+ dur:'Complementa al sedante durante el procedimiento.',
+ adm:'Opioide de acción rápida para el dolor del choque; se suma a un sedante (midazolam/propofol/etomidato). Reversible con naloxona. Suma depresión respiratoria con el sedante.',
+ mec:'Opioide de acción rápida (analgesia).',
+ ind:'Analgesia adyuvante en la cardioversión.',
+ dmax:'Titula lento; el bolo rápido en dosis altas puede dar rigidez torácica.',
+ iv:'IV',pres:'Ampolla',ci:'—',
+ ea:'Depresión respiratoria, hipotensión, rigidez torácica (dosis altas rápidas)',
+ mon:'SpO₂, ECG, presión; naloxona disponible como reversor',
+ nota:'La cardioversión duele: un analgésico complementa al sedante. Reversible con naloxona.'};
+
+var TXC=[
+ ['🌀 Primer paso (estable)','Maniobras vagales',C1,[F_VAGAL]],
+ ['💉 Fármacos (estable, estrecho regular)','Bloqueo del nodo AV',AZ,[F_ADENO,F_DILTI,F_VERAP,F_BB]],
+ ['⚡ Inestable','Sin demora',C2,[F_CARDIO]],
+ ['🎯 Definitivo','Recurrente / sintomática',CO,[F_ABLA]],
+ ['💤 Sedación para la cardioversión','Con pulso y consciente — la cardioversión duele; sedación/analgesia procedimental',C3,[F_SED_ETO,F_SED_PRO,F_SED_MID,F_SED_KET,F_SED_FEN]],
+ ['❌ NO hacer','Errores peligrosos',RJ,[F_NO_WPW,F_NO_ANCHO,F_NO_DEMORA]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">¿Estable o inestable? Esa es la primera decisión</div><b>Inestable</b> (hipotensión, alteración del estado mental, dolor torácico isquémico, insuficiencia cardíaca aguda) → <b>cardioversión sincronizada</b> ya. <b>Estable</b> con complejo estrecho regular → <b>vagales → adenosina → betabloqueador o calcioantagonista</b>. Cuidado con el complejo ancho y con la preexcitación (WPW). La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💉 Agudo (estable, estrecho regular)',color:'#d84315',farmacos:[
+  {n:'Adenosina',ini:'6 mg → 12 mg IV rápido',da:'Bolo rápido + lavado 20 mL + elevar brazo. No en FA preexcitada (WPW). Cuidado en asma.',iv:'IV rápido',pres:'Ampolla',ci:'Asma grave, FA preexcitada',ea:'Rubor, opresión, pausa transitoria',nota:'Fármaco de elección.'},
+  {n:'Diltiazem',ini:'0.25 mg/kg IV (~15–20 mg)',da:'2.ª dosis 0.35 mg/kg; infusión 5–15 mg/h. No con BB IV; no en IC/FE reducida.',iv:'IV',pres:'Ampolla',ci:'IC FE reducida, QRS ancho dudoso',ea:'Hipotensión, bradicardia',nota:'No combinar con BB IV.'},
+  {n:'Verapamilo',ini:'2.5–5 mg IV en 2 min',da:'Repetir 5–10 mg c/15–30 min (máx ~20–30 mg). Mismas precauciones que diltiazem.',iv:'IV',pres:'Ampolla',ci:'IC FE reducida, QRS ancho dudoso',ea:'Hipotensión, bradicardia',nota:'No con BB IV.'},
+  {n:'Betabloqueador (metoprolol/esmolol)',ini:'Metoprolol 2.5–5 mg IV c/5 min (máx 15 mg)',da:'Esmolol en infusión titulable. No con calcioantagonista IV.',iv:'IV',pres:'Ampolla',ci:'Broncoespasmo grave, IC descompensada',ea:'Hipotensión, bradicardia',nota:'No con diltiazem/verapamilo IV.'}]},
+ {familia:'⚡ Eléctrico / definitivo',color:'#0a5c45',farmacos:[
+  {n:'Cardioversión sincronizada',ini:'50–100 J (inestable)',da:'SINCRONIZADA. Para inestable o estable refractaria. Sedación si se puede.',iv:'Eléctrico',pres:'Sincronizada',ci:'—',ea:'Quemadura, sedación',nota:'Inestable = ya.'},
+  {n:'Ablación con catéter',ini:'Recurrente',da:'Estudio electrofisiológico + ablación; curativa en muchos casos.',iv:'Procedimiento',pres:'—',ci:'Según caso',ea:'Complicaciones poco frecuentes',nota:'Tratamiento de fondo.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Precaución',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para el paciente',color:'#0a5c45',fichas:[
+  {n:'Qué es y qué hacer',via:'Al alta / seguimiento',
+   enf:'Explicar que es una taquicardia por un "cortocircuito" eléctrico, en general no peligrosa si el corazón es sano; enseñar maniobras vagales; comentar la ablación como solución definitiva si recurre.',
+   pac:'Es un ritmo rápido por un cortocircuito eléctrico; suele controlarse bien. Aprende la maniobra de Valsalva para intentar cortarla. Si te da palpitación rápida y sostenida con mareo, dolor de pecho o falta de aire, busca atención. Si se repite, hay un procedimiento (ablación) que puede curarla.',
+   nota:'Evita desencadenantes conocidos (exceso de cafeína, estimulantes) si los identificas.',
+   alarma:'Consulta urgente si hay desmayo, dolor de pecho, falta de aire intensa o palpitación que no cede.'}]},
+ {familia:'🔎 Para el equipo',color:'#0c3b6e',fichas:[
+  {n:'Enfoque agudo',via:'En el evento',
+   enf:'Primero estable vs inestable. Inestable → cardioversión sincronizada. Estable de complejo estrecho regular → vagales → adenosina → betabloqueador/calcioantagonista. Cuidado con el complejo ancho (trátalo como TV) y la preexcitación (WPW).',
+   pac:'El equipo valorará la estabilidad y elegirá el tratamiento.',
+   nota:'Registra ECG de 12 derivaciones durante y después; útil para el diagnóstico del tipo.',
+   alarma:'Complejo ancho irregular → sospecha WPW: no bloquees el nodo AV.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ estable:{t:'TSV estable típica (estrecho regular)',c:'#d84315',h:
+  '<div class="prose"><p><b>Perfil:</b> palpitaciones de inicio súbito, complejo estrecho regular ~150–250/min, hemodinámicamente estable.</p></div>'
+  +'<div class="alert a-g"><span class="ai">🌀</span><div><b>Maniobras vagales</b> (Valsalva modificada); si no cede, <b>adenosina 6 mg → 12 mg IV rápido</b>; si aún no, <b>betabloqueador o diltiazem/verapamilo</b>.</div></div>'},
+ inestable:{t:'TSV inestable',c:'#7b1c1c',h:
+  '<div class="prose"><p><b>Perfil:</b> hipotensión, alteración del estado mental, dolor torácico isquémico o insuficiencia cardíaca aguda.</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚡</span><div><b>Cardioversión eléctrica sincronizada</b> de inmediato (50–100 J), con sedación si el estado lo permite. No te demores con fármacos.</div></div>'},
+ ancho:{t:'Complejo ancho / dudoso',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> taquicardia de QRS ancho de origen incierto.</p></div>'
+  +'<div class="alert a-w"><span class="ai">⚠️</span><div>Trátala como <b>taquicardia ventricular</b> hasta demostrar lo contrario: <b>no</b> uses verapamilo/diltiazem. Si es <b>irregular</b> y ancha, sospecha <b>WPW</b> (fibrilación auricular preexcitada) y <b>no bloquees el nodo</b>.</div></div>'},
+ recurrente:{t:'Recurrente / definitivo',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> episodios repetidos o mal tolerados.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🎯</span><div>Deriva a <b>electrofisiología</b> para <b>ablación con catéter</b> (curativa en muchos casos). Para episodios ocasionales, valora "pastilla en el bolsillo" y maniobras vagales.</div></div>'},
+ mat:{t:'Taquicardia auricular multifocal',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> QRS estrecho irregular con ondas P de morfología variable, frecuente en enfermedad pulmonar.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🫁</span><div><b>Trata la causa subyacente</b> (p. ej. enfermedad pulmonar, hipoxia). El <b>magnesio</b> puede ayudar; los antiarrítmicos y la cardioversión <b>no</b> son útiles.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Taquicardia con pulso de complejo estrecho regular (probable TSV). ¿El paciente está estable o inestable (hipotensión, alteración del estado mental, dolor torácico isquémico, insuficiencia cardíaca aguda)?',o:[
+   ['Inestable','inest'],['Estable','estable']]},
+ inest:{t:'Cardioversión sincronizada YA',r:'high',x:'Paciente inestable → <b>cardioversión eléctrica sincronizada</b> (50–100 J; sincronizada, no desfibrilación), con sedación si el estado lo permite. No pierdas tiempo con fármacos.'},
+ estable:{q:'Estable. ¿El complejo es estrecho y regular?',o:[
+   ['Sí: estrecho regular','vagales'],['No: ancho o irregular','ancho']]},
+ ancho:{t:'Cuidado: complejo ancho o irregular',r:'mid',x:'Si es <b>ancho regular de origen incierto</b> → trátalo como <b>taquicardia ventricular</b> (no verapamilo/diltiazem). Si es <b>ancho irregular</b> → sospecha <b>fibrilación auricular preexcitada (WPW)</b>: <b>no bloquees el nodo AV</b>; cardioversión o antiarrítmico específico y valoración especializada.'},
+ vagales:{t:'Maniobras vagales',r:'ok',x:'<b>Valsalva modificada</b> (o masaje del seno carotídeo si no hay contraindicación), con ECG continuo. Si no revierte, pasa a adenosina.',n:'adeno'},
+ adeno:{q:'¿Revirtió con las maniobras vagales?',o:[
+   ['No revirtió','farmaco'],['Sí revirtió','ok']]},
+ farmaco:{t:'Adenosina y, si falla, nodal',r:'ok',x:'<b>Adenosina 6 mg IV rápido</b> (+ lavado y elevar el brazo); si no revierte, <b>12 mg</b> (repetible). Si persiste y sigue estable, <b>betabloqueador</b> o <b>diltiazem/verapamilo</b> intravenoso (no los combines). Si aun así no cede, valora cardioversión sincronizada.',n:'ok'},
+ ok:{t:'Revierte / control',r:'ok',x:'Registra ECG de 12 derivaciones tras revertir (ayuda al diagnóstico del tipo). Para episodios recurrentes, deriva a electrofisiología para <b>ablación</b>.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div>';
+    if(n.n)h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\''+n.n+'\')">→ Continuar</button></div>';
+    h+='</div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('estable',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>

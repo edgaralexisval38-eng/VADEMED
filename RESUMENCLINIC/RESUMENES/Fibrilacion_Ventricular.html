@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fibrilación ventricular / TV sin pulso · Clínica Rápida</title>
+<style>
+
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#c1121f;--acd:#6b0f1a;--acl:#fbe9eb;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#6b0f1a,#c1121f);">
+  <div class="hdr-top">
+    <div class="hdr-icon">⚡</div>
+    <div>
+      <div class="hdr-eye">Urgencias · ACLS</div>
+      <div class="hdr-title">Fibrilación ventricular / TV sin pulso</div>
+      <div class="hdr-sub">Ritmo DESFIBRILABLE · RCP + choque temprano</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> I49.0</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Desfibrila YA</span>
+    <span class="badge">Adrenalina 1 mg tras 2.º choque</span>
+    <span class="badge">Amiodarona 300→150 mg</span>
+    <span class="badge">H y T</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Desfibrilable</div><div class="qs-l">FV / TV sin pulso</div></div>
+  <div class="qs"><div class="qs-v">120–200 J</div><div class="qs-l">bifásico</div></div>
+  <div class="qs"><div class="qs-v">Adrenalina</div><div class="qs-l">1 mg c/3–5 min</div></div>
+  <div class="qs"><div class="qs-v">Amiodarona</div><div class="qs-l">300 → 150 mg</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🖥️ Reconocer</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Posparo</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="alert a-i"><span class="ai">⚡</span><div><div class="at">Fibrilación ventricular en una frase</div>Actividad eléctrica ventricular <strong>caótica y sin gasto</strong> → <strong>paro cardíaco</strong>. La <strong>TV sin pulso</strong> se maneja igual. Son <strong>ritmos desfibrilables</strong>: lo que salva es <strong>RCP de alta calidad</strong> ininterrumpida + <strong>desfibrilación temprana</strong>; los fármacos son complemento.</div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📖</span><span class="st">Definición y clasificación</span><span class="sg open">&#8964;</span></div>
+<div class="sb"><div class="prose"><ul><li><strong>Fibrilación ventricular (FV):</strong> ondulaciones caóticas sin QRS; puede ser <strong>gruesa</strong> (mejor pronóstico) o <strong>fina</strong> (cuidado: no confundir con asistolia).</li><li><strong>TV sin pulso:</strong> QRS anchos rápidos, <strong>monomorfa</strong> o <strong>polimorfa</strong> (incluida <em>torsades</em>), sin pulso.</li><li><strong>Ritmos desfibrilables</strong> (rama izquierda del algoritmo), frente a los <strong>no desfibrilables</strong> (asistolia/AESP).</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li>Ritmo inicial frecuente en el <strong>paro cardíaco súbito</strong> del adulto, sobre todo de origen <strong>isquémico</strong> (infarto).</li><li>Al ser desfibrilable, tiene <strong>mejor pronóstico que la asistolia/AESP</strong> si se trata pronto.</li><li>La supervivencia <strong>cae con cada minuto</strong> de retraso en la desfibrilación (≈7-10% por minuto sin RCP/choque).</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Reentrada caótica:</strong> múltiples frentes de onda desorganizan la despolarización → no hay contracción efectiva → no hay gasto.</li><li><strong>Sustrato + desencadenante:</strong> un miocardio vulnerable (isquemia, cicatriz, QT largo) más un disparador (extrasístole) inician la arritmia. <em>Por eso tratar la causa previene la recurrencia.</em></li><li><strong>Ventana desfibrilable:</strong> el choque despolariza en masa y permite reiniciar un ritmo organizado, más eficaz cuanto antes. <em>Por eso desfibrilar temprano es la intervención de mayor impacto.</em></li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Causas (H y T + desencadenantes)</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Isquemia coronaria/infarto</strong> (la más frecuente) y <strong>miocardiopatías</strong>.</li><li><strong>Electrolitos:</strong> hiper/hipokalemia, hipomagnesemia; <strong>QT largo</strong> (fármacos, congénito) → torsades.</li><li><strong>H y T:</strong> Hipoxia, Hipovolemia, Hidrogeniones, Hipo/Hiperkalemia, Hipotermia · neumotórax a Tensión, Taponamiento, Toxinas, Trombosis pulmonar/coronaria.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento rápido</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Clínico:</strong> inconsciencia, sin pulso ni respiración normal (comprobación &lt;10 s) → activa el código.</li><li><strong>FV:</strong> ondulación caótica irregular sin QRS. <strong>TV sin pulso:</strong> QRS anchos regulares rápidos.</li><li>Ante una línea casi plana, <strong>sube la ganancia</strong> para no confundir una FV fina con asistolia.</li></ul></div></div></div><div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden"><div class="prose"><ul><li><strong>Retrasar la desfibrilación</strong> por colocar vía, dar fármacos o intubar.</li><li><strong>Interrumpir las compresiones</strong> más de lo necesario o revisar pulso justo tras el choque.</li><li>Usar <strong>magnesio de rutina</strong> (solo en torsades) o <strong>dosis altas de adrenalina</strong>.</li></ul></div></div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">📈 ECG de ejemplo (FV y TV sin pulso)</span><span class="sg open">&#8964;</span></div><div class="sb"><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,110.0 L 8,121.5 L 10,128.3 L 12,129.1 L 14,124.6 L 16,117.2 L 18,109.3 L 20,102.3 L 22,96.4 L 24,91.2 L 26,86.8 L 28,83.8 L 30,83.4 L 32,86.2 L 34,91.5 L 36,97.6 L 38,102.0 L 40,103.3 L 42,101.9 L 44,99.2 L 46,97.1 L 48,96.7 L 50,97.6 L 52,98.2 L 54,97.3 L 56,94.7 L 58,91.6 L 60,89.9 L 62,90.8 L 64,94.4 L 66,99.0 L 68,102.6 L 70,103.7 L 72,102.4 L 74,100.0 L 76,98.4 L 78,99.0 L 80,101.8 L 82,105.5 L 84,108.5 L 86,109.6 L 88,108.4 L 90,105.3 L 92,101.2 L 94,96.7 L 96,92.2 L 98,87.9 L 100,84.1 L 102,81.4 L 104,80.5 L 106,82.0 L 108,85.7 L 110,91.1 L 112,96.9 L 114,102.3 L 116,106.6 L 118,109.5 L 120,111.3 L 122,112.1 L 124,111.9 L 126,110.9 L 128,108.9 L 130,106.1 L 132,102.7 L 134,99.0 L 136,95.1 L 138,91.4 L 140,88.0 L 142,85.1 L 144,83.1 L 146,82.5 L 148,83.4 L 150,86.3 L 152,90.7 L 154,96.3 L 156,102.4 L 158,107.8 L 160,111.8 L 162,113.6 L 164,112.9 L 166,110.2 L 168,105.9 L 170,101.2 L 172,96.9 L 174,93.6 L 176,91.2 L 178,89.8 L 180,89.2 L 182,89.6 L 184,91.1 L 186,94.0 L 188,98.1 L 190,102.6 L 192,106.3 L 194,107.9 L 196,106.8 L 198,103.2 L 200,98.2 L 202,93.4 L 204,89.9 L 206,88.3 L 208,88.4 L 210,89.6 L 212,91.4 L 214,93.7 L 216,96.5 L 218,99.8 L 220,103.5 L 222,106.7 L 224,108.8 L 226,109.3 L 228,108.5 L 230,107.0 L 232,105.4 L 234,103.9 L 236,102.2 L 238,99.4 L 240,95.3 L 242,90.2 L 244,85.4 L 246,82.3 L 248,81.8 L 250,84.0 L 252,87.7 L 254,91.6 L 256,94.8 L 258,97.4 L 260,100.1 L 262,103.6 L 264,107.5 L 266,110.9 L 268,112.0 L 270,109.9 L 272,105.1 L 274,99.5 L 276,95.5 L 278,94.5 L 280,96.5 L 282,100.0 L 284,102.7 L 286,103.3 L 288,102.1 L 290,100.3 L 292,99.2 L 294,99.2 L 296,99.2 L 298,97.5 L 300,92.9 L 302,86.0 L 304,79.2 L 306,75.3 L 308,76.0 L 310,81.3 L 312,89.1 L 314,97.0 L 316,103.3 L 318,107.7 L 320,111.3 L 322,114.7 L 324,117.8 L 326,119.1 L 328,117.2 L 330,111.6 L 332,104.1 L 334,97.4 L 336,94.1 L 338,94.7 L 340,97.4 L 342,99.2 L 344,97.6 L 346,92.4 L 348,86.1 L 350,81.9 L 352,82.1 L 354,86.7 L 356,93.0 L 358,97.7 L 360,98.6 L 362,96.1 L 364,92.9 L 366,91.5 L 368,93.5 L 370,97.6 L 372,101.4 L 374,102.9 L 376,101.7 L 378,99.6 L 380,99.2 L 382,102.2 L 384,107.9 L 386,114.0 L 388,117.4 L 390,116.5 L 392,112.0 L 394,106.0 L 396,100.7 L 398,97.0 L 400,94.1 L 402,90.5 L 404,85.2 L 406,79.3 L 408,75.0 L 410,74.7 L 412,79.1 L 414,86.8 L 416,94.9 L 418,100.7 L 420,103.1 L 422,102.9 L 424,102.3 L 426,103.0 L 428,105.2 L 430,107.8 L 432,109.0 L 434,107.9 L 436,105.2 L 438,102.8 L 440,102.3 L 442,104.0 L 444,106.5 L 446,107.4 L 448,104.8 L 450,98.7 L 452,91.0 L 454,84.3 L 456,80.9 L 458,81.4 L 460,84.9 L 462,89.3 L 464,93.0 L 466,95.5 L 468,97.4 L 470,99.5 L 472,102.3 L 474,105.0 L 476,106.9 L 478,106.9 L 480,105.1 L 482,102.3 L 484,99.7 L 486,98.1 L 488,97.6 L 490,97.3 L 492,96.7 L 494,95.6 L 496,94.4 L 498,94.2 L 500,95.4 L 502,98.0 L 504,100.9 L 506,102.9 L 508,103.2 L 510,101.9 L 512,99.8 L 514,98.0 L 516,97.0 L 518,96.6 L 520,96.0 L 522,94.5 L 524,91.9 L 526,89.0 L 528,87.0 L 530,87.1 L 532,89.7 L 534,94.5 L 536,100.3 L 538,106.0 L 540,110.7 L 542,113.8 L 544,115.3 L 546,115.2 L 548,113.1 L 550,108.9 L 552,102.6 L 554,94.9 L 556,86.7 L 558,79.8 L 560,75.4 L 562,74.3 L 564,76.7 L 566,81.8 L 568,88.8 L 570,96.5 L 572,103.9 L 574,110.3 L 576,115.0 L 578,117.5 L 580,117.7 L 582,115.7 L 584,112.0 L 586,107.2 L 588,101.9 L 590,96.7 L 592,91.9 L 594,87.8 L 596,84.5 L 598,82.5 L 600,82.1 L 602,83.6 L 604,86.8 L 606,91.5 L 608,97.1 L 610,102.6 L 612,107.2 L 614,110.1 L 616,110.8 L 618,109.4 L 620,106.4 L 622,102.4 L 624,98.4 L 626,94.8 L 628,92.0 L 630,89.7 L 632,87.9 L 634,86.8 L 636,87.1 L 638,89.9 L 640,95.4 L 642,103.4 L 644,112.0 L 646,118.9 L 648,122.0 L 650,120.2 L 652,114.1 L 654,105.4 L 656,96.5 L 658,88.8 L 660,83.2 L 662,79.3 L 664,76.8 L 666,75.7 L 668,76.5 L 670,79.7 L 672,85.3 L 674,92.2 L 676,98.9 L 678,103.8 L 680,106.5 L 682,107.9 L 684,109.3 L 686,111.8 L 688,115.3 L 690,118.6 L 692,119.9 L 694,118.3 L 696,113.8 L 698,107.7 L 700,101.6 L 702,96.2 L 704,91.3 L 706,86.1 L 708,80.2 L 710,74.5 L 712,70.7 L 714,70.8 L 716,75.5 L 718,83.7 L 720,93.0 L 722,100.7 L 724,105.3 L 726,107.2 L 728,108.1 L 730,109.6 L 732,111.9 L 734,113.9 L 736,113.7 L 738,110.1 L 740,103.8 L 742,96.8 L 744,92.0 L 746,91.0 L 748,93.4 L 750,97.2 L 752,99.9 L 754,100.4" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Fibrilación ventricular (FV)</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">Ondas caóticas e irregulares, sin QRS ni línea de base identificables.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><svg viewBox="0 0 760 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;border-radius:8px;border:1px solid #ecc;background:#fff8f8;margin:4px 0;"><defs><pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0 L0 0 0 8" fill="none" stroke="#f6cfcf" stroke-width="0.6"/></pattern><pattern id="bg" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#sm)"/><path d="M40 0 L0 0 0 40" fill="none" stroke="#e89a9a" stroke-width="1.2"/></pattern></defs><rect x="0" y="0" width="760" height="180" fill="url(#bg)"/><path d="M 6 98 L 14 98 L 14 56 L 30 56 L 30 98 L 38 98" fill="none" stroke="#999" stroke-width="1.2"/><path d="M 6,95.4 L 8,90.1 L 10,85.1 L 12,80.5 L 14,76.3 L 16,72.6 L 18,69.5 L 20,67.0 L 22,65.1 L 24,63.8 L 26,63.1 L 28,62.9 L 30,63.2 L 32,63.9 L 34,65.0 L 36,66.5 L 38,68.2 L 40,70.1 L 42,72.3 L 44,74.6 L 46,77.1 L 48,79.8 L 50,82.6 L 52,85.6 L 54,88.7 L 56,91.9 L 58,95.4 L 60,99.0 L 62,102.7 L 64,106.5 L 66,110.4 L 68,114.3 L 70,118.2 L 72,122.0 L 74,125.6 L 76,128.8 L 78,131.7 L 80,134.2 L 82,136.1 L 84,137.3 L 86,137.9 L 88,137.7 L 90,136.8 L 92,135.1 L 94,132.7 L 96,129.6 L 98,125.8 L 100,121.5 L 102,116.7 L 104,111.6 L 106,106.2 L 108,100.8 L 110,95.4 L 112,90.1 L 114,85.1 L 116,80.5 L 118,76.3 L 120,72.6 L 122,69.5 L 124,67.0 L 126,65.1 L 128,63.8 L 130,63.1 L 132,62.9 L 134,63.2 L 136,63.9 L 138,65.0 L 140,66.5 L 142,68.2 L 144,70.1 L 146,72.3 L 148,74.6 L 150,77.1 L 152,79.8 L 154,82.6 L 156,85.6 L 158,88.7 L 160,91.9 L 162,95.4 L 164,99.0 L 166,102.7 L 168,106.5 L 170,110.4 L 172,114.3 L 174,118.2 L 176,122.0 L 178,125.6 L 180,128.8 L 182,131.7 L 184,134.2 L 186,136.1 L 188,137.3 L 190,137.9 L 192,137.7 L 194,136.8 L 196,135.1 L 198,132.7 L 200,129.6 L 202,125.8 L 204,121.5 L 206,116.7 L 208,111.6 L 210,106.2 L 212,100.8 L 214,95.4 L 216,90.1 L 218,85.1 L 220,80.5 L 222,76.3 L 224,72.6 L 226,69.5 L 228,67.0 L 230,65.1 L 232,63.8 L 234,63.1 L 236,62.9 L 238,63.2 L 240,63.9 L 242,65.0 L 244,66.5 L 246,68.2 L 248,70.1 L 250,72.3 L 252,74.6 L 254,77.1 L 256,79.8 L 258,82.6 L 260,85.6 L 262,88.7 L 264,91.9 L 266,95.4 L 268,99.0 L 270,102.7 L 272,106.5 L 274,110.4 L 276,114.3 L 278,118.2 L 280,122.0 L 282,125.6 L 284,128.8 L 286,131.7 L 288,134.2 L 290,136.1 L 292,137.3 L 294,137.9 L 296,137.7 L 298,136.8 L 300,135.1 L 302,132.7 L 304,129.6 L 306,125.8 L 308,121.5 L 310,116.7 L 312,111.6 L 314,106.2 L 316,100.8 L 318,95.4 L 320,90.1 L 322,85.1 L 324,80.5 L 326,76.3 L 328,72.6 L 330,69.5 L 332,67.0 L 334,65.1 L 336,63.8 L 338,63.1 L 340,62.9 L 342,63.2 L 344,63.9 L 346,65.0 L 348,66.5 L 350,68.2 L 352,70.1 L 354,72.3 L 356,74.6 L 358,77.1 L 360,79.8 L 362,82.6 L 364,85.6 L 366,88.7 L 368,91.9 L 370,95.4 L 372,99.0 L 374,102.7 L 376,106.5 L 378,110.4 L 380,114.3 L 382,118.2 L 384,122.0 L 386,125.6 L 388,128.8 L 390,131.7 L 392,134.2 L 394,136.1 L 396,137.3 L 398,137.9 L 400,137.7 L 402,136.8 L 404,135.1 L 406,132.7 L 408,129.6 L 410,125.8 L 412,121.5 L 414,116.7 L 416,111.6 L 418,106.2 L 420,100.8 L 422,95.4 L 424,90.1 L 426,85.1 L 428,80.5 L 430,76.3 L 432,72.6 L 434,69.5 L 436,67.0 L 438,65.1 L 440,63.8 L 442,63.1 L 444,62.9 L 446,63.2 L 448,63.9 L 450,65.0 L 452,66.5 L 454,68.2 L 456,70.1 L 458,72.3 L 460,74.6 L 462,77.1 L 464,79.8 L 466,82.6 L 468,85.6 L 470,88.7 L 472,91.9 L 474,95.4 L 476,99.0 L 478,102.7 L 480,106.5 L 482,110.4 L 484,114.3 L 486,118.2 L 488,122.0 L 490,125.6 L 492,128.8 L 494,131.7 L 496,134.2 L 498,136.1 L 500,137.3 L 502,137.9 L 504,137.7 L 506,136.8 L 508,135.1 L 510,132.7 L 512,129.6 L 514,125.8 L 516,121.5 L 518,116.7 L 520,111.6 L 522,106.2 L 524,100.8 L 526,95.4 L 528,90.1 L 530,85.1 L 532,80.5 L 534,76.3 L 536,72.6 L 538,69.5 L 540,67.0 L 542,65.1 L 544,63.8 L 546,63.1 L 548,62.9 L 550,63.2 L 552,63.9 L 554,65.0 L 556,66.5 L 558,68.2 L 560,70.1 L 562,72.3 L 564,74.6 L 566,77.1 L 568,79.8 L 570,82.6 L 572,85.6 L 574,88.7 L 576,91.9 L 578,95.4 L 580,99.0 L 582,102.7 L 584,106.5 L 586,110.4 L 588,114.3 L 590,118.2 L 592,122.0 L 594,125.6 L 596,128.8 L 598,131.7 L 600,134.2 L 602,136.1 L 604,137.3 L 606,137.9 L 608,137.7 L 610,136.8 L 612,135.1 L 614,132.7 L 616,129.6 L 618,125.8 L 620,121.5 L 622,116.7 L 624,111.6 L 626,106.2 L 628,100.8 L 630,95.4 L 632,90.1 L 634,85.1 L 636,80.5 L 638,76.3 L 640,72.6 L 642,69.5 L 644,67.0 L 646,65.1 L 648,63.8 L 650,63.1 L 652,62.9 L 654,63.2 L 656,63.9 L 658,65.0 L 660,66.5 L 662,68.2 L 664,70.1 L 666,72.3 L 668,74.6 L 670,77.1 L 672,79.8 L 674,82.6 L 676,85.6 L 678,88.7 L 680,91.9 L 682,95.4 L 684,99.0 L 686,102.7 L 688,106.5 L 690,110.4 L 692,114.3 L 694,118.2 L 696,122.0 L 698,125.6 L 700,128.8 L 702,131.7 L 704,134.2 L 706,136.1 L 708,137.3 L 710,137.9 L 712,137.7 L 714,136.8 L 716,135.1 L 718,132.7 L 720,129.6 L 722,125.8 L 724,121.5 L 726,116.7 L 728,111.6 L 730,106.2 L 732,100.8 L 734,95.4 L 736,90.1 L 738,85.1 L 740,80.5 L 742,76.3 L 744,72.6 L 746,69.5 L 748,67.0 L 750,65.1 L 752,63.8 L 754,63.1" fill="none" stroke="#161616" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><text x="10" y="20" font-family="system-ui,sans-serif" font-size="13" font-weight="800" fill="#7a1020">Taquicardia ventricular sin pulso</text><text x="10" y="36" font-family="system-ui,sans-serif" font-size="11" fill="#8a4a4a">QRS anchos, regulares y rápidos; en el paro, sin pulso palpable.</text><text x="752" y="172" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#c08a8a">25 mm/s · 10 mm/mV</text></svg><div class="alert a-w"><span class="ai">⚠️</span><div>Ambos son <b>ritmos desfibrilables</b>. Ante una línea casi plana, sube la ganancia para no confundir una <b>FV fina</b> con asistolia.</div></div></div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🖥️</span><span class="st">Reconocimiento en el monitor</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Fibrilación ventricular:</strong> ondulaciones <strong>caóticas e irregulares</strong>, sin QRS identificables ni ondas P. La amplitud puede ser gruesa o fina.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>TV sin pulso:</strong> QRS <strong>anchos y regulares</strong> (monomorfa) o polimorfos, a frecuencia rápida, <strong>sin pulso</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Confirma el paro clínicamente: <strong>inconsciencia, ausencia de pulso y de respiración normal</strong> (comprobación &lt;10 s).</div></div>
+  <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Ante la duda entre FV fina y asistolia, comprueba conexiones/ganancia; si persiste la duda, trata como el ritmo que mejor se ajuste y prioriza RCP de calidad.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Desfibrilable vs no desfibrilable</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Desfibrilable</th><th>No desfibrilable</th></tr></thead><tbody>
+    <tr><td class="dm">FV · TV sin pulso</td><td class="dn">Asistolia · AESP</td></tr>
+    <tr><td class="dm">Choque + RCP + adrenalina + antiarrítmico</td><td class="dn">RCP + adrenalina (NO choque)</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>La rama del algoritmo se decide por el ritmo: este archivo cubre la <b>rama desfibrilable</b> (FV/TV sin pulso).</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Torsades de pointes</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-w"><span class="ai">💠</span><div><b>TV polimorfa con QT largo</b> (torsades): si pierde el pulso, desfibrila, y añade <b>sulfato de magnesio 1–2 g IV</b>. Corrige los desencadenantes (fármacos que prolongan QT, hipokalemia/hipomagnesemia).</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo ACLS interactivo — rama desfibrilable</div>Recorre los ciclos: choque → RCP 2 min → fármaco según el ciclo → reevaluar. Adrenalina tras el 2.º choque; amiodarona tras el 3.º.</div></div><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Fármacos del paro con dosis. Toca para desplegar o <strong>busca por nombre</strong>.</div></div><input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (adrenalina, amiodarona, magnesio…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;"><div id="farm-body"></div></div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('presenciada',this)">FV presenciada</button>
+  <button class="pchip" onclick="setEscen('refractaria',this)">Refractaria</button>
+  <button class="pchip" onclick="setEscen('torsades',this)">Torsades</button>
+  <button class="pchip" onclick="setEscen('rosc',this)">ROSC</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💗</span><span class="st">Cuidados posparo (tras el retorno de la circulación)</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Prioridad</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Oxigenación/ventilación</td><td>Titular O2 (evita hiperoxia); evitar hiperventilación</td></tr>
+    <tr><td class="dn">Hemodinamia</td><td>Soporte de la presión arterial (líquidos/vasopresores según el caso)</td></tr>
+    <tr><td class="dm">ECG 12 derivaciones</td><td>Valorar reperfusión coronaria (isquemia/infarto)</td></tr>
+    <tr><td class="dn">Temperatura</td><td>Manejo dirigido de la temperatura en el comatoso</td></tr>
+    <tr><td class="dm">Causa</td><td>Identificar y tratar la causa (H y T)</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>El ascenso brusco del ETCO2 en capnografía puede ser el primer signo del retorno de la circulación.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Prevención de recurrencia</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Tratar la <strong>isquemia</strong> (reperfusión) y corregir <strong>electrolitos</strong> (potasio, magnesio).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Revisar <strong>fármacos que prolongan el QT</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Valoración por cardiología: <strong>desfibrilador implantable</strong> según la causa y el riesgo.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Fibrilación ventricular / TV sin pulso</h2>
+  <p>Soporte vital cardiovascular avanzado (ACLS). Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Algoritmo de paro, desfibrilación, adrenalina, amiodarona/lidocaína, cuidados posparo</strong> → guías AHA 2020 [1] y actualización [2].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Contexto mexicano</strong> → CENETEC [3].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Guías ACLS</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">Panchal AR, Bartos JA, Cabañas JG, et al. <em>Part 3: Adult Basic and Advanced Life Support: 2020 AHA Guidelines for CPR and ECC.</em> Circulation. 2020;142(16 suppl 2):S366-S468. [RCP de alta calidad; desfibrilación temprana en FV/TV sin pulso; adrenalina 1 mg cada 3–5 min (primera dosis tras el 2.º choque en desfibrilables); amiodarona 300 mg → 150 mg o lidocaína; cuidados posparo. Sustenta el Tratamiento y el algoritmo.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1161/CIR.0000000000000916" target="_blank">🔗 DOI 10.1161/CIR.0000000000000916</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">American Heart Association. <em>2023 AHA Focused Update on Advanced Cardiovascular Life Support.</em> Circulation. 2023. [Actualización de recomendaciones de ACLS; reafirma el papel de la adrenalina y el manejo de las causas reversibles. Complementa las guías de 2020.]</div>
+      <a class="biblio-link" href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000001194" target="_blank">🔗 AHA · 2023 Focused Update ACLS</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): reanimación cardiopulmonar / paro cardíaco.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja fármacos, energías y presentaciones con los recursos y el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Verifica actualizaciones de las guías de reanimación (<strong>AHA / ILCOR</strong>) y locales (<strong>CENETEC, SSa México</strong>), y adapta a los recursos de tu unidad. Última revisión: <strong>agosto 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#c1121f', C1='#c1121f', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Punto clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Dosis')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / base',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Vía',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones',f.pres,'#374151');
+  if(f.ci)h+=txrow('Precauciones',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Durante la reanimación',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#6b0f1a')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_RCP={n:'RCP de alta calidad',elec:true,linea:'La base — no se detiene',
+  dlbl:'Cómo',da:'Compresiones a 100–120/min, profundidad 5–6 cm, permitir la reexpansión completa del tórax, minimizar las interrupciones (<10 s) y relevar al compresor cada 2 minutos',
+  dur:'Continua durante toda la reanimación; solo se pausa para el análisis del ritmo y el choque.',
+  adm:'Es lo que mantiene la perfusión coronaria y cerebral. Ventilación 30:2 sin vía aérea avanzada; con vía aérea avanzada, ventilar cada 6 segundos sin pausar las compresiones. Usa capnografía para vigilar la calidad.',
+  mec:'Perfusión coronaria y cerebral generada por las compresiones.',
+  ind:'Todo paro cardíaco.',
+  dmax:'Minimiza las pausas peri-choque: reanuda las compresiones inmediatamente tras el choque.',iv:'—',pres:'—',
+  ci:'—',ea:'—',mon:'ETCO2 (capnografía), fracción de compresión',
+  nota:'⭐ La supervivencia depende de compresiones ininterrumpidas y de desfibrilar pronto.'};
+var F_DESFIB={n:'Desfibrilación',elec:true,linea:'Intervención clave en FV / TV sin pulso',
+  dlbl:'Energía',da:'Choque bifásico según el fabricante (habitualmente 120–200 J); si se desconoce, usa la dosis máxima. Cada choque debe ser de igual o mayor energía (p. ej. 120 → 200 → 300 → 360 J)',
+  dur:'Un choque, e inmediatamente reanudar RCP 2 minutos antes de reanalizar el ritmo.',
+  adm:'Es la intervención que revierte la FV/TV sin pulso. Desfibrila lo antes posible; carga el desfibrilador mientras se comprime para minimizar la pausa. Tras el choque, NO revises pulso: reanuda compresiones de inmediato.',
+  mec:'Despolariza en masa el miocardio para permitir que reinicie un ritmo organizado.',
+  ind:'FV y TV sin pulso (ritmos desfibrilables).',
+  dmax:'Reanuda las compresiones inmediatamente tras el choque; reanaliza a los 2 minutos.',iv:'Eléctrico',pres:'Bifásico (preferente) / monofásico 360 J',
+  ci:'No desfibrilar asistolia ni AESP (no desfibrilables)',ea:'Quemadura cutánea, lesión miocárdica',mon:'Ritmo tras 2 min de RCP',
+  nota:'⭐ Cuanto antes se desfibrila, mayor la supervivencia. No retrases el choque por fármacos o vía aérea.'};
+var F_ADRE={n:'Adrenalina (epinefrina)',elec:true,linea:'Vasopresor — durante la reanimación',
+  dlbl:'Dosis',da:'1 mg IV/IO cada 3–5 minutos. En ritmos desfibrilables, administra la primera dosis tras el segundo choque (cuando persiste la FV/TV)',
+  dur:'Repetir cada 3–5 minutos hasta el retorno de la circulación o el fin de la reanimación.',
+  adm:'Mejora la presión de perfusión coronaria y cerebral. La vía intravenosa se prefiere sobre la intraósea. No interrumpas las compresiones para administrarla.',
+  mec:'Agonista alfa/beta adrenérgico (vasoconstricción → ↑ presión de perfusión).',
+  ind:'FV/TV sin pulso persistente (y asistolia/AESP, donde se da lo antes posible).',
+  dmax:'No usar dosis altas de rutina (sin beneficio y posible daño).',iv:'IV / IO',pres:'Ampolla 1 mg (1:1000 o 1:10000 según preparación)',
+  ci:'—',ea:'Taquiarritmias tras el retorno de la circulación',mon:'Ritmo, retorno de la circulación',
+  nota:'⭐ En desfibrilables: primera dosis tras el 2.º choque; en no desfibrilables: lo antes posible.'};
+var F_AMIO={n:'Amiodarona',elec:true,linea:'Antiarrítmico — FV/TV refractaria al choque',
+  dlbl:'Dosis',da:'300 mg IV/IO en bolo (primera dosis, tras el tercer choque si persiste); si persiste, segunda dosis de 150 mg IV/IO',
+  dur:'Bolos durante la reanimación; dosis acumulada máxima ~2.2 g en 24 horas (con infusiones posteriores).',
+  adm:'Se usa cuando la FV/TV sin pulso persiste pese a la desfibrilación y la adrenalina. No sustituye al choque: es un complemento.',
+  mec:'Antiarrítmico de clase III (prolonga el potencial de acción).',
+  ind:'FV/TV sin pulso refractaria al choque.',
+  dmax:'No usar en TV polimorfa asociada a QT largo (torsades): ahí, magnesio.',iv:'IV / IO',pres:'Ampolla 150 mg',
+  ci:'Torsades/QT largo (usar magnesio)',ea:'Hipotensión, bradicardia tras el retorno de la circulación',mon:'Ritmo, presión tras el retorno',
+  nota:'⭐ 300 mg tras el 3.er choque; luego 150 mg. Elige un solo antiarrítmico (amiodarona o lidocaína).'};
+var F_LIDO={n:'Lidocaína (alternativa a amiodarona)',linea:'Antiarrítmico — si no hay amiodarona',
+  dlbl:'Dosis',da:'1–1.5 mg/kg IV/IO en bolo; puede repetirse 0.5–0.75 mg/kg cada 5–10 minutos (máximo ~3 mg/kg)',
+  dur:'Bolos durante la reanimación.',
+  adm:'Alternativa cuando la amiodarona no está disponible o no es eficaz. No combines dos antiarrítmicos.',
+  mec:'Antiarrítmico de clase Ib (bloqueo de canales de sodio).',
+  ind:'FV/TV sin pulso refractaria si no hay amiodarona.',
+  dmax:'Máximo acumulado ~3 mg/kg.',iv:'IV / IO',pres:'Ampolla',
+  ci:'—',ea:'Neurotoxicidad a dosis altas',mon:'Ritmo',
+  nota:'Solo un antiarrítmico: amiodarona O lidocaína, no ambos.'};
+var F_MAG={n:'Sulfato de magnesio',linea:'Solo para torsades de pointes / QT largo',
+  dlbl:'Dosis',da:'1–2 g IV/IO diluido, para la TV polimorfa asociada a QT largo (torsades de pointes)',
+  dur:'Dosis puntual; no de rutina en el paro.',
+  adm:'No se usa de rutina en la FV/TV sin pulso: solo cuando hay torsades de pointes (TV polimorfa con QT largo).',
+  mec:'Estabiliza la membrana; útil en torsades.',
+  ind:'Torsades de pointes / QT largo.',
+  dmax:'No mejora los desenlaces en el paro cardíaco no asociado a torsades.',iv:'IV / IO',pres:'Ampolla',
+  ci:'—',ea:'Hipotensión con la infusión rápida',mon:'Ritmo, presión',
+  nota:'Reserva el magnesio para torsades; no lo uses de rutina.'};
+var F_VIA={n:'Vía aérea y capnografía',linea:'Soporte durante la reanimación',
+  dlbl:'Cómo',da:'Ventilación con bolsa-mascarilla (30:2) o vía aérea avanzada; con vía aérea avanzada, ventilar cada 6 segundos (10/min) sin pausar las compresiones. Monitoriza con capnografía (ETCO2)',
+  dur:'Durante toda la reanimación.',
+  adm:'La colocación de una vía aérea avanzada no debe retrasar la desfibrilación ni interrumpir las compresiones. La capnografía ayuda a vigilar la calidad de la RCP y a detectar el retorno de la circulación (ascenso brusco de ETCO2).',
+  mec:'Oxigenación/ventilación; ETCO2 refleja el gasto generado por las compresiones.',
+  ind:'Todo paro.',
+  dmax:'Evita la hiperventilación (reduce el retorno venoso).',iv:'—',pres:'Bolsa-mascarilla · supraglótica · intubación',
+  ci:'—',ea:'Hiperventilación perjudicial',mon:'ETCO2',
+  nota:'Un ETCO2 persistentemente muy bajo (<10 mmHg) sugiere RCP de baja calidad o mal pronóstico.'};
+var F_CAUSAS={n:'Causas reversibles — H y T',elec:true,linea:'Búscalas y trátalas en cada ciclo',
+  dlbl:'Regla',da:'H: Hipovolemia · Hipoxia · Hidrogeniones (acidosis) · Hipo/Hiperkalemia · Hipotermia. T: neumotórax a Tensión · Taponamiento cardíaco · Toxinas · Trombosis pulmonar · Trombosis coronaria',
+  dur:'Búsqueda activa desde el inicio y en cada ciclo de 2 minutos.',
+  adm:'Identificar y tratar la causa reversible es a menudo lo que revierte el paro, sobre todo si la FV es refractaria. Usa la historia, la ecografía a pie de cama y la gasometría.',
+  mec:'—',
+  ind:'Todo paro; imprescindible en la FV refractaria.',
+  dmax:'La FV refractaria obliga a replantear H y T (p. ej. hiperkalemia, isquemia coronaria).',iv:'—',pres:'—',
+  ci:'—',ea:'—',mon:'Ecografía, gasometría, historia',
+  nota:'⭐ En FV que no cede pese a choques y fármacos, la clave suele estar en una H o una T.'};
+var F_NO_RETRASO={n:'❌ Retrasar la desfibrilación',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No demores el choque por colocar una vía, dar fármacos o intubar: en FV/TV sin pulso, desfibrilar pronto es lo que salva',
+  dur:'Desfibrila en cuanto identifiques el ritmo desfibrilable.',
+  adm:'Carga el desfibrilador mientras se comprime; da el choque y reanuda compresiones de inmediato.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Menor supervivencia por cada minuto de retraso',
+  nota:'La desfibrilación temprana es la intervención con mayor impacto en la supervivencia.'};
+var F_NO_PAUSAS={n:'❌ Interrumpir las compresiones más de lo necesario',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No hagas pausas largas para revisar el pulso, intubar o dar fármacos: minimiza las interrupciones (<10 s) y no revises pulso justo tras el choque',
+  dur:'Reanuda compresiones inmediatamente tras cada choque.',
+  adm:'Cada pausa reduce la presión de perfusión coronaria; reanaliza el ritmo cada 2 minutos, no antes.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Caída de la perfusión, menor supervivencia',
+  nota:'Tras el choque: compresiones YA; el análisis del ritmo espera 2 minutos.'};
+var F_NO_MAGRUT={n:'❌ Magnesio o dosis altas de adrenalina de rutina',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No uses magnesio de rutina (solo en torsades/QT largo) ni dosis altas de adrenalina (sin beneficio y con posible daño)',
+  dur:'—',
+  adm:'Magnesio solo para torsades; adrenalina 1 mg cada 3–5 minutos, no dosis altas. Elige un solo antiarrítmico.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Efectos adversos sin beneficio',
+  nota:'Sigue las dosis estándar; evita intervenciones sin evidencia durante el paro.'};
+
+var TXC=[
+ ['⚡ Intervención clave','Desfibrilar YA + RCP de alta calidad',C1,[F_RCP,F_DESFIB]],
+ ['💉 Fármacos','Durante la reanimación',AZ,[F_ADRE,F_AMIO,F_LIDO,F_MAG]],
+ ['🫁 Soporte y causas','Vía aérea y reversibles',CO,[F_VIA,F_CAUSAS]],
+ ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_RETRASO,F_NO_PAUSAS,F_NO_MAGRUT]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-r" style="margin-bottom:12px;"><span class="ai">⚡</span><div><div class="at">FV / TV sin pulso = ritmo DESFIBRILABLE</div>Lo que salva: <b>RCP de alta calidad ininterrumpida</b> + <b>desfibrilación temprana</b>. Los fármacos (adrenalina tras el 2.º choque; amiodarona tras el 3.º) son complemento, no sustituyen al choque. Busca las <b>H y T</b> en cada ciclo. La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💉 Fármacos del paro',color:'#c1121f',farmacos:[
+  {n:'Adrenalina (epinefrina)',ini:'1 mg IV/IO c/3–5 min',da:'En desfibrilables, 1.ª dosis tras el 2.º choque. IV preferido sobre IO.',iv:'IV/IO',pres:'Ampolla 1 mg',ci:'Dosis altas no',ea:'Taquiarritmia post-retorno',nota:'Vasopresor de elección.'},
+  {n:'Amiodarona',ini:'300 mg → 150 mg IV/IO',da:'Tras el 3.er choque si persiste. Máx acumulado ~2.2 g/24 h.',iv:'IV/IO',pres:'Ampolla 150 mg',ci:'Torsades/QT largo',ea:'Hipotensión post-retorno',nota:'Antiarrítmico de elección.'},
+  {n:'Lidocaína',ini:'1–1.5 mg/kg → 0.5–0.75 mg/kg',da:'Alternativa si no hay amiodarona. Máx ~3 mg/kg.',iv:'IV/IO',pres:'Ampolla',ci:'—',ea:'Neurotoxicidad',nota:'Solo un antiarrítmico.'},
+  {n:'Sulfato de magnesio',ini:'1–2 g IV/IO',da:'SOLO en torsades/QT largo; no de rutina.',iv:'IV/IO',pres:'Ampolla',ci:'—',ea:'Hipotensión',nota:'Reservado a torsades.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Precaución',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'🚑 Para el equipo de reanimación',color:'#0a5c45',fichas:[
+  {n:'Roles y calidad de la RCP',via:'Desde el inicio',
+   enf:'Asigna roles (compresiones, vía aérea, fármacos/tiempos, registro, líder). Relevo del compresor cada 2 minutos. Minimiza las pausas peri-choque; carga el desfibrilador durante las compresiones.',
+   pac:'—',
+   nota:'Un miembro controla los tiempos de adrenalina (cada 3–5 min) y el conteo de choques.',
+   alarma:'ETCO2 persistentemente <10 mmHg sugiere RCP de baja calidad: mejora compresiones.'}]},
+ {familia:'🔎 Secuencia mental',color:'#0c3b6e',fichas:[
+  {n:'Ciclo de 2 minutos',via:'Cada ciclo',
+   enf:'Comprimir → (a los 2 min) analizar ritmo → si desfibrilable, chocar y reanudar RCP → fármaco según el ciclo → buscar H y T. Repetir.',
+   pac:'—',
+   nota:'Adrenalina tras el 2.º choque; amiodarona 300 mg tras el 3.º (luego 150 mg).',
+   alarma:'Si el ritmo pasa a no desfibrilable (asistolia/AESP), cambia a esa rama del algoritmo.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—'&&f.pac!=='')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ presenciada:{t:'FV presenciada / monitorizada',c:'#c1121f',h:
+  '<div class="prose"><p><b>Perfil:</b> paro presenciado con desfibrilador disponible de inmediato.</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚡</span><div><b>Desfibrila de inmediato</b> e inicia RCP. La desfibrilación temprana es la mayor determinante de supervivencia en la FV/TV sin pulso presenciada.</div></div>'},
+ refractaria:{t:'FV refractaria / tormenta',c:'#7b1c1c',h:
+  '<div class="prose"><p><b>Perfil:</b> FV que persiste pese a ≥3 choques, adrenalina y antiarrítmico.</p></div>'
+  +'<div class="alert a-r"><span class="ai">⚠️</span><div>Replantea <b>H y T</b> (hiperkalemia, isquemia coronaria), optimiza la RCP y la posición de las palas; considera <b>segunda dosis de amiodarona (150 mg)</b> y, según el contexto/recursos, estrategias avanzadas (p. ej. reperfusión coronaria, soporte extracorpóreo).</div></div>'},
+ torsades:{t:'TV polimorfa (torsades) / QT largo',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> TV polimorfa con QT largo.</p></div>'
+  +'<div class="alert a-w"><span class="ai">💠</span><div>Si hay pulso perdido, desfibrila; administra <b>sulfato de magnesio 1–2 g IV</b>. Corrige desencadenantes (fármacos que prolongan QT, hipokalemia/hipomagnesemia).</div></div>'},
+ rosc:{t:'Retorno de la circulación (ROSC)',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> se recupera pulso/circulación.</p></div>'
+  +'<div class="alert a-g"><span class="ai">✅</span><div>Cuidados posparo: <b>oxigenación/ventilación</b> adecuadas (evita hiperoxia/hiperventilación), soporte de la <b>presión</b>, <b>ECG de 12 derivaciones</b> (valorar reperfusión coronaria) y <b>manejo dirigido de la temperatura</b>. Trata la causa.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ACLS (rama desfibrilable) ===== */
+var ALGO={
+ start:{q:'Paro cardíaco. Inicia RCP y conecta el monitor/desfibrilador. ¿El ritmo es desfibrilable (FV o TV sin pulso)?',o:[
+   ['Sí: FV / TV sin pulso','c1'],['No: asistolia / AESP','nodesf']]},
+ nodesf:{t:'Rama NO desfibrilable',r:'mid',x:'Asistolia o actividad eléctrica sin pulso → <b>no se desfibrila</b>: RCP de alta calidad + <b>adrenalina 1 mg lo antes posible</b> y cada 3–5 min, buscando H y T. (Ver la ficha correspondiente de asistolia/AESP.)'},
+ c1:{t:'Choque 1 + RCP 2 min',r:'ok',x:'<b>Desfibrila</b> (bifásico 120–200 J) y reanuda <b>RCP inmediatamente 2 minutos</b>. Consigue acceso IV/IO. No revises pulso tras el choque.',n:'reeval1'},
+ reeval1:{q:'A los 2 minutos, reanaliza el ritmo. ¿Sigue desfibrilable?',o:[
+   ['Sí, persiste FV/TV','c2'],['Ritmo organizado / posible pulso','rosc'],['Pasó a asistolia/AESP','nodesf']]},
+ c2:{t:'Choque 2 + adrenalina + RCP 2 min',r:'ok',x:'<b>Desfibrila</b> de nuevo, reanuda RCP 2 min y da <b>adrenalina 1 mg IV/IO</b> (y repite cada 3–5 min). Considera vía aérea avanzada y capnografía. Busca H y T.',n:'reeval2'},
+ reeval2:{q:'A los 2 minutos, reanaliza. ¿Sigue desfibrilable?',o:[
+   ['Sí, persiste FV/TV','c3'],['Ritmo organizado / posible pulso','rosc'],['Pasó a asistolia/AESP','nodesf']]},
+ c3:{t:'Choque 3 + amiodarona 300 mg + RCP 2 min',r:'ok',x:'<b>Desfibrila</b>, reanuda RCP 2 min y da <b>amiodarona 300 mg IV/IO</b> (o lidocaína si no hay). Sigue la adrenalina cada 3–5 min. Insiste en las <b>H y T</b>.',n:'reeval3'},
+ reeval3:{q:'A los 2 minutos, reanaliza. ¿Situación?',o:[
+   ['Persiste FV/TV (refractaria)','refract'],['Ritmo organizado / posible pulso','rosc'],['Pasó a asistolia/AESP','nodesf']]},
+ refract:{t:'FV refractaria',r:'high',x:'Continúa ciclos de choque + RCP; <b>segunda dosis de amiodarona 150 mg</b>; adrenalina cada 3–5 min. <b>Replantea H y T</b> (hiperkalemia, isquemia). Según recursos, valora estrategias avanzadas (reperfusión coronaria, soporte extracorpóreo).'},
+ rosc:{t:'Retorno de la circulación (ROSC)',r:'ok',x:'Confirma pulso. Inicia <b>cuidados posparo</b>: oxigenación/ventilación (evita hiperoxia), soporte de presión, <b>ECG de 12 derivaciones</b> (valora reperfusión coronaria) y <b>manejo dirigido de la temperatura</b>. Trata la causa.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div>';
+    if(n.n)h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\''+n.n+'\')">→ Continuar</button></div>';
+    h+='</div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('presenciada',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>
