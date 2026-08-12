@@ -128,11 +128,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
         const device = String(body?.device ?? "").trim();
         if (device && !fila.offline) {
           const { data: dev, error: devErr } = await supabase.rpc("registrar_dispositivo", {
-            p_codigo: codigo, p_device: device, p_max: 2,
+            p_codigo: codigo, p_device: device, p_max: 3,
           });
           if (devErr) throw devErr;
           if (dev === false) {
-            return json({ ok: false, limite: true, error: "Este código ya está activo en 2 dispositivos." });
+            return json({ ok: false, limite: true, error: "Este código ya está activo en 3 dispositivos." });
           }
         }
         return json({ ok: true, nombre: fila.nombre ?? null, offline: !!fila.offline });
