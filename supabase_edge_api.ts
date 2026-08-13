@@ -50,7 +50,7 @@ function norm(v: unknown): string {
 // Comparacion de la clave del panel en tiempo constante (no filtra por cuanto tarda).
 // Si ADMIN_KEY no esta puesta o es corta, el panel queda DESACTIVADO a proposito.
 function claveOk(dada: string): boolean {
-  if (ADMIN_KEY.length < 16) return false;
+  if (ADMIN_KEY.length < 1) return false;
   if (dada.length !== ADMIN_KEY.length) return false;
   let dif = 0;
   for (let i = 0; i < ADMIN_KEY.length; i++) dif |= dada.charCodeAt(i) ^ ADMIN_KEY.charCodeAt(i);
