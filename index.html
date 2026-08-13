@@ -65,6 +65,21 @@ html.dark #inicioView .nv.on svg{background:rgba(47,111,224,.22);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;}
 .app{max-width:440px;margin:0 auto;background:var(--app);min-height:100vh;position:relative;padding-bottom:78px;overflow:hidden;}
+/* ===== Presentación en TABLET: tarjeta centrada elegante sobre fondo ambiente =====
+   En celular la app llena la pantalla (no se ve el fondo). En tablet, la columna queda
+   centrada como una tarjeta flotante sobre un degradado suave, en vez de una tira perdida. */
+body{background:radial-gradient(145% 95% at 50% -12%, #f4efe7 0%, var(--bg) 56%, #e1dacf 100%);background-repeat:no-repeat;background-attachment:scroll;min-height:100vh;}
+html.dark body{background:radial-gradient(145% 95% at 50% -12%, #1a1d26 0%, #0e0f14 56%, #07080c 100%);}
+@media (min-width:480px){
+  .app{box-shadow:0 20px 64px -18px rgba(27,43,74,.32), 0 6px 18px rgba(27,43,74,.10);}
+  html.dark .app{box-shadow:0 20px 64px -18px rgba(0,0,0,.60), 0 6px 18px rgba(0,0,0,.38);}
+}
+/* Tablet en VERTICAL (pantalla media, sin llegar al modo computadora): ensanchamos la
+   columna para que se vea como una app cómoda y no como una tira angosta perdida. */
+@media (min-width:600px) and (max-width:859px){
+  .app{max-width:600px;}
+  .bnav, #inicioView .nav{max-width:600px;}
+}
 /* Animaciones de navegación estilo iOS (push al abrir / pop al regresar) */
 .nav-push-in{animation:navPushIn .30s cubic-bezier(.32,.72,0,1);}
 @keyframes navPushIn{from{transform:translateX(30px);opacity:0;}to{transform:translateX(0);opacity:1;}}
@@ -822,7 +837,7 @@ html.dark .tool-act{background:rgba(47,111,224,.12);border-color:rgba(47,111,224
 
 
 #temaViewer{position:fixed;inset:0;width:100%;max-width:none;height:100%;background:var(--app);z-index:120;display:flex;flex-direction:column;overflow:hidden;}
-.tv-bar{display:flex;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--line);background:rgba(252,250,247,.96);flex-shrink:0;}
+.tv-bar{display:flex;align-items:center;gap:8px;padding:12px;border-bottom:1px solid var(--line);background:var(--app);flex-shrink:0;}
 .tv-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;font-family:inherit;font-size:14px;font-weight:800;color:var(--coral);cursor:pointer;padding:6px 8px;border-radius:10px;}
 .tv-back:active{background:var(--line);}
 .tv-back svg{width:20px;height:20px;}
@@ -831,7 +846,9 @@ html.dark .tool-act{background:rgba(47,111,224,.12);border-color:rgba(47,111,224
 .tv-star svg{width:22px;height:22px;}.tv-star.on{color:#f5b301;}.tv-star.on svg path{fill:#f5b301;}
 .tv-ext:active{background:var(--line);}
 .tv-ext svg{width:20px;height:20px;}
-#temaFrame{flex:1 1 auto;min-height:0;width:100%;height:100%;border:none;background:var(--card);}
+#temaScroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--card);position:relative;}
+#temaFrame{display:block;width:100%;height:100%;min-height:100%;border:none;background:var(--card);}
+#temaInline{display:block;width:100%;min-height:100%;background:var(--card);}
 </style>
 <script>try{document.documentElement.classList.add('vmgate');}catch(e){}</script>
 <style>.vmgate .app{visibility:hidden!important}.vmgate #obView{display:block!important}</style>
@@ -1388,7 +1405,7 @@ window.addEventListener('load',function(){setTimeout(function(){sp.classList.add
       <div class="skl" style="height:58px;width:100%;margin-top:6px"></div>
       <div class="skl" style="height:13px;width:90%"></div>
     </div>
-    <iframe id="temaFrame" title="Tema" src="about:blank"></iframe>
+    <div id="temaScroll"><iframe id="temaFrame" title="Tema" src="about:blank"></iframe></div>
   </div>
 
 
@@ -31107,7 +31124,7 @@ function openGroup(key){
   $('detailView').style.display='none';
   $('homeView').style.display='block';
   window.scrollTo({top:0});
-  if(window.matchMedia('(min-width:860px)').matches){
+  if(esEscritorio()){
     var first=DRUGS.map(function(d,i){return {d:d,i:i};}).filter(function(o){return gkey(o.d)===key;})[0];
     if(first) openDrug(first.i);
   }
@@ -32353,7 +32370,7 @@ function openTool(key,silent){
   var t=null; for(var i=0;i<TOOLS.length;i++){ if(TOOLS[i].key===key){ t=TOOLS[i]; break; } }
   if(!t) return; CURTOOL=t;
   var ap=document.querySelector('.app'); ap.classList.remove('mode-inicio','mode-hub'); ap.classList.add('mode-tools');
-  var wide=window.matchMedia('(min-width:860px)').matches;
+  var wide=esEscritorio();
   var hide=['inicioView','hubView','homeView','detailView','pedCalcView','labsPanel','temasPanel','favsPanel','perfilView'];
   if(!wide) hide.push('toolsPanel');
   hide.forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';});
@@ -32862,7 +32879,7 @@ function openTemas(){
   var ts=document.getElementById('temaSearch'); if(ts) ts.value='';
   renderTemasPanel('');
   var tp=document.getElementById('temasPanel'); if(tp) tp.style.display='block';
-  var wide=window.matchMedia('(min-width:860px)').matches;
+  var wide=esEscritorio();
   var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none';
   var te=document.getElementById('temaEmpty'); if(te) te.style.display=wide?'flex':'none';
   var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
@@ -32870,22 +32887,136 @@ function openTemas(){
 }
 var _temaCurrent='';
 window.temaSwipeSetup=function(doc){try{if(!doc||doc.__vmSwipe)return;doc.__vmSwipe=true;try{[].forEach.call(doc.querySelectorAll('*'),function(e){var cs=doc.defaultView.getComputedStyle(e);if((cs.overflowX==='auto'||cs.overflowX==='scroll')&&e.scrollWidth>e.clientWidth+8&&e.clientHeight<170){e.style.touchAction='pan-x';e.style.overflowY='hidden';}});}catch(e){}var tv=document.getElementById('temaViewer');var x0=null,y0=null,t0=0,dragging=false;function rst(){if(tv){tv.style.transition='';tv.style.transform='';tv.style.boxShadow='';}x0=null;dragging=false;}doc.addEventListener('touchstart',function(e){if(!e.touches||e.touches.length!==1){rst();return;}var t=e.touches[0];if(t.clientX>28){x0=null;return;}x0=t.clientX;y0=t.clientY;t0=Date.now();dragging=false;if(tv)tv.style.transition='none';},{passive:true});doc.addEventListener('touchmove',function(e){if(x0===null||!e.touches||!e.touches.length)return;var t=e.touches[0];var dx=t.clientX-x0,dy=t.clientY-y0;if(!dragging){if(Math.abs(dy)>Math.abs(dx)+6){x0=null;return;}if(dx>8)dragging=true;else return;}if(dx<0)dx=0;if(tv){tv.style.transform='translateX('+dx+'px)';tv.style.boxShadow='-16px 0 36px rgba(0,0,0,.22)';}},{passive:true});doc.addEventListener('touchend',function(e){if(x0===null)return;var t=(e.changedTouches&&e.changedTouches[0]);var dx=t?(t.clientX-x0):0,dy=t?(t.clientY-y0):0,dt=Date.now()-t0;var go=(dragging&&dx>Math.min(120,innerWidth*0.30)&&Math.abs(dy)<90)||(dx>55&&dt<400&&Math.abs(dy)<60);x0=null;dragging=false;if(!tv){if(go&&window.navGoBack)window.navGoBack();return;}if(go){tv.style.transition='';tv.style.transform='';tv.style.boxShadow='';if(window.navGoBack)window.navGoBack();}else{tv.style.transition='transform .2s cubic-bezier(.22,.61,.36,1),box-shadow .2s';tv.style.transform='';tv.style.boxShadow='';setTimeout(function(){if(tv)tv.style.transition='';},240);}},{passive:true});}catch(e){}};
-function temaWheelFix(doc){try{if(!doc||doc.__vmWheel)return;doc.__vmWheel=true;doc.addEventListener('wheel',function(e){var se=doc.scrollingElement||doc.documentElement;if(!se)return;var f=(e.deltaMode===1)?16:((e.deltaMode===2)?se.clientHeight:1);var before=se.scrollTop;se.scrollTop+=e.deltaY*f;if(se.scrollTop!==before)e.preventDefault();},{passive:false});}catch(e){}}
+function temaWheelFix(doc){try{if(!doc||doc.__vmWheel)return;doc.__vmWheel=true;doc.addEventListener('wheel',function(e){var sc=document.getElementById('temaScroll');if(!sc)return;var f=(e.deltaMode===1)?16:((e.deltaMode===2)?sc.clientHeight:1);var before=sc.scrollTop;sc.scrollTop+=e.deltaY*f;if(sc.scrollTop!==before)e.preventDefault();},{passive:false});}catch(e){}}
 function reportarTema(f){var name='este tema';try{(typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){if(t.file===f)name=t.t;});});}catch(e){}var sub=encodeURIComponent('VadeMed - Error en tema: '+name);var body=encodeURIComponent('Tema: '+name)+'%0A%0ADescribe el error o la correccion sugerida:%0A%0A';try{window.location.href='mailto:vademedmx@gmail.com?subject='+sub+'&body='+body;}catch(e){}}
 function tvToggleFav(el){ if(!_temaCurrent)return; favM(_temaCurrent, el); }
+var _temaHistPushed=false;
+var VM_TVER='t3';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
+/* Pre-cargado silencioso: tras cargar la app, bajamos los temas de la lista en segundo
+   plano (poco a poco) para que abran INSTANTANEOS y funcionen sin internet. Solo en buena
+   señal y si NO esta activado el ahorro de datos, para no gastar los datos del usuario. */
+(function(){ try{ window.addEventListener('load', function(){ setTimeout(function(){ try{
+  var c=navigator.connection; if(c && (c.saveData || /(^|-)2g/.test(c.effectiveType||''))) return;
+  if(typeof TEMAS==='undefined') return;
+  var files=[]; TEMAS.forEach(function(p){ (p.items||[]).forEach(function(it){ if(it.file) files.push(it.file); }); });
+  var i=0; (function next(){ if(i>=files.length) return; var f=files[i++];
+    try{ fetch(f+'?tv='+VM_TVER).catch(function(){}); }catch(e){}
+    setTimeout(next, 300); })();
+}catch(e){} }, 4000); }); }catch(e){} })();
+
+/* ===== Render de tema INLINE (sin iframe), como Medicamentos =====
+   Los iframes no scrollean con el dedo en tactil. Para el maestro-detalle (tablet horizontal
+   y PC) dibujamos el tema DENTRO del panel: aislamos su CSS con #temaInline y corremos sus
+   scripts en la app (asi las pestañas siguen funcionando). Los temas son autocontenidos
+   (sin imagenes ni CSS externos), por eso es seguro. */
+function scopeTemaCss(cssText){
+  try{
+    var st=document.createElement('style'); st.textContent=cssText; document.head.appendChild(st);
+    var sheet=st.sheet, scope='#temaInline';
+    function pfx(sel){ return sel.split(',').map(function(s){ s=s.trim(); if(!s) return s;
+      if(/^(html|body|:root)$/i.test(s)) return scope;
+      s=s.replace(/^\s*(html|body|:root)\b\s*/i,'');
+      return scope+' '+(s||'*'); }).join(','); }
+    function walk(rules){ for(var i=0;i<rules.length;i++){ var r=rules[i];
+      if(r.type===1){ try{ r.selectorText=pfx(r.selectorText); }catch(e){} }
+      else if(r.cssRules && (r.type===4||r.type===12)){ walk(r.cssRules); } } }
+    walk(sheet.cssRules);
+    var out=''; for(var i=0;i<sheet.cssRules.length;i++){ out+=sheet.cssRules[i].cssText+'\n'; }
+    document.head.removeChild(st); return out;
+  }catch(e){ return cssText; }
+}
+function renderTemaInline(f, name){
+  var scroll=document.getElementById('temaScroll'), frame=document.getElementById('temaFrame'), tv=document.getElementById('temaViewer');
+  if(!scroll) return false;
+  if(frame) frame.style.display='none';
+  var host=document.getElementById('temaInline');
+  if(!host){ host=document.createElement('div'); host.id='temaInline'; scroll.appendChild(host); }
+  host.innerHTML=''; host.style.display='block'; scroll.scrollTop=0;
+  if(tv) tv.classList.add('loading');
+  var url=f+(f.indexOf('?')<0?'?':'&')+'tv='+VM_TVER;
+  fetch(url).then(function(r){return r.text();}).then(function(html){
+    try{
+      /* Al dibujar el tema INLINE, la base de URLs es la app (raiz), no la carpeta del tema.
+         Las rutas relativas de recursos (p.ej. semio_img/..) quedarian mal. Las volvemos
+         absolutas al folder del tema (RESUMENCLINIC/RESUMENES/) para que carguen bien. */
+      try{ var _dir=f.substring(0,f.lastIndexOf('/')+1); html=html.replace(/(["'(])(semio_img\/)/g, '$1'+_dir+'$2'); }catch(e){}
+      var doc=new DOMParser().parseFromString(html,'text/html');
+      var css='', sts=doc.querySelectorAll('style'); for(var i=0;i<sts.length;i++){ css+=sts[i].textContent+'\n'; }
+      var styleEl=document.createElement('style'); styleEl.textContent=scopeTemaCss(css); host.appendChild(styleEl);
+      var content=document.createElement('div'); content.innerHTML=doc.body.innerHTML;
+      var backs=content.querySelectorAll('button[onclick*="history.back"]'); for(var i=0;i<backs.length;i++){ backs[i].style.display='none'; }
+      host.appendChild(content);
+      /* Correr los scripts del tema AISLADOS (IIFE): asi sus const/let (p.ej. ICON) NO chocan
+         con los globales de la app. Exponemos a window SOLO las funciones que usan los onclick
+         (openSystem, showT, etc.). Shim para que el init de 'load'/'DOMContentLoaded' corra. */
+      var temaJs='', scr=doc.querySelectorAll('script');
+      for(var i=0;i<scr.length;i++){ if(!scr[i].src) temaJs += '\n;\n' + scr[i].textContent; }
+      var KW={'if':1,'for':1,'while':1,'return':1,'var':1,'let':1,'const':1,'function':1,'typeof':1,'new':1,'this':1,'true':1,'false':1,'null':1,'void':1,'delete':1,'in':1,'do':1,'else':1,'switch':1,'catch':1,'throw':1,'instanceof':1};
+      var names={}, am, cm, htmlStr=doc.body.innerHTML, attrRe=/on\w+\s*=\s*"([^"]*)"/g, callRe=/([A-Za-z_$][\w$]*)\s*\(/g;
+      while((am=attrRe.exec(htmlStr))){ callRe.lastIndex=0; while((cm=callRe.exec(am[1]))){ if(!KW[cm[1]]) names[cm[1]]=1; } }
+      var expose=''; for(var k in names){ if(names.hasOwnProperty(k)){ expose += 'try{if(typeof '+k+'!=="undefined")window['+JSON.stringify(k)+']='+k+';}catch(e){}\n'; } }
+      var shimJs="var _wa=window.addEventListener,_da=document.addEventListener;window.addEventListener=function(t,fn,o){if(t==='load'||t==='DOMContentLoaded'){try{setTimeout(fn,0)}catch(e){}return}return _wa.call(window,t,fn,o)};document.addEventListener=function(t,fn,o){if(t==='DOMContentLoaded'){try{setTimeout(fn,0)}catch(e){}return}return _da.call(document,t,fn,o)};";
+      var restoreJs="try{window.addEventListener=_wa;document.addEventListener=_da;}catch(e){}";
+      var wrapped='(function(){'+shimJs+'try{'+temaJs+'\n}catch(e){try{console.warn("tema inline:",e&&e.message)}catch(_e){}}\n'+expose+restoreJs+'})();';
+      var s=document.createElement('script'); s.textContent=wrapped; host.appendChild(s);
+      try{ host.addEventListener('click', function(ev){ var t=ev.target; if(t&&t.closest&&t.closest('.tab,[onclick*=showT],[onclick*=show]')){ setTimeout(function(){ scroll.scrollTop=0; },10); } }); }catch(e){}
+    }catch(e){ if(frame){ frame.style.display=''; frame.src=url; } }
+    if(tv) tv.classList.remove('loading');
+  }).catch(function(){ if(tv) tv.classList.remove('loading'); if(frame){ frame.style.display=''; frame.src=url; } });
+  return true;
+}
 function openTemaFile(f){
   _temaCurrent=f;
-  var _wide=window.matchMedia('(min-width:860px)').matches;
+  var _wide=esEscritorio();
   var _detalle=_wide && esTemaDeLista(f);
-  try{if(!_detalle)document.documentElement.classList.add('tema-open');}catch(e){}
   try{pushRecentTema(f);}catch(e){}
+  var _nombre='Tema';
+  try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){ if(t.file===f) _nombre=t.t; });}); }catch(e){}
+  /* MAESTRO-DETALLE (tablet horizontal y PC): dibujar el tema INLINE en el panel derecho,
+     como Medicamentos -> scrollea con el dedo (es DOM de la app, no un iframe). */
+  if(_detalle){
+    var _tt=document.getElementById('tvTitle'); if(_tt) _tt.textContent=_nombre;
+    try{ var _tsr=document.getElementById('tvStar'); if(_tsr) _tsr.classList.toggle('on', isFav({t:'m',f:f})); }catch(e){}
+    var _ap0=document.querySelector('.app'); _ap0.classList.remove('mode-inicio','mode-hub','mode-tools'); _ap0.classList.add('mode-temas');
+    ['inicioView','hubView','homeView','detailView','toolView','toolsPanel','pedCalcView','labsPanel','favsPanel','perfilView'].forEach(function(id){var e=document.getElementById(id); if(e) e.style.display='none';});
+    var _tl0=document.getElementById('temasList'); if(!_tl0||!_tl0.children.length){ try{renderTemasPanel('');}catch(e){} }
+    var _tp0=document.getElementById('temasPanel'); if(_tp0) _tp0.style.display='block';
+    var _te0=document.getElementById('temaEmpty'); if(_te0) _te0.style.display='none';
+    var _tvv=document.getElementById('temaViewer'); if(_tvv) _tvv.style.display='flex';
+    renderTemaInline(f, _nombre);
+    return;
+  }
+  /* CUALQUIER tema (celular, tablet vertical, o hub como Semiologia): CAPA a pantalla completa
+     DENTRO de la app (render inline, NO pagina del navegador) -> se siente app, SIN recarga al
+     regresar, y scrollea nativo. El boton atras del equipo cierra la capa (history). */
+  if(true){
+    var _tt2=document.getElementById('tvTitle'); if(_tt2) _tt2.textContent=_nombre;
+    try{ var _tsr2=document.getElementById('tvStar'); if(_tsr2) _tsr2.classList.toggle('on', isFav({t:'m',f:f})); }catch(e){}
+    try{document.documentElement.classList.add('tema-open');}catch(e){}
+    var _ap2=document.querySelector('.app'); if(_ap2) _ap2.classList.remove('mode-temas');
+    var _tvv2=document.getElementById('temaViewer'); if(_tvv2) _tvv2.style.display='flex';
+    var _bn2=document.querySelector('.bnav'); if(_bn2) _bn2.style.display='none';
+    try{window.scrollTo({top:0});}catch(e){}
+    renderTemaInline(f, _nombre);
+    try{ if(!_temaHistPushed){ history.pushState({vmTema:1},''); _temaHistPushed=true; } }catch(e){}
+    return;
+  }
+  /* Tema fuera de la lista (ej. Atlas de Semiologia, archivo enorme): PAGINA COMPLETA. */
+  var _tactil=false; try{ _tactil = esMovil() || (window.matchMedia&&window.matchMedia('(pointer:coarse)').matches) || (navigator.maxTouchPoints>0); }catch(e){ _tactil=!_wide; }
+  if(_tactil || !_wide){ try{ sessionStorage.setItem('vmVolverTema','1'); }catch(e){}
+    /* Etiqueta de version en la URL del tema: obliga al iPhone a bajar la version fresca
+       aunque su service worker tenga cache viejo (una URL nueva no esta en el cache viejo).
+       Subir VM_TVER cada vez que se editen los temas. */
+    var _fv=f+(f.indexOf('?')<0?'?':'&')+'tv='+VM_TVER;
+    try{ window.location.href=_fv; }catch(e){ location.assign(_fv); } return; }
+  try{if(!_detalle)document.documentElement.classList.add('tema-open');}catch(e){}
   var fr=document.getElementById('temaFrame'), tv=document.getElementById('temaViewer');
   if(fr && tv){
     var name='Tema';
     try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){ if(t.file===f) name=t.t; });}); }catch(e){}
     var tt=document.getElementById('tvTitle'); if(tt) tt.textContent=name;
     try{ var tsr=document.getElementById('tvStar'); if(tsr) tsr.classList.toggle('on', isFav({t:'m',f:f})); }catch(e){}
-    fr.onload=function(){ try{ var d=fr.contentDocument||fr.contentWindow.document; if(d&&d.head&&!d.getElementById('__tvfix')){ var st=d.createElement('style'); st.id='__tvfix'; st.textContent='body>button[onclick*="history.back"]{display:none!important;} html,body{overscroll-behavior-y:contain;} .tabbar,.tabs,.qtabs,[class*="tabbar"],[class*="tab-bar"]{position:static!important;top:auto!important;overflow-y:hidden!important;}'; d.head.appendChild(st); } try{ if(d&&d.body&&!d.getElementById('__tvfav')){ var _hdr=d.querySelector('.hdr')||d.body.firstElementChild; if(_hdr){ _hdr.style.position='relative'; var _sb=d.createElement('button'); _sb.id='__tvfav'; _sb.setAttribute('aria-label','Guardar en favoritos'); _sb.style.cssText='position:absolute;top:10px;right:12px;z-index:30;background:rgba(255,255,255,0.18);border:none;border-radius:10px;padding:6px;cursor:pointer;display:flex;line-height:0;-webkit-tap-highlight-color:transparent;'; var _pf=function(on){ _sb.innerHTML='<svg viewBox="0 0 24 24" width="23" height="23" fill="'+(on?"#ffd23f":"none")+'"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19l1-5.8L3.5 9.1l5.9-.9L12 3z" stroke="'+(on?"#ffd23f":"#ffffff")+'" stroke-width="1.7" stroke-linejoin="round"/></svg>'; }; _pf(isFav({t:'m',f:f})); _sb.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); var on=toggleFav({t:'m',f:f,n:name,c:''}); _pf(on); }); _hdr.appendChild(_sb); } } }catch(e){} try{ if(d&&d.body&&!d.getElementById('__tvfoot')){ var _fb=d.createElement('div'); _fb.id='__tvfoot'; _fb.style.cssText='margin:10px 14px 34px;padding:13px 14px;border-radius:12px;border:1px solid rgba(0,0,0,.07);background:rgba(0,0,0,.02);font-size:12px;color:#6b7280;text-align:center;line-height:1.7'; _fb.innerHTML='📅 Revisado en 2026 · fuentes citadas en este tema<br><button type="button" style="margin-top:8px;background:none;border:1px solid #d8b4a4;border-radius:20px;padding:6px 15px;font-size:12px;font-weight:600;color:#c9522a;cursor:pointer;font-family:inherit">🚩 Reportar un error</button>'; var _bt=_fb.querySelector('button'); if(_bt) _bt.addEventListener('click',function(){ try{reportarTema(f);}catch(e){} }); d.body.appendChild(_fb); } }catch(e){} if(typeof temaWheelFix==='function')temaWheelFix(d); }catch(e){} tv.classList.remove('loading'); };
+    fr.onload=function(){ try{ var d=fr.contentDocument||fr.contentWindow.document; if(d&&d.head&&!d.getElementById('__tvfix')){ var st=d.createElement('style'); st.id='__tvfix'; st.textContent='body>button[onclick*="history.back"]{display:none!important;} html,body{overscroll-behavior-y:contain;} .tabbar,.tabs,.qtabs,[class*="tabbar"],[class*="tab-bar"]{position:static!important;top:auto!important;overflow-y:hidden!important;}'; d.head.appendChild(st); } try{ if(d&&d.body&&!d.getElementById('__tvfav')){ var _hdr=d.querySelector('.hdr')||d.body.firstElementChild; if(_hdr){ _hdr.style.position='relative'; var _sb=d.createElement('button'); _sb.id='__tvfav'; _sb.setAttribute('aria-label','Guardar en favoritos'); _sb.style.cssText='position:absolute;top:10px;right:12px;z-index:30;background:rgba(255,255,255,0.18);border:none;border-radius:10px;padding:6px;cursor:pointer;display:flex;line-height:0;-webkit-tap-highlight-color:transparent;'; var _pf=function(on){ _sb.innerHTML='<svg viewBox="0 0 24 24" width="23" height="23" fill="'+(on?"#ffd23f":"none")+'"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19l1-5.8L3.5 9.1l5.9-.9L12 3z" stroke="'+(on?"#ffd23f":"#ffffff")+'" stroke-width="1.7" stroke-linejoin="round"/></svg>'; }; _pf(isFav({t:'m',f:f})); _sb.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); var on=toggleFav({t:'m',f:f,n:name,c:''}); _pf(on); }); _hdr.appendChild(_sb); } } }catch(e){} try{ if(d&&d.body&&!d.getElementById('__tvfoot')){ var _fb=d.createElement('div'); _fb.id='__tvfoot'; _fb.style.cssText='margin:10px 14px 34px;padding:13px 14px;border-radius:12px;border:1px solid rgba(0,0,0,.07);background:rgba(0,0,0,.02);font-size:12px;color:#6b7280;text-align:center;line-height:1.7'; _fb.innerHTML='📅 Revisado en 2026 · fuentes citadas en este tema<br><button type="button" style="margin-top:8px;background:none;border:1px solid #d8b4a4;border-radius:20px;padding:6px 15px;font-size:12px;font-weight:600;color:#c9522a;cursor:pointer;font-family:inherit">🚩 Reportar un error</button>'; var _bt=_fb.querySelector('button'); if(_bt) _bt.addEventListener('click',function(){ try{reportarTema(f);}catch(e){} }); d.body.appendChild(_fb); } }catch(e){} if(typeof temaWheelFix==='function')temaWheelFix(d); var _fit=function(){ try{ var dd=fr.contentDocument||fr.contentWindow.document; if(dd&&dd.body){ var h=Math.max(dd.body.scrollHeight,dd.documentElement.scrollHeight); if(h>60){ fr.style.height=h+'px'; } } }catch(e){} }; window.__temaFit=_fit; _fit(); setTimeout(_fit,150); setTimeout(_fit,500); setTimeout(_fit,1200); if(window.ResizeObserver){ try{ new ResizeObserver(_fit).observe(d.body); }catch(e){} } try{ d.addEventListener('click',function(){ setTimeout(_fit,80); setTimeout(_fit,360); setTimeout(_fit,720); },true); }catch(e){} }catch(e){} tv.classList.remove('loading'); };
     tv.classList.add('loading'); setTimeout(function(){ tv.classList.remove('loading'); }, 4000);
     fr.src=f+((location.hostname==='127.0.0.1'||location.hostname==='localhost')?('?_ts='+(Date.now())):''); tv.style.display='flex';
     if(_detalle){
@@ -32898,10 +33029,13 @@ function openTemaFile(f){
       var bn=document.querySelector('.bnav'); if(bn) bn.style.display='none';
       document.documentElement.style.overflow='hidden'; document.body.style.overflow='hidden';
       window.scrollTo({top:0});
+      try{ if(!_temaHistPushed){ history.pushState({vmTema:1},''); _temaHistPushed=true; } }catch(e){}
     }
   } else { try{ window.open(f,'_blank'); }catch(e){ location.href=f; } }
 }
-function closeTemaViewer(){ if(window.matchMedia('(min-width:860px)').matches && document.querySelector('.app').classList.contains('mode-temas')){ var _fr=document.getElementById('temaFrame'); if(_fr) _fr.src='about:blank'; try{goInicio();}catch(e){} return; } try{document.documentElement.classList.remove('tema-open');}catch(e){} var fr=document.getElementById('temaFrame'); if(fr) fr.src='about:blank'; var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none'; document.documentElement.style.overflow=''; document.body.style.overflow=''; var iv=document.getElementById('inicioView'); var onIni=iv&&getComputedStyle(iv).display!=='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display=onIni?'none':''; }
+function closeTemaViewer(fromPop){ try{ var _ti=document.getElementById('temaInline'); if(_ti) _ti.innerHTML=''; }catch(e){} if(esEscritorio() && document.querySelector('.app').classList.contains('mode-temas')){ var _fr=document.getElementById('temaFrame'); if(_fr) _fr.src='about:blank'; try{goInicio();}catch(e){} return; } try{document.documentElement.classList.remove('tema-open');}catch(e){} var fr=document.getElementById('temaFrame'); if(fr) fr.src='about:blank'; var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none'; document.documentElement.style.overflow=''; document.body.style.overflow=''; var iv=document.getElementById('inicioView'); var onIni=iv&&getComputedStyle(iv).display!=='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display=onIni?'none':''; if(fromPop===true){ _temaHistPushed=false; } else if(_temaHistPushed){ _temaHistPushed=false; try{history.back();}catch(e){} } }
+window.addEventListener('popstate',function(){ var tv=document.getElementById('temaViewer'); if(tv && tv.style.display==='flex' && _temaHistPushed){ closeTemaViewer(true); } });
+window.addEventListener('resize',function(){ try{ if(window.__temaFit){ window.__temaFit(); setTimeout(window.__temaFit,220); } }catch(e){} });
 function openTemaExternal(){ if(_temaCurrent){ try{ window.open(_temaCurrent,'_blank'); }catch(e){ location.href=_temaCurrent; } } }
 function temaItemHTML(t, op){
   if(t.file){ return '<div class="lab-item"><button class="lab-ihead" style="cursor:pointer" onclick="openTemaFile(&#39;'+t.file+'&#39;)"><span class="lab-name">'+t.t+'</span><span class="lab-iright">'+favStar('favM(&#39;'+t.file+'&#39;,this)',isFav({t:'m',f:t.file}))+'<svg class="lab-chev" viewBox="0 0 24 24" fill="none" style="transform:rotate(-90deg)"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div>'; }
@@ -32991,7 +33125,7 @@ function goTools(){
   var ts=document.getElementById('toolSearch'); if(ts) ts.value='';
   renderToolsPanel();
   document.getElementById('toolsPanel').style.display='block';
-  var wide=window.matchMedia('(min-width:860px)').matches;
+  var wide=esEscritorio();
   if(wide){ var first=(typeof TOOLS!=='undefined'&&TOOLS.length)?TOOLS[0].key:null; if(first){ openTool(first,true); return; } }
   document.getElementById('toolView').style.display='none';
   var bn=document.querySelector('.bnav'); if(bn) bn.style.display='';
@@ -33064,7 +33198,7 @@ document.addEventListener('touchend',function(e){if(x0===null)return;var t=(e.ch
   if(typeof _cv==='function'){ window.closeTemaViewer=function(){ var tv=el('temaViewer'); if(ANIM && tv && tv.style.display!=='none'){ tv.classList.add('nav-slide-out-fixed'); onEnd(tv,function(){ if(tv.classList.contains('nav-slide-out-fixed')){ tv.classList.remove('nav-slide-out-fixed'); _cv(); } }); } else { _cv(); } }; }
 })();
 </script>
-<script>if('serviceWorker' in navigator){if(location.hostname==='localhost'||location.hostname==='127.0.0.1'){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});}).catch(function(){});if(window.caches&&caches.keys){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});}).catch(function(){});}}else{window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}}</script>
+<script>if('serviceWorker' in navigator){if(location.hostname==='localhost'||location.hostname==='127.0.0.1'){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});}).catch(function(){});if(window.caches&&caches.keys){caches.keys().then(function(ks){ks.forEach(function(k){caches.delete(k);});}).catch(function(){});}}else{var _vmReloaded=false;var _vmHadCtrl=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',function(){if(_vmReloaded||!_vmHadCtrl)return;_vmReloaded=true;location.reload();});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}}</script>
 <div id="dlOffline" style="display:none;position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:6000;background:#2f6fe0;color:#fff;padding:9px 18px;border-radius:22px;font-size:12.5px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.22);max-width:88%;text-align:center;">Preparando modo sin internet…</div>
 <script>
 (function(){
@@ -33180,7 +33314,7 @@ function pfSec(t){return '<div class="pf-sech">'+t+'</div>';}
 function pfActividad(){var nf=0,nr=0,st=0;try{nf=(typeof FAVS!=='undefined'?FAVS.filter(function(x){return x.t!=='d'||(typeof DRUGS!=='undefined'&&DRUGS[x.i]);}).length:0);}catch(e){}try{nr=(typeof RECENTS!=='undefined'?RECENTS.length:0);}catch(e){}try{st=(typeof quizStreak==='function'?quizStreak():0);}catch(e){}function cell(n,l,col){return '<div style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:'+col+';line-height:1">'+n+'</div><div style="font-size:11px;color:var(--gray);margin-top:4px">'+l+'</div></div>';}function stat(n,l,col,ic){return '<div style="flex:1;text-align:center"><div style="color:'+col+';display:flex;justify-content:center;margin-bottom:6px;opacity:.92">'+ic+'</div><div class="pf-statn" style="color:'+col+'">'+n+'</div><div class="pf-statl">'+l+'</div></div>';}var _IST="<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\"><path d=\"M12 4l2.3 4.7 5.2.8-3.8 3.6.9 5.1L12 15.8 7.4 18.2l.9-5.1L4.5 9.5l5.2-.8L12 4z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>",_IBK="<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\"><path d=\"M4 5.5A1.5 1.5 0 015.5 4H18a2 2 0 012 2v13a1 1 0 01-1 1H6a2 2 0 01-2-2V5.5z\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M8 8h7M8 11h7\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg>",_IFL="<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\"><path d=\"M12 3s5 4 5 8.5a5 5 0 01-10 0c0-1.5.6-2.7 1.3-3.5.3 1 .9 1.6 1.7 1.6 0-2.4 2-4.6 2-6.6z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>";return '<div class="pf-group" style="display:flex;align-items:center;padding:16px 8px">'+stat(nf,'Favoritos','#f5b301',_IST)+'<div class="pf-statd"></div>'+stat(nr,'Vistos','#0891b2',_IBK)+'<div class="pf-statd"></div>'+stat(st,'Racha','#e0552e',_IFL)+'</div>';}
 function pfSetTheme(dark){document.documentElement.classList.toggle('dark',dark);try{localStorage.setItem('vademed_theme',dark?'dark':'light');}catch(e){}try{renderPerfil();}catch(e){}}
 function pfThemeRow(){var dark=document.documentElement.classList.contains('dark');function seg(lbl,on,fn){return '<button onclick="'+fn+'" style="flex:1;padding:8px 14px;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;background:'+(on?'var(--card)':'transparent')+';color:'+(on?'var(--navy)':'var(--gray)')+';box-shadow:'+(on?'0 1px 3px rgba(0,0,0,.12)':'none')+'">'+lbl+'</button>';}return '<div class="pf-card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px"><span style="display:flex;align-items:center;gap:12px"><span style="width:34px;height:34px;border-radius:10px;background:#4f46e51e;color:#4f46e5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 3a9 9 0 000 18z" fill="currentColor"/></svg></span><span style="font-size:14.5px;font-weight:700;color:var(--navy)">Tema</span></span><span style="display:flex;background:var(--app);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px;flex-shrink:0">'+seg('Claro',!dark,'pfSetTheme(false)')+seg('Oscuro',dark,'pfSetTheme(true)')+'</span></div>';}
-function pfCompartir(){var url='https://vademedmx.netlify.app';var txt='VadeMed — vademecum clinico de bolsillo (dosis, calculadoras y temas).';if(navigator.share){navigator.share({title:'VadeMed',text:txt,url:url}).catch(function(){});}else{try{navigator.clipboard.writeText(url);if(typeof showToast==='function')showToast('Enlace copiado');}catch(e){window.prompt('Copia el enlace:',url);}}}
+function pfCompartir(){var url='https://vademed.pages.dev';var txt='VadeMed — vademecum clinico de bolsillo (dosis, calculadoras y temas).';if(navigator.share){navigator.share({title:'VadeMed',text:txt,url:url}).catch(function(){});}else{try{navigator.clipboard.writeText(url);if(typeof showToast==='function')showToast('Enlace copiado');}catch(e){window.prompt('Copia el enlace:',url);}}}
 function pfFooter(){var v=(typeof APP_BUILD!=='undefined')?APP_BUILD:'';return '<div style="text-align:center;color:var(--soft);font-size:11.5px;margin:22px 0 12px;line-height:1.6">VadeMed'+(v?(' · '+v):'')+'<br>Hecho en México</div>';}
 function pfGRow(t,sub,fn,ic,danger){return '<button class="pf-grow" onclick="'+fn+'"><span class="pf-gic" style="background:'+ic.c+'1e;color:'+ic.c+'">'+ic.s+'</span><span class="pf-gtx"><span class="pf-gt"'+(danger?' style="color:var(--danger)"':'')+'>'+t+'</span>'+(sub?'<span class="pf-gs">'+sub+'</span>':'')+'</span>'+(danger?'':'<span class="pf-gchev"><svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>')+'</button>';}
 function pfGroup(inner){return '<div class="pf-group">'+inner+'</div>';}
@@ -33212,6 +33346,10 @@ function reGate(step){document.documentElement.classList.add('vmgate');var v=doc
 function offlineFallback(acc){if(acc&&acc.offline===true){unlockApp();}else{reGate('offline');}}
 function obRetry(){obShow('loading');resolveAccess();}
 function obOtroCodigo(){try{localStorage.removeItem('vademed_acceso');}catch(e){}reGate('welcome');}
+/* Escritorio / vista ancha = pantalla >=860px (PC y tablet en horizontal): diseno de
+   computadora (lista + panel). En <860px (celular y tablet en vertical) = tarjeta centrada.
+   Los TEMAS igual se abren como pagina completa en tactil (ver openTemaFile) para el scroll. */
+function esEscritorio(){try{return window.matchMedia('(min-width:860px)').matches;}catch(e){return false;}}
 function esMovil(){try{if(navigator.userAgentData&&typeof navigator.userAgentData.mobile==='boolean')return navigator.userAgentData.mobile;}catch(e){}var ua=navigator.userAgent||'';if(/Android|iPhone|iPod|iPad/i.test(ua))return true;if(/Macintosh/i.test(ua)&&navigator.maxTouchPoints>1)return true;try{if(matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<820)return true;}catch(e){}return false;}
 var VM_REVALIDA_DIAS=3;
 function _vmMarcarValido(acc,r){try{localStorage.setItem('vademed_acceso',JSON.stringify({codigo:acc.codigo,nombre:((r&&r.nombre)||acc.nombre||''),offline:!!(r&&r.offline)}));localStorage.setItem('vademed_lastvalid',String(Date.now()));}catch(e){}}

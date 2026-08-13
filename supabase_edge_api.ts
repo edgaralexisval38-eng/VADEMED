@@ -9,6 +9,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY  = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_KEY   = Deno.env.get("RESEND_KEY") ?? "";
+const ADMIN_KEY    = Deno.env.get("ADMIN_KEY") ?? "";   // clave maestra del panel de control
 const INTENTOS_MAX = parseInt(Deno.env.get("INTENTOS_MAX") ?? "10", 10);
 const INTENTOS_MIN = parseInt(Deno.env.get("INTENTOS_MINUTOS") ?? "15", 10);
 
@@ -38,6 +39,33 @@ function getIP(req: Request): string {
 
 function esc(s: string): string {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Los codigos se guardan y se comparan SIEMPRE en MAYUSCULAS, asi el cliente
+// puede escribir "vm-a7k2" en la computadora y entra igual.
+function norm(v: unknown): string {
+  return String(v ?? "").trim().toUpperCase();
+}
+
+// Comparacion de la clave del panel en tiempo constante (no filtra por cuanto tarda).
+// Si ADMIN_KEY no esta puesta o es corta, el panel queda DESACTIVADO a proposito.
+function claveOk(dada: string): boolean {
+  if (ADMIN_KEY.length < 16) return false;
+  if (dada.length !== ADMIN_KEY.length) return false;
+  let dif = 0;
+  for (let i = 0; i < ADMIN_KEY.length; i++) dif |= dada.charCodeAt(i) ^ ADMIN_KEY.charCodeAt(i);
+  return dif === 0;
+}
+
+function aInt(v: unknown): number | null {
+  if (v === null || v === undefined || v === "") return null;
+  const n = parseInt(String(v), 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+function txt(v: unknown): string | null {
+  const s = String(v ?? "").trim();
+  return s ? s.slice(0, 300) : null;
 }
 
 // concordancia de genero correcta en el asunto
@@ -104,7 +132,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     // ---------- ACCION: verificar ----------
     if (action === "verificar") {
-      const codigo = String(body?.codigo ?? "").trim();
+      const codigo = norm(body?.codigo);
       if (!codigo) return json({ ok: false, error: "Escribe tu código" });
 
       const ip = getIP(req);
@@ -145,7 +173,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     // ---------- ACCION: perfil_get (traer perfil+favoritos por codigo) ----------
     if (action === "perfil_get") {
-      const codigo = String(body?.codigo ?? "").trim();
+      const codigo = norm(body?.codigo);
       if (!codigo) return json({ ok: false, error: "Falta código" });
       // el codigo debe estar activo
       const { data: ver } = await supabase.rpc("verificar_codigo", { p_codigo: codigo });
@@ -158,7 +186,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     // ---------- ACCION: perfil_set (guardar perfil+favoritos por codigo) ----------
     if (action === "perfil_set") {
-      const codigo = String(body?.codigo ?? "").trim();
+      const codigo = norm(body?.codigo);
       const datos = body?.datos ?? {};
       if (!codigo) return json({ ok: false, error: "Falta código" });
       const { data: ver } = await supabase.rpc("verificar_codigo", { p_codigo: codigo });
@@ -174,7 +202,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     if (action === "sugerencia") {
       const tipo    = String(body?.tipo ?? "sugerencia").trim().toLowerCase();
       const mensaje = String(body?.mensaje ?? "").trim();
-      const codigo  = String(body?.codigo ?? "").trim();
+      const codigo  = norm(body?.codigo);
       const version = String(body?.version_app ?? "").trim();
 
       if (mensaje.length < 4 || mensaje.length > 2000) {
@@ -194,6 +222,79 @@ Deno.serve(async (req: Request): Promise<Response> => {
       }
 
       return json({ ok: true });
+    }
+
+    // ---------- ACCIONES DEL PANEL DE CONTROL (admin_*) ----------
+    // Todas exigen la clave maestra (secret ADMIN_KEY). Sin ella no pasa nada.
+    if (typeof action === "string" && action.startsWith("admin_")) {
+      if (!claveOk(String(body?.clave ?? ""))) {
+        await new Promise((r) => setTimeout(r, 700));   // frena la fuerza bruta
+        return json({ ok: false, error: "Clave incorrecta" }, 401);
+      }
+
+      const cod = norm(body?.codigo);
+
+      if (action === "admin_listar") {
+        const { data, error } = await supabase.rpc("admin_listar");
+        if (error) throw error;
+        return json({ ok: true, lista: data ?? [] });
+      }
+
+      if (action === "admin_crear") {
+        const { data, error } = await supabase.rpc("admin_crear", {
+          p_codigo:   cod,
+          p_nombre:   txt(body?.nombre),
+          p_dias:     aInt(body?.dias),
+          p_plan:     txt(body?.plan),
+          p_contacto: txt(body?.contacto),
+          p_nota:     txt(body?.nota),
+        });
+        if (error) throw error;
+        return json(data);
+      }
+
+      if (action === "admin_activo") {
+        const { data, error } = await supabase.rpc("admin_set_activo", {
+          p_codigo: cod, p_activo: !!body?.activo,
+        });
+        if (error) throw error;
+        return json(data);
+      }
+
+      if (action === "admin_liberar") {
+        const { data, error } = await supabase.rpc("admin_liberar", { p_codigo: cod });
+        if (error) throw error;
+        return json(data);
+      }
+
+      if (action === "admin_extender") {
+        const dias = aInt(body?.dias);
+        if (!dias) return json({ ok: false, error: "Faltan los días a extender" });
+        const { data, error } = await supabase.rpc("admin_extender", {
+          p_codigo: cod, p_dias: dias,
+        });
+        if (error) throw error;
+        return json(data);
+      }
+
+      if (action === "admin_editar") {
+        const { data, error } = await supabase.rpc("admin_editar", {
+          p_codigo:   cod,
+          p_nombre:   txt(body?.nombre),
+          p_contacto: txt(body?.contacto),
+          p_nota:     txt(body?.nota),
+        });
+        if (error) throw error;
+        return json(data);
+      }
+
+      if (action === "admin_borrar") {
+        const { data, error } = await supabase.rpc("admin_borrar", { p_codigo: cod });
+        if (error) throw error;
+        return json(data);
+      }
+
+      return json({ ok: false, error: "Acción de panel no reconocida" }, 400);
     }
 
     return json({ ok: false, error: "Acción no reconocida" }, 400);
