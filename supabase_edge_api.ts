@@ -227,7 +227,25 @@ Deno.serve(async (req: Request): Promise<Response> => {
     // ---------- ACCIONES DEL PANEL DE CONTROL (admin_*) ----------
     // Todas exigen la clave maestra (secret ADMIN_KEY). Sin ella no pasa nada.
     if (typeof action === "string" && action.startsWith("admin_")) {
+      // Candado por intentos. Reusamos el mismo contador que los codigos de acceso,
+      // pero en su propio espacio ("admin:") para que no se estorben entre si.
+      // 5 fallos = 15 minutos bloqueado, ademas del castigo de 700 ms por intento.
+      const ipAdmin = "admin:" + getIP(req);
+      try {
+        const { data: chkA } = await supabase.rpc("chequear_intento", {
+          p_ip: ipAdmin, p_max: 5, p_min: 15,
+        });
+        const estA = Array.isArray(chkA) ? chkA[0] : chkA;
+        if (estA?.bloqueado) {
+          return json({
+            ok: false,
+            error: `Demasiados intentos. Espera ${estA.minutos_restantes ?? 15} minutos.`,
+          }, 429);
+        }
+      } catch (_e) { /* si el contador falla, seguimos con la clave */ }
+
       if (!claveOk(String(body?.clave ?? ""))) {
+        try { await supabase.rpc("registrar_fallo", { p_ip: ipAdmin, p_min: 15 }); } catch (_e) {}
         await new Promise((r) => setTimeout(r, 700));   // frena la fuerza bruta
         return json({ ok: false, error: "Clave incorrecta" }, 401);
       }
