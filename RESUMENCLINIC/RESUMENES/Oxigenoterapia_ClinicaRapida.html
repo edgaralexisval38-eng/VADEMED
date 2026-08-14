@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Oxigenoterapia · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0c3b6e;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+/* HEADER */
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+/* QUICK STATS */
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+/* TABBAR */
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+/* PANELS */
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+/* SECCIONES COLAPSABLES */
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+/* ALERTAS */
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+/* TABLAS */
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+/* CHIPS DE POBLACIÓN */
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+
+/* TEXTO */
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+
+/* PUNTOS CLAVE */
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#eef2f8;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* FICHA DE FÁRMACO */
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:95px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;}
+
+/* INDICACIONES */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{background:var(--ac);color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:12px 14px;}
+
+/* CALCULADORAS */
+.calc{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap;}
+.calc-row label{font-size:12px;font-weight:600;color:var(--gray-700);flex:1;min-width:130px;}
+.calc-row input,.calc-row select{font-size:13px;padding:7px 9px;border:1px solid var(--bd);border-radius:var(--rs);width:110px;font-family:inherit;}
+.btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-out{margin-top:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;display:none;}
+.calc-out.show{display:block;}
+.res-r{background:var(--rl);color:var(--r);border:1px solid var(--rm);}
+.res-y{background:var(--al);color:var(--a);border:1px solid var(--am);}
+.res-g{background:var(--gl);color:var(--g);border:1px solid var(--gm);}
+
+/* ALGORITMO */
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.algo-q h4{margin:0 0 10px;font-size:14px;color:var(--gray-900);}
+.algo-opt{display:block;width:100%;text-align:left;padding:11px 13px;margin-bottom:8px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:13px;font-weight:600;color:var(--gray-700);cursor:pointer;font-family:inherit;}
+.algo-opt:hover{border-color:var(--ac);background:var(--bl);}
+.algo-res{background:#fff;border:2px solid var(--ac);border-radius:var(--rad);padding:14px;}
+
+/* DESPLEGABLE INDICACIONES */
+.ind-drug{border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;overflow:hidden;}
+.ind-drug-h{padding:10px 12px;background:var(--gray-50);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;color:var(--gray-900);}
+.ind-drug-b{padding:12px;display:none;}
+.ind-drug-b.show{display:block;}
+.ind-field{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.if-via{background:var(--al);color:var(--a);}
+.if-enf{background:var(--bl);color:var(--b);}
+.if-pac{background:var(--gl);color:var(--g);}
+.if-nota{background:var(--gray-50);color:var(--gray-700);border:1px solid var(--bd);}
+.if-alarma{background:var(--rl);color:var(--r);}
+.if-lbl{font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.5px;display:block;margin-bottom:3px;}
+
+/* BIBLIOGRAFÍA */
+.biblio-header{background:linear-gradient(135deg,#0a1a3a,#1a3060);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+
+/* ESCENARIO — bloques de info */
+.esc-hero{background:linear-gradient(135deg,#0a1a3a,#1a3060);color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}
+.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-meta{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin-top:7px;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-info .fu-t{min-width:120px;}
+/* ESCALERA */
+.lad-t{font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;}
+.rung{position:relative;border:1px solid var(--bd);border-radius:var(--rad);background:#fff;padding:11px 12px 11px 46px;margin-bottom:0;}
+.rung-num{position:absolute;left:10px;top:11px;width:26px;height:26px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.rung-dev{font-size:13px;font-weight:700;color:var(--gray-900);}
+.rung-ind{font-size:12px;color:var(--gray-700);line-height:1.5;margin-top:3px;}
+.rung-fail{font-size:11.5px;color:var(--r);background:var(--rl);border-radius:var(--rs);padding:4px 8px;margin-top:6px;line-height:1.45;}
+.rung-conn{width:2px;height:14px;background:var(--bd);margin:0 auto;}
+.rung.crit{border-color:var(--rm);}
+.rung.crit .rung-num{background:var(--rm);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<!-- BOTÓN REGRESAR -->
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<!-- HEADER -->
+<div class="hdr" style="background:linear-gradient(135deg,#0a1a3a,#1a3060);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🫁</div>
+    <div>
+      <div class="hdr-eye">Neumología · Urgencias · Cuidados respiratorios</div>
+      <div class="hdr-title">Oxigenoterapia</div>
+      <div class="hdr-sub">BTS 2017 · GOLD 2025 · ATS 2020 · CENETEC</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Meta general 94–98%</span>
+    <span class="badge">Retenedor CO₂ 88–92%</span>
+    <span class="badge">Hipoxemia PaO₂&lt;60</span>
+    <span class="badge">ROX éxito ≥4.88</span>
+  </div>
+</div>
+
+<!-- QUICK STATS -->
+<div class="qstats">
+  <div class="qs"><div class="qs-v">94–98%</div><div class="qs-l">Meta SpO₂ general</div></div>
+  <div class="qs"><div class="qs-v">88–92%</div><div class="qs-l">Meta retenedor</div></div>
+  <div class="qs"><div class="qs-v">&lt;90% / &lt;60</div><div class="qs-l">SpO₂ / PaO₂ mmHg</div></div>
+  <div class="qs"><div class="qs-v">≥15 h/d</div><div class="qs-l">LTOT domiciliaria</div></div>
+</div>
+
+<!-- TABBAR -->
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Evaluación</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Dispositivos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y objetivo</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>La <strong>oxigenoterapia</strong> es la administración de oxígeno a una concentración (FiO₂) mayor que la del aire ambiente (21%) con fin terapéutico. El oxígeno es un <strong>fármaco</strong>: se prescribe con dosis (flujo/FiO₂), meta (rango de SpO₂), vía (dispositivo) y monitorización.</p>
+        <p><strong>Objetivo:</strong> tratar o prevenir la <strong>hipoxemia</strong> tisular, no la disnea. Se titula a un <strong>rango meta de SpO₂</strong>, evitando tanto la hipoxemia como la <strong>hiperoxia</strong>.</p>
+      </div>
+      <div class="tw" style="margin-top:8px;">
+        <table class="t">
+          <tr><th>Concepto</th><th>Definición</th><th>Umbral</th></tr>
+          <tr><td>Hipoxemia</td><td>PaO₂ arterial baja</td><td class="dn">PaO₂ &lt; 60 mmHg / SpO₂ &lt; 90%</td></tr>
+          <tr><td>Hipoxia</td><td>Aporte de O₂ tisular insuficiente</td><td>Clínico (lactato, disfunción orgánica)</td></tr>
+          <tr><td>Insuf. respiratoria tipo I</td><td>Hipoxémica</td><td>PaO₂ &lt; 60 · PaCO₂ normal/baja</td></tr>
+          <tr><td>Insuf. respiratoria tipo II</td><td>Hipercápnica</td><td>PaCO₂ &gt; 45 mmHg + pH</td></tr>
+          <tr><td>Hiperoxia</td><td>Exceso de O₂</td><td class="dm">SpO₂ 100% con O₂ suplementario</td></tr>
+        </table>
+      </div>
+      <div class="alert a-r" style="margin-top:8px;"><span class="ai">⛔</span><div><div class="at">El oxígeno no sustituye a la ventilación</div>Si hay hipoventilación (PaCO₂ ↑, somnolencia), el O₂ corrige la SpO₂ pero NO la retención de CO₂. Valorar soporte ventilatorio (VMNI/IOT).</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas de saturación (BTS 2017)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Población</th><th>Meta SpO₂</th><th>Racional</th></tr>
+          <tr><td>Adulto agudo general</td><td class="dn">94–98%</td><td>Evitar hipoxemia e hiperoxia</td></tr>
+          <tr><td>Riesgo de fallo hipercápnico</td><td class="dn">88–92%</td><td>EPOC, SOH, neuromuscular, bronquiectasias, fibrosis quística, tórax deformado</td></tr>
+          <tr><td>Paro / reanimación</td><td>100% (bolsa-válvula-reservorio)</td><td>Titular tras RCE</td></tr>
+          <tr><td>Intoxicación por CO / cianuro</td><td>100% independiente de SpO₂</td><td>SpO₂ no es fiable (COHb)</td></tr>
+          <tr><td>SCA / EVC sin hipoxemia</td><td>No dar si SpO₂ ≥ 93–94%</td><td>Hiperoxia = daño (AVOID, DETO2X)</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div><div class="at">Regla práctica</div>Ante un paciente agudo sin factores de riesgo, inicia en <strong>94–98%</strong>. Si hay EPOC/retención conocida o sospechada, usa <strong>88–92%</strong> hasta tener gasometría.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Indicaciones</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Escenario</th><th>Indicación</th></tr>
+          <tr><td>Aguda</td><td>Hipoxemia aguda (SpO₂ &lt; 90% aire ambiente), paro cardiorrespiratorio, choque, trauma mayor, sepsis, disnea grave con desaturación</td></tr>
+          <tr><td>Sin esperar SpO₂</td><td>Intoxicación por CO, crisis drepanocítica, neumotórax (favorece reabsorción), buceo/descompresión</td></tr>
+          <tr><td>Crónica (LTOT)</td><td>PaO₂ ≤ 55 mmHg (o SpO₂ ≤ 88%) en reposo, estable; o PaO₂ 56–59 con cor pulmonale, ICC o poliglobulia (Hto &gt; 55%)</td></tr>
+          <tr><td>Paliativa</td><td>Disnea con hipoxemia documentada (no rutinaria si SpO₂ normal — preferir aire/ventilador de mano)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiología: por qué la hiperoxia daña</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div style="background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--r);line-height:1.55;"><strong>1. Hipercapnia inducida por O₂ (retenedor):</strong> pierde vasoconstricción hipóxica → altera V/Q; efecto Haldane (O₂ desplaza CO₂ de la Hb); reducción del estímulo hipóxico. Sube la PaCO₂ → narcosis, acidosis.</div>
+      <div style="background:var(--al);border-left:3px solid var(--am);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--a);line-height:1.55;"><strong>2. Atelectasia por reabsorción:</strong> FiO₂ alta lava el nitrógeno alveolar; el O₂ se absorbe rápido y el alvéolo colapsa.</div>
+      <div style="background:var(--bl);border-left:3px solid var(--bm);border-radius:var(--rs);padding:10px 12px;font-size:12.5px;color:var(--b);line-height:1.55;"><strong>3. Toxicidad pulmonar / estrés oxidativo:</strong> FiO₂ &gt; 0.6 por &gt; 24–48 h genera radicales libres → daño alveolar difuso. En prematuros: retinopatía y displasia broncopulmonar.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Pacientes de riesgo de fallo hipercápnico</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Grupo</th><th>Ejemplos</th></tr>
+          <tr><td>EPOC</td><td>Especialmente exacerbado, VEF₁ bajo, retenedor conocido</td></tr>
+          <tr><td>Hipoventilación</td><td>Obesidad-hipoventilación (SOH), síndrome de apnea</td></tr>
+          <tr><td>Neuromuscular</td><td>ELA, Guillain-Barré, distrofias, lesión medular alta</td></tr>
+          <tr><td>Restrictivo de pared</td><td>Cifoescoliosis, secuela de TB, toracoplastía</td></tr>
+          <tr><td>Otros</td><td>Bronquiectasias, fibrosis quística</td></tr>
+        </table>
+      </div>
+      <div class="alert a-i" style="margin-top:8px;"><span class="ai">💳</span><div>Estos pacientes deben portar una <strong>tarjeta de alerta de oxígeno</strong> con su meta de SpO₂ y flujo/FiO₂ previos.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">1</span><span class="kt">Poner O₂ "de rutina" a todo paciente con SpO₂ normal (≥94%) — la hiperoxia empeora SCA, EVC y paro.</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt">Negar O₂ a un EPOC hipoxémico grave por miedo a la CO₂ — la hipoxemia mata antes; titular a 88–92%, no suspender.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt">Usar mascarilla simple a &lt; 5 L/min → reinhalación de CO₂ dentro de la mascarilla.</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt">Confiar en la SpO₂ en intoxicación por CO o en mala perfusión/hipotermia (lectura falsamente normal).</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt">No purgar/inflar el reservorio de la mascarilla de no reinhalación antes de colocarla.</span></div>
+      <div class="kp"><span class="kn">6</span><span class="kt">Prescribir sin meta ni reevaluación — el O₂ debe titularse y registrarse como cualquier fármaco.</span></div>
+      <div class="kp"><span class="kn">7</span><span class="kt">Olvidar humidificar en flujos altos prolongados o vía traqueostomía → tapones de moco.</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de escalamiento / UCI</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Dato</th><th>Umbral de alarma</th></tr>
+          <tr><td>SpO₂ pese a FiO₂ alta</td><td class="dm">&lt; 90% con reservorio 15 L o FiO₂ ≥ 0.6</td></tr>
+          <tr><td>Índice ROX (en CNAF)</td><td class="dm">&lt; 3.85 → alto riesgo de fallo, valorar IOT</td></tr>
+          <tr><td>PaCO₂ / pH</td><td class="dm">PaCO₂ ↑ con pH &lt; 7.35 → VMNI/IOT</td></tr>
+          <tr><td>Trabajo respiratorio</td><td>FR &gt; 30, uso de músculos accesorios, agotamiento</td></tr>
+          <tr><td>Estado mental</td><td>Somnolencia, confusión, incapacidad de proteger vía aérea</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ EVALUACIÓN ============ -->
+<div class="panel" id="tab-dx">
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Abordaje de la hipoxemia</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p><strong>Paso 1 —</strong> Confirma con oximetría de pulso; verifica curva/perfusión. Ante duda o riesgo hipercápnico → <strong>gasometría arterial</strong>.</p>
+        <p><strong>Paso 2 —</strong> Clasifica: ¿tipo I (hipoxémica) o tipo II (hipercápnica)? Calcula el <strong>gradiente A-a</strong> para orientar el mecanismo.</p>
+        <p><strong>Paso 3 —</strong> Identifica el mecanismo y trata la causa; el O₂ es soporte, no tratamiento etiológico.</p>
+      </div>
+      <div class="tw" style="margin-top:8px;">
+        <table class="t">
+          <tr><th>Mecanismo</th><th>Gradiente A-a</th><th>Responde a O₂</th><th>Ejemplo</th></tr>
+          <tr><td>Alteración V/Q</td><td>Elevado</td><td class="dn">Sí (bien)</td><td>EPOC, asma, neumonía</td></tr>
+          <tr><td>Shunt</td><td>Elevado</td><td class="dm">Pobre</td><td>SDRA, edema, atelectasia</td></tr>
+          <tr><td>Hipoventilación</td><td>Normal</td><td class="dn">Sí</td><td>Opioides, neuromuscular</td></tr>
+          <tr><td>Difusión</td><td>Elevado</td><td class="dn">Sí</td><td>Fibrosis, enfisema</td></tr>
+          <tr><td>Baja FiO₂ ambiental</td><td>Normal</td><td class="dn">Sí</td><td>Altitud</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Interpretación de gasometría</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Parámetro</th><th>Normal (aire, nivel mar)</th><th>Interpretación</th></tr>
+          <tr><td>pH</td><td>7.35–7.45</td><td>&lt;7.35 acidosis · &gt;7.45 alcalosis</td></tr>
+          <tr><td>PaO₂</td><td>80–100 mmHg</td><td>&lt;60 = hipoxemia · &lt;40 grave</td></tr>
+          <tr><td>PaCO₂</td><td>35–45 mmHg</td><td>&gt;45 hipoventilación/retención</td></tr>
+          <tr><td>HCO₃⁻</td><td>22–26 mEq/L</td><td>Compensación metabólica</td></tr>
+          <tr><td>SaO₂</td><td>≥95%</td><td>Correlaciona con curva de disociación</td></tr>
+          <tr><td>P/F (PaO₂/FiO₂)</td><td>&gt;400</td><td>≤300 lesión · ≤200 SDRA mod-grave</td></tr>
+        </table>
+      </div>
+      <div class="alert a-i" style="margin-top:8px;"><span class="ai">🧮</span><div><div class="at">Gradiente A-a</div>A-a = [FiO₂ × (Patm − 47) − PaCO₂/0.8] − PaO₂. En aire a nivel del mar: PAO₂ ≈ 150 − PaCO₂/0.8. Normal ≈ (edad/4)+4.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📉</span><span class="st">Curva de disociación (SpO₂ ↔ PaO₂)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>SpO₂</th><th>PaO₂ aprox.</th><th>Lectura</th></tr>
+          <tr><td>98–100%</td><td>&gt; 100 mmHg</td><td>Normal / posible hiperoxia con O₂</td></tr>
+          <tr><td>95%</td><td>≈ 80 mmHg</td><td>Límite bajo normal</td></tr>
+          <tr><td>90%</td><td class="dm">≈ 60 mmHg</td><td>Umbral: punto de codo de la curva</td></tr>
+          <tr><td>88%</td><td>≈ 55 mmHg</td><td>Meta baja retenedor / criterio LTOT</td></tr>
+          <tr><td>&lt; 85%</td><td>&lt; 50 mmHg</td><td>Hipoxemia grave — actuar ya</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Debajo de <strong>90%</strong> la curva cae abruptamente: pequeñas bajadas de SpO₂ = grandes caídas de PaO₂. La SpO₂ sobreestima con acidosis, fiebre, COHb y mala perfusión.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Limitaciones de la oximetría de pulso</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">!</span><span class="kt"><strong>Falsos normales:</strong> intoxicación por CO (COHb se lee como O₂Hb), metahemoglobinemia (tiende a 85%).</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt"><strong>Lecturas erróneas:</strong> hipoperfusión, hipotermia, vasoconstricción, esmalte oscuro, movimiento, arritmia.</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt"><strong>Sesgo por pigmentación:</strong> puede sobreestimar la SpO₂ real en piel oscura → confirmar con gasometría si hay duda.</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt"><strong>No informa ventilación:</strong> una SpO₂ normal con O₂ puede ocultar una PaCO₂ en ascenso.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ ESCALAS / CALCULADORAS ============ -->
+<div class="panel" id="tab-esc">
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Índice ROX (predice fallo de CNAF)</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>ROX = (SpO₂/FiO₂) / FR. Se mide a las <strong>2, 6 y 12 h</strong> de cánula nasal de alto flujo (CNAF). Ingresa FiO₂ como % (ej. 50).</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>SpO₂ (%)</label><input id="rox-spo2" type="number" placeholder="92"></div>
+        <div class="calc-row"><label>FiO₂ (%)</label><input id="rox-fio2" type="number" placeholder="50"></div>
+        <div class="calc-row"><label>Frecuencia respiratoria (rpm)</label><input id="rox-fr" type="number" placeholder="28"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-p" onclick="calcRox()">Calcular</button>
+          <button class="btn btn-s" onclick="resetRox()">Reiniciar</button>
+        </div>
+        <div class="calc-out" id="rox-out"></div>
+      </div>
+      <div class="tw">
+        <table class="t">
+          <tr><th>ROX</th><th>Interpretación</th></tr>
+          <tr><td class="dn">≥ 4.88</td><td>Buen pronóstico — bajo riesgo de intubación, continuar CNAF</td></tr>
+          <tr><td>3.85 – 4.87</td><td>Zona gris — reevaluar en 1–2 h</td></tr>
+          <tr><td class="dm">&lt; 3.85</td><td>Alto riesgo de fallo — valorar IOT</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Duración de tanque de O₂</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Duración (min) = (Presión psi × factor del cilindro) / flujo. Reservar ~200 psi de seguridad.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>Presión del manómetro (psi)</label><input id="tk-psi" type="number" placeholder="2000"></div>
+        <div class="calc-row"><label>Tipo de cilindro</label>
+          <select id="tk-fac">
+            <option value="0.28">E (0.28)</option>
+            <option value="0.16">D (0.16)</option>
+            <option value="1.56">M (1.56)</option>
+            <option value="2.41">G (2.41)</option>
+            <option value="3.14">H / K (3.14)</option>
+          </select>
+        </div>
+        <div class="calc-row"><label>Flujo (L/min)</label><input id="tk-flow" type="number" placeholder="4"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-p" onclick="calcTank()">Calcular</button>
+          <button class="btn btn-s" onclick="resetTank()">Reiniciar</button>
+        </div>
+        <div class="calc-out" id="tk-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">💨</span><span class="st">FiO₂ estimada por cánula nasal</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Regla aproximada: FiO₂ ≈ 20% + (4 × L/min). Válida ~1–6 L/min; la FiO₂ real depende del patrón respiratorio del paciente.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>Flujo por puntas (L/min)</label><input id="fi-flow" type="number" placeholder="3"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-p" onclick="calcFio2()">Calcular</button>
+          <button class="btn btn-s" onclick="resetFio2()">Reiniciar</button>
+        </div>
+        <div class="calc-out" id="fi-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📐</span><span class="st">Relación S/F (sustituto de P/F)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Cuando no hay gasometría, la relación SpO₂/FiO₂ estima la P/F. Ingresa FiO₂ como fracción (0.21–1.0).</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>SpO₂ (%)</label><input id="sf-spo2" type="number" placeholder="90"></div>
+        <div class="calc-row"><label>FiO₂ (fracción)</label><input id="sf-fio2" type="number" step="0.01" placeholder="0.5"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="btn btn-p" onclick="calcSf()">Calcular</button>
+          <button class="btn btn-s" onclick="resetSf()">Reiniciar</button>
+        </div>
+        <div class="calc-out" id="sf-out"></div>
+      </div>
+      <div class="tw">
+        <table class="t">
+          <tr><th>S/F</th><th>≈ P/F</th><th>Equivalente</th></tr>
+          <tr><td>235</td><td>≈ 200</td><td>SDRA moderado</td></tr>
+          <tr><td>315</td><td>≈ 300</td><td>SDRA leve / lesión pulmonar</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ ALGORITMO ============ -->
+<div class="panel" id="tab-algo">
+  <div class="alert a-i"><span class="ai">🔀</span><div>Árbol de decisión para hipoxemia aguda. Responde las preguntas para llegar a la conducta.</div></div>
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoInit()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- ============ DISPOSITIVOS / FÁRMACOS ============ -->
+<div class="panel" id="tab-farm">
+  <div class="alert a-i"><span class="ai">💊</span><div>Escalera de dispositivos <strong>de lo más básico a lo más especializado</strong> (puntas nasales → intubación → ECMO). Toca cada ficha para desplegarla: FiO₂ que aporta por litro, vía, contraindicaciones y efectos adversos con su solución.</div></div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Tabla comparativa rápida</span><span class="sg open">⌄</span></div>
+    <div class="sb"><div id="farm-tabla"></div></div>
+  </div>
+  <input id="farm-search" type="text" placeholder="Buscar dispositivo (puntas, venturi, CNAF, VMNI, traqueo, ECMO)..." oninput="filtrarFarmacos(this.value)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;margin-bottom:12px;font-family:inherit;">
+  <div id="farm-body"></div>
+</div>
+
+<!-- ============ INDICACIONES ============ -->
+<div class="panel" id="tab-ind">
+  <div class="alert a-i"><span class="ai">📋</span><div>Indicaciones prácticas por dispositivo: vía/ajuste, enfermería, paciente, nota clínica y señales de alarma.</div></div>
+  <div id="ind-body"></div>
+</div>
+
+<!-- ============ ESCENARIOS ============ -->
+<div class="panel" id="tab-escen">
+  <div class="alert a-i"><span class="ai">⚙️</span><div>Selecciona un escenario clínico. Verás qué está indicado y por qué, qué más hacer, cada cuánto reevaluar y la <strong>escalera completa</strong> de puntas nasales → intubación.</div></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;" id="escen-chips"></div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ============ SEGUIMIENTO ============ -->
+<div class="panel" id="tab-seg">
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento y titulación</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Momento</th><th>Evaluación</th><th>Meta</th><th>Acción</th></tr>
+          <tr><td>Inicio</td><td>SpO₂, FR, causa</td><td>SpO₂ en rango meta</td><td>Elegir dispositivo y flujo</td></tr>
+          <tr><td>30–60 min</td><td>Gasometría (si riesgo hipercápnico)</td><td>pH ≥7.35</td><td>Titular / escalar si CO₂ ↑</td></tr>
+          <tr><td>Cada turno</td><td>SpO₂, dispositivo, tolerancia</td><td>Rango meta con mínima FiO₂</td><td>Destetar en cuanto sea posible</td></tr>
+          <tr><td>Destete</td><td>SpO₂ estable ≥ meta con FiO₂ baja</td><td>SpO₂ ≥94% aire ambiente</td><td>Reducir de forma escalonada</td></tr>
+          <tr><td>LTOT (crónico)</td><td>Gasometría estable ×2 (separadas &gt;3 sem)</td><td>PaO₂ ≥60 / SpO₂ ≥90%</td><td>Prescribir ≥15 h/d, reevaluar 60–90 d</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Señales de alarma</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-r"><span class="ai">⛔</span><div>SpO₂ &lt; 90% pese a FiO₂ alta · caída &gt;3% sostenida · FR &gt;30 o &lt;8 · uso de accesorios · cianosis</div></div>
+      <div class="alert a-r"><span class="ai">⛔</span><div>Somnolencia progresiva, cefalea, asterixis, rubor → sospecha narcosis por CO₂</div></div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div>SpO₂ persistente 100% con O₂ → reducir FiO₂ (evitar hiperoxia)</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">👨‍⚕️</span><span class="st">Referencia a especialista</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Situación</th><th>Especialidad</th><th>Urgencia</th></tr>
+          <tr><td>Fallo de O₂ convencional / ROX bajo</td><td>Medicina crítica / UCI</td><td class="dm">Inmediata</td></tr>
+          <tr><td>Acidosis hipercápnica</td><td>Neumología / UCI (VMNI)</td><td class="dm">Urgente</td></tr>
+          <tr><td>Candidato a LTOT</td><td>Neumología</td><td>Programada</td></tr>
+          <tr><td>Hipoxemia sin causa clara</td><td>Neumología / Cardiología</td><td>Preferente</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🏠</span><span class="st">Oxígeno domiciliario (LTOT) — seguridad</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">✓</span><span class="kt">Prohibido fumar y llamas abiertas cerca del equipo; el O₂ es comburente.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Concentrador para uso continuo + tanque de respaldo por cortes de luz; mantener libre de aceites/grasas.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Verificar cumplimiento (≥15 h/d), estado de mucosa nasal y flujo prescrito en cada visita.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Oxigenoterapia</h2>
+    <p>Referencias primarias, guías internacionales y estudios clave utilizados en esta guía. Nivel de evidencia indicado.</p>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías y posicionamientos internacionales</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">1</span><span class="biblio-year">2017</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">O'Driscoll BR, Howard LS, Earis J, Mak V, et al. <em>BTS guideline for oxygen use in adults in healthcare and emergency settings.</em> Thorax 2017;72(Suppl 1):ii1–ii90. [Metas de SpO₂ 94–98% y 88–92%, dispositivos y titulación].</div>
+        <a class="biblio-link" href="https://doi.org/10.1136/thoraxjnl-2016-209729" target="_blank">🔗 DOI 10.1136/thoraxjnl-2016-209729</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">2</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Global Initiative for Chronic Obstructive Lung Disease. <em>Global Strategy for the Diagnosis, Management and Prevention of COPD (GOLD Report).</em> 2025. [Criterios de oxígeno a largo plazo, meta 88–92%].</div>
+        <a class="biblio-link" href="https://goldcopd.org/" target="_blank">🔗 goldcopd.org</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">3</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Jacobs SS, Krishnan JA, Lederer DJ, et al. <em>Home Oxygen Therapy for Adults with Chronic Lung Disease. An Official ATS Clinical Practice Guideline.</em> Am J Respir Crit Care Med 2020;202(10):e121–e141.</div>
+        <a class="biblio-link" href="https://doi.org/10.1164/rccm.202009-3608ST" target="_blank">🔗 DOI 10.1164/rccm.202009-3608ST</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Estudios clínicos clave (ECAs)</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">4</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Chu DK, Kim LH, Young PJ, et al. <em>Mortality and morbidity in acutely ill adults treated with liberal versus conservative oxygen therapy (IOTA): a systematic review and meta-analysis.</em> Lancet 2018;391(10131):1693–1705. [La hiperoxia aumenta la mortalidad].</div>
+        <a class="biblio-link" href="https://doi.org/10.1016/S0140-6736(18)30479-3" target="_blank">🔗 DOI 10.1016/S0140-6736(18)30479-3</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">5</span><span class="biblio-year">2019</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Roca O, Caralt B, Messika J, et al. <em>An Index Combining Respiratory Rate and Oxygenation to Predict Outcome of Nasal High-Flow Therapy (índice ROX).</em> Am J Respir Crit Care Med 2019;199(11):1368–1376. [ROX ≥4.88 predice éxito de CNAF].</div>
+        <a class="biblio-link" href="https://doi.org/10.1164/rccm.201803-0589OC" target="_blank">🔗 DOI 10.1164/rccm.201803-0589OC · PMID 30576221</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">6</span><span class="biblio-year">2015</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Frat JP, Thille AW, Mercat A, et al. <em>High-flow oxygen through nasal cannula in acute hypoxemic respiratory failure (FLORALI).</em> N Engl J Med 2015;372(23):2185–2196.</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa1503326" target="_blank">🔗 DOI 10.1056/NEJMoa1503326</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">7</span><span class="biblio-year">2010</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Austin MA, Wills KE, Blizzard L, et al. <em>Effect of high flow oxygen on mortality in COPD patients in prehospital setting.</em> BMJ 2010;341:c5462. [O₂ titulado 88–92% reduce mortalidad vs alto flujo].</div>
+        <a class="biblio-link" href="https://doi.org/10.1136/bmj.c5462" target="_blank">🔗 DOI 10.1136/bmj.c5462</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">8</span><span class="biblio-year">2020</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">CENETEC-Salud. <em>Guías de Práctica Clínica: manejo de la EPOC y de la insuficiencia respiratoria.</em> SSa, México. [Adaptación al contexto institucional y presentaciones disponibles].</div>
+        <a class="biblio-link" href="http://www.cenetec-difusion.com/CMGPC/" target="_blank">🔗 cenetec-difusion.com/CMGPC</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Metaanálisis / ECA de alta calidad</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudios observacionales / cohortes</div>
+        <div class="nl-item"><span class="biblio-level lv-c" style="margin:0;">Nivel C</span> Consenso de expertos / series de casos</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia / opinión de expertos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert a-i" style="margin:0 0 20px;">
+    <span class="ai">ℹ️</span>
+    <div>Esta guía fue elaborada con base en la evidencia disponible a 2026. Se recomienda verificar actualizaciones de guías locales (CENETEC, SSa México) y adaptar al contexto institucional. Última revisión: agosto 2026.</div>
+  </div>
+</div>
+
+<script>
+// ===== TAB SWITCHER =====
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id);
+  if(t)t.classList.add('on');
+  var b=document.querySelectorAll('.tab');
+  for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  if(el)el.classList.add('on');
+  window.scrollTo(0,0);
+}
+// ===== COLAPSABLE =====
+function tog(h){
+  var sb=h.nextElementSibling,sg=h.querySelector('.sg');
+  if(sb)sb.classList.toggle('hidden');
+  if(sg)sg.classList.toggle('open');
+}
+
+// ===== CALCULADORAS =====
+function setOut(id,cls,html){var o=document.getElementById(id);o.className='calc-out show '+cls;o.innerHTML=html;}
+
+function calcRox(){
+  var s=parseFloat(document.getElementById('rox-spo2').value);
+  var f=parseFloat(document.getElementById('rox-fio2').value);
+  var r=parseFloat(document.getElementById('rox-fr').value);
+  if(isNaN(s)||isNaN(f)||isNaN(r)||f<=0||r<=0){setOut('rox-out','res-y','Completa SpO₂, FiO₂ y FR con valores válidos.');return;}
+  var rox=(s/(f/100))/r;
+  var msg='ROX = '+rox.toFixed(2)+' — ';
+  var cls;
+  if(rox>=4.88){cls='res-g';msg+='bajo riesgo de fallo, continuar CNAF.';}
+  else if(rox>=3.85){cls='res-y';msg+='zona gris, reevaluar en 1–2 h.';}
+  else{cls='res-r';msg+='alto riesgo de fallo, valorar intubación.';}
+  setOut('rox-out',cls,msg);
+}
+function resetRox(){['rox-spo2','rox-fio2','rox-fr'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('rox-out').className='calc-out';}
+
+function calcTank(){
+  var p=parseFloat(document.getElementById('tk-psi').value);
+  var fac=parseFloat(document.getElementById('tk-fac').value);
+  var fl=parseFloat(document.getElementById('tk-flow').value);
+  if(isNaN(p)||isNaN(fl)||fl<=0){setOut('tk-out','res-y','Completa presión y flujo válidos.');return;}
+  var usable=p-200; if(usable<0)usable=0;
+  var min=(usable*fac)/fl;
+  var h=Math.floor(min/60), m=Math.round(min%60);
+  var cls=min<30?'res-r':(min<60?'res-y':'res-g');
+  setOut('tk-out',cls,'Duración útil ≈ '+Math.round(min)+' min ('+h+' h '+m+' min), reservando 200 psi de seguridad.');
+}
+function resetTank(){document.getElementById('tk-psi').value='';document.getElementById('tk-flow').value='';document.getElementById('tk-out').className='calc-out';}
+
+function calcFio2(){
+  var fl=parseFloat(document.getElementById('fi-flow').value);
+  if(isNaN(fl)||fl<=0){setOut('fi-out','res-y','Ingresa un flujo válido.');return;}
+  var fio2=20+4*fl;
+  var cls='res-g',nota='';
+  if(fl>6){cls='res-y';nota=' (por arriba de 6 L/min la fórmula pierde exactitud; considerar mascarilla).';}
+  setOut('fi-out',cls,'FiO₂ estimada ≈ '+fio2+'%'+nota);
+}
+function resetFio2(){document.getElementById('fi-flow').value='';document.getElementById('fi-out').className='calc-out';}
+
+function calcSf(){
+  var s=parseFloat(document.getElementById('sf-spo2').value);
+  var f=parseFloat(document.getElementById('sf-fio2').value);
+  if(isNaN(s)||isNaN(f)||f<=0){setOut('sf-out','res-y','Completa SpO₂ y FiO₂ (fracción) válidos.');return;}
+  var sf=s/f;
+  var cls,eq;
+  if(sf<=235){cls='res-r';eq='≈ P/F ≤200 (SDRA moderado-grave).';}
+  else if(sf<=315){cls='res-y';eq='≈ P/F ≤300 (lesión pulmonar / SDRA leve).';}
+  else{cls='res-g';eq='oxigenación relativamente conservada.';}
+  setOut('sf-out',cls,'S/F = '+sf.toFixed(0)+' — '+eq);
+}
+function resetSf(){document.getElementById('sf-spo2').value='';document.getElementById('sf-fio2').value='';document.getElementById('sf-out').className='calc-out';}
+
+// ===== ALGORITMO =====
+var ALGO={
+  q0:{q:'¿SpO₂ en aire ambiente?',o:[
+    {t:'≥ 94% (sin factores de riesgo)',go:'rNoO2'},
+    {t:'90–93% o riesgo hipercápnico',go:'q1'},
+    {t:'< 90% (hipoxemia)',go:'q1'}]},
+  q1:{q:'¿Riesgo de fallo hipercápnico? (EPOC, SOH, neuromuscular, deformidad torácica)',o:[
+    {t:'Sí',go:'rRet'},
+    {t:'No',go:'q2'}]},
+  q2:{q:'¿Qué tan grave / qué respuesta necesitas?',o:[
+    {t:'Hipoxemia leve-moderada',go:'rLow'},
+    {t:'Hipoxemia grave / paciente crítico',go:'rHigh'},
+    {t:'Crítico y no mejora con reservorio',go:'rCnaf'}]}
+};
+var ALGO_RES={
+  rNoO2:{c:'a-g',t:'No requiere oxígeno',x:'SpO₂ ≥94% sin riesgo: no administrar O₂ de rutina. Vigilar. La hiperoxia empeora SCA, EVC y paro. Trata la causa de base.'},
+  rRet:{c:'a-w',t:'Meta 88–92% — titular con precaución',x:'Inicia con <strong>Venturi 24–28%</strong> o puntas 1–2 L/min. Gasometría a los 30–60 min. Si pH &lt;7.35 con PaCO₂ ↑ → <strong>VMNI</strong>. No suspender O₂ si hay hipoxemia grave: la hipoxemia mata antes que la hipercapnia. Meta SpO₂ 88–92%.'},
+  rLow:{c:'a-i',t:'Bajo flujo — meta 94–98%',x:'<strong>Puntas nasales 2–6 L/min</strong> (FiO₂ ~24–44%) o <strong>mascarilla simple 5–10 L/min</strong>. Reevaluar SpO₂ y titular. Buscar y tratar la causa.'},
+  rHigh:{c:'a-r',t:'Alto flujo / reservorio — meta 94–98%',x:'<strong>Mascarilla con reservorio (no reinhalación) 10–15 L/min</strong>, FiO₂ 60–95%. Si no mejora, escalar. Monitoreo continuo y gasometría.'},
+  rCnaf:{c:'a-r',t:'Escalar a CNAF / soporte avanzado',x:'<strong>Cánula nasal de alto flujo (CNAF)</strong> hasta 60 L/min con FiO₂ titulable, o <strong>VMNI</strong> según el caso. Calcular <strong>índice ROX</strong> a 2/6/12 h: &lt;3.85 → intubación. Avisar a UCI.'}
+};
+function algoRender(node){
+  var box=document.getElementById('algo-box');
+  if(ALGO_RES[node]){
+    var r=ALGO_RES[node];
+    box.innerHTML='<div class="algo-res"><div class="alert '+r.c+'" style="margin:0 0 6px;"><span class="ai">✓</span><div><div class="at">'+r.t+'</div>'+r.x+'</div></div></div>';
+    return;
+  }
+  var q=ALGO[node];
+  var h='<div class="algo-q"><h4>'+q.q+'</h4>';
+  for(var i=0;i<q.o.length;i++){h+='<button class="algo-opt" onclick="algoRender(\''+q.o[i].go+'\')">'+q.o[i].t+'</button>';}
+  h+='</div>';
+  box.innerHTML=h;
+}
+function algoInit(){algoRender('q0');}
+
+// ===== CHIPS (compartido) =====
+function renderChips(containerId,keys,onclick,activeKey){
+  var c=document.getElementById(containerId);var h='';
+  keys.forEach(function(k){h+='<span class="pchip'+(k===activeKey?' on':'')+'" onclick="'+onclick+'(\''+k+'\')">'+k+'</span>';});
+  c.innerHTML=h;
+}
+
+// ===== DISPOSITIVOS (escalera básico → especializado, desplegable) =====
+function fiTab(rows){
+  var h='<div class="tw" style="margin-top:2px;"><table class="t"><tr><th>Flujo</th><th>FiO₂ aprox.</th></tr>';
+  for(var i=0;i<rows.length;i++)h+='<tr><td class="dn">'+rows[i][0]+'</td><td>'+rows[i][1]+'</td></tr>';
+  return h+'</table></div>';
+}
+var DISPOS=[
+  {n:'Puntas / cánula nasal',nivel:'Bajo flujo · básico',color:'#1a6bbd',rf:'24–44% (≈+4%/L)',ru:'Hipoxemia leve',
+    fio2:'Regla ≈ 21% + 4% por cada litro (máx. útil 6 L/min):'+fiTab([['1 L/min','~24%'],['2 L/min','~28%'],['3 L/min','~32%'],['4 L/min','~36%'],['5 L/min','~40%'],['6 L/min','~44%']])+'<div style="font-size:11px;color:var(--gray-600);margin-top:4px;">La FiO₂ real varía con el patrón respiratorio; arriba de 6 L pierde exactitud y seca la mucosa.</div>',
+    via:'Puntas en narinas; cómoda, permite comer y hablar. Humidificar si &gt;4 L/min.',
+    ci:'Obstrucción nasal completa; epistaxis activa; poco fiable a &gt;6 L/min (usar mascarilla).',
+    ea:[{e:'Sequedad / irritación nasal',s:'humidificar el O₂; lubricante hidrosoluble (nunca vaselina cerca del O₂).'},{e:'Epistaxis',s:'bajar flujo, humidificar; si persiste cambiar a mascarilla.'},{e:'Úlceras retroauriculares o en narinas',s:'almohadillar el tubo, revisar puntos de apoyo cada turno.'}],
+    nota:'<strong>Uso:</strong> hipoxemia leve-moderada, transporte, domiciliaria. Primer escalón (BTS 2017).'},
+  {n:'Mascarilla simple',nivel:'Bajo flujo',color:'#0c3b6e',rf:'40–60% (≥5 L)',ru:'Hipoxemia moderada',
+    fio2:'Requiere mínimo 5 L/min para lavar el CO₂ espirado:'+fiTab([['5–6 L/min','~40%'],['6–7 L/min','~50%'],['7–10 L/min','~60%']]),
+    via:'Facial; nunca por debajo de 5 L/min.',
+    ci:'Flujo &lt;5 L/min (reinhalación de CO₂); riesgo hipercápnico (preferir Venturi).',
+    ea:[{e:'Reinhalación de CO₂ con flujo bajo',s:'mantener siempre ≥5 L/min.'},{e:'Claustrofobia / intolerancia',s:'explicar; si la SpO₂ lo permite, cambiar a puntas.'},{e:'Sequedad de mucosas y ojos',s:'ajustar el sello, humidificar.'},{e:'Dificulta comer / hablar',s:'retirar breve y supervisado, o puntas para comer.'}],
+    nota:'<strong>Uso:</strong> hipoxemia moderada sin riesgo de retención (BTS 2017).'},
+  {n:'Mascarilla Venturi',nivel:'Flujo controlado · FiO₂ fija',color:'#7a4a00',rf:'24–50% fija',ru:'Retenedor / FiO₂ precisa',
+    fio2:'FiO₂ <em>fija</em> según la válvula (el color varía por marca); el flujo mínimo solo asegura el arrastre, no cambia la FiO₂:'+fiTab([['24% (azul)','2 L/min'],['28% (blanco)','4 L/min'],['31% (naranja)','6 L/min'],['35% (amarillo)','8 L/min'],['40% (rojo)','10–12 L/min'],['50% (verde)','15 L/min']]),
+    via:'Facial con válvula intercambiable; no cubrir los orificios de arrastre.',
+    ci:'Prácticamente ninguna; principal limitante es la incomodidad.',
+    ea:[{e:'Ruido / incomodidad',s:'explicar; alternar con puntas para comer.'},{e:'FiO₂ menor si se ocluyen los orificios',s:'mantener libres las ventanas de arrastre.'},{e:'Sequedad',s:'adaptador de humidificación compatible.'}],
+    nota:'<strong>Uso ideal:</strong> EPOC/retenedor, donde se necesita FiO₂ precisa y estable (BTS 2017).'},
+  {n:'Mascarilla con reservorio (no reinhalación)',nivel:'Alto FiO₂',color:'#c0392b',rf:'60–95%',ru:'Hipoxemia grave / emergencia',
+    fio2:'Bolsa reservorio + válvulas unidireccionales; mantener el reservorio siempre inflado:'+fiTab([['10 L/min','~60%'],['11–12 L/min','~70–80%'],['15 L/min','85–95%']]),
+    via:'Facial con bolsa; inflar el reservorio antes de colocarla.',
+    ci:'Riesgo hipercápnico sin monitoreo estrecho; no para uso prolongado.',
+    ea:[{e:'Colapso del reservorio',s:'subir el flujo hasta que la bolsa no se vacíe en la inspiración; verificar sello.'},{e:'Hiperoxia / atelectasia por reabsorción',s:'titular hacia abajo en cuanto mejore la SpO₂.'},{e:'Sensación de asfixia / claustrofobia',s:'tranquilizar y asegurar flujo alto continuo.'}],
+    nota:'<strong>Uso:</strong> hipoxemia grave, emergencia, intoxicación por CO. Puente a soporte avanzado.'},
+  {n:'Cánula nasal de alto flujo (CNAF)',nivel:'Alto flujo',color:'#7b1c1c',rf:'21–100% (10–60 L)',ru:'Insuf. hipoxémica tipo I',
+    fio2:'La FiO₂ se fija en el <strong>mezclador (21–100%)</strong>, independiente del flujo. El flujo (10–60 L/min) regula el lavado de espacio muerto y la PEEP leve (~2–5 cmH₂O con la boca cerrada). Gas calentado a 37°C y 100% humidificado. <em>Aquí no aplica "FiO₂ por litro": el litraje no cambia la FiO₂.</em>',
+    via:'Puntas nasales de alto flujo dedicadas + circuito con humidificador calentado.',
+    ci:'Necesidad de intubación inmediata; trauma/cirugía facial o nasal; obstrucción; bajo nivel de conciencia con riesgo de broncoaspiración.',
+    ea:[{e:'Distensión gástrica',s:'sonda orogástrica si molesta.'},{e:'Sequedad / epistaxis por mala humidificación',s:'verificar agua y temperatura del humidificador.'},{e:'Retraso de la intubación si falla',s:'calcular ROX a 2/6/12 h; &lt;3.85 → intubar sin demora.'},{e:'Lesión nasal por las puntas',s:'ajustar sin ocluir la narina, revisar apoyos.'}],
+    nota:'<strong>Uso:</strong> insuf. respiratoria hipoxémica tipo I (FLORALI, NEJM 2015; ROX, AJRCCM 2019).'},
+  {n:'CPAP (presión positiva continua no invasiva)',nivel:'No invasivo',color:'#6a1a5a',rf:'21–100% + 5–10 cmH₂O',ru:'Edema agudo de pulmón',
+    fio2:'FiO₂ ajustable por mezclador (21–100%) + <strong>presión continua 5–10 cmH₂O</strong> (una sola presión, no cicla). Recluta alvéolos y mejora la oxigenación.',
+    via:'Mascarilla oronasal / facial total o casco (helmet); requiere sello hermético y paciente colaborador.',
+    ci:'Paro o apnea, bajo nivel de conciencia, vómito o hemorragia digestiva alta, inestabilidad hemodinámica, trauma facial, neumotórax no drenado.',
+    ea:[{e:'Fuga y lesión por presión en el puente nasal',s:'apósito hidrocoloide, ajustar el arnés sin sobreapretar.'},{e:'Distensión gástrica / aerofagia',s:'sonda gástrica, bajar la presión.'},{e:'Claustrofobia',s:'usar casco (helmet) o interfaz más cómoda, acompañar.'},{e:'Sequedad ocular por fuga',s:'reposicionar la mascarilla, humidificar.'}],
+    nota:'<strong>Uso:</strong> elección en edema agudo de pulmón cardiogénico.'},
+  {n:'VMNI — BiPAP (dos niveles de presión)',nivel:'No invasivo avanzado',color:'#4a1060',rf:'21–100% + IPAP/EPAP',ru:'Acidosis hipercápnica',
+    fio2:'FiO₂ por mezclador + <strong>IPAP 10–15</strong> (soporte inspiratorio) y <strong>EPAP 4–5 cmH₂O</strong>. Descarga los músculos y elimina CO₂.',
+    via:'Mascarilla oronasal / facial total o casco; requiere paciente colaborador y con reflejos de vía aérea.',
+    ci:'Igual que CPAP + incapacidad de proteger la vía aérea, secreciones abundantes, agitación no controlable.',
+    ea:[{e:'Asincronía paciente-ventilador',s:'ajustar rampa, sensibilidad e IPAP/EPAP.'},{e:'Úlcera nasal por presión',s:'apósito protector, rotar la interfaz.'},{e:'Distensión gástrica',s:'sonda gástrica; evitar IPAP excesiva.'},{e:'Fallo (pH no mejora en 1–2 h)',s:'no demorar la intubación.'}],
+    nota:'<strong>Uso:</strong> elección en acidosis hipercápnica del EPOC (pH 7.25–7.35).'},
+  {n:'Traqueostomía / collar de traqueostomía',nivel:'Vía aérea quirúrgica',color:'#1f6f6f',rf:'~28–100% humidificado',ru:'Destete / vía aérea crónica',
+    fio2:'El <strong>collar (mascarilla) de traqueostomía</strong> entrega O₂ humidificado sobre el estoma; la FiO₂ es variable y depende del flujo y del sistema. Se salta la vía aérea superior, por lo que la <strong>humidificación es obligatoria</strong>:'+fiTab([['Collar humidificado 8–10 L/min','~35–60%'],['Alto flujo traqueal','21–100% titulable'],['Nariz húmeda (HME) + O₂','según flujo']])+'<div style="font-size:11px;color:var(--gray-600);margin-top:4px;">También puede conectarse al ventilador (VM) cuando se requiere soporte.</div>',
+    via:'Estoma traqueal con cánula de traqueostomía; collar/mascarilla de traqueo, pieza en T o conexión a alto flujo/ventilador.',
+    ci:'No es un escalón de urgencia; requiere cánula permeable. Precaución con la decanulación o la obstrucción.',
+    ea:[{e:'Tapones de moco / obstrucción de la cánula',s:'humidificación continua, aspiración frecuente, recambio de la cánula interna.'},{e:'Decanulación accidental',s:'kit de recambio a pie de cama; en traqueo reciente (&lt;7 días) alto riesgo de falsa vía → oxigenar por vía oral/facial y llamar a vía aérea difícil.'},{e:'Sequedad y costras (se omite la nariz)',s:'humidificación calentada obligatoria o nariz húmeda (HME).'},{e:'Infección del estoma / broncoaspiración',s:'curación y asepsia; valorar deglución y elevar la cabecera.'}],
+    nota:'<strong>Uso:</strong> destete de ventilación mecánica prolongada, obstrucción de vía aérea superior, protección de vía aérea o secreciones abundantes.'},
+  {n:'Intubación + ventilación mecánica invasiva',nivel:'Invasivo',color:'#374151',rf:'21–100% + PEEP',ru:'Fallo de no invasivo',
+    fio2:'FiO₂ precisa 21–100% en el ventilador + <strong>PEEP programable</strong>; control total de volumen, presión y frecuencia. Se titula la FiO₂ a la mínima que mantenga la meta.',
+    via:'Tubo endotraqueal (vía aérea definitiva) con sedoanalgesia; confirmar con capnografía.',
+    ci:'Es el escalón de rescate; la limitante es la voluntad anticipada / no-reanimar. Prever plan de vía aérea difícil.',
+    ea:[{e:'Intubación esofágica / mala posición',s:'confirmar con capnografía y auscultación; Rx de control.'},{e:'Neumonía asociada a ventilador',s:'cabecera 30–45°, higiene oral, protocolos de destete.'},{e:'Barotrauma / volutrauma',s:'ventilación protectora (Vt 6 mL/kg peso ideal, presión meseta &lt;30).'},{e:'Hipotensión post-intubación',s:'volumen y/o vasopresor, ajustar sedación e insuflación.'}],
+    nota:'<strong>Uso:</strong> fallo del soporte no invasivo; ventilación protectora y prono si P/F &lt;150.'},
+  {n:'ECMO veno-venoso (circulación / oxigenación extracorpórea)',nivel:'Extracorpóreo · máximo nivel',color:'#111827',rf:'Extracorpóreo',ru:'Hipoxemia refractaria',
+    fio2:'La oxigenación ocurre <strong>fuera del pulmón</strong>: un oxigenador de membrana controla la fracción de O₂ del gas de barrido y el flujo ("sweep") elimina el CO₂. Permite "reposo pulmonar" con ventilación ultraprotectora.',
+    via:'Canulación venosa (yugular y/o femoral); centro especializado y equipo multidisciplinario, con anticoagulación.',
+    ci:'Comorbilidad terminal, contraindicación de anticoagulación mayor, daño neurológico irreversible, fragilidad extrema (relativas).',
+    ea:[{e:'Sangrado por anticoagulación',s:'titular heparina a metas, transfundir, control de sitios de punción.'},{e:'Trombosis / falla del oxigenador',s:'monitoreo del circuito, recambio del oxigenador si falla.'},{e:'Hemólisis',s:'vigilar flujos y presiones del circuito.'},{e:'Infección de cánulas',s:'asepsia estricta y vigilancia de sitios.'}],
+    nota:'<strong>Uso:</strong> hipoxemia refractaria pese a VM optimizada + prono; rescate en SDRA grave.'}
+];
+function buildTablaComparativa(){
+  var h='<div class="tw"><table class="t"><tr><th>#</th><th>Dispositivo</th><th>FiO₂</th><th>Uso principal</th></tr>';
+  for(var i=0;i<DISPOS.length;i++){var d=DISPOS[i];
+    h+='<tr><td><span style="display:inline-block;width:16px;height:16px;border-radius:50%;background:'+d.color+';color:#fff;text-align:center;line-height:16px;font-size:10px;font-weight:700;">'+(i+1)+'</span></td>';
+    h+='<td style="font-weight:600;">'+d.n.split(' (')[0]+'</td><td class="dn">'+d.rf+'</td><td>'+d.ru+'</td></tr>';
+  }
+  h+='</table></div>';
+  document.getElementById('farm-tabla').innerHTML=h;
+}
+function renderFarm(filter){
+  filter=(filter||'').toLowerCase();
+  var h='';var shown=0;
+  for(var i=0;i<DISPOS.length;i++){
+    var d=DISPOS[i];
+    if(filter && d.n.toLowerCase().indexOf(filter)<0 && d.nivel.toLowerCase().indexOf(filter)<0)continue;
+    var open=(!filter && shown===0);var id='dev-'+i;
+    var eah='';
+    for(var k=0;k<d.ea.length;k++)eah+='<div style="margin-bottom:5px;"><span style="color:var(--r);font-weight:600;">• '+d.ea[k].e+'</span><br><span style="color:var(--g);">↳ Solución: '+d.ea[k].s+'</span></div>';
+    h+='<div class="ind-drug">';
+    h+='<div class="ind-drug-h" onclick="togInd(\''+id+'\')" style="border-left:4px solid '+d.color+';">';
+    h+='<span><span style="display:inline-block;background:'+d.color+';color:#fff;width:20px;height:20px;border-radius:50%;text-align:center;line-height:20px;font-size:11px;font-weight:700;margin-right:6px;">'+(i+1)+'</span>'+d.n+' <span style="background:'+d.color+'1a;color:'+d.color+';font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:2px;white-space:nowrap;">'+d.nivel+'</span></span>';
+    h+='<span id="'+id+'-ar">'+(open?'▼':'►')+'</span></div>';
+    h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'">';
+    h+='<div class="fu-r"><div class="fu-t">FiO₂ / litro</div><div class="fu-x">'+d.fio2+'</div></div>';
+    h+='<div class="fu-r"><div class="fu-t">Vía</div><div class="fu-x">'+d.via+'</div></div>';
+    h+='<div class="fu-r"><div class="fu-t">Contraindic.</div><div class="fu-x">'+d.ci+'</div></div>';
+    h+='<div class="fu-r"><div class="fu-t">Ef. adversos → solución</div><div class="fu-x">'+eah+'</div></div>';
+    h+='<div style="margin-top:6px;background:var(--bl);border-radius:var(--rs);padding:8px 10px;font-size:12px;color:var(--gray-700);line-height:1.55;">'+d.nota+'</div>';
+    h+='</div></div>';
+    shown++;
+  }
+  if(shown===0)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+filter+'".</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(v){renderFarm(v);}
+
+// ===== INDICACIONES =====
+var IND=[
+  {familia:'Dispositivos de bajo flujo',color:'#0c3b6e',farmacos:[
+    {n:'Puntas nasales',dosis:[{label:'Inicio 2 L/min → titular 1–6 L/min a meta SpO₂'}],via:'Vía nasal; verificar permeabilidad; humidificar si >4 L/min',enfermeria:'Colocar puntas hacia el septum; fijar sin comprimir; revisar pabellones auriculares y narinas cada turno; registrar flujo y SpO₂.',paciente:'Respire normal por la nariz. No suba usted el flujo. Avise si siente sequedad, ardor nasal o falta de aire.',nota:'FiO₂ ~24–44%. Cómodas y bien toleradas; primer escalón en hipoxemia leve-moderada (BTS 2017).',alarma:'SpO₂ &lt;90%, aumento de trabajo respiratorio o dolor por presión → avisar de inmediato.'},
+    {n:'Mascarilla con reservorio',dosis:[{label:'10–15 L/min, mantener reservorio inflado'}],via:'Facial con bolsa; inflar reservorio antes de colocar',enfermeria:'Purgar/llenar la bolsa antes de aplicar; asegurar sello facial; verificar que el reservorio no colapse en la inspiración; monitoreo continuo de SpO₂.',paciente:'La bolsa debe permanecer inflada. No se retire la mascarilla sin avisar. Respire con calma.',nota:'FiO₂ 60–95%. Para hipoxemia grave y emergencias; puente a soporte avanzado.',alarma:'Reservorio que se colapsa, SpO₂ que no sube, somnolencia → escalar.'}
+  ]},
+  {familia:'Alto flujo',color:'#7a4a00',farmacos:[
+    {n:'Mascarilla Venturi',dosis:[{label:'Elegir válvula 24–28% (retenedor)'},{label:'Válvula 31–40% (mayor requerimiento)'}],via:'Ajustar flujo al indicado en cada válvula de color',enfermeria:'Seleccionar válvula correcta y flujo mínimo indicado; no cubrir orificios de arrastre; documentar FiO₂ entregada.',paciente:'Esta mascarilla da una cantidad exacta de oxígeno. No tape los agujeritos laterales.',nota:'FiO₂ fija e independiente del patrón respiratorio; ideal en EPOC/retenedor (BTS 2017).',alarma:'Somnolencia, cefalea o SpO₂ &gt;92% en retenedor → reevaluar FiO₂ y gasometría.'},
+    {n:'Cánula nasal de alto flujo (CNAF)',dosis:[{label:'Flujo 50 L/min, FiO₂ 1.0 y titular a la baja'}],via:'Gas calentado y humidificado; puntas de alto flujo dedicadas',enfermeria:'Verificar temperatura y agua del humidificador; sellar puntas sin ocluir; calcular índice ROX a 2/6/12 h; vigilar distensión gástrica.',paciente:'Sentirá aire tibio y con fuerza por la nariz; es normal. Mantenga la boca cerrada para que funcione mejor.',nota:'Lava espacio muerto y da PEEP leve; en insuf. hipoxémica tipo I (FLORALI 2015).',alarma:'ROX &lt;3.85, FR en aumento o deterioro del estado mental → valorar intubación.'}
+  ]}
+];
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var fam=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+fam.color+';">'+fam.familia+' · '+fam.farmacos.length+'</div><div class="ind-bb">';
+    for(var j=0;j<fam.farmacos.length;j++){
+      var d=fam.farmacos[j];var id='ind-'+i+'-'+j;
+      h+='<div class="ind-drug"><div class="ind-drug-h" onclick="togInd(\''+id+'\')"><span>'+d.n+'</span><span id="'+id+'-ar">►</span></div>';
+      h+='<div class="ind-drug-b" id="'+id+'">';
+      if(d.dosis.length>1){
+        h+='<select style="width:100%;padding:7px;border:1px solid var(--bd);border-radius:var(--rs);font-size:12px;margin-bottom:8px;font-family:inherit;">';
+        for(var k=0;k<d.dosis.length;k++)h+='<option>'+d.dosis[k].label+'</option>';
+        h+='</select>';
+      } else {
+        h+='<div class="ind-field if-nota"><span class="if-lbl">Dosis</span>'+d.dosis[0].label+'</div>';
+      }
+      h+='<div class="ind-field if-via"><span class="if-lbl">Vía / ajuste</span>'+d.via+'</div>';
+      h+='<div class="ind-field if-enf"><span class="if-lbl">Enfermería</span>'+d.enfermeria+'</div>';
+      h+='<div class="ind-field if-pac"><span class="if-lbl">Paciente</span>'+d.paciente+'</div>';
+      h+='<div class="ind-field if-nota"><span class="if-lbl">Nota clínica</span>'+d.nota+'</div>';
+      h+='<div class="ind-field if-alarma"><span class="if-lbl">Alarma</span>'+d.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+function togInd(id){
+  var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');
+  b.classList.toggle('show');
+  ar.textContent=b.classList.contains('show')?'▼':'►';
+}
+
+// ===== ESCENARIOS (con escalera puntas → intubación) =====
+var ESCEN={
+  'EPOC exacerbado':{
+    p:'Disnea, sibilancias, aumento y purulencia del esputo; antecedente de EPOC.',
+    meta:'Meta SpO₂ 88–92%',
+    ind:'<strong>O₂ controlado (Venturi 24–28% o puntas 1–2 L/min).</strong> Por qué: el retenedor puede perder el estímulo hipóxico y subir la PaCO₂ con FiO₂ alta; se busca la mínima FiO₂ que dé 88–92%.',
+    mas:'Salbutamol + ipratropio nebulizados con <em>aire comprimido</em> (no con O₂), esteroide sistémico (prednisona 40 mg o hidrocortisona), antibiótico si hay datos de infección. Rx de tórax para descartar neumotórax/neumonía.',
+    mon:'SpO₂ continua. Gasometría a los 30–60 min de iniciar O₂ y de cada cambio de FiO₂; a la hora tras iniciar VMNI.',
+    esc:[
+      {n:'Puntas nasales 1–2 L/min ó Venturi 24%',i:'Inicio en hipoxemia leve; FiO₂ baja y controlada.',f:'SpO₂ &lt; 88%'},
+      {n:'Venturi 28 → 35% (o puntas 2–4 L/min)',i:'Subir escalonadamente manteniendo 88–92%.',f:'PaCO₂ en ascenso con pH &lt; 7.35'},
+      {n:'VMNI — BiPAP (IPAP 10–15 / EPAP 4–5 cmH₂O)',i:'Elección en acidosis hipercápnica (pH 7.25–7.35): descarga los músculos y baja la PaCO₂.',f:'pH &lt; 7.25, intolerancia o deterioro en 1–2 h'},
+      {n:'Intubación + ventilación mecánica invasiva',i:'Acidosis progresiva, agotamiento, ↓ conciencia o no protección de vía aérea.',f:'',c:1}
+    ]
+  },
+  'Crisis asmática':{
+    p:'Disnea, sibilancias, tos, uso de músculos accesorios; taquipnea. La PaCO₂ normal o alta es signo de gravedad (fatiga).',
+    meta:'Meta SpO₂ 94–98%',
+    ind:'<strong>Puntas nasales o mascarilla para SpO₂ 94–98%.</strong> Por qué: la hipoxemia es por V/Q; evitar hiperoxia. El O₂ acompaña al tratamiento broncodilatador, no lo sustituye.',
+    mas:'Salbutamol (continuo/seriado) + ipratropio nebulizados con O₂, esteroide sistémico temprano, sulfato de magnesio IV en crisis grave; considerar adrenalina IM si anafilaxia o crisis casi fatal.',
+    mon:'SpO₂ continua, flujo espiratorio pico (PEF), respuesta clínica cada 15–20 min. Gasometría en crisis grave: PaCO₂ «normal» que sube = alarma.',
+    esc:[
+      {n:'Puntas nasales 2–6 L/min ó mascarilla simple',i:'Corrige la hipoxemia leve-moderada mientras actúa el broncodilatador.',f:'SpO₂ &lt; 94% o crisis grave'},
+      {n:'Mascarilla con reservorio 10–15 L/min',i:'Hipoxemia grave; FiO₂ alta como puente.',f:'Fatiga, silencio auscultatorio, PaCO₂ ↑'},
+      {n:'VMNI (solo en centros con experiencia)',i:'Uso controvertido; puede ensayarse vigilado y sin retrasar la intubación.',f:'No mejora rápido o deterioro'},
+      {n:'Intubación + VM (secuencia rápida)',i:'PaCO₂ normal/alta con fatiga, alteración del estado de alerta o paro inminente. Ventilar con tiempo espiratorio largo (evitar auto-PEEP).',f:'',c:1}
+    ]
+  },
+  'Hipercapnia (tipo II)':{
+    p:'Insuficiencia respiratoria tipo II: PaCO₂ &gt; 45 mmHg. Somnolencia, cefalea, asterixis, rubor.',
+    meta:'Meta SpO₂ 88–92%',
+    ind:'<strong>O₂ controlado (Venturi 24–28%).</strong> Por qué: corrige la hipoxemia (que mata antes) usando la mínima FiO₂ para 88–92%, sin abolir el estímulo ni empeorar la retención por efecto Haldane/V-Q.',
+    mas:'Tratar la causa: broncodilatadores/esteroide en EPOC, revertir sedantes (naloxona/flumazenil si opioides/benzodiacepinas), soporte en enfermedad neuromuscular, VMNI en hipoventilación por obesidad.',
+    mon:'Gasometría seriada cada 30–60 min. Nivel de conciencia continuo (la narcosis por CO₂ precede al paro).',
+    esc:[
+      {n:'Venturi 24–28% (o puntas 1–2 L/min)',i:'FiO₂ controlada a meta 88–92%.',f:'PaCO₂ ↑ con pH &lt; 7.35'},
+      {n:'Reducir FiO₂ a la mínima útil + tratar causa',i:'Evitar sobre-oxigenar; optimizar broncodilatación/ventilación.',f:'Persiste acidosis hipercápnica'},
+      {n:'VMNI — BiPAP',i:'Soporte ventilatorio no invasivo de elección: baja la PaCO₂ y sube el pH.',f:'pH &lt; 7.25, intolerancia o no mejora'},
+      {n:'Intubación + VM invasiva',i:'Fallo de VMNI, deterioro del sensorio, agotamiento.',f:'',c:1}
+    ]
+  },
+  'Acidosis respiratoria':{
+    p:'pH &lt; 7.35 con PaCO₂ &gt; 45 mmHg. Aguda (sin compensación) o crónica reagudizada.',
+    meta:'Meta según causa (retenedor 88–92%)',
+    ind:'<strong>Asegurar oxigenación con O₂ controlado</strong> (evitar hiperoxia si hay retención) <strong>y corregir la ventilación.</strong> Por qué: la acidosis es por hipoventilación/PaCO₂ alta; el O₂ trata la hipoxemia pero NO corrige el CO₂ — hay que mejorar la ventilación.',
+    mas:'Identificar y tratar la causa: depresión del SNC (revertir opioides/benzo), EPOC/asma, fatiga muscular, obstrucción. Corregir electrolitos. No corregir con bicarbonato salvo indicaciones específicas.',
+    mon:'Gasometría cada 30–60 min para ver tendencia de pH/PaCO₂. Estado de conciencia continuo.',
+    esc:[
+      {n:'O₂ controlado (Venturi 24–28%) + posición',i:'Oxigenar sin abolir el estímulo; optimizar mecánica ventilatoria.',f:'pH &lt; 7.35 persistente con PaCO₂ ↑'},
+      {n:'Tratar causa + broncodilatador / revertir sedación',i:'Naloxona/flumazenil si aplica; broncodilatación intensiva.',f:'pH no mejora, PaCO₂ sigue subiendo'},
+      {n:'VMNI — BiPAP',i:'Soporte de elección en acidosis hipercápnica (pH 7.25–7.35).',f:'pH &lt; 7.25 o intolerancia'},
+      {n:'Intubación + VM invasiva',i:'Acidosis progresiva, ↓ conciencia, agotamiento.',f:'',c:1}
+    ]
+  },
+  'Neumonía / SDRA':{
+    p:'Fiebre, tos, hipoxemia progresiva a menudo refractaria (mecanismo de shunt).',
+    meta:'Meta 94–98% (SDRA 88–95%)',
+    ind:'<strong>O₂ suplementario titulado; escalar rápido si hay shunt.</strong> Por qué: la hipoxemia por shunt responde mal al O₂ de bajo flujo; con frecuencia se requiere alto flujo, presión positiva o VM protectora.',
+    mas:'Antibiótico/antiviral dirigido y temprano, manejo de sepsis, líquidos con cautela. Prono despierto o en VM (P/F &lt; 150). Valorar criterios de Berlín para SDRA.',
+    mon:'SpO₂ continua; ROX a las 2, 6 y 12 h en CNAF; P/F o S/F seriadas.',
+    esc:[
+      {n:'Puntas nasales / mascarilla simple',i:'Hipoxemia leve-moderada.',f:'SpO₂ &lt; 90% pese a FiO₂ ~40%'},
+      {n:'Mascarilla con reservorio 10–15 L/min',i:'Hipoxemia grave; puente a soporte avanzado.',f:'No alcanza meta'},
+      {n:'Cánula nasal de alto flujo (CNAF) 30–60 L/min',i:'Insuf. hipoxémica tipo I; lava espacio muerto y da PEEP leve. Calcular ROX.',f:'ROX &lt; 3.85 o empeora'},
+      {n:'VMNI seleccionada / prono despierto',i:'En casos elegidos, sin retrasar la intubación.',f:'Sin mejoría'},
+      {n:'Intubación + VM protectora (± prono, bloqueo NM)',i:'Vt 6 mL/kg peso ideal, PEEP según tabla; prono 16 h si P/F &lt; 150.',f:'',c:1}
+    ]
+  },
+  'Edema agudo pulmón':{
+    p:'Disnea súbita, ortopnea, estertores, hipoxemia; a menudo hipertensivo o isquémico.',
+    meta:'Meta SpO₂ 94–98%',
+    ind:'<strong>O₂ para corregir hipoxemia + presión positiva temprana (CPAP).</strong> Por qué: la CPAP reduce precarga y poscarga, mejora la oxigenación y disminuye la necesidad de intubar.',
+    mas:'Nitratos (si TA lo permite), diurético de asa (furosemida), tratar la causa (isquemia, arritmia, crisis hipertensiva); sentar al paciente. Vigilar potasio.',
+    mon:'SpO₂ continua, TA frecuente, diuresis; la respuesta suele verse en minutos.',
+    esc:[
+      {n:'Mascarilla simple / con reservorio',i:'Corrige la hipoxemia inicial.',f:'Persiste dificultad o SpO₂ baja'},
+      {n:'CPAP 5–10 cmH₂O (o BiPAP)',i:'Presión positiva: mejora oxigenación y hemodinamia. Elección temprana.',f:'No mejora, hipercapnia o agotamiento'},
+      {n:'Intubación + VM invasiva',i:'Fatiga respiratoria, deterioro, shock cardiogénico.',f:'',c:1}
+    ]
+  },
+  'Intoxicación por CO':{
+    p:'Cefalea, náusea, confusión; exposición a combustión/humo. La SpO₂ es falsamente normal (la co-oximetría lee COHb como O₂Hb).',
+    meta:'FiO₂ 100% siempre (sin importar SpO₂)',
+    ind:'<strong>O₂ al 100% con mascarilla con reservorio desde el inicio.</strong> Por qué: acorta drásticamente la vida media de la carboxihemoglobina (de ~300 min a ~90 min); no esperar a la SpO₂ porque no es fiable.',
+    mas:'Retirar de la fuente, ECG y troponina (isquemia), co-oximetría (COHb). En incendios sospechar intoxicación por cianuro concomitante (hidroxocobalamina).',
+    mon:'COHb seriada y estado neurológico; la SpO₂ NO sirve para guiar el tratamiento.',
+    esc:[
+      {n:'Mascarilla con reservorio 15 L/min, FiO₂ 100%',i:'Tratamiento inicial en todos, independientemente de la SpO₂.',f:'↓ conciencia, inestabilidad o coma'},
+      {n:'Intubación con FiO₂ 1.0',i:'Alteración del estado de alerta, inestabilidad o incapacidad de proteger la vía aérea.',f:'Criterios de terapia hiperbárica'},
+      {n:'Cámara hiperbárica (O₂ hiperbárico)',i:'COHb muy alta, síntomas neurológicos, pérdida de conciencia, embarazo, isquemia. Requiere traslado a centro con cámara.',f:'',c:1}
+    ]
+  },
+  'Paro / peri-paro':{
+    p:'Ausencia de pulso/respiración o inestabilidad extrema.',
+    meta:'FiO₂ 100% en paro; titular a 94–98% tras RCE',
+    ind:'<strong>O₂ al 100% con bolsa-válvula-mascarilla y reservorio durante la RCP.</strong> Por qué: durante el paro se maximiza el aporte de O₂; tras el retorno de circulación (RCE) se titula para evitar la hiperoxia, que empeora el pronóstico neurológico.',
+    mas:'RCP de calidad y ACLS, tratar causas reversibles (H y T), capnografía para confirmar tubo y calidad de RCP.',
+    mon:'Capnografía continua; tras RCE, SpO₂/gasometría y titulación para evitar hiperoxia.',
+    esc:[
+      {n:'Bolsa-válvula-mascarilla + reservorio, O₂ 15 L (FiO₂ 100%)',i:'Ventilación con O₂ máximo durante la reanimación.',f:'Necesidad de vía aérea definitiva'},
+      {n:'Vía aérea avanzada / intubación',i:'Según protocolo ACLS; confirmar con capnografía.',f:'Tras el retorno de circulación (RCE)'},
+      {n:'Titular O₂ a SpO₂ 94–98% post-RCE',i:'Evitar la hiperoxia: reducir FiO₂ en cuanto la SpO₂ lo permita.',f:'',c:1}
+    ]
+  }
+};
+function showEscen(key){
+  renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);
+  var d=ESCEN[key];
+  var h='';
+  h+='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div><span class="esc-meta">🎯 '+d.meta+'</span></div>';
+  h+='<div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Indicado / por qué</div><div class="fu-x">'+d.ind+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Qué más hacer</div><div class="fu-x">'+d.mas+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Cada cuánto</div><div class="fu-x">'+d.mon+'</div></div>';
+  h+='</div>';
+  h+='<div class="lad-t">🪜 Escalera de manejo (puntas nasales → intubación)</div>';
+  for(var i=0;i<d.esc.length;i++){
+    var r=d.esc[i];
+    h+='<div class="rung'+(r.c?' crit':'')+'"><div class="rung-num">'+(r.c?'⛑':(i+1))+'</div>';
+    h+='<div class="rung-dev">'+r.n+'</div><div class="rung-ind">'+r.i+'</div>';
+    if(r.f)h+='<div class="rung-fail">⬇ Si falla / gatillo → '+r.f+'</div>';
+    h+='</div>';
+    if(i<d.esc.length-1)h+='<div class="rung-conn"></div>';
+  }
+  document.getElementById('escen-body').innerHTML=h;
+}
+
+// ===== INIT =====
+window.addEventListener('load',function(){
+  algoInit();
+  buildTablaComparativa();
+  renderFarm('');
+  buildInd();
+  showEscen(Object.keys(ESCEN)[0]);
+});
+</script>
+</body>
+</html>
