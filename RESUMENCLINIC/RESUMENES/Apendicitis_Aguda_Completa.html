@@ -1057,6 +1057,8 @@ function buildRACards(color,farmacos){
     }
     h+='<div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
     if(f.iv)h+=poprow('Vía',f.iv,'#1a3a5c');
+    if(f.frec)h+=poprow('Frecuencia',f.frec,'#0f2a4a');
+    if(f.dur)h+=poprow('Duración',f.dur,'#0f2a4a');
     if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
     if(f.fda)h+=poprow('Embarazo',f.fda,'#7a4a00');
     if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
@@ -1075,15 +1077,19 @@ var AZ='#1a4d7a', AM='#a1541f';
 
 var APX_ATB=[
  {n:'Metronidazol + Ceftriaxona',linea:'⭐ 1ª línea — profilaxis',
-  da:'Metronidazol 500 mg IV · Ceftriaxona 1-2 g IV · Dosis única en no complicada',
-  prep:'Aplicar <b>30-60 min antes de la incisión</b>. Metronidazol en infusión de 30-60 min; ceftriaxona en 30 min. <b>Repetir la dosis</b> si la cirugía pasa de 4 h o hay sangrado mayor a 1500 mL.',
+  da:'Metronidazol 500 mg IV · Ceftriaxona 1-2 g IV',
+  frec:'<b>Dosis única</b> preoperatoria · repetir si la cirugía pasa de 4 h o hay sangrado mayor a 1500 mL',
+  dur:'<b>Apendicitis no complicada: solo esa dosis.</b> No se continúa después de la cirugía',
+  prep:'Aplicar <b>30-60 min antes de la incisión</b>. Metronidazol en infusión de 30-60 min; ceftriaxona en 30 min.',
   iv:'Intravenosa',pres:'Metronidazol sol. iny. 500 mg/100 mL · Ceftriaxona fco. ámp. 1 g',
   fda:'Ceftriaxona segura · metronidazol: evitar el 1er trimestre si hay alternativa',
   ci:'Alergia a betalactámicos · alergia a nitroimidazoles · recién nacido con hiperbilirrubinemia',
   ea:'Náusea y sabor metálico · diarrea · flebitis · reacción tipo disulfiram con alcohol',
-  nota:'Esquema de elección. GPC + WSES 2025. Cubre gramnegativos y anaerobios. <b>En apendicitis no complicada una sola dosis basta</b> — no se continúa después de la cirugía.'},
+  nota:'Esquema de elección. GPC + WSES 2025. Cubre gramnegativos y anaerobios. <b>Alargar la profilaxis en apendicitis no complicada no reduce infecciones y sí genera resistencia.</b>'},
  {n:'Metronidazol + Ciprofloxacino',linea:'2ª línea — si hay alergia',
   da:'Metronidazol 500 mg IV · Ciprofloxacino 400 mg IV',
+  frec:'<b>Dosis única</b> preoperatoria · si se continúa: cada 12 h',
+  dur:'Igual que la 1ª línea: una sola dosis en no complicada',
   prep:'Ciprofloxacino en <b>infusión de 60 min</b>; más rápido causa flebitis. Misma ventana de 30-60 min antes de la incisión.',
   iv:'Intravenosa',pres:'Ciprofloxacino sol. iny. 200 mg/100 mL y 400 mg/200 mL',
   fda:'Ciprofloxacino: evitar en embarazo si hay alternativa',
@@ -1091,8 +1097,10 @@ var APX_ATB=[
   ea:'Tendinopatía y ruptura del tendón de Aquiles · disglucemia · QT largo · neuropatía',
   nota:'Para alergia a cefalosporinas. <b>Revisa la resistencia local a quinolonas</b> antes de elegirla: en varias regiones ya es alta.'},
  {n:'Piperacilina-Tazobactam',linea:'3ª línea — complicada o sepsis',
-  da:'3.375-4.5 g IV · cada 6-8 h',
-  prep:'Infusión de 30 min, o <b>extendida en 4 h</b> si hay sepsis (mejora la exposición del antibiótico). Ajustar la dosis en falla renal.',
+  da:'3.375 g o 4.5 g IV por dosis',
+  frec:'<b>Cada 6-8 h</b>',
+  dur:'<b>4-7 días</b> en complicada · hasta 24-48 h sin fiebre y con leucocitos normales',
+  prep:'Infusión de 30 min, o <b>extendida en 4 h</b> si hay sepsis (mejora la exposición). Ajustar la dosis en falla renal.',
   iv:'Intravenosa',pres:'Fco. ámp. 4.5 g (4 g piperacilina / 0.5 g tazobactam)',
   fda:'Puede usarse en embarazo',
   ci:'Alergia a penicilinas',
@@ -1102,7 +1110,7 @@ var APX_ATB=[
 
 var APX_DOLOR=[
  {n:'Paracetamol',linea:'⭐ Base de la analgesia',
-  da:'1 g IV cada 6-8 h · máximo 4 g al día',
+  da:'1 g IV por dosis',frec:'<b>Cada 6-8 h</b>',dur:'Mientras haya dolor · <b>máximo 4 g al día</b>',
   prep:'Infusión en 15 min. Si pesa menos de 50 kg: <b>15 mg/kg por dosis</b>. Es la base sobre la que se añaden los demás — no se sustituye por ellos.',
   iv:'Intravenosa; oral en cuanto tolere',pres:'Sol. iny. 1 g/100 mL · Tab 500 mg',
   fda:'Seguro en embarazo y lactancia',
@@ -1110,7 +1118,7 @@ var APX_DOLOR=[
   ea:'Hepatotoxicidad por dosis acumulada — <b>suma todas las fuentes</b>, incluidas las combinaciones',
   nota:'Analgesia multimodal: paracetamol + AINE reduce mucho la necesidad de opioide y sus efectos.'},
  {n:'Ketorolaco',linea:'⭐ AINE — primera opción',
-  da:'15-30 mg IV cada 6-8 h · máximo 120 mg al día · <b>máximo 5 días</b>',
+  da:'15-30 mg IV por dosis',frec:'<b>Cada 6-8 h</b>',dur:'<b>Máximo 5 días</b> · máximo 120 mg al día',
   prep:'Bolo lento (al menos 15 s) o infusión corta. En <b>mayores de 65 años o menos de 50 kg: 15 mg</b> por dosis. Suspender a los 5 días aunque siga el dolor.',
   iv:'Intravenosa',pres:'Sol. iny. 30 mg/mL',
   fda:'Contraindicado en el 3er trimestre — cierra el conducto arterioso',
@@ -1118,7 +1126,7 @@ var APX_DOLOR=[
   ea:'Gastritis y sangrado digestivo · lesión renal aguda · inhibe la agregación plaquetaria',
   nota:'<b>La analgesia NO enmascara el cuadro ni retrasa el diagnóstico</b> — es un mito viejo ya desmentido (Cochrane). Dale desde urgencias sin esperar la valoración quirúrgica: el paciente coopera mejor en la exploración.'},
  {n:'Metamizol (dipirona)',linea:'AINE — alternativa',
-  da:'1 g IV cada 6-8 h · máximo 6 g al día',
+  da:'1 g IV por dosis',frec:'<b>Cada 6-8 h</b>',dur:'Máximo 6 g al día',
   prep:'<b>Diluir e infundir lento.</b> Aplicado rápido provoca hipotensión importante.',
   iv:'Intravenosa',pres:'Sol. iny. 1 g/2 mL',
   fda:'Evitar en el 3er trimestre',
@@ -1126,7 +1134,7 @@ var APX_DOLOR=[
   ea:'Hipotensión si se pasa rápido · <b>agranulocitosis</b> (rara pero grave)',
   nota:'Muy usado en México. Buena opción cuando el ketorolaco está contraindicado por riesgo de sangrado o por falla renal.'},
  {n:'Tramadol',linea:'Dolor moderado a intenso',
-  da:'50-100 mg IV cada 8 h · máximo 400 mg al día',
+  da:'50-100 mg IV por dosis',frec:'<b>Cada 8 h</b>',dur:'Máximo 400 mg al día',
   prep:'<b>Infusión lenta en 15-30 min.</b> En bolo rápido causa náusea intensa. Combinar siempre con antiemético.',
   iv:'Intravenosa',pres:'Sol. iny. 100 mg/2 mL',
   fda:'Evitar en embarazo y lactancia',
@@ -1134,7 +1142,7 @@ var APX_DOLOR=[
   ea:'Náusea y vómito (muy frecuentes) · mareo · convulsiones a dosis altas · síndrome serotoninérgico con antidepresivos',
   nota:'Escalón intermedio: cuando paracetamol + AINE no bastan, antes de pasar a morfina.'},
  {n:'Morfina',linea:'Dolor intenso',
-  da:'2-4 mg IV en bolo · repetir cada 5-10 min hasta controlar',
+  da:'2-4 mg IV en bolo',frec:'<b>Repetir cada 5-10 min</b> hasta controlar el dolor',dur:'Titulada según respuesta · reevaluar en cada bolo',
   prep:'<b>Titular</b>: bolos pequeños y reevaluar, no una dosis grande de entrada. Ten <b>naloxona</b> a la mano. Vigila frecuencia respiratoria y sedación.',
   iv:'Intravenosa',pres:'Sol. iny. 10 mg/mL',
   fda:'Solo si es necesario; vigilar depresión respiratoria del recién nacido cerca del parto',
@@ -1142,7 +1150,7 @@ var APX_DOLOR=[
   ea:'Depresión respiratoria · sedación · náusea · estreñimiento · prurito',
   nota:'Para dolor intenso que no cede. Titulada es segura y <b>tampoco retrasa el diagnóstico</b>.'},
  {n:'Metoclopramida',linea:'⭐ Antiemético',
-  da:'10 mg IV cada 8 h · máximo 30 mg al día',
+  da:'10 mg IV por dosis',frec:'<b>Cada 8 h</b>',dur:'Máximo 30 mg al día',
   prep:'Bolo lento en 1-2 min; rápido produce acatisia (inquietud muy molesta).',
   iv:'Intravenosa',pres:'Sol. iny. 10 mg/2 mL',
   fda:'Se usa en embarazo',
@@ -1150,7 +1158,7 @@ var APX_DOLOR=[
   ea:'<b>Distonía aguda y acatisia</b>, sobre todo en menores de 30 años · somnolencia',
   nota:'Náusea y vómito perioperatorio. En jóvenes considera ondansetrón por el riesgo de distonía.'},
  {n:'Ondansetrón',linea:'Antiemético — alternativa',
-  da:'4-8 mg IV cada 8 h',
+  da:'4-8 mg IV por dosis',frec:'<b>Cada 8 h</b>',dur:'Según persista la náusea',
   prep:'Bolo lento en 2-5 min.',
   iv:'Intravenosa',pres:'Sol. iny. 4 mg/2 mL y 8 mg/4 mL',
   fda:'Se usa; datos tranquilizadores',
@@ -1179,11 +1187,27 @@ function apxFichas(){
       var fs=[];
       [].slice.call(t.querySelectorAll('tbody tr')).forEach(function(tr){
         var c=[].slice.call(tr.children); if(c.length<2) return;
-        var extra='';
-        c.forEach(function(td,i){ if(i!==iF && i!==0 && !/dosis/i.test(hs[i]||'')) extra+='<b>'+(hs[i]||'')+':</b> '+td.innerHTML+'<br>'; });
-        var dosis=''; c.forEach(function(td,i){ if(/dosis/i.test(hs[i]||'')) dosis=td.textContent.trim(); });
-        var lin=(c[0]?c[0].textContent.trim():''); if(/1[ªa]\s*l[íi]nea|^IV\b|ingreso/i.test(lin)) lin='⭐ '+lin;
-        fs.push({n:c[iF].textContent.trim(), linea:lin, da:dosis, nota:extra});
+        var lin=(c[0]?c[0].textContent.trim():'');
+        var extra='',dosis='',via='',dur='',frec='';
+        c.forEach(function(td,i){
+          var h=(hs[i]||'').toLowerCase();
+          if(i===iF||i===0) return;
+          if(/dosis m[áa]x/.test(h)){ dur=(dur?dur+' · ':'')+'Máximo: '+td.textContent.trim(); return; }
+          if(/dosis/.test(h)){ dosis=td.textContent.trim(); return; }
+          if(/v[íi]a/.test(h)){ via=td.textContent.trim(); return; }
+          if(/duraci[óo]n/.test(h)){ dur=(dur?dur+' · ':'')+td.textContent.trim(); return; }
+          extra+='<b>'+(hs[i]||'')+':</b> '+td.innerHTML+'<br>';
+        });
+        /* la frecuencia suele venir dentro de la dosis (c/8h): la mostramos aparte */
+        var mf=dosis.match(/c\/\s?\d+\s?-?\s?\d*\s?h/gi);
+        if(mf) frec='Cada '+mf.join(' · cada ').replace(/c\/\s?/gi,'').replace(/h/gi,' h');
+        if(!via){
+          var pista=(lin+' '+dosis+' '+c[iF].textContent).toLowerCase();
+          if(/\bvo\b|oral/.test(pista)) via='Oral';
+          else if(/\biv\b|intravenos/.test(pista)) via='Intravenosa';
+        }
+        if(/1[ªa]\s*l[íi]nea|^IV\b|ingreso/i.test(lin)) lin='⭐ '+lin;
+        fs.push({n:c[iF].textContent.trim(), linea:lin, da:dosis, frec:frec, dur:dur, iv:via, nota:extra});
       });
       html = buildRACards(AZ, fs);
     }
