@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Molusco contagioso · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#9c3d6e;--acd:#4a1730;--acl:#f6ebf1;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#4a1730,#9c3d6e);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🔴</div>
+    <div>
+      <div class="hdr-eye">Dermatología</div>
+      <div class="hdr-title">Molusco contagioso</div>
+      <div class="hdr-sub">Poxvirus · autolimitado · manejo individualizado</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Autolimitado (6–12 meses)</span>
+    <span class="badge">Observación de elección</span>
+    <span class="badge">Signo BOTE ≠ infección</span>
+    <span class="badge">🚫 imiquimod de rutina</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">Poxvirus</div><div class="qs-l">viral, benigno</div></div>
+  <div class="qs"><div class="qs-v">6–12 m</div><div class="qs-l">resolución</div></div>
+  <div class="qs"><div class="qs-v">Observar</div><div class="qs-l">niño sano</div></div>
+  <div class="qs"><div class="qs-v">VIH</div><div class="qs-l">si extenso</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Métodos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>El <strong>molusco contagioso</strong> es una infección viral cutánea benigna por un <strong>poxvirus</strong> (virus del molusco contagioso). Se presenta como <strong>pápulas cupuliformes umbilicadas</strong> de 2–5 mm, color piel o perladas. Es muy frecuente, sobre todo en <strong>niños</strong>.</p></div>
+  <div class="alert a-g"><span class="ai">🎯</span><div><div class="at">La idea que ordena todo</div>Es <strong>autolimitado</strong>: en el niño sano, la <strong>observación</strong> es la opción de elección. Se trata si hay molestia, diseminación amplia, motivo estético o <strong>inmunodepresión</strong>.</div></div>
+  <div class="alert a-i"><span class="ai">💡</span><div><div class="at">El signo BOTE</div>El <strong>enrojecimiento e inflamación</strong> de una lesión ("Beginning Of The End") suele anunciar que va a <strong>resolverse</strong>; no lo confundas con una infección bacteriana.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología y transmisión</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Comentario</th></tr></thead><tbody>
+    <tr><td class="dm">Agente</td><td>Poxvirus (virus del molusco contagioso, familia Poxviridae)</td></tr>
+    <tr><td class="dm">Edad</td><td>Mayor incidencia en <strong>menores de 14 años</strong></td></tr>
+    <tr><td class="dn">Transmisión</td><td>Contacto directo, <strong>fómites</strong> (toallas, ropa, juguetes, piscina) y <strong>autoinoculación</strong> (rascado)</td></tr>
+    <tr><td class="dn">En el adulto</td><td>Molusco anogenital: a menudo por <strong>contacto sexual</strong> (contexto de ITS)</td></tr>
+    <tr><td class="dn">Curso</td><td>Autolimitado; resolución habitual en <strong>6–12 meses</strong> (a veces ~2 años)</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Por qué el manejo es el que es</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Virus confinado a la epidermis</strong><br>El virus se replica solo en la epidermis y no da viremia; la infección es <strong>localizada y benigna</strong>.<br><br><strong>Por eso:</strong> muchos tratamientos son <strong>tópicos o físicos</strong> dirigidos a la lesión.</div>
+  <div class="fp fp-a"><strong>2. La inmunidad lo resuelve</strong><br>Con el tiempo, la respuesta inmune elimina el virus (signo BOTE).<br><br><strong>Por eso:</strong> la <strong>observación</strong> es válida en el inmunocompetente, y en el inmunodeprimido lo clave es <strong>reconstituir la inmunidad</strong>.</div>
+  <div class="fp fp-b"><strong>3. Se disemina por contacto y rascado</strong><br>La autoinoculación y los fómites propagan las lesiones.<br><br><strong>Por eso:</strong> las <strong>medidas de higiene</strong> (no rascar, no compartir toallas, cubrir lesiones) son parte del tratamiento.</div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Presentación clínica</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Pápulas cupuliformes</strong> de 2–5 mm, color piel o perladas, con <strong>umbilicación central</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Distribución en <strong>tronco, axilas, huecos, cara</strong> (niños) o <strong>área anogenital</strong> (adultos).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Generalmente <strong>asintomáticas</strong>; a veces prurito o eccema alrededor (eccema molluscatum).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Distribución <strong>lineal</strong> por autoinoculación (rascado).</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Cuándo pensar en algo más</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Molusco atípico</div>Lesiones <strong>gigantes, muy numerosas o refractarias</strong>, sobre todo en la cara del adulto → valora <strong>inmunodepresión (VIH)</strong>.</div></div>
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Molusco anogenital en el adulto</strong> → contexto de ITS; considera tamizaje.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Lesión única atípica en el adulto mayor → considerar diferencial (descartar tumor si dudas).</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">El diagnóstico es clínico</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>El diagnóstico es <strong>visual</strong>: pápulas cupuliformes con <strong>umbilicación central</strong>. No suele requerir estudios. La <strong>dermatoscopia</strong> muestra un patrón central característico; la biopsia rara vez es necesaria.</p></div>
+  <div class="alert a-i"><span class="ai">🔍</span><div>Si exprimes una lesión sale un material blanquecino (cuerpo del molusco). Reserva la biopsia para lesiones atípicas o dudas diagnósticas.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔍</span><span class="st">Diagnóstico diferencial</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Entidad</th><th>Clave para distinguir</th></tr></thead><tbody>
+    <tr><td class="dm">Verrugas víricas</td><td>Superficie rugosa/queratósica, sin umbilicación central</td></tr>
+    <tr><td class="dm">Milia / quistes</td><td>Blanco-amarillentos, sin umbilicación</td></tr>
+    <tr><td class="dn">Acné / foliculitis</td><td>Pústulas centradas en folículo, inflamatorias</td></tr>
+    <tr><td class="dn">Criptococosis / histoplasmosis (VIH)</td><td>En inmunodeprimido, lesiones umbilicadas pueden simular molusco → sospecha micosis sistémica</td></tr>
+  </tbody></table></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div>En el <b>inmunodeprimido</b>, lesiones "tipo molusco" diseminadas pueden ser <b>micosis profundas</b> (criptococo, histoplasma): no asumas molusco sin considerarlo.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm">
+<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Métodos por ámbito (casa / consultorio / casos especiales), con pauta y duración. Toca para desplegar o <strong>busca por nombre</strong>.</div></div>
+<input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (KOH, cantaridina, curetaje…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;">
+<div id="farm-body"></div>
+</div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('nino',this)">Niño sano</button>
+  <button class="pchip" onclick="setEscen('adulto',this)">Adulto anogenital</button>
+  <button class="pchip" onclick="setEscen('inmuno',this)">Inmunodeprimido/VIH</button>
+  <button class="pchip" onclick="setEscen('dermatitis',this)">Dermatitis asociada</button>
+  <button class="pchip" onclick="setEscen('recurrente',this)">Recurrente</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Seguimiento</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Observación</td><td>Revisar cada 1–3 meses; esperar la resolución (6–12 meses)</td></tr>
+    <tr><td class="dm">Tras tratar</td><td>Retratar las lesiones nuevas; vigilar cicatriz/discromía</td></tr>
+    <tr><td class="dn">Signo BOTE</td><td>Enrojecimiento que anuncia resolución; no confundir con infección</td></tr>
+    <tr><td class="dn">Refractario/atípico</td><td>Valorar inmunodepresión (VIH) y derivar a dermatología</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Prevención de la diseminación</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>No rascar ni exprimir</strong> (autoinoculación) y no afeitar sobre las lesiones.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>No compartir</strong> toallas, esponjas ni ropa; higiene de manos.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Cubrir las lesiones</strong> expuestas (piscina, deportes de contacto).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Tratar el <strong>eccema</strong> acompañante para reducir el rascado y la diseminación.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Lesiones <strong>gigantes, muy numerosas o refractarias</strong> → dermatología.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Molusco <strong>extenso/atípico</strong> en el adulto → valorar VIH (infectología).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Duda diagnóstica o lesión atípica → valoración/biopsia.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Molusco contagioso</h2>
+  <p>Revisión sistemática, evidencia Cochrane y nuevas terapias. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Espera vigilante e imiquimod no eficaz</strong> → revisión <strong>Cochrane</strong> [2].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Tasas de aclaramiento por método (curetaje, KOH, podofilotoxina)</strong> → revisión sistemática [1].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Nuevas terapias FDA (cantaridina, berdazimer)</strong> → revisión de avances [3].</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Descripción clínica y diagnóstico</strong> → texto de referencia [4]; <strong>contexto MX</strong> → CENETEC [5].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Revisiones sistemáticas y evidencia</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Wang, et al. <em>Treatments for Molluscum contagiosum: A systematic review.</em> J Dtsch Dermatol Ges (JDDG). 2025. [Revisión sistemática PRISMA: aclaramiento por método (curetaje ~98%, autoinoculación ~79%, podofilotoxina ~75%, KOH ~74%); berdazimer con buen perfil pediátrico. Sustenta las eficacias y el Tratamiento.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1111/ddg.70100" target="_blank">🔗 DOI 10.1111/ddg.70100</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">2017</span><span class="biblio-level lv-a">Nivel A</span></div>
+      <div class="biblio-ref">van der Wouden JC, et al. <em>Interventions for cutaneous molluscum contagiosum.</em> Cochrane Database Syst Rev. 2017;5:CD004767. [22 ECA (N=1650): apoya esperar la resolución espontánea; el imiquimod 5% no fue más eficaz que el vehículo y causó más reacciones. Sustenta la observación y el "NO hacer" del imiquimod.]</div>
+      <a class="biblio-link" href="https://doi.org/10.1002/14651858.CD004767.pub4" target="_blank">🔗 DOI 10.1002/14651858.CD004767.pub4</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📗 Nuevas terapias y descripción clínica</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">2024</span><span class="biblio-level lv-c">Nivel C</span></div>
+      <div class="biblio-ref">Recent advances in the treatment of molluscum contagiosum. <em>Contemporary Pediatrics.</em> 2024. [Resume las opciones aprobadas por la FDA: cantaridina 0.7% (Ycanth, 2023, en consultorio, ≥2 años) y berdazimer gel 10.3% (Zelsuvmi, 2024, en casa, ≥1 año). Sustenta las fichas de cantaridina y berdazimer.]</div>
+      <a class="biblio-link" href="https://www.contemporarypediatrics.com/view/recent-advances-in-the-treatment-of-molluscum-contagiosum" target="_blank">🔗 Contemporary Pediatrics 2024</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">4</span><span class="biblio-year">Ref.</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">Molluscum Contagiosum. <em>Merck Manual (Professional Edition).</em> [Descripción clínica (pápulas umbilicadas 2–5 mm), diagnóstico clínico y opciones de manejo (mecánicas y tópicas). Sustenta el Resumen y el Diagnóstico.]</div>
+      <a class="biblio-link" href="https://www.merckmanuals.com/professional/dermatologic-disorders/viral-skin-diseases/molluscum-contagiosum" target="_blank">🔗 Merck Manual</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">5</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC).</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente de dermatosis virales y coteja disponibilidad de tratamientos con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Revisión Cochrane / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones sistemáticas / observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Revisiones narrativas / consenso</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Se recomienda verificar actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y adaptar al contexto institucional. Última revisión: <strong>julio 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#9c3d6e', C1='#9c3d6e', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Opción de elección" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Pauta')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / cómo',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo elegirlo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Eficacia / nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Ámbito',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Presentaciones',f.pres,'#374151');
+  if(f.ci)h+=txrow('Contraindicaciones / cautela',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Efectos adversos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Seguimiento',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#4a1730')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_OBS={n:'Observación (espera vigilante)',elec:true,linea:'Opción por defecto — niño inmunocompetente',
+  dlbl:'Conducta',da:'No tratar y vigilar; la mayoría se resuelve sola',
+  dur:'Resolución espontánea habitual en 6–12 meses (a veces hasta ~2 años).',
+  adm:'Explica las medidas para evitar la diseminación y el contagio. Es la opción con mejor respaldo en niños sanos.',
+  mec:'La inmunidad del huésped elimina el virus con el tiempo.',
+  ind:'Niño inmunocompetente, pocas lesiones, sin repercusión estética/funcional.',
+  dmax:'Fuerte respaldo (Cochrane): esperar la resolución es una estrategia válida.',
+  iv:'Ambulatorio',pres:'—',ci:'—',ea:'Ninguno',mon:'Revisar cada 1–3 meses',
+  nota:'⭐ El signo BOTE (enrojecimiento e inflamación de las lesiones) suele anunciar la resolución; no lo confundas con infección. Trata si hay molestia, diseminación amplia, afectación estética o inmunodepresión.'};
+var F_CURET={n:'Curetaje (legrado)',elec:true,linea:'Tratamiento físico — alta eficacia',
+  dlbl:'Pauta',da:'Legrado de las lesiones con cureta; considerar anestésico tópico previo (p. ej., lidocaína/prilocaína 30–60 min antes) en niños',
+  dur:'Sesión única o pocas sesiones; retratar las lesiones nuevas.',
+  adm:'Rápido y con las tasas de aclaramiento más altas. Puede doler o sangrar; en niños, la anestesia tópica previa lo facilita.',
+  mec:'Elimina mecánicamente el cuerpo del molusco.',
+  ind:'Lesiones accesibles; cuando se busca resolución rápida.',
+  dmax:'Aclaramiento ~98% en revisiones; operador-dependiente.',
+  iv:'Consultorio',pres:'Cureta; anestésico tópico',ci:'Zonas delicadas sin anestesia; niño no colaborador',ea:'Dolor, sangrado, cicatriz',mon:'Revisar por lesiones nuevas',
+  nota:'⭐ Muy eficaz. En niños, la anestesia tópica previa mejora la tolerancia. Evítalo si va a causar más daño que la propia enfermedad autolimitada.'};
+var F_CANTA={n:'Cantaridina 0.7% (en consultorio)',linea:'Tratamiento físico/químico — aplicado por el clínico',
+  dlbl:'Pauta',da:'Aplicación por el clínico sobre cada lesión; lavar a las 2–6 h. Repetir cada 2–4 semanas según respuesta',
+  dur:'Varias sesiones espaciadas 2–4 semanas hasta aclaramiento.',
+  adm:'Agente vesicante; NO lo aplica el paciente. Aprobado para ≥2 años.',
+  mec:'Vesicante que provoca una ampolla intraepidérmica que desprende la lesión.',
+  ind:'Alternativa indolora al curetaje/crioterapia en niños.',
+  dmax:'Aclaramiento ~46–54% (ensayos CAMP) vs vehículo.',
+  iv:'Consultorio',pres:'Cantaridina tópica 0.7%',ci:'Cara, mucosas, zona perianal; no en casa',ea:'Ampolla, ardor, hiperpigmentación',mon:'Revisar a las 2–4 semanas',
+  nota:'Bien tolerada por los niños (indolora al aplicar). Lávala en el tiempo indicado para limitar la ampolla.'};
+var F_CRIO={n:'Crioterapia',linea:'Tratamiento físico',
+  dlbl:'Pauta',da:'Nitrógeno líquido sobre cada lesión; repetir cada 2–3 semanas hasta aclaramiento',
+  dur:'Varias sesiones espaciadas 2–3 semanas.',
+  adm:'Rápida, pero dolorosa: menos usada en niños pequeños.',
+  mec:'Destrucción por congelación.',
+  ind:'Pocas lesiones en pacientes que toleran el frío/dolor.',
+  dmax:'Eficaz; molestia y riesgo de cambios de pigmento.',
+  iv:'Consultorio',pres:'Nitrógeno líquido',ci:'Niños pequeños (dolor), fototipos altos (discromía)',ea:'Dolor, ampolla, hipo/hiperpigmentación, cicatriz',mon:'Cada 2–3 semanas',
+  nota:'Reserva para pocas lesiones; el dolor limita su uso en la infancia.'};
+var F_KOH={n:'Hidróxido de potasio (KOH) tópico',elec:true,linea:'Tratamiento tópico en casa — buena opción pediátrica',
+  dlbl:'Pauta',da:'KOH al 5–10%: aplicar 1–2 veces al día sobre las lesiones hasta que se inflamen; suspender al aparecer inflamación',
+  dur:'Habitualmente 2–6 semanas hasta la resolución de las lesiones tratadas.',
+  adm:'Aplicación domiciliaria dirigida solo a las lesiones (protege la piel sana). Detén al inflamarse (anuncia resolución).',
+  mec:'Álcali queratolítico que rompe la lesión y estimula la respuesta inflamatoria.',
+  ind:'Manejo en casa, útil en niños; alternativa no dolorosa a los métodos físicos.',
+  dmax:'Aclaramiento ~74% en revisiones.',
+  iv:'Domiciliario',pres:'Solución de KOH 5–10%',ci:'Cara/genitales con cautela; evitar piel sana',ea:'Ardor, irritación, hipo/hiperpigmentación',mon:'A las 2–4 semanas',
+  nota:'⭐ Buena opción en casa. Aplica solo sobre la lesión y suspende cuando se enrojezca/inflame.'};
+var F_BERDA={n:'Berdazimer gel 10.3%',linea:'Tratamiento tópico en casa — aprobado por FDA',
+  dlbl:'Pauta',da:'Aplicar 1 vez al día sobre las lesiones, hasta 12 semanas',
+  dur:'Hasta 12 semanas; suspender antes si se resuelven.',
+  adm:'Autoaplicado en casa; aprobado para ≥1 año.',
+  mec:'Libera óxido nítrico con actividad antiviral/inmunomoduladora.',
+  ind:'Manejo domiciliario cuando esté disponible.',
+  dmax:'Reducción de lesiones ~52–76% en fase 3.',
+  iv:'Domiciliario',pres:'Gel de berdazimer 10.3% (disponibilidad variable)',ci:'Hipersensibilidad',ea:'Reacción en el sitio, dermatitis, prurito',mon:'Control periódico',
+  nota:'Opción reciente aprobada por FDA (2024) para uso en casa; disponibilidad aún limitada.'};
+var F_PODO={n:'Podofilotoxina 0.5% (anogenital, adultos)',linea:'Tratamiento tópico',
+  dlbl:'Pauta',da:'Aplicar 2 veces al día, 3 días consecutivos por semana, hasta 4 semanas',
+  dur:'Ciclos semanales de 3 días, hasta 4 semanas.',
+  adm:'Para molusco anogenital del adulto; el paciente la aplica en casa.',
+  mec:'Antimitótico que destruye la lesión.',
+  ind:'Molusco anogenital del adulto (contexto de ITS).',
+  dmax:'Aclaramiento ~75% en revisiones.',
+  iv:'Domiciliario',pres:'Solución/gel de podofilotoxina 0.5%',ci:'EMBARAZO (contraindicada), niños',ea:'Irritación, erosión',mon:'A las 2–4 semanas',
+  nota:'No usar en el embarazo. Reservada al área anogenital del adulto.'};
+var F_TRET={n:'Tretinoína tópica',linea:'Tratamiento tópico',
+  dlbl:'Pauta',da:'Crema 0.1% o gel 0.025%: aplicar 1 vez al día por la noche sobre las lesiones',
+  dur:'Varias semanas; suspender si hay irritación importante.',
+  adm:'Útil en lesiones diseminadas pequeñas; puede irritar.',
+  mec:'Retinoide que altera la queratinización y favorece el desprendimiento.',
+  ind:'Lesiones múltiples pequeñas, alternativa tópica.',
+  dmax:'Eficacia moderada.',
+  iv:'Domiciliario',pres:'Tretinoína crema 0.1% / gel 0.025%',ci:'EMBARAZO, irritación',ea:'Eritema, descamación; puede aumentar lesiones por autoinoculación si irrita',mon:'Periódico',
+  nota:'Cuidado con la irritación; no usar en el embarazo.'};
+var F_INMUNO={n:'Tratar la inmunodeficiencia / inmunoterapia',elec:true,linea:'Casos especiales — inmunodeprimido o recurrente',
+  dlbl:'Conducta',da:'En VIH/inmunodepresión: optimizar la inmunidad (p. ej., terapia antirretroviral). En casos persistentes: inmunoterapia intralesional (Candida, MMR)',
+  dur:'Según el control de la inmunodeficiencia; la mejoría inmune suele resolver el molusco.',
+  adm:'El molusco extenso o gigante en el adulto obliga a descartar/valorar VIH.',
+  mec:'La recuperación inmune controla el virus; la inmunoterapia estimula la respuesta local.',
+  ind:'Inmunodeprimido, molusco extenso/refractario o muy recurrente.',
+  dmax:'La reconstitución inmune es lo más eficaz en el inmunodeprimido.',
+  iv:'Especializado',pres:'TAR; antígenos intralesionales (Candida/MMR)',ci:'Según técnica',ea:'Según técnica',mon:'Dermatología / infectología',
+  nota:'⭐ En el inmunodeprimido, controla la causa de fondo. El molusco anogenital extenso en el adulto: valora estudio de ITS/VIH.'};
+var F_NO_IMIQ={n:'❌ Imiquimod de rutina',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No uses imiquimod 5% como tratamiento de rutina del molusco',
+  dur:'No fue más eficaz que el vehículo en ensayos y causó más reacciones locales.',
+  adm:'Reserva otras opciones con mejor evidencia (observación, curetaje, KOH).',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Irritación, sin beneficio de rutina',
+  nota:'La evidencia (Cochrane) no apoya el imiquimod de rutina para el molusco.'};
+var F_NO_AGRE={n:'❌ Tratamientos agresivos en niños por algo autolimitado',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No provoques cicatrices/dolor innecesarios en un niño por una enfermedad que se cura sola',
+  dur:'El daño del tratamiento no debe superar al de la propia enfermedad.',
+  adm:'Prefiere observación o métodos menos agresivos; individualiza.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Cicatrices, dolor, discromía',
+  nota:'"Primum non nocere": muchas veces observar es lo correcto.'};
+var F_NO_BOTE={n:'❌ Confundir el signo BOTE con infección',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No trates con antibiótico el enrojecimiento que precede a la resolución',
+  dur:'El signo BOTE (inflamación) suele anunciar que las lesiones van a resolverse.',
+  adm:'Distínguelo de una verdadera infección bacteriana (dolor, pus, celulitis progresiva).',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Antibiótico innecesario',
+  nota:'Reconocer el BOTE evita tratamientos innecesarios.'};
+
+var TXC=[
+ ['Observación (por defecto)','La mayoría de los niños sanos',CO,[F_OBS]],
+ ['Tratamientos físicos','Cuando se decide tratar',C1,[F_CURET,F_CANTA,F_CRIO]],
+ ['Tratamientos tópicos','Manejo en casa o dirigido',AZ,[F_KOH,F_BERDA,F_PODO,F_TRET]],
+ ['Casos especiales','Inmunodeprimido / recurrente',C2,[F_INMUNO]],
+ ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_IMIQ,F_NO_AGRE,F_NO_BOTE]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">Casi siempre se cura solo</div>El molusco es <b>autolimitado</b>: en el niño sano, la <b>observación</b> es la opción de elección. Se trata si hay molestia, diseminación amplia, motivo estético o <b>inmunodepresión</b>. La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== MÉTODOS (acordeón) ===== */
+var FARMACOS=[
+ {familia:'🏠 Tópicos (en casa)',color:'#0c3b6e',farmacos:[
+  {n:'Hidróxido de potasio (KOH) 5–10%',ini:'1–2 veces/día',da:'Aplicar solo sobre las lesiones hasta que se inflamen; 2–6 semanas. Protege la piel sana.',iv:'Domiciliario',pres:'Solución 5–10%',ci:'Cara/genitales con cautela',ea:'Ardor, discromía',nota:'Buena opción pediátrica en casa; suspender al inflamarse.'},
+  {n:'Berdazimer gel 10.3%',ini:'1 vez/día',da:'Hasta 12 semanas. Aprobado FDA (≥1 año).',iv:'Domiciliario',pres:'Gel 10.3% (limitado)',ci:'Hipersensibilidad',ea:'Reacción local, dermatitis',nota:'Opción reciente aprobada para uso en casa.'},
+  {n:'Podofilotoxina 0.5%',ini:'2×/día, 3 días/sem',da:'Ciclos semanales hasta 4 semanas. Anogenital del adulto.',iv:'Domiciliario',pres:'Solución/gel 0.5%',ci:'EMBARAZO, niños',ea:'Irritación, erosión',nota:'No en embarazo; área anogenital del adulto.'},
+  {n:'Tretinoína',ini:'1 vez/noche',da:'Crema 0.1% o gel 0.025% sobre las lesiones.',iv:'Domiciliario',pres:'Crema 0.1%/gel 0.025%',ci:'EMBARAZO, irritación',ea:'Eritema, descamación',nota:'Cuidado con la irritación.'}]},
+ {familia:'🏥 Físicos (en consultorio)',color:'#9c3d6e',farmacos:[
+  {n:'Curetaje',ini:'Sesión',da:'Legrado; anestésico tópico previo en niños. Aclaramiento ~98%.',iv:'Consultorio',pres:'Cureta',ci:'Zona sensible sin anestesia',ea:'Dolor, sangrado, cicatriz',nota:'El más eficaz; operador-dependiente.'},
+  {n:'Cantaridina 0.7%',ini:'c/2–4 semanas',da:'Aplica el clínico; lavar a las 2–6 h. ≥2 años.',iv:'Consultorio',pres:'Cantaridina 0.7%',ci:'Cara, mucosas; no en casa',ea:'Ampolla, ardor',nota:'Indolora al aplicar; útil en niños.'},
+  {n:'Crioterapia',ini:'c/2–3 semanas',da:'Nitrógeno líquido por lesión; varias sesiones.',iv:'Consultorio',pres:'Nitrógeno líquido',ci:'Niños pequeños, fototipos altos',ea:'Dolor, discromía',nota:'Dolorosa; pocas lesiones.'}]},
+ {familia:'🛡️ Casos especiales',color:'#7a4a00',farmacos:[
+  {n:'Terapia antirretroviral (VIH)',ini:'Según infectología',da:'Reconstituir la inmunidad resuelve el molusco extenso.',iv:'Especializado',pres:'TAR',ci:'—',ea:'Según esquema',nota:'Molusco extenso en adulto → valorar VIH.'},
+  {n:'Inmunoterapia intralesional',ini:'Sesiones',da:'Antígeno de Candida o MMR intralesional en casos persistentes.',iv:'Especializado',pres:'Antígeno intralesional',ci:'—',ea:'Dolor local, reacción',nota:'Para resistentes/recurrentes.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Pauta',f.da);
+  if(f.iv)h+=poprow('Ámbito',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Cautela',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'👤 Para el paciente / familia',color:'#0a5c45',fichas:[
+  {n:'Entender el molusco y evitar el contagio',via:'Al diagnóstico',
+   enf:'Explicar que es viral, benigno y que suele curarse solo; reforzar medidas para no diseminarlo.',
+   pac:'Son granitos por un virus de la piel. <b>Se curan solos</b>, aunque puede tardar meses. Para no diseminarlos: <b>no los rasques ni exprimas</b>, no compartas toallas ni esponjas, cúbrelos si están expuestos y lávate las manos. En la piscina/deporte de contacto, cubre las lesiones.',
+   nota:'El enrojecimiento de una lesión (signo BOTE) suele anunciar que va a curarse; no siempre es infección.',
+   alarma:'Consulta si hay <b>pus, dolor creciente o enrojecimiento que se extiende</b> (posible infección), o si las lesiones son muy numerosas o crecen mucho.'}]},
+ {familia:'🔎 Cuándo pensar en algo más',color:'#0c3b6e',fichas:[
+  {n:'Señales que cambian la conducta',via:'Valorar',
+   enf:'Molusco extenso/atípico en el adulto, o refractario, obliga a valorar inmunodepresión (VIH).',
+   pac:'En algunos casos conviene estudiar más a fondo.',
+   nota:'Molusco anogenital en el adulto → contexto de ITS; molusco gigante/extenso → valorar VIH.',
+   alarma:'Lesiones gigantes, muy numerosas o que no responden → derivar a dermatología.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Personal de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ nino:{t:'Niño inmunocompetente',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> el caso más común; pápulas umbilicadas, pocas o moderadas, sin repercusión.</p></div>'
+  +'<div class="alert a-g"><span class="ai">✅</span><div><div class="at">Conducta</div><b>Observación</b> con medidas de higiene. Trata solo si hay molestia, diseminación amplia o motivo estético: <b>KOH en casa</b> o <b>curetaje/cantaridina</b> en consultorio.</div></div>'},
+ adulto:{t:'Adulto — molusco anogenital (ITS)',c:'#6a1a5a',h:
+  '<div class="prose"><p><b>Perfil:</b> en el adulto, el molusco genital suele transmitirse por contacto sexual.</p></div>'
+  +'<div class="alert a-w"><span class="ai">⚠️</span><div>Manéjalo en el <b>contexto de ITS</b>: valora tamizaje de otras infecciones y a la pareja. Tratamiento: <b>curetaje/crioterapia</b> o <b>podofilotoxina 0.5%</b> (no en embarazo).</div></div>'},
+ inmuno:{t:'Inmunodeprimido / VIH',c:'#7b1c1c',h:
+  '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Molusco extenso o gigante</div>En VIH/inmunodepresión el molusco puede ser <b>extenso, gigante o refractario</b>. Lo más eficaz es <b>reconstituir la inmunidad</b> (TAR). Valora VIH ante un molusco atípico/extenso en el adulto.</div></div>'},
+ dermatitis:{t:'Dermatitis asociada (eccema molluscatum)',c:'#a85a1a',h:
+  '<div class="prose"><p><b>Perfil:</b> eccema alrededor de las lesiones; frecuente en atópicos.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🧴</span><div>Trata el eccema (emolientes ± corticoide tópico suave) y evita rascar (autoinoculación). El control del eccema reduce la diseminación.</div></div>'},
+ recurrente:{t:'Persistente / recurrente',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> lesiones que no resuelven o reaparecen.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🔁</span><div>Reevalúa la adherencia y la autoinoculación; valora <b>inmunoterapia intralesional</b> (Candida/MMR) y descarta inmunodepresión. Deriva a dermatología si es refractario.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Paciente con pápulas umbilicadas compatibles con molusco. ¿Es inmunocompetente?',o:[
+   ['Sí','competente'],['No (VIH / inmunodepresión)','inmuno']]},
+ inmuno:{t:'Trata la inmunodeficiencia',r:'mid',x:'En inmunodepresión el molusco puede ser extenso/refractario. Lo más eficaz es <b>reconstituir la inmunidad</b> (p. ej., TAR en VIH) + tratamiento local si procede. Valora VIH ante un molusco atípico/extenso en el adulto.'},
+ competente:{q:'¿Hay molestia, diseminación amplia, motivo estético o afectación anogenital en el adulto?',o:[
+   ['No (niño sano, pocas lesiones)','observa'],['Sí, conviene tratar','tratar']]},
+ observa:{t:'Observación (espera vigilante)',r:'ok',x:'<b>Observa</b> con medidas de higiene para evitar la diseminación. La mayoría se resuelve en 6–12 meses. El signo BOTE (enrojecimiento) suele anunciar la resolución; no lo confundas con infección.'},
+ tratar:{q:'¿Prefieres manejo en casa o en consultorio?',o:[
+   ['En casa','casa'],['En consultorio','consultorio']]},
+ casa:{t:'Tópico en casa',r:'ok',x:'<b>KOH 5–10%</b> 1–2 veces/día hasta que se inflamen las lesiones (2–6 semanas); o <b>berdazimer 10.3%</b> 1 vez/día hasta 12 semanas. En molusco anogenital del adulto: <b>podofilotoxina 0.5%</b> (no en embarazo).'},
+ consultorio:{t:'Físico en consultorio',r:'ok',x:'<b>Curetaje</b> (muy eficaz; anestésico tópico previo en niños) o <b>cantaridina 0.7%</b> (indolora al aplicar, se lava a las 2–6 h, repetir c/2–4 semanas). La <b>crioterapia</b> es una opción, pero duele en niños.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('nino',document.querySelector('#escen-chips .pchip')); algoStart();
+});
+
+</script>
+</body>
+</html>

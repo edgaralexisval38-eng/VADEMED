@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Torsión testicular · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-200:#e5e7eb;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#a4243b;--acd:#5c1420;--acl:#f7e7ea;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:sticky;top:0;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.prose b,.prose strong{color:var(--gray-900);}
+
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+
+/* Fisiopatología — 3 bloques */
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}
+.fp b,.fp strong{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}
+.fp-a{background:var(--al);border-color:var(--am);}
+.fp-b{background:var(--bl);border-color:var(--bm);}
+
+/* Tx líneas / fichas */
+.sif-card{background:#fff;border:1px solid var(--bd);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;}
+.sif-n{font-size:13px;font-weight:700;color:var(--ac);margin-bottom:6px;}
+.poprow{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--gray-100);font-size:12px;line-height:1.5;}
+.poprow:last-child{border-bottom:none;}
+.poprow-t{min-width:88px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);flex-shrink:0;padding-top:1px;}
+.poprow-v{color:var(--gray-700);flex:1;}
+.poprow-v b{color:var(--gray-900);}
+
+/* Fármacos acordeón */
+.farm-l{margin-bottom:14px;}
+.farm-lh{font-size:11px;font-weight:700;color:#fff;padding:7px 12px;border-radius:var(--rs) var(--rs) 0 0;}
+.farm-c{border:1px solid var(--bd);border-top:none;background:#fff;}
+.farm-hd{padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray-100);}
+.farm-nm{font-size:12.5px;font-weight:700;color:var(--gray-900);flex:1;}
+.farm-ini{font-size:11px;color:var(--gray-600);}
+.farm-b{padding:10px 12px;border-bottom:1px solid var(--gray-100);background:var(--gray-50);}
+.farm-b .poprow-t{color:var(--ac);}
+
+/* Calculadora / interactivos */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.calc-in{width:100%;padding:9px 11px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;margin-bottom:2px;}
+.opt{display:inline-block;padding:7px 12px;margin:3px 4px 3px 0;border:1.5px solid var(--bd);border-radius:20px;font-size:12.5px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}
+.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+
+/* Algoritmo */
+.an{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.a-q{font-size:14px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.5;}
+
+/* Indicaciones */
+.ind-b{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.ind-bh{color:#fff;padding:8px 14px;font-size:12px;font-weight:700;}
+.ind-bb{padding:6px 10px 10px;}
+.ind-card{border:1px solid var(--gray-100);border-radius:var(--rs);margin-top:8px;overflow:hidden;}
+.ind-hd{padding:9px 12px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gray-900);display:flex;align-items:center;gap:8px;background:var(--gray-50);}
+.ind-body{padding:10px 12px;display:none;}
+.ind-body.on{display:block;}
+.ind-sec{margin-bottom:8px;padding:8px 10px;border-radius:var(--rs);font-size:12px;line-height:1.55;}
+.ind-via{background:var(--al);color:var(--a);}
+.ind-enf{background:var(--bl);color:var(--b);}
+.ind-pac{background:var(--gl);color:var(--g);}
+.ind-nota{background:var(--acl);color:var(--acd);}
+.ind-alarma{background:var(--rl);color:var(--r);}
+.ind-slbl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:2px;opacity:.85;}
+
+/* Bibliografía CAD */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin:0 0 4px;}
+.biblio-header p{font-size:12px;opacity:0.85;margin:0;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--acl);color:var(--ac);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;margin-top:5px;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.biblio-link:hover{text-decoration:underline;}
+.nivel-legend{display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:5px;color:var(--gray-600);}
+
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.farm-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#5c1420,#a4243b);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🚨</div>
+    <div>
+      <div class="hdr-eye">Urología · Emergencia</div>
+      <div class="hdr-title">Torsión testicular</div>
+      <div class="hdr-sub">Tiempo es testículo · ventana ~6 h</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Emergencia quirúrgica</span>
+    <span class="badge">Cremastérico ausente = torsión</span>
+    <span class="badge">Orquidopexia bilateral</span>
+    <span class="badge">TWIST ≥5 → cirugía</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">~6 h</div><div class="qs-l">ventana</div></div>
+  <div class="qs"><div class="qs-v">Súbito</div><div class="qs-l">inicio</div></div>
+  <div class="qs"><div class="qs-v">Cremastérico</div><div class="qs-l">ausente</div></div>
+  <div class="qs"><div class="qs-v">Bilateral</div><div class="qs-l">orquidopexia</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('txc',this)">🎯 Tratamiento</button>
+  <button class="tab" onclick="showT('farm',this)">💊 Fármacos</button>
+  <button class="tab" onclick="showT('ind',this)">📋 Indicaciones</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<div class="panel on" id="tab-res">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y lo esencial</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="prose"><p>La <strong>torsión testicular</strong> es la torsión del <strong>cordón espermático</strong> que interrumpe el flujo sanguíneo del testículo. Es una <strong>emergencia quirúrgica</strong>: el daño es tiempo-dependiente.</p></div>
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">"Tiempo es testículo"</div>El salvamento es ~<strong>90–100% si se opera dentro de las 6 horas</strong> y cae drásticamente después. Todo varón prepúber o joven con dolor escrotal agudo tiene <strong>torsión hasta demostrar lo contrario</strong>.</div></div>
+  <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">La regla operativa</div>Con sospecha clínica alta (o TWIST alto), ve a <strong>quirófano sin esperar la imagen</strong>. El signo más fiable a favor de torsión es la <strong>ausencia del reflejo cremastérico</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Afecta a ~<strong>1 de cada 4000 varones menores de 25 años</strong>.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Incidencia <strong>bimodal</strong>: pico <strong>neonatal</strong> (extravaginal) y pico en la <strong>adolescencia</strong> (~12–18 años, intravaginal).</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Representa el <strong>10–15%</strong> de los escrotos agudos pediátricos que llegan a urgencias.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt">Es la <strong>causa de escroto agudo que no se puede pasar por alto</strong> por su carácter tiempo-dependiente.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Etiología y anatomía</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Tipo</th><th>Características</th></tr></thead><tbody>
+    <tr><td class="dm">Intravaginal (adolescente)</td><td>Deformidad en <strong>"badajo de campana"</strong> (bell clapper): la túnica vaginal envuelve alto el cordón → teste móvil/horizontal que se tuerce dentro de la túnica. Suele ser <strong>bilateral (~80%)</strong>.</td></tr>
+    <tr><td class="dn">Extravaginal (neonatal)</td><td>Se torcen el cordón y las túnicas en conjunto (antes de la fijación testicular); a menudo <strong>prenatal</strong>.</td></tr>
+  </tbody></table></div>
+  <div class="alert a-i"><span class="ai">💡</span><div>La deformidad en badajo de campana explica por qué se fija el <b>lado contralateral</b>: la predisposición es bilateral.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Deformidad en badajo de campana</strong> (el principal factor anatómico).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Adolescencia</strong> (crecimiento testicular rápido) y periodo <strong>neonatal</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Antecedente de dolor escrotal intermitente</strong> (torsión intermitente previa).</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Criptorquidia</strong> / teste no descendido y <strong>aumento del volumen testicular</strong>.</div></div>
+  <div class="kp"><div class="kn">5</div><div class="kt"><strong>Trauma, frío o ejercicio</strong> como desencadenantes; <strong>antecedente familiar</strong>.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="fp fp-r"><strong>1. Obstrucción progresiva</strong><br>El cordón torcido obstruye primero el <strong>retorno venoso</strong> → edema; luego el <strong>flujo arterial</strong> → isquemia → infarto.<br><br><strong>Por eso:</strong> el testículo se hincha y asciende (el cordón se acorta al torcerse).</div>
+  <div class="fp fp-a"><strong>2. Grados de torsión</strong><br>La rotación va de <strong>180° a 720°</strong> o más; a más vueltas, isquemia más rápida.<br><br><strong>Por eso:</strong> el tiempo hasta la detorsión y el grado determinan la viabilidad.</div>
+  <div class="fp fp-b"><strong>3. La ventana de 6 horas</strong><br>La probabilidad de salvar el teste es alta en las primeras <strong>~6 h</strong> y decae después.<br><br><strong>Por eso:</strong> la sospecha alta manda al quirófano antes que la ecografía.</div>
+</div></div>
+</div>
+<div class="panel" id="tab-dx">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Presentación clínica</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt">Dolor escrotal <strong>súbito e intenso</strong>, unilateral; puede despertar del sueño.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Náusea y vómito</strong> frecuentes; a veces dolor abdominal bajo.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Teste <strong>alto y horizontal</strong> (signo de Angell), muy doloroso; epidídimo en posición anómala.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Reflejo cremastérico ausente</strong> (el hallazgo más fiable); <strong>Prehn no fiable</strong>; sin síntomas urinarios.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✋</span><span class="st">Signos, uno por uno</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Reflejo cremastérico ausente</strong>: el signo <strong>más sensible/fiable</strong> a favor de torsión (poco fiable en menores de 1 año).</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Teste alto y horizontal</strong> (Angell): muy <strong>específico</strong>; el cordón se acorta al torcerse.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Signo de Prehn</strong> (dolor mejora al elevar el teste): <strong>NO fiable</strong> para descartar torsión.</div></div>
+  <div class="kp"><div class="kn">4</div><div class="kt"><strong>Doppler</strong>: flujo ausente/disminuido; signo del remolino (whirlpool). No retrasar cirugía si la clínica es clara.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">TWIST score — calcúlalo</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="calc-w">
+    <div style="font-size:14px;font-weight:800;color:var(--ac);margin-bottom:4px;">TWIST (Testicular Workup for Ischemia and Suspected Torsion)</div>
+    <div style="font-size:11.5px;color:#6b7280;margin-bottom:12px;">Toca los hallazgos presentes. El puntaje orienta la conducta (no sustituye el juicio clínico).</div>
+    <div class="chips" id="tw-chips">
+      <button class="pchip" onclick="twToggle('ind',this)">Induración/dureza (2)</button>
+      <button class="pchip" onclick="twToggle('dur',this)">Tumefacción/edema (2)</button>
+      <button class="pchip" onclick="twToggle('alto',this)">Teste alto (1)</button>
+      <button class="pchip" onclick="twToggle('crem',this)">Cremastérico ausente (1)</button>
+      <button class="pchip" onclick="twToggle('nau',this)">Náusea/vómito (1)</button>
+    </div>
+    <div style="margin-top:6px;"><button class="calc-btn sc" onclick="twReset()">Reiniciar</button></div>
+    <div class="calc-result" id="tw-res"></div>
+  </div>
+  <div class="alert a-i"><span class="ai">💡</span><div><b>Interpretación:</b> ≥5 alto (cirugía directa), 3–4 intermedio (Doppler), 0–2 bajo (torsión poco probable). El score apoya, no reemplaza, la decisión clínica.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Diferencial rápido</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="tw"><table class="t"><thead><tr><th>Rasgo</th><th>Torsión testicular</th><th>Apéndice</th><th>Epididimitis</th></tr></thead><tbody>
+    <tr><td class="dm">Inicio</td><td><strong>Súbito</strong></td><td>Gradual</td><td>Gradual</td></tr>
+    <tr><td class="dn">Cremastérico</td><td><strong>Ausente</strong></td><td>Presente</td><td>Presente</td></tr>
+    <tr><td class="dm">Teste</td><td>Alto/horizontal</td><td>Normal</td><td>Normal</td></tr>
+    <tr><td class="dn">Doppler</td><td>Flujo ↓/ausente</td><td>Flujo normal</td><td>Flujo ↑</td></tr>
+  </tbody></table></div>
+  <div class="alert a-r"><span class="ai">🚨</span><div>Dolor <b>súbito</b> + náusea + <b>teste alto</b> + <b>cremastérico ausente</b> = torsión → <b>quirófano</b>, no esperes la imagen.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-algo"><div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo interactivo</div>Sospecha alta o TWIST ≥5 → quirófano. Dudoso → Doppler. Cada minuto cuenta.</div></div><div class="an"><div id="algo-box"></div></div></div>
+<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-farm"><div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Analgesia perioperatoria con dosis. La analgesia NO debe retrasar la cirugía. Toca para desplegar o <strong>busca</strong>.</div></div><input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (morfina, ketorolaco…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;"><div id="farm-body"></div></div>
+<div class="panel" id="tab-ind"><div id="ind-body"></div></div>
+<div class="panel" id="tab-escen">
+<div class="chips" id="escen-chips">
+  <button class="pchip on" onclick="setEscen('clasico',this)">Adolescente clásico</button>
+  <button class="pchip" onclick="setEscen('neonato',this)">Neonato</button>
+  <button class="pchip" onclick="setEscen('intermitente',this)">Intermitente</button>
+  <button class="pchip" onclick="setEscen('doppler',this)">Caso dudoso</button>
+</div>
+<div id="escen-body"></div>
+</div>
+<div class="panel" id="tab-seg">
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Tras la cirugía</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="tw"><table class="t"><thead><tr><th>Punto</th><th>Qué hacer</th></tr></thead><tbody>
+    <tr><td class="dm">Testículo salvado</td><td>Orquidopexia bilateral hecha; cuidado de herida; control urológico</td></tr>
+    <tr><td class="dn">Orquiectomía</td><td>Prótesis diferida si se desea; apoyo psicológico en el adolescente</td></tr>
+    <tr><td class="dm">Fertilidad</td><td>Informar sobre posible impacto; seguimiento según el caso</td></tr>
+  </tbody></table></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Complicaciones</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Pérdida testicular</strong> (orquiectomía) y <strong>atrofia</strong> del teste salvado.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Infertilidad/subfertilidad</strong> y posible formación de <strong>anticuerpos antiespermáticos</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Recurrencia</strong> si no se realiza la orquidopexia.</div></div>
+</div></div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">↩️</span><span class="st">Torsión intermitente</span><span class="sg">&#8964;</span></div>
+<div class="sb hidden">
+  <div class="kp"><div class="kn">1</div><div class="kt">Episodios de dolor <strong>que aparecen y ceden</strong> espontáneamente.</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt">Un Doppler <strong>normal entre episodios no lo descarta</strong>.</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt">Valorar <strong>orquidopexia electiva</strong> para prevenir una torsión completa.</div></div>
+</div></div>
+</div>
+<div class="panel" id="tab-bib">
+<div class="biblio-header">
+  <h2>📚 Bibliografía — Torsión testicular</h2>
+  <p>Emergencia urológica. Nivel de evidencia indicado.</p>
+</div>
+
+<div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Resumen de la evidencia que sostiene este archivo</span><span class="sg open">&#8964;</span></div>
+<div class="sb">
+  <div class="kp"><div class="kn">1</div><div class="kt"><strong>Cremastérico ausente, teste alto, ventana ~6 h, orquidopexia bilateral</strong> → revisión AFP [1] y texto de referencia [2].</div></div>
+  <div class="kp"><div class="kn">2</div><div class="kt"><strong>Epidemiología (1/4000, bimodal), anatomía (bell clapper) y TWIST</strong> → texto de referencia [2].</div></div>
+  <div class="kp"><div class="kn">3</div><div class="kt"><strong>Contexto mexicano</strong> → CENETEC [3].</div></div>
+</div></div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">📘 Diagnóstico y manejo</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">1</span><span class="biblio-year">2013</span><span class="biblio-level lv-b">Nivel B</span></div>
+      <div class="biblio-ref">Sharp VJ, Kieran K, Arlen AM. <em>Testicular torsion: diagnosis, evaluation, and management.</em> Am Fam Physician. 2013;88(12):835-840. [La ausencia del reflejo cremastérico es el signo más preciso; ventana ~6 h; exploración quirúrgica con orquidopexia bilateral. Sustenta el Resumen, el Diagnóstico y el Tratamiento.]</div>
+      <a class="biblio-link" href="https://www.aafp.org/pubs/afp/issues/2013/1215/p835.html" target="_blank">🔗 aafp.org · AFP 2013</a>
+    </div>
+    <div class="biblio-item">
+      <div><span class="biblio-num">2</span><span class="biblio-year">Ref.</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">Testicular Torsion. <em>StatPearls (NCBI Bookshelf).</em> [Incidencia (~1/4000 &lt;25 años), torsión bimodal (neonatal extravaginal / adolescente intravaginal), deformidad en badajo de campana, y uso del TWIST score. Sustenta el Resumen enriquecido y la calculadora.]</div>
+      <a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK448199/" target="_blank">🔗 StatPearls · Testicular Torsion</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">🗂️ Fuentes institucionales — México</div>
+  <div class="biblio-body">
+    <div class="biblio-item">
+      <div><span class="biblio-num">3</span><span class="biblio-year">CENETEC</span><span class="biblio-level lv-exp">Experto</span></div>
+      <div class="biblio-ref">CENETEC — Secretaría de Salud. <em>Catálogo Maestro de Guías de Práctica Clínica (CMGPC): escroto agudo / torsión testicular.</em> Sistema Nacional de Salud, México. [Consulta la GPC vigente y coteja conductas y analgésicos con el cuadro básico de tu unidad.]</div>
+      <a class="biblio-link" href="https://cenetec-difusion.com/gpc-sns/" target="_blank">🔗 cenetec-difusion.com/gpc-sns</a>
+    </div>
+  </div>
+</div>
+
+<div class="biblio-section">
+  <div class="biblio-section-hdr">ℹ️ Nivel de evidencia utilizado</div>
+  <div class="biblio-body">
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">Nivel A</span> Guía / metaanálisis / ECA</div>
+      <div class="nl-item"><span class="biblio-level lv-b">Nivel B</span> Revisiones / estudios observacionales</div>
+      <div class="nl-item"><span class="biblio-level lv-c">Nivel C</span> Consenso / series de casos</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Experto</span> Texto de referencia / opinión de expertos</div>
+    </div>
+  </div>
+</div>
+
+<div class="alert a-i" style="margin:0 0 20px;">
+  <span class="ai">ℹ️</span>
+  <div>Esta guía fue elaborada con base en la evidencia disponible a <strong>2026</strong>. Verifica actualizaciones de guías locales (<strong>CENETEC, SSa México</strong>) y adapta al contexto institucional. Última revisión: <strong>julio 2026</strong>.</div>
+</div>
+</div>
+
+<script>
+/* ===== COLORES ===== */
+var AC='#a4243b', C1='#a4243b', C2='#7a4a00', C3='#374151', CO='#0a5c45', RJ='#7b1c1c', AZ='#0c3b6e';
+
+/* ===== NAV ===== */
+function showT(id,el){
+  var p=document.querySelectorAll('.panel');
+  for(var i=0;i<p.length;i++)p[i].classList.remove('on');
+  var t=document.getElementById('tab-'+id); if(t)t.classList.add('on');
+  var tabs=document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++)tabs[j].classList.remove('on');
+  if(el)el.classList.add('on'); window.scrollTo(0,0);
+}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(!sb)return;sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function fdTog(id){var b=document.getElementById(id);if(b)b.style.display=(b.style.display==='none'||!b.style.display)?'block':'none';}
+function nm(id){var e=document.getElementById(id);if(!e)return null;var v=parseFloat(e.value);return isNaN(v)?null:v;}
+
+/* ===== FICHAS ===== */
+function poprow(t,v){return '<div class="poprow"><span class="poprow-t">'+t+'</span><span class="poprow-v">'+v+'</span></div>';}
+function txrow(t,v,c){return '<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #f9fafb;font-size:12px;"><span style="color:#6b7280;min-width:120px;flex-shrink:0;">'+t+'</span><span style="font-weight:600;color:'+(c||'#374151')+';text-align:right;">'+v+'</span></div>';}
+var TXIDX=0;
+function txCardHTML(f,color,abrir){
+  var id='txc-'+(TXIDX++);
+  var col=f.no?'#7b1c1c':color;
+  var estrella=f.elec?'<span title="Punto clave" style="color:#f5b301;font-size:16px;">★</span> ':'';
+  var h='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04);">';
+  h+='<div onclick="fdTog(\''+id+'\')" style="background:'+col+';color:#fff;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+estrella+(f.linea||'')+'</div><div style="font-size:15px;font-weight:800;">'+f.n+'</div></div>';
+  h+='<span style="font-size:20px;color:rgba(255,255,255,0.75);">&#8964;</span></div>';
+  h+='<div id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  h+='<div style="background:'+col+'11;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.da){h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:'+col+';letter-spacing:.3px;">'+(f.dlbl||'Conducta')+'</div>';
+           h+='<div style="font-size:14px;font-weight:800;color:'+col+';margin-top:1px;">'+f.da+'</div>';}
+  if(f.dur)h+='<div style="font-size:12.5px;font-weight:700;color:#c0392b;margin-top:6px;line-height:1.5;">'+f.dur+'</div>';
+  if(f.adm)h+='<div style="font-size:12.5px;color:#374151;margin-top:4px;line-height:1.5;">'+f.adm+'</div>';
+  h+='</div><div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+  if(f.mec)h+=txrow('Mecanismo / base',f.mec,'#374151');
+  if(f.ind)h+=txrow('Cuándo',f.ind,'#0c3b6e');
+  if(f.dmax)h+=txrow('Nota',f.dmax,'#7a4a00');
+  if(f.iv)h+=txrow('Ámbito',f.iv,'#1a3a5c');
+  if(f.pres)h+=txrow('Detalle',f.pres,'#374151');
+  if(f.ci)h+=txrow('Cautela',f.ci,'#c0392b');
+  if(f.ea)h+=txrow('Riesgos',f.ea,'#374151');
+  if(f.mon)h+=txrow('Seguimiento',f.mon,'#0a5c45');
+  h+='</div>';
+  if(f.nota)h+='<div style="padding:10px 14px;background:'+(f.no?'#fdeaea':'var(--acl)')+';"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+(f.no?'#7b1c1c':'#5c1420')+';margin-bottom:4px;letter-spacing:.4px;">Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.7;">'+f.nota+'</div></div>';
+  h+='</div></div>';
+  return h;
+}
+function buildCards(color,fichas){var h='';for(var i=0;i<fichas.length;i++)h+=txCardHTML(fichas[i],color,false);return h;}
+function buildLinea(label,sublabel,badgeColor,fichas,cardColor){
+  var h='<div style="margin-top:14px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+  h+='<span style="background:'+badgeColor+';color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;white-space:nowrap;">'+label+'</span>';
+  if(sublabel)h+='<span style="font-size:11.5px;color:#6b7280;line-height:1.4;">'+sublabel+'</span>';
+  h+='</div>'+buildCards(cardColor||badgeColor,fichas)+'</div>';
+  return h;
+}
+
+/* ===== FICHAS DE TRATAMIENTO ===== */
+var F_CIR={n:'Exploración quirúrgica urgente + orquidopexia bilateral',elec:true,linea:'EMERGENCIA — el tratamiento definitivo',
+  dlbl:'Conducta',da:'Exploración escrotal URGENTE con detorsión y orquidopexia BILATERAL; orquiectomía si el teste es inviable',
+  dur:'"Tiempo es testículo": la mejor tasa de salvamento es dentro de las ~6 h del inicio.',
+  adm:'Si la clínica es clara (dolor súbito, cremastérico ausente, teste alto, TWIST alto), lleva a quirófano SIN esperar el Doppler. Se fijan AMBOS testes porque la predisposición anatómica (badajo de campana) suele ser bilateral.',
+  mec:'Destorcer el cordón restaura el flujo; la orquidopexia evita la recurrencia.',
+  ind:'Sospecha de torsión testicular a cualquier edad.',
+  dmax:'Salvamento ~90–100% &lt;6 h; cae marcadamente tras 12–24 h.',
+  iv:'Quirófano',pres:'Detorsión + orquidopexia bilateral',ci:'—',ea:'Pérdida testicular si hay demora',mon:'Viabilidad intraoperatoria; seguimiento urológico',
+  nota:'⭐ La imagen NUNCA debe retrasar la cirugía cuando la sospecha es alta. Un Doppler normal no descarta la torsión intermitente.'};
+var F_MANUAL={n:'Detorsión manual (puente mientras se opera)',linea:'Medida temporal, no definitiva',
+  dlbl:'Conducta',da:'Rota el teste hacia afuera "abriendo un libro" (habitualmente de medial a lateral); si el dolor aumenta, gira en sentido contrario',
+  dur:'No sustituye la cirugía: la orquidopexia sigue siendo necesaria.',
+  adm:'La analgesia facilita la maniobra. El alivio del dolor y el descenso del teste sugieren éxito. Confirma con Doppler si está disponible sin demora, pero no retrases el quirófano.',
+  mec:'Deshace la vuelta del cordón y restablece el flujo de forma temporal.',
+  ind:'Torsión testicular con demora quirúrgica prevista.',
+  dmax:'Dos tercios son mediales (se destorcen lateralmente), pero no siempre.',
+  iv:'Urgencias',pres:'Maniobra manual',ci:'No debe retrasar el quirófano',ea:'Detorsión incompleta o en sentido erróneo',mon:'Dolor, flujo, cirugía posterior',
+  nota:'Guíate por el alivio del dolor: si empeora al girar en un sentido, prueba el contrario.'};
+var F_MEDIDAS={n:'Medidas generales',elec:true,linea:'Soporte — preparación quirúrgica',
+  dlbl:'Conducta',da:'Ayuno (nada por vía oral) ante cirugía inminente, acceso IV y preparación para quirófano sin demora',
+  dur:'Desde la sospecha hasta el quirófano.',
+  adm:'Coloca vía IV, mantén al paciente en ayuno para la anestesia, solicita valoración quirúrgica urgente y prepara el consentimiento. La analgesia y el antiemético acompañan.',
+  mec:'Optimiza al paciente para la cirugía urgente.',
+  ind:'Todo paciente con sospecha de torsión.',
+  dmax:'—',iv:'Urgencias',pres:'Ayuno · vía IV · preparación',ci:'—',ea:'—',mon:'Estado general, dolor, ayuno',
+  nota:'⭐ Las medidas generales NUNCA deben retrasar la cirugía.'};
+var F_MORFINA={n:'Morfina',linea:'Analgesia — dolor intenso',
+  dlbl:'Dosis',da:'0.05–0.1 mg/kg IV en bolos de 2–4 mg cada 5–10 min, titulando según el dolor',
+  dur:'Mientras se prepara el quirófano; no debe retrasar la cirugía.',
+  adm:'Opioide de elección para el dolor intenso. Titula con vigilancia respiratoria.',
+  mec:'Agonista opioide.',
+  ind:'Dolor intenso de la torsión.',
+  dmax:'Titular según respuesta; vigilar depresión respiratoria.',
+  iv:'IV',pres:'Ampolleta',ci:'Depresión respiratoria, hipotensión',ea:'Sedación, náusea, depresión respiratoria',mon:'Dolor, estado respiratorio',
+  nota:'Analgésico de primera línea en el dolor severo; el ketorolaco lo complementa.'};
+var F_KETO={n:'Ketorolaco',linea:'Analgesia coadyuvante',
+  dlbl:'Dosis',da:'30 mg IV/IM (puede repetirse cada 6 h; máximo 120 mg/día y 5 días)',
+  dur:'Uso corto; no exceder 5 días.',
+  adm:'AINE parenteral coadyuvante si no hay contraindicación (función renal, sangrado, úlcera). Reduce el requerimiento de opioide.',
+  mec:'AINE (inhibidor de la COX).',
+  ind:'Dolor de la torsión, como coadyuvante.',
+  dmax:'Máx 120 mg/día; 5 días.',
+  iv:'IV/IM',pres:'Ampolleta 30 mg',ci:'ERC, sangrado, úlcera',ea:'Gastrolesión, daño renal',mon:'Función renal, dolor',
+  nota:'Complementa al opioide; útil como analgesia multimodal.'};
+var F_ONDA={n:'Ondansetrón',linea:'Antiemético',
+  dlbl:'Dosis',da:'4–8 mg IV',
+  dur:'Según necesidad por la náusea/vómito.',
+  adm:'Antiemético para la náusea y el vómito, muy frecuentes en la torsión.',
+  mec:'Antagonista de los receptores 5-HT3.',
+  ind:'Náusea/vómito asociados a la torsión.',
+  dmax:'Vigilar el QT.',
+  iv:'IV',pres:'Ampolleta 4/8 mg',ci:'QT largo',ea:'Cefalea, prolongación del QT',mon:'QT si hay riesgo',
+  nota:'La náusea/vómito acompaña con frecuencia a la torsión: el antiemético mejora el confort.'};
+var F_NO_IMG={n:'❌ Esperar la imagen cuando la sospecha es alta',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No retrases la cirugía por hacer un Doppler si la clínica es clara',
+  dur:'Cada hora cuenta: el salvamento cae rápidamente después de las 6 h.',
+  adm:'Con sospecha alta (o TWIST alto), lleva a quirófano; la imagen es para los casos dudosos/intermedios.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Pérdida testicular',
+  nota:'"Tiempo es testículo": la exploración quirúrgica no espera a la ecografía en el caso claro.'};
+var F_NO_UNILAT={n:'❌ Fijar solo el teste afectado',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No olvides la orquidopexia CONTRALATERAL',
+  dur:'La predisposición anatómica (badajo de campana) suele ser bilateral (~80%).',
+  adm:'Fija ambos testes para prevenir una torsión futura del lado sano.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Torsión del teste contralateral',
+  nota:'La orquidopexia bilateral es parte del estándar de tratamiento.'};
+var F_NO_PREHN={n:'❌ Descartar torsión por Prehn o Doppler "normal"',no:true,linea:'NO hacer',
+  dlbl:'Conducta',da:'No te fíes del signo de Prehn ni de un Doppler normal para excluir torsión',
+  dur:'Prehn no es fiable; el Doppler puede ser normal en la torsión intermitente.',
+  adm:'Prioriza la clínica y el TWIST; ante duda, explora quirúrgicamente.',
+  mec:'—',ind:'—',dmax:'—',iv:'—',pres:'—',ci:'—',
+  ea:'Torsión no diagnosticada',
+  nota:'El signo más fiable a FAVOR de torsión es la ausencia del reflejo cremastérico.'};
+
+var TXC=[
+ ['🚨 Tratamiento definitivo','Cirugía urgente',C1,[F_CIR,F_MANUAL]],
+ ['💉 Soporte y analgesia','Sin retrasar la cirugía',C2,[F_MEDIDAS,F_MORFINA,F_KETO,F_ONDA]],
+ ['❌ NO hacer','Errores que cuestan un testículo',RJ,[F_NO_IMG,F_NO_UNILAT,F_NO_PREHN]]
+];
+function buildTxc(){
+  TXIDX=0;
+  var h='<div class="alert a-r" style="margin-bottom:12px;"><span class="ai">🚨</span><div><div class="at">Emergencia: tiempo es testículo</div>La torsión testicular es una <b>emergencia quirúrgica</b>. Con sospecha alta, ve a <b>quirófano</b> (detorsión + orquidopexia bilateral) dentro de ~6 h, <b>sin esperar la imagen</b>. La <span style="color:#f5b301;">★</span> marca lo prioritario. Toca cada ficha.</div></div>';
+  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
+  document.getElementById('txc-body').innerHTML=h;
+}
+
+/* ===== TWIST SCORE (interactivo) ===== */
+var TWIST={dur:false,ind:false,alto:false,crem:false,nau:false};
+function twToggle(k,el){TWIST[k]=!TWIST[k];if(el)el.classList.toggle('on',TWIST[k]);twCalc();}
+function twCalc(){
+  var s=0;
+  if(TWIST.ind)s+=2;   // induración/dureza
+  if(TWIST.dur)s+=2;   // tumefacción/edema
+  if(TWIST.alto)s+=1;  // teste alto
+  if(TWIST.crem)s+=1;  // cremastérico ausente
+  if(TWIST.nau)s+=1;   // náusea/vómito
+  var box=document.getElementById('tw-res'),cls,txt;
+  if(s>=5){cls='res-high';txt='<b>Riesgo ALTO ('+s+'/7)</b> → alta probabilidad de torsión. Considera <b>exploración quirúrgica directa</b>, sin retrasar por ecografía.';}
+  else if(s>=3){cls='res-mid';txt='<b>Riesgo INTERMEDIO ('+s+'/7)</b> → <b>ecografía Doppler</b> para orientar; mantén alta sospecha clínica.';}
+  else{cls='res-ok';txt='<b>Riesgo BAJO ('+s+'/7)</b> → torsión poco probable; valora otras causas. Reevalúa si la clínica cambia (el score no es infalible).';}
+  box.className='calc-result show '+cls;
+  box.innerHTML='<div style="font-size:15px;font-weight:800;">TWIST '+s+'/7</div><div style="font-size:12.5px;margin-top:6px;line-height:1.6;">'+txt+'</div>'+
+    '<div style="font-size:11px;margin-top:8px;opacity:0.85;">TWIST: induración/dureza (2) · tumefacción/edema (2) · teste alto (1) · reflejo cremastérico ausente (1) · náusea o vómito (1). Herramienta de apoyo; no sustituye el juicio clínico ni la exploración quirúrgica ante sospecha alta.</div>';
+}
+function twReset(){
+  TWIST={dur:false,ind:false,alto:false,crem:false,nau:false};
+  var chips=document.querySelectorAll('#tw-chips .pchip');
+  for(var i=0;i<chips.length;i++)chips[i].classList.remove('on');
+  twCalc();
+}
+
+/* ===== FÁRMACOS ===== */
+var FARMACOS=[
+ {familia:'💉 Analgesia perioperatoria',color:'#a4243b',farmacos:[
+  {n:'Morfina',ini:'0.05–0.1 mg/kg IV',da:'Opioide de elección para el dolor intenso; bolos de 2–4 mg cada 5–10 min titulando. No debe retrasar la cirugía.',iv:'IV',pres:'Ampolleta',ci:'Depresión respiratoria, hipotensión',ea:'Sedación, náusea, depresión respiratoria',nota:'Titular con vigilancia respiratoria.'},
+  {n:'Ketorolaco',ini:'30 mg IV/IM',da:'AINE parenteral coadyuvante si no hay contraindicación.',iv:'IV/IM',pres:'Ampolleta 30 mg',ci:'ERC, sangrado, úlcera',ea:'Gastrolesión, renal',nota:'Coadyuvante analgésico.'},
+  {n:'Ondansetrón',ini:'4–8 mg IV',da:'Antiemético para la náusea/vómito frecuentes.',iv:'IV',pres:'Ampolleta 4/8 mg',ci:'QT largo',ea:'Cefalea, QT',nota:'Útil por la náusea de la torsión.'}]}
+];
+var FAM_OPEN={};
+function famTog(i){FAM_OPEN[i]=!FAM_OPEN[i];renderFarm(document.getElementById('farm-q').value);}
+function farmCardHTML(f,color,idx,abrir){
+  var id='fc-'+idx;
+  var h='<div class="farm-c"><div class="farm-hd" onclick="fdTog(\''+id+'\')"><span class="farm-nm">'+f.n+'</span><span class="farm-ini" style="color:'+color+';">'+f.ini+'</span></div>';
+  h+='<div class="farm-b" id="'+id+'" style="display:'+(abrir?'block':'none')+';">';
+  if(f.da)h+=poprow('Dosis',f.da);
+  if(f.iv)h+=poprow('Vía',f.iv);
+  if(f.pres)h+=poprow('Presentación',f.pres);
+  if(f.ci)h+=poprow('Cautela',f.ci);
+  if(f.ea)h+=poprow('Efectos',f.ea);
+  if(f.nota)h+=poprow('Nota',f.nota);
+  h+='</div></div>';return h;
+}
+function renderFarm(q){
+  q=(q||'').toLowerCase().trim();var h='',idx=0;
+  for(var i=0;i<FARMACOS.length;i++){
+    var fam=FARMACOS[i],fis=[];
+    for(var j=0;j<fam.farmacos.length;j++){var f=fam.farmacos[j];if(!q||(f.n+' '+f.ini+' '+(f.nota||'')).toLowerCase().indexOf(q)>=0)fis.push(f);}
+    if(!fis.length)continue;
+    h+='<div class="farm-l"><div class="farm-lh" style="background:'+fam.color+';">'+fam.familia+' · '+fis.length+'</div>';
+    var abierta=q?true:!!FAM_OPEN[i];
+    for(var k=0;k<fis.length;k++){h+=farmCardHTML(fis[k],fam.color,idx,q?true:abierta);idx++;}
+    h+='</div>';
+  }
+  if(!h)h='<div class="alert a-w"><span class="ai">🔎</span><div>Sin resultados para “'+q+'”.</div></div>';
+  document.getElementById('farm-body').innerHTML=h;
+}
+function filtrarFarmacos(q){renderFarm(q);}
+
+/* ===== INDICACIONES ===== */
+var IND=[
+ {familia:'🩺 Para el equipo',color:'#0a5c45',fichas:[
+  {n:'Actúa como si fuera torsión',via:'Al primer contacto',
+   enf:'Todo varón prepúber o joven con dolor escrotal agudo tiene torsión hasta demostrar lo contrario. Explora el reflejo cremastérico y la posición del teste, calcula el TWIST y activa la vía quirúrgica.',
+   pac:'El dolor brusco de testículo es una urgencia; hay que valorarlo y, si hace falta, operar de inmediato.',
+   nota:'El signo más fiable a favor de torsión es la AUSENCIA del reflejo cremastérico; la imagen no debe retrasar el quirófano en el caso claro.',
+   alarma:'Dolor súbito + náusea + teste alto + cremastérico ausente = quirófano, no esperes.'}]},
+ {familia:'👤 Para el paciente / familia',color:'#0c3b6e',fichas:[
+  {n:'Por qué operar ya',via:'Al indicar cirugía',
+   enf:'Explicar el carácter tiempo-dependiente, la orquidopexia bilateral y la posibilidad de orquiectomía si el teste no es viable.',
+   pac:'El testículo se torció y se quedó sin riego. Hay que operar cuanto antes para intentar salvarlo y fijar también el otro lado para que no le pase lo mismo. Si el testículo ya no es viable, podría ser necesario retirarlo.',
+   nota:'Cuanto antes se opere, mayor la probabilidad de conservar el testículo.',
+   alarma:'Si el dolor reaparece después, acude de inmediato.'}]}
+];
+function indTog(id){var b=document.getElementById(id);if(b)b.classList.toggle('on');}
+function buildInd(){
+  var h='';
+  for(var i=0;i<IND.length;i++){
+    var g=IND[i];
+    h+='<div class="ind-b"><div class="ind-bh" style="background:'+g.color+';">'+g.familia+' · '+g.fichas.length+'</div><div class="ind-bb">';
+    for(var j=0;j<g.fichas.length;j++){
+      var f=g.fichas[j],id='ind-'+i+'-'+j;
+      h+='<div class="ind-card"><div class="ind-hd" onclick="indTog(\''+id+'\')"><span>▸</span> '+f.n+'</div><div class="ind-body" id="'+id+'">';
+      if(f.via&&f.via!=='—')h+='<div class="ind-sec ind-via"><span class="ind-slbl">Momento</span>'+f.via+'</div>';
+      if(f.enf&&f.enf!=='—')h+='<div class="ind-sec ind-enf"><span class="ind-slbl">Equipo de salud</span>'+f.enf+'</div>';
+      if(f.pac&&f.pac!=='—')h+='<div class="ind-sec ind-pac"><span class="ind-slbl">Para el paciente</span>'+f.pac+'</div>';
+      if(f.nota)h+='<div class="ind-sec ind-nota"><span class="ind-slbl">Nota clínica</span>'+f.nota+'</div>';
+      if(f.alarma)h+='<div class="ind-sec ind-alarma"><span class="ind-slbl">Señales de alarma</span>'+f.alarma+'</div>';
+      h+='</div></div>';
+    }
+    h+='</div></div>';
+  }
+  document.getElementById('ind-body').innerHTML=h;
+}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ clasico:{t:'Adolescente con dolor súbito',c:'#a4243b',h:
+  '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">El caso clásico</div>Adolescente, dolor <b>súbito</b> e intenso, náusea/vómito, teste <b>alto y horizontal</b>, <b>cremastérico ausente</b>. <b>Exploración quirúrgica urgente</b> (detorsión + orquidopexia bilateral) dentro de ~6 h. No esperes la imagen.</div></div>'},
+ neonato:{t:'Neonato (torsión extravaginal)',c:'#7a4a00',h:
+  '<div class="prose"><p><b>Perfil:</b> escroto duro, indoloro y decolorado, a menudo de origen prenatal.</p></div>'
+  +'<div class="alert a-w"><span class="ai">👶</span><div>Valoración urológica urgente. El salvamento del lado afectado suele ser malo si es prenatal, pero se explora para valorar y <b>fijar el teste contralateral</b>.</div></div>'},
+ intermitente:{t:'Torsión intermitente',c:'#0c3b6e',h:
+  '<div class="prose"><p><b>Perfil:</b> episodios de dolor escrotal que aparecen y ceden espontáneamente.</p></div>'
+  +'<div class="alert a-i"><span class="ai">↩️</span><div>Un Doppler <b>normal entre episodios no lo descarta</b>. Valora <b>orquidopexia electiva</b> para prevenir una torsión completa.</div></div>'},
+ doppler:{t:'Caso dudoso',c:'#0a5c45',h:
+  '<div class="prose"><p><b>Perfil:</b> presentación no clásica o TWIST intermedio.</p></div>'
+  +'<div class="alert a-i"><span class="ai">🖥️</span><div><b>Ecografía Doppler</b> si se obtiene sin demora (flujo ausente/disminuido apoya torsión). Si persiste la duda o el TWIST es alto → <b>exploración quirúrgica</b>.</div></div>'}
+};
+function setEscen(k,el){
+  var c=document.querySelectorAll('#escen-chips .pchip');
+  for(var i=0;i<c.length;i++)c[i].classList.remove('on');
+  if(el)el.classList.add('on');
+  var e=ESCEN[k];
+  document.getElementById('escen-body').innerHTML='<div class="sec"><div class="sh" style="cursor:default;"><span class="si">⚙️</span><span class="st">'+e.t+'</span></div><div class="sb">'+e.h+'</div></div>';
+}
+
+/* ===== ALGORITMO ===== */
+var ALGO={
+ start:{q:'Dolor escrotal agudo. Evalúa la sospecha de torsión (dolor SÚBITO, náusea/vómito, teste alto/horizontal, cremastérico AUSENTE) y calcula el TWIST. ¿Sospecha alta?',o:[
+   ['Sí (o TWIST ≥5)','quirofano'],['Dudoso / TWIST intermedio','doppler'],['Baja / TWIST bajo','bajo']]},
+ quirofano:{t:'🚨 Quirófano YA',r:'high',x:'<b>Exploración quirúrgica URGENTE</b> (detorsión + orquidopexia bilateral) dentro de ~6 h. <b>NO esperes</b> el Doppler. Analgesia; considera detorsión manual como puente si habrá demora. Orquiectomía si el teste es inviable.'},
+ doppler:{q:'Caso dudoso. ¿Puedes obtener una ecografía Doppler sin demora?',o:[
+   ['Sí','dop_res'],['No','quirofano']]},
+ dop_res:{t:'Doppler para orientar',r:'mid',x:'<b>Flujo ausente/disminuido</b> → torsión (quirófano). <b>Flujo normal</b> → considera otras causas, pero <b>ojo</b>: un Doppler normal no descarta la torsión intermitente si la clínica es muy sugestiva.'},
+ bajo:{t:'Torsión poco probable',r:'ok',x:'Valora otras causas del escroto agudo (torsión de apéndice, epididimitis). <b>Reevalúa</b> si la clínica cambia; el TWIST bajo no es infalible.'}
+};
+function algoStart(){algoGo('start');}
+function algoGo(k){
+  var n=ALGO[k],b=document.getElementById('algo-box'),h='';
+  if(!n)return;
+  if(n.q){h='<div class="a-q">'+n.q+'</div>';for(var i=0;i<n.o.length;i++)h+='<button class="opt" onclick="algoGo(\''+n.o[i][1]+'\')">'+n.o[i][0]+'</button>';}
+  else{var cls=n.r==='high'?'res-high':(n.r==='mid'?'res-mid':'res-ok');
+    h='<div class="calc-result show '+cls+'"><div style="font-size:14px;font-weight:800;margin-bottom:6px;">'+n.t+'</div><div>'+n.x+'</div></div>';
+    h+='<div style="margin-top:10px;"><button class="opt" onclick="algoGo(\'start\')">↩ Empezar de nuevo</button></div>';}
+  b.innerHTML=h;
+}
+
+/* ===== INIT ===== */
+window.addEventListener('load',function(){
+  buildTxc(); renderFarm(''); buildInd();
+  setEscen('clasico',document.querySelector('#escen-chips .pchip'));
+  twCalc(); algoStart();
+});
+
+</script>
+</body>
+</html>
