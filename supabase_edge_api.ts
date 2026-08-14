@@ -306,6 +306,16 @@ Deno.serve(async (req: Request): Promise<Response> => {
         return json(data);
       }
 
+      if (action === "admin_renombrar") {
+        const nuevo = norm(body?.nuevo);
+        if (!nuevo) return json({ ok: false, error: "Falta el código nuevo" });
+        const { data, error } = await supabase.rpc("admin_renombrar", {
+          p_viejo: cod, p_nuevo: nuevo,
+        });
+        if (error) throw error;
+        return json(data);
+      }
+
       if (action === "admin_borrar") {
         const { data, error } = await supabase.rpc("admin_borrar", { p_codigo: cod });
         if (error) throw error;
