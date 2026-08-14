@@ -256,24 +256,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hosp-item::before{content:'•';position:absolute;left:0;opacity:0.6;}
 
 @media print{.tabbar,.hdr-badges,.print-btn{display:none!important;}.panel{display:block!important;padding:10px 0!important;}.sec-body.hidden{display:block!important;}body{background:#fff;}}
-/* Fichas desplegables de farmaco (sustituyen a las tablas de 6 columnas) */
-.fichas{display:flex;flex-direction:column;gap:8px;margin:10px 0 0;}
-.fic{border:1px solid #e3e9f2;border-radius:11px;overflow:hidden;background:#fff;}
-.fic-h{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;background:#f7f9fc;transition:background .14s;}
-.fic-h:hover{background:#eef3fa;}
-.fic-n{flex:1;font-weight:800;font-size:14.5px;color:#0f2a4a;line-height:1.3;}
-.fic-l{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:#2563a8;padding:3px 9px;border-radius:20px;white-space:nowrap;}
-.fic-g{color:#8a93a6;font-size:15px;transition:transform .2s;flex:0 0 auto;}
-.fic-g.open{transform:rotate(180deg);}
-.fic-b{padding:2px 13px 11px;display:none;}
-.fic-b.on{display:block;}
-.fic-r{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #f0f4f9;font-size:13.5px;}
-.fic-r:last-child{border-bottom:none;}
-.fic-k{flex:0 0 96px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#7c8798;padding-top:3px;}
-.fic-v{flex:1;color:#1f2a44;line-height:1.5;}
-.fic-vertabla{background:none;border:none;font-family:inherit;font-size:12px;font-weight:700;color:#7c8798;cursor:pointer;padding:6px 2px;text-decoration:underline;}
-.fic-vertabla:hover{color:#2563a8;}
-@media(max-width:520px){.fic-r{flex-direction:column;gap:1px;}.fic-k{flex:none;}}
 </style>
 </head>
 <body>
@@ -1034,49 +1016,174 @@ function updateCalcResult(calc){
   }
 }
 
-function togFicha(h){
-  var b=h.nextElementSibling, g=h.querySelector('.fic-g');
-  if(b) b.classList.toggle('on');
-  if(g) g.classList.toggle('open');
+
+/* ===== Fichas de farmaco (mismo motor visual que EPOC/rinitis) ===== */
+function raT(id){
+  var b=document.getElementById(id), a=document.getElementById(id+'-a');
+  if(!b) return;
+  var abierto=(b.style.display!=='none');
+  b.style.display = abierto ? 'none' : 'block';
+  if(a) a.style.transform = abierto ? '' : 'rotate(180deg)';
 }
-function verTabla(btn){
-  var w=btn.previousElementSibling;
-  if(!w) return;
-  var oculta=(w.style.display==='none');
-  w.style.display = oculta ? '' : 'none';
-  btn.textContent = oculta ? 'Ocultar la tabla completa' : 'Ver la tabla completa';
+function poprow(k,v,c){
+  return '<div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12.5px;">'
+       + '<div style="flex:0 0 120px;color:#6b7280;">'+k+'</div>'
+       + '<div style="flex:1;color:'+(c||'#374151')+';font-weight:600;text-align:right;line-height:1.5;">'+v+'</div></div>';
 }
+function buildRACards(color,farmacos){
+  var h='';
+  farmacos.forEach(function(f,i){
+    var fid='rac'+i+Math.random().toString(36).substr(2,4);
+    h+='<div style="background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+    h+='<div onclick="raT(\''+fid+'\')" style="background:'+color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">';
+    h+='<div><div style="font-size:10px;opacity:0.8;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.5px;">'+(f.linea||'')+'</div><div style="font-size:14px;font-weight:800;">'+f.n+'</div></div>';
+    h+='<span id="'+fid+'-a" style="font-size:20px;color:rgba(255,255,255,0.75);transition:transform .2s;">&#8964;</span></div>';
+    h+='<div id="'+fid+'" style="display:none;">';
+    if(f.da){
+      h+='<div style="background:'+color+'15;border-bottom:2px solid '+color+'33;padding:12px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:6px;">💊 Dosis y duración</div>';
+      var doses=f.da.split(' · ');
+      if(doses.length>1){doses.forEach(function(d){if(d.trim())h+='<div style="font-size:13px;font-weight:700;color:'+color+';padding:3px 0 3px 10px;border-left:3px solid '+color+';margin-bottom:4px;">'+d.trim()+'</div>';});}
+      else{h+='<div style="font-size:13.5px;font-weight:800;color:'+color+';">'+f.da+'</div>';}
+      h+='</div>';
+    }
+    if(f.prep&&f.prep!=='—'){
+      h+='<div style="background:#e8f1fb;border-bottom:1px solid #c8ddf0;padding:11px 14px;">';
+      h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:5px;">⚠️ Cómo administrar</div>';
+      h+='<div style="font-size:12.5px;color:#16335c;line-height:1.65;">'+f.prep+'</div></div>';
+    }
+    h+='<div style="padding:10px 14px;border-bottom:1px solid #f3f4f6;">';
+    if(f.iv)h+=poprow('Vía',f.iv,'#1a3a5c');
+    if(f.pres)h+=poprow('Presentaciones MX',f.pres,'#374151');
+    if(f.fda)h+=poprow('Embarazo',f.fda,'#7a4a00');
+    if(f.ci)h+=poprow('Contraindicaciones',f.ci,'#c0392b');
+    if(f.ea)h+=poprow('Efectos adversos',f.ea,'#374151');
+    h+='</div>';
+    if(f.nota)h+='<div style="padding:10px 14px;background:#f0f6fc;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+color+';margin-bottom:4px;">📋 Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.75;">'+f.nota+'</div></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+function buildLinea(label,color,farmacos){
+  return '<div style="background:'+color+';color:#fff;border-radius:6px;padding:6px 12px;margin:14px 0 8px;font-size:11px;font-weight:700;">'+label+'</div>'+buildRACards(color,farmacos);
+}
+
+var AZ='#1a4d7a', AM='#a1541f';
+
+var APX_ATB=[
+ {n:'Metronidazol + Ceftriaxona',linea:'1ª línea — profilaxis',
+  da:'Metronidazol 500 mg IV · Ceftriaxona 1-2 g IV · Dosis única en no complicada',
+  prep:'Aplicar <b>30-60 min antes de la incisión</b>. Metronidazol en infusión de 30-60 min; ceftriaxona en 30 min. <b>Repetir la dosis</b> si la cirugía pasa de 4 h o hay sangrado mayor a 1500 mL.',
+  iv:'Intravenosa',pres:'Metronidazol sol. iny. 500 mg/100 mL · Ceftriaxona fco. ámp. 1 g',
+  fda:'Ceftriaxona segura · metronidazol: evitar el 1er trimestre si hay alternativa',
+  ci:'Alergia a betalactámicos · alergia a nitroimidazoles · recién nacido con hiperbilirrubinemia',
+  ea:'Náusea y sabor metálico · diarrea · flebitis · reacción tipo disulfiram con alcohol',
+  nota:'Esquema de elección. GPC IMSS-031 + WSES 2025. Cubre gramnegativos y anaerobios. <b>En apendicitis no complicada una sola dosis basta</b> — no se continúa después de la cirugía.'},
+ {n:'Metronidazol + Ciprofloxacino',linea:'2ª línea — si hay alergia',
+  da:'Metronidazol 500 mg IV · Ciprofloxacino 400 mg IV',
+  prep:'Ciprofloxacino en <b>infusión de 60 min</b>; más rápido causa flebitis. Misma ventana de 30-60 min antes de la incisión.',
+  iv:'Intravenosa',pres:'Ciprofloxacino sol. iny. 200 mg/100 mL y 400 mg/200 mL',
+  fda:'Ciprofloxacino: evitar en embarazo si hay alternativa',
+  ci:'Alergia a quinolonas · tendinopatía previa por quinolonas · QT prolongado',
+  ea:'Tendinopatía y ruptura del tendón de Aquiles · disglucemia · QT largo · neuropatía',
+  nota:'Para alergia a cefalosporinas. <b>Revisa la resistencia local a quinolonas</b> antes de elegirla: en varias regiones ya es alta.'},
+ {n:'Piperacilina-Tazobactam',linea:'3ª línea — complicada o sepsis',
+  da:'3.375-4.5 g IV · cada 6-8 h',
+  prep:'Infusión de 30 min, o <b>extendida en 4 h</b> si hay sepsis (mejora la exposición del antibiótico). Ajustar la dosis en falla renal.',
+  iv:'Intravenosa',pres:'Fco. ámp. 4.5 g (4 g piperacilina / 0.5 g tazobactam)',
+  fda:'Puede usarse en embarazo',
+  ci:'Alergia a penicilinas',
+  ea:'Diarrea · nefrotoxicidad si se combina con vancomicina · citopenias con uso prolongado',
+  nota:'Apendicitis complicada, perforación o sepsis. Cobertura ampliada que incluye <i>Pseudomonas</i>.'}
+];
+
+var APX_DOLOR=[
+ {n:'Paracetamol',linea:'Base de la analgesia',
+  da:'1 g IV cada 6-8 h · máximo 4 g al día',
+  prep:'Infusión en 15 min. Si pesa menos de 50 kg: <b>15 mg/kg por dosis</b>. Es la base sobre la que se añaden los demás — no se sustituye por ellos.',
+  iv:'Intravenosa; oral en cuanto tolere',pres:'Sol. iny. 1 g/100 mL · Tab 500 mg',
+  fda:'Seguro en embarazo y lactancia',
+  ci:'Insuficiencia hepática grave',
+  ea:'Hepatotoxicidad por dosis acumulada — <b>suma todas las fuentes</b>, incluidas las combinaciones',
+  nota:'Analgesia multimodal: paracetamol + AINE reduce mucho la necesidad de opioide y sus efectos.'},
+ {n:'Ketorolaco',linea:'AINE — primera opción',
+  da:'15-30 mg IV cada 6-8 h · máximo 120 mg al día · <b>máximo 5 días</b>',
+  prep:'Bolo lento (al menos 15 s) o infusión corta. En <b>mayores de 65 años o menos de 50 kg: 15 mg</b> por dosis. Suspender a los 5 días aunque siga el dolor.',
+  iv:'Intravenosa',pres:'Sol. iny. 30 mg/mL',
+  fda:'Contraindicado en el 3er trimestre — cierra el conducto arterioso',
+  ci:'Sangrado activo · úlcera péptica · falla renal · alergia a AINE · alto riesgo de sangrado quirúrgico',
+  ea:'Gastritis y sangrado digestivo · lesión renal aguda · inhibe la agregación plaquetaria',
+  nota:'<b>La analgesia NO enmascara el cuadro ni retrasa el diagnóstico</b> — es un mito viejo ya desmentido (Cochrane). Dale desde urgencias sin esperar la valoración quirúrgica: el paciente coopera mejor en la exploración.'},
+ {n:'Metamizol (dipirona)',linea:'AINE — alternativa',
+  da:'1 g IV cada 6-8 h · máximo 6 g al día',
+  prep:'<b>Diluir e infundir lento.</b> Aplicado rápido provoca hipotensión importante.',
+  iv:'Intravenosa',pres:'Sol. iny. 1 g/2 mL',
+  fda:'Evitar en el 3er trimestre',
+  ci:'Antecedente de agranulocitosis · discrasias sanguíneas · porfiria',
+  ea:'Hipotensión si se pasa rápido · <b>agranulocitosis</b> (rara pero grave)',
+  nota:'Muy usado en México. Buena opción cuando el ketorolaco está contraindicado por riesgo de sangrado o por falla renal.'},
+ {n:'Tramadol',linea:'Dolor moderado a intenso',
+  da:'50-100 mg IV cada 8 h · máximo 400 mg al día',
+  prep:'<b>Infusión lenta en 15-30 min.</b> En bolo rápido causa náusea intensa. Combinar siempre con antiemético.',
+  iv:'Intravenosa',pres:'Sol. iny. 100 mg/2 mL',
+  fda:'Evitar en embarazo y lactancia',
+  ci:'Epilepsia no controlada · uso de IMAO · intoxicación por depresores del SNC',
+  ea:'Náusea y vómito (muy frecuentes) · mareo · convulsiones a dosis altas · síndrome serotoninérgico con antidepresivos',
+  nota:'Escalón intermedio: cuando paracetamol + AINE no bastan, antes de pasar a morfina.'},
+ {n:'Morfina',linea:'Dolor intenso',
+  da:'2-4 mg IV en bolo · repetir cada 5-10 min hasta controlar',
+  prep:'<b>Titular</b>: bolos pequeños y reevaluar, no una dosis grande de entrada. Ten <b>naloxona</b> a la mano. Vigila frecuencia respiratoria y sedación.',
+  iv:'Intravenosa',pres:'Sol. iny. 10 mg/mL',
+  fda:'Solo si es necesario; vigilar depresión respiratoria del recién nacido cerca del parto',
+  ci:'Depresión respiratoria · íleo paralítico · inestabilidad hemodinámica sin corregir',
+  ea:'Depresión respiratoria · sedación · náusea · estreñimiento · prurito',
+  nota:'Para dolor intenso que no cede. Titulada es segura y <b>tampoco retrasa el diagnóstico</b>.'},
+ {n:'Metoclopramida',linea:'Antiemético',
+  da:'10 mg IV cada 8 h · máximo 30 mg al día',
+  prep:'Bolo lento en 1-2 min; rápido produce acatisia (inquietud muy molesta).',
+  iv:'Intravenosa',pres:'Sol. iny. 10 mg/2 mL',
+  fda:'Se usa en embarazo',
+  ci:'Obstrucción mecánica · perforación · feocromocitoma · parkinsonismo',
+  ea:'<b>Distonía aguda y acatisia</b>, sobre todo en menores de 30 años · somnolencia',
+  nota:'Náusea y vómito perioperatorio. En jóvenes considera ondansetrón por el riesgo de distonía.'},
+ {n:'Ondansetrón',linea:'Antiemético — alternativa',
+  da:'4-8 mg IV cada 8 h',
+  prep:'Bolo lento en 2-5 min.',
+  iv:'Intravenosa',pres:'Sol. iny. 4 mg/2 mL y 8 mg/4 mL',
+  fda:'Se usa; datos tranquilizadores',
+  ci:'QT prolongado · junto con otros fármacos que alargan el QT',
+  ea:'Cefalea · estreñimiento · prolongación del QT',
+  nota:'Preferible en jóvenes y en quien ya tuvo distonía por metoclopramida.'}
+];
+
 function apxFichas(){
   var tp=document.getElementById('tab-tratamiento');
   if(!tp || tp.getAttribute('data-fichas')==='1') return;
+
+  /* 1) La tabla de profilaxis se sustituye por fichas completas + analgesia */
   var tablas=[].slice.call(tp.querySelectorAll('table'));
-  tablas.forEach(function(t){
+  tablas.forEach(function(t,idx){
     var hs=[].slice.call(t.querySelectorAll('thead th')).map(function(h){return h.textContent.trim();});
-    var iF=-1;
-    hs.forEach(function(h,i){ if(/f[áa]rmaco/i.test(h)) iF=i; });
-    if(iF<0) return;                                  /* solo tablas de farmacos */
-    var html='<div class="fichas">';
-    [].slice.call(t.querySelectorAll('tbody tr')).forEach(function(tr){
-      var c=[].slice.call(tr.children);
-      if(c.length<2) return;
-      var nombre = c[iF] ? c[iF].innerHTML : '';
-      var badge  = (iF!==0 && c[0]) ? c[0].textContent.trim() : '';
-      var filas='';
-      c.forEach(function(td,i){
-        if(i===iF) return;
-        if(i===0 && badge) return;
-        var k=hs[i]||'';
-        filas+='<div class="fic-r"><div class="fic-k">'+k+'</div><div class="fic-v">'+td.innerHTML+'</div></div>';
-      });
-      html+='<div class="fic"><div class="fic-h" onclick="togFicha(this)">'
-          + '<span class="fic-n">'+nombre+'</span>'
-          + (badge ? '<span class="fic-l">'+badge+'</span>' : '')
-          + '<span class="fic-g">⌄</span></div>'
-          + '<div class="fic-b">'+filas+'</div></div>';
-    });
-    html+='</div>';
+    var iF=-1; hs.forEach(function(h,i){ if(/f[áa]rmaco/i.test(h)) iF=i; });
+    if(iF<0) return;
     var w=(t.closest && t.closest('.tbl-wrap')) || t;
-    w.insertAdjacentHTML('afterend', html + '<button class="fic-vertabla" onclick="verTabla(this)">Ver la tabla completa</button>');
+    var html;
+    if(idx===0){
+      html = buildLinea('Antibiótico profiláctico', AZ, APX_ATB)
+           + buildLinea('Analgesia y coadyuvantes — desde urgencias', AM, APX_DOLOR);
+    } else {
+      /* las otras tablas se convierten leyendo sus propios datos */
+      var fs=[];
+      [].slice.call(t.querySelectorAll('tbody tr')).forEach(function(tr){
+        var c=[].slice.call(tr.children); if(c.length<2) return;
+        var extra='';
+        c.forEach(function(td,i){ if(i!==iF && i!==0 && !/dosis/i.test(hs[i]||'')) extra+='<b>'+(hs[i]||'')+':</b> '+td.innerHTML+'<br>'; });
+        var dosis=''; c.forEach(function(td,i){ if(/dosis/i.test(hs[i]||'')) dosis=td.textContent.trim(); });
+        fs.push({n:c[iF].innerHTML, linea:(c[0]?c[0].textContent.trim():''), da:dosis, nota:extra});
+      });
+      html = buildRACards(AZ, fs);
+    }
+    w.insertAdjacentHTML('afterend', html);
     w.style.display='none';
   });
   tp.setAttribute('data-fichas','1');
