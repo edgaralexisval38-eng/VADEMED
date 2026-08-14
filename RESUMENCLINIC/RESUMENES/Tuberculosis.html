@@ -287,6 +287,21 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 
 <!-- TX SENSIBLE -->
 <div class="panel" id="tab-txs">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Esquema según el caso — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="tb-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showTbPop('pulmonar',this)">🫁 Pulmonar (adulto)</button>
+      <button class="pchip" onclick="showTbPop('corto',this)">⚡ Corto 4 meses</button>
+      <button class="pchip" onclick="showTbPop('menin',this)">🧠 Meníngea / SNC</button>
+      <button class="pchip" onclick="showTbPop('osea',this)">🦴 Ósea / articular</button>
+      <button class="pchip" onclick="showTbPop('embarazo',this)">🤰 Embarazo</button>
+      <button class="pchip" onclick="showTbPop('ninos',this)">👶 Niños</button>
+      <button class="pchip" onclick="showTbPop('vih',this)">🩸 Con VIH</button>
+      <button class="pchip" onclick="showTbPop('higado',this)">🫀 Hepatopatía</button>
+      <button class="pchip" onclick="showTbPop('renal',this)">💧 ERC / diálisis</button>
+    </div>
+    <div id="tb-pop-out"></div>
+  </div></div>
   <div class="esc-intro"><b>TB sensible a rifampicina</b> (resultado molecular Rif sensible). Hay un régimen <b>de referencia de 6 meses</b> y dos alternativas más cortas de <b>4 meses</b>. Siempre con piridoxina en riesgo y apoyo a la adherencia (TAES/DOT).</div>
   <div class="alert a-i"><span class="ai">🧭</span><div><div class="at">¿Cuál elegir?</div><b>6 meses (HRZE):</b> sirve para todos y para enfermedad grave/SNC. · <b>4 m HPMZ:</b> ≥12 años con TB pulmonar (no embarazo). · <b>4 m pediátrico:</b> 3 m-16 años con enfermedad NO grave.</div></div>
   <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Regímenes</span><span class="sg open">⌄</span></div>
@@ -535,6 +550,107 @@ function DS_FARMACOS(){
     {n:'Moxifloxacino (M)',linea:'Fluoroquinolona',da:'400 mg/día',prep:'Vigilar QT.',iv:'Oral / IV',pres:'Tab 400 mg',fda:'Evitar en embarazo',ci:'QT prolongado',ea:'QT, tendinopatía, disglucemia, GI',nota:'Componente del régimen de 4 meses (HPMZ) y grupo A en MDR.'}
   ]);
 }
+
+/* ===== Esquema segun el caso (chips) =====
+   Mismo patron que sifilis: en vez de leer secciones, el medico toca su caso
+   y ve el regimen exacto con dosis. */
+function tbFase(t){ return '<div class="tw"><table class="t"><thead><tr><th>Fase</th><th>Fármacos</th><th>Duración</th></tr></thead><tbody>'+t+'</tbody></table></div>'; }
+function tbDosis(){
+  return '<div class="tw" style="margin-top:10px"><table class="t"><thead><tr><th>Fármaco</th><th>Dosis adulto</th><th>Máximo</th></tr></thead><tbody>'
+   +'<tr><td class="dn">Isoniazida (H)</td><td>5 mg/kg/día</td><td>300 mg</td></tr>'
+   +'<tr><td class="dn">Rifampicina (R)</td><td>10 mg/kg/día</td><td>600 mg</td></tr>'
+   +'<tr><td class="dn">Pirazinamida (Z)</td><td>25 mg/kg/día</td><td>2000 mg</td></tr>'
+   +'<tr><td class="dn">Etambutol (E)</td><td>15 mg/kg/día (15-25)</td><td>1600 mg</td></tr>'
+   +'</tbody></table></div>';
+}
+var TB_POP={
+ pulmonar:function(){
+  return '<div class="alert a-i"><span class="ai">📌</span><div><div class="at">Régimen de referencia · 6 meses</div><b>2 HRZE / 4 HR</b> — toma diaria. Cubre la mayoría de los casos de TB pulmonar sensible en adultos.</div></div>'
+   +tbFase('<tr><td class="dn">Intensiva</td><td>H + R + Z + E</td><td>2 meses (diario)</td></tr><tr><td class="dn">Continuación</td><td>H + R</td><td>4 meses (diario)</td></tr>')
+   +tbDosis()
+   +'<div class="alert a-w" style="margin-top:10px"><span class="ai">🧠</span><div><b>Piridoxina (B6) 25-50 mg/día</b> si hay riesgo de neuropatía: VIH, embarazo, diabetes, desnutrición, alcoholismo o ERC.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">🔍</span><div>Baciloscopia de control al <b>final del 2.º mes</b>. Si sigue positiva: revisar adherencia y pedir prueba de sensibilidad — <b>no</b> prolongar la fase intensiva de rutina.</div></div>';
+ },
+ corto:function(){
+  return '<div class="alert a-i"><span class="ai">⚡</span><div><div class="at">Régimen de 4 meses (HPMZ)</div><b>2 meses H + rifapentina + moxifloxacino + Z</b>, luego <b>2 meses H + rifapentina + moxifloxacino</b>.</div></div>'
+   +tbFase('<tr><td class="dn">Intensiva</td><td>H + Rifapentina 1200 mg + Moxifloxacino 400 mg + Z</td><td>2 meses (diario)</td></tr><tr><td class="dn">Continuación</td><td>H + Rifapentina 1200 mg + Moxifloxacino 400 mg</td><td>2 meses (diario)</td></tr>')
+   +'<div class="alert a-w" style="margin-top:10px"><span class="ai">✅</span><div><b>Solo si:</b> ≥12 años, TB <b>pulmonar</b> sensible a rifampicina, isoniazida y fluoroquinolonas.</div></div>'
+   +'<div class="alert a-r" style="margin-top:8px"><span class="ai">🚫</span><div><b>No usar en:</b> embarazo o lactancia · TB extrapulmonar (SNC, ósea, miliar) · &lt;12 años · resistencia a cualquiera de sus componentes.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">💊</span><div>Existe además el régimen pediátrico de <b>4 meses</b> (2HRZ(E)/2HR) para niños con TB <b>no severa</b> — velo en el chip 👶 Niños.</div></div>';
+ },
+ menin:function(){
+  return '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Urgencia — no esperes confirmación</div>Ante sospecha de TB meníngea, <b>inicia tratamiento de inmediato</b>. La mortalidad y la secuela dependen de cuánto tardes.</div></div>'
+   +tbFase('<tr><td class="dn">Intensiva</td><td>H + R + Z + E</td><td>2 meses</td></tr><tr><td class="dn">Continuación</td><td>H + R</td><td>7-10 meses</td></tr>')
+   +'<div class="alert a-i" style="margin-top:10px"><span class="ai">⏱️</span><div>Duración total <b>9-12 meses</b> (no 6). Igual de largo en TB miliar con afección del SNC.</div></div>'
+   +'<div class="alert a-w" style="margin-top:8px"><span class="ai">💉</span><div><div class="at">Corticoide — siempre</div><b>Dexametasona</b> 0.3-0.4 mg/kg/día IV las primeras semanas, con reducción gradual a lo largo de <b>6-8 semanas</b>. Reduce mortalidad.</div></div>'
+   +tbDosis()
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">🧠</span><div>H y Z penetran bien al LCR; R y E lo hacen de forma limitada. Piridoxina siempre.</div></div>';
+ },
+ osea:function(){
+  return '<div class="alert a-i"><span class="ai">🦴</span><div><div class="at">TB ósea, articular o vertebral (mal de Pott)</div>Mismos fármacos, <b>más tiempo</b>.</div></div>'
+   +tbFase('<tr><td class="dn">Intensiva</td><td>H + R + Z + E</td><td>2 meses</td></tr><tr><td class="dn">Continuación</td><td>H + R</td><td>4-7 meses</td></tr>')
+   +'<div class="alert a-w" style="margin-top:10px"><span class="ai">⏱️</span><div>Total <b>6-9 meses</b>; se extiende a 9-12 si hay afección vertebral extensa o respuesta lenta.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">🔧</span><div>Cirugía solo si hay compresión medular, inestabilidad o absceso grande que no responde.</div></div>'
+   +tbDosis();
+ },
+ embarazo:function(){
+  return '<div class="alert a-g"><span class="ai">✅</span><div><div class="at">El esquema estándar es seguro</div><b>2 HRZE / 4 HR</b> — no se cambia por el embarazo. La TB sin tratar es mucho más peligrosa para la madre y el feto que los fármacos.</div></div>'
+   +tbFase('<tr><td class="dn">Intensiva</td><td>H + R + Z + E</td><td>2 meses</td></tr><tr><td class="dn">Continuación</td><td>H + R</td><td>4 meses</td></tr>')
+   +'<div class="alert a-w" style="margin-top:10px"><span class="ai">🧠</span><div><b>Piridoxina 25-50 mg/día siempre</b> durante el embarazo y la lactancia.</div></div>'
+   +'<div class="alert a-r" style="margin-top:8px"><span class="ai">🚫</span><div><b>Evitar:</b> estreptomicina y aminoglucósidos (ototoxicidad fetal) · régimen corto HPMZ (rifapentina y moxifloxacino no recomendados) · fluoroquinolonas salvo que no haya alternativa.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">🤱</span><div>La lactancia <b>se mantiene</b>: el paso de los fármacos a la leche es mínimo. Al recién nacido se le valora para TPT.</div></div>'
+   +tbDosis();
+ },
+ ninos:function(){
+  return '<div class="alert a-i"><span class="ai">👶</span><div><div class="at">Dosis pediátricas — más altas por kilo que en el adulto</div>Los niños metabolizan más rápido; usar dosis de adulto por kg los deja infratratados.</div></div>'
+   +'<div class="tw"><table class="t"><thead><tr><th>Fármaco</th><th>mg/kg/día</th><th>Rango</th><th>Máximo</th></tr></thead><tbody>'
+   +'<tr><td class="dn">Isoniazida (H)</td><td><b>10</b></td><td>7-15</td><td>300 mg</td></tr>'
+   +'<tr><td class="dn">Rifampicina (R)</td><td><b>15</b></td><td>10-20</td><td>600 mg</td></tr>'
+   +'<tr><td class="dn">Pirazinamida (Z)</td><td><b>35</b></td><td>30-40</td><td>2000 mg</td></tr>'
+   +'<tr><td class="dn">Etambutol (E)</td><td><b>20</b></td><td>15-25</td><td>1600 mg</td></tr>'
+   +'</tbody></table></div>'
+   +'<div class="alert a-g" style="margin-top:10px"><span class="ai">⚡</span><div><div class="at">TB no severa: 4 meses</div>En niños y adolescentes de <b>3 meses a 16 años</b> con TB <b>no severa</b>: <b>2 HRZ(E) / 2 HR</b>. Se considera no severa la TB ganglionar periférica o la pulmonar limitada sin cavitación y con baciloscopia negativa.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">📋</span><div>TB severa o extrapulmonar: esquema completo de <b>6 meses</b> (2HRZE/4HR); SNC y ósea, <b>9-12 meses</b>.</div></div>'
+   +'<div class="alert a-w" style="margin-top:8px"><span class="ai">👁️</span><div>El etambutol <b>sí se usa</b> en niños. La vieja preocupación por la neuritis óptica no lo justifica a estas dosis, aunque hay que vigilarla en quien ya puede reportar su visión.</div></div>';
+ },
+ vih:function(){
+  return '<div class="alert a-r"><span class="ai">⏱️</span><div><div class="at">Cuándo iniciar el antirretroviral</div>Primero el tratamiento de TB, y el TARV <b>en cuanto se tolere</b>:<br>· <b>CD4 &lt;50</b> → dentro de las <b>2 primeras semanas</b><br>· <b>CD4 ≥50</b> → dentro de las <b>8 primeras semanas</b><br>· <b>TB meníngea</b> → esperar 4-8 semanas (el inicio temprano aumenta mortalidad)</div></div>'
+   +tbFase('<tr><td class="dn">Intensiva</td><td>H + R + Z + E</td><td>2 meses</td></tr><tr><td class="dn">Continuación</td><td>H + R</td><td>4 meses</td></tr>')
+   +'<div class="alert a-w" style="margin-top:10px"><span class="ai">⚠️</span><div><div class="at">Interacción con rifampicina</div>Es un inductor potente. Con <b>dolutegravir</b>: subir a <b>50 mg cada 12 h</b>. Los <b>inhibidores de proteasa</b> no se combinan con rifampicina — usar <b>rifabutina</b> en su lugar.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">🔥</span><div><b>Síndrome de reconstitución inmune (IRIS):</b> empeoramiento paradójico a las 2-8 semanas de iniciar el TARV. <b>No se suspende nada</b>; se trata con corticoide si es grave.</div></div>'
+   +'<div class="alert a-w" style="margin-top:8px"><span class="ai">🧠</span><div>Piridoxina 25-50 mg/día siempre.</div></div>'
+   +tbDosis();
+ },
+ higado:function(){
+  return '<div class="alert a-w"><span class="ai">🫀</span><div><div class="at">Los tres hepatotóxicos son H, R y Z</div>El etambutol y las fluoroquinolonas prácticamente no lo son.</div></div>'
+   +'<div class="tw"><table class="t"><thead><tr><th>Situación</th><th>Qué hacer</th></tr></thead><tbody>'
+   +'<tr><td class="dn">Hepatopatía leve y estable</td><td>Esquema estándar con <b>PFH cada 2-4 semanas</b></td></tr>'
+   +'<tr><td class="dn">Cirrosis compensada</td><td>Quitar <b>Z</b>: 2 HRE / 7 HR (total 9 meses)</td></tr>'
+   +'<tr><td class="dn">Cirrosis descompensada</td><td>Dejar como máximo <b>un</b> hepatotóxico. Manejo por especialista</td></tr>'
+   +'</tbody></table></div>'
+   +'<div class="alert a-r" style="margin-top:10px"><span class="ai">🛑</span><div><div class="at">Cuándo suspender por hepatotoxicidad</div>· <b>ALT &gt;3× el límite alto CON síntomas</b> (náusea, vómito, dolor, ictericia)<br>· <b>ALT &gt;5× el límite alto</b> aunque no haya síntomas<br>· <b>Bilirrubina en ascenso</b><br>Suspender los tres y reintroducir de uno en uno cuando normalicen.</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">🔁</span><div>Reintroducción: primero <b>R</b>, luego <b>H</b>, y <b>Z</b> al final (o ya no).</div></div>';
+ },
+ renal:function(){
+  return '<div class="alert a-i"><span class="ai">💧</span><div><div class="at">H y R no se ajustan; Z y E sí</div>La isoniazida y la rifampicina se eliminan por el hígado. La pirazinamida y el etambutol se acumulan en la ERC.</div></div>'
+   +'<div class="tw"><table class="t"><thead><tr><th>Fármaco</th><th>TFG &lt;30 o diálisis</th></tr></thead><tbody>'
+   +'<tr><td class="dn">Isoniazida (H)</td><td>Sin cambios · 5 mg/kg/día</td></tr>'
+   +'<tr><td class="dn">Rifampicina (R)</td><td>Sin cambios · 10 mg/kg/día</td></tr>'
+   +'<tr><td class="dn">Pirazinamida (Z)</td><td><b>25-35 mg/kg 3 veces por semana</b> (no diario)</td></tr>'
+   +'<tr><td class="dn">Etambutol (E)</td><td><b>15-25 mg/kg 3 veces por semana</b> (no diario)</td></tr>'
+   +'</tbody></table></div>'
+   +'<div class="alert a-w" style="margin-top:10px"><span class="ai">🩺</span><div>En hemodiálisis, dar las dosis <b>después</b> de la sesión. Piridoxina siempre (la ERC es factor de neuropatía).</div></div>'
+   +'<div class="alert a-i" style="margin-top:8px"><span class="ai">👁️</span><div>Vigilar más de cerca la <b>visión</b> con etambutol: el riesgo de neuritis sube al acumularse.</div></div>';
+ }
+};
+function showTbPop(id,btn){
+  var ch=document.querySelectorAll('#tb-pop-chips .pchip');
+  for(var i=0;i<ch.length;i++) ch[i].classList.remove('on');
+  if(btn) btn.classList.add('on');
+  var out=document.getElementById('tb-pop-out');
+  if(out && TB_POP[id]) out.innerHTML=TB_POP[id]();
+}
+
 /* ===== FÁRMACOS DE TB RESISTENTE ===== */
 function DR_FARMACOS(){
   return buildLinea('BPaLM / BPaL y otros (MDR/RR)','grupos A-B-C','#9a1233',[
@@ -581,6 +697,7 @@ function showEsc2(k){var s=ESC_TB[k],d=document.getElementById('esc2-content');i
 window.addEventListener('load',function(){
   var t=document.getElementById('tab-res');if(t)t.classList.add('on');
   var a=document.getElementById('far-ds');if(a)a.innerHTML=DS_FARMACOS();
+  try{ var _tp=document.getElementById('tb-pop-out'); if(_tp) _tp.innerHTML=TB_POP.pulmonar(); }catch(e){}
   var b=document.getElementById('far-dr');if(b)b.innerHTML=DR_FARMACOS();
   initEsc2();renderRaStep('start');
 });
