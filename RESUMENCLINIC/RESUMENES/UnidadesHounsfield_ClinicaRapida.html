@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Unidades Hounsfield · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#155e75;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e8f0f3;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.calc{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap;}
+.calc-row label{font-size:12px;font-weight:600;color:var(--gray-700);flex:1;min-width:150px;}
+.calc-row input,.calc-row select{font-size:13px;padding:7px 9px;border:1px solid var(--bd);border-radius:var(--rs);width:110px;font-family:inherit;}
+.btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-out{margin-top:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;display:none;}
+.calc-out.show{display:block;}
+.res-r{background:var(--rl);color:var(--r);border:1px solid var(--rm);}
+.res-y{background:var(--al);color:var(--a);border:1px solid var(--am);}
+.res-g{background:var(--gl);color:var(--g);border:1px solid var(--gm);}
+.ind-drug{border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;overflow:hidden;}
+.ind-drug-h{padding:10px 12px;background:var(--gray-50);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;color:var(--gray-900);gap:8px;}
+.ind-drug-b{padding:12px;display:none;}
+.ind-drug-b.show{display:block;}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.esc-hero{background:linear-gradient(135deg,#06272e,#155e75);color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}
+.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.swatch{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid rgba(0,0,0,.2);}
+.biblio-header{background:linear-gradient(135deg,#06272e,#155e75);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-c{background:#fef3c7;color:#92400e;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#06272e,#155e75);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🩻</div>
+    <div>
+      <div class="hdr-eye">Radiología · Imagenología · Tomografía</div>
+      <div class="hdr-title">Unidades Hounsfield (UH)</div>
+      <div class="hdr-sub">Radiodensidad en TC · escala referida a agua y aire</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Agua = 0 UH</span>
+    <span class="badge">Aire = −1000 UH</span>
+    <span class="badge">Grasa = negativa</span>
+    <span class="badge">Realce &gt;20 UH</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">0 UH</div><div class="qs-l">Agua</div></div>
+  <div class="qs"><div class="qs-v">−1000</div><div class="qs-l">Aire</div></div>
+  <div class="qs"><div class="qs-v">+1000</div><div class="qs-l">Hueso cortical</div></div>
+  <div class="qs"><div class="qs-v">≤10 UH</div><div class="qs-l">Adenoma suprarr.</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dens',this)">🔢 Densidades</button>
+  <button class="tab" onclick="showT('vent',this)">🪟 Ventanas</button>
+  <button class="tab" onclick="showT('apli',this)">🩻 Aplicaciones</button>
+  <button class="tab" onclick="showT('tum',this)">🎯 Tumores</button>
+  <button class="tab" onclick="showT('calc',this)">🧮 Calculadoras</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('err',this)">❌ Errores</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>La <strong>Unidad Hounsfield</strong> (UH o HU) es la escala de <strong>radiodensidad</strong> usada en TC. Es una escala lineal que compara la atenuación de rayos X de un tejido con la del <strong>agua</strong> (0 UH) y el <strong>aire</strong> (−1000 UH).</p>
+        <p style="background:var(--gray-50);border-radius:var(--rs);padding:8px 10px;font-family:monospace;font-size:12px;">UH = 1000 × (μ<sub>tejido</sub> − μ<sub>agua</sub>) / (μ<sub>agua</sub> − μ<sub>aire</sub>)</p>
+        <p>Rango habitual almacenado: <strong>−1024 a +3071 UH</strong> (12 bits). Cuanto más denso el tejido (más atenúa), mayor la UH y más blanco se ve.</p>
+      </div>
+      <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>La UH depende del <strong>kV</strong> del estudio: a menor kV (p. ej. estudios de bajo voltaje o energía dual), el yodo del contraste se ve más denso. Compara siempre fases del mismo estudio.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Escala de referencia rápida</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th></th><th>Tejido / sustancia</th><th>UH aprox.</th></tr>
+          <tr><td><span class="swatch" style="background:#111;"></span></td><td>Aire</td><td class="dn">−1000</td></tr>
+          <tr><td><span class="swatch" style="background:#333;"></span></td><td>Pulmón</td><td>−700 a −500</td></tr>
+          <tr><td><span class="swatch" style="background:#5a5a3a;"></span></td><td>Grasa</td><td class="dn">−100 a −50</td></tr>
+          <tr><td><span class="swatch" style="background:#777;"></span></td><td>Agua / quiste simple</td><td class="dn">0 a 15</td></tr>
+          <tr><td><span class="swatch" style="background:#888;"></span></td><td>LCR</td><td>0 a 15</td></tr>
+          <tr><td><span class="swatch" style="background:#999;"></span></td><td>Sustancia blanca / gris</td><td>20 a 45</td></tr>
+          <tr><td><span class="swatch" style="background:#aaa;"></span></td><td>Músculo / tejido blando</td><td>20 a 45</td></tr>
+          <tr><td><span class="swatch" style="background:#a58;"></span></td><td>Hígado</td><td>40 a 60</td></tr>
+          <tr><td><span class="swatch" style="background:#c66;"></span></td><td>Sangre coagulada / hemorragia aguda</td><td class="dm">50 a 80</td></tr>
+          <tr><td><span class="swatch" style="background:#ddd;"></span></td><td>Hueso esponjoso</td><td>+300 a +400</td></tr>
+          <tr><td><span class="swatch" style="background:#fff;"></span></td><td>Hueso cortical</td><td class="dn">+1000</td></tr>
+          <tr><td><span class="swatch" style="background:#fff;border-color:#000;"></span></td><td>Metal / contraste concentrado</td><td>+2000 a +3000</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔑</span><span class="st">Reglas de oro</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">1</span><span class="kt"><strong>Grasa = UH negativa</strong> (−50 a −100). Encontrar grasa confirma lesiones como angiomiolipoma, hamartoma, lipoma, teratoma.</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt"><strong>Líquido simple = 0–20 UH.</strong> Un quiste no realza; una lesión sólida sí.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt"><strong>Realce = fase con contraste − fase simple.</strong> &gt;20 UH = realce significativo (sólido/vascular); &lt;10 UH = no realza.</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt"><strong>Sangre aguda es hiperdensa</strong> (50–80 UH); con el tiempo se vuelve isodensa e hipodensa.</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt"><strong>Mide con ROI</strong> sobre zona homogénea, evitando bordes, calcio y artefactos.</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Cómo se forma la imagen</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="prose">
+        <p>Cada píxel (vóxel) tiene un coeficiente de atenuación μ. Se normaliza a la escala Hounsfield con agua = 0 y aire = −1000. El monitor no puede mostrar 4000 tonos de gris a la vez, por eso se usa el <strong>«ventaneo»</strong> (windowing): se elige un rango (ancho, WW) centrado en un nivel (WL) para maximizar el contraste del tejido de interés.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DENSIDADES -->
+<div class="panel" id="tab-dens">
+  <div class="alert a-i"><span class="ai">🔢</span><div>Tabla completa de densidades por categoría. Usa el buscador para filtrar (p. ej. "sangre", "grasa", "quiste").</div></div>
+  <input id="dens-search" type="text" placeholder="Buscar tejido o sustancia..." oninput="filtrarDens(this.value)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;margin-bottom:12px;font-family:inherit;">
+  <div id="dens-body"></div>
+</div>
+
+<!-- VENTANAS -->
+<div class="panel" id="tab-vent">
+  <div class="alert a-i"><span class="ai">🪟</span><div>El «ventaneo» ajusta ancho (WW) y nivel (WL). Rango visible = WL ± WW/2. Toca un preajuste para ver qué resalta y su rango.</div></div>
+  <div class="chipbar" id="vent-chips"></div>
+  <div id="vent-body"></div>
+  <div class="calc" style="margin-top:6px;">
+    <div style="font-size:13px;font-weight:700;color:var(--ac);margin-bottom:8px;">Calculadora de rango visible</div>
+    <div class="calc-row"><label>Ancho de ventana (WW)</label><input id="ww" type="number" placeholder="350"></div>
+    <div class="calc-row"><label>Nivel de ventana (WL)</label><input id="wl" type="number" placeholder="40"></div>
+    <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcWin()">Calcular</button><button class="btn btn-s" onclick="resetWin()">Reiniciar</button></div>
+    <div class="calc-out" id="win-out"></div>
+  </div>
+</div>
+
+<!-- APLICACIONES -->
+<div class="panel" id="tab-apli">
+  <div class="alert a-i"><span class="ai">🩻</span><div>Umbrales de UH útiles por órgano/sistema.</div></div>
+  <div id="apli-body"></div>
+</div>
+
+<!-- TUMORES -->
+<div class="panel" id="tab-tum">
+  <div class="alert a-i"><span class="ai">🎯</span><div>¿Cuándo una masa es sospechosa de tumor? La <strong>densidad (UH)</strong> orienta el contenido y el <strong>realce con contraste</strong> define si hay tejido vascularizado. Aquí, por órgano y patrón.</div></div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Principios generales</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">1</span><span class="kt"><strong>El realce manda.</strong> Un componente que capta contraste (&gt;20 UH sobre la fase simple) es <strong>tejido sólido vascularizado</strong> → tumor o inflamación, hasta demostrar lo contrario. Sin realce (&lt;10 UH) = quiste/benigno.</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt"><strong>Grasa macroscópica (&lt; −20 UH) = casi siempre benigno:</strong> angiomiolipoma, mielolipoma, lipoma, teratoma, hamartoma. <em>Excepción:</em> liposarcoma (grasa + componente sólido grueso que realza).</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt"><strong>Masa hiperdensa en fase simple (&gt;45–50 UH):</strong> diferencial = hemorragia, calcio, tumor <em>hipercelular</em> (linfoma, tumores de células pequeñas/redondas), melanoma metastásico, coloide/proteína. La clave: ¿realza o no?</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt"><strong>El patrón de realce clasifica:</strong> homogéneo (benigno frecuente), heterogéneo o en <em>anillo</em> con necrosis central (agresivo), nodular periférico discontinuo con relleno centrípeto (hemangioma), lavado tras hiperrealce arterial (CHC).</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt"><strong>Mide bien:</strong> ROI en el mismo estudio y misma fase para restar; evita bordes, calcio y artefactos. La densidad absoluta importa menos que el <em>cambio</em> con contraste.</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Umbrales de realce (regla práctica)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Realce (con − sin contraste)</th><th>Interpretación</th></tr>
+          <tr><td class="dn">&lt; 10 UH</td><td>Sin realce → quiste / lesión benigna no vascular</td></tr>
+          <tr><td class="dm">10 – 20 UH</td><td>Equívoco → RM, US con contraste o seguimiento (ojo pseudorealce)</td></tr>
+          <tr><td class="dn">&gt; 20 UH</td><td>Realce definitivo → lesión sólida vascularizada; considerar tumor</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>El <strong>carcinoma renal papilar</strong> y algunos tumores hipovasculares realzan poco (10–20 UH): un realce "modesto" no descarta malignidad. Correlaciona con morfología y fases.</div></div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;">🫁 Por órgano — cuándo pensar en tumor</div>
+  <div id="tum-body"></div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas de malignidad</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">!</span><span class="kt">Realce heterogéneo o en anillo con <strong>necrosis central</strong>.</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt">Márgenes irregulares o <strong>infiltrantes</strong>; pérdida de planos grasos.</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt"><strong>Trombo tumoral</strong> que realza dentro de vena (renal/porta) — distingue de trombo blando.</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt">Linfadenopatía, lesiones múltiples, metástasis a distancia.</span></div>
+      <div class="kp"><span class="kn">!</span><span class="kt"><strong>Crecimiento</strong> en el seguimiento o tamaño grande (&gt;4 cm suprarrenal/renal).</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">💡</span><span class="st">Perlas para no equivocarse</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">✓</span><span class="kt"><strong>Pseudorealce</strong> de quistes renales pequeños: pueden subir 10–20 UH junto a parénquima muy realzado sin ser sólidos.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt"><strong>Quiste hiperdenso:</strong> mide 30–90 UH en simple (proteína/hemorragia) pero <em>no realza</em> → benigno.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Encontrar <strong>grasa</strong> en una masa es tu mejor amigo: reclasifica a benigno en riñón, suprarrenal, mediastino, ovario.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Usa protocolos multifásicos (simple + arterial + portal ± tardía) — una sola fase engaña.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULADORAS -->
+<div class="panel" id="tab-calc">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">➕</span><span class="st">Realce post-contraste</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Realce = UH con contraste − UH simple. &gt;20 UH = realce significativo (lesión sólida/vascular); &lt;10 UH = sin realce (quiste). 10–20 UH = indeterminado (ojo con pseudorealce).</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>UH sin contraste</label><input id="re-u" type="number" placeholder="30"></div>
+        <div class="calc-row"><label>UH con contraste</label><input id="re-e" type="number" placeholder="65"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcRealce()">Calcular</button><button class="btn btn-s" onclick="resetRealce()">Reiniciar</button></div>
+        <div class="calc-out" id="re-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Washout suprarrenal (adenoma)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Protocolo trifásico: simple (U), portal ~60–70 s (E) y tardía 15 min (D). Adenoma si <strong>APW ≥60%</strong> ó <strong>RPW ≥40%</strong> (o UH simple ≤10).</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>UH simple (U)</label><input id="wo-u" type="number" placeholder="18"></div>
+        <div class="calc-row"><label>UH con contraste (E)</label><input id="wo-e" type="number" placeholder="80"></div>
+        <div class="calc-row"><label>UH tardía 15 min (D)</label><input id="wo-d" type="number" placeholder="35"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcWashout()">Calcular</button><button class="btn btn-s" onclick="resetWashout()">Reiniciar</button></div>
+        <div class="calc-out" id="wo-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🫀</span><span class="st">Esteatosis hepática (hígado − bazo)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>En TC <strong>simple</strong>: esteatosis si hígado &lt;40 UH, o <strong>hígado − bazo ≤ −10 UH</strong>. (No válido en fase con contraste.)</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>UH hígado (simple)</label><input id="st-h" type="number" placeholder="35"></div>
+        <div class="calc-row"><label>UH bazo (simple)</label><input id="st-b" type="number" placeholder="50"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcEsteat()">Calcular</button><button class="btn btn-s" onclick="resetEsteat()">Reiniciar</button></div>
+        <div class="calc-out" id="st-out"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="alert a-i"><span class="ai">⚙️</span><div>Selecciona un escenario para ver cómo la UH orienta el diagnóstico.</div></div>
+  <div class="chipbar" id="escen-chips"></div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- ERRORES -->
+<div class="panel" id="tab-err">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores y artefactos frecuentes</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">1</span><span class="kt"><strong>Pseudorealce de quistes renales:</strong> quistes pequeños junto a parénquima muy realzado pueden subir 10–20 UH sin ser sólidos. Interpretar con cautela.</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt"><strong>Promedio de volumen parcial:</strong> ROI que incluye dos tejidos da un valor intermedio falso. Usa ROI pequeño y homogéneo.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt"><strong>Endurecimiento del haz / artefacto metálico:</strong> junto a hueso, metal o contraste concentrado, las UH pierden validez.</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt"><strong>Comparar fases distintas:</strong> medir realce entre estudios con distinto kV o técnica invalida la resta.</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt"><strong>Confundir hiperdensidad:</strong> calcio, contraste, sangre y coloide pueden verse igual de blancos; la fase simple los distingue.</span></div>
+      <div class="kp"><span class="kn">6</span><span class="kt"><strong>Quiste hiperdenso:</strong> un quiste proteináceo/hemorrágico puede medir 30–90 UH en simple; la clave es que <em>no realza</em>.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Unidades Hounsfield</h2>
+    <p>Referencias primarias y guías de caracterización por densitometría en TC.</p>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Fundamentos y guías</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">1</span><span class="biblio-year">1973</span><span class="biblio-level lv-exp">Clásico</span></div>
+        <div class="biblio-ref">Hounsfield GN. <em>Computerized transverse axial scanning (tomography): Part 1. Description of system.</em> Br J Radiol 1973;46(552):1016–1022. [Escala original de densidad TC].</div>
+        <a class="biblio-link" href="https://doi.org/10.1259/0007-1285-46-552-1016" target="_blank">🔗 DOI 10.1259/0007-1285-46-552-1016</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">2</span><span class="biblio-year">2016</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Marty M, et al. <em>Differentiation of Adrenal Hyperplasia From Adenoma by Use of CT Densitometry and Percentage Washout.</em> AJR 2016;206(3):519–524. [Umbrales UH ≤10, APW ≥60%, RPW ≥40%].</div>
+        <a class="biblio-link" href="https://doi.org/10.2214/AJR.15.14558" target="_blank">🔗 DOI 10.2214/AJR.15.14558 · PMID 26700341</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">3</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Silverman SG, Pedrosa I, et al. <em>Bosniak Classification of Cystic Renal Masses, Version 2019.</em> Radiology 2019;292(2):475–488. [Quiste vs sólido, umbrales de realce].</div>
+        <a class="biblio-link" href="https://doi.org/10.1148/radiol.2019182646" target="_blank">🔗 DOI 10.1148/radiol.2019182646</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">4</span><span class="biblio-year">2020</span><span class="biblio-level lv-exp">Experto</span></div>
+        <div class="biblio-ref">The Radiology Assistant / textos de referencia de TC abdominal y neurorradiología. [Ventanas, densidades por tejido, pitfalls].</div>
+        <a class="biblio-link" href="https://radiologyassistant.nl/" target="_blank">🔗 radiologyassistant.nl</a>
+      </div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / consenso mayor</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudio de validación</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia</div>
+      </div>
+    </div>
+  </div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Los valores de UH son orientativos y varían con el equipo, el kV y la fase de contraste. Verifica los protocolos locales. Última revisión: agosto 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function setOut(id,cls,html){var o=document.getElementById(id);o.className='calc-out show '+cls;o.innerHTML=html;}
+
+// ===== DENSIDADES =====
+var DENS=[
+  {cat:'Aire / gas',color:'#111827',rows:[['Aire / gas libre','−1000'],['Pulmón normal','−700 a −500'],['Enfisema','&lt; −950']]},
+  {cat:'Grasa',color:'#8a7a2a',rows:[['Grasa subcutánea/visceral','−100 a −50'],['Angiomiolipoma / lipoma','&lt; −20 (grasa macroscópica)'],['Médula ósea grasa','−50 a 0']]},
+  {cat:'Líquidos',color:'#1a6bbd',rows:[['Agua','0'],['Quiste simple / LCR','0 a 15'],['Bilis / orina','0 a 20'],['Trasudado','&lt; 15'],['Exudado / quiste proteináceo','20 a 45']]},
+  {cat:'Tejidos blandos',color:'#155e75',rows:[['Músculo','20 a 45'],['Sustancia blanca cerebral','20 a 30'],['Sustancia gris cerebral','37 a 45'],['Hígado','40 a 60'],['Bazo','40 a 55'],['Páncreas / riñón','30 a 45']]},
+  {cat:'Sangre',color:'#c0392b',rows:[['Sangre no coagulada','30 a 45'],['Hemorragia aguda / coágulo','50 a 80'],['Hematoma subagudo','30 a 50'],['Hematoma crónico','&lt; 30 (hipodenso)']]},
+  {cat:'Calcio / hueso',color:'#6b7280',rows:[['Hueso esponjoso','+300 a +400'],['Hueso cortical','+1000'],['Calcificación / litiasis','+100 a +1000+'],['Cálculo de ácido úrico','200 a 500'],['Cálculo de calcio','&gt; 1000']]},
+  {cat:'Contraste / metal',color:'#0a5c45',rows:[['Contraste yodado (realce)','100 a 500'],['Contraste concentrado (vejiga)','&gt; 1000'],['Metal / prótesis','+2000 a +3000']]}
+];
+function renderDens(f){f=(f||'').toLowerCase();var h='';var shown=0;
+  for(var i=0;i<DENS.length;i++){var g=DENS[i];
+    var rows=g.rows.filter(function(r){return r[0].toLowerCase().indexOf(f)>=0||g.cat.toLowerCase().indexOf(f)>=0;});
+    if(rows.length===0)continue;
+    var id='dens-'+i;var open=(f!=='')||(shown===0);shown++;
+    h+='<div class="ind-drug"><div class="ind-drug-h" onclick="togInd(\''+id+'\')" style="border-left:4px solid '+g.color+';"><span><span class="swatch" style="background:'+g.color+';"></span>'+g.cat+' <span style="color:var(--gray-600);font-weight:500;font-size:11px;">· '+rows.length+'</span></span><span id="'+id+'-ar">'+(open?'▼':'►')+'</span></div>';
+    h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'">';
+    h+='<div class="tw"><table class="t"><tr><th>Estructura</th><th>UH</th></tr>';
+    for(var j=0;j<rows.length;j++)h+='<tr><td>'+rows[j][0]+'</td><td class="dn">'+rows[j][1]+'</td></tr>';
+    h+='</table></div></div></div>';
+  }
+  if(shown===0)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados.</div></div>';
+  document.getElementById('dens-body').innerHTML=h;
+}
+function filtrarDens(v){renderDens(v);}
+
+// ===== TUMORES por órgano =====
+var TUMOR=[
+  {o:'🫘 Suprarrenal',color:'#155e75',rows:[
+    ['Benigno típico','Adenoma: UH simple ≤10 (rico en lípidos) o washout APW ≥60% / RPW ≥40%. Mielolipoma: contiene grasa (&lt; −20 UH).'],
+    ['Sospecha de tumor','UH simple &gt;10 SIN washout, realce ávido y sostenido, &gt;4 cm, heterogéneo, bordes irregulares o crecimiento.'],
+    ['Pensar en…','Feocromocitoma (muy vascular, hiperintenso en T2), carcinoma corticosuprarrenal (grande, necrótico), metástasis (bilateral, primario conocido).']
+  ]},
+  {o:'🫘 Renal',color:'#1a6bbd',rows:[
+    ['Benigno típico','Quiste simple 0–20 UH sin realce (Bosniak I). Angiomiolipoma: grasa &lt; −20 UH (diagnóstico).'],
+    ['Sospecha de tumor','Realce &gt;20 UH en componente sólido = masa sólida → carcinoma de células renales (CCR) hasta demostrar lo contrario.'],
+    ['Ojo','CCR papilar realza poco (10–20 UH): no lo descartes. Quistes complejos (septos/realce) → Bosniak IIF/III/IV. Trombo tumoral en vena renal que realza.']
+  ]},
+  {o:'🫀 Hígado',color:'#a85510',rows:[
+    ['Benigno típico','Quiste 0–20 UH no realza. Hemangioma: realce nodular periférico discontinuo con relleno centrípeto (sigue al pool vascular). HNF: cicatriz central.'],
+    ['Sospecha de tumor','Paciente de riesgo (cirrosis/VHB): nódulo con <strong>hiperrealce arterial + lavado (washout) + cápsula</strong> = CHC (LI-RADS LR-5).'],
+    ['Pensar en…','Metástasis (múltiples, en anillo, hipovasculares hipodensas), colangiocarcinoma (realce tardío, retracción capsular).']
+  ]},
+  {o:'🧠 Cerebro',color:'#7b1c1c',rows:[
+    ['Extraaxial benigno','Meningioma: masa extraaxial, base dural, realce homogéneo intenso, "cola dural", ± calcio.'],
+    ['Sospecha de tumor','Realce en anillo irregular con necrosis y edema → glioma de alto grado. Múltiples lesiones en anillo en unión gris-blanca → metástasis.'],
+    ['Ojo','Linfoma primario: hiperdenso en simple, realce homogéneo intenso (inmunocompetente). Absceso: anillo fino + restricción a la difusión (DWI) — distínguelo del tumor.']
+  ]},
+  {o:'🫁 Tórax / mediastino',color:'#0a5c45',rows:[
+    ['Benigno típico','Hamartoma: grasa y/o calcio en "palomita de maíz". Nódulo con calcio central/difuso, laminar o en palomita → patrón benigno.'],
+    ['Sospecha de tumor','Nódulo sólido no calcificado con realce &gt;15 UH → sospechoso; &lt;15 UH probablemente benigno. Bordes espiculados, crecimiento.'],
+    ['Mediastino','Timoma (partes blandas, prevascular), teratoma (grasa/calcio/quiste), linfoma (masa homogénea), tumores germinales.']
+  ]},
+  {o:'🔬 Otros / pistas por densidad',color:'#4a1060',rows:[
+    ['Grasa = benigno','Lipoma, teratoma, mielolipoma, angiomiolipoma (excepción: liposarcoma con sólido grueso).'],
+    ['Hiperdenso en simple','Linfoma y tumores de células pequeñas (hipercelulares), melanoma metastásico, tumores con hemorragia.'],
+    ['Calcio','Calcificación gruesa/central suele ser benigna; psamomatosa o excéntrica puede verse en malignidad.']
+  ]}
+];
+function renderTumores(){var h='';
+  for(var i=0;i<TUMOR.length;i++){var t=TUMOR[i];var id='tum-'+i;var open=(i===0);
+    h+='<div class="ind-drug"><div class="ind-drug-h" onclick="togInd(\''+id+'\')" style="border-left:4px solid '+t.color+';"><span>'+t.o+'</span><span id="'+id+'-ar">'+(open?'▼':'►')+'</span></div>';
+    h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'">';
+    for(var j=0;j<t.rows.length;j++)h+='<div class="fu-r"><div class="fu-t">'+t.rows[j][0]+'</div><div class="fu-x">'+t.rows[j][1]+'</div></div>';
+    h+='</div></div>';
+  }
+  document.getElementById('tum-body').innerHTML=h;
+}
+
+// ===== VENTANAS =====
+var VENT={
+  'Partes blandas / abdomen':{ww:350,wl:40,u:'Vísceras abdominales, mediastino, músculo. Ventana estándar de partes blandas.'},
+  'Pulmón':{ww:1500,wl:-600,u:'Parénquima pulmonar, nódulos, enfisema, vidrio esmerilado.'},
+  'Hueso':{ww:2000,wl:400,u:'Fracturas, corticales, lesiones óseas.'},
+  'Cerebro':{ww:80,wl:40,u:'Parénquima cerebral, hemorragia, diferenciación sustancia gris/blanca.'},
+  'Ictus (stroke)':{ww:35,wl:35,u:'Ventana estrecha para detectar isquemia temprana (pérdida de diferenciación).'},
+  'Hígado':{ww:150,wl:30,u:'Ventana estrecha para realzar lesiones hepáticas de bajo contraste.'},
+  'Angio-TC':{ww:600,wl:150,u:'Vasos con contraste, aneurismas, disección.'}
+};
+function showVent(key){
+  renderChips('vent-chips',Object.keys(VENT),'showVent',key);
+  var v=VENT[key];var lo=v.wl-v.ww/2,hi=v.wl+v.ww/2;
+  var h='<div class="esc-info"><div class="fu-r"><div class="fu-t">Preajuste</div><div class="fu-x"><strong>'+key+'</strong></div></div>';
+  h+='<div class="fu-r"><div class="fu-t">WW / WL</div><div class="fu-x">'+v.ww+' / '+v.wl+' UH</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Rango visible</div><div class="fu-x"><span class="dn">'+lo+' a '+hi+' UH</span> (todo lo &lt;'+lo+' se ve negro; todo lo &gt;'+hi+' se ve blanco)</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Para qué</div><div class="fu-x">'+v.u+'</div></div></div>';
+  document.getElementById('vent-body').innerHTML=h;
+}
+function calcWin(){var ww=parseFloat(document.getElementById('ww').value),wl=parseFloat(document.getElementById('wl').value);
+  if(isNaN(ww)||isNaN(wl)||ww<=0){setOut('win-out','res-y','Ingresa WW y WL válidos.');return;}
+  var lo=wl-ww/2,hi=wl+ww/2;setOut('win-out','res-g','Rango visible: '+lo+' a '+hi+' UH. Estructuras &lt;'+lo+' → negras; &gt;'+hi+' → blancas.');}
+function resetWin(){document.getElementById('ww').value='';document.getElementById('wl').value='';document.getElementById('win-out').className='calc-out';}
+
+// ===== APLICACIONES =====
+var APLI=[
+  {o:'Suprarrenal',color:'#155e75',items:[['Adenoma rico en lípidos','UH simple ≤10 → benigno'],['Washout','APW ≥60% ó RPW ≥40% → adenoma'],['Feocromocitoma/malignidad','UH alto sin washout, realce intenso']]},
+  {o:'Renal',color:'#1a6bbd',items:[['Quiste simple','0–20 UH, no realza (Bosniak I)'],['Lesión sólida','realce &gt;20 UH'],['Angiomiolipoma','grasa &lt; −20 UH (diagnóstico)'],['Quiste hiperdenso','&gt;20 UH en simple pero sin realce']]},
+  {o:'Hígado',color:'#a85510',items:[['Esteatosis','&lt;40 UH o hígado−bazo ≤ −10'],['Quiste','0–20 UH'],['Hemangioma/lesión','requiere fases de contraste']]},
+  {o:'Neuro',color:'#7b1c1c',items:[['Hemorragia aguda','50–80 UH (hiperdensa)'],['Isquemia','hipodensa, pérdida diferenciación gris/blanca'],['Calcificación','&gt;100 UH']]},
+  {o:'Urolitiasis',color:'#7a4a00',items:[['Cálculo de calcio','&gt;1000 UH (duro, resiste litotricia)'],['Ácido úrico','200–500 UH (radiolúcido en Rx)'],['Predicción de tratamiento','&gt;1000 UH → menor éxito de LEOC']]},
+  {o:'Tórax',color:'#0a5c45',items:[['Hamartoma','grasa y/o calcio en "palomita de maíz" → benigno'],['Nódulo calcificado','patrón benigno'],['Derrame','trasudado &lt;15, exudado/hemotórax mayor']]}
+];
+function renderApli(){var h='';
+  for(var i=0;i<APLI.length;i++){var a=APLI[i];
+    h+='<div class="ind-drug"><div class="ind-drug-h" onclick="togInd(\'ap-'+i+'\')" style="border-left:4px solid '+a.color+';"><span>'+a.o+'</span><span id="ap-'+i+'-ar">'+(i===0?'▼':'►')+'</span></div>';
+    h+='<div class="ind-drug-b'+(i===0?' show':'')+'" id="ap-'+i+'"><div class="tw"><table class="t"><tr><th>Hallazgo</th><th>Clave de UH</th></tr>';
+    for(var j=0;j<a.items.length;j++)h+='<tr><td style="font-weight:600;">'+a.items[j][0]+'</td><td>'+a.items[j][1]+'</td></tr>';
+    h+='</table></div></div></div>';
+  }
+  document.getElementById('apli-body').innerHTML=h;
+}
+
+// ===== CALCULADORAS =====
+function calcRealce(){var u=parseFloat(document.getElementById('re-u').value),e=parseFloat(document.getElementById('re-e').value);
+  if(isNaN(u)||isNaN(e)){setOut('re-out','res-y','Completa ambos valores.');return;}
+  var d=e-u;var cls,msg;
+  if(d>20){cls='res-r';msg='realce significativo → lesión sólida/vascular.';}
+  else if(d>=10){cls='res-y';msg='indeterminado (10–20 UH); ojo con pseudorealce.';}
+  else{cls='res-g';msg='sin realce → compatible con quiste.';}
+  setOut('re-out',cls,'Realce = '+d+' UH — '+msg);}
+function resetRealce(){document.getElementById('re-u').value='';document.getElementById('re-e').value='';document.getElementById('re-out').className='calc-out';}
+
+function calcWashout(){var u=parseFloat(document.getElementById('wo-u').value),e=parseFloat(document.getElementById('wo-e').value),d=parseFloat(document.getElementById('wo-d').value);
+  if(isNaN(u)||isNaN(e)||isNaN(d)){setOut('wo-out','res-y','Completa U, E y D.');return;}
+  if((e-u)===0){setOut('wo-out','res-y','E − U no puede ser 0.');return;}
+  var apw=((e-d)/(e-u))*100,rpw=((e-d)/e)*100;
+  var adenoma=(u<=10)||(apw>=60)||(rpw>=40);
+  var cls=adenoma?'res-g':'res-r';
+  var msg='APW = '+apw.toFixed(0)+'% · RPW = '+rpw.toFixed(0)+'% · UH simple '+u+'. ';
+  msg+=adenoma?'→ Criterios de <strong>adenoma benigno</strong>.':'→ NO cumple criterios de adenoma; masa indeterminada, valorar más estudio.';
+  setOut('wo-out',cls,msg);}
+function resetWashout(){['wo-u','wo-e','wo-d'].forEach(function(i){document.getElementById(i).value='';});document.getElementById('wo-out').className='calc-out';}
+
+function calcEsteat(){var hg=parseFloat(document.getElementById('st-h').value),bz=parseFloat(document.getElementById('st-b').value);
+  if(isNaN(hg)||isNaN(bz)){setOut('st-out','res-y','Completa hígado y bazo.');return;}
+  var dif=hg-bz;var est=(hg<40)||(dif<=-10);
+  var cls=est?'res-r':'res-g';
+  setOut('st-out',cls,'Hígado '+hg+' UH · hígado−bazo = '+dif+' UH — '+(est?'compatible con <strong>esteatosis hepática</strong>.':'sin criterios de esteatosis por TC.'));}
+function resetEsteat(){document.getElementById('st-h').value='';document.getElementById('st-b').value='';document.getElementById('st-out').className='calc-out';}
+
+// ===== ESCENARIOS =====
+var ESCEN={
+  'Incidentaloma suprarrenal':{p:'Nódulo suprarrenal hallado incidentalmente en TC.',k:'UH simple ≤10 → adenoma rico en lípidos (no requiere más). Si &gt;10 → protocolo de washout (APW≥60%/RPW≥40% = adenoma).',x:'Si no cumple criterios, tamaño &gt;4 cm o crecimiento → valorar RM/seguimiento o cirugía.'},
+  'Quiste vs sólido renal':{p:'Lesión renal a caracterizar.',k:'Quiste simple 0–20 UH sin realce (Bosniak I). Realce &gt;20 UH = sólido. Grasa &lt; −20 UH = angiomiolipoma.',x:'Cuidado con el pseudorealce y el quiste hiperdenso (mide alto pero no realza).'},
+  'Hemorragia vs isquemia (cráneo)':{p:'Déficit neurológico agudo, TC simple.',k:'Sangre aguda hiperdensa 50–80 UH. Isquemia hipodensa con pérdida de diferenciación gris/blanca.',x:'Usar ventana estrecha (ictus) para isquemia temprana; no dar UH junto a hueso.'},
+  'Composición del cálculo':{p:'Urolitiasis en TC sin contraste.',k:'&gt;1000 UH = cálculo de calcio (duro). 200–500 UH = ácido úrico. La densidad predice respuesta a litotricia.',x:'Cálculos muy densos (&gt;1000 UH) responden peor a LEOC.'},
+  'Esteatosis hepática':{p:'Hígado a evaluar por infiltración grasa.',k:'En simple: hígado &lt;40 UH o hígado−bazo ≤ −10 UH.',x:'No aplicable en fase con contraste; usar simple.'},
+  'Nódulo pulmonar':{p:'Nódulo hallado en TC de tórax.',k:'Grasa o calcio en "palomita" → hamartoma/benigno. Calcificación difusa/central → benigno.',x:'Nódulo sólido no calcificado → seguimiento según Fleischner.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave de UH</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Nota / trampa</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;
+}
+
+window.addEventListener('load',function(){
+  renderDens('');
+  showVent(Object.keys(VENT)[0]);
+  renderApli();
+  renderTumores();
+  showEscen(Object.keys(ESCEN)[0]);
+});
+</script>
+</body>
+</html>

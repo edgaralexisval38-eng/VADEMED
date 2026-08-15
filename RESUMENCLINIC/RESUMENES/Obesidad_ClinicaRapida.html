@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Obesidad · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#0f766e;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#e3f0ef;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.calc{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap;}
+.calc-row label{font-size:12px;font-weight:600;color:var(--gray-700);flex:1;min-width:150px;}
+.calc-row input,.calc-row select{font-size:13px;padding:7px 9px;border:1px solid var(--bd);border-radius:var(--rs);min-width:120px;font-family:inherit;}
+.btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-out{margin-top:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;display:none;}
+.calc-out.show{display:block;}
+.res-r{background:var(--rl);color:var(--r);border:1px solid var(--rm);}
+.res-y{background:var(--al);color:var(--a);border:1px solid var(--am);}
+.res-g{background:var(--gl);color:var(--g);border:1px solid var(--gm);}
+.ind-drug-b{display:none;}
+.ind-drug-b.show{display:block;}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.esc-hero{background:linear-gradient(135deg,#042f2e,#0f766e);color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}
+.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.algo-q h4{margin:0 0 10px;font-size:14px;color:var(--gray-900);}
+.algo-opt{display:block;width:100%;text-align:left;padding:11px 13px;margin-bottom:8px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:13px;font-weight:600;color:var(--gray-700);cursor:pointer;font-family:inherit;}
+.algo-opt:hover{border-color:var(--ac);background:var(--gl);}
+.algo-res{background:#fff;border:2px solid var(--ac);border-radius:var(--rad);padding:14px;}
+.biblio-header{background:linear-gradient(135deg,#042f2e,#0f766e);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#042f2e,#0f766e);">
+  <div class="hdr-top">
+    <div class="hdr-icon">⚖️</div>
+    <div>
+      <div class="hdr-eye">Endocrinología · Medicina interna · Nutrición</div>
+      <div class="hdr-title">Obesidad</div>
+      <div class="hdr-sub">Enfermedad crónica · ADA/AACE · guía de farmacoterapia 2025</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> E66.9 · Obesidad, no especificada</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">IMC ≥30</span>
+    <span class="badge">Cintura &gt;102/88 cm</span>
+    <span class="badge">Meta 5–10%</span>
+    <span class="badge">Fármaco si IMC ≥27+comorb.</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">≥30</div><div class="qs-l">IMC obesidad</div></div>
+  <div class="qs"><div class="qs-v">&gt;102/88</div><div class="qs-l">Cintura H/M (cm)</div></div>
+  <div class="qs"><div class="qs-v">5–10%</div><div class="qs-l">Meta de pérdida</div></div>
+  <div class="qs"><div class="qs-v">~15–20%</div><div class="qs-l">Semaglutida/Tirzep.</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Evaluación</button>
+  <button class="tab" onclick="showT('esc',this)">🧮 Calculadoras</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>La <strong>obesidad</strong> es una <strong>enfermedad crónica, recidivante y multifactorial</strong> caracterizada por un exceso de grasa corporal que daña la salud. Se clasifica por el <strong>índice de masa corporal (IMC)</strong>, complementado con el <strong>perímetro de cintura</strong> (grasa visceral).</p>
+        <p>No es un problema de "voluntad": intervienen genética, ambiente, hormonas del apetito y un <strong>punto de ajuste</strong> que el cuerpo defiende, por eso el peso tiende a recuperarse.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Clasificación por IMC</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Categoría</th><th>IMC (kg/m²)</th></tr>
+          <tr><td>Bajo peso</td><td>&lt;18.5</td></tr>
+          <tr><td>Normal</td><td>18.5–24.9</td></tr>
+          <tr><td>Sobrepeso</td><td class="dn">25–29.9</td></tr>
+          <tr><td>Obesidad clase I</td><td class="dn">30–34.9</td></tr>
+          <tr><td>Obesidad clase II</td><td class="dn">35–39.9</td></tr>
+          <tr><td>Obesidad clase III (grave)</td><td class="dm">≥40</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>En población <strong>asiática</strong> los umbrales son menores (sobrepeso ≥23, obesidad ≥25). El IMC no distingue músculo de grasa: complementa con <strong>cintura</strong> (&gt;102 cm en hombres, &gt;88 cm en mujeres = obesidad central).</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div style="background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--r);line-height:1.55;"><strong>1. Balance energético positivo:</strong> ingesta &gt; gasto durante tiempo prolongado → almacenamiento en el tejido adiposo.</div>
+      <div style="background:var(--al);border-left:3px solid var(--am);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--a);line-height:1.55;"><strong>2. Señales de apetito:</strong> leptina (saciedad, hay resistencia), grelina (hambre), GLP-1/GIP (incretinas). Aquí actúan los fármacos modernos.</div>
+      <div style="background:var(--bl);border-left:3px solid var(--bm);border-radius:var(--rs);padding:10px 12px;font-size:12.5px;color:var(--b);line-height:1.55;"><strong>3. Defensa del peso:</strong> al bajar de peso, el cuerpo reduce el gasto y aumenta el hambre para volver a su "punto de ajuste" → explica la recuperación.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Comorbilidades asociadas</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Sistema</th><th>Comorbilidad</th></tr>
+          <tr><td>Metabólico</td><td>Diabetes tipo 2, prediabetes, dislipidemia, síndrome metabólico</td></tr>
+          <tr><td>Cardiovascular</td><td>Hipertensión, cardiopatía isquémica, insuficiencia cardiaca, FA</td></tr>
+          <tr><td>Respiratorio</td><td>Apnea obstructiva del sueño, hipoventilación</td></tr>
+          <tr><td>Digestivo</td><td>Hígado graso (MASLD), ERGE, litiasis biliar</td></tr>
+          <tr><td>Reproductivo</td><td>SOP, infertilidad, complicaciones del embarazo</td></tr>
+          <tr><td>Musculoesquelético</td><td>Artrosis, dolor lumbar</td></tr>
+          <tr><td>Otros</td><td>Varios cánceres, depresión, estigma, enfermedad renal</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">1</span><span class="kt">Tratarla como falta de voluntad en vez de enfermedad crónica; culpar al paciente.</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt">Fijar metas irreales (&gt;10% rápido); un <strong>5–10%</strong> ya mejora comorbilidades.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt">Olvidar buscar causas/contribuyentes: hipotiroidismo, Cushing, fármacos que engordan.</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt">Suspender el fármaco al lograr la meta → el peso se recupera (es tratamiento crónico).</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt">No abordar el riesgo cardiovascular y metabólico en paralelo.</span></div>
+      <div class="kp"><span class="kn">6</span><span class="kt">Retrasar la referencia a cirugía bariátrica cuando está indicada.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- EVALUACIÓN -->
+<div class="panel" id="tab-dx">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Cómo evaluar</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">1</span><span class="kt"><strong>Antropometría:</strong> IMC + perímetro de cintura (± % de grasa).</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt"><strong>Comorbilidad:</strong> presión, glucosa/A1c, lípidos, tamizaje de apnea y hígado graso.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt"><strong>Causas secundarias:</strong> hipotiroidismo (TSH), Cushing (si datos), fármacos obesogénicos (esteroides, antipsicóticos, insulina, algunos antidepresivos).</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt"><strong>Estadificar impacto</strong> (p. ej. escala de Edmonton): no solo el peso, sino cuánto afecta la salud.</span></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Estudios básicos</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Estudio</th><th>Para qué</th></tr>
+          <tr><td>Glucosa en ayuno / HbA1c</td><td>Prediabetes / diabetes</td></tr>
+          <tr><td>Perfil de lípidos</td><td>Dislipidemia, riesgo CV</td></tr>
+          <tr><td>Pruebas de función hepática</td><td>Hígado graso (MASLD)</td></tr>
+          <tr><td>TSH</td><td>Descartar hipotiroidismo</td></tr>
+          <tr><td>Presión arterial</td><td>Hipertensión</td></tr>
+          <tr><td>Tamizaje de apnea (STOP-BANG)</td><td>SAOS</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Fármacos que engordan y su alternativa</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw"><table class="t">
+        <tr><th>Clase que engorda</th><th>Alternativa más peso-neutra</th></tr>
+        <tr><td class="dm">Glucocorticoides</td><td>Dosis mínima y menor tiempo; ahorradores de esteroide</td></tr>
+        <tr><td class="dm">Antipsicóticos (olanzapina, clozapina)</td><td>Aripiprazol, ziprasidona, lurasidona</td></tr>
+        <tr><td class="dm">Insulina / sulfonilureas</td><td>Metformina, GLP-1, SGLT2 (peso-neutros o que bajan peso)</td></tr>
+        <tr><td class="dm">Antidepresivos (paroxetina, mirtazapina, tricíclicos)</td><td>Bupropión, fluoxetina, sertralina</td></tr>
+        <tr><td class="dm">Antiepilépticos (valproato, gabapentina, pregabalina)</td><td>Topiramato, lamotrigina, zonisamida</td></tr>
+        <tr><td class="dm">Betabloqueadores (atenolol, metoprolol)</td><td>IECA/ARA II, o carvedilol/nebivolol</td></tr>
+        <tr><td class="dm">Antihistamínicos sedantes</td><td>2.ª generación (loratadina, cetirizina)</td></tr>
+        <tr><td class="dm">Progestágeno inyectable (DMPA)</td><td>Otro método anticonceptivo</td></tr>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULADORAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Calculadora de IMC</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="calc">
+        <div class="calc-row"><label>Peso (kg)</label><input id="imc-p" type="number" step="0.1" placeholder="92"></div>
+        <div class="calc-row"><label>Talla (cm)</label><input id="imc-t" type="number" placeholder="168"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcIMC()">Calcular</button><button class="btn btn-s" onclick="resetIMC()">Reiniciar</button></div>
+        <div class="calc-out" id="imc-out"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Riesgo por perímetro de cintura</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="calc">
+        <div class="calc-row"><label>Sexo</label><select id="ci-sexo"><option value="h">Hombre</option><option value="m">Mujer</option></select></div>
+        <div class="calc-row"><label>Cintura (cm)</label><input id="ci-cm" type="number" placeholder="100"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcCintura()">Evaluar</button><button class="btn btn-s" onclick="resetCintura()">Reiniciar</button></div>
+        <div class="calc-out" id="ci-out"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Meta de pérdida de peso (5–10%)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="calc">
+        <div class="calc-row"><label>Peso actual (kg)</label><input id="mp-p" type="number" step="0.1" placeholder="92"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcMeta()">Calcular</button><button class="btn btn-s" onclick="resetMeta()">Reiniciar</button></div>
+        <div class="calc-out" id="mp-out"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Estadificación EOSS (Edmonton)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>La EOSS estadifica el <strong>impacto en la salud</strong> (0–4), no solo el peso; guía la intensidad del tratamiento.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>Mayor afectación del paciente</label>
+          <select id="eoss-sel">
+            <option value="0">Sin factores de riesgo ni síntomas</option>
+            <option value="1">Factores subclínicos o síntomas leves</option>
+            <option value="2">Enfermedad establecida (DM2, HTA, SAOS)</option>
+            <option value="3">Daño orgánico / limitación significativa</option>
+            <option value="4">Enfermedad grave o discapacidad</option>
+          </select></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcEoss()">Clasificar</button></div>
+        <div class="calc-out" id="eoss-out"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📆</span><span class="st">Calendario de titulación</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Genera el esquema de escalada de dosis semana a semana.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>Fármaco</label><select id="tit-sel"><option>Semaglutida (Wegovy)</option><option>Tirzepatida (Zepbound)</option><option>Liraglutida (Saxenda)</option></select></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcTitra()">Generar</button></div>
+        <div id="tit-out" style="margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="alert a-i"><span class="ai">🔀</span><div>Elección del escalón de tratamiento según IMC y comorbilidad.</div></div>
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoInit()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- TRATAMIENTO -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-g"><span class="ai">🏆</span><div><div class="at">Escalones del tratamiento</div>Todos: <strong>estilo de vida</strong>. Fármaco si <strong>IMC ≥30</strong> o <strong>≥27 con comorbilidad</strong>. Cirugía si <strong>IMC ≥40</strong> o <strong>≥35 con comorbilidad</strong>.</div></div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;">🏃 1) Estilo de vida (base de todo)</div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🥗</span><span class="st">Metas de estilo de vida</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Componente</th><th>Objetivo</th></tr>
+          <tr><td>Dieta</td><td class="dn">Déficit de 500–750 kcal/día; patrón sostenible (mediterráneo, hipocalórico)</td></tr>
+          <tr><td>Actividad física</td><td class="dn">≥150–300 min/semana; agregar fuerza</td></tr>
+          <tr><td>Conducta</td><td>Automonitoreo, metas, apoyo; dormir bien; reducir sedentarismo</td></tr>
+          <tr><td>Meta inicial</td><td class="dn">Perder 5–10% en 6 meses (ya mejora comorbilidades)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;">💊 2) Fármacos (IMC ≥30 o ≥27 + comorbilidad)</div>
+  <div class="alert a-i"><span class="ai">💊</span><div>Toca cada ficha para ver dosis, mecanismo, contraindicaciones, efectos adversos y seguimiento. Se combinan con el estilo de vida.</div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Tabla comparativa de fármacos</span><span class="sg open">⌄</span></div>
+  <div class="sb"><div id="farm-tabla"></div></div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Eficacia — datos de ensayos</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Fármaco</th><th>Pérdida de peso media</th><th>Ensayo (duración)</th></tr>
+      <tr><td class="dn">⭐ Tirzepatida 15 mg</td><td class="dn">−20.9% (≈ −21 kg)</td><td>SURMOUNT-1 (72 sem)</td></tr>
+      <tr><td>Tirzepatida 10 mg / 5 mg</td><td>−19.5% / −15.0%</td><td>SURMOUNT-1</td></tr>
+      <tr><td class="dn">⭐ Semaglutida 2.4 mg</td><td class="dn">−14.9% (≈ −15.3 kg)</td><td>STEP 1 (68 sem)</td></tr>
+      <tr><td>Liraglutida 3.0 mg</td><td>−8.0% (≈ −8.4 kg)</td><td>SCALE (56 sem)</td></tr>
+      <tr><td>Fentermina/topiramato 15/92</td><td>−9.8%</td><td>CONQUER / SEQUEL</td></tr>
+      <tr><td>Naltrexona/bupropión</td><td>−5 a −6%</td><td>COR-I/II</td></tr>
+      <tr><td>Orlistat</td><td>≈ −3% vs placebo (−2.9 kg)</td><td>XENDOS</td></tr>
+      <tr><td class="dn">Retatrutida (triple GIP/GLP-1/glucagón)*</td><td class="dn">−24.2% (fase 2)</td><td>Jastreboff, NEJM 2023 (48 sem)</td></tr>
+      <tr><td>Semaglutida oral 50 mg</td><td>−15 a −17%</td><td>OASIS-1 (68 sem)</td></tr>
+      <tr><td class="dn">Cirugía (manga / bypass)</td><td class="dn">−25 a −30%</td><td>Cohortes / STAMPEDE</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">📊</span><div>Con <strong>tirzepatida 15 mg, ~57%</strong> pierde ≥20% del peso; con <strong>semaglutida 2.4 mg, ~50%</strong> pierde ≥15% y ~86% ≥5%. El estilo de vida/placebo solo logra ≈ −2 a −3%. La semaglutida además demostró <strong>beneficio cardiovascular</strong> (SELECT).</div></div>
+  </div></div>
+  <input id="farm-search" type="text" placeholder="Buscar fármaco (semaglutida, orlistat, oral...)" oninput="renderFarm(this.value)" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;margin-bottom:10px;font-family:inherit;">
+  <div id="farm-body"></div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;">🧭 Manejo práctico</div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤢</span><span class="st">Manejo de efectos GI (incretinas)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>Titula despacio:</strong> no subas la dosis si todavía hay náusea; espera a que se estabilice cada escalón.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Porciones pequeñas, comer lento, evitar frituras/grasa y exceso; detenerse al sentirse lleno.</span></div>
+    <div style="font-size:11px;color:var(--gray-700);line-height:1.5;margin:-2px 0 8px 28px;background:#f0f9f7;border-radius:6px;padding:6px 9px;">✅ <strong>Sí puede comer:</strong> alimentos secos y blandos, bajos en grasa — galletas saladas al despertar, pan tostado, arroz, avena, pollo o pescado a la plancha, papa y verduras cocidas, plátano, manzana o pera cocida, yogur natural, gelatina y caldos claros. El jengibre (té o caramelo) ayuda con la náusea. Comer poco y frecuente.</div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Hidratación; la náusea suele mejorar en 1–2 semanas de cada dosis.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Estreñimiento: fibra, líquidos y laxante suave. Antiemético puntual si es necesario.</span></div>
+    <div style="font-size:11px;color:var(--gray-700);line-height:1.5;margin:-2px 0 8px 28px;background:#f0f9f7;border-radius:6px;padding:6px 9px;">💊 <strong>Opciones y dosis:</strong> Fibra: <em>psyllium</em> (Plantago) 1 cucharada (~3.5–5 g) en un vaso de agua, 1–3×/día. Laxante suave: <em>polietilenglicol (PEG)</em> 17 g/día, o <em>lactulosa</em> 15–30 mL/día, o <em>docusato</em> 100 mg c/12 h — siempre con abundante agua. Antiemético puntual: <em>metoclopramida</em> 10 mg VO c/8 h, u <em>ondansetrón</em> 4–8 mg.</div>
+    <div class="kp"><span class="kn">!</span><span class="kt"><strong>Alarma:</strong> vómito intenso/deshidratación o dolor abdominal fuerte → descartar pancreatitis o retención gástrica.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔁</span><span class="st">Reglas para suspender o cambiar</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>Evalúa a los 3 meses</strong> en dosis eficaz: si perdió <strong>≥5%</strong> → continuar; si &lt;5% → cambiar de fármaco o escalar.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><strong>Meseta:</strong> antes de rendirte, refuerza estilo de vida, verifica adherencia y llega a la dosis máxima tolerada.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><strong>Es crónico:</strong> al suspender, el peso se recupera; planea continuidad o transición.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Suspender si hay efectos adversos intolerables, embarazo o nueva contraindicación.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Perioperatorio de GLP-1 (cirugía / endoscopia)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-r"><span class="ai">⚠️</span><div><div class="at">Riesgo de broncoaspiración</div>Los GLP-1 enlentecen el vaciamiento gástrico → estómago lleno pese al ayuno, con riesgo de aspiración bajo sedación/anestesia.</div></div>
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>Semanales</strong> (semaglutida, tirzepatida): suspender <strong>~1 semana antes</strong> del procedimiento.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><strong>Diarios</strong> (liraglutida): omitir la dosis <strong>el día</strong> del procedimiento.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Endoscopia: mismo cuidado; valorar dieta líquida 24 h antes y precauciones de "estómago lleno".</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">Reiniciar cuando tolere la vía oral y sin íleo.</span></div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Nuevos fármacos y desenlaces cardiovasculares</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">★</span><span class="kt"><strong>SELECT (semaglutida 2.4 mg, NEJM 2023):</strong> en obesidad/sobrepeso <em>con enfermedad CV establecida y sin diabetes</em>, redujo los eventos cardiovasculares mayores (muerte CV, IAM, EVC) <strong>~20%</strong>. Da un beneficio más allá del peso.</span></div>
+    <div class="kp"><span class="kn">★</span><span class="kt"><strong>Retatrutida</strong> (triple agonista GIP/GLP-1/glucagón): <strong>~24%</strong> de pérdida en fase 2 (NEJM 2023). <em>Investigacional</em> (fase 3 en curso); aún no aprobada.</span></div>
+    <div class="kp"><span class="kn">★</span><span class="kt"><strong>Semaglutida oral (50 mg)</strong>: ~15–17% de pérdida (OASIS-1); alternativa sin inyección.</span></div>
+    <div class="kp"><span class="kn">★</span><span class="kt"><strong>Tirzepatida + DM2 (SURMOUNT-2):</strong> ~15% de pérdida; también mejora el control glucémico.</span></div>
+    <div style="font-size:11px;color:var(--gray-600);margin-top:4px;">* Investigacional = aún no aprobado para uso clínico rutinario.</div>
+  </div></div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧒</span><span class="st">Obesidad en pediatría / adolescentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Aspecto</th><th>Recomendación (AAP 2023)</th></tr>
+      <tr><td>Estilo de vida</td><td class="dn">Base para todos; tratamiento conductual intensivo familiar</td></tr>
+      <tr><td>Fármacos</td><td>Ofrecer desde los <strong>≥12 años</strong> con obesidad, junto al estilo de vida</td></tr>
+      <tr><td class="dn">Semaglutida 2.4 mg (STEP TEENS)</td><td class="dn">−16.1% en adolescentes 12–17 años (NEJM 2022); aprobada ≥12 años</td></tr>
+      <tr><td>Otros aprobados ≥12 años</td><td>Liraglutida 3.0 mg, fentermina/topiramato, orlistat</td></tr>
+      <tr><td>Cirugía bariátrica</td><td class="dm">Considerar desde los ≥13 años en obesidad grave con comorbilidad</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">👶</span><div>La AAP recomienda <strong>no demorar</strong> el tratamiento ("watchful waiting" ya no se aconseja); evaluar comorbilidad (hígado graso, apnea, DM2, SOP).</div></div>
+  </div></div>
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;">🔪 3) Cirugía bariátrica</div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔪</span><span class="st">Cirugía metabólica / bariátrica</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Aspecto</th><th>Detalle</th></tr>
+          <tr><td>Indicaciones</td><td class="dn">IMC ≥40, o ≥35 con comorbilidad; considerar ≥30–35 con diabetes tipo 2 mal controlada</td></tr>
+          <tr><td>Técnicas</td><td>Manga gástrica (sleeve) y bypass gástrico en Y de Roux (más metabólico)</td></tr>
+          <tr><td>Resultados</td><td class="dn">Pérdida ~25–30% y remisión frecuente de DM2</td></tr>
+          <tr><td>Seguimiento</td><td>Suplementos de por vida (B12, hierro, calcio, vit. D, folato); vigilar deficiencias</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Requiere evaluación multidisciplinaria (nutrición, psicología, cirugía) y compromiso con el seguimiento a largo plazo.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="alert a-i"><span class="ai">⚙️</span><div>Selecciona un escenario clínico.</div></div>
+  <div class="chipbar" id="escen-chips"></div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento y metas</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Momento</th><th>Acción</th><th>Meta</th></tr>
+          <tr><td>Basal</td><td>Peso, IMC, cintura, comorbilidad, elección de plan</td><td>Plan individualizado</td></tr>
+          <tr><td>Mensual (inicio de fármaco)</td><td>Peso, tolerancia, efectos adversos</td><td>Titular dosis</td></tr>
+          <tr><td>3 meses</td><td>Evaluar respuesta</td><td class="dn">≥5% de pérdida (si no, cambiar de fármaco)</td></tr>
+          <tr><td>6–12 meses</td><td>Peso, comorbilidad, laboratorio</td><td>Mantener 5–10%+; ajustar</td></tr>
+          <tr><td>Largo plazo</td><td>Continuar tratamiento (es crónico)</td><td>Evitar recuperación</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧾</span><span class="st">Qué medir en el seguimiento</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">✓</span><span class="kt">Peso, IMC y cintura; % de pérdida respecto al basal.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Presión, glucosa/A1c y lípidos (mejoran con la pérdida de peso).</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Tolerancia y efectos adversos del fármaco; adherencia.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Tras cirugía: vitaminas y minerales (B12, hierro, calcio, vit. D) de por vida.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Obesidad</h2>
+    <p>Guías y ensayos clínicos que fundamentan el manejo actual.</p>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">1</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Grunvald E, et al. <em>Pharmacotherapy for obesity management in adults: 2025 clinical practice guideline update.</em> [Fármacos, umbrales y eficacia].</div>
+        <a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12350384/" target="_blank">🔗 PMC12350384</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">2</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">ASMBS / IFSO. <em>Indications for Metabolic and Bariatric Surgery — 2022 Update.</em> Surg Obes Relat Dis 2022. [IMC ≥35 o ≥30 con DM2].</div>
+        <a class="biblio-link" href="https://doi.org/10.1016/j.soard.2022.08.013" target="_blank">🔗 DOI 10.1016/j.soard.2022.08.013</a>
+      </div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Ensayos clínicos clave</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">3</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Wilding JPH, et al. <em>Once-Weekly Semaglutide in Adults with Overweight or Obesity (STEP 1).</em> N Engl J Med 2021;384:989–1002. [~15% de pérdida].</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa2032183" target="_blank">🔗 DOI 10.1056/NEJMoa2032183</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">4</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Jastreboff AM, et al. <em>Tirzepatide Once Weekly for the Treatment of Obesity (SURMOUNT-1).</em> N Engl J Med 2022;387:205–216. [~20% de pérdida].</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa2206038" target="_blank">🔗 DOI 10.1056/NEJMoa2206038</a>
+      </div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudio observacional</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia</div>
+      </div>
+    </div>
+  </div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Farmacoterapia en evolución rápida; verifica disponibilidad y aprobaciones locales. Última revisión: agosto 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function setOut(id,cls,html){var o=document.getElementById(id);o.className='calc-out show '+cls;o.innerHTML=html;}
+function val(id){return document.getElementById(id).value;}
+
+// ===== CALCULADORAS =====
+function calcIMC(){var p=parseFloat(val('imc-p')),t=parseFloat(val('imc-t'));
+  if(isNaN(p)||isNaN(t)||t<=0){setOut('imc-out','res-y','Ingresa peso y talla válidos.');return;}
+  var m=t/100;var imc=p/(m*m);var cat,cls;
+  if(imc<18.5){cat='Bajo peso';cls='res-y';}
+  else if(imc<25){cat='Normal';cls='res-g';}
+  else if(imc<30){cat='Sobrepeso';cls='res-y';}
+  else if(imc<35){cat='Obesidad clase I';cls='res-r';}
+  else if(imc<40){cat='Obesidad clase II';cls='res-r';}
+  else{cat='Obesidad clase III (grave)';cls='res-r';}
+  setOut('imc-out',cls,'IMC = '+imc.toFixed(1)+' kg/m² — <strong>'+cat+'</strong>.');}
+function resetIMC(){document.getElementById('imc-p').value='';document.getElementById('imc-t').value='';document.getElementById('imc-out').className='calc-out';}
+
+function calcCintura(){var s=val('ci-sexo'),c=parseFloat(val('ci-cm'));
+  if(isNaN(c)){setOut('ci-out','res-y','Ingresa la cintura.');return;}
+  var umbral=s==='h'?102:88;var alto=c>umbral;
+  setOut('ci-out',alto?'res-r':'res-g','Cintura '+c+' cm (umbral '+umbral+' cm) — '+(alto?'<strong>obesidad central / riesgo aumentado</strong>.':'sin criterio de obesidad central.'));}
+function resetCintura(){document.getElementById('ci-cm').value='';document.getElementById('ci-out').className='calc-out';}
+
+function calcMeta(){var p=parseFloat(val('mp-p'));if(isNaN(p)){setOut('mp-out','res-y','Ingresa el peso.');return;}
+  var p5=(p*0.05),p10=(p*0.10);
+  setOut('mp-out','res-g','Meta 5% = '+p5.toFixed(1)+' kg (a '+(p-p5).toFixed(1)+' kg) · Meta 10% = '+p10.toFixed(1)+' kg (a '+(p-p10).toFixed(1)+' kg).');}
+function resetMeta(){document.getElementById('mp-p').value='';document.getElementById('mp-out').className='calc-out';}
+
+// ===== ALGORITMO =====
+var ALGO={
+  q0:{q:'¿IMC del paciente?',o:[{t:'25–26.9 (sobrepeso)',go:'q1'},{t:'27–29.9 (sobrepeso)',go:'q1'},{t:'30–34.9 (obesidad I)',go:'q2'},{t:'≥35 (obesidad II–III)',go:'q3'}]},
+  q1:{q:'¿Tiene comorbilidad relacionada con el peso (DM2, HTA, dislipidemia, SAOS…)?',o:[{t:'Sí',go:'rFarm'},{t:'No',go:'rVida'}]},
+  q2:{q:'¿IMC ≥30?',o:[{t:'Sí (obesidad)',go:'rFarm'}]},
+  q3:{q:'¿Comorbilidad o IMC ≥40?',o:[{t:'IMC ≥40, o ≥35 con comorbilidad',go:'rCir'},{t:'Solo requiere fármaco',go:'rFarm'}]}
+};
+var ALGO_RES={
+  rVida:{c:'a-i',t:'Estilo de vida',x:'Sobrepeso sin comorbilidad: <strong>dieta + actividad + conducta</strong>. Meta 5–10%. Reevaluar; si aparece comorbilidad o no baja, considerar fármaco.'},
+  rFarm:{c:'a-w',t:'Estilo de vida + fármaco',x:'IMC ≥30, o ≥27 con comorbilidad: añadir un <strong>fármaco anti-obesidad</strong> (preferir agonistas de incretina como semaglutida o tirzepatida por su eficacia). Evaluar respuesta a los 3 meses (≥5%).'},
+  rCir:{c:'a-r',t:'Valorar cirugía bariátrica',x:'IMC ≥40, o ≥35 con comorbilidad (o ≥30–35 con DM2 mal controlada): referir a <strong>cirugía metabólica</strong> con evaluación multidisciplinaria, además de estilo de vida ± fármaco.'}
+};
+function algoRender(node){var box=document.getElementById('algo-box');
+  if(ALGO_RES[node]){var r=ALGO_RES[node];box.innerHTML='<div class="algo-res"><div class="alert '+r.c+'" style="margin:0;"><span class="ai">✓</span><div><div class="at">'+r.t+'</div>'+r.x+'</div></div></div>';return;}
+  var q=ALGO[node];var h='<div class="algo-q"><h4>'+q.q+'</h4>';
+  for(var i=0;i<q.o.length;i++)h+='<button class="algo-opt" onclick="algoRender(\''+q.o[i].go+'\')">'+q.o[i].t+'</button>';
+  h+='</div>';box.innerHTML=h;}
+function algoInit(){algoRender('q0');}
+
+// ===== FÁRMACOS (formato barra de color) =====
+var FARM=[
+  {n:'Tirzepatida (Zepbound / Mounjaro)',color:'#0f766e',tag:'⭐ Elección · máxima eficacia (~20%)',
+    dosis:'2.5 mg SC semanal → escalar cada 4 sem hasta 5–15 mg',
+    dosisSub:'Titular lento para tolerancia GI; máx 15 mg/semana.',
+    desc:'Agonista dual GIP/GLP-1; pérdida de peso ~20–22% (SURMOUNT-1). La más eficaz.',
+    rows:[
+      ['Mecanismo','Agonista dual de los receptores GIP y GLP-1: aumenta saciedad, enlentece el vaciamiento gástrico y mejora la glucosa.'],
+      ['Cuándo','IMC ≥30, o ≥27 con comorbilidad.'],
+      ['Dosis / nota','2.5 → 5 → 7.5 → 10 → 12.5 → 15 mg cada 4 semanas según tolerancia y respuesta.'],
+      ['Vía','Subcutánea, 1 vez por semana.'],
+      ['Presentaciones','Pluma precargada (Zepbound para obesidad; Mounjaro para DM2).'],
+      ['Contraindicaciones','Antecedente personal/familiar de carcinoma medular de tiroides o MEN2; pancreatitis; embarazo.'],
+      ['Efectos adversos','Náusea, vómito, diarrea, estreñimiento (dosis-dependiente); colelitiasis; pancreatitis (rara).'],
+      ['Seguimiento','Peso y tolerancia mensual al titular; suspender si no ≥5% a 3–6 meses en dosis eficaz.']
+    ],
+    nota:'El peso se recupera al suspender: es tratamiento crónico. Considerar costo y disponibilidad.'},
+  {n:'Semaglutida 2.4 mg (Wegovy)',color:'#0f766e',tag:'⭐ Elección · alta eficacia (~15%)',
+    dosis:'0.25 mg SC semanal → escalar cada 4 sem hasta 2.4 mg',
+    dosisSub:'Titular lento; dosis de mantenimiento 2.4 mg/semana.',
+    desc:'Agonista del receptor GLP-1; pérdida de peso ~15% (STEP 1). Beneficio cardiovascular demostrado.',
+    rows:[
+      ['Mecanismo','Agonista GLP-1: aumenta la saciedad y enlentece el vaciamiento gástrico.'],
+      ['Cuándo','IMC ≥30, o ≥27 con comorbilidad.'],
+      ['Dosis / nota','0.25 → 0.5 → 1.0 → 1.7 → 2.4 mg cada 4 semanas.'],
+      ['Vía','Subcutánea, 1 vez por semana.'],
+      ['Presentaciones','Pluma (Wegovy para obesidad; Ozempic para DM2, dosis menores).'],
+      ['Contraindicaciones','Carcinoma medular de tiroides / MEN2; pancreatitis; embarazo.'],
+      ['Efectos adversos','Náusea, vómito, diarrea, estreñimiento; colelitiasis; pancreatitis (rara).'],
+      ['Seguimiento','Peso mensual al titular; evaluar respuesta a 3–6 meses.']
+    ],
+    nota:'Tratamiento crónico; el peso se recupera al suspender.'},
+  {n:'Liraglutida 3.0 mg (Saxenda)',color:'#0d9488',tag:'GLP-1 diario',
+    dosis:'0.6 mg SC diario → +0.6 mg cada semana hasta 3.0 mg',
+    dosisSub:'Aplicación diaria (a diferencia de las semanales).',
+    desc:'Agonista GLP-1 diario; pérdida ~5–8%. Alternativa cuando no hay semanales.',
+    rows:[
+      ['Mecanismo','Agonista GLP-1 (acción diaria).'],
+      ['Cuándo','IMC ≥30, o ≥27 con comorbilidad.'],
+      ['Dosis / nota','0.6 → 1.2 → 1.8 → 2.4 → 3.0 mg, subiendo cada semana.'],
+      ['Vía','Subcutánea, diaria.'],
+      ['Presentaciones','Pluma multidosis (Saxenda para obesidad).'],
+      ['Contraindicaciones','Carcinoma medular de tiroides / MEN2; pancreatitis; embarazo.'],
+      ['Efectos adversos','Náusea, vómito, diarrea; colelitiasis.'],
+      ['Seguimiento','Peso y tolerancia; respuesta a 3 meses.']
+    ],
+    nota:'Menos eficaz que las semanales y requiere inyección diaria.'},
+  {n:'Fentermina / topiramato ER (Qsymia)',color:'#b45309',tag:'Oral combinado',
+    dosis:'3.75/23 mg → 7.5/46 mg → 15/92 mg VO/día',
+    dosisSub:'Iniciar bajo y titular; tomar por la mañana.',
+    desc:'Anorexígeno + topiramato; pérdida ~8–10%.',
+    rows:[
+      ['Mecanismo','Fentermina (simpaticomimético anorexígeno) + topiramato (saciedad).'],
+      ['Cuándo','IMC ≥30, o ≥27 con comorbilidad.'],
+      ['Dosis / nota','Iniciar 3.75/23 mg × 14 días; subir según respuesta hasta 15/92 mg.'],
+      ['Vía','Oral, una vez al día por la mañana (evitar insomnio).'],
+      ['Presentaciones','Cápsula de liberación prolongada.'],
+      ['Contraindicaciones','Embarazo (topiramato: hendidura oral), hipertiroidismo, glaucoma, cardiopatía/HTA no controlada, IMAO.'],
+      ['Efectos adversos','Parestesias, boca seca, insomnio, taquicardia, alteración cognitiva.'],
+      ['Seguimiento','Presión y frecuencia cardiaca; anticoncepción efectiva.']
+    ],
+    nota:'Muy eficaz entre los orales; vigilar el perfil cardiovascular y el embarazo.'},
+  {n:'Naltrexona / bupropión (Contrave)',color:'#b45309',tag:'Oral combinado',
+    dosis:'8/90 mg: titular a 2 comprimidos cada 12 h (32/360 mg/día)',
+    dosisSub:'Subir 1 comprimido por semana hasta la dosis meta.',
+    desc:'Actúa sobre el apetito y el sistema de recompensa; pérdida ~5%.',
+    rows:[
+      ['Mecanismo','Naltrexona (antagonista opioide) + bupropión (inhibidor de recaptura de dopamina/noradrenalina).'],
+      ['Cuándo','IMC ≥30, o ≥27 con comorbilidad; útil si hay ansia por comer.'],
+      ['Dosis / nota','Semana 1: 1 tab AM; se sube semanalmente hasta 2 tabs BID.'],
+      ['Vía','Oral, dos veces al día.'],
+      ['Presentaciones','Comprimido de liberación prolongada 8/90 mg.'],
+      ['Contraindicaciones','Convulsiones, trastorno alimentario, uso crónico de opioides, HTA no controlada, IMAO, embarazo.'],
+      ['Efectos adversos','Náusea, cefalea, estreñimiento, insomnio, aumento de la presión.'],
+      ['Seguimiento','Presión arterial; ánimo (bupropión).']
+    ],
+    nota:'Evitar con opioides (precipita abstinencia) y en riesgo de convulsiones.'},
+  {n:'Orlistat',color:'#6b7280',tag:'Inhibidor de lipasa',
+    dosis:'120 mg VO con cada comida que contenga grasa (hasta 3×/día)',
+    dosisSub:'Omitir la dosis si la comida no tiene grasa.',
+    desc:'Reduce la absorción de grasa ~30%; pérdida ~3–5%. Disponible sin incretinas.',
+    rows:[
+      ['Mecanismo','Inhibe la lipasa pancreática → menor absorción de grasa dietética.'],
+      ['Cuándo','IMC ≥30, o ≥27 con comorbilidad; opción no sistémica.'],
+      ['Dosis / nota','120 mg con las comidas grasas; añadir multivitamínico (vitaminas liposolubles).'],
+      ['Vía','Oral, con las comidas.'],
+      ['Presentaciones','Cápsula 120 mg (60 mg de venta libre en algunos países).'],
+      ['Contraindicaciones','Síndrome de malabsorción, colestasis, embarazo.'],
+      ['Efectos adversos','Esteatorrea, urgencia y escape fecal, flatulencia con descarga (peor con dieta grasa).'],
+      ['Seguimiento','Adherencia a dieta baja en grasa; vitaminas liposolubles.']
+    ],
+    nota:'Los efectos GI mejoran la adherencia a una dieta baja en grasa; suplementar vitaminas.'},
+  {n:'Fentermina (sola)',color:'#6b7280',tag:'Corto plazo (≤12 sem)',
+    dosis:'15–37.5 mg VO/día por la mañana',
+    dosisSub:'Uso a corto plazo (habitualmente ≤12 semanas).',
+    desc:'Anorexígeno económico para uso breve.',
+    rows:[
+      ['Mecanismo','Simpaticomimético: suprime el apetito.'],
+      ['Cuándo','Uso a corto plazo, sin cardiopatía; puente o inicio.'],
+      ['Dosis / nota','Iniciar 15 mg/día; máximo 37.5 mg/día por la mañana.'],
+      ['Vía','Oral, una vez al día.'],
+      ['Presentaciones','Tabletas/cápsulas 15, 30, 37.5 mg.'],
+      ['Contraindicaciones','Cardiopatía, HTA no controlada, hipertiroidismo, glaucoma, antecedente de abuso, embarazo, IMAO.'],
+      ['Efectos adversos','Insomnio, taquicardia, aumento de presión, boca seca, nerviosismo.'],
+      ['Seguimiento','Presión y frecuencia cardiaca; no combinar con otros simpaticomiméticos.']
+    ],
+    nota:'Aprobada solo para uso corto; poca evidencia de mantenimiento a largo plazo en monoterapia.'}
+];
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+function renderFarm(f){f=(f||'').toLowerCase();var h='';var shown=0;for(var i=0;i<FARM.length;i++){var d=FARM[i];if(f&&d.n.toLowerCase().indexOf(f)<0&&d.tag.toLowerCase().indexOf(f)<0)continue;var id='farm-'+i;var open=(!f&&shown===0);shown++;
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">Dosis</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div>';
+  h+='<div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div>';
+  h+='<div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  if(shown===0)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+f+'".</div></div>';document.getElementById('farm-body').innerHTML=h;}
+
+// ===== COMPARATIVA / EOSS / TITULACIÓN =====
+var COMPARA=[
+  {n:'Tirzepatida',ef:'~20–22%',via:'SC semanal',costo:'Alto',ci:'CMT/MEN2, pancreatitis, embarazo'},
+  {n:'Semaglutida 2.4 mg',ef:'~15%',via:'SC semanal',costo:'Alto',ci:'CMT/MEN2, pancreatitis, embarazo'},
+  {n:'Liraglutida 3.0 mg',ef:'~5–8%',via:'SC diaria',costo:'Alto',ci:'CMT/MEN2, pancreatitis, embarazo'},
+  {n:'Fentermina/topiramato',ef:'~8–10%',via:'VO diaria',costo:'Medio',ci:'Embarazo, HTA/cardiopatía, glaucoma, hipertiroidismo'},
+  {n:'Naltrexona/bupropión',ef:'~5%',via:'VO 2×/día',costo:'Medio',ci:'Convulsiones, opioides, HTA no controlada, embarazo'},
+  {n:'Orlistat',ef:'~3–5%',via:'VO con comidas',costo:'Bajo',ci:'Malabsorción, colestasis, embarazo'},
+  {n:'Fentermina',ef:'~3–5% (corto plazo)',via:'VO diaria',costo:'Bajo',ci:'Cardiopatía, HTA, hipertiroidismo, embarazo'}
+];
+function buildComparaTabla(){var h='<div class="tw"><table class="t"><tr><th>Fármaco</th><th>Eficacia</th><th>Vía</th><th>Costo</th><th>CI clave</th></tr>';
+  for(var i=0;i<COMPARA.length;i++){var c=COMPARA[i];h+='<tr><td style="font-weight:600;">'+c.n+'</td><td class="dn">'+c.ef+'</td><td>'+c.via+'</td><td>'+c.costo+'</td><td style="color:#7b1c1c;">'+c.ci+'</td></tr>';}
+  h+='</table></div>';document.getElementById('farm-tabla').innerHTML=h;}
+function calcEoss(){var s=val('eoss-sel');var map={
+  '0':['res-g','EOSS 0','Sin factores de riesgo ni síntomas. Manejo: prevención y estilo de vida.'],
+  '1':['res-y','EOSS 1','Factores subclínicos (prediabetes, PA limítrofe) o síntomas leves. Manejo: estilo de vida intensivo y vigilancia.'],
+  '2':['res-y','EOSS 2','Enfermedad establecida (DM2, HTA, SAOS) o limitación moderada. Manejo: estilo de vida + fármaco; tratar comorbilidad.'],
+  '3':['res-r','EOSS 3','Daño orgánico (IAM, complicaciones) o limitación significativa. Manejo: intensivo; valorar cirugía bariátrica.'],
+  '4':['res-r','EOSS 4','Enfermedad grave/terminal o discapacidad. Manejo: individualizado, a menudo agresivo o paliativo.']
+};var m=map[s];setOut('eoss-out',m[0],'<strong>'+m[1]+'</strong> — '+m[2]);}
+var TITRA={
+  'Semaglutida (Wegovy)':[['Sem 1–4','0.25 mg SC/sem'],['Sem 5–8','0.5 mg'],['Sem 9–12','1.0 mg'],['Sem 13–16','1.7 mg'],['Sem 17 en adelante','2.4 mg (mantenimiento)']],
+  'Tirzepatida (Zepbound)':[['Sem 1–4','2.5 mg SC/sem'],['Sem 5–8','5 mg'],['Sem 9–12','7.5 mg'],['Sem 13–16','10 mg'],['Sem 17–20','12.5 mg'],['Sem 21 en adelante','15 mg (máx)']],
+  'Liraglutida (Saxenda)':[['Sem 1','0.6 mg SC/día'],['Sem 2','1.2 mg'],['Sem 3','1.8 mg'],['Sem 4','2.4 mg'],['Sem 5 en adelante','3.0 mg']]
+};
+function calcTitra(){var k=val('tit-sel');var rows=TITRA[k];var h='<div class="tw"><table class="t"><tr><th>Semana</th><th>Dosis</th></tr>';
+  for(var i=0;i<rows.length;i++)h+='<tr><td class="dn">'+rows[i][0]+'</td><td>'+rows[i][1]+'</td></tr>';
+  h+='</table></div>';document.getElementById('tit-out').innerHTML=h;}
+
+// ===== ESCENARIOS =====
+var ESCEN={
+  'Obesidad + DM2':{p:'Obesidad con diabetes tipo 2.',k:'Preferir fármacos que bajan peso y glucosa.',x:'Semaglutida o tirzepatida de elección (control glucémico + pérdida de peso); valorar cirugía metabólica si IMC ≥35 (o ≥30 mal controlada).'},
+  'Obesidad + apnea del sueño':{p:'Obesidad con SAOS.',k:'La pérdida de peso mejora la apnea.',x:'Estilo de vida + fármaco (incretina); CPAP en paralelo; cirugía en obesidad grave.'},
+  'Obesidad + hígado graso (MASLD)':{p:'Esteatosis/esteatohepatitis metabólica.',k:'Perder ≥7–10% mejora la histología.',x:'Estilo de vida intensivo; incretinas útiles; evitar alcohol; controlar metabólico.'},
+  'Obesidad + SOP':{p:'Ovario poliquístico con obesidad.',k:'La pérdida de peso regulariza ciclos y mejora la fertilidad.',x:'Estilo de vida; metformina; considerar fármacos anti-obesidad (suspender GLP-1 al buscar embarazo).'},
+  'Obesidad clase III':{p:'IMC ≥40.',k:'Alto riesgo; a menudo requiere cirugía.',x:'Referir a cirugía bariátrica con equipo multidisciplinario; fármaco y estilo de vida como puente/complemento.'},
+  'Preconcepcional / embarazo':{p:'Mujer con obesidad que busca o cursa embarazo.',k:'Los fármacos anti-obesidad están contraindicados en el embarazo.',x:'Optimizar peso antes de concebir con estilo de vida; suspender GLP-1/orlistat/topiramato al embarazarse; folato y control metabólico.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+window.addEventListener('load',function(){
+  algoInit();
+  buildComparaTabla();
+  renderFarm('');
+  showEscen(Object.keys(ESCEN)[0]);
+});
+</script>
+</body>
+</html>

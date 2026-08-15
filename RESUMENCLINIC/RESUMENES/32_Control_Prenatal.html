@@ -372,6 +372,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab" onclick="showT('lab',this)">🧪 Laboratorios</button>
   <button class="tab" onclick="showT('usg',this)">🩻 Ultrasonidos</button>
   <button class="tab" onclick="showT('sup',this)">💊 Suplementos y vacunas</button>
+  <button class="tab" onclick="showT('fx',this)">🚫 Fármacos contraindicados</button>
   <button class="tab" onclick="showT('vig',this)">📊 Vigilancia</button>
   <button class="tab" onclick="showT('ala',this)">🚩 Signos de alarma</button>
   <button class="tab" onclick="showT('esce',this)">⚙️ Escenarios</button>
@@ -641,6 +642,29 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
     <div class="alert a-r" style="margin-top:8px;"><span class="ai">🚫</span><div><div class="at">Contraindicadas: vacunas de virus vivos atenuados</div><strong>Triple viral (sarampión-rubéola-parotiditis, SRP), varicela y VPH</strong> NO se aplican durante el embarazo. Si se requieren, se posponen al <strong>puerperio</strong> (son compatibles con la lactancia). Tras SRP o varicela, evitar el embarazo ~1 mes.</div></div>
     <div class="alert a-i" style="margin-top:6px;"><span class="ai">🤱</span><div>La fiebre amarilla solo si el riesgo de exposición es alto e inevitable (valoración individual). En el <strong>puerperio</strong> se aprovechan para completar SRP, varicela, VPH y hepatitis B según corresponda.</div></div>
   </div></div>
+</div>
+
+<!-- FÁRMACOS CONTRAINDICADOS -->
+<div class="panel" id="tab-fx">
+
+  <input id="fx-search" type="text" placeholder="Buscar medicamento (p. ej. warfarina, AINE, metronidazol)..." oninput="renderFx()" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;margin-bottom:10px;font-family:inherit;">
+  <div id="fx-filter" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"></div>
+  <div id="fx-body"></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📆</span><span class="st">Ventanas críticas por semana (por qué importa el momento)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <thead><tr><th>Periodo</th><th>Qué ocurre</th><th>Riesgo dominante</th></tr></thead>
+      <tbody>
+        <tr><td class="dn">Sem 0–2 (preimplantación)</td><td>Fase de "todo o nada".</td><td>La agresión causa aborto o no deja secuela.</td></tr>
+        <tr><td class="dn">Sem 3–8 (organogénesis)</td><td>Se forman los órganos.</td><td class="dm">Máximo riesgo de malformaciones mayores: valproato, retinoides, metotrexato, warfarina, litio.</td></tr>
+        <tr><td class="dn">Sem 9 al término (fase fetal)</td><td>Crecimiento y maduración funcional.</td><td>IECA/ARA (riñón), AINE ≥20 sem (ductus/riñón), tetraciclinas &gt;15 sem (dientes), aminoglucósidos (oído), yodo radiactivo (tiroides).</td></tr>
+        <tr><td class="dn">Cerca del término</td><td>Últimas semanas.</td><td>AINE (cierre del ductus), TMP-SMX/nitrofurantoína (ictericia/hemólisis), opioides (abstinencia), benzodiacepinas (hipotonía).</td></tr>
+      </tbody>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Regla práctica: ante cualquier prescripción en el embarazo, verifica <strong>categoría de seguridad + semana de gestación</strong> y prefiere el fármaco con más experiencia de uso seguro.</div></div>
+  </div></div>
+
 </div>
 
 <!-- VIGILANCIA -->
@@ -1450,6 +1474,98 @@ window.addEventListener('load',function(){
   renderAsa();
 });
 
+
+/* ===== Fármacos en el embarazo (buscador + semáforo) ===== */
+var FARMEMB=[
+  {n:'IECA (enalapril…) y ARA II (losartán…)',lv:'r',why:'Oligohidramnios, fetopatía renal (insuficiencia renal, hipoplasia pulmonar y craneal) y muerte fetal.',when:'Sobre todo 2.º–3.er trimestre; se evitan durante <strong>todo el embarazo</strong>. Alternativa: metildopa, labetalol o nifedipino.'},
+  {n:'Warfarina',lv:'r',why:'Embriopatía warfarínica (hipoplasia nasal, condrodisplasia punctata), hemorragia y anomalías del SNC.',when:'Semanas <strong>6–12</strong> (embriopatía) y 3.er trimestre (hemorragia). Cambiar a heparina/HBPM.'},
+  {n:'Isotretinoína / retinoides orales',lv:'r',why:'Teratógeno potente: malformaciones craneofaciales, cardiacas y del SNC.',when:'Cualquier momento; crítico en el <strong>1.er trimestre</strong>. Requiere anticoncepción obligatoria.'},
+  {n:'Valproato / ácido valproico',lv:'r',why:'Defectos del tubo neural (espina bífida), dismorfias y menor neurodesarrollo.',when:'1.er trimestre (cierre del tubo neural <strong>sem 3–4</strong>) y todo el embarazo.'},
+  {n:'Metotrexato',lv:'r',why:'Abortivo y teratógeno (craneofacial, extremidades, SNC).',when:'1.er trimestre; suspender antes de concebir.'},
+  {n:'Misoprostol',lv:'r',why:'Abortivo; síndrome de Möbius y defectos por bandas amnióticas.',when:'Contraindicado salvo indicación obstétrica específica.'},
+  {n:'Tetraciclinas / doxiciclina',lv:'r',why:'Tinción dental permanente y depósito en el hueso fetal.',when:'Después de la <strong>semana ~15</strong> (2.º–3.er trimestre).'},
+  {n:'AINE (ibuprofeno, ketorolaco, naproxeno)',lv:'r',why:'Cierre prematuro del conducto arterioso, oligohidramnios y disfunción renal fetal.',when:'Evitar <strong>≥20 semanas</strong>; contraindicados en el 3.er trimestre (&gt;30 sem). Alternativa: paracetamol.'},
+  {n:'Litio',lv:'r',why:'Anomalía de Ebstein (malformación cardiaca).',when:'1.er trimestre; si es imprescindible, vigilar niveles.'},
+  {n:'Carbamazepina / fenitoína',lv:'r',why:'Defectos del tubo neural y síndrome por hidantoína (facial, uñas).',when:'1.er trimestre.'},
+  {n:'Aminoglucósidos (estreptomicina, gentamicina)',lv:'r',why:'Ototoxicidad y nefrotoxicidad fetal.',when:'Todo el embarazo (estreptomicina contraindicada).'},
+  {n:'Fluoroquinolonas (cipro/levofloxacino)',lv:'r',why:'Daño al cartílago / artropatía (datos en animales).',when:'Evitar en el embarazo; usar alternativa.'},
+  {n:'Estatinas',lv:'r',why:'Interfieren en la síntesis de colesterol fetal.',when:'Suspender durante el embarazo.'},
+  {n:'Yodo radiactivo (I-131)',lv:'r',why:'Ablación de la tiroides fetal.',when:'Contraindicado; la tiroides fetal capta yodo desde la <strong>sem 10–12</strong>.'},
+  {n:'TMP-SMX (trimetoprim-sulfametoxazol)',lv:'r',why:'Antifolato → defectos del tubo neural; cerca del término, ictericia/kernícterus.',when:'1.er trimestre y últimas semanas.'},
+  {n:'Metronidazol',lv:'y',why:'Datos mixtos en el 1.er trimestre; muy usado y seguro después.',when:'Preferir evitarlo en el 1.er trimestre; seguro en 2.º–3.º (tricomoniasis, vaginosis).'},
+  {n:'Fluconazol',lv:'y',why:'Dosis altas y prolongadas son teratógenas.',when:'Dosis única de 150 mg probablemente segura; evitar dosis altas → preferir azoles tópicos.'},
+  {n:'Ondansetrón',lv:'y',why:'Controversia de hendidura palatina en el 1.er trimestre.',when:'Usar si el beneficio es claro (hiperémesis); preferir B6/doxilamina de inicio.'},
+  {n:'Nitrofurantoína',lv:'y',why:'Anemia hemolítica en déficit de G6PD; ictericia neonatal a término.',when:'Buena en el 2.º trimestre; evitar cerca del término (≥38 sem).'},
+  {n:'Paroxetina (ISRS)',lv:'y',why:'Ligero aumento de defectos cardiacos.',when:'1.er trimestre; preferir otros ISRS (sertralina).'},
+  {n:'Opioides / codeína',lv:'y',why:'En uso crónico, síndrome de abstinencia neonatal.',when:'Uso breve aceptable; cuidado en uso prolongado cerca del término.'},
+  {n:'Corticoides sistémicos',lv:'y',why:'Uso puntual aceptable; a considerar según indicación.',when:'Betametasona/dexametasona <strong>indicadas</strong> para maduración pulmonar (24–34 sem).'},
+  {n:'Paracetamol (acetaminofén)',lv:'g',why:'Analgésico/antipirético de elección en el embarazo.',when:'Cualquier trimestre; a la dosis eficaz más baja.'},
+  {n:'Penicilinas / amoxicilina',lv:'g',why:'Antibiótico de elección; amplia experiencia de seguridad.',when:'Todo el embarazo.'},
+  {n:'Cefalosporinas',lv:'g',why:'Antibiótico seguro.',when:'Todo el embarazo.'},
+  {n:'Azitromicina / eritromicina',lv:'g',why:'Alternativa segura (evitar estolato de eritromicina).',when:'Todo el embarazo.'},
+  {n:'Metildopa',lv:'g',why:'Antihipertensivo crónico de elección.',when:'Todo el embarazo.'},
+  {n:'Labetalol',lv:'g',why:'Antihipertensivo seguro (preferir sobre atenolol).',when:'Todo el embarazo; útil en crisis.'},
+  {n:'Nifedipino',lv:'g',why:'Antihipertensivo y tocolítico seguro.',when:'Todo el embarazo.'},
+  {n:'Hidralazina',lv:'g',why:'Control de hipertensión severa aguda.',when:'Uso agudo intrahospitalario.'},
+  {n:'Heparina / HBPM (enoxaparina)',lv:'g',why:'Anticoagulante de elección; no cruza la placenta.',when:'Todo el embarazo; sustituye a la warfarina.'},
+  {n:'Insulina',lv:'g',why:'Tratamiento de elección de la diabetes en el embarazo.',when:'Todo el embarazo (metformina aceptable).'},
+  {n:'Levotiroxina',lv:'g',why:'Tratamiento del hipotiroidismo; esencial para el feto.',when:'Todo el embarazo; suele requerir subir la dosis.'},
+  {n:'Piridoxina (B6) ± doxilamina',lv:'g',why:'Primera línea para náusea y vómito.',when:'Desde el 1.er trimestre.'},
+  {n:'Famotidina / omeprazol',lv:'g',why:'Manejo del reflujo; seguros.',when:'Todo el embarazo (tras medidas y antiácidos).'},
+  {n:'Salbutamol / budesonida inhalada',lv:'g',why:'Control del asma; el asma mal controlada es más riesgosa.',when:'Todo el embarazo.'},
+  {n:'Ácido fólico / hierro',lv:'g',why:'Suplementación esencial (previene defectos del tubo neural y anemia).',when:'Folato idealmente preconcepcional; hierro según necesidad.'},
+  {n:'Loratadina / cetirizina',lv:'g',why:'Antihistamínicos de 2.ª generación preferidos para rinitis y alergia.',when:'Todo el embarazo.'},
+  {n:'Clotrimazol / miconazol (óvulos o crema)',lv:'g',why:'Antimicóticos tópicos de elección para candidiasis vaginal.',when:'Todo el embarazo (esquema de 7 días).'},
+  {n:'Nistatina',lv:'g',why:'Antimicótico tópico/oral no absorbible, seguro.',when:'Todo el embarazo.'},
+  {n:'Aciclovir / valaciclovir',lv:'g',why:'Tratamiento del herpes; seguro cuando está indicado.',when:'Todo el embarazo.'},
+  {n:'Metoclopramida',lv:'g',why:'Antiemético seguro; buena opción tras B6/doxilamina.',when:'Todo el embarazo (uso a corto plazo).'},
+  {n:'Sucralfato',lv:'g',why:'Protector de mucosa que no se absorbe; muy seguro para pirosis y gastritis.',when:'Todo el embarazo; 1.ª opción local.'},
+  {n:'Psyllium / lactulosa',lv:'g',why:'Fibra y laxante osmótico para el estreñimiento; seguros.',when:'Todo el embarazo, con abundante agua.'},
+  {n:'Simeticona',lv:'g',why:'Antiflatulento que no se absorbe.',when:'Todo el embarazo.'},
+  {n:'Permetrina tópica',lv:'g',why:'Tratamiento de elección para escabiasis y pediculosis.',when:'Todo el embarazo.'},
+  {n:'Fosfomicina',lv:'g',why:'Antibiótico en dosis única para ITU/bacteriuria; seguro.',when:'Todo el embarazo.'},
+  {n:'Clindamicina',lv:'g',why:'Segura; útil en vaginosis bacteriana y en alérgicos a penicilina.',when:'Todo el embarazo.'},
+  {n:'Dimenhidrinato',lv:'g',why:'Antihistamínico usado para náusea y mareo; seguro a corto plazo.',when:'Todo el embarazo.'},
+  {n:'Calcio (carbonato)',lv:'g',why:'Suplemento y antiácido; seguro.',when:'Todo el embarazo.'},
+  {n:'Amoxicilina-clavulanato',lv:'g',why:'Antibiótico de amplio espectro seguro.',when:'Todo el embarazo.'},
+  {n:'Aspirina',lv:'y',why:'A dosis plena actúa como AINE (evitar). A dosis baja (100–150 mg) es tratamiento indicado para prevenir preeclampsia.',when:'Dosis baja: desde la sem 12–16 en alto riesgo. Dosis plena: evitar, sobre todo en el 3.er trimestre.'},
+  {n:'Pseudoefedrina / descongestivos orales',lv:'y',why:'Asociación con gastrosquisis en el 1.er trimestre.',when:'Evitar en el 1.er trimestre; preferir solución salina nasal.'},
+  {n:'Loperamida',lv:'y',why:'Antidiarreico con datos limitados.',when:'Uso corto; preferir hidratación; evitar en el 1.er trimestre si es posible.'},
+  {n:'Ergotamina / ergotínicos (migraña)',lv:'r',why:'Vasoconstrictor y uterotónico: riesgo de aborto e hipoxia fetal.',when:'Contraindicado durante todo el embarazo.'}
+];
+var FXLEVEL='all';
+var FXMETA={r:{c:'#b91c1c',bg:'#fdeaea',e:'🔴',t:'Contraindicado',ord:0},y:{c:'#b45309',bg:'#fff8e1',e:'🟡',t:'Precaución',ord:1},g:{c:'#0a5c45',bg:'#e8f5ee',e:'🟢',t:'Seguro',ord:2}};
+function fxChips(){
+  var opts=[['all','Todos','#374151'],['r','🔴 Contraindicados','#b91c1c'],['y','🟡 Precaución','#b45309'],['g','🟢 Seguros','#0a5c45']];
+  var h='';
+  for(var i=0;i<opts.length;i++){var a=FXLEVEL===opts[i][0];
+    h+='<button onclick="fxSetLevel(\''+opts[i][0]+'\')" style="padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid '+opts[i][2]+';background:'+(a?opts[i][2]:'#fff')+';color:'+(a?'#fff':opts[i][2])+';">'+opts[i][1]+'</button>';
+  }
+  document.getElementById('fx-filter').innerHTML=h;
+}
+function fxSetLevel(l){FXLEVEL=l;fxChips();renderFx();}
+function renderFx(){
+  var q=(document.getElementById('fx-search').value||'').toLowerCase();
+  var list=FARMEMB.filter(function(d){
+    if(FXLEVEL!=='all'&&d.lv!==FXLEVEL)return false;
+    return d.n.toLowerCase().indexOf(q)>=0||d.why.toLowerCase().indexOf(q)>=0;
+  });
+  list.sort(function(a,b){return FXMETA[a.lv].ord-FXMETA[b.lv].ord;});
+  var h='';
+  if(list.length===0){h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados para "'+q+'".</div></div>';}
+  for(var i=0;i<list.length;i++){var d=list[i];var m=FXMETA[d.lv];
+    h+='<div class="sec" style="border-left:4px solid '+m.c+';"><div class="sh" onclick="tog(this)">';
+    h+='<span class="si">'+m.e+'</span><span class="st">'+d.n+'</span>';
+    h+='<span style="font-size:9px;font-weight:700;color:#fff;background:'+m.c+';padding:2px 8px;border-radius:20px;margin-right:6px;white-space:nowrap;">'+m.t+'</span>';
+    h+='<span class="sg">⌄</span></div>';
+    h+='<div class="sb hidden">';
+    h+='<div style="background:'+m.bg+';border-radius:6px;padding:9px 11px;margin-bottom:8px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+m.c+';margin-bottom:2px;">'+(d.lv==='g'?'Por qué es seguro':'Por qué')+'</div><div style="font-size:12.5px;color:var(--gray-900);line-height:1.5;">'+d.why+'</div></div>';
+    h+='<div style="border:1px solid var(--bd);border-radius:6px;padding:9px 11px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:2px;">Cuándo / semanas</div><div style="font-size:12.5px;color:var(--gray-700);line-height:1.5;">'+d.when+'</div></div>';
+    h+='</div></div>';
+  }
+  document.getElementById('fx-body').innerHTML=h;
+}
+window.addEventListener('load',function(){fxChips();renderFx();});
 </script>
 </body>
 </html>

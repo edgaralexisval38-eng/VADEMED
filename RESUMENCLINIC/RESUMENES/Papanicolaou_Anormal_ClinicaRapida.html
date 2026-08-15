@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Papanicolaou anormal · Clínica Rápida</title>
+<style>
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#9d2c5f;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#fbe9f1;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.calc{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap;}
+.calc-row label{font-size:12px;font-weight:600;color:var(--gray-700);flex:1;min-width:130px;}
+.calc-row input,.calc-row select{font-size:13px;padding:7px 9px;border:1px solid var(--bd);border-radius:var(--rs);min-width:150px;font-family:inherit;}
+.btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-out{margin-top:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;display:none;}.calc-out.show{display:block;}
+.res-r{background:var(--rl);color:var(--r);border:1px solid var(--rm);}.res-y{background:var(--al);color:var(--a);border:1px solid var(--am);}.res-g{background:var(--gl);color:var(--g);border:1px solid var(--gm);}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.esc-hero{background:linear-gradient(135deg,#4a0a24,#9d2c5f);color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.biblio-header{background:linear-gradient(135deg,#4a0a24,#9d2c5f);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#4a0a24,#9d2c5f);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🔬</div>
+    <div>
+      <div class="hdr-eye">Ginecología · Displasia cervical · ASCCP</div>
+      <div class="hdr-title">Papanicolaou anormal</div>
+      <div class="hdr-sub">Citología cervical anormal · Bethesda + manejo por riesgo (ASCCP Enduring 2024)</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> R87.6 · Hallazgos citológicos anormales en especímenes del cuello uterino</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Bethesda</span>
+    <span class="badge">Co-test con VPH</span>
+    <span class="badge">Colposcopia</span>
+    <span class="badge">LEEP si HSIL/CIN2-3</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">ASC-US</div><div class="qs-l">+ VPH → colpo</div></div>
+  <div class="qs"><div class="qs-v">LSIL</div><div class="qs-l">Colposcopia</div></div>
+  <div class="qs"><div class="qs-v">ASC-H/HSIL</div><div class="qs-l">Colposcopia (± tratar)</div></div>
+  <div class="qs"><div class="qs-v">AGC</div><div class="qs-l">Colpo + endometrio</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('beth',this)">🔬 Bethesda</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('manejo',this)">🧭 Manejo</button>
+  <button class="tab" onclick="showT('ev',this)">📈 Evidencia</button>
+  <button class="tab" onclick="showT('vac',this)">💉 Vacuna</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición y conceptos</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="prose">
+      <p>El <strong>Papanicolaou (citología cervical) anormal</strong> detecta cambios en las células del cuello uterino, casi siempre por <strong>infección persistente por VPH de alto riesgo</strong> (16/18 y otros). La mayoría regresa; algunas progresan a lesión de alto grado y cáncer.</p>
+      <p>El resultado se informa con el <strong>sistema Bethesda</strong>. El manejo actual (ASCCP, <strong>Enduring Guidelines</strong> 2024) es <strong>basado en el riesgo</strong> de CIN3+ e integra la citología con la <strong>prueba de VPH</strong> (co-test) y los antecedentes.</p>
+    </div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>Regla mental: <strong>ASC-US</strong> → depende del VPH; <strong>LSIL</strong> → colposcopia; <strong>ASC-H / HSIL</strong> → colposcopia (y HSIL a menudo tratamiento); <strong>AGC</strong> → colposcopia + muestreo endocervical/endometrial.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦠</span><span class="st">Etiología — cepas de VPH</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="prose"><p>Casi todo cáncer cervical se debe a <strong>infección persistente por VPH de alto riesgo</strong>. Las oncoproteínas <strong>E6 (degrada p53)</strong> y <strong>E7 (inactiva Rb)</strong> inmortalizan la célula.</p></div>
+    <div class="tw"><table class="t">
+      <tr><th>Grupo</th><th>Cepas</th><th>Enfermedad</th></tr>
+      <tr><td class="dm">Alto riesgo (oncogénico)</td><td><strong>16 y 18</strong>, 31, 33, 35, 39, 45, 51, 52, 56, 58, 59, 68</td><td><strong>16 y 18 causan ~70%</strong> del cáncer cervical (16 el más oncogénico); 31/33/45/52/58 otro ~20%. También cáncer de vagina, vulva, ano y orofaringe.</td></tr>
+      <tr><td class="dn">Bajo riesgo (no oncogénico)</td><td><strong>6 y 11</strong> (también 40, 42, 43, 44)</td><td><strong>6 y 11 causan ~90% de las verrugas genitales (condilomas)</strong> y la papilomatosis respiratoria recurrente.</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💉</span><div>La mayoría de las infecciones se aclaran en <strong>~1–2 años</strong>; la <strong>persistencia</strong> de alto riesgo es la que progresa. La <strong>vacuna nonavalente</strong> cubre 6, 11, 16, 18, 31, 33, 45, 52 y 58.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧬</span><span class="st">Terminología (citología vs histología)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Citología (Pap)</th><th>Histología (biopsia)</th><th>Equivale a</th></tr>
+      <tr><td>LSIL</td><td>CIN 1</td><td>Displasia leve (bajo grado)</td></tr>
+      <tr><td>HSIL</td><td>CIN 2 / CIN 3</td><td>Displasia moderada-grave (alto grado)</td></tr>
+      <tr><td>—</td><td>AIS</td><td>Adenocarcinoma in situ (glandular)</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt">Tratar (LEEP) una lesión de <strong>bajo grado</strong> — la mayoría regresa; se vigila.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt">Olvidar el <strong>VPH reflejo</strong> en ASC-US (define si va a colposcopia o vigilancia).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">Hacer conización/LEEP en el <strong>embarazo</strong> por displasia (se difiere salvo sospecha de invasión).</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">No muestrear <strong>endometrio</strong> en AGC de ≥35 años o con factores de riesgo.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">Sobretratar a mujeres <strong>&lt;25 años</strong> (alta tasa de regresión).</span></div>
+  </div></div>
+</div>
+
+<!-- BETHESDA -->
+<div class="panel" id="tab-beth">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Resultados de Bethesda</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Resultado</th><th>Significado</th></tr>
+      <tr><td class="dn">NILM</td><td>Negativo para lesión intraepitelial o malignidad (normal)</td></tr>
+      <tr><td class="dn">ASC-US</td><td>Células escamosas atípicas de significado indeterminado</td></tr>
+      <tr><td class="dn">LSIL</td><td>Lesión escamosa de bajo grado (≈ VPH/CIN 1)</td></tr>
+      <tr><td class="dn">ASC-H</td><td>Atípicas, no se puede excluir alto grado</td></tr>
+      <tr><td class="dn">HSIL</td><td>Lesión escamosa de alto grado (≈ CIN 2-3)</td></tr>
+      <tr><td class="dn">AGC</td><td>Células glandulares atípicas (origen endocervical/endometrial)</td></tr>
+      <tr><td class="dm">Carcinoma / AIS</td><td>Sospecha de invasión o adenocarcinoma in situ → oncología</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>La citología también informa si la muestra es <strong>adecuada</strong> (presencia de zona de transformación/células endocervicales).</div></div>
+  </div></div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎨</span><span class="st">Índice de Swede (colposcopia)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Puntúa 5 rasgos colposcópicos (0–2 cada uno, total 0–10) para estimar el grado de la lesión y decidir biopsia vs tratamiento.</div></div>
+    <div class="calc">
+      <div class="calc-row"><label>Captación de acetoblanco</label><select id="sw-ace"><option value="0">Nula o transparente (0)</option><option value="1">Tenue / sombreada (1)</option><option value="2">Intensa, opaca (2)</option></select></div>
+      <div class="calc-row"><label>Bordes / superficie</label><select id="sw-mar"><option value="0">Difusos (0)</option><option value="1">Netos irregulares, satélites (1)</option><option value="2">Netos, borde interno / desnivel (2)</option></select></div>
+      <div class="calc-row"><label>Vasos</label><select id="sw-vas"><option value="0">Finos regulares (0)</option><option value="1">Ausentes (1)</option><option value="2">Gruesos / atípicos (2)</option></select></div>
+      <div class="calc-row"><label>Tamaño de la lesión</label><select id="sw-tam"><option value="0">&lt;5 mm (0)</option><option value="1">5–15 mm o 2 cuadrantes (1)</option><option value="2">&gt;15 mm, 3–4 cuadrantes o endocervical (2)</option></select></div>
+      <div class="calc-row"><label>Tinción con yodo (lugol)</label><select id="sw-yodo"><option value="0">Capta café — yodo positivo (0)</option><option value="1">Captación parcial / moteada (1)</option><option value="2">Amarilla, no capta (2)</option></select></div>
+      <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcSwede()">Calcular</button><button class="btn btn-s" onclick="resetSwede()">Reiniciar</button></div>
+      <div class="calc-out" id="sw-out"></div>
+    </div>
+    <div class="tw"><table class="t"><tr><th>Swede</th><th>Interpretación</th></tr><tr><td class="dn">≤4</td><td>Probable bajo grado</td></tr><tr><td>5–7</td><td>Intermedio → biopsia</td></tr><tr><td class="dm">≥8</td><td>Probable alto grado (HSIL) → tratar; alta especificidad</td></tr></table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📉</span><span class="st">Umbrales de riesgo ASCCP (CIN3+)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Las guías ASCCP (Enduring 2024) deciden según el <strong>riesgo inmediato de CIN3+</strong>. Ingresa el % (de las tablas/app) para ver la conducta.</div></div>
+    <div class="calc">
+      <div class="calc-row"><label>Riesgo inmediato de CIN3+ (%)</label><input id="asccp-r" type="number" step="0.1" placeholder="4.5"></div>
+      <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcAsccp()">Ver conducta</button></div>
+      <div class="calc-out" id="asccp-out"></div>
+    </div>
+    <div class="tw"><table class="t">
+      <tr><th>Riesgo CIN3+</th><th>Conducta</th></tr>
+      <tr><td class="dm">≥60%</td><td>Tratamiento expedito preferido</td></tr>
+      <tr><td>25–59.9%</td><td>Colposcopia o tratamiento expedito (ambos aceptables)</td></tr>
+      <tr><td class="dn">4–24.9%</td><td>Colposcopia</td></tr>
+      <tr><td>0.55–3.9%</td><td>Repetir en 1 año</td></tr>
+      <tr><td>0.15–0.54%</td><td>Repetir en 3 años</td></tr>
+      <tr><td class="dn">&lt;0.15%</td><td>Repetir en 5 años</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎗️</span><span class="st">Estadificación FIGO (cáncer invasor)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Etapa</th><th>Extensión</th></tr>
+      <tr><td class="dn">I</td><td>Confinado al cuello (IA microinvasor por microscopía; IB clínicamente visible)</td></tr>
+      <tr><td class="dn">II</td><td>Más allá del útero, sin llegar a pared pélvica ni tercio inferior de vagina (IIA vagina, IIB parametrio)</td></tr>
+      <tr><td class="dn">III</td><td>Pared pélvica, tercio inferior de vagina, hidronefrosis o ganglios (IIIC)</td></tr>
+      <tr><td class="dm">IV</td><td>Vejiga/recto (IVA) o metástasis a distancia (IVB)</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">🎗️</span><div>La estadificación y el tratamiento del cáncer invasor los define <strong>Ginecología Oncológica</strong>.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📚</span><span class="st">Otras clasificaciones que se usan</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Sistema</th><th>Para qué</th></tr>
+      <tr><td class="dn">Bethesda</td><td>Informe de la citología (Pap): NILM, ASC-US, LSIL, ASC-H, HSIL, AGC</td></tr>
+      <tr><td class="dn">CIN / NIC (1–3) y LAST (2 niveles: LSIL/HSIL)</td><td>Graduación histológica de la biopsia</td></tr>
+      <tr><td class="dn">IFCPC 2011</td><td>Terminología colposcópica (cambios grado 1/2, hallazgos sospechosos de invasión)</td></tr>
+      <tr><td class="dn">Reid (RCI)</td><td>Índice colposcópico alternativo (0–8): márgenes, color, vasos, yodo</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- MANEJO (fusión de manejo + procedimientos) -->
+<div class="panel" id="tab-manejo">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Elige el resultado → conducta completa</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">ℹ️</span><div>Elige el <strong>tipo de estudio</strong> y el <strong>resultado</strong>; verás la conducta dirigida <strong>completa</strong> (tratamiento, quién la realiza, progresión, malignidad, qué pedir y seguimiento) según las guías ASCCP vigentes (Enduring 2024).</div></div>
+    <div class="calc">
+      <div class="calc-row"><label>Tipo de estudio</label><select id="sel-tipo" onchange="fillResultado()"><option value="Citología">Citología (Papanicolaou)</option><option value="Biopsia">Biopsia (histología)</option><option value="Colposcopia">Colposcopia</option></select></div>
+      <div class="calc-row"><label>Resultado</label><select id="sel-res"></select></div>
+      <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="showSelected()">Ver conducta completa</button></div>
+    </div>
+    <div id="sel-out" style="margin-top:12px;"></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔤</span><span class="st">Significado de las siglas</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Sigla</th><th>Significado</th></tr>
+      <tr><td class="dn">Pap</td><td>Papanicolaou (citología cervical)</td></tr>
+      <tr><td class="dn">VPH / HPV</td><td>Virus del papiloma humano</td></tr>
+      <tr><td class="dn">NILM</td><td>Negativo para lesión intraepitelial o malignidad (normal)</td></tr>
+      <tr><td class="dn">ASC-US</td><td>Células escamosas atípicas de significado indeterminado</td></tr>
+      <tr><td class="dn">ASC-H</td><td>Células escamosas atípicas; no se puede excluir alto grado</td></tr>
+      <tr><td class="dn">LSIL</td><td>Lesión escamosa intraepitelial de bajo grado</td></tr>
+      <tr><td class="dn">HSIL</td><td>Lesión escamosa intraepitelial de alto grado</td></tr>
+      <tr><td class="dn">AGC</td><td>Células glandulares atípicas</td></tr>
+      <tr><td class="dn">CIN / NIC</td><td>Neoplasia intraepitelial cervical (grados 1–3)</td></tr>
+      <tr><td class="dn">AIS</td><td>Adenocarcinoma in situ (lesión glandular)</td></tr>
+      <tr><td class="dn">ZT</td><td>Zona de transformación</td></tr>
+      <tr><td class="dn">LEEP / LLETZ</td><td>Escisión electroquirúrgica con asa de la zona de transformación</td></tr>
+      <tr><td class="dn">ECC</td><td>Legrado endocervical</td></tr>
+      <tr><td class="dn">VAIN</td><td>Neoplasia intraepitelial vaginal</td></tr>
+      <tr><td class="dn">ASCCP</td><td>Sociedad Americana de Colposcopia y Patología Cervical</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Resumen rápido (citología + VPH)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Citología</th><th>Conducta</th></tr>
+      <tr><td class="dn">ASC-US, VPH−</td><td>Riesgo muy bajo → volver a tamizaje (co-test en 3 años)</td></tr>
+      <tr><td class="dn">ASC-US, VPH+</td><td>Colposcopia</td></tr>
+      <tr><td class="dn">LSIL, VPH− (co-test)</td><td>Repetir co-test en 1 año</td></tr>
+      <tr><td class="dn">LSIL, VPH+/desconocido</td><td>Colposcopia</td></tr>
+      <tr><td class="dn">ASC-H</td><td>Colposcopia (independiente del VPH)</td></tr>
+      <tr><td class="dn">HSIL</td><td>Colposcopia; en ≥25 años, tratamiento inmediato (ver-y-tratar) es aceptable</td></tr>
+      <tr><td class="dn">AGC</td><td>Colposcopia + legrado endocervical; endometrio si ≥35 años o riesgo</td></tr>
+    </table></div>
+  </div></div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;">🎯 Todas las conductas por resultado</div>
+  <div class="chipbar" id="rx-filter"></div>
+  <div id="rx-body"></div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;">🧰 Los procedimientos en detalle</div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- EVIDENCIA -->
+<div class="panel" id="tab-ev">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">Historia natural (regresión / progresión)</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-i"><span class="ai">📊</span><div>Cifras del meta-análisis clásico (Öster 1993) y revisiones modernas (Loopik 2021). El potencial de regresión es alto, sobre todo en el bajo grado y en mujeres jóvenes.</div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Lesión</th><th>Regresa</th><th>Persiste</th><th>Progresa a CIN3</th><th>Progresa a cáncer</th></tr>
+      <tr><td class="dn">CIN 1 (LSIL)</td><td class="dn">~60%</td><td>~30%</td><td>~10%</td><td>~1%</td></tr>
+      <tr><td class="dn">CIN 2</td><td>~40–50% (jóvenes ~60%)</td><td>~35%</td><td>~20%</td><td>~5%</td></tr>
+      <tr><td class="dn">CIN 3 (HSIL)</td><td>~30%</td><td>resto</td><td>—</td><td class="dm">~12% (hasta ~31% a 30 años si NO se trata)</td></tr>
+    </table></div>
+    <div style="font-size:11px;color:var(--gray-600);margin-top:6px;">Tiempo: la mayoría de las CIN1 que van a regresar lo hacen en <strong>~1–2 años</strong> → por eso se observan. El CIN3 no tratado tiene el mayor riesgo de invasión (McCredie 2008: ~31.3% de cáncer a 30 años).</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏆</span><span class="st">¿Qué técnica es mejor? (evidencia)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>Escisión vs ablación:</strong> el meta-análisis Cochrane (Martin-Hirsch) muestra <strong>eficacia similar</strong> entre LEEP, conización y métodos ablativos (crioterapia/termocoagulación) para erradicar la CIN — ninguna es claramente superior en curación.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><strong>LEEP es el tratamiento de elección</strong> para CIN2-3: da <strong>pieza histológica</strong> (detecta invasión oculta y evalúa márgenes), es ambulatorio y con anestesia local.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><strong>Tasas de curación:</strong> LEEP/cono ~<strong>90–95%</strong>; crioterapia ~85–90% (menor en lesiones grandes, endocervicales o glandulares). Recurrencia/enfermedad residual ~<strong>5–15%</strong>.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><strong>Riesgo obstétrico:</strong> la escisión (sobre todo conos profundos) aumenta el <strong>parto pretérmino</strong> → conservador en jóvenes con deseo de fertilidad.</span></div>
+    <div class="alert a-g" style="margin-top:6px;"><span class="ai">🥇</span><div>La <strong>prueba de VPH post-tratamiento ("test of cure")</strong> es el <strong>mejor predictor de recurrencia</strong>, más sensible que la citología: un VPH <strong>negativo a los 6 meses</strong> confiere riesgo muy bajo de enfermedad residual.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔪</span><span class="st">Manejo tras histerectomía</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Conducta</th></tr>
+      <tr><td>Histerectomía por causa <strong>benigna</strong>, sin antecedente de CIN2-3</td><td class="dn">Suspender el tamizaje (no requiere citología de cúpula)</td></tr>
+      <tr><td>Histerectomía con antecedente de <strong>CIN2-3</strong> en los 25 años previos</td><td>Continuar citología ± VPH de <strong>cúpula vaginal</strong> por 20–25 años (riesgo de VAIN / cáncer vaginal ~1–7%)</td></tr>
+      <tr><td><strong>Histerectomía radical</strong> por cáncer cervical</td><td>Seguimiento oncológico: exploración + citología de cúpula; imagen según etapa</td></tr>
+      <tr><td>Citología de cúpula <strong>anormal</strong> tras histerectomía</td><td class="dm">Colposcopia de la vagina + biopsia; tratar VAIN</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">💉</span><div><strong>VAIN (neoplasia intraepitelial vaginal):</strong> se trata con escisión o láser, <strong>tópicos</strong> (imiquimod, 5-fluorouracilo) o <strong>braquiterapia</strong> en casos extensos/multifocales o post-radioterapia. La displasia de cúpula puede aparecer años después: el seguimiento es prolongado.</div></div>
+  </div></div>
+</div>
+
+<!-- VACUNA -->
+<div class="panel" id="tab-vac">
+  <div class="alert a-g"><span class="ai">💉</span><div><div class="at">Prevención primaria</div>La vacuna es lo más costo-efectivo contra el cáncer cervical; su máximo beneficio es <strong>antes de la exposición al VPH</strong>. No sustituye el tamizaje.</div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Las vacunas disponibles</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Vacuna</th><th>Cepas que cubre</th><th>Notas</th></tr>
+      <tr><td class="dn">Bivalente (Cervarix)</td><td>16, 18</td><td>Cubre ~70% del cáncer; no protege contra verrugas.</td></tr>
+      <tr><td class="dn">Tetravalente (Gardasil)</td><td>6, 11, 16, 18</td><td>Añade protección contra verrugas genitales (6/11).</td></tr>
+      <tr><td class="dn">⭐ Nonavalente (Gardasil 9)</td><td>6, 11, 16, 18, 31, 33, 45, 52, 58</td><td><strong>Cubre ~90% del cáncer</strong>; es la preferida y la más disponible hoy.</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">¿A quién y desde qué edad?</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Grupo</th><th>Recomendación</th></tr>
+      <tr><td class="dn">Rutina</td><td><strong>11–12 años</strong> (puede iniciarse desde los <strong>9</strong>). Ideal <strong>antes del inicio de la vida sexual</strong>.</td></tr>
+      <tr><td class="dn">Catch-up (rezago)</td><td>Hasta los <strong>26 años</strong>, en ambos sexos, si no se vacunaron.</td></tr>
+      <tr><td class="dn">27–45 años</td><td><strong>Decisión clínica compartida</strong> (beneficio menor porque muchos ya se expusieron); no es de rutina.</td></tr>
+      <tr><td class="dn">Hombres</td><td>Sí: previene verrugas y cáncer anal, de pene y orofaríngeo, y reduce la transmisión.</td></tr>
+      <tr><td class="dn">Inmunocomprometidos / VIH</td><td>3 dosis, incluso entre los 9–14 años.</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Esquema de dosis</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="tw"><table class="t">
+      <tr><th>Edad / condición</th><th>Dosis</th></tr>
+      <tr><td class="dn">9–14 años</td><td>2 dosis (0 y 6–12 meses)</td></tr>
+      <tr><td class="dn">≥15 años o inmunocomprometidos</td><td>3 dosis (0, 1–2 y 6 meses)</td></tr>
+    </table></div>
+    <div class="alert a-i" style="margin-top:8px;"><span class="ai">🌍</span><div>La <strong>OMS (2022)</strong> avala un <strong>esquema de 1 dosis</strong> para 9–20 años; varios países lo han adoptado por su eficacia comparable y mayor cobertura.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Efectividad (evidencia)</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">✓</span><span class="kt"><strong>Seroconversión ~100%</strong> y eficacia <strong>&gt;90%</strong> contra CIN2+ por VPH 16/18 en personas no expuestas (naïve).</span></div>
+    <div class="kp"><span class="kn">✓</span><span class="kt"><strong>Impacto poblacional (Falcaro et al., Lancet 2021, Inglaterra):</strong> vacunar a los <strong>12–13 años redujo el cáncer cervical ~87%</strong> y el CIN3 ~97%.</span></div>
+    <div class="kp"><span class="kn">✓</span><span class="kt">El beneficio es <strong>máximo cuanto más temprano</strong> se aplica (antes de la exposición); disminuye si ya hubo infección.</span></div>
+    <div class="alert a-i" style="margin-top:6px;"><span class="ai">🔎</span><div>La vacuna NO cubre todos los tipos oncogénicos → <strong>el tamizaje sigue siendo necesario</strong> aun en vacunadas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❓</span><span class="st">¿Vacunar después de la infección o del tratamiento?</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-g"><span class="ai">✅</span><div><div class="at">Sí, dentro del rango de edad aprobado</div>Aunque ya haya VPH, Pap anormal o tratamiento previo.</div></div>
+    <div class="kp"><span class="kn">1</span><span class="kt"><strong>Es profiláctica, NO terapéutica:</strong> no elimina una infección ni una lesión ya existentes.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><strong>Protege contra los otros tipos</strong> que la persona aún no ha adquirido (es raro estar infectada por los 9 tipos a la vez).</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><strong>Reduce la recurrencia tras tratamiento (LEEP/cono):</strong> los meta-análisis muestran ~<strong>50%</strong> menos recurrencia de CIN2+ en vacunadas (vacunación adyuvante). ACOG 2023: puede considerarse, sin sustituir la vigilancia.</span></div>
+    <div class="alert a-w" style="margin-top:6px;"><span class="ai">⚠️</span><div>No retrasar el tratamiento de la lesión por vacunar, ni usar la vacuna para "tratar" una lesión existente.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Seguridad y contraindicaciones</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="kp"><span class="kn">✓</span><span class="kt">Muy segura; efectos leves (dolor local, cefalea). <strong>Síncope vasovagal</strong> en adolescentes → observar 15 min sentados.</span></div>
+    <div class="kp"><span class="kn">✕</span><span class="kt"><strong>Contraindicación:</strong> reacción alérgica grave previa a la vacuna o a la levadura (Gardasil).</span></div>
+    <div class="kp"><span class="kn">🤰</span><span class="kt"><strong>Embarazo:</strong> no se recomienda iniciar/continuar durante el embarazo (se difiere al posparto); no es teratógena y es compatible con la lactancia.</span></div>
+  </div></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="alert a-i"><span class="ai">⚙️</span><div>Poblaciones especiales.</div></div>
+  <div class="chipbar" id="escen-chips"></div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento tras tratamiento</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Situación</th><th>Seguimiento</th></tr>
+      <tr><td>Tras LEEP por CIN2-3</td><td class="dn">Co-test (o VPH) a los 6 meses y luego anual; vigilancia prolongada (≥25 años)</td></tr>
+      <tr><td>Lesión de bajo grado en vigilancia</td><td>Co-test en 1 año; colposcopia si persiste VPH+ o progresa</td></tr>
+      <tr><td>Colposcopia normal tras Pap anormal</td><td>Seguimiento según riesgo (co-test en 1 año)</td></tr>
+      <tr><td>Márgenes positivos / AIS</td><td>Mayor riesgo residual → seguimiento estrecho o reescisión</td></tr>
+    </table></div>
+    <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>La <strong>persistencia de VPH</strong> es el mejor predictor de recurrencia; el seguimiento se basa en el VPH.</div></div>
+  </div></div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía — Papanicolaou anormal</h2><p>Guías de manejo de la citología cervical anormal.</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">📘 Guías vigentes (manejo · tamizaje · vacuna)</div><div class="biblio-body">
+    <div class="biblio-item"><div><span class="biblio-num">1</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">ASCCP. <em>Enduring Consensus Cervical Cancer Screening and Management Guidelines — actualización 2024</em> (incluye triaje con <strong>doble tinción p16/Ki-67</strong>). J Low Genit Tract Dis 2024;28(2). <strong>Actualiza y mantiene vigentes las guías de 2019.</strong></div><a class="biblio-link" href="https://journals.lww.com/jlgtd/fulltext/2024/04000/enduring_consensus_guidelines_for_cervical_cancer.1.aspx" target="_blank">🔗 JLGTD 2024 (Enduring Guidelines)</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">2</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Perkins RB, et al. <em>2019 ASCCP Risk-Based Management Consensus Guidelines.</em> J Low Genit Tract Dis 2020;24(2):102–131. (Marco de manejo por riesgo, base de las Enduring Guidelines.)</div><a class="biblio-link" href="https://doi.org/10.1097/LGT.0000000000000525" target="_blank">🔗 DOI 10.1097/LGT.0000000000000525</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">3</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Fontham ETH, et al. <em>Cervical Cancer Screening for Individuals at Average Risk: 2020 Guideline Update From the American Cancer Society.</em> CA Cancer J Clin 2020;70(5):321–346. (Inicio del tamizaje a los 25 años, VPH primario preferido.)</div><a class="biblio-link" href="https://doi.org/10.3322/caac.21628" target="_blank">🔗 DOI 10.3322/caac.21628</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">4</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">American Cancer Society. <em>Actualización del tamizaje: muestras autotomadas para VPH y criterios de salida del tamizaje.</em> CA Cancer J Clin 2025.</div><a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12677112/" target="_blank">🔗 ACS 2025 (autotoma de VPH)</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">5</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">OMS. <em>WHO guideline for screening and treatment of cervical pre-cancer lesions for cervical cancer prevention.</em> 2.ª ed. Ginebra: OMS, 2021.</div><a class="biblio-link" href="https://www.who.int/publications/i/item/9789240030824" target="_blank">🔗 WHO 2021</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">6</span><span class="biblio-year">2015</span><span class="biblio-level lv-exp">Referencia</span></div><div class="biblio-ref">Nayar R, Wilbur DC. <em>The Bethesda System for Reporting Cervical Cytology.</em> 3.ª ed. Springer, 2015.</div><a class="biblio-link" href="https://doi.org/10.1007/978-3-319-11074-5" target="_blank">🔗 DOI 10.1007/978-3-319-11074-5</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">7</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Nivel A</span></div><div class="biblio-ref">Falcaro M, et al. <em>The effects of the national HPV vaccination programme in England on cervical cancer and CIN3 incidence.</em> Lancet 2021;398(10316):2084–2092.</div><a class="biblio-link" href="https://doi.org/10.1016/S0140-6736(21)02178-4" target="_blank">🔗 DOI 10.1016/S0140-6736(21)02178-4</a></div>
+    <div class="biblio-item"><div><span class="biblio-num">8</span><span class="biblio-year">2023</span><span class="biblio-level lv-b">Nivel B</span></div><div class="biblio-ref">ACOG. <em>Adjuvant HPV Vaccination for Patients Undergoing Treatment for CIN 2+.</em> Practice Advisory 2023; CDC/ACIP HPV vaccination recommendations.</div><a class="biblio-link" href="https://www.acog.org/clinical/clinical-guidance/practice-advisory/articles/2023/07/adjuvant-human-papillomavirus-vaccination-for-patients-undergoing-treatment-for-cervical-intraepithelial-neoplasia" target="_blank">🔗 ACOG Practice Advisory</a></div>
+  </div></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">ℹ️ Nivel de evidencia</div><div class="biblio-body"><div class="nivel-legend"><div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / consenso</div><div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Referencia</span> Texto</div></div></div></div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>El manejo por riesgo se mantiene vigente mediante las <strong>ASCCP Enduring Guidelines</strong> (última actualización 2024, con triaje por doble tinción); el tamizaje sigue la ACS 2020/2025 (VPH primario, autotoma) y la OMS 2021. Usa la app/tablas oficiales de ASCCP para el % exacto de CIN3+. Adapta a guías locales (CENETEC). Última revisión: agosto 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function setOut(id,cls,html){var o=document.getElementById(id);o.className='calc-out show '+cls;o.innerHTML=html;}
+function val(id){return document.getElementById(id).value;}
+
+// ===== MANEJO (lookup) =====
+function calcManejo(){var c=val('mn-cyto'),h=val('mn-hpv');var cls='res-y',msg='';
+  if(c==='nilm'){
+    if(h==='pos'){cls='res-y';msg='<strong>NILM con VPH+:</strong> repetir co-test en 1 año. Si VPH 16/18 (genotipo) → colposcopia.';}
+    else{cls='res-g';msg='<strong>NILM:</strong> tamizaje de rutina; no requiere estudio adicional.';}
+  } else if(c==='ascus'){
+    if(h==='neg'){cls='res-g';msg='<strong>ASC-US, VPH−:</strong> riesgo muy bajo → regresar a tamizaje (co-test en 3 años).';}
+    else if(h==='pos'){cls='res-r';msg='<strong>ASC-US, VPH+:</strong> colposcopia.';}
+    else{cls='res-y';msg='<strong>ASC-US, VPH desconocido:</strong> preferir VPH reflejo. Si no es posible, repetir citología en 1 año o colposcopia.';}
+  } else if(c==='lsil'){
+    if(h==='neg'){cls='res-y';msg='<strong>LSIL, VPH− (co-test):</strong> repetir co-test en 1 año (riesgo bajo).';}
+    else{cls='res-r';msg='<strong>LSIL, VPH+ o desconocido:</strong> colposcopia.';}
+  } else if(c==='asch'){
+    cls='res-r';msg='<strong>ASC-H:</strong> colposcopia, independientemente del VPH (riesgo intermedio-alto de CIN2+).';
+  } else if(c==='hsil'){
+    cls='res-r';msg='<strong>HSIL:</strong> colposcopia; en ≥25 años es aceptable el <strong>tratamiento inmediato</strong> ("ver y tratar", LEEP) por el alto riesgo de CIN3+.';
+  } else if(c==='agc'){
+    cls='res-r';msg='<strong>AGC:</strong> colposcopia + <strong>legrado endocervical</strong>; añadir <strong>muestreo endometrial</strong> si ≥35 años, sangrado anormal o riesgo. Descartar patología glandular.';
+  }
+  setOut('mn-out',cls,msg);}
+
+// ===== PROCEDIMIENTOS (fichas) =====
+var FARM=[
+  {n:'Colposcopia + biopsia dirigida',color:'#9d2c5f',tag:'Evaluación de la anormalidad',
+    dosis:'Visualización con ácido acético ± lugol + biopsia de zonas anormales',dosisSub:'Estudio clave tras un Pap anormal de riesgo.',desc:'Permite ver la zona de transformación y tomar biopsia para el diagnóstico histológico (CIN).',
+    rows:[['Qué es','Examen magnificado del cuello con soluciones que resaltan lesiones.'],['Cuándo','ASC-US VPH+, LSIL VPH+, ASC-H, HSIL, AGC.'],['Cómo','Ácido acético 3–5% (acetoblanco), lugol; biopsia dirigida ± legrado endocervical.'],['Complicaciones','Sangrado leve, molestia; muy segura.'],['Seguimiento','Según histología: vigilancia (bajo grado) o tratamiento (CIN2-3).']],
+    nota:'En embarazo se realiza colposcopia, pero se difiere la biopsia/tratamiento salvo sospecha de invasión.'},
+  {n:'LEEP / LLETZ (asa diatérmica)',color:'#7b1c1c',tag:'⭐ Tratamiento de elección · CIN2-3 / HSIL',
+    dosis:'Escisión de la zona de transformación con asa electroquirúrgica',dosisSub:'Ambulatorio, bajo anestesia local.',desc:'Tratamiento de elección para lesiones de alto grado (CIN2-3/HSIL); da pieza para histología.',
+    rows:[['Qué es','Escisión electroquirúrgica de la zona de transformación.'],['Cuándo','CIN2-3/HSIL confirmado; "ver y tratar" en HSIL de ≥25 años.'],['Cómo','Asa de alambre con corriente; ambulatorio, anestesia local.'],['Complicaciones','Sangrado, estenosis cervical, riesgo de parto pretérmino en gestaciones futuras.'],['Seguimiento','Co-test/VPH a los 6 meses; vigilancia prolongada.']],
+    nota:'Preferir escisión (da diagnóstico) sobre ablación cuando hay alto grado.'},
+  {n:'Conización (cono con bisturí frío)',color:'#7b1c1c',tag:'AIS / sospecha de invasión',
+    dosis:'Cono cervical amplio con márgenes',dosisSub:'Mayor pieza; cuando LEEP no es suficiente.',desc:'Para adenocarcinoma in situ (AIS), sospecha de microinvasión o discordancia.',
+    rows:[['Qué es','Escisión cónica del cuello con bisturí (o láser).'],['Cuándo','AIS, sospecha de invasión, márgenes/legrado positivos, discordancia cito-histológica.'],['Cómo','Quirófano; evalúa márgenes y profundidad.'],['Complicaciones','Sangrado, estenosis, incompetencia cervical.'],['Seguimiento','Según márgenes; AIS con deseo de fertilidad requiere vigilancia estrecha.']],
+    nota:'AIS tiene lesiones "salteadas": márgenes negativos no garantizan ausencia de enfermedad.'},
+  {n:'Crioterapia / ablación (termocoagulación)',color:'#b45309',tag:'Ablación · lesiones satisfactorias',
+    dosis:'Destrucción de la zona de transformación por frío o calor',dosisSub:'Solo si la lesión es totalmente visible y no glandular.',desc:'Alternativa ablativa en contextos de "tamizar y tratar" (VPH+), sin obtener pieza.',
+    rows:[['Qué es','Destrucción térmica de la zona de transformación.'],['Cuándo','Lesión escamosa totalmente visible, sin sospecha de alto grado glandular ni invasión.'],['Cómo','Criosonda o termocoagulador.'],['Complicaciones','Flujo acuoso, cólico; no da pieza histológica.'],['Seguimiento','VPH/co-test a los 6–12 meses.']],
+    nota:'No usar si se sospecha invasión, AIS o la lesión no es totalmente visible.'},
+  {n:'Observación / vigilancia',color:'#0f766e',tag:'Bajo grado · dejar regresar',
+    dosis:'Co-test o VPH de seguimiento sin tratar',dosisSub:'La mayoría de las lesiones de bajo grado regresan.',desc:'Conducta preferida en LSIL/CIN1 y en mujeres jóvenes.',
+    rows:[['Qué es','Seguimiento con citología/VPH en lugar de tratar.'],['Cuándo','LSIL/CIN1, mujeres &lt;25 años, embarazo.'],['Cómo','Co-test en 1 año (o VPH); colposcopia si persiste/progresa.'],['Complicaciones','Ninguna; evita el sobretratamiento.'],['Seguimiento','Tratar solo si progresa a alto grado o persiste el VPH.']],
+    nota:'El sobretratamiento del bajo grado aumenta el riesgo obstétrico sin beneficio.'},
+  {n:'Histerectomía',color:'#4a1060',tag:'Definitivo · casos seleccionados',
+    dosis:'Histerectomía simple (extrafascial) — NO es tratamiento primario del CIN',
+    dosisSub:'Reservada a candidatas específicas; nunca de rutina para displasia.',
+    desc:'La mayoría de la displasia se trata de forma conservadora (LEEP/cono). La histerectomía se reserva para situaciones concretas.',
+    rows:[
+      ['¿Quiénes son candidatas?','AIS con paridad satisfecha (opción preferida); CIN2-3 recurrente o persistente tras escisión adecuada o imposibilidad de re-cono; márgenes/ECC positivos sin opción de reescisión; VAIN extensa; patología uterina asociada (miomas, prolapso, sangrado); imposibilidad de seguimiento.'],
+      ['NO candidatas','CIN como primer tratamiento (sería sobretratamiento) → usar LEEP/cono.'],
+      ['Quién la realiza','Ginecólogo (histerectomía simple). GINE-ONCO si es por cáncer invasor (histerectomía radical + linfadenectomía).'],
+      ['Antes de operar','Descartar cáncer invasor (cono/estudio): una histerectomía simple sobre un cáncer oculto es tratamiento inadecuado.'],
+      ['Seguimiento','Si había CIN2-3: citología ± VPH de cúpula vaginal por 20–25 años (riesgo de VAIN/cáncer vaginal).']
+    ],
+    nota:'Regla de oro: NUNCA histerectomía como primer tratamiento del CIN sin descartar antes cáncer invasor.'}
+];
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+function renderFarm(){var h='';for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">En qué consiste</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  document.getElementById('farm-body').innerHTML=h;}
+
+var ESCEN={
+  'Embarazo':{p:'Pap anormal en la gestación.',k:'El objetivo es descartar cáncer invasor, no tratar la displasia.',x:'Colposcopia permitida; diferir biopsia y tratamiento (LEEP/cono) salvo sospecha de invasión. Reevaluar a las 6 semanas posparto.'},
+  'Menor de 25 años':{p:'Mujer joven con citología anormal.',k:'Muy alta tasa de regresión; evitar sobretratar.',x:'Preferir vigilancia en bajo grado; colposcopia según resultado; tratar solo alto grado persistente/confirmado.'},
+  'Inmunosupresión / VIH':{p:'Paciente inmunocomprometida.',k:'Mayor riesgo de progresión y persistencia del VPH.',x:'Tamizaje más frecuente y umbral más bajo para colposcopia; seguir guías específicas de VIH.'},
+  'AGC (glandular)':{p:'Células glandulares atípicas.',k:'Puede reflejar patología endocervical o endometrial.',x:'Colposcopia + legrado endocervical; muestreo endometrial si ≥35 años, sangrado anormal o factores de riesgo.'},
+  'Posmenopausia':{p:'Pap anormal en la posmenopausia.',k:'Atrofia puede simular atipia; menor recambio celular.',x:'Considerar estrógeno tópico y repetir; colposcopia según resultado; valorar endometrio ante AGC/sangrado.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+
+// ===== TRATAMIENTO POR RESULTADO =====
+var RESULT=[
+  {n:'ASC-US',cat:'Citología',color:'#b45309',onco:false,
+   tx:'No se trata. Triage con VPH reflejo: VPH+ → colposcopia; VPH− → volver a tamizaje.',
+   quien:'Ginecólogo / primer nivel (colposcopia por colposcopista)',
+   rows:[['Por cuánto tiempo','Sin tratamiento; solo estratificación de riesgo.'],['Otras posibilidades','Si no hay VPH disponible: repetir citología en 1 año o colposcopia.'],['Tasa de progresión','Riesgo de CIN3+ a 5 años ~2% (VPH+) y ~0.4% (VPH−).'],['Riesgo de malignidad','Muy bajo.'],['Qué más hacer','Genotipo VPH 16/18 → colposcopia aunque la citología sea menor.'],['Qué más pedir','Prueba de VPH de alto riesgo (reflejo).'],['Seguimiento','VPH−: co-test en 3 años. VPH+ con colposcopia normal: co-test en 1 año.']]},
+  {n:'LSIL',cat:'Citología',color:'#b45309',onco:false,
+   tx:'No se trata. Colposcopia si VPH+ o desconocido (equivale a CIN1). Si co-test VPH−: repetir en 1 año.',
+   quien:'Ginecólogo / colposcopista',
+   rows:[['Por cuánto tiempo','Vigilancia; tratar solo si progresa/persiste.'],['Otras posibilidades','Observación en jóvenes; escisión solo si persiste alto grado.'],['Tasa de progresión','Regresa ~60% (1–2 años); persiste ~30%; progresa a CIN3 ~10% (~2 años); a cáncer ~1% (largo plazo, &gt;10 años).'],['Riesgo de malignidad','~1%.'],['Qué más hacer','Evaluar toda la zona de transformación (ZT).'],['Qué más pedir','VPH de alto riesgo.'],['Seguimiento','Co-test en 1 año; colposcopia si VPH persiste o citología ≥ASC-US.']]},
+  {n:'ASC-H',cat:'Citología',color:'#c0392b',onco:false,
+   tx:'Colposcopia SIEMPRE (independiente del VPH): alto valor predictivo de lesión de alto grado.',
+   quien:'Ginecólogo / colposcopista',
+   rows:[['Por cuánto tiempo','Tratar según la biopsia.'],['Otras posibilidades','Escisión diagnóstica si la colposcopia no explica la citología.'],['Tasa de progresión','CIN2+ en ~26–40% en la biopsia/seguimiento inicial (corto plazo).'],['Riesgo de malignidad','Intermedio-alto.'],['Qué más hacer','Biopsia dirigida + legrado endocervical.'],['Qué más pedir','VPH (genotipo), evaluar ZT.'],['Seguimiento','Según histología.']]},
+  {n:'HSIL (citología)',cat:'Citología',color:'#7b1c1c',onco:false,
+   tx:'Colposcopia; en ≥25 años es aceptable el tratamiento inmediato (LEEP "ver y tratar") por el alto riesgo.',
+   quien:'Ginecólogo / colposcopista',
+   rows:[['Por cuánto tiempo','Tratamiento único (LEEP) + vigilancia prolongada.'],['Otras posibilidades','Escisión diagnóstica si hay discordancia cito-colposcópica.'],['Tasa de progresión','CIN2+ ~60% en la biopsia inmediata; si es CIN3 no tratado → ~12% a cáncer (hasta ~31% a 30 años).'],['Riesgo de malignidad','Alto (se trata).'],['Qué más hacer','Descartar invasión; asegurar ZT visible.'],['Qué más pedir','VPH; prueba de embarazo antes de LEEP.'],['Seguimiento','Co-test/VPH a los 6 meses, luego anual (25 años).']]},
+  {n:'AGC (glandular)',cat:'Citología',color:'#6a1a5a',onco:false,
+   tx:'Estudio (no es tratamiento): colposcopia + legrado endocervical + muestreo endometrial (≥35 años, sangrado o riesgo).',
+   quien:'Ginecólogo; si hay AIS/adenocarcinoma → derivar a gine-onco',
+   rows:[['Por cuánto tiempo','Según resultado del estudio.'],['Otras posibilidades','Conización diagnóstica si persiste sin explicación.'],['Tasa de progresión','Neoplasia significativa en ~9–41% (CIN2+, AIS o adenocarcinoma), mayor en "favor neoplasia" y ≥35 años.'],['Riesgo de malignidad','Puede reflejar cáncer endocervical o endometrial oculto.'],['Qué más hacer','Descartar patología endometrial y glandular.'],['Qué más pedir','Biopsia endometrial, VPH, imagen según hallazgos.'],['Seguimiento','Individualizado según el diagnóstico final.']]},
+  {n:'CIN 1 (NIC 1) — biopsia',cat:'Biopsia',color:'#b45309',onco:false,
+   tx:'Observación (NO tratar de rutina): la mayoría regresa.',
+   quien:'Ginecólogo / colposcopista',
+   rows:[['Por cuánto tiempo','Vigilar hasta ~24 meses.'],['Otras posibilidades','Si persiste ≥2 años, o si venía de HSIL/ASC-H/AGC → escisión (LEEP) o ablación.'],['Tasa de progresión','Regresa ~60% (1–2 años); persiste ~30%; progresa a CIN3 ~10% (~2 años); a cáncer ~1% (a largo plazo, &gt;10 años).'],['Riesgo de malignidad','~1%.'],['Qué más hacer','Confirmar concordancia cito-colpo-histológica.'],['Qué más pedir','Co-test/VPH en 1 año.'],['Seguimiento','Co-test a 1 año; colposcopia si VPH+ o ≥ASC-US; dos negativos → tamizaje.']]},
+  {n:'CIN 2 (NIC 2) — biopsia',cat:'Biopsia',color:'#7b1c1c',onco:false,
+   tx:'ESCISIÓN (LEEP/LLETZ) = estándar (da histología, ambulatorio, curación ~90–95%).',
+   quien:'Ginecólogo / colposcopista (NO requiere gine-onco salvo sospecha de invasión o AIS)',
+   rows:[['Por cuánto tiempo','Procedimiento único. En <25 años o deseo de fertilidad: observación con co-test + colposcopia a 6 y 12 meses, hasta 24 meses (regresa ~50–60% en jóvenes).'],['Otras posibilidades','Ablación (crioterapia/termocoagulación) si la ZT es totalmente visible, sin afectación endocervical ni sospecha glandular/invasión; conización si ZT no visible o afectación endocervical.'],['Tasa de progresión','Regresa ~40–50% (~2 años; jóvenes ~60%); progresa a CIN3 ~20% (~2 años); a cáncer invasor ~5% (~5 años si no se trata).'],['Riesgo de malignidad','Progresión a cáncer invasor ~5% si no se trata.'],['Qué más hacer','Prueba de embarazo (diferir tratamiento si gestante); tipificar VPH 16/18; asegurar ZT visible.'],['Qué más pedir','VPH; legrado endocervical si ZT no visible; laboratorio prequirúrgico si procede.'],['Seguimiento','Co-test (o VPH) a los 6 meses y luego anual; vigilancia ≥25 años. Márgenes o legrado positivos → mayor riesgo residual (reescisión o seguimiento estrecho).']]},
+  {n:'CIN 3 (NIC 3) / HSIL histológico',cat:'Biopsia',color:'#7b1c1c',onco:false,
+   tx:'ESCISIÓN (LEEP o conización) SIEMPRE — no se observa.',
+   quien:'Ginecólogo / colposcopista',
+   rows:[['Por cuánto tiempo','Tratamiento único; seguimiento prolongado (25 años).'],['Otras posibilidades','Conización si afectación endocervical o duda de invasión; ablación solo en casos seleccionados.'],['Tasa de progresión','A cáncer invasor ~12% (hasta ~31% a 30 años si NO se trata; McCredie 2008).'],['Riesgo de malignidad','Alto — se trata siempre.'],['Qué más hacer','Descartar invasión oculta; revisar márgenes.'],['Qué más pedir','VPH post-tratamiento (test of cure).'],['Seguimiento','Co-test a 6 meses, luego anual (25 años).']]},
+  {n:'AIS (adenocarcinoma in situ)',cat:'Biopsia',color:'#4a1060',onco:true,
+   tx:'Conización cilíndrica (cono frío) con márgenes; si paridad satisfecha → histerectomía (preferida).',
+   quien:'Ginecólogo con experiencia; valorar/derivar a GINE-ONCO (lesión glandular, salteada o sospecha de invasión)',
+   rows:[['Por cuánto tiempo','Definitivo con histerectomía; si se conserva el útero, seguimiento estrecho.'],['Otras posibilidades','Manejo conservador (cono) solo con deseo de fertilidad y márgenes negativos.'],['Tasa de progresión','Precursor directo del adenocarcinoma; sin tratar progresa a invasor en pocos años (riesgo alto).'],['Riesgo de malignidad','Alto; los márgenes negativos NO garantizan ausencia (lesiones salteadas).'],['Qué más hacer','Legrado del canal endocervical restante.'],['Qué más pedir','VPH, evaluación de márgenes; imagen si sospecha de invasión.'],['Seguimiento','Co-test + legrado endocervical cada 6 meses si es conservador.']]},
+  {n:'Cáncer invasor',cat:'Biopsia',color:'#111827',onco:true,
+   tx:'DERIVAR a Ginecología Oncológica: estadificación FIGO y tratamiento (cirugía radical o radio-quimioterapia según etapa).',
+   quien:'GINE-ONCO (obligatorio)',
+   rows:[['Por cuánto tiempo','Manejo oncológico según etapa.'],['Otras posibilidades','Histerectomía radical + linfadenectomía (etapas tempranas) o quimio-radioterapia (avanzadas).'],['Tasa de progresión','Ya es enfermedad invasora.'],['Riesgo de malignidad','Es cáncer confirmado.'],['Qué más hacer','Valoración multidisciplinaria; preservación de fertilidad en casos muy seleccionados.'],['Qué más pedir','Estadificación clínica, RM pélvica y/o PET-CT.'],['Seguimiento','Oncológico según protocolo.']]},
+  {n:'Colposcopia — cambios menores (grado 1)',cat:'Colposcopia',color:'#b45309',onco:false,
+   tx:'Biopsia dirigida; suele corresponder a CIN1 → observación.',
+   quien:'Colposcopista / ginecólogo',
+   rows:[['Hallazgos','Acetoblanco tenue, mosaico/punteado fino, bordes geográficos.'],['Otras posibilidades','Seguimiento si la biopsia es CIN1.'],['Tasa de progresión','Perfil de bajo grado (como CIN1): progresa a CIN3 ~10% a ~2 años; a cáncer ~1%.'],['Riesgo de malignidad','Bajo.'],['Qué más pedir','VPH; co-test de seguimiento.'],['Seguimiento','Según la biopsia (co-test en 1 año).']]},
+  {n:'Colposcopia — cambios mayores (grado 2)',cat:'Colposcopia',color:'#7b1c1c',onco:false,
+   tx:'Biopsia dirigida; alta probabilidad de CIN2-3 → tratamiento (LEEP), o "ver y tratar" si HSIL citológico.',
+   quien:'Colposcopista / ginecólogo',
+   rows:[['Hallazgos','Acetoblanco denso, mosaico/punteado grueso, bordes definidos, signo del borde interno, signo de la cresta (ridge).'],['Otras posibilidades','Escisión diagnóstico-terapéutica.'],['Tasa de progresión','Perfil de alto grado (como CIN2-3): CIN3 hasta ~12% a cáncer si no se trata.'],['Riesgo de malignidad','Buscar signos de invasión (vasos atípicos, ulceración).'],['Qué más pedir','Biopsia + legrado endocervical; VPH.'],['Seguimiento','Post-tratamiento: co-test 6 meses, anual.']]},
+  {n:'Colposcopia insatisfactoria / inadecuada',cat:'Colposcopia',color:'#6b7280',onco:false,
+   tx:'Zona de transformación no visible: legrado endocervical; si citología de alto grado → escisión diagnóstica (cono).',
+   quien:'Ginecólogo / colposcopista',
+   rows:[['Por qué','ZT dentro del canal (frecuente en posmenopausia).'],['Otras posibilidades','Estrógeno tópico y repetir en la posmenopausia.'],['Qué más hacer','No dar por normal una colposcopia inadecuada con citología anormal.'],['Qué más pedir','Legrado endocervical; valorar cono diagnóstico.'],['Seguimiento','Según resultado del canal endocervical.']]}
+];
+var RXCAT='all';
+function rxChips(){var opts=[['all','Todos'],['Citología','Citología'],['Biopsia','Biopsia'],['Colposcopia','Colposcopia']];var h='';
+  for(var i=0;i<opts.length;i++){var a=RXCAT===opts[i][0];h+='<span class="pchip'+(a?' on':'')+'" onclick="rxSet(\''+opts[i][0]+'\')">'+opts[i][1]+'</span>';}
+  document.getElementById('rx-filter').innerHTML=h;}
+function rxSet(c){RXCAT=c;rxChips();renderRx();}
+var SIG={
+  'ASC-US':'Células escamosas atípicas de significado indeterminado',
+  'LSIL':'Lesión escamosa intraepitelial de bajo grado',
+  'ASC-H':'Células escamosas atípicas; no se puede excluir alto grado',
+  'HSIL (citología)':'Lesión escamosa intraepitelial de alto grado',
+  'AGC (glandular)':'Células glandulares atípicas',
+  'CIN 1 (NIC 1) — biopsia':'Neoplasia intraepitelial cervical grado 1 (displasia leve)',
+  'CIN 2 (NIC 2) — biopsia':'Neoplasia intraepitelial cervical grado 2 (displasia moderada)',
+  'CIN 3 (NIC 3) / HSIL histológico':'Neoplasia intraepitelial cervical grado 3 (displasia grave / in situ)',
+  'AIS (adenocarcinoma in situ)':'Adenocarcinoma in situ (lesión glandular precursora)',
+  'Cáncer invasor':'Carcinoma invasor confirmado',
+  'Colposcopia — cambios menores (grado 1)':'Cambios colposcópicos de bajo grado',
+  'Colposcopia — cambios mayores (grado 2)':'Cambios colposcópicos de alto grado',
+  'Colposcopia insatisfactoria / inadecuada':'Zona de transformación no visible'
+};
+function rxCardHTML(d,i,open){var id='rx-'+i;var h='';
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.cat+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div>';
+  if(SIG[d.n])h+='<div style="font-size:10.5px;opacity:0.82;font-weight:500;margin-top:1px;">'+SIG[d.n]+'</div>';
+  h+='</div><span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">Tratamiento dirigido</div>';
+  h+='<div style="font-size:13.5px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.tx+'</div>';
+  h+='<div style="font-size:12px;font-weight:700;color:'+(d.onco?'#b91c1c':'#0f766e')+';margin-top:4px;">👥 Quién lo realiza: '+d.quien+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div></div></div>';return h;}
+function renderRx(){var h='';var shown=0;for(var i=0;i<RESULT.length;i++){var d=RESULT[i];if(RXCAT!=='all'&&d.cat!==RXCAT)continue;shown++;h+=rxCardHTML(d,i,false);}
+  if(shown===0)h='<div class="alert a-w"><span class="ai">🔍</span><div>Sin resultados.</div></div>';
+  document.getElementById('rx-body').innerHTML=h;}
+function fillResultado(){var t=val('sel-tipo');var s=document.getElementById('sel-res');var h='';
+  for(var i=0;i<RESULT.length;i++){if(RESULT[i].cat===t)h+='<option value="'+i+'">'+RESULT[i].n+'</option>';}
+  s.innerHTML=h;document.getElementById('sel-out').innerHTML='';}
+function showSelected(){var i=parseInt(val('sel-res'),10);if(isNaN(i))return;document.getElementById('sel-out').innerHTML=rxCardHTML(RESULT[i],'sel',true);}
+
+function calcSwede(){var s=0;['sw-ace','sw-mar','sw-vas','sw-tam','sw-yodo'].forEach(function(id){s+=parseInt(val(id),10);});
+  var cls,txt;
+  if(s<=4){cls='res-g';txt='probable BAJO grado → biopsia u observación.';}
+  else if(s<=7){cls='res-y';txt='intermedio → biopsia dirigida.';}
+  else{cls='res-r';txt='probable ALTO grado (HSIL) → tratar; "ver y tratar" aceptable (≥8 tiene alta especificidad para HSIL).';}
+  setOut('sw-out',cls,'Índice de Swede = '+s+'/10 — '+txt);}
+function resetSwede(){['sw-ace','sw-mar','sw-vas','sw-tam','sw-yodo'].forEach(function(id){document.getElementById(id).selectedIndex=0;});document.getElementById('sw-out').className='calc-out';}
+function calcAsccp(){var r=parseFloat(val('asccp-r'));if(isNaN(r)){setOut('asccp-out','res-y','Ingresa el riesgo de CIN3+ (%).');return;}
+  var cls,txt;
+  if(r>=60){cls='res-r';txt='Tratamiento expedito preferido.';}
+  else if(r>=25){cls='res-r';txt='Colposcopia o tratamiento expedito (ambos aceptables).';}
+  else if(r>=4){cls='res-y';txt='Colposcopia.';}
+  else if(r>=0.55){cls='res-g';txt='Repetir prueba en 1 año.';}
+  else if(r>=0.15){cls='res-g';txt='Repetir en 3 años.';}
+  else{cls='res-g';txt='Repetir en 5 años (tamizaje de rutina).';}
+  setOut('asccp-out',cls,'Riesgo CIN3+ '+r+'% → <strong>'+txt+'</strong>');}
+window.addEventListener('load',function(){rxChips();renderRx();fillResultado();renderFarm();showEscen(Object.keys(ESCEN)[0]);});
+</script>
+</body>
+</html>

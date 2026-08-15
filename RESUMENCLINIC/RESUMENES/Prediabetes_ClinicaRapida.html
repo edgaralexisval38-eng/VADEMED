@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Prediabetes · Clínica Rápida</title>
+<style>
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --ac:#7a4a00;--rad:10px;--rs:6px;
+}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;}
+.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}
+.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}
+.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}
+.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}
+.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}
+.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}
+.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}
+.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}
+.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}
+.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}
+.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}
+.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.7;color:var(--gray-700);}
+.prose p{margin-bottom:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:#f5efe2;border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.5;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}
+.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}
+.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.calc{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;flex-wrap:wrap;}
+.calc-row label{font-size:12px;font-weight:600;color:var(--gray-700);flex:1;min-width:150px;}
+.calc-row input,.calc-row select{font-size:13px;padding:7px 9px;border:1px solid var(--bd);border-radius:var(--rs);min-width:120px;font-family:inherit;}
+.btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-p{background:var(--ac);color:#fff;}
+.btn-s{background:var(--gray-100);color:var(--gray-700);}
+.calc-out{margin-top:10px;padding:11px 13px;border-radius:var(--rs);font-size:13px;font-weight:600;display:none;}
+.calc-out.show{display:block;}
+.res-r{background:var(--rl);color:var(--r);border:1px solid var(--rm);}
+.res-y{background:var(--al);color:var(--a);border:1px solid var(--am);}
+.res-g{background:var(--gl);color:var(--g);border:1px solid var(--gm);}
+.ind-drug{border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;overflow:hidden;}
+.ind-drug-h{padding:10px 12px;background:var(--gray-50);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;color:var(--gray-900);gap:8px;}
+.ind-drug-b{padding:12px;display:none;}
+.ind-drug-b.show{display:block;}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.esc-hero{background:linear-gradient(135deg,#2a1a00,#5a3a00);color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}
+.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.algo-q{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;}
+.algo-q h4{margin:0 0 10px;font-size:14px;color:var(--gray-900);}
+.algo-opt{display:block;width:100%;text-align:left;padding:11px 13px;margin-bottom:8px;border:1.5px solid var(--bd);border-radius:var(--rs);background:#fff;font-size:13px;font-weight:600;color:var(--gray-700);cursor:pointer;font-family:inherit;}
+.algo-opt:hover{border-color:var(--ac);background:var(--al);}
+.algo-res{background:#fff;border:2px solid var(--ac);border-radius:var(--rad);padding:14px;}
+.biblio-header{background:linear-gradient(135deg,#2a1a00,#5a3a00);color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}
+.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}
+.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}
+.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}
+.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}
+.lv-b{background:#dbeafe;color:#1e40af;}
+.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr" style="background:linear-gradient(135deg,#2a1a00,#5a3a00);">
+  <div class="hdr-top">
+    <div class="hdr-icon">🩸</div>
+    <div>
+      <div class="hdr-eye">Endocrinología · Medicina interna · Primer nivel</div>
+      <div class="hdr-title">Prediabetes</div>
+      <div class="hdr-sub">Disglucemia de alto riesgo · ADA 2025 · reversible</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> R73.0 · Anormalidades en la prueba de tolerancia a la glucosa</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">A1c 5.7–6.4%</span>
+    <span class="badge">GAA 100–125</span>
+    <span class="badge">ITG 140–199</span>
+    <span class="badge">Estilo vida −58%</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">5.7–6.4%</div><div class="qs-l">HbA1c</div></div>
+  <div class="qs"><div class="qs-v">100–125</div><div class="qs-l">Glucosa ayuno</div></div>
+  <div class="qs"><div class="qs-v">140–199</div><div class="qs-l">2 h CTOG</div></div>
+  <div class="qs"><div class="qs-v">−7% peso</div><div class="qs-l">Meta estilo vida</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Diagnóstico</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('algo',this)">🔀 Algoritmo</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- RESUMEN -->
+<div class="panel on" id="tab-res">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📌</span><span class="st">Definición</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>La <strong>prediabetes</strong> es un estado de <strong>disglucemia intermedia</strong>: la glucosa está por encima de lo normal pero no alcanza el umbral de diabetes. Marca un <strong>riesgo alto</strong> de progresar a diabetes tipo 2 y de enfermedad cardiovascular, pero es <strong>reversible</strong> con intervención temprana.</p>
+        <p>Se define por cualquiera de tres criterios: <strong>glucosa alterada en ayuno (GAA)</strong>, <strong>intolerancia a la glucosa (ITG)</strong> o <strong>HbA1c 5.7–6.4%</strong>.</p>
+      </div>
+      <div class="alert a-i" style="margin-top:8px;"><span class="ai">💡</span><div>No es una "enfermedad benigna": muchos ya tienen retinopatía, nefropatía incipiente o riesgo CV. Es una <strong>ventana de oportunidad</strong>.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Criterios diagnósticos (ADA)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Prueba</th><th>Normal</th><th>Prediabetes</th><th>Diabetes</th></tr>
+          <tr><td>HbA1c</td><td>&lt;5.7%</td><td class="dn">5.7–6.4%</td><td class="dm">≥6.5%</td></tr>
+          <tr><td>Glucosa en ayuno</td><td>&lt;100</td><td class="dn">100–125 (GAA)</td><td class="dm">≥126</td></tr>
+          <tr><td>CTOG 2 h (75 g)</td><td>&lt;140</td><td class="dn">140–199 (ITG)</td><td class="dm">≥200</td></tr>
+          <tr><td>Glucosa al azar</td><td>—</td><td>—</td><td class="dm">≥200 + síntomas</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Valores en mg/dL. Para <strong>diagnóstico de diabetes</strong> se requieren 2 pruebas anormales (o una repetida), salvo glucosa ≥200 con síntomas clásicos.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología e importancia</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Dato</th><th>Cifra</th></tr>
+          <tr><td>Progresión a DM2</td><td class="dm">~5–10% por año (mayor si GAA + ITG)</td></tr>
+          <tr><td>Subdiagnóstico</td><td>La mayoría de las personas con prediabetes lo ignora</td></tr>
+          <tr><td>Reversión posible</td><td class="dn">Sí, sobre todo con pérdida de peso temprana</td></tr>
+          <tr><td>Riesgo cardiovascular</td><td>Elevado ya en esta etapa</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Fisiopatología</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div style="background:var(--rl);border-left:3px solid var(--rm);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--r);line-height:1.55;"><strong>1. Resistencia a la insulina:</strong> el músculo, hígado y tejido graso responden menos a la insulina (asociada a obesidad central e inactividad).</div>
+      <div style="background:var(--al);border-left:3px solid var(--am);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;font-size:12.5px;color:var(--a);line-height:1.55;"><strong>2. Disfunción de la célula β:</strong> el páncreas compensa con más insulina, pero empieza a fallar → sube la glucosa.</div>
+      <div style="background:var(--bl);border-left:3px solid var(--bm);border-radius:var(--rs);padding:10px 12px;font-size:12.5px;color:var(--b);line-height:1.55;"><strong>3. GAA vs ITG:</strong> la GAA refleja más resistencia hepática y déficit de insulina en fase temprana; la ITG, resistencia muscular y respuesta posprandial deficiente.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Factor</th><th>Detalle</th></tr>
+          <tr><td>Sobrepeso / obesidad</td><td class="dn">IMC ≥25 (≥23 en asiáticos), sobre todo obesidad central</td></tr>
+          <tr><td>Sedentarismo</td><td>&lt;150 min/semana de actividad</td></tr>
+          <tr><td>Antecedente familiar</td><td>Diabetes en familiar de 1er grado</td></tr>
+          <tr><td>Diabetes gestacional previa</td><td>O hijo macrosómico</td></tr>
+          <tr><td>SOP</td><td>Síndrome de ovario poliquístico</td></tr>
+          <tr><td>Componentes metabólicos</td><td>HTA, HDL bajo, triglicéridos altos</td></tr>
+          <tr><td>Edad / etnia</td><td>≥35 años; poblaciones de mayor riesgo (latina, afro, asiática, indígena)</td></tr>
+          <tr><td>Acantosis nigricans</td><td>Signo de resistencia a la insulina</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">1</span><span class="kt">No tamizar a quien tiene factores de riesgo (obesidad, familiar, GDM previa).</span></div>
+      <div class="kp"><span class="kn">2</span><span class="kt">Etiquetar "prediabetes" con un solo valor limítrofe sin confirmar ni repetir.</span></div>
+      <div class="kp"><span class="kn">3</span><span class="kt">Tratarlo como algo trivial: ignorar el riesgo cardiovascular concurrente.</span></div>
+      <div class="kp"><span class="kn">4</span><span class="kt">Olvidar que la HbA1c engaña en anemia, hemoglobinopatías, embarazo o ERC.</span></div>
+      <div class="kp"><span class="kn">5</span><span class="kt">Saltar directo a metformina sin ofrecer estilo de vida estructurado (más eficaz).</span></div>
+      <div class="kp"><span class="kn">6</span><span class="kt">No reevaluar cada año: la prediabetes progresa de forma silenciosa.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="panel" id="tab-dx">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">¿A quién tamizar? (ADA)</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>Tamizar con <strong>glucosa en ayuno, HbA1c o CTOG</strong> en:</p>
+      </div>
+      <div class="kp"><span class="kn">•</span><span class="kt">Todos los adultos a partir de los <strong>35 años</strong>.</span></div>
+      <div class="kp"><span class="kn">•</span><span class="kt">Cualquier edad con <strong>sobrepeso/obesidad + ≥1 factor de riesgo</strong>.</span></div>
+      <div class="kp"><span class="kn">•</span><span class="kt">Antecedente de <strong>diabetes gestacional</strong> (de por vida, cada 1–3 años).</span></div>
+      <div class="kp"><span class="kn">•</span><span class="kt">Personas con VIH, uso de antipsicóticos/esteroides, enfermedad CV, SOP.</span></div>
+      <div class="alert a-i" style="margin-top:8px;"><span class="ai">🔁</span><div>Si es normal, repetir <strong>cada 3 años</strong>. Con prediabetes, revalorar <strong>cada año</strong>.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Interpretación de las pruebas (valores)</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Prueba</th><th>Normal</th><th>Prediabetes</th><th>Sugiere diabetes</th></tr>
+          <tr><td>Glucosa en ayuno</td><td class="dn">&lt;100 mg/dL</td><td>100–125 (GAA)</td><td class="dm">≥126 mg/dL</td></tr>
+          <tr><td>HbA1c</td><td class="dn">&lt;5.7%</td><td>5.7–6.4%</td><td class="dm">≥6.5%</td></tr>
+          <tr><td>CTOG 2 h (75 g)</td><td class="dn">&lt;140 mg/dL</td><td>140–199 (ITG)</td><td class="dm">≥200 mg/dL</td></tr>
+          <tr><td>Glucosa al azar</td><td>—</td><td>—</td><td class="dm">≥200 + síntomas</td></tr>
+        </table>
+      </div>
+      <div class="alert a-g" style="margin-top:8px;"><span class="ai">🥇</span><div><div class="at">Gold estándar</div>La <strong>curva de tolerancia oral a la glucosa (CTOG con 75 g)</strong> es la prueba de referencia: es la más sensible y detecta la intolerancia a la glucosa (ITG) que la A1c y la glucosa en ayuno pueden pasar por alto. En embarazo, la CTOG es el estándar para diabetes gestacional.</div></div>
+      <div class="tw" style="margin-top:8px;">
+        <table class="t">
+          <tr><th>Prueba</th><th>Ventaja</th><th>Limitación</th></tr>
+          <tr><td>Glucosa en ayuno</td><td>Barata, rápida</td><td>Requiere ayuno 8 h; variable</td></tr>
+          <tr><td>HbA1c</td><td>Sin ayuno, refleja ~3 meses</td><td>Engaña en anemia, hemoglobinopatías, ERC, embarazo, edad</td></tr>
+          <tr><td>CTOG 2 h</td><td>Más sensible (detecta ITG)</td><td>Lenta, menos reproducible</td></tr>
+        </table>
+      </div>
+      <div class="alert a-w" style="margin-top:8px;"><span class="ai">⚠️</span><div>Las pruebas pueden ser <strong>discordantes</strong>. Si dos difieren, repite la anormal. Para <strong>diagnosticar diabetes</strong> se necesitan 2 pruebas anormales (o 1 repetida), salvo glucosa al azar ≥200 con síntomas.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Confirmación diagnóstica</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="prose">
+        <p><strong>Prediabetes:</strong> basta un criterio en rango (idealmente confirmar por su implicación clínica).</p>
+        <p><strong>Diabetes:</strong> requiere <strong>dos</strong> resultados anormales (dos pruebas distintas en la misma muestra, o la misma prueba repetida) — salvo síntomas clásicos + glucosa al azar ≥200.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ESCALAS -->
+<div class="panel" id="tab-esc">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧮</span><span class="st">FINDRISC — riesgo de DM2 a 10 años</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Cuestionario validado que estima el riesgo sin necesidad de laboratorio. Útil para tamizaje oportunista.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>Edad</label><select id="fr-edad"><option value="0">&lt;45 años</option><option value="2">45–54</option><option value="3">55–64</option><option value="4">&gt;64</option></select></div>
+        <div class="calc-row"><label>IMC (kg/m²)</label><select id="fr-imc"><option value="0">&lt;25</option><option value="1">25–30</option><option value="3">&gt;30</option></select></div>
+        <div class="calc-row"><label>Sexo</label><select id="fr-sexo"><option value="h">Hombre</option><option value="m">Mujer</option></select></div>
+        <div class="calc-row"><label>Perímetro de cintura (cm)</label><input id="fr-cintura" type="number" placeholder="95"></div>
+        <div class="calc-row"><label>¿Actividad física ≥30 min/día?</label><select id="fr-act"><option value="0">Sí</option><option value="2">No</option></select></div>
+        <div class="calc-row"><label>¿Come verduras/fruta a diario?</label><select id="fr-veg"><option value="0">Sí</option><option value="1">No</option></select></div>
+        <div class="calc-row"><label>¿Medicación para la presión?</label><select id="fr-hta"><option value="0">No</option><option value="2">Sí</option></select></div>
+        <div class="calc-row"><label>¿Glucosa alta alguna vez?</label><select id="fr-glu"><option value="0">No</option><option value="5">Sí</option></select></div>
+        <div class="calc-row"><label>Familiar con diabetes</label><select id="fr-fam"><option value="0">No</option><option value="3">Abuelos/tíos/primos</option><option value="5">Padres/hermanos/hijos</option></select></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcFindrisc()">Calcular</button><button class="btn btn-s" onclick="resetFindrisc()">Reiniciar</button></div>
+        <div class="calc-out" id="fr-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🩸</span><span class="st">Clasificador glucémico</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Ingresa los valores que tengas (deja en blanco los que no). Devuelve la categoría más alta.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>HbA1c (%)</label><input id="cl-a1c" type="number" step="0.1" placeholder="5.9"></div>
+        <div class="calc-row"><label>Glucosa en ayuno (mg/dL)</label><input id="cl-fpg" type="number" placeholder="110"></div>
+        <div class="calc-row"><label>CTOG 2 h (mg/dL)</label><input id="cl-ogtt" type="number" placeholder="160"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcClasif()">Clasificar</button><button class="btn btn-s" onclick="resetClasif()">Reiniciar</button></div>
+        <div class="calc-out" id="cl-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🔄</span><span class="st">HbA1c → glucosa media estimada</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>Glucosa media estimada (eAG): mg/dL = 28.7 × A1c − 46.7.</div></div>
+      <div class="calc">
+        <div class="calc-row"><label>HbA1c (%)</label><input id="ea-a1c" type="number" step="0.1" placeholder="6.0"></div>
+        <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-p" onclick="calcEag()">Calcular</button><button class="btn btn-s" onclick="resetEag()">Reiniciar</button></div>
+        <div class="calc-out" id="ea-out"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALGORITMO -->
+<div class="panel" id="tab-algo">
+  <div class="alert a-i"><span class="ai">🔀</span><div>Del tamizaje al manejo. Responde las preguntas.</div></div>
+  <div id="algo-box"></div>
+  <button class="btn btn-s" style="margin-top:10px;" onclick="algoInit()">↩ Empezar de nuevo</button>
+</div>
+
+<!-- TRATAMIENTO (estilo de vida + fármacos) -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-g"><span class="ai">🏆</span><div><div class="at">Jerarquía del tratamiento</div>El <strong>estilo de vida es la base</strong> (reduce la progresión ~58%). La <strong>metformina</strong> se añade en alto riesgo (~31%). Nunca sustituye a los hábitos.</div></div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;">🏃 1) Estilo de vida (primera línea · DPP)</div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas del programa (DPP)</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Meta</th><th>Objetivo concreto</th></tr>
+          <tr><td>Pérdida de peso</td><td class="dn">≥7% del peso corporal (y mantenerlo)</td></tr>
+          <tr><td>Actividad física</td><td class="dn">≥150 min/semana de intensidad moderada</td></tr>
+          <tr><td>Alimentación</td><td>Reducir calorías y grasa saturada; más fibra, verduras, granos enteros; menos bebidas azucaradas</td></tr>
+          <tr><td>Otros</td><td>Dejar de fumar, dormir bien, limitar alcohol</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🥗</span><span class="st">Recomendaciones prácticas</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="kp"><span class="kn">✓</span><span class="kt">Patrones útiles: dieta mediterránea, DASH, o cualquier patrón hipocalórico sostenible que la persona pueda mantener.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Actividad: repartir 30 min × 5 días; combinar aeróbico + resistencia; reducir el tiempo sentado.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Metas pequeñas y medibles; referir a programas de prevención estructurados cuando existan.</span></div>
+      <div class="kp"><span class="kn">✓</span><span class="kt">Tratar de forma agresiva el riesgo cardiovascular: presión, lípidos, tabaquismo.</span></div>
+    </div>
+  </div>
+
+  <div style="font-size:12px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;">💊 2) Fármacos (coadyuvantes)</div>
+  <div class="alert a-i"><span class="ai">💊</span><div>Toca cada ficha para ver dosis, mecanismo, presentaciones, contraindicaciones, efectos adversos y seguimiento.</div></div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ESCENARIOS -->
+<div class="panel" id="tab-escen">
+  <div class="alert a-i"><span class="ai">⚙️</span><div>Selecciona un escenario clínico.</div></div>
+  <div class="chipbar" id="escen-chips"></div>
+  <div id="escen-body"></div>
+</div>
+
+<!-- SEGUIMIENTO -->
+<div class="panel" id="tab-seg">
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento y metas</span><span class="sg open">⌄</span></div>
+    <div class="sb">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Momento</th><th>Acción</th><th>Meta</th></tr>
+          <tr><td>Basal</td><td>Confirmar categoría, evaluar riesgo CV, IMC, cintura</td><td>Plan individualizado</td></tr>
+          <tr><td>3–6 meses</td><td>Revisar adherencia, peso, actividad</td><td>Camino a −7% de peso</td></tr>
+          <tr><td>Cada año</td><td>Repetir glucosa/HbA1c</td><td>Detectar progresión o reversión</td></tr>
+          <tr><td>Cada visita</td><td>Presión, lípidos, tabaquismo</td><td>Control de riesgo CV</td></tr>
+          <tr><td>Reversión</td><td>Normoglucemia sostenida</td><td>Mantener hábitos; seguir vigilando</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🗓️</span><span class="st">Cada cuánto ver al paciente</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Situación</th><th>Frecuencia de visita</th></tr>
+          <tr><td>Prediabetes, iniciando cambios</td><td class="dn">Cada 3–6 meses el primer año (peso, hábitos, adherencia)</td></tr>
+          <tr><td>Prediabetes estable</td><td>Al menos anual</td></tr>
+          <tr><td>Con metformina</td><td>A los 1–3 meses de iniciar, luego cada 6–12 meses</td></tr>
+          <tr><td>Tamizaje si fue normal</td><td>Repetir cada 3 años</td></tr>
+          <tr><td>Antecedente de diabetes gestacional</td><td>Cada 1–3 años de por vida</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🧾</span><span class="st">Qué estudios pedir</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="tw">
+        <table class="t">
+          <tr><th>Estudio</th><th>Cuándo / para qué</th></tr>
+          <tr><td>HbA1c o glucosa en ayuno</td><td class="dn">Anual (revalorar categoría / progresión); CTOG si se busca ITG</td></tr>
+          <tr><td>Perfil de lípidos</td><td>Anual (riesgo cardiovascular)</td></tr>
+          <tr><td>Presión arterial, peso, IMC, cintura</td><td>En cada visita</td></tr>
+          <tr><td>Función renal (TFG/creatinina)</td><td>Basal y periódica; obligada si toma metformina</td></tr>
+          <tr><td>Vitamina B12</td><td>Si metformina de uso prolongado (déficit)</td></tr>
+          <tr><td>Enzimas hepáticas / US hígado</td><td>Si sospecha de hígado graso (MASLD)</td></tr>
+          <tr><td>Complementarios</td><td>SOP, apnea del sueño, evaluación CV según el caso</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Señales de progresión a diabetes</span><span class="sg">⌄</span></div>
+    <div class="sb hidden">
+      <div class="alert a-r"><span class="ai">⛔</span><div>HbA1c ≥6.5%, glucosa en ayuno ≥126 o CTOG ≥200 (confirmados) → diabetes: iniciar manejo.</div></div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div>Síntomas: poliuria, polidipsia, pérdida de peso no intencionada, visión borrosa.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BIBLIOGRAFÍA -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header">
+    <h2>📚 Bibliografía — Prediabetes</h2>
+    <p>Guías y ensayos clínicos que fundamentan el diagnóstico y la prevención.</p>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📘 Guías</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">1</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">American Diabetes Association. <em>Standards of Care in Diabetes—2025. Sec. 2 (Diagnóstico) y Sec. 3 (Prevención/retraso de la diabetes).</em> Diabetes Care 2025;48(Suppl 1). [Criterios A1c/GAA/ITG y metformina].</div>
+        <a class="biblio-link" href="https://diabetesjournals.org/care/article/48/Supplement_1/S27/157566" target="_blank">🔗 diabetesjournals.org (SoC 2025)</a>
+      </div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">📗 Ensayos clínicos clave</div>
+    <div class="biblio-body">
+      <div class="biblio-item">
+        <div><span class="biblio-num">2</span><span class="biblio-year">2002</span><span class="biblio-level lv-a">Nivel A</span></div>
+        <div class="biblio-ref">Knowler WC, et al. (DPP Research Group). <em>Reduction in the Incidence of Type 2 Diabetes with Lifestyle Intervention or Metformin.</em> N Engl J Med 2002;346(6):393–403. [Estilo de vida −58%, metformina −31%].</div>
+        <a class="biblio-link" href="https://doi.org/10.1056/NEJMoa012512" target="_blank">🔗 DOI 10.1056/NEJMoa012512</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">3</span><span class="biblio-year">2003</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">Lindström J, Tuomilehto J. <em>The Diabetes Risk Score (FINDRISC): a practical tool to predict type 2 diabetes risk.</em> Diabetes Care 2003;26(3):725–731.</div>
+        <a class="biblio-link" href="https://doi.org/10.2337/diacare.26.3.725" target="_blank">🔗 DOI 10.2337/diacare.26.3.725</a>
+      </div>
+      <div class="biblio-item">
+        <div><span class="biblio-num">4</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Nivel B</span></div>
+        <div class="biblio-ref">DPP Outcomes Study (DPPOS). <em>Long-term benefits of lifestyle and metformin over 21 years.</em> Diabetes Care 2025;48(7):1101. [Beneficio sostenido de la prevención].</div>
+        <a class="biblio-link" href="https://diabetesjournals.org/care/article/48/7/1101/158195" target="_blank">🔗 diabetesjournals.org (DPPOS)</a>
+      </div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">ℹ️ Nivel de evidencia</div>
+    <div class="biblio-body">
+      <div class="nivel-legend">
+        <div class="nl-item"><span class="biblio-level lv-a" style="margin:0;">Nivel A</span> Guía / ECA de alta calidad</div>
+        <div class="nl-item"><span class="biblio-level lv-b" style="margin:0;">Nivel B</span> Estudio de validación / cohorte</div>
+        <div class="nl-item"><span class="biblio-level lv-exp" style="margin:0;">Experto</span> Texto de referencia</div>
+      </div>
+    </div>
+  </div>
+  <div class="alert a-i" style="margin:0 0 20px;"><span class="ai">ℹ️</span><div>Criterios basados en ADA 2025; adapta a guías locales. Verifica actualizaciones anuales. Última revisión: agosto 2026.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function setOut(id,cls,html){var o=document.getElementById(id);o.className='calc-out show '+cls;o.innerHTML=html;}
+function val(id){return document.getElementById(id).value;}
+
+// ===== FINDRISC =====
+function calcFindrisc(){
+  var pts=0;
+  ['fr-edad','fr-imc','fr-act','fr-veg','fr-hta','fr-glu','fr-fam'].forEach(function(id){pts+=parseInt(val(id),10);});
+  var sexo=val('fr-sexo');var c=parseFloat(val('fr-cintura'));
+  if(isNaN(c)){setOut('fr-out','res-y','Ingresa el perímetro de cintura.');return;}
+  var cp;
+  if(sexo==='h'){cp=(c<94)?0:((c<=102)?3:4);}else{cp=(c<80)?0:((c<=88)?3:4);}
+  pts+=cp;
+  var cls,cat,riesgo;
+  if(pts<7){cls='res-g';cat='Bajo';riesgo='~1% a 10 años';}
+  else if(pts<12){cls='res-g';cat='Ligeramente elevado';riesgo='~4%';}
+  else if(pts<15){cls='res-y';cat='Moderado';riesgo='~17%';}
+  else if(pts<21){cls='res-r';cat='Alto';riesgo='~33%';}
+  else{cls='res-r';cat='Muy alto';riesgo='~50%';}
+  setOut('fr-out',cls,'Puntaje FINDRISC = '+pts+' — riesgo <strong>'+cat+'</strong> ('+riesgo+' de DM2 a 10 años). '+(pts>=12?'Solicitar glucosa/HbA1c.':'Reforzar prevención y reevaluar.'));
+}
+function resetFindrisc(){['fr-edad','fr-imc','fr-sexo','fr-act','fr-veg','fr-hta','fr-glu','fr-fam'].forEach(function(id){document.getElementById(id).selectedIndex=0;});document.getElementById('fr-cintura').value='';document.getElementById('fr-out').className='calc-out';}
+
+// ===== CLASIFICADOR =====
+function calcClasif(){
+  var a=parseFloat(val('cl-a1c')),f=parseFloat(val('cl-fpg')),o=parseFloat(val('cl-ogtt'));
+  if(isNaN(a)&&isNaN(f)&&isNaN(o)){setOut('cl-out','res-y','Ingresa al menos un valor.');return;}
+  var level=0;var det=[];
+  function chk(v,pre,pdMin,pdMax,dm){if(isNaN(v))return;var l=0,t;if(v>=dm){l=2;t='diabetes';}else if(v>=pdMin){l=1;t='prediabetes';}else{l=0;t='normal';}det.push(pre+' '+v+' → '+t);if(l>level)level=l;}
+  chk(a,'A1c',5.7,6.4,6.5);
+  chk(f,'Ayuno',100,125,126);
+  chk(o,'CTOG 2 h',140,199,200);
+  var cls=level===2?'res-r':(level===1?'res-y':'res-g');
+  var cat=level===2?'DIABETES (confirmar con 2ª prueba)':(level===1?'PREDIABETES':'Normoglucemia');
+  setOut('cl-out',cls,'<strong>'+cat+'</strong><br>'+det.join('<br>'));
+}
+function resetClasif(){['cl-a1c','cl-fpg','cl-ogtt'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('cl-out').className='calc-out';}
+
+// ===== eAG =====
+function calcEag(){var a=parseFloat(val('ea-a1c'));if(isNaN(a)){setOut('ea-out','res-y','Ingresa la HbA1c.');return;}var e=28.7*a-46.7;setOut('ea-out','res-g','Glucosa media estimada ≈ '+e.toFixed(0)+' mg/dL ('+(e/18).toFixed(1)+' mmol/L).');}
+function resetEag(){document.getElementById('ea-a1c').value='';document.getElementById('ea-out').className='calc-out';}
+
+// ===== ALGORITMO =====
+var ALGO={
+  q0:{q:'¿Resultado del tamizaje?',o:[{t:'Normal (A1c <5.7, ayuno <100)',go:'rNorm'},{t:'Rango de prediabetes',go:'q1'},{t:'Rango de diabetes',go:'rDM'}]},
+  q1:{q:'¿Tiene indicación de metformina? (IMC ≥35, <60 años, antecedente de diabetes gestacional, o A1c en ascenso pese al estilo de vida)',o:[{t:'Sí, ≥1 criterio',go:'rMet'},{t:'No',go:'rVida'}]}
+};
+var ALGO_RES={
+  rNorm:{c:'a-g',t:'Normoglucemia',x:'Sin prediabetes. Reforzar hábitos saludables y <strong>repetir tamizaje en 3 años</strong> (antes si aparecen factores de riesgo).'},
+  rVida:{c:'a-i',t:'Prediabetes → estilo de vida intensivo',x:'Base del tratamiento: <strong>−7% de peso</strong>, <strong>≥150 min/semana</strong> de ejercicio, alimentación saludable. Reduce la progresión ~58%. Controlar riesgo CV. Reevaluar HbA1c/glucosa <strong>cada año</strong>.'},
+  rMet:{c:'a-w',t:'Prediabetes → estilo de vida + metformina',x:'Añadir <strong>metformina</strong> al estilo de vida en alto riesgo: IMC ≥35, edad &lt;60, diabetes gestacional previa, o A1c en ascenso. Iniciar 500 mg y titular. Seguir con hábitos y control anual.'},
+  rDM:{c:'a-r',t:'Diabetes — confirmar y tratar',x:'Confirmar con una <strong>2ª prueba anormal</strong> (o síntomas + glucosa ≥200). Iniciar manejo de diabetes tipo 2 (estilo de vida + metformina y según comorbilidad), educación y metas glucémicas.'}
+};
+function algoRender(node){var box=document.getElementById('algo-box');
+  if(ALGO_RES[node]){var r=ALGO_RES[node];box.innerHTML='<div class="algo-res"><div class="alert '+r.c+'" style="margin:0;"><span class="ai">✓</span><div><div class="at">'+r.t+'</div>'+r.x+'</div></div></div>';return;}
+  var q=ALGO[node];var h='<div class="algo-q"><h4>'+q.q+'</h4>';
+  for(var i=0;i<q.o.length;i++)h+='<button class="algo-opt" onclick="algoRender(\''+q.o[i].go+'\')">'+q.o[i].t+'</button>';
+  h+='</div>';box.innerHTML=h;}
+function algoInit(){algoRender('q0');}
+
+// ===== FÁRMACOS (ficha completa) =====
+var FARM=[
+  {n:'Metformina',color:'#7a4a00',tag:'⭐ 1.ª opción farmacológica',
+    dosis:'Metformina 500 mg VO con la cena → titular a 850–1000 mg cada 12 h',
+    dosisSub:'Subir lento (cada 1–2 semanas) para tolerancia GI; máx 2000 mg/día.',
+    desc:'Coadyuvante del estilo de vida en prediabetes de alto riesgo; no lo sustituye. Reduce la progresión a DM2 ~31% (DPP).',
+    rows:[
+      ['Mecanismo / base','Biguanida: reduce la gluconeogénesis hepática y mejora la sensibilidad a la insulina.'],
+      ['Cuándo','Alto riesgo: IMC ≥35 kg/m², edad &lt;60 años, antecedente de diabetes gestacional, o HbA1c en ascenso pese al estilo de vida.'],
+      ['Dosis / nota','Iniciar 500 mg/día; titular cada 1–2 sem; usar liberación prolongada (XR) si hay intolerancia GI.'],
+      ['Vía','Oral, con alimentos.'],
+      ['Presentaciones','500, 850 y 1000 mg (comprimido simple y XR).'],
+      ['Contraindicaciones','TFG &lt;30 (precaución 30–45); suspender ante contraste yodado o enfermedad aguda con riesgo de acidosis láctica; hepatopatía grave, alcoholismo.'],
+      ['Efectos adversos','Náusea/diarrea (mejora con alimentos y XR); déficit de vitamina B12 a largo plazo.'],
+      ['Seguimiento','HbA1c/glucosa anual; función renal (TFG) periódica; vitamina B12 si uso prolongado; vigilar tolerancia.']
+    ],
+    nota:'No causa hipoglucemia en monoterapia; bajo costo y buen perfil de seguridad. El estilo de vida sigue siendo la base.'},
+  {n:'Agonistas GLP-1 / fármacos para peso',color:'#0c3b6e',tag:'En obesidad',
+    dosis:'Semaglutida / liraglutida (GLP-1) SC — dosis según producto',
+    dosisSub:'No es indicación primaria "para prediabetes"; individualizar en obesidad.',
+    desc:'En obesidad producen pérdida de peso significativa y reducen la progresión a DM2; se consideran cuando el estilo de vida ± metformina no basta.',
+    rows:[
+      ['Mecanismo / base','Agonista del receptor GLP-1: aumenta la saciedad, enlentece el vaciamiento gástrico y mejora la glucosa.'],
+      ['Cuándo','Prediabetes con obesidad y comorbilidades cuando no se alcanzan metas con estilo de vida ± metformina.'],
+      ['Dosis / nota','Titular de forma escalonada para reducir la náusea.'],
+      ['Vía','Subcutánea (algunos disponibles vía oral).'],
+      ['Presentaciones','Plumas precargadas SC (semanales o diarias según molécula).'],
+      ['Contraindicaciones','Antecedente personal/familiar de carcinoma medular de tiroides o MEN2; pancreatitis previa; precaución en enfermedad GI grave.'],
+      ['Efectos adversos','Náusea, vómito, diarrea (dosis-dependiente); pancreatitis (rara).'],
+      ['Seguimiento','Peso, tolerancia GI y glucosa; valorar costo y disponibilidad.']
+    ],
+    nota:'Decisión individualizada; el estilo de vida es la base del tratamiento.'}
+];
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+function renderFarm(){var h='';for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">Dosis</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div>';
+  h+='<div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div>';
+  h+='<div style="padding:10px 14px;background:#f0f9ff;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0c3b6e;margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  document.getElementById('farm-body').innerHTML=h;}
+
+// ===== ESCENARIOS =====
+var ESCEN={
+  'Obesidad (IMC ≥35)':{p:'Prediabetes con obesidad grado II o mayor.',k:'Riesgo muy alto de progresión; candidato claro a metformina + estilo de vida.',x:'Meta de pérdida ≥7–10%; valorar agonista GLP-1 o cirugía bariátrica si IMC ≥35–40 con comorbilidad.',s:'Peso y cintura en cada visita; HbA1c cada 6–12 meses; perfil metabólico y hepático anual.'},
+  'Diabetes gestacional previa':{p:'Mujer con antecedente de diabetes gestacional.',k:'Riesgo elevado de por vida (hasta ~50% a 10 años).',x:'Estilo de vida intensivo; considerar metformina; la lactancia ayuda.',s:'Tamizar con glucosa/A1c cada 1–3 años de por vida y al planear un nuevo embarazo.'},
+  'SOP':{p:'Síndrome de ovario poliquístico con disglucemia.',k:'Resistencia a la insulina de base; suele haber sobrepeso.',x:'Estilo de vida; la metformina mejora la glucosa y regulariza ciclos.',s:'CTOG o A1c anual; perfil lipídico; evaluar apnea del sueño.'},
+  'Riesgo cardiovascular alto':{p:'Prediabetes + HTA, dislipidemia o tabaquismo (síndrome metabólico).',k:'El riesgo CV ya está elevado en esta etapa.',x:'Tratar agresivo la presión, estatina según riesgo y cese de tabaco, además de la glucosa.',s:'Lípidos y presión en cada visita; calcular riesgo CV; ECG si está indicado.'},
+  'Adulto mayor':{p:'Persona mayor con prediabetes.',k:'Progresión más lenta; la A1c es menos fiable; priorizar función y evitar hipoglucemia.',x:'Estilo de vida adaptado y metas individualizadas; cuidado con la fragilidad y la polifarmacia.',s:'Vigilancia anual; revisar función renal y fármacos.'},
+  'Adolescente / joven con obesidad':{p:'Joven con sobrepeso y disglucemia.',k:'La DM2 de inicio temprano es más agresiva.',x:'Estilo de vida con enfoque familiar; metformina si procede; buscar comorbilidad (hígado graso, SOP).',s:'A1c y perfil hepático/lipídico anual; medir presión.'},
+  'Disglucemia por fármacos':{p:'Hiperglucemia asociada a glucocorticoides o antipsicóticos.',k:'Puede ser reversible al ajustar el fármaco causal.',x:'Reevaluar necesidad/dosis del fármaco; estilo de vida; vigilar de cerca.',s:'Glucosa/A1c al iniciar el fármaco y de forma periódica durante el tratamiento.'},
+  'A1c no fiable':{p:'Anemia, hemoglobinopatía, ERC o embarazo.',k:'La HbA1c puede estar falsamente alta o baja.',x:'Usar glucosa en ayuno o CTOG; en embarazo, criterios de diabetes gestacional.',s:'Seguir con la prueba alterna elegida (glucosa/CTOG).'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Estudios / seguimiento</div><div class="fu-x">'+d.s+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+window.addEventListener('load',function(){
+  algoInit();
+  renderFarm();
+  showEscen(Object.keys(ESCEN)[0]);
+});
+</script>
+</body>
+</html>
