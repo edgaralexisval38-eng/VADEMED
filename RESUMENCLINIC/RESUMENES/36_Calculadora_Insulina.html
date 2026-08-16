@@ -339,6 +339,20 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
   <button class="tab bib" onclick="showT('bib',this)">📚 Bibliografía</button>
 </div>
 
+<!-- Peso y TDD se tecleaban hasta 8 veces en distintas pestanas, y cada repeticion
+     era otra oportunidad de dedazo. Se capturan UNA vez aqui y bajan a todos lados. -->
+<div id="pacBox" style="background:#effafc;border-bottom:1px solid #bce3ec;padding:9px 12px;">
+  <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;">
+    <span style="font-size:11px;font-weight:800;color:#0e7490;text-transform:uppercase;letter-spacing:.04em;">Paciente</span>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--gray-700);">Peso
+      <input id="pac-peso" type="number" class="calc-in" style="width:64px;padding:5px 8px;" placeholder="70" oninput="pacSync()"> kg</label>
+    <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--gray-700);">TDD
+      <input id="pac-tdd" type="number" class="calc-in" style="width:64px;padding:5px 8px;" placeholder="40" oninput="pacSync()"> U</label>
+    <button onclick="pacLimpiar()" style="margin-left:auto;background:none;border:0;color:#0e7490;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;">Limpiar</button>
+  </div>
+  <div id="pac-msg" style="font-size:11px;color:#5b7782;margin-top:5px;">Se copian solos a todas las pestañas.</div>
+</div>
+
 <div class="panel on" id="tab-res">
   <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧩</span><span class="st">Las piezas de un esquema</span><span class="sg open">⌄</span></div>
   <div class="sb">
@@ -1014,6 +1028,25 @@ function selEscen(i){
 }
 
 function calcTog(el){el.classList.toggle('open');}
+/* st-dose queda FUERA a proposito: son mg del corticoide, no unidades de insulina. */
+var PAC_PESO=['tdd-peso','aj-peso','ini-peso','st-peso'];
+var PAC_TDD=['esq-tdd','cor-tdd','carb-tdd','rx-tdd','aj-dose','conv-dose'];
+function pacSync(){
+  var w=document.getElementById('pac-peso'), d=document.getElementById('pac-tdd');
+  var W=w?w.value.trim():'', D=d?d.value.trim():'';
+  if(W!=='')PAC_PESO.forEach(function(id){var e=document.getElementById(id);if(e)e.value=W;});
+  if(D!=='')PAC_TDD.forEach(function(id){var e=document.getElementById(id);if(e)e.value=D;});
+  ['calcTDD','calcEsq','calcCor','calcCarb','calcRx','calcAjuste','calcConv','calcIni','calcSteroid','calcTit']
+    .forEach(function(f){try{if(typeof window[f]==='function')window[f]();}catch(e){}});
+  var m=document.getElementById('pac-msg');
+  if(m)m.textContent=(W||D)?('Aplicado a todas las pestañas'+(W?' · '+W+' kg':'')+(D?' · TDD '+D+' U':'')):'Se copian solos a todas las pestañas.';
+}
+function pacLimpiar(){
+  ['pac-peso','pac-tdd'].concat(PAC_PESO).concat(PAC_TDD).forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  ['calcTDD','calcEsq','calcCor','calcCarb','calcRx','calcAjuste','calcConv','calcIni','calcSteroid','calcTit']
+    .forEach(function(f){try{if(typeof window[f]==='function')window[f]();}catch(e){}});
+  var m=document.getElementById('pac-msg'); if(m)m.textContent='Se copian solos a todas las pestañas.';
+}
 function num(id){var v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;}
 /* Rangos plausibles. Un dedazo de un digito (400 en vez de 40) llegaba a proponer
    62 U de rapida, asi que ahora se detiene el calculo y se avisa. */
@@ -1033,6 +1066,9 @@ function calcTDD(){
   var f=s.f;var note='';
   if(tddRenal){f=s.basalOnly?0.1:0.25;note=' \u00b7 dosis reducida por edad \u226570 o ERC';}
   var tdd=Math.round(w*f);
+  /* la TDD recien calculada se sube al bloque de paciente, para no volver a teclearla */
+  try{var _pt=document.getElementById('pac-tdd'); if(_pt&&!_pt.value){_pt.value=tdd;
+    PAC_TDD.forEach(function(id){var e=document.getElementById(id);if(e&&!e.value)e.value=tdd;});}}catch(e){}
   if(s.basalOnly){
     res.innerHTML='<span class="big">'+tdd+' U/d\u00eda de basal</span><span class="sub">glargina, detemir o NPH, 1 vez al d\u00eda ('+f+' U/kg'+note+')</span>'
       +'<div style="margin-top:8px;font-size:12px;">A\u00f1adir insulina r\u00e1pida en comidas si la glucosa posprandial sigue alta.</div>';
