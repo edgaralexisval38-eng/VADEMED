@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cefaleas · Clínica Rápida</title>
+<style>
+/* ===== CAMBIAR SOLO --ac y --acd POR EL COLOR DE LA ESPECIALIDAD ===== */
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#4f46e5;--acd:#3730a3;--acl:#eef2ff;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.step{display:flex;gap:10px;margin-bottom:10px;}
+.step-n{background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.step-b{flex:1;font-size:12.5px;color:var(--gray-700);line-height:1.55;}.step-b b{color:var(--gray-900);}
+/* Calculadora / escalas */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+/* Chips */
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+/* Escenarios */
+.esc-hero{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+/* Bibliografía */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🤕</div>
+    <div>
+      <div class="hdr-eye">Neurología · Urgencias · Medicina interna</div>
+      <div class="hdr-title">Cefaleas</div>
+      <div class="hdr-sub">Abordaje del paciente con cefalea · primaria vs secundaria · banderas rojas · evidencia 2024–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> R51 cefalea · G44.2 tensional · G44.0 en racimos</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Tensional la + frecuente</span>
+    <span class="badge">Primaria &gt;90%</span>
+    <span class="badge">SNNOOP10</span>
+    <span class="badge">Racimos 0.1%</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">&gt;90%</div><div class="qs-l">Son primarias</div></div>
+  <div class="qs"><div class="qs-v">~⅔–78%</div><div class="qs-l">Tensional (vida)</div></div>
+  <div class="qs"><div class="qs-v">&lt;10%</div><div class="qs-l">Secundarias</div></div>
+  <div class="qs"><div class="qs-v">SNNOOP10</div><div class="qs-l">Banderas rojas</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">⚙️ Fisiopatología</button>
+  <button class="tab" onclick="showT('etio',this)">🗂️ Clasificación</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Clínica y Dx</button>
+  <button class="tab" onclick="showT('esc',this)">🚩 Banderas rojas / escalas</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ================= RESUMEN ================= -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Definición y concepto operativo</span><span class="sg">▾</span></div>
+  <div class="sb"><div class="prose">
+    <p><b>Cefalea</b> = dolor localizado por encima de la línea orbitomeatal (cabeza, cuero cabelludo o cuello superior). Es un <b>síntoma</b>, no una enfermedad; el reto clínico es distinguir la abrumadora mayoría de <b>cefaleas primarias</b> (benignas, sin lesión estructural subyacente) de la minoría de <b>cefaleas secundarias</b> potencialmente mortales.</p>
+    <p>La estrategia de abordaje se resume en tres pasos: <b>(1) clasificar</b> con la ICHD-3, <b>(2) descartar causa secundaria</b> buscando activamente banderas rojas (SNNOOP10) y <b>(3) tratar</b> la cefalea primaria específica. La migraña, por su extensión, se cubre en su propio resumen; aquí se aborda brevemente y se remite.</p>
+  </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔑</span><span class="st">Puntos clave</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt">La <b>anamnesis dirigida es la herramienta diagnóstica principal</b>: patrón temporal (aguda súbita, aguda-subaguda progresiva, crónica recurrente, crónica diaria) más presencia/ausencia de banderas rojas orientan casi todo el diagnóstico.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>&gt;90% de las cefaleas atendidas son primarias</b>; las secundarias representan &lt;10%, pero es obligación excluirlas antes de etiquetar una cefalea como primaria.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt">La <b>cefalea tensional</b> es la primaria más prevalente (prevalencia a lo largo de la vida ~⅔ a 78%); la <b>migraña</b> ~12–15%; la <b>cefalea en racimos</b> es rara (~0.1%) pero de las más dolorosas.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt">La <b>cefalea en trueno</b> (thunderclap: intensidad máxima en &lt;1 min) obliga a descartar <b>hemorragia subaracnoidea</b> con TC sin contraste ± punción lumbar, aun con exploración normal.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt">En &gt;50 años con cefalea de novo pensar en <b>arteritis de células gigantes</b> (VSG/PCR, iniciar esteroide sin demora); es causa tratable y prevenible de ceguera.</span></div>
+    <div class="kp"><span class="kn">6</span><span class="kt">La migraña y la cefalea son de las <b>principales causas de discapacidad</b> a nivel mundial (GBD: la cefalea, y en particular la migraña, encabeza la carga de años vividos con discapacidad en jóvenes).</span></div>
+    <div class="kp"><span class="kn">7</span><span class="kt">El <b>abuso de analgésicos</b> (≥10–15 días/mes según fármaco) perpetúa la cefalea (cefalea por sobreuso de medicación): sospechar en toda cefalea que se cronifica.</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología con cifras</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Tipo</th><th>Prevalencia</th><th>Comentario</th></tr>
+      <tr><td><b>Primarias (global)</b></td><td class="dn">&gt;90% de consultas</td><td>Migraña + tensional + trigémino-autonómicas + otras</td></tr>
+      <tr><td>Cefalea tensional</td><td class="dn">~⅔ a 78% (vida)</td><td>La más prevalente; a menudo infratratada/infrarreportada</td></tr>
+      <tr><td>Migraña</td><td class="dn">~12–15%</td><td>Predominio femenino 3:1; ver resumen dedicado</td></tr>
+      <tr><td>Cefalea en racimos</td><td class="dn">~0.1%</td><td>Predominio masculino; de las más dolorosas conocidas</td></tr>
+      <tr><td><b>Secundarias</b></td><td class="dm">&lt;10%</td><td>Minoría, pero incluyen las emergencias que hay que excluir</td></tr>
+      <tr><td>Cefalea por abuso de fármacos</td><td class="dn">~1–2% población</td><td>Complicación frecuente de migraña/tensional mal tratadas</td></tr>
+    </table></div>
+    <div class="alert a-i"><span class="ai">💡</span><div><div class="at">Regla práctica</div>La probabilidad basal favorece siempre lo benigno; el error clásico no es sobrediagnosticar, sino <b>no buscar la bandera roja</b> que reclasifica al paciente como secundario.</div></div>
+  </div></div>
+</div>
+
+<!-- ================= FISIOPATOLOGÍA ================= -->
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧠</span><span class="st">Estructuras sensibles al dolor</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="diag"><b>El parénquima cerebral NO duele.</b> El dolor de cabeza surge de la tracción, inflamación, distensión o compresión de estructuras <b>sensibles al dolor</b>, todas inervadas por el <b>trigémino (V)</b> supratentorialmente y por <b>C1–C3, IX y X</b> en la fosa posterior:
+    <br>• <b>Duramadre</b> (especialmente base, tienda del cerebelo y en torno a senos venosos).
+    <br>• <b>Arterias</b> durales, piales y grandes vasos del polígono de Willis.
+    <br>• <b>Senos venosos durales</b> y venas tributarias.
+    <br>• <b>Nervios craneales</b> con aferencia sensitiva: V (trigémino), IX (glosofaríngeo), X (vago).
+    <br>• <b>Músculos pericraneales</b>, aponeurosis, cuero cabelludo, arterias extracraneales y mucosas de senos/ojos/oídos.</div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Implicación clínica</div>Una masa cerebral duele cuando <b>tracciona o desplaza</b> estas estructuras (o eleva la PIC), no por el tejido tumoral en sí. Esto explica por qué grandes lesiones pueden ser indoloras y pequeñas lesiones muy dolorosas.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Mecanismos por tipo de cefalea primaria</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="fp fp-p"><b>Migraña — sistema trigémino-vascular.</b> Activación del núcleo trigémino-cervical y liberación de neuropéptidos vasoactivos (<b>CGRP</b>, PACAP) → inflamación neurógena perivascular y sensibilización periférica y central. El aura corresponde a la <b>depresión cortical propagada</b>. El generador está en tronco/diencéfalo. (Detalle en el resumen de migraña.)</div>
+    <div class="fp fp-b"><b>Cefalea tensional — tensión miofascial + sensibilización central.</b> Aumento de la sensibilidad de estructuras miofasciales pericraneales (mecanismo periférico en la forma episódica) que, con la cronificación, evoluciona a <b>sensibilización central</b> y disfunción del control inhibitorio descendente del dolor (mecanismo dominante en la forma crónica).</div>
+    <div class="fp fp-r"><b>Cefalea en racimos — reflejo trigémino-autonómico + hipotálamo.</b> Activación del <b>reflejo trigémino-autonómico</b> (rama trigeminal aferente + eferente parasimpática facial → lagrimeo, rinorrea, inyección conjuntival) con disfunción simpática oculosimpática (ptosis/miosis). El <b>hipotálamo posterior</b> actúa como marcapasos, explicando la periodicidad circadiana/circanual (crisis "en reloj" y salvas estacionales).</div>
+  </div></div>
+</div>
+
+<!-- ================= CLASIFICACIÓN ================= -->
+<div class="panel" id="tab-etio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">ICHD-3: primarias vs secundarias</span><span class="sg">▾</span></div>
+  <div class="sb"><div class="prose">
+    <p>La <b>Clasificación Internacional de las Cefaleas, 3.ª edición (ICHD-3)</b> es el marco de referencia. Divide las cefaleas en <b>primarias</b> (partes 1–4), <b>secundarias</b> (partes 5–12) y <b>neuropatías craneales dolorosas y otras</b> (parte 13).</p>
+  </div>
+    <div class="tw"><table class="t">
+      <tr><th>PRIMARIAS (&gt;90%)</th><th>Ejemplos</th></tr>
+      <tr><td><b>1. Migraña</b></td><td>Con/sin aura, crónica, estados migrañosos (ver resumen dedicado)</td></tr>
+      <tr><td><b>2. Cefalea tensional</b></td><td>Episódica infrecuente / frecuente / crónica</td></tr>
+      <tr><td><b>3. Cefaleas trigémino-autonómicas (TAC)</b></td><td>Racimos; hemicránea paroxística; SUNCT/SUNA; hemicránea continua</td></tr>
+      <tr><td><b>4. Otras primarias</b></td><td>Tusígena, por esfuerzo, asociada a actividad sexual, hípnica, en trueno primaria, punzante primaria, numular, nueva cefalea diaria persistente (NDPH)</td></tr>
+    </table></div>
+    <div class="tw"><table class="t">
+      <tr><th>SECUNDARIAS (&lt;10% — hay que excluirlas)</th><th>Ejemplos clave</th></tr>
+      <tr><td><b>Vascular</b></td><td class="dm">HSA/thunderclap, disección carotídea/vertebral, trombosis venosa cerebral, ictus, arteritis de células gigantes, SVCR, HSD</td></tr>
+      <tr><td><b>Masa / hipertensión intracraneal</b></td><td>Tumor, absceso; HIC idiopática (pseudotumor cerebri); hidrocefalia</td></tr>
+      <tr><td><b>Infección</b></td><td class="dm">Meningitis, encefalitis, absceso; sinusitis</td></tr>
+      <tr><td><b>Traumática</b></td><td>Cefalea postraumática aguda/persistente</td></tr>
+      <tr><td><b>Sustancias / abstinencia</b></td><td>Cefalea por sobreuso de medicación; monóxido de carbono; cafeína</td></tr>
+      <tr><td><b>Homeostasis / sistémica</b></td><td>Hipertensión grave/emergencia hipertensiva, hipoxia/hipercapnia, hipotiroidismo, preeclampsia</td></tr>
+      <tr><td><b>Craneofacial / cervical</b></td><td>Glaucoma agudo de ángulo cerrado, patología cervical, ATM, sinusal</td></tr>
+    </table></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚖️</span><span class="st">Diferencial de las 3 primarias principales</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Rasgo</th><th>Tensional</th><th>Migraña</th><th>Racimos</th></tr>
+      <tr><td><b>Localización</b></td><td>Bilateral, "en banda"</td><td>Unilateral (60%)</td><td>Unilateral periorbitaria/temporal (fija)</td></tr>
+      <tr><td><b>Duración</b></td><td>30 min – 7 días</td><td>4–72 h</td><td class="dn">15–180 min</td></tr>
+      <tr><td><b>Calidad</b></td><td>Opresiva/tensiva (no pulsátil)</td><td>Pulsátil</td><td class="dm">Terebrante, atroz, "el peor dolor"</td></tr>
+      <tr><td><b>Intensidad</b></td><td>Leve–moderada</td><td>Moderada–severa</td><td class="dm">Severísima</td></tr>
+      <tr><td><b>Frecuencia</b></td><td>Variable</td><td>Episódica</td><td>1–8/día en salvas</td></tr>
+      <tr><td><b>Asociados</b></td><td>Ninguno o leve; NO empeora con actividad</td><td>Náusea, foto/fonofobia, empeora con actividad, aura</td><td>Síntomas autonómicos ipsilaterales + inquietud/agitación</td></tr>
+      <tr><td><b>Conducta</b></td><td>Sigue actividad</td><td>Busca reposo/oscuridad</td><td class="dm">No puede estarse quieto (se mueve, se golpea)</td></tr>
+    </table></div>
+    <div class="alert a-i"><span class="ai">🔍</span><div><div class="at">Truco</div>La <b>inquietud/agitación</b> (paciente que camina o se golpea la cabeza) es casi patognomónica de racimos y contrasta con la migraña, donde el paciente busca quietud y oscuridad.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Perfil de la cefalea en racimos</span><span class="sg">▾</span></div>
+  <div class="sb"><div class="prose">
+    <p><b>Varón</b> (predominio ~3–4:1), 20–40 años, fumador. Dolor <b>periorbitario/temporal unilateral, estrictamente lateralizado, severísimo</b>, de <b>15–180 min</b> de duración, con <b>1–8 crisis al día</b> agrupadas en <b>salvas</b> (semanas–meses) separadas por remisiones. Marcada <b>periodicidad circadiana</b> (crisis nocturnas a la misma hora) y <b>estacional</b>.</p>
+    <p>Acompañado de <b>síntomas autonómicos ipsilaterales</b>: lagrimeo, inyección conjuntival, rinorrea/congestión nasal, sudoración/edema facial, y <b>ptosis/miosis</b> (Horner parcial). Rasgo distintivo: <b>inquietud o agitación psicomotriz</b> durante la crisis.</p>
+  </div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">TAC que imitan</div>La <b>hemicránea paroxística</b> (crisis más cortas, más frecuentes, <b>respuesta absoluta a indometacina</b>) y <b>SUNCT/SUNA</b> (segundos, muy frecuentes) entran en el diferencial. Un primer racimo o cambio atípico obliga a <b>RM con foco en hipófisis/seno cavernoso</b> para excluir lesión secundaria.</div></div>
+  </div></div>
+</div>
+
+<!-- ================= CLÍNICA Y DX ================= -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📝</span><span class="st">Anamnesis estructurada de la cefalea</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="step"><span class="step-n">1</span><span class="step-b"><b>Patrón temporal.</b> Súbita ("en trueno") vs progresiva subaguda vs recurrente episódica vs crónica diaria. Es el eje que más orienta.</span></div>
+    <div class="step"><span class="step-n">2</span><span class="step-b"><b>Perfil del dolor.</b> Localización, calidad (pulsátil, opresiva, terebrante), intensidad, duración de las crisis, frecuencia.</span></div>
+    <div class="step"><span class="step-n">3</span><span class="step-b"><b>Síntomas asociados.</b> Aura, náusea, foto/fonofobia, síntomas autonómicos, fiebre, déficit focal, alteración de conciencia, convulsión.</span></div>
+    <div class="step"><span class="step-n">4</span><span class="step-b"><b>Desencadenantes y moduladores.</b> Valsalva/tos, postura (decúbito vs bipedestación), esfuerzo, sexo, sueño, menstruación, fármacos.</span></div>
+    <div class="step"><span class="step-n">5</span><span class="step-b"><b>Banderas rojas (SNNOOP10)</b> y comorbilidad (cáncer, VIH/inmunosupresión, embarazo, anticoagulación, edad de inicio).</span></div>
+    <div class="step"><span class="step-n">6</span><span class="step-b"><b>Consumo de analgésicos</b>: número de días/mes con medicación aguda (para detectar sobreuso).</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Exploración física esencial</span><span class="sg">▾</span></div>
+  <div class="sb"><div class="prose">
+    <p><b>Signos vitales</b> (TA, temperatura), <b>fondo de ojo</b> (buscar <b>papiledema</b>), examen neurológico completo (focalidad, marcha, pares craneales), <b>signos meníngeos</b>, palpación de arteria temporal y puntos pericraneales, exploración ocular (glaucoma: ojo rojo doloroso, midriasis media, córnea turbia) y auscultación craneal/cervical (soplos).</p>
+  </div>
+    <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Papiledema = alarma</div>Su hallazgo implica <b>hipertensión intracraneal</b> hasta demostrar lo contrario: neuroimagen urgente (con venografía) y, si es normal, punción lumbar con medición de presión de apertura.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Estudios diagnósticos: cuándo y cuál</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Estudio</th><th>Indicación principal</th></tr>
+      <tr><td><b>TC sin contraste</b></td><td>Urgencia: thunderclap (HSA), trauma, sospecha de sangrado/masa con deterioro. Alta sensibilidad para HSA en las primeras 6 h.</td></tr>
+      <tr><td><b>Punción lumbar</b></td><td>Tras TC normal en thunderclap (xantocromía/eritrocitos por HSA); sospecha de meningitis/encefalitis; medición de presión en HIC idiopática.</td></tr>
+      <tr><td><b>RM (± angio/veno-RM)</b></td><td>Cefalea progresiva/atípica, déficit focal, sospecha de tumor, disección, trombosis venosa, patología de fosa posterior/hipófisis, TAC atípicas.</td></tr>
+      <tr><td><b>VSG / PCR</b></td><td>&gt;50 años con cefalea de novo → arteritis de células gigantes (no demorar esteroide).</td></tr>
+      <tr><td><b>Otros</b></td><td>Tonometría (glaucoma), carboxihemoglobina (CO), estudios sistémicos según sospecha.</td></tr>
+    </table></div>
+    <div class="alert a-g"><span class="ai">✅</span><div><div class="at">No sobreimagen en cefalea primaria típica</div>En cefalea recurrente con criterios claros de migraña/tensional, <b>sin banderas rojas y con exploración normal</b>, la neuroimagen sistemática NO está indicada (Choosing Wisely).</div></div>
+  </div></div>
+</div>
+
+<!-- ================= BANDERAS ROJAS / ESCALAS ================= -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Checklist SNNOOP10 (banderas rojas)</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="prose"><p>Marca cada bandera roja presente. La herramienta cuenta las banderas y sugiere la conducta (estudio urgente/neuroimagen). <b>Una sola bandera bien fundamentada basta para estudiar</b>: úsala como cribado, no como suma ponderada.</p></div>
+    <div class="calc-w"><div id="snnoop-box"></div></div>
+    <div class="tw"><table class="t">
+      <tr><th>Letra</th><th>Bandera</th><th>Sospecha / acción</th></tr>
+      <tr><td><b>S</b></td><td>Síntomas Sistémicos (fiebre, pérdida de peso)</td><td>Infección (meningitis), neoplasia, arteritis → estudio sistémico/PL</td></tr>
+      <tr><td><b>N</b></td><td>Neoplasia conocida</td><td>Metástasis → RM con contraste</td></tr>
+      <tr><td><b>N</b></td><td>déficit Neurológico (incl. alteración de conciencia)</td><td>Lesión estructural/vascular → neuroimagen urgente</td></tr>
+      <tr><td><b>O</b></td><td>inicio súbito (Onset, thunderclap)</td><td class="dm">HSA → TC + PL; SVCR, disección, trombosis venosa</td></tr>
+      <tr><td><b>O</b></td><td>edad de inicio (Onset) &gt;50 años</td><td class="dm">Arteritis de células gigantes → VSG/PCR + esteroide</td></tr>
+      <tr><td><b>P</b></td><td>cambio de Patrón / cefalea progresiva reciente</td><td>Masa, HSD, HIC → neuroimagen</td></tr>
+      <tr><td><b>P</b></td><td>Postural (empeora de pie o en decúbito)</td><td>Hipotensión de LCR / HIC → RM ± presión LCR</td></tr>
+      <tr><td><b>P</b></td><td>Precipitada por Valsalva (tos, esfuerzo)</td><td>Lesión de fosa posterior/Chiari → RM</td></tr>
+      <tr><td><b>P</b></td><td>Papiledema</td><td class="dm">HIC → neuroimagen + PL con presión de apertura</td></tr>
+      <tr><td><b>P</b></td><td>Progresión rápida / Postural (variantes)</td><td>Ver arriba</td></tr>
+      <tr><td><b>O</b></td><td>ojo doloroso con rasgos autonómicos / dolor Ocular</td><td>Glaucoma agudo, disección, patología orbitaria</td></tr>
+      <tr><td><b>P</b></td><td>Postraumática (inicio tras trauma)</td><td>HSD, HED, contusión → TC</td></tr>
+      <tr><td><b>10</b></td><td>Inmunodepresión/VIH · abuso de analgésicos · Embarazo/puerperio</td><td>Infección oportunista; cefalea por sobreuso; preeclampsia/trombosis venosa</td></tr>
+    </table></div>
+    <div class="alert a-i"><span class="ai">📌</span><div><div class="at">SNNOOP10</div><b>S</b>istémico · <b>N</b>eoplasia · <b>N</b>eurológico · <b>O</b>nset súbito · <b>O</b>nset &gt;50 · <b>P</b>atrón/progresiva · <b>P</b>apiledema · <b>P</b>ostural · <b>P</b>recipitada por Valsalva · <b>P</b>ostraumática · más los "10": Embarazo/puerperio, ojo doloroso, Inmunodepresión y abuso de analgésicos (Do et al., 2019).</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Del patrón temporal a la sospecha</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="tw"><table class="t">
+      <tr><th>Patrón</th><th>Piensa en</th></tr>
+      <tr><td>Súbita máxima (&lt;1 min)</td><td class="dm">HSA, SVCR, disección, trombosis venosa, apoplejía hipofisaria</td></tr>
+      <tr><td>Aguda con fiebre/rigidez</td><td class="dm">Meningitis/encefalitis</td></tr>
+      <tr><td>Subaguda progresiva</td><td>Masa, HSD, trombosis venosa, HIC, arteritis (&gt;50 a)</td></tr>
+      <tr><td>Crónica recurrente episódica</td><td>Migraña, tensional, racimos (primarias)</td></tr>
+      <tr><td>Crónica diaria de novo</td><td>NDPH, sobreuso de medicación, HIC idiopática</td></tr>
+    </table></div>
+  </div></div>
+</div>
+
+<!-- ================= TRATAMIENTO ================= -->
+<div class="panel" id="tab-tx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Principios de tratamiento</span><span class="sg">▾</span></div>
+  <div class="sb"><div class="prose">
+    <p>Tras <b>excluir causa secundaria</b>, el tratamiento se dirige al fenotipo primario. Distinguir siempre tratamiento <b>agudo/abortivo</b> del <b>preventivo</b>, y limitar los analgésicos agudos para no inducir cefalea por sobreuso. Las fichas siguientes se agrupan por categoría; la migraña se resume y remite a su documento dedicado.</p>
+  </div></div></div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ================= ESCENARIOS ================= -->
+<div class="panel" id="tab-escen"><div class="chipbar" id="escen-chips"></div><div id="escen-body"></div></div>
+
+<!-- ================= SEGUIMIENTO ================= -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Seguimiento y metas</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="kp"><span class="kn">1</span><span class="kt"><b>Diario/calendario de cefalea:</b> registrar frecuencia, intensidad, duración, desencadenantes y <b>días/mes con medicación aguda</b>. Es la mejor herramienta de seguimiento y de detección de sobreuso.</span></div>
+    <div class="kp"><span class="kn">2</span><span class="kt"><b>Metas:</b> reducir frecuencia e intensidad, restaurar la función y la calidad de vida, y <b>evitar la cronificación</b> por abuso de analgésicos.</span></div>
+    <div class="kp"><span class="kn">3</span><span class="kt"><b>Reevaluar banderas rojas</b> en cada visita: un cambio de patrón en una cefalea "primaria" conocida obliga a reconsiderar causa secundaria.</span></div>
+    <div class="kp"><span class="kn">4</span><span class="kt"><b>Adherencia y titulación</b> de preventivos: dar tiempo suficiente (6–8 semanas a dosis útil) antes de declarar fracaso; retirar de forma gradual.</span></div>
+    <div class="kp"><span class="kn">5</span><span class="kt"><b>Educación:</b> higiene de sueño, hidratación, manejo del estrés, cese de tabaco (racimos) y límite explícito de días de analgésico.</span></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar a Neurología</span><span class="sg">▾</span></div>
+  <div class="sb">
+    <div class="fp fp-r"><b>Urgente / mismo día:</b> cualquier bandera roja (thunderclap, papiledema, déficit focal, fiebre + rigidez, sospecha de arteritis).</div>
+    <div class="fp fp-a"><b>Preferente:</b> cefalea en racimos o TAC (confirmar y manejar preventivo/verapamilo con ECG), diagnóstico incierto, sospecha de HIC idiopática.</div>
+    <div class="fp fp-b"><b>Ordinaria:</b> cefalea primaria refractaria a 2–3 preventivos bien conducidos, cefalea por sobreuso que no cede con retiro, discapacidad significativa.</div>
+  </div></div>
+</div>
+
+<!-- ================= BIBLIOGRAFÍA ================= -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía</h2><p>Referencias 2019–2026 · guías y clasificaciones de referencia</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Clasificación y banderas rojas</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Headache Classification Committee of the IHS. <em>The International Classification of Headache Disorders, 3rd edition (ICHD-3)</em>. Cephalalgia. 2018;38(1):1-211 (actualización en línea vigente).</div><a class="biblio-link" href="https://ichd-3.org/">🔗 ichd-3.org</a></div>
+      <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-level lv-a">Consenso</span><div class="biblio-ref">Do TP, Remmers A, Schytz HW, et al. <em>Red and orange flags for secondary headaches in clinical practice: SNNOOP10 list</em>. Neurology. 2019;92(3):134-144.</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/30587518/">🔗 PubMed 30587518</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Cefaleas trigémino-autonómicas / racimos</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">May A, Evers S, Goadsby PJ, et al. <em>European Academy of Neurology guidelines on the treatment of cluster headache</em>. Eur J Neurol. 2023;30(10):2955-2979.</div><a class="biblio-link" href="https://onlinelibrary.wiley.com/doi/10.1111/ene.15956">🔗 Eur J Neurol 2023</a></div>
+      <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Robbins MS, Starling AJ, Pringsheim TM, et al. <em>Treatment of Cluster Headache: The American Headache Society Evidence-Based Guidelines</em>. Headache. 2016;56(7):1093-1106.</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/27432623/">🔗 PubMed 27432623</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Tensional, sobreuso y neuroimagen</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-level lv-b">Revisión</span><div class="biblio-ref">Jackson JL, Mancuso JM, Nickoloff S, et al. <em>Tricyclic and tetracyclic antidepressants for the prevention of frequent episodic or chronic tension-type headache: systematic review and meta-analysis</em>. J Gen Intern Med. 2017;32(12):1351-1358.</div><a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5698213/">🔗 PMC5698213</a></div>
+      <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Diener HC, Antonaci F, Braschinsky M, et al. <em>European Academy of Neurology guideline on the management of medication-overuse headache</em>. Eur J Neurol. 2020;27(7):1102-1116.</div><a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/32430926/">🔗 PubMed 32430926</a></div>
+      <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">VA/DoD. <em>Clinical Practice Guideline for the Management of Headache</em>. Ann Intern Med / VA-DoD. 2024.</div><a class="biblio-link" href="https://www.healthquality.va.gov/HEALTHQUALITY/guidelines/pain/headache/Headache-CPG-Annals-2024.pdf">🔗 VA/DoD 2024 (PDF)</a></div>
+      <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-level lv-b">Revisión</span><div class="biblio-ref">Ducros A, Bousser MG. <em>Thunderclap headache: an update</em>. Y revisión de políticas clínicas de cefalea aguda (ACEP, 2024) sobre TC y punción lumbar en HSA.</div><a class="biblio-link" href="https://www.abem.org/wp-content/uploads/2024/07/key-advances_-adult-patients-with-acute-headache_clinical-policy-alert.pdf">🔗 ACEP Clinical Policy 2024</a></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Guía</span> Guía/consenso</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Revisión</span> Revisión/meta-análisis</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Opinión de experto</div>
+  </div>
+  <div class="alert a-w" style="margin-top:12px;"><span class="ai">⚠️</span><div><div class="at">Aviso</div>Referencia de apoyo a la decisión clínica. No sustituye el juicio del profesional ni las fichas técnicas locales. Verificar dosis y presentaciones (marcas México) antes de prescribir.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function val(id){return document.getElementById(id).value;}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* ===== FICHAS DE FÁRMACOS ===== */
+var CATMETA={
+ 'CEFALEA TENSIONAL':{label:'CEFALEA TENSIONAL',sub:'Agudo: AINE/paracetamol (limitar) · Preventivo si crónica: amitriptilina',color:'#4f46e5'},
+ 'CEFALEA EN RACIMOS':{label:'CEFALEA EN RACIMOS',sub:'Agudo: oxígeno + triptán SC/nasal · Transición: esteroide/bloqueo · Preventivo: verapamilo',color:'#be123c'},
+ 'MIGRAÑA (resumen)':{label:'MIGRAÑA (resumen)',sub:'Ver resumen dedicado de migraña',color:'#db2777'},
+ 'CEFALEA POR ABUSO DE ANALGÉSICOS':{label:'ABUSO DE ANALGÉSICOS',sub:'Suspender el fármaco sobreusado · puente · iniciar preventivo · educar',color:'#b45309'},
+ 'SECUNDARIA — ESTUDIO URGENTE':{label:'SECUNDARIA · ESTUDIO URGENTE',sub:'Conducta ante bandera roja, no fármaco',color:'#7b1c1c'}
+};
+var FARM=[
+ /* ===== TENSIONAL ===== */
+ {cat:'CEFALEA TENSIONAL',n:'Ibuprofeno',color:'#4f46e5',tag:'⭐ Agudo de 1.ª línea',dosis:'400–600 mg VO por crisis',dosisSub:'Máx. limitar a <15 días/mes para evitar sobreuso',desc:'AINE de elección para la crisis tensional; naproxeno 500 mg es alternativa de acción más prolongada.',
+  rows:[['Vía','Oral'],['Frecuencia','Por crisis; repetir a las 6–8 h si precisa'],['Duración','Puntual; NO uso diario'],['Candidatos','Cefalea tensional episódica'],['Indicación','Dolor leve–moderado'],['Presentac. MX','Advil, Motrin, genéricos 400/600 mg'],['Contraindic.','Úlcera/hemorragia GI, ERC, embarazo 3.er trim.'],['E. adversos','Dispepsia, riesgo GI/renal, sobreuso']],
+  nota:'Los AINE son superiores al paracetamol en tensional. Vigilar el número de días de uso: ≥15 días/mes de analgésico simple durante >3 meses define cefalea por sobreuso.'},
+ {cat:'CEFALEA TENSIONAL',n:'Paracetamol (acetaminofén)',color:'#4f46e5',tag:'Agudo alternativo',dosis:'1 g VO por crisis',dosisSub:'Máx. 3–4 g/día; limitar días/mes',desc:'Alternativa cuando el AINE está contraindicado (p. ej., embarazo). Eficacia algo menor que los AINE.',
+  rows:[['Vía','Oral'],['Frecuencia','Por crisis'],['Duración','Puntual'],['Candidatos','Contraindicación de AINE, embarazo'],['Indicación','Dolor leve–moderado'],['Presentac. MX','Tylenol, Tempra, genéricos 500/1000 mg'],['Contraindic.','Hepatopatía grave'],['E. adversos','Hepatotoxicidad por sobredosis; sobreuso']],
+  nota:'ASA 500–1000 mg es otra opción. Todos los analgésicos simples deben limitarse a <15 días/mes.'},
+ {cat:'CEFALEA TENSIONAL',n:'Amitriptilina',color:'#4f46e5',tag:'⭐ Preventivo (crónica)',dosis:'10–75 mg VO por la noche',dosisSub:'Iniciar 10 mg, titular lento',desc:'Tricíclico de elección para la prevención de la cefalea tensional crónica; evidencia de meta-análisis. Titular según respuesta/tolerancia.',
+  rows:[['Vía','Oral (nocturna)'],['Frecuencia','1 vez/día'],['Duración','Preventivo ≥3–6 meses; reevaluar'],['Candidatos','Tensional crónica/frecuente'],['Indicación','Prevención'],['Presentac. MX','Anapsique, Tryptanol 10/25/50 mg'],['Contraindic.','IAM reciente, arritmia, glaucoma ángulo cerrado, retención urinaria'],['E. adversos','Sedación, boca seca, aumento de peso, estreñimiento']],
+  nota:'Empezar en dosis bajas y subir lento minimiza efectos anticolinérgicos. Mirtazapina o venlafaxina son alternativas. Combinar con terapia no farmacológica (ejercicio, manejo del estrés, fisioterapia).'},
+ /* ===== RACIMOS ===== */
+ {cat:'CEFALEA EN RACIMOS',n:'Oxígeno al 100%',color:'#be123c',tag:'⭐ AGUDO de 1.ª línea',dosis:'12–15 L/min con mascarilla no reinhalante, 15 min',dosisSub:'Paciente sentado, inclinado hacia adelante',desc:'Aborta la crisis en la mayoría en 15 min. Seguro, sin cefalea de rebote; primera elección en la crisis aguda.',
+  rows:[['Vía','Inhalada (mascarilla facial con reservorio)'],['Frecuencia','Al inicio de cada crisis'],['Duración','15–20 min por crisis'],['Candidatos','Crisis de racimos'],['Indicación','Aborto agudo'],['Presentac. MX','Oxígeno medicinal, concentrador/tanque'],['Contraindic.','EPOC grave retenedor (relativa; vigilar)'],['E. adversos','Escasos; sequedad de mucosas']],
+  nota:'Requiere flujo alto (12–15 L/min) y mascarilla con reservorio; los flujos bajos fallan. Combinar con triptán SC/nasal si no responde.'},
+ {cat:'CEFALEA EN RACIMOS',n:'Sumatriptán SC / nasal',color:'#be123c',tag:'⭐ AGUDO de 1.ª línea',dosis:'6 mg SC (o 20 mg intranasal)',dosisSub:'Máx. 2 dosis SC/día',desc:'Triptán de acción rápida; la vía subcutánea es la más eficaz para abortar la crisis de racimos. Zolmitriptán nasal 5–10 mg es alternativa.',
+  rows:[['Vía','Subcutánea (preferida) o intranasal'],['Frecuencia','Por crisis; máx. 2/día, separar ≥1 h'],['Duración','Puntual'],['Candidatos','Crisis de racimos'],['Indicación','Aborto agudo'],['Presentac. MX','Imigran/Sumax SC 6 mg, nasal'],['Contraindic.','Cardiopatía isquémica, HTA no controlada, ictus, embarazo'],['E. adversos','Opresión torácica, parestesias, rubor']],
+  nota:'La vía oral es demasiado lenta para racimos. Evitar en enfermedad cardiovascular. No usar con ergotamínicos.'},
+ {cat:'CEFALEA EN RACIMOS',n:'Prednisona (transicional)',color:'#be123c',tag:'Transición',dosis:'60–100 mg/día VO, pauta descendente 2–3 sem',dosisSub:'Puente hasta que actúe el verapamilo',desc:'Corticoide de transición para controlar rápidamente la salva mientras se titula el preventivo. Alternativa: bloqueo del nervio occipital mayor con esteroide/anestésico.',
+  rows:[['Vía','Oral'],['Frecuencia','1 vez/día, descenso progresivo'],['Duración','2–3 semanas (curso corto)'],['Candidatos','Inicio de salva, mientras titula verapamilo'],['Indicación','Terapia transicional'],['Presentac. MX','Prednisona genérica, Meticorten'],['Contraindic.','Infección activa, DM descompensada, úlcera'],['E. adversos','Hiperglucemia, insomnio, no uso prolongado']],
+  nota:'El bloqueo occipital (esteroide + anestésico) es una excelente alternativa transicional con evidencia sólida. No usar esteroides de forma crónica.'},
+ {cat:'CEFALEA EN RACIMOS',n:'Verapamilo',color:'#be123c',tag:'⭐ PREVENTIVO de 1.ª línea',dosis:'240–480 mg/día VO (hasta 960 en refractarios)',dosisSub:'Titular con ECG por bloqueo AV',desc:'Preventivo de elección de la cefalea en racimos. Titulación progresiva con vigilancia de ECG (riesgo de bloqueo AV y bradicardia).',
+  rows:[['Vía','Oral'],['Frecuencia','Repartido (o liberación prolongada)'],['Duración','Durante la salva + 2 sem tras remisión'],['Candidatos','Prevención en salva'],['Indicación','Preventivo'],['Presentac. MX','Dilacoran/Cronovera 80/120/180/240 mg'],['Contraindic.','Bloqueo AV, bradicardia, ICC, WPW'],['E. adversos','Estreñimiento, edema, bloqueo AV, bradicardia']],
+  nota:'ECG basal y con cada aumento de dosis (buscar prolongación PR/bloqueo). Galcanezumab (anti-CGRP) está aprobado para racimos episódicos; litio y topiramato son de 2.ª línea.'},
+ {cat:'CEFALEA EN RACIMOS',n:'Galcanezumab / Litio / Topiramato',color:'#be123c',tag:'Preventivo 2.ª línea',dosis:'Galcanezumab 300 mg SC mensual · Litio 600–900 mg/día · Topiramato 100 mg/día',dosisSub:'Según refractariedad y comorbilidad',desc:'Opciones cuando el verapamilo es insuficiente o mal tolerado. Galcanezumab con evidencia en racimos episódicos.',
+  rows:[['Vía','SC (galcanezumab) / oral (litio, topiramato)'],['Frecuencia','Mensual / diaria'],['Duración','Según respuesta'],['Candidatos','Racimos refractarios a verapamilo'],['Indicación','Preventivo 2.ª línea'],['Presentac. MX','Emgality (galcanezumab); Carbolit; Topamax'],['Contraindic.','Litio: ERC, embarazo; topiramato: litiasis, glaucoma, embarazo'],['E. adversos','Litio: temblor, tiroides, nefro; topiramato: parestesias, cognición']],
+  nota:'El litio requiere monitorización de niveles (ventana estrecha). En racimos crónicos refractarios valorar estimulación de nervio occipital/derivación a unidad de cefalea.'},
+ /* ===== MIGRAÑA (RESUMEN) ===== */
+ {cat:'MIGRAÑA (resumen)',n:'Migraña — remite al resumen dedicado',color:'#db2777',tag:'Ver documento aparte',dosis:'Agudo: AINE/triptanes · Preventivo: betabloqueante, topiramato, anti-CGRP',dosisSub:'Detalle completo en el resumen de MIGRAÑA',desc:'Aquí solo referencia. Agudo: AINE (naproxeno, ibuprofeno), triptanes (sumatriptán, rizatriptán), antieméticos; gepantes/ditanes en casos seleccionados. Preventivo: propranolol, amitriptilina, topiramato, candesartán y anticuerpos anti-CGRP.',
+  rows:[['Vía','Oral/SC/nasal según fármaco'],['Frecuencia','Agudo por crisis; preventivo diario/mensual'],['Duración','Ver resumen de migraña'],['Candidatos','Migraña episódica/crónica'],['Indicación','Agudo y preventivo'],['Presentac. MX','Ver resumen dedicado'],['Contraindic.','Triptanes: cardiopatía; topiramato/valproato: embarazo'],['E. adversos','Ver resumen dedicado']],
+  nota:'Este documento se centra en tensional, racimos, sobreuso y exclusión de secundarias. Para el abordaje completo de la migraña, consultar su resumen específico.'},
+ /* ===== ABUSO DE ANALGÉSICOS ===== */
+ {cat:'CEFALEA POR ABUSO DE ANALGÉSICOS',n:'Retiro + puente + preventivo',color:'#b45309',tag:'⭐ Estrategia integral',dosis:'Suspender el analgésico sobreusado; puente con AINE/esteroide; iniciar preventivo',dosisSub:'Educación y calendario de cefalea',desc:'Definición: cefalea ≥15 días/mes en paciente con cefalea preexistente, por sobreuso ≥3 meses (analgésicos simples ≥15 d/mes; triptanes/opioides/combinados/ergóticos ≥10 d/mes).',
+  rows:[['Vía','Según fármaco puente'],['Frecuencia','Retiro (brusco o gradual según fármaco)'],['Duración','Puente 1–2 semanas; preventivo prolongado'],['Candidatos','Cefalea cronificada por sobreuso'],['Indicación','Revertir la cronificación'],['Presentac. MX','Naproxeno/prednisona como puente'],['Contraindic.','Según fármaco elegido'],['E. adversos','Cefalea de rebote durante el retiro (transitoria)']],
+  nota:'Retiro abrupto para analgésicos simples/triptanes/ergóticos; considerar retiro gradual y apoyo para opioides/barbitúricos. El inicio precoz de un preventivo mejora las tasas de éxito. Clave: educación del paciente sobre el límite de días de analgésico.'},
+ /* ===== SECUNDARIA — ESTUDIO URGENTE ===== */
+ {cat:'SECUNDARIA — ESTUDIO URGENTE',n:'Conducta ante bandera roja',color:'#7b1c1c',tag:'⚠️ No es fármaco: es conducta',dosis:'Neuroimagen ± punción lumbar según sospecha',dosisSub:'VSG/PCR + esteroide si >50 a (arteritis)',desc:'Ante cualquier bandera roja SNNOOP10, priorizar el diagnóstico de la causa secundaria antes de tratar como primaria.',
+  rows:[['Vía','—'],['Frecuencia','Urgente'],['Duración','Hasta descartar/confirmar causa'],['Candidatos','Cefalea con bandera roja'],['Indicación','Thunderclap → TC + PL (HSA); fiebre+rigidez → PL (meningitis); papiledema → neuroimagen + PL; >50 a → VSG/PCR'],['Presentac. MX','TC, RM/angio-veno, LCR, laboratorio'],['Contraindic.','PL: efecto masa/HIC con riesgo de herniación → imagen antes'],['E. adversos','—']],
+  nota:'Arteritis de células gigantes: iniciar corticoide (prednisona 40–60 mg/día, o dosis altas IV si hay compromiso visual) SIN esperar a la biopsia. Meningitis bacteriana: antibiótico empírico + dexametasona sin demorar por la imagen. La sospecha clínica manda sobre el resultado normal aislado.'}
+];
+function renderFarm(){var el=document.getElementById('farm-body');if(!el)return;var h='';var prevCat=null;for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  if(d.cat&&d.cat!==prevCat){var _m=(typeof CATMETA!=='undefined'&&CATMETA[d.cat])?CATMETA[d.cat]:{};var _pc=_m.color||d.color||'var(--ac)';var _sub=_m.sub||'';h+='<div style="margin:18px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><span style="background:'+_pc+';color:#fff;font-size:12px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">'+(_m.label||d.cat)+'</span>'+(_sub?'<span style="font-size:12.5px;color:#6b7280;line-height:1.4;">'+_sub+'</span>':'')+'</div>';prevCat=d.cat;}
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">'+(d.dlbl||'Dosis')+'</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  el.innerHTML=h;}
+
+/* ===== MOTOR DE ESCALAS PUNTUADAS ===== */
+var SCREG={};var SCST={};
+SCREG['snnoop']={title:'Banderas rojas',max:11,
+ items:[
+  {t:'Síntomas Sistémicos (fiebre, pérdida de peso) o Neoplasia/Inmunodepresión',o:[['No',0],['Sí',1]]},
+  {t:'Déficit Neurológico o alteración de conciencia',o:[['No',0],['Sí',1]]},
+  {t:'Inicio súbito (thunderclap, máximo en <1 min)',o:[['No',0],['Sí',1]]},
+  {t:'Edad de inicio >50 años',o:[['No',0],['Sí',1]]},
+  {t:'Cambio de Patrón / cefalea progresiva reciente',o:[['No',0],['Sí',1]]},
+  {t:'Postural (empeora de pie o en decúbito)',o:[['No',0],['Sí',1]]},
+  {t:'Precipitada por Valsalva (tos, esfuerzo)',o:[['No',0],['Sí',1]]},
+  {t:'Papiledema',o:[['No',0],['Sí',1]]},
+  {t:'Postraumática (inicio tras trauma craneal)',o:[['No',0],['Sí',1]]},
+  {t:'Ojo doloroso/rojo con rasgos autonómicos',o:[['No',0],['Sí',1]]},
+  {t:'Embarazo o puerperio · abuso de analgésicos',o:[['No',0],['Sí',1]]}
+ ],
+ interpret:function(t){
+   if(t===0)return{band:'Sin banderas',cls:'res-ok',msg:'Ninguna bandera roja marcada. Si el cuadro cumple criterios de cefalea primaria (migraña/tensional/racimos) con exploración normal, la neuroimagen sistemática NO está indicada. Tratar el fenotipo primario.'};
+   if(t===1)return{band:'1 bandera roja',cls:'res-high',msg:'Al menos una bandera roja: NO tranquilizar. Basta una para estudiar. Solicita el estudio dirigido según la bandera (ver tabla): thunderclap → TC + PL; papiledema → neuroimagen + PL; >50 a → VSG/PCR + esteroide; fiebre/rigidez → PL.'};
+   return{band:t+' banderas rojas',cls:'res-high',msg:'Múltiples banderas rojas: alta probabilidad de cefalea secundaria. Estudio urgente (neuroimagen ± punción lumbar), laboratorio dirigido y valoración inmediata. No etiquetar como cefalea primaria.'};
+ },
+ note:'SNNOOP10 (Do et al., Neurology 2019). El conteo es orientativo: una sola bandera bien fundada obliga a estudiar; la conducta se define por CUÁL bandera está presente, no por la suma.'};
+function scInit(sid){var sc=SCREG[sid];var box=document.getElementById(sid+'-box');if(!box)return;var h='';for(var i=0;i<sc.items.length;i++){var it=sc.items[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+(i+1)+'. '+it.t+'</div><div id="'+sid+'-g'+i+'">';for(var j=0;j<it.o.length;j++){var p=it.o[j][1];h+='<button class="opt" onclick="scPick(\''+sid+'\','+i+','+p+',this)">'+it.o[j][0]+(p?' <b>('+(p>0?'+':'')+p+')</b>':'')+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="scReset(\''+sid+'\')">Reiniciar</button></div><div id="'+sid+'-res" class="calc-result"></div>';box.innerHTML=h;}
+function scPick(sid,i,pts,btn){SCST[sid]=SCST[sid]||{};SCST[sid][i]=pts;var g=btn.parentNode.querySelectorAll('.opt');for(var k=0;k<g.length;k++)g[k].classList.remove('on');btn.classList.add('on');scCalc(sid);}
+function scReset(sid){SCST[sid]={};var b=document.querySelectorAll('#'+sid+'-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById(sid+'-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function scCalc(sid){var sc=SCREG[sid],st=SCST[sid]||{},tot=0,n=0;for(var i=0;i<sc.items.length;i++){if(st[i]!=null){tot+=st[i];n++;}}var box=document.getElementById(sid+'-res');if(!box)return;if(n<sc.items.length){box.className='calc-result show res-mid';box.innerHTML='Responde las '+sc.items.length+' preguntas ('+n+'/'+sc.items.length+').';return;}var r=sc.interpret(tot);box.className='calc-result show '+r.cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">'+sc.title+' = '+tot+(sc.max?(' / '+sc.max):'')+' · '+r.band+'</div><div style="margin-top:6px;">'+r.msg+'</div>'+(sc.note?'<div class="calc-note">'+sc.note+'</div>':'');}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ 'Thunderclap':{p:'Cefalea de intensidad máxima instaurada en <1 minuto ("el peor dolor de mi vida").',k:'Sospecha nº1: hemorragia subaracnoidea. También SVCR, disección arterial, trombosis venosa cerebral, apoplejía hipofisaria, hipotensión de LCR.',x:'TC craneal sin contraste URGENTE (muy sensible en las primeras 6 h). Si TC normal y persiste sospecha → punción lumbar buscando xantocromía/eritrocitos que no se aclaran. Si ambas normales, considerar angio-TC/RM para SVCR/disección. Nunca tranquilizar solo con exploración normal.'},
+ 'Cefalea >50 años':{p:'Cefalea de novo o cambio de patrón en paciente mayor de 50 años.',k:'Arteritis de células gigantes: puede haber claudicación mandibular, hipersensibilidad del cuero cabelludo, arteria temporal indurada/dolorosa, polimialgia, síntomas visuales. Riesgo de ceguera irreversible.',x:'VSG y PCR urgentes. Ante sospecha, INICIAR corticoide sin esperar la biopsia (prednisona 40–60 mg/día; si hay pérdida visual, metilprednisolona IV en pulsos). Biopsia de arteria temporal / eco-Doppler para confirmar. También descartar masa/HSD con neuroimagen.'},
+ 'Embarazo/puerperio':{p:'Cefalea nueva o intensa en gestante o puérpera.',k:'Preeclampsia/eclampsia (HTA + proteinuria, >20 sem o posparto), trombosis venosa cerebral (estado protrombótico), hemorragia, hipertensión intracraneal, apoplejía hipofisaria (Sheehan).',x:'Medir TA y buscar proteinuria; si hay HTA/edema/alteraciones visuales → manejo de preeclampsia (sulfato de magnesio, antihipertensivos, valoración obstétrica). Neuroimagen con veno-RM ante focalidad o thunderclap para trombosis venosa. Fármacos: paracetamol de elección; evitar AINE en 3.er trimestre y ergóticos/triptanes con cautela.'},
+ 'Papiledema / HIC idiopática':{p:'Cefalea con papiledema, más frecuente en mujer joven con obesidad; puede haber oscurecimientos visuales transitorios, diplopía (VI par), acúfeno pulsátil.',k:'Hipertensión intracraneal idiopática (pseudotumor cerebri) es diagnóstico de exclusión; primero descartar masa y trombosis venosa.',x:'Neuroimagen con veno-RM (excluir trombosis/masa). Si normal → punción lumbar con presión de apertura elevada y LCR normal. Tratar: pérdida de peso, acetazolamida; riesgo de pérdida visual → seguimiento oftalmológico (campimetría), derivar. La PL está contraindicada si hay efecto masa sin imagen previa.'},
+ 'Postraumática':{p:'Cefalea que se inicia en relación temporal con un traumatismo craneal.',k:'Descartar hematoma subdural/epidural y contusión, especialmente en ancianos, anticoagulados o alcohólicos (puede ser tardío). La cefalea postraumática persistente (>3 meses) es un cuadro frecuente tras trauma leve.',x:'TC sin contraste ante trauma con banderas (Glasgow alterado, focalidad, vómitos, anticoagulación, edad avanzada, deterioro). Cefalea postraumática persistente: manejo sintomático según fenotipo (a menudo tipo tensional o migrañoso), rehabilitación y evitar sobreuso de analgésicos.'},
+ 'Abuso de medicación':{p:'Cefalea que se ha vuelto casi diaria en paciente que toma analgésicos con frecuencia.',k:'Cefalea por sobreuso: ≥15 días/mes de analgésicos simples, o ≥10 días/mes de triptanes/opioides/combinados/ergóticos, durante >3 meses, en paciente con cefalea previa.',x:'Suspender el fármaco sobreusado (retiro abrupto para simples/triptanes/ergóticos; gradual/apoyo para opioides-barbitúricos). Puente con AINE de vida media larga o esteroide. INICIAR preventivo de forma precoz. Educar sobre el límite de días de analgésico. Advertir de la cefalea de rebote transitoria.'},
+ 'Racimos vs migraña':{p:'Diferenciar dos cefaleas unilaterales que se confunden.',k:'Racimos: 15–180 min, varias/día en salvas, síntomas autonómicos marcados, paciente INQUIETO/agitado, predominio masculino, periodicidad circadiana. Migraña: 4–72 h, náusea/foto-fonofobia, aura, paciente QUIETO buscando oscuridad, predominio femenino.',x:'La duración corta, la agitación, los rasgos autonómicos y la periodicidad orientan a racimos. Racimos → oxígeno + sumatriptán SC + verapamilo preventivo. Migraña → ver resumen dedicado. Un primer episodio de racimos o TAC atípica exige RM para excluir lesión secundaria.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+function initAll(){renderFarm();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('snnoop');}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Control del dolor · Clínica Rápida</title>
+<style>
+/* ===== CAMBIAR SOLO --ac y --acd POR EL COLOR DE LA ESPECIALIDAD ===== */
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#b91c1c;--acd:#7f1d1d;--acl:#fef2f2;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.step{display:flex;gap:10px;margin-bottom:10px;}
+.step-n{background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.step-b{flex:1;font-size:12.5px;color:var(--gray-700);line-height:1.55;}.step-b b{color:var(--gray-900);}
+/* Calculadora / escalas */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+/* Chips */
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+/* Escenarios */
+.esc-hero{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+/* Bibliografía */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">💊</div>
+    <div>
+      <div class="hdr-eye">Algología · Medicina interna · Cuidados paliativos</div>
+      <div class="hdr-title">Control del dolor</div>
+      <div class="hdr-sub">Escalera analgésica de la OMS · dosis, contraindicaciones y adyuvantes · evidencia 2024–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> R52 · R52.1 dolor crónico intratable · R52.2 otro dolor crónico</div>
+    </div>
+  </div>
+  <div class="hdr-badges"><span class="badge">Escalera OMS 3 escalones</span><span class="badge">Ascensor analgésico</span><span class="badge">Opioides con cautela</span><span class="badge">Adyuvantes</span></div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">3 + adyuvantes</div><div class="qs-l">Escalones OMS</div></div>
+  <div class="qs"><div class="qs-v">VO preferente</div><div class="qs-l">Vía · horario fijo</div></div>
+  <div class="qs"><div class="qs-v">10–15%</div><div class="qs-l">Rescate irruptivo</div></div>
+  <div class="qs"><div class="qs-v">~20%</div><div class="qs-l">Dolor crónico adultos</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">⚙️ Fisiopatología</button>
+  <button class="tab" onclick="showT('etio',this)">🔢 Escalera OMS</button>
+  <button class="tab" onclick="showT('dx',this)">📏 Evaluación del dolor</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ===================== RESUMEN ===================== -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Principios del control del dolor</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">1</span><div class="kt"><b>Evaluar antes de tratar.</b> Caracterizar tipo (nociceptivo / neuropático / nociceplástico), intensidad (EVA/ENA 0–10), temporalidad (agudo vs crónico), impacto funcional y componente emocional. "No hay analgesia racional sin diagnóstico del dolor".</div></div>
+      <div class="kp"><span class="kn">2</span><div class="kt"><b>Tratar por escalones… o usar el "ascensor".</b> La escalera OMS asciende de no opioides → opioides débiles → opioides fuertes. En dolor <b>intenso</b> (EVA ≥7) o crónico oncológico está justificado saltar directo al escalón 3 (concepto de <b>ascensor analgésico</b>).</div></div>
+      <div class="kp"><span class="kn">3</span><div class="kt"><b>Vía oral preferente.</b> Sencilla, económica y eficaz. Reservar la parenteral/transdérmica para intolerancia digestiva, disfagia, crisis o últimos días.</div></div>
+      <div class="kp"><span class="kn">4</span><div class="kt"><b>Horario fijo + rescates.</b> Pautar "reloj en mano" (a horas fijas), NO a demanda. Prever <b>dosis de rescate</b> para el dolor irruptivo (10–15% de la dosis diaria total de opioide).</div></div>
+      <div class="kp"><span class="kn">5</span><div class="kt"><b>Prevenir efectos adversos.</b> Con todo opioide: laxante profiláctico SIEMPRE, antiemético las primeras semanas, vigilar sedación/depresión respiratoria.</div></div>
+      <div class="kp"><span class="kn">6</span><div class="kt"><b>Reevaluar y titular.</b> Ajustar según respuesta y toxicidad; considerar rotación de opioide y adyuvantes. "Individualizar la dosis": la correcta es la que controla el dolor con efectos tolerables.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose">
+        <p>El <b>dolor crónico</b> afecta a cerca del <b>20% de los adultos</b> a nivel mundial (rango 11–40% según definición y población); es la principal causa de discapacidad y de años vividos con discapacidad.</p>
+        <p>En el paciente <b>oncológico</b>, la prevalencia de dolor es de <b>~40% al diagnóstico</b>, <b>~55% durante el tratamiento</b> y <b>>66% en enfermedad avanzada/terminal</b>. Hasta un tercio de los pacientes con cáncer refiere <b>infratratamiento</b> del dolor.</p>
+        <p>El <b>dolor neuropático</b> tiene una prevalencia poblacional del <b>7–10%</b>. El <b>dolor irruptivo</b> aparece en el <b>40–80%</b> de los pacientes con dolor oncológico controlado de base.</p>
+      </div>
+      <div class="alert a-i"><span class="ai">ℹ️</span><div><div class="at">Marco general</div>La escalera OMS (1986, validaciones y actualizaciones posteriores) sigue siendo el marco de referencia; las guías modernas la complementan con evaluación multidimensional, adyuvantes desde el inicio, técnicas intervencionistas (4.º escalón) y uso cauto de opioides en dolor crónico NO oncológico.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FISIOPATOLOGÍA ===================== -->
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Tipos de dolor según mecanismo</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="diag"><b>NOCICEPTIVO</b> — activación de nociceptores por daño tisular real o inminente, con vía nerviosa intacta. Responde bien a AINE/paracetamol y opioides.<br>
+      • <b>Somático:</b> bien localizado, "punzante/opresivo" (hueso, músculo, piel; p.ej. metástasis óseas, herida quirúrgica).<br>
+      • <b>Visceral:</b> mal localizado, "sordo/cólico", referido, con cortejo vegetativo (obstrucción, distensión de vísceras).</div>
+      <div class="diag"><b>NEUROPÁTICO</b> — lesión o enfermedad del sistema somatosensorial. "Quemante, eléctrico, hormigueo", con alodinia/hiperalgesia. Responde parcialmente a opioides; requiere <b>adyuvantes</b> (antidepresivos, anticonvulsivantes).<br>
+      • <b>Periférico:</b> neuropatía diabética, neuralgia postherpética, del trigémino, atrapamientos, quimioterapia.<br>
+      • <b>Central:</b> dolor post-ictus, lesión medular, esclerosis múltiple.</div>
+      <div class="diag"><b>NOCICEPLÁSTICO</b> — alteración del procesamiento nociceptivo <b>sin</b> daño tisular ni lesión nerviosa demostrable; sensibilización central predominante. Ejemplos: <b>fibromialgia</b>, síndrome de intestino irritable, cefalea tensional. Responde mal a opioides; base en duloxetina/pregabalina, ejercicio y abordaje biopsicosocial.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Agudo vs. crónico · sensibilización</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-b"><b>Dolor agudo:</b> <3 meses, función protectora/adaptativa, proporcional al daño. Meta: analgesia rápida y suficiente para permitir función y prevenir cronificación.</div>
+      <div class="fp fp-r"><b>Dolor crónico:</b> ≥3 meses o más allá de la curación esperada. Pierde su función protectora y se convierte en enfermedad en sí misma, con impacto físico, emocional y social. Meta: función y calidad de vida, no necesariamente "cero dolor".</div>
+      <div class="fp fp-a"><b>Sensibilización periférica:</b> nociceptores más excitables por mediadores inflamatorios (prostaglandinas, bradicinina, sustancia P) → hiperalgesia primaria. Diana de los <b>AINE</b>.</div>
+      <div class="fp fp-p"><b>Sensibilización central:</b> hiperexcitabilidad de neuronas del asta dorsal (fenómeno de "wind-up", NMDA), amplificación y persistencia del dolor → alodinia e hiperalgesia secundaria. Diana de <b>gabapentinoides, antidepresivos y ketamina/metadona</b>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ESCALERA OMS ===================== -->
+<div class="panel" id="tab-etio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🪜</span><span class="st">Los 3 escalones de la OMS</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="step"><span class="step-n">1</span><div class="step-b"><b>Dolor leve (EVA 1–3) — No opioides.</b> Paracetamol y/o AINE ± adyuvante. Es la base analgésica y con frecuencia se mantiene en escalones superiores.</div></div>
+      <div class="step"><span class="step-n">2</span><div class="step-b"><b>Dolor leve-moderado (EVA 4–6) — Opioides débiles.</b> Tramadol o codeína (a menudo combinados con paracetamol) + no opioide del escalón 1 ± adyuvante.</div></div>
+      <div class="step"><span class="step-n">3</span><div class="step-b"><b>Dolor moderado-intenso (EVA 7–10) — Opioides fuertes.</b> Morfina (referencia), oxicodona, hidromorfona, fentanilo, buprenorfina, tapentadol, metadona ± no opioide ± adyuvante. <b>Sin techo terapéutico</b> (salvo toxicidad).</div></div>
+      <div class="alert a-g"><span class="ai">➕</span><div><div class="at">Adyuvantes en CUALQUIER escalón</div>Antidepresivos, anticonvulsivantes, corticoides, bifosfonatos, anestésicos locales, etc. Pueden añadirse en los tres escalones según el mecanismo del dolor; en dolor neuropático son de <b>primera línea</b>, no un complemento opcional.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛗</span><span class="st">Ascensor analgésico y dolor irruptivo</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-r"><b>Ascensor analgésico:</b> no es obligatorio subir peldaño a peldaño. Ante dolor <b>intenso de inicio</b> (EVA ≥7) o dolor oncológico grave, se puede iniciar directamente en el <b>escalón 3</b>. La intensidad y el tipo de dolor —no un orden rígido— guían el punto de partida.</div>
+      <div class="fp fp-p"><b>Dolor irruptivo:</b> exacerbación transitoria del dolor sobre una base bien controlada. <b>Rescate = 10–15% de la dosis diaria total</b> de opioide, con el mismo opioide de acción rápida (o fentanilo transmucoso de inicio rápido en irruptivo oncológico). Si se requieren ≥3–4 rescates/día → subir la dosis basal.</div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">No mezclar dos opioides débiles ni débil + fuerte a dosis plenas</div>No combinar tramadol + codeína, ni subir de escalón sin optimizar el previo (salvo ascensor). Al pasar de escalón 2 a 3, retirar el opioide débil.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Tabla resumen de escalones</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Escalón</th><th>Intensidad (EVA)</th><th>Fármacos base</th><th>± Adyuvante</th></tr>
+        <tr><td><b>1 · No opioides</b></td><td>Leve 1–3</td><td>Paracetamol, AINE, metamizol</td><td>Sí</td></tr>
+        <tr><td><b>2 · Opioides débiles</b></td><td>Leve-mod 4–6</td><td>Tramadol, codeína (± paracetamol)</td><td>Sí</td></tr>
+        <tr><td><b>3 · Opioides fuertes</b></td><td>Mod-intenso 7–10</td><td>Morfina, oxicodona, hidromorfona, fentanilo, buprenorfina, metadona, tapentadol</td><td>Sí</td></tr>
+        <tr><td><b>(4) · Intervencionista</b></td><td>Refractario</td><td>Bloqueos, vía espinal, neuromodulación</td><td>Sí</td></tr>
+      </table></div>
+      <div class="calc-note">El escalón 1 (no opioide) suele mantenerse combinado en los escalones 2 y 3 por su efecto ahorrador de opioide.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EVALUACIÓN DEL DOLOR ===================== -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📏</span><span class="st">Cómo evaluar el dolor</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose"><p>Evaluación estructurada (regla mnemotécnica <b>ALICIA / OPQRST</b>): <b>A</b>parición, <b>L</b>ocalización e irradiación, <b>I</b>ntensidad (0–10), <b>C</b>arácter (quemante/cólico/punzante → orienta al mecanismo), <b>I</b>rradiación, factores que lo <b>A</b>livian/agravan; más impacto funcional, sueño y esfera emocional. Reevaluar tras cada intervención.</p></div>
+      <div class="alert a-i"><span class="ai">🔎</span><div><div class="at">La intensidad guía el escalón</div>EVA/ENA <b>1–3 leve</b> → escalón 1; <b>4–6 moderado</b> → escalón 2; <b>7–10 grave</b> → escalón 3. En dolor neuropático, aplicar <b>DN4</b> (≥4/10 = componente neuropático probable) e iniciar adyuvantes.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Escala visual/numérica (EVA/ENA)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Puntuación (0–10)</th><th>Banda</th><th>Conducta</th></tr>
+        <tr><td>0</td><td>Sin dolor</td><td>Vigilar</td></tr>
+        <tr><td class="dn">1–3</td><td>Leve</td><td>Escalón 1 (no opioides)</td></tr>
+        <tr><td class="dn">4–6</td><td>Moderado</td><td>Escalón 2 (opioide débil)</td></tr>
+        <tr><td class="dm">7–10</td><td>Grave</td><td>Escalón 3 (opioide fuerte / ascensor)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗣️</span><span class="st">Escala verbal simple</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Categoría verbal</th><th>Equivale a EVA</th></tr>
+        <tr><td>Sin dolor</td><td>0</td></tr>
+        <tr><td>Leve</td><td>1–3</td></tr>
+        <tr><td>Moderado</td><td>4–6</td></tr>
+        <tr><td>Intenso</td><td>7–9</td></tr>
+        <tr><td>Insoportable</td><td>10</td></tr>
+      </table></div>
+      <div class="calc-note">En pacientes con deterioro cognitivo o no comunicativos usar escalas observacionales (PAINAD, ESCID, FLACC).</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚡</span><span class="st">DN4 — cribado de dolor neuropático</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose"><p>Cuestionario <b>DN4</b>: 7 ítems de entrevista + 3 de exploración; 1 punto por respuesta positiva. <b>≥4/10 = dolor neuropático probable</b> (sensibilidad ~83%, especificidad ~90%).</p></div>
+      <div class="tw"><table class="t">
+        <tr><th>Bloque</th><th>Ítems</th></tr>
+        <tr><td>Entrevista (síntomas)</td><td>Quemazón · frío doloroso · descargas eléctricas · hormigueo · pinchazos · entumecimiento · picazón</td></tr>
+        <tr><td>Exploración</td><td>Hipoestesia al tacto · hipoestesia al pinchazo · dolor provocado por cepillado (alodinia)</td></tr>
+      </table></div>
+      <div class="calc-note">Usa la calculadora interactiva del DN4 en la pestaña "📊 Escalas".</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ESCALAS (SCREG) ===================== -->
+<div class="panel" id="tab-esc">
+  <div class="calc-w">
+    <div class="calc-lbl" style="font-size:13px;">📊 Intensidad del dolor (ENA 0–10)</div>
+    <div id="ena-box"></div>
+  </div>
+  <div class="calc-w">
+    <div class="calc-lbl" style="font-size:13px;">⚡ DN4 — cribado de dolor neuropático</div>
+    <div id="dn4-box"></div>
+  </div>
+</div>
+
+<!-- ===================== TRATAMIENTO (FARM) ===================== -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-w" style="margin-bottom:12px;"><span class="ai">⚠️</span><div><div class="at">Uso profesional</div>Dosis para adultos, referencia rápida. Ajustar por edad, peso, función renal/hepática y comorbilidad. Las presentaciones y marcas corresponden a México y pueden variar.</div></div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ===================== ESCENARIOS ===================== -->
+<div class="panel" id="tab-escen"><div class="chipbar" id="escen-chips"></div><div id="escen-body"></div></div>
+
+<!-- ===================== SEGUIMIENTO ===================== -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas y reevaluación</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><span class="kn">1</span><div class="kt"><b>Meta realista:</b> reducir la EVA ≥30–50%, recuperar sueño y función, no exigir "cero dolor" en dolor crónico. Definir objetivos funcionales concretos (caminar, dormir, trabajar).</div></div>
+      <div class="kp"><span class="kn">2</span><div class="kt"><b>Reevaluar periódicamente:</b> a las 24–72 h al iniciar/titular opioide; luego según estabilidad. Registrar intensidad, alivio, EA y consumo de rescates.</div></div>
+      <div class="kp"><span class="kn">3</span><div class="kt"><b>Profilaxis fija de EA:</b> laxante con todo opioide, antiemético inicial; revisar sedación y estreñimiento en cada visita.</div></div>
+    </div>
+  </div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Signos de mal uso de opioides</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-r"><b>Alertas (aberrant behaviors):</b> pérdida repetida de recetas, escalada no pautada, solicitud precoz de reposición, uso por vías no prescritas, consumo de sustancias, resistencia a alternativas. Considerar herramientas de riesgo (ORT, SOAPP) antes de iniciar opioides en dolor crónico NO oncológico.</div>
+      <div class="fp fp-a"><b>Prescripción segura:</b> dosis efectiva mínima; precaución al superar <b>50 MME/día</b> y evitar/justificar por encima de <b>90 MME/día</b>; evitar combinación con benzodiacepinas; ofrecer naloxona domiciliaria en pacientes de riesgo.</div>
+    </div>
+  </div>
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar a clínica del dolor</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-i"><span class="ai">🏥</span><div><div class="at">Criterios de derivación</div>Dolor refractario pese a optimización de escalones y adyuvantes; dolor neuropático de difícil control; necesidad de técnicas intervencionistas (bloqueos, vía espinal, radiofrecuencia, neuroestimulación); rotación compleja de opioides o dosis altas; sospecha de trastorno por uso de opioides; dolor oncológico complejo o urgencia paliativa.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== BIBLIOGRAFÍA ===================== -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía y evidencia</h2><p>Guías y revisiones 2022–2026 · escalera OMS, dolor neuropático y oncológico, opioides</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Guías y documentos clave</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-year">2019/2024</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">OMS. <em>WHO guidelines for the pharmacological and radiotherapeutic management of cancer pain in adults and adolescents</em>. Principios: por reloj, por escalera, por la vía adecuada, individualizado.<a class="biblio-link" href="https://www.who.int/publications/i/item/9789241550390">who.int/publications/9789241550390</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Review</span><div class="biblio-ref">Anekar AA, Hendrix JM, Cascella M. <em>WHO Analgesic Ladder</em>. StatPearls. Revisión actualizada del marco de 3 escalones y su evolución.<a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK554435/">ncbi.nlm.nih.gov/books/NBK554435</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">NICE NG193. <em>Chronic pain (primary and secondary) in over 16s: assessment and management</em>. Uso restrictivo de opioides en dolor crónico primario.<a class="biblio-link" href="https://www.nice.org.uk/guidance/ng193">nice.org.uk/guidance/ng193</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Dowell D, et al. <em>CDC Clinical Practice Guideline for Prescribing Opioids for Pain — United States, 2022</em>. MMWR Recomm Rep.<a class="biblio-link" href="https://www.cdc.gov/mmwr/volumes/71/rr/rr7103a1.htm">cdc.gov/mmwr/rr7103a1</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">ESMO. <em>Cancer pain management: ESMO Clinical Practice Guideline</em> (Fallon M, et al., actualización). Ann Oncol.<a class="biblio-link" href="https://www.esmo.org/guidelines/guidelines-by-topic/supportive-and-palliative-care/cancer-pain-management">esmo.org/guidelines/cancer-pain-management</a></div></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Dolor neuropático y adyuvantes</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-year">2015/2024</span><span class="biblio-level lv-a">Meta-análisis</span><div class="biblio-ref">Finnerup NB, et al. <em>Pharmacotherapy for neuropathic pain in adults</em> (NeuPSIG/IASP). Primera línea: gabapentinoides, ISRSN (duloxetina), tricíclicos.<a class="biblio-link" href="https://www.thelancet.com/journals/laneur/article/PIIS1474-4422(14)70251-0/fulltext">Lancet Neurology — NeuPSIG</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Review</span><div class="biblio-ref">NICE CKS. <em>Neuropathic pain — pharmacological management</em>. Amitriptilina, duloxetina, gabapentina o pregabalina como opciones de primera línea.<a class="biblio-link" href="https://cks.nice.org.uk/topics/neuropathic-pain-drug-treatment/">cks.nice.org.uk/neuropathic-pain</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Review</span><div class="biblio-ref">Rosenberger DC, et al. <em>Challenges of neuropathic pain: evidence-based recommendations</em>. Rev Neurol (Paris) / actualización de manejo escalonado.<a class="biblio-link" href="https://www.sciencedirect.com/science/article/pii/S0755498224000101">sciencedirect — neuropathic pain 2024</a></div></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Opioides · equianalgesia · seguridad</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">9</span><span class="biblio-year">2026</span><span class="biblio-level lv-b">Referencia</span><div class="biblio-ref">Palliative Care Network of Wisconsin. <em>Fast Fact #36: Calculating Opioid Dose Conversions</em>. Tabla equianalgésica y reducción por tolerancia cruzada.<a class="biblio-link" href="https://www.mypcnow.org/fast-fact/calculating-opioid-dose-conversions/">mypcnow.org/fast-fact-36</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">10</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Referencia</span><div class="biblio-ref">Theriot J, Sabir S, Azadfard M. <em>Opioid Antagonists (Naloxone)</em>. StatPearls. Titulación 0.04–0.4 mg IV en depresión respiratoria; repetir por vida media corta.<a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK441910/">ncbi.nlm.nih.gov/books/NBK441910</a></div></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Guía</span> Guía/meta-análisis</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Review</span> Revisión/referencia</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Consenso de experto</div>
+  </div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function val(id){return document.getElementById(id).value;}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* ===== FICHAS DE FÁRMACOS =====
+   FARM = [{n, color, tag, dosis, dosisSub, desc, rows:[[label,val]...], nota}]
+   tag con "⭐ " al inicio marca de elección. color = hex por fármaco/familia. */
+/* CATMETA: por cada categoría (cat) su chip: {label, sub, color}. */
+var CATMETA={
+  'E1':{label:'ESCALÓN 1 · No opioides',sub:'Dolor leve (EVA 1–3) · base analgésica y ahorrador de opioide',color:'#b91c1c'},
+  'E2':{label:'ESCALÓN 2 · Opioides débiles',sub:'Dolor leve-moderado (EVA 4–6) · ± no opioide ± adyuvante',color:'#b45309'},
+  'E3':{label:'ESCALÓN 3 · Opioides fuertes',sub:'Dolor moderado-intenso (EVA 7–10) · sin techo salvo toxicidad',color:'#7f1d1d'},
+  'ADY':{label:'ADYUVANTES',sub:'Coanalgésicos en cualquier escalón · 1ª línea en dolor neuropático',color:'#0a5c45'},
+  'EA':{label:'MANEJO DE EFECTOS ADVERSOS / SEGURIDAD',sub:'Profilaxis, rotación, naloxona y deprescripción',color:'#0c3b6e'}
+};
+var FARM=[
+/* ---------- ESCALÓN 1 ---------- */
+{cat:'E1',n:'Paracetamol (acetaminofén)',color:'#b91c1c',tag:'⭐ Elección · analgésico-antipirético',dosis:'500–1000 mg c/6–8 h',dosisSub:'Máx 3–4 g/día (3 g si hepatopatía/anciano/alcohol)',desc:'Analgésico de base, buen perfil de seguridad GI y renal; sin efecto antiinflamatorio relevante.',
+ rows:[['Vía','VO / IV (perfusión 15 min)'],['Frecuencia','c/6–8 h, horario fijo'],['Duración','Sin límite si función hepática normal'],['Candidatos','Dolor leve; combinable en escalones 2–3'],['Indicación','Dolor nociceptivo leve, fiebre, coadyuvante'],['Presentac. MX','Tempra®, Tylenol® — tab 500/750 mg, sol IV 1 g'],['Contraindic.','Hepatopatía grave, hipersensibilidad; cautela alcoholismo'],['E. adversos','Hepatotoxicidad por sobredosis (>4 g/d); raros a dosis terapéuticas']],
+ nota:'Techo terapéutico: no aumentar más allá del máximo. En intoxicación → N-acetilcisteína. Vigilar dosis oculta en combinaciones.'},
+{cat:'E1',n:'Ibuprofeno (AINE)',color:'#b91c1c',tag:'AINE no selectivo',dosis:'400–600 mg c/6–8 h',dosisSub:'Máx 2400 mg/día; usar la dosis mínima eficaz',desc:'AINE de referencia; efecto analgésico y antiinflamatorio. Ideal en dolor somático/inflamatorio.',
+ rows:[['Vía','VO (con alimentos)'],['Frecuencia','c/6–8 h'],['Duración','El menor tiempo posible'],['Candidatos','Dolor músculo-esquelético, óseo, dismenorrea'],['Indicación','Dolor nociceptivo inflamatorio'],['Presentac. MX','Advil®, Motrin® — tab 400/600/800 mg, susp'],['Contraindic.','Úlcera péptica activa, ERC, IC, sangrado, 3.er trimestre embarazo'],['E. adversos','Gastrolesión, HTA, retención hídrica, nefrotoxicidad, riesgo CV']],
+ nota:'Efecto techo. Añadir IBP si riesgo GI. Evitar en ERC, deshidratación y ancianos frágiles. Precaución con anticoagulantes.'},
+{cat:'E1',n:'Naproxeno (AINE)',color:'#b91c1c',tag:'AINE · vida media larga',dosis:'250–500 mg c/12 h',dosisSub:'Máx 1000–1250 mg/día',desc:'AINE con menor riesgo cardiovascular relativo dentro del grupo; cómodo por posología c/12 h.',
+ rows:[['Vía','VO'],['Frecuencia','c/12 h'],['Duración','Menor tiempo posible'],['Candidatos','Dolor inflamatorio crónico, artropatías'],['Indicación','Nociceptivo inflamatorio, gota'],['Presentac. MX','Flanax®, Naxen® — tab 250/500 mg'],['Contraindic.','Igual que ibuprofeno: úlcera, ERC, IC, sangrado'],['E. adversos','Gastrolesión, renal, HTA; menor riesgo CV comparativo']],
+ nota:'Preferido cuando preocupa el riesgo CV. Mismas precauciones GI/renales que todos los AINE.'},
+{cat:'E1',n:'Diclofenaco (AINE)',color:'#b91c1c',tag:'AINE potente',dosis:'50 mg c/8 h VO · 75 mg IM',dosisSub:'Máx 150 mg/día',desc:'AINE potente analgésico-antiinflamatorio; mayor riesgo cardiovascular relativo del grupo.',
+ rows:[['Vía','VO / IM / tópico'],['Frecuencia','c/8–12 h'],['Duración','Corta'],['Candidatos','Dolor agudo músculo-esquelético, cólico renal'],['Indicación','Nociceptivo inflamatorio moderado'],['Presentac. MX','Voltaren® — tab 50/100 mg, amp 75 mg, gel'],['Contraindic.','ECV establecida, úlcera, ERC, IC'],['E. adversos','GI, HTA, riesgo trombótico CV (el mayor entre AINE)']],
+ nota:'Evitar en cardiopatía isquémica y arteriopatía. Preferir la vía tópica en dolor localizado por menor exposición sistémica.'},
+{cat:'E1',n:'Ketorolaco (AINE)',color:'#b91c1c',tag:'AINE parenteral · uso corto',dosis:'10–30 mg c/6–8 h',dosisSub:'Máx 90 mg/día (60 mg en ancianos) · ≤5 días',desc:'AINE de potencia analgésica alta, útil en dolor agudo/posoperatorio. Uso muy limitado en el tiempo.',
+ rows:[['Vía','IV / IM / VO'],['Frecuencia','c/6–8 h'],['Duración','≤5 días (alto riesgo GI/renal)'],['Candidatos','Dolor agudo intenso, posoperatorio, cólico'],['Indicación','Nociceptivo agudo de corta duración'],['Presentac. MX','Dolac®, Supradol® — amp 30 mg, tab 10 mg SL'],['Contraindic.','Úlcera, ERC, riesgo CV, anticoagulación, sangrado, cirugía con riesgo hemorrágico'],['E. adversos','Hemorragia GI, nefrotoxicidad, inhibición plaquetaria']],
+ nota:'No exceder 5 días. Uno de los AINE con mayor tasa de complicaciones GI/renales: reservar para agudo y hidratar.'},
+{cat:'E1',n:'Metamizol (dipirona)',color:'#b91c1c',tag:'Analgésico-espasmolítico',dosis:'500 mg–1 g c/6–8 h',dosisSub:'Máx 3–4 g/día',desc:'Potente analgésico y antipirético con acción espasmolítica; escasa gastrolesión. Útil en dolor visceral/cólico.',
+ rows:[['Vía','VO / IV lenta / IM'],['Frecuencia','c/6–8 h'],['Duración','Corta-media'],['Candidatos','Dolor visceral, cólico, posoperatorio, fiebre'],['Indicación','Nociceptivo visceral/espasmódico'],['Presentac. MX','Neo-Melubrina® — tab 500 mg, amp 1 g'],['Contraindic.','Antecedente de agranulocitosis, discrasias, alergia a pirazolonas, embarazo 3.er trim'],['E. adversos','Agranulocitosis (rara pero grave), hipotensión con IV rápida, reacciones alérgicas']],
+ nota:'Vigilar signos de agranulocitosis (fiebre, odinofagia, aftas) → suspender y hemograma. Administrar IV muy lento (riesgo de hipotensión).'},
+/* ---------- ESCALÓN 2 ---------- */
+{cat:'E2',n:'Tramadol',color:'#b45309',tag:'⭐ Opioide débil · doble mecanismo',dosis:'50–100 mg c/6–8 h',dosisSub:'Máx 400 mg/día (300 mg en >75 años)',desc:'Agonista opioide µ débil + inhibidor de recaptación de serotonina/noradrenalina. Útil también en componente neuropático.',
+ rows:[['Vía','VO / IV / SC · LI y LP'],['Frecuencia','c/6–8 h (LP c/12 h)'],['Duración','Según control'],['Candidatos','Dolor moderado; con componente neuropático'],['Indicación','Nociceptivo/mixto moderado'],['Presentac. MX','Tradol®, Nobligan® — cáps 50 mg, gotas, amp 100 mg, LP 100/150/200 mg'],['Contraindic.','Epilepsia mal controlada, uso de IMAO, intoxicación por depresores'],['E. adversos','Náusea/vómito, mareo, estreñimiento, convulsiones, síndrome serotoninérgico']],
+ nota:'Riesgo serotoninérgico con ISRS/ISRSN/IMAO/triptanes. Baja el umbral convulsivo. Ajustar en ERC/hepatopatía y anciano. Iniciar bajo y titular.'},
+{cat:'E2',n:'Codeína',color:'#b45309',tag:'Opioide débil · profármaco',dosis:'30–60 mg c/4–6 h',dosisSub:'Máx 240 mg/día',desc:'Profármaco convertido a morfina por CYP2D6; eficacia analgésica y antitusígena variable según genotipo.',
+ rows:[['Vía','VO'],['Frecuencia','c/4–6 h'],['Duración','Según control'],['Candidatos','Dolor moderado, tos'],['Indicación','Nociceptivo moderado'],['Presentac. MX','Frecuente combinada con paracetamol (Tylex®, tab 30/500 mg)'],['Contraindic.','Metabolizadores ultrarrápidos CYP2D6, lactancia, <12 años, EPOC grave'],['E. adversos','Estreñimiento marcado, náusea, sedación, depresión respiratoria']],
+ nota:'Variabilidad CYP2D6: los ultrarrápidos generan morfina en exceso (riesgo de toxicidad); los pobres metabolizadores no obtienen analgesia.'},
+{cat:'E2',n:'Tramadol / Paracetamol',color:'#b45309',tag:'Combinación fija',dosis:'37.5/325 mg · 1–2 comp c/6–8 h',dosisSub:'Máx 8 comp/día (300 mg tramadol)',desc:'Combinación sinérgica: inicio más rápido (paracetamol) y efecto sostenido (tramadol), a menor dosis de cada uno.',
+ rows:[['Vía','VO'],['Frecuencia','c/6–8 h'],['Duración','Según control'],['Candidatos','Dolor moderado agudo o crónico'],['Indicación','Nociceptivo/mixto moderado'],['Presentac. MX','Zaldiar® — comp 37.5/325 mg'],['Contraindic.','Las de tramadol + hepatopatía (paracetamol)'],['E. adversos','Náusea, mareo, estreñimiento; sumar límite de paracetamol']],
+ nota:'Vigilar la dosis total de paracetamol si se asocian otros productos que lo contengan. Mismas precauciones serotoninérgicas del tramadol.'},
+/* ---------- ESCALÓN 3 ---------- */
+{cat:'E3',n:'Morfina',color:'#7f1d1d',tag:'⭐ Opioide fuerte de REFERENCIA',dosis:'LI 5–10 mg c/4 h y titular · LP c/12 h',dosisSub:'Sin techo terapéutico (salvo toxicidad)',desc:'Patrón de oro del escalón 3 y referencia para la equianalgesia. Iniciar con liberación inmediata, titular y pasar a liberación prolongada.',
+ rows:[['Vía','VO / SC / IV (relación oral:parenteral ≈ 3:1)'],['Frecuencia','LI c/4 h · LP c/12 h · rescate = 10–15% dosis diaria'],['Duración','Crónica; titular a la baja al mejorar'],['Candidatos','Dolor intenso oncológico y no oncológico seleccionado'],['Indicación','Nociceptivo mod-intenso, disnea paliativa'],['Presentac. MX','Graten® — sol/tab LI, LP; amp; Analfin®'],['Contraindic.','Depresión respiratoria no monitorizada, íleo, hipersensibilidad'],['E. adversos','Estreñimiento, náusea, sedación, depresión respiratoria, prurito, mioclonías']],
+ nota:'Ajustar/espaciar en ERC (acúmulo de metabolitos M6G → neurotoxicidad). Laxante profiláctico SIEMPRE. Antídoto: naloxona.'},
+{cat:'E3',n:'Oxicodona',color:'#7f1d1d',tag:'Opioide fuerte',dosis:'LP 10 mg c/12 h inicio · LI 5 mg rescate',dosisSub:'≈ 1.5–2× más potente que la morfina oral',desc:'Agonista µ potente, buena biodisponibilidad oral. Combinación con naloxona (oral) reduce el estreñimiento.',
+ rows:[['Vía','VO (LI/LP)'],['Frecuencia','LP c/12 h · LI c/4–6 h'],['Duración','Crónica'],['Candidatos','Dolor intenso; alternativa/rotación de morfina'],['Indicación','Nociceptivo y mixto intenso'],['Presentac. MX','OxyContin®, Targin® (oxicodona/naloxona)'],['Contraindic.','Íleo, depresión respiratoria, hepatopatía grave'],['E. adversos','Similares a morfina; algo menos de prurito/alucinaciones']],
+ nota:'Equivalencia orientativa: 10 mg oxicodona VO ≈ 15–20 mg morfina VO. Ajustar en insuficiencia hepática y renal.'},
+{cat:'E3',n:'Hidromorfona',color:'#7f1d1d',tag:'Opioide fuerte · alta potencia',dosis:'LI 1.3 mg c/4 h · LP c/24 h',dosisSub:'≈ 5–7.5× más potente que la morfina oral',desc:'Agonista µ muy potente, útil cuando se requieren volúmenes pequeños (SC) o en rotación por toxicidad.',
+ rows:[['Vía','VO (LI/LP), SC/IV'],['Frecuencia','LI c/4 h · LP c/24 h'],['Duración','Crónica'],['Candidatos','Dolor intenso; rotación; vía SC'],['Indicación','Nociceptivo intenso oncológico'],['Presentac. MX','Jurnista® (LP OROS 24 h)'],['Contraindic.','Íleo, depresión respiratoria'],['E. adversos','Similares a morfina; menor acumulación en ERC que morfina']],
+ nota:'Alta potencia: extremar cuidado en la conversión. 1.5 mg IV / 7.5 mg VO ≈ 10 mg morfina IV / 30 mg morfina VO (aprox.).'},
+{cat:'E3',n:'Fentanilo transdérmico',color:'#7f1d1d',tag:'Parche · dolor crónico ESTABLE',dosis:'Parche c/72 h · inicio 12–25 µg/h',dosisSub:'25 µg/h ≈ 60–90 mg morfina VO/día',desc:'Opioide muy potente en parche de liberación sostenida; útil en disfagia o intolerancia oral con dolor estable.',
+ rows:[['Vía','Transdérmica (recambio c/72 h)'],['Frecuencia','Cada 72 h; inicio de efecto 12–24 h'],['Duración','Crónica estable'],['Candidatos','Dolor crónico controlado; disfagia; mala tolerancia GI'],['Indicación','Nociceptivo estable, NO dolor agudo'],['Presentac. MX','Durogesic® — 12/25/50/75/100 µg/h'],['Contraindic.','Dolor agudo, paciente opioide-naïve, inestabilidad de dosis, fiebre alta/calor (↑absorción)'],['E. adversos','Como opioides; reservorio persiste 12–24 h tras retirar el parche']],
+ nota:'NO iniciar en opioide-naïve ni en dolor agudo/inestable. El calor aumenta la absorción. Para irruptivo usar fentanilo transmucoso de inicio rápido.'},
+{cat:'E3',n:'Buprenorfina',color:'#7f1d1d',tag:'Agonista parcial · parche',dosis:'Parche 5–20 µg/h (c/7 días) o 35 µg/h (c/72–96 h)',dosisSub:'Techo analgésico parcial; seguro en ERC',desc:'Agonista parcial µ y antagonista κ; parche de larga duración. Buen perfil en anciano y ERC.',
+ rows:[['Vía','Transdérmica · sublingual'],['Frecuencia','Parche semanal o c/3–4 días'],['Duración','Crónica'],['Candidatos','Anciano, ERC, dolor crónico estable'],['Indicación','Nociceptivo mod-intenso estable'],['Presentac. MX','Transtec®, Restiva® — parche'],['Contraindic.','Depresión respiratoria grave; combinar con agonista puro puede antagonizar'],['E. adversos','Náusea, estreñimiento, sedación; menor depresión respiratoria (techo)']],
+ nota:'No requiere ajuste importante en ERC. Su alta afinidad puede dificultar la reversión con naloxona (usar dosis mayores). Techo parcial de efecto.'},
+{cat:'E3',n:'Tapentadol',color:'#7f1d1d',tag:'Doble mecanismo · dolor mixto',dosis:'LP 50 mg c/12 h inicio · máx 500 mg/día',dosisSub:'Agonista µ + inhibidor de recaptación de noradrenalina',desc:'Analgésico central de doble mecanismo, útil en dolor mixto/neuropático, con mejor tolerancia GI que otros opioides fuertes.',
+ rows:[['Vía','VO (LI/LP)'],['Frecuencia','LP c/12 h'],['Duración','Crónica'],['Candidatos','Dolor mixto/neuropático mod-intenso'],['Indicación','Nociceptivo + neuropático'],['Presentac. MX','Palexia® — LI/LP 50/100/150/200/250 mg'],['Contraindic.','IMAO, epilepsia mal controlada, insuf hepática/renal grave'],['E. adversos','Menos estreñimiento y náusea que morfina; mareo, riesgo serotoninérgico']],
+ nota:'Menor efecto serotoninérgico que tramadol pero precaución con ISRS/ISRSN. Buena opción cuando predomina el componente neuropático.'},
+{cat:'E3',n:'Metadona',color:'#7f1d1d',tag:'⚠️ Solo por experto',dosis:'Individualizada (p.ej. 2.5–5 mg c/8–12 h)',dosisSub:'Vida media larga y variable (8–59 h) · equianalgesia NO lineal',desc:'Agonista µ + antagonista NMDA (útil en dolor neuropático y tolerancia). Farmacocinética compleja: prescripción por experto.',
+ rows:[['Vía','VO / SC / IV'],['Frecuencia','c/8–12 h (analgésica)'],['Duración','Crónica'],['Candidatos','Dolor refractario, neuropático, rotación por toxicidad'],['Indicación','Nociceptivo/neuropático intenso complejo'],['Presentac. MX','Rubidexol® / metadona sol y tab'],['Contraindic.','QT largo, interacciones (CYP), sin experiencia en titulación'],['E. adversos','Prolongación QT (torsade), acumulación diferida, sedación tardía']],
+ nota:'ECG basal y de control por riesgo de QT. Ratio de conversión variable según dosis previa: titulación lenta y vigilada. NO para inexpertos.'},
+/* ---------- ADYUVANTES ---------- */
+{cat:'ADY',n:'Amitriptilina (tricíclico)',color:'#0a5c45',tag:'⭐ Neuropático · 1ª línea',dosis:'10–25 mg noche → titular a 25–75 mg',dosisSub:'Máx 75–150 mg/día (menor en anciano)',desc:'Antidepresivo tricíclico; primera línea del dolor neuropático. Mejora también el sueño. Efecto analgésico independiente del antidepresivo.',
+ rows:[['Vía','VO (noche)'],['Frecuencia','1 vez/día (nocturna)'],['Duración','Semanas para efecto pleno'],['Candidatos','Dolor neuropático, con insomnio asociado'],['Indicación','Neuropático central/periférico'],['Presentac. MX','Tryptanol® — tab 10/25 mg'],['Contraindic.','Cardiopatía isquémica reciente, arritmia, glaucoma, retención urinaria, anciano frágil'],['E. adversos','Anticolinérgicos (boca seca, estreñimiento), sedación, ortostatismo, QT']],
+ nota:'Empezar bajo y de noche. Nortriptilina mejor tolerada en ancianos. Evaluar riesgo cardiovascular (ECG si dosis altas o edad).'},
+{cat:'ADY',n:'Duloxetina (ISRSN)',color:'#0a5c45',tag:'⭐ Neuropático · 1ª línea',dosis:'30 mg/día → 60 mg/día',dosisSub:'Máx 120 mg/día',desc:'Inhibidor de recaptación de serotonina-noradrenalina; primera línea en neuropatía diabética dolorosa, fibromialgia y dolor músculo-esquelético crónico.',
+ rows:[['Vía','VO'],['Frecuencia','1 vez/día'],['Duración','Crónica'],['Candidatos','Neuropatía diabética, fibromialgia, nociceplástico'],['Indicación','Neuropático y nociceplástico'],['Presentac. MX','Cymbalta® — cáps 30/60 mg'],['Contraindic.','Hepatopatía, IMAO, glaucoma no controlado, ERC grave'],['E. adversos','Náusea, boca seca, insomnio, HTA, riesgo serotoninérgico']],
+ nota:'Preferible a tricíclicos en anciano/cardiópata por mejor perfil. No suspender de golpe (síndrome de retirada). Vigilar TA.'},
+{cat:'ADY',n:'Gabapentina',color:'#0a5c45',tag:'Anticonvulsivante · neuropático',dosis:'300 mg noche → 900–3600 mg/día en 3 tomas',dosisSub:'Titulación progresiva cada 3–7 días',desc:'Gabapentinoide (ligando α2δ de canales de calcio); primera línea del dolor neuropático. Requiere titulación por sedación.',
+ rows:[['Vía','VO (3 tomas)'],['Frecuencia','c/8 h'],['Duración','Crónica'],['Candidatos','Neuralgia postherpética, neuropatía, dolor central'],['Indicación','Neuropático periférico/central'],['Presentac. MX','Neurontin® — cáps 300/400 mg'],['Contraindic.','Hipersensibilidad; ajustar en ERC (eliminación renal)'],['E. adversos','Somnolencia, mareo, edema, ataxia, aumento de peso']],
+ nota:'Ajuste por función renal obligatorio. Titular despacio para tolerar la sedación. Riesgo de depresión respiratoria si se combina con opioides.'},
+{cat:'ADY',n:'Pregabalina',color:'#0a5c45',tag:'Anticonvulsivante · neuropático',dosis:'75 mg c/12 h → 150–300 mg c/12 h',dosisSub:'Máx 600 mg/día',desc:'Gabapentinoide de farmacocinética más lineal y predecible que la gabapentina; inicio de efecto más rápido.',
+ rows:[['Vía','VO (2 tomas)'],['Frecuencia','c/12 h'],['Duración','Crónica'],['Candidatos','Neuropatía, fibromialgia, dolor central, ansiedad asociada'],['Indicación','Neuropático y nociceplástico'],['Presentac. MX','Lyrica® — cáps 75/150/300 mg'],['Contraindic.','Ajustar en ERC; potencial de mal uso'],['E. adversos','Somnolencia, mareo, edema periférico, aumento de peso, visión borrosa']],
+ nota:'Ajuste renal. Vigilar potencial de abuso (fármaco controlado en varios países). No suspender bruscamente. Sinergia depresora con opioides.'},
+{cat:'ADY',n:'Carbamazepina',color:'#0a5c45',tag:'Neuralgia del trigémino',dosis:'100 mg c/12 h → 200–1200 mg/día',dosisSub:'Titular según respuesta y tolerancia',desc:'Anticonvulsivante de elección en la neuralgia del trigémino. Inductor enzimático con múltiples interacciones.',
+ rows:[['Vía','VO'],['Frecuencia','c/8–12 h'],['Duración','Crónica'],['Candidatos','Neuralgia del trigémino y glosofaríngea'],['Indicación','Dolor neuropático paroxístico/lancinante'],['Presentac. MX','Tegretol® — tab 200 mg, LP 200/400 mg'],['Contraindic.','Bloqueo AV, discrasias, porfiria, uso de IMAO'],['E. adversos','Hiponatremia, mielosupresión, hepatotoxicidad, rash (SJS/NET), ataxia']],
+ nota:'Cribado HLA-B*1502 en población asiática (riesgo SJS). Vigilar hemograma, Na e hígado. Oxcarbazepina como alternativa mejor tolerada.'},
+{cat:'ADY',n:'Corticoides (dexametasona)',color:'#0a5c45',tag:'Dolor óseo / compresivo',dosis:'4–16 mg/día (dexametasona)',dosisSub:'Curso corto o descendente',desc:'Reducen edema e inflamación perineural/peritumoral; útiles en compresión medular, dolor óseo, cefalea por hipertensión intracraneal y visceral por cápsula.',
+ rows:[['Vía','VO / IV / SC'],['Frecuencia','1–2 tomas/día (matutina)'],['Duración','Corta o descendente'],['Candidatos','Compresión nerviosa/medular, dolor óseo, hepatomegalia'],['Indicación','Dolor por compresión/inflamación'],['Presentac. MX','Alin®, Decadron® — tab 0.5/4 mg, amp 4/8 mg'],['Contraindic.','Infección no controlada, úlcera, descompensación glucémica'],['E. adversos','Hiperglucemia, insomnio, miopatía, gastrolesión (evitar con AINE), inmunosupresión']],
+ nota:'Efecto coanalgésico rápido y mejora del apetito/ánimo en paliativos. Dar por la mañana. En compresión medular: dosis altas + urgencia.'},
+{cat:'ADY',n:'Lidocaína parche 5%',color:'#0a5c45',tag:'Neuropático localizado',dosis:'1–3 parches c/12 h (12 h on / 12 h off)',dosisSub:'Aplicar sobre piel íntegra en zona dolorosa',desc:'Anestésico local tópico; primera línea en neuralgia postherpética localizada y dolor neuropático periférico focal. Mínima absorción sistémica.',
+ rows:[['Vía','Tópica (parche)'],['Frecuencia','12 h aplicado / 12 h de descanso'],['Duración','Crónica'],['Candidatos','Neuralgia postherpética, dolor neuropático localizado'],['Indicación','Neuropático periférico focal'],['Presentac. MX','Versatis® — parche 5%'],['Contraindic.','Piel lesionada/inflamada, alergia a anestésicos locales'],['E. adversos','Reacción cutánea local leve; sistémicos muy raros']],
+ nota:'Excelente perfil de seguridad; ideal en anciano y polimedicado. No aplicar sobre piel dañada. Combinable con otros adyuvantes.'},
+{cat:'ADY',n:'Capsaicina 8% (tópica)',color:'#0a5c45',tag:'Neuropático periférico',dosis:'Parche 8% una aplicación (30–60 min) c/3 meses',dosisSub:'Aplicación en medio hospitalario',desc:'Agonista TRPV1 que desensibiliza las fibras nociceptivas; útil en dolor neuropático periférico localizado refractario.',
+ rows:[['Vía','Tópica (parche de alta concentración)'],['Frecuencia','Repetible cada ≥3 meses'],['Duración','Efecto prolongado tras una aplicación'],['Candidatos','Neuropatía periférica localizada, postherpética, VIH'],['Indicación','Neuropático periférico focal'],['Presentac. MX','Qutenza® (parche 8%); cremas 0.025–0.075% OTC'],['Contraindic.','Piel lesionada, cara/mucosas'],['E. adversos','Ardor y eritema en la aplicación, dolor transitorio, ↑TA durante el procedimiento']],
+ nota:'El parche de 8% se aplica bajo supervisión (premedicar el ardor). Las cremas de baja concentración requieren varias aplicaciones al día.'},
+{cat:'ADY',n:'Bifosfonatos / denosumab',color:'#0a5c45',tag:'Metástasis óseas',dosis:'Ác. zoledrónico 4 mg IV c/3–4 sem',dosisSub:'Denosumab 120 mg SC c/4 sem (alternativa)',desc:'Reducen la actividad osteoclástica: analgesia en metástasis óseas y prevención de eventos óseos (fracturas, hipercalcemia, compresión).',
+ rows:[['Vía','IV (zoledrónico) / SC (denosumab)'],['Frecuencia','Cada 3–4 semanas'],['Duración','Prolongada'],['Candidatos','Dolor óseo metastásico, mieloma'],['Indicación','Dolor óseo oncológico'],['Presentac. MX','Zometa® (zoledrónico), Xgeva® (denosumab)'],['Contraindic.','ERC grave (zoledrónico), hipocalcemia no corregida'],['E. adversos','Osteonecrosis mandibular, hipocalcemia, reacción de fase aguda, nefrotoxicidad']],
+ nota:'Revisión dental previa (osteonecrosis). Suplementar calcio/vitamina D. Denosumab preferible en ERC. Efecto analgésico en semanas.'},
+/* ---------- MANEJO DE EFECTOS ADVERSOS / SEGURIDAD ---------- */
+{cat:'EA',n:'Estreñimiento por opioides',color:'#0c3b6e',tag:'⭐ Profilaxis SIEMPRE',dosis:'Laxante estimulante + osmótico desde el día 1',dosisSub:'Senósidos + PEG / lactulosa · titular',desc:'El estreñimiento NO desarrolla tolerancia: pautar laxante profiláctico con TODO opioide. Si es refractario, valorar antagonistas periféricos (metilnaltrexona, naloxegol).',
+ rows:[['Vía','VO (laxantes); SC (metilnaltrexona)'],['Frecuencia','Diaria, fija'],['Duración','Mientras dure el opioide'],['Candidatos','Todo paciente con opioide'],['Indicación','Prevención y tratamiento del estreñimiento'],['Presentac. MX','Senósidos, PEG (Nulytely®), lactulosa; Relistor® (metilnaltrexona)'],['Contraindic.','Obstrucción intestinal mecánica'],['E. adversos','Cólico, diarrea si sobredosis de laxante']],
+ nota:'Descartar impactación/obstrucción antes de escalar laxantes. Combinar estimulante + osmótico. Oxicodona/naloxona reduce el estreñimiento.'},
+{cat:'EA',n:'Náusea / vómito por opioides',color:'#0c3b6e',tag:'Tolerancia en ~1 semana',dosis:'Metoclopramida 10 mg c/8 h u haloperidol 0.5–1.5 mg',dosisSub:'Profilaxis los primeros 5–7 días',desc:'Frecuente al inicio y suele ceder con tolerancia. Antiemético según mecanismo (procinético, antidopaminérgico).',
+ rows:[['Vía','VO / SC / IV'],['Frecuencia','Pautado los primeros días'],['Duración','1–2 semanas (transitorio)'],['Candidatos','Inicio de opioide, rotación'],['Indicación','Náusea inducida por opioide'],['Presentac. MX','Plasil® (metoclopramida), Haldol® (haloperidol), ondansetrón'],['Contraindic.','Metoclopramida: obstrucción, parkinsonismo; QT largo (ondansetrón/haloperidol)'],['E. adversos','Extrapiramidalismo, QT, sedación']],
+ nota:'Si persiste >1 semana, revisar otras causas (estreñimiento, hipercalcemia, SNC) o rotar opioide.'},
+{cat:'EA',n:'Sedación / depresión respiratoria — NALOXONA',color:'#0c3b6e',tag:'⚠️ Antídoto opioide',dosis:'0.04–0.4 mg IV, titular c/2–3 min',dosisSub:'Repetir/infundir por vida media corta (30–90 min)',desc:'La depresión respiratoria es la toxicidad grave. Naloxona (antagonista µ) titulada: revertir la hipoventilación SIN precipitar abstinencia/dolor severo.',
+ rows:[['Vía','IV (preferida), IM, SC, intranasal'],['Frecuencia','Bolos c/2–3 min hasta FR ≥8–10 y despierta'],['Duración','Vigilar/reinfundir: puede re-narcotizarse'],['Candidatos','FR <8, hipoxia, coma, miosis puntiforme'],['Indicación','Sobredosis / depresión respiratoria por opioide'],['Presentac. MX','Naloxona amp 0.4 mg; intranasal 4 mg'],['Contraindic.','Ninguna en emergencia vital'],['E. adversos','Abstinencia aguda, agitación, HTA, edema pulmonar, dolor rebote']],
+ nota:'Diluir 0.4 mg en 10 mL (0.04 mg/mL) y titular en el paciente con dolor crónico para no revertir toda la analgesia. Buprenorfina puede requerir dosis mayores.'},
+{cat:'EA',n:'Prurito / otros EA opioides',color:'#0c3b6e',tag:'Manejo sintomático',dosis:'Antihistamínico; considerar rotación',dosisSub:'Vigilar retención urinaria, mioclonías, xerostomía',desc:'El prurito (liberación de histamina) suele ser leve; mioclonías y neurotoxicidad sugieren acumulación de metabolitos (especialmente morfina en ERC).',
+ rows:[['Vía','VO / IV según síntoma'],['Frecuencia','Según necesidad'],['Duración','Transitorio'],['Candidatos','Prurito, mioclonías, retención'],['Indicación','EA menores de opioides'],['Presentac. MX','Antihistamínicos; rotación de opioide'],['Contraindic.','—'],['E. adversos','Los del fármaco sintomático empleado']],
+ nota:'Mioclonías/delirium/hiperalgesia → sospechar toxicidad por metabolitos: hidratar, reducir dosis y ROTAR opioide.'},
+{cat:'EA',n:'Rotación de opioides',color:'#0c3b6e',tag:'Toxicidad o mal control',dosis:'Convertir a dosis equianalgésica y reducir 25–50%',dosisSub:'Por tolerancia cruzada incompleta',desc:'Cambiar de opioide ante toxicidad no controlable o analgesia insuficiente. Calcular dosis equianalgésica y reducir por seguridad; añadir rescates.',
+ rows:[['Vía','La adecuada al nuevo opioide'],['Frecuencia','Reajuste con titulación'],['Duración','Según evolución'],['Candidatos','Neurotoxicidad, EA intolerables, dolor refractario, cambio de vía'],['Indicación','Optimizar balance analgesia/toxicidad'],['Presentac. MX','—'],['Contraindic.','—'],['E. adversos','Sobredosis si no se aplica la reducción por tolerancia cruzada']],
+ nota:'Ejemplos equianalgésicos VO: morfina 30 = oxicodona 15–20 = hidromorfona 6–7.5 = tramadol 150 = codeína 200 mg. Reducir 25–50% al rotar y titular.'},
+{cat:'EA',n:'Deprescripción de opioides',color:'#0c3b6e',tag:'Retirada gradual',dosis:'Reducir 10–25% cada 1–4 semanas',dosisSub:'Individualizar según duración y dosis',desc:'En dolor no oncológico controlado o sin beneficio, reducir de forma gradual para evitar abstinencia; abordaje compartido con el paciente.',
+ rows:[['Vía','VO'],['Frecuencia','Reducciones periódicas'],['Duración','Semanas-meses'],['Candidatos','Beneficio insuficiente, alto riesgo, mejoría del dolor'],['Indicación','Suspensión segura de opioides'],['Presentac. MX','—'],['Contraindic.','No forzar retirada abrupta en dependencia establecida'],['E. adversos','Síndrome de abstinencia si es demasiado rápida']],
+ nota:'Nunca suspensión brusca en uso prolongado. Vigilar abstinencia (ansiedad, sudoración, mialgias, diarrea). Tratar el trastorno por uso si existe.'}
+];
+function renderFarm(){var el=document.getElementById('farm-body');if(!el)return;var h='';var prevCat=null;for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  if(d.cat&&d.cat!==prevCat){var _m=(typeof CATMETA!=='undefined'&&CATMETA[d.cat])?CATMETA[d.cat]:{};var _pc=_m.color||d.color||'var(--ac)';var _sub=_m.sub||'';h+='<div style="margin:18px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><span style="background:'+_pc+';color:#fff;font-size:12px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">'+(_m.label||d.cat)+'</span>'+(_sub?'<span style="font-size:12.5px;color:#6b7280;line-height:1.4;">'+_sub+'</span>':'')+'</div>';prevCat=d.cat;}
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">'+(d.dlbl||'Dosis')+'</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  el.innerHTML=h;}
+
+/* ===== MOTOR DE ESCALAS PUNTUADAS =====
+   SCREG[sid]={title, items:[{t,o:[[label,pts]...]}], interpret:function(total){return{band,cls,msg}}, max, note}
+   Renderiza en un contenedor con id = sid+'-box'. cls: 'res-ok' | 'res-mid' | 'res-high'. */
+var SCREG={
+  'ena':{title:'ENA',max:10,note:'La intensidad orienta el escalón OMS; reevaluar tras cada intervención.',
+    items:[{t:'Intensidad del dolor ahora (0 = sin dolor · 10 = máximo imaginable)',o:[['0',0],['1',1],['2',2],['3',3],['4',4],['5',5],['6',6],['7',7],['8',8],['9',9],['10',10]]}],
+    interpret:function(t){if(t===0)return{band:'Sin dolor',cls:'res-ok',msg:'Sin dolor actual. Vigilar y mantener medidas.'};if(t<=3)return{band:'Leve',cls:'res-ok',msg:'Escalón 1: paracetamol y/o AINE ± adyuvante.'};if(t<=6)return{band:'Moderado',cls:'res-mid',msg:'Escalón 2: opioide débil (tramadol/codeína) ± no opioide ± adyuvante.'};return{band:'Grave',cls:'res-high',msg:'Escalón 3 (ascensor analgésico): opioide fuerte + no opioide ± adyuvante. Titular y prever rescates.'};}},
+  'dn4':{title:'DN4',max:10,note:'≥4/10 sugiere dolor neuropático → iniciar adyuvantes (gabapentinoide, duloxetina o tricíclico).',
+    items:[
+      {t:'¿Quemazón?',o:[['No',0],['Sí',1]]},
+      {t:'¿Sensación de frío doloroso?',o:[['No',0],['Sí',1]]},
+      {t:'¿Descargas eléctricas?',o:[['No',0],['Sí',1]]},
+      {t:'¿Hormigueo?',o:[['No',0],['Sí',1]]},
+      {t:'¿Pinchazos (alfileres)?',o:[['No',0],['Sí',1]]},
+      {t:'¿Entumecimiento?',o:[['No',0],['Sí',1]]},
+      {t:'¿Picazón (comezón)?',o:[['No',0],['Sí',1]]},
+      {t:'Exploración: ¿hipoestesia al tacto?',o:[['No',0],['Sí',1]]},
+      {t:'Exploración: ¿hipoestesia al pinchazo?',o:[['No',0],['Sí',1]]},
+      {t:'Exploración: ¿dolor al cepillado / roce (alodinia)?',o:[['No',0],['Sí',1]]}
+    ],
+    interpret:function(t){if(t>=4)return{band:'Neuropático probable',cls:'res-high',msg:'DN4 ≥4: componente neuropático probable. Iniciar adyuvantes de 1ª línea (gabapentina/pregabalina, duloxetina o amitriptilina); los opioides responden solo parcialmente.'};return{band:'Poco probable',cls:'res-ok',msg:'DN4 <4: dolor neuropático poco probable. Reevaluar si cambia el patrón clínico.'};}}
+};var SCST={};
+function scInit(sid){var sc=SCREG[sid];var box=document.getElementById(sid+'-box');if(!box)return;var h='';for(var i=0;i<sc.items.length;i++){var it=sc.items[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+(i+1)+'. '+it.t+'</div><div id="'+sid+'-g'+i+'">';for(var j=0;j<it.o.length;j++){var p=it.o[j][1];h+='<button class="opt" onclick="scPick(\''+sid+'\','+i+','+p+',this)">'+it.o[j][0]+(p?' <b>('+(p>0?'+':'')+p+')</b>':'')+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="scReset(\''+sid+'\')">Reiniciar</button></div><div id="'+sid+'-res" class="calc-result"></div>';box.innerHTML=h;}
+function scPick(sid,i,pts,btn){SCST[sid]=SCST[sid]||{};SCST[sid][i]=pts;var g=btn.parentNode.querySelectorAll('.opt');for(var k=0;k<g.length;k++)g[k].classList.remove('on');btn.classList.add('on');scCalc(sid);}
+function scReset(sid){SCST[sid]={};var b=document.querySelectorAll('#'+sid+'-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById(sid+'-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function scCalc(sid){var sc=SCREG[sid],st=SCST[sid]||{},tot=0,n=0;for(var i=0;i<sc.items.length;i++){if(st[i]!=null){tot+=st[i];n++;}}var box=document.getElementById(sid+'-res');if(!box)return;if(n<sc.items.length){box.className='calc-result show res-mid';box.innerHTML='Responde las '+sc.items.length+' preguntas ('+n+'/'+sc.items.length+').';return;}var r=sc.interpret(tot);box.className='calc-result show '+r.cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">'+sc.title+' = '+tot+(sc.max?(' / '+sc.max):'')+' · '+r.band+'</div><div style="margin-top:6px;">'+r.msg+'</div>'+(sc.note?'<div class="calc-note">'+sc.note+'</div>':'');}
+
+/* ===== ESCENARIOS =====
+   ESCEN = {'Nombre':{p:'contexto', k:'clave', x:'conducta'}, ...} */
+var ESCEN={
+  'Dolor oncológico':{p:'Dolor moderado-intenso en paciente con cáncer; frecuente componente mixto.',k:'Aplicar principios OMS: por reloj, vía oral preferente, individualizar. En dolor intenso, ascensor directo a escalón 3 (morfina de referencia). Adyuvantes según mecanismo; corticoides/bifosfonatos en dolor óseo o compresivo.',x:'Iniciar morfina LI 5–10 mg VO c/4 h, titular y pasar a LP c/12 h; rescate = 10–15% de la dosis diaria total. Laxante profiláctico + antiemético. Reevaluar en 24–72 h.'},
+  'Dolor neuropático':{p:'Dolor quemante/eléctrico con alodinia; DN4 ≥4.',k:'Los adyuvantes son PRIMERA línea, no complemento. Opioides responden solo parcialmente. Considerar lidocaína/capsaicina tópica si es localizado.',x:'Iniciar gabapentina 300 mg noche (→900–3600 mg/d) o pregabalina 75 mg c/12 h, o duloxetina 30–60 mg/d, o amitriptilina 10–25 mg noche. Titular; combinar clases si respuesta parcial. Tramadol/tapentadol como opioides con acción sobre lo neuropático.'},
+  'Dolor agudo posoperatorio':{p:'Dolor nociceptivo intenso autolimitado.',k:'Analgesia multimodal y ahorradora de opioide: paracetamol + AINE de base + opioide de rescate; NO fentanilo transdérmico (dolor inestable).',x:'Paracetamol 1 g IV c/8 h + AINE (ketorolaco ≤5 días) fijos; morfina/oxicodona titulada para picos. Retirar opioide al mejorar. Prevenir estreñimiento/náusea.'},
+  'Dolor crónico NO oncológico':{p:'Dolor persistente sin cáncer; riesgo de opioides supera el beneficio a largo plazo.',k:'Priorizar no opioides, adyuvantes y abordaje no farmacológico (ejercicio, terapia psicológica). Opioides solo seleccionados, a dosis mínima, con metas funcionales y evaluación de riesgo de adicción.',x:'Optimizar escalón 1 + adyuvante. Si se usa opioide: consentimiento, ORT/SOAPP, dosis mínima, precaución >50 MME/d, evitar >90 MME/d, no combinar con benzodiacepinas, reevaluar y deprescribir si no hay beneficio.'},
+  'Anciano / ERC / hepatopatía':{p:'Poblaciones con alteración farmacocinética y mayor sensibilidad.',k:'"Start low, go slow". Ajustar por función renal/hepática; evitar AINE en ERC/anciano frágil; paracetamol ≤3 g/d en hepatopatía.',x:'Anciano/ERC: preferir buprenorfina o fentanilo (menos metabolitos activos); evitar morfina en ERC avanzada (M6G). Reducir dosis de gabapentinoides por aclaramiento renal. Hepatopatía: bajar paracetamol y opioides.'},
+  'Dolor irruptivo':{p:'Exacerbación transitoria sobre dolor basal controlado.',k:'Rescate con opioide de acción rápida = 10–15% de la dosis diaria total. Si ≥3–4 rescates/día → subir la dosis basal.',x:'Morfina LI o fentanilo transmucoso de inicio rápido (oncológico). Registrar número de rescates para ajustar la base. Diferenciar de dolor por fin de dosis (acortar intervalo o subir basal).'},
+  'Sobredosis de opioides':{p:'Depresión respiratoria (FR <8), miosis puntiforme, estupor/coma.',k:'Emergencia: soporte ventilatorio + NALOXONA titulada. Vigilancia prolongada por re-narcotización (naloxona de vida media corta).',x:'Naloxona 0.04–0.4 mg IV, repetir c/2–3 min hasta FR ≥8–10 y despertar; diluir para titular en dolor crónico. Considerar infusión continua u opioides de vida media larga (metadona/buprenorfina → más dosis). Monitorizar ≥2–4 h (o más).'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+function initAll(){renderFarm();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('ena');scInit('dn4');}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Esguince de dedo · Clínica Rápida</title>
+<style>
+/* ===== CAMBIAR SOLO --ac y --acd POR EL COLOR DE LA ESPECIALIDAD ===== */
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#6d28d9;--acd:#4c1d95;--acl:#f5f3ff;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.step{display:flex;gap:10px;margin-bottom:10px;}
+.step-n{background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.step-b{flex:1;font-size:12.5px;color:var(--gray-700);line-height:1.55;}.step-b b{color:var(--gray-900);}
+/* Calculadora / escalas */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+/* Chips */
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+/* Escenarios */
+.esc-hero{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+/* Bibliografía */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">✋</div>
+    <div>
+      <div class="hdr-eye">Traumatología · Urgencias · Cirugía de mano</div>
+      <div class="hdr-title">Esguince de dedo</div>
+      <div class="hdr-sub">Lesión ligamentaria de los dedos · IFP y pulgar del guardabosques · evidencia 2024–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> S63.6 · Esguince y torcedura de dedo(s) de la mano</div>
+    </div>
+  </div>
+  <div class="hdr-badges"><span class="badge">Común en deportes de balón</span><span class="badge">IFP la + afectada</span><span class="badge">Pulgar: lig. colateral cubital</span><span class="badge">Ojo: lesión de Stener</span></div>
+</div>
+
+<div class="qstats"><div class="qs"><div class="qs-v">IFP</div><div class="qs-l">Articulación + lesionada</div></div><div class="qs"><div class="qs-v">I–II–III</div><div class="qs-l">Grados de gravedad</div></div><div class="qs"><div class="qs-v">&gt;30–35°</div><div class="qs-l">Laxitud valgo = rotura LCU</div></div><div class="qs"><div class="qs-v">Stener</div><div class="qs-l">Indicación quirúrgica</div></div></div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">⚙️ Fisiopatología</button>
+  <button class="tab" onclick="showT('etio',this)">⚠️ Etiología</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Clínica y Dx</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ==== Cada panel: <div class="panel[ on]" id="tab-XXX"> ... </div> ==== -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Resumen ejecutivo</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="prose">
+      <p>El <b>esguince de dedo</b> es una lesión de los <b>ligamentos que estabilizan las articulaciones interfalángicas y metacarpofalángicas</b> de la mano, producida por fuerzas de hiperextensión, desviación lateral (valgo/varo) o compresión axial. Es una de las lesiones musculoesqueléticas más frecuentes en la práctica deportiva y en urgencias, y con frecuencia se subestima como un simple "dedo golpeado" (<em>jammed finger</em>).</p>
+      <p>La articulación <b>interfalángica proximal (IFP)</b> es la <b>más afectada</b>; sus estabilizadores son los <b>ligamentos colaterales</b> (radial y cubital), la <b>placa volar</b> y la banda dorsal del aparato extensor. En el <b>pulgar</b>, la lesión clave es la del <b>ligamento colateral cubital (LCU)</b> de la metacarpofalángica (MCF) — el clásico <b>"pulgar del guardabosques / del esquiador"</b>.</p>
+      <p>La mayoría de los esguinces (grados I–II) responden a tratamiento conservador con <b>buddy taping</b> (sindactilia) y <b>movilización precoz</b>. El reto clínico es <b>no pasar por alto</b> las lesiones que requieren cirugía: la <b>lesión de Stener</b>, la rotura completa del LCU del pulgar, las fracturas-avulsión desplazadas y las luxaciones inestables o irreducibles.</p>
+    </div>
+    <div class="alert a-r"><span class="ai">🚩</span><div><div class="at">Regla de oro</div>La lesión de Stener del pulgar <b>no cicatriza espontáneamente</b> porque el LCU roto queda atrapado sobre la aponeurosis del aductor: es indicación quirúrgica. Sospecharla ante laxitud en valgo de la MCF &gt;30–35° o &gt;15° respecto al lado sano.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="prose"><p>Predomina en <b>deportes de balón</b> (baloncesto, voleibol, balonmano, fútbol americano y rugby) por atrapamiento del dedo con la pelota, y en caídas con la mano extendida (esquí, ciclismo).</p></div>
+    <div class="tw"><table class="t"><thead><tr><th>Dato</th><th>Cifra / referencia</th></tr></thead><tbody>
+      <tr><td>Articulación más afectada</td><td class="dn">IFP (interfalángica proximal)</td></tr>
+      <tr><td>Mecanismo típico</td><td>Hiperextensión / desviación lateral por balón o caída</td></tr>
+      <tr><td>Lesión del pulgar por excelencia</td><td class="dn">LCU de la MCF (pulgar del esquiador/guardabosques)</td></tr>
+      <tr><td>Prevalencia de lesión de Stener en roturas completas del LCU</td><td class="dm">~68–87 %</td></tr>
+      <tr><td>Umbral de rotura completa del LCU</td><td>Laxitud en valgo &gt;30–35° o &gt;15° vs. lado sano</td></tr>
+      <tr><td>Umbral de fractura-avulsión quirúrgica</td><td>Desplazamiento &gt;2 mm o &gt;20–30 % de superficie articular</td></tr>
+    </tbody></table></div>
+    <div class="fp fp-p"><b>Impacto funcional:</b> el principal problema del esguince de dedo mal tratado no es la inestabilidad sino la <b>rigidez residual</b> por inmovilización prolongada. La movilización precoz protegida es la clave del buen resultado.</div>
+  </div></div>
+</div>
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Anatomía estabilizadora</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="prose">
+      <p>Cada articulación de los dedos es una <b>bisagra</b> estabilizada por tres elementos:</p>
+    </div>
+    <div class="kp"><div class="kn">1</div><div class="kt"><b>Ligamentos colaterales</b> (radial y cubital): resisten las fuerzas de desviación lateral (varo/valgo). En la IFP son los estabilizadores laterales principales.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><b>Placa (fibrocartílago) volar:</b> refuerzo palmar que impide la <b>hiperextensión</b>. Su avulsión es típica del "dedo en hiperextensión".</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><b>Aparato dorsal (bandeleta central del extensor):</b> su lesión en la IFP puede evolucionar a <b>deformidad en boutonnière</b> si pasa inadvertida.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔧</span><span class="st">Mecanismos de lesión</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="prose">
+      <p>Según la dirección de la fuerza se lesiona una estructura u otra:</p>
+    </div>
+    <div class="fp fp-b"><b>Hiperextensión</b> → lesión de la <b>placa volar</b> ± avulsión ósea de la base de la falange; en el pulgar/IFP puede acompañar a luxación dorsal.</div>
+    <div class="fp fp-a"><b>Desviación lateral (valgo/varo)</b> → lesión de un <b>ligamento colateral</b>; la intensidad determina distensión (grado I), rotura parcial (II) o completa (III).</div>
+    <div class="fp fp-r"><b>Abducción forzada del pulgar</b> (bastón de esquí, caída sobre pulgar abierto) → tracción del <b>LCU de la MCF</b> → rotura, típicamente de su inserción distal en la falange proximal.</div>
+    <div class="fp fp-p"><b>Compresión axial</b> ("balón en la punta del dedo") → carga sobre superficie articular y placa volar → esguince, subluxación o fractura-luxación.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚨</span><span class="st">Lesión de Stener (concepto clave)</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="diag">
+      Cuando el <b>LCU del pulgar se rompe completamente</b> en su extremo distal, el ligamento se retrae y se desplaza en sentido proximal. Entre el muñón ligamentario y su punto de inserción se interpone la <b>aponeurosis del músculo aductor del pulgar</b>. El resultado es que los dos extremos del ligamento <b>quedan separados por tejido interpuesto</b> y <b>no pueden cicatrizar en aposición</b> por muy bien que se inmovilice.<br><br>
+      Esto es la <b>lesión de Stener</b>: presente en un <b>68–87 %</b> de las roturas completas del LCU. Se palpa a veces como un nódulo doloroso en el borde cubital de la MCF. <b>Implica indicación quirúrgica</b> (reparación/reinserción con anclajes de sutura), porque el tratamiento conservador conduce a inestabilidad crónica, pérdida de fuerza de pinza y artrosis precoz.
+    </div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">No confundir cronología con nombre</div><b>Pulgar del esquiador</b> = lesión <b>aguda</b> del LCU. <b>Pulgar del guardabosques</b> = insuficiencia <b>crónica/degenerativa</b> del mismo ligamento por microtraumatismos repetidos. Ambos comparten fisiopatología y evaluación.</div></div>
+  </div></div>
+</div>
+<div class="panel" id="tab-etio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏷️</span><span class="st">Clasificación por grados</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Grado</th><th>Lesión anatómica</th><th>Estabilidad</th><th>Conducta base</th></tr></thead><tbody>
+      <tr><td class="dn">I</td><td>Distensión (elongación) del ligamento, sin rotura</td><td>Estable</td><td>Buddy taping + movilización precoz</td></tr>
+      <tr><td class="dn">II</td><td>Rotura parcial de fibras</td><td>Estable (tope firme al estrés, dolor)</td><td>Buddy taping / férula corta + movilización protegida</td></tr>
+      <tr><td class="dm">III</td><td>Rotura completa ± avulsión ósea</td><td class="dm">Inestable (sin tope firme)</td><td>Valorar cirugía (sobre todo LCU del pulgar / Stener)</td></tr>
+    </tbody></table></div>
+    <div class="fp fp-p"><b>Regla práctica:</b> lo que distingue II de III no es el dolor sino el <b>tope al final del recorrido</b> del estrés. Un tope firme (aunque doloroso) = estable (I–II). Ausencia de tope / apertura excesiva = rotura completa (III).</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Factores de riesgo y mecanismos</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Factor</th><th>Contexto</th></tr></thead><tbody>
+      <tr><td>Deportes de balón</td><td>Baloncesto, voleibol, balonmano, fútbol americano, rugby (atrapamiento del dedo)</td></tr>
+      <tr><td>Caída con la mano extendida</td><td>Esquí (bastón), ciclismo, patinaje → pulgar del esquiador</td></tr>
+      <tr><td>Microtraumatismo repetido</td><td>Actividad ocupacional → pulgar del guardabosques crónico</td></tr>
+      <tr><td>Laxitud ligamentaria previa</td><td>Mayor riesgo de inestabilidad tras esguince</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Clínica</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="prose"><p>Dolor y <b>edema localizados en la articulación</b>, con equimosis y limitación dolorosa de la movilidad. Puntos clave según localización:</p></div>
+    <div class="fp fp-b"><b>IFP:</b> dolor lateral (colateral) o volar (placa volar); vigilar deformidad en boutonnière (dolor dorsal + déficit de extensión de la IFP) y luxación.</div>
+    <div class="fp fp-a"><b>Pulgar (MCF):</b> dolor y tumefacción en el borde <b>cubital</b>; debilidad de la pinza pulgar-índice; posible nódulo palpable (sugiere Stener).</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩻</span><span class="st">Secuencia diagnóstica</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="step"><div class="step-n">1</div><div class="step-b"><b>Radiografía SIEMPRE antes del estrés.</b> AP, lateral y oblicua para descartar <b>fractura por avulsión</b>, luxación o subluxación. Estresar sobre un hueso fracturado puede desplazar el fragmento.</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-b"><b>Prueba de estrés en la IFP:</b> aplicar valgo/varo en <b>extensión completa</b> y a <b>30° de flexión</b>; comparar siempre con el <b>dedo contralateral</b>. Buscar apertura anómala y ausencia de tope firme.</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-b"><b>Prueba de estrés en valgo de la MCF del pulgar</b> (en extensión y a 30° de flexión, con anestesia local si el dolor lo impide). <b>Laxitud &gt;30–35°</b>, o <b>&gt;15° respecto al lado sano</b>, sugiere <b>rotura completa del LCU</b> y posible lesión de Stener.</div></div>
+    <div class="step"><div class="step-n">4</div><div class="step-b"><b>Imagen avanzada si duda de Stener:</b> ecografía dinámica (operador dependiente) o <b>RM</b> como referencia para confirmar rotura completa e interposición de la aponeurosis del aductor.</div></div>
+    <div class="alert a-r"><span class="ai">🚩</span><div><div class="at">Nunca al revés</div>Rx <b>antes</b> del estrés. Si la Rx muestra una fractura-avulsión grande o desplazada, no fuerce la maniobra: derive.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📐</span><span class="st">Interpretación del estrés</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Hallazgo</th><th>Interpretación</th></tr></thead><tbody>
+      <tr><td>Tope firme, dolor, sin apertura</td><td>Esguince estable (grado I–II) → conservador</td></tr>
+      <tr><td>Apertura MCF pulgar &gt;30–35° o &gt;15° vs. sano</td><td class="dm">Rotura completa LCU → sospecha de Stener → mano/cirugía</td></tr>
+      <tr><td>Ausencia de tope en IFP</td><td class="dm">Rotura completa colateral (III) → valorar</td></tr>
+      <tr><td>Nódulo palpable borde cubital MCF</td><td class="dm">Lesión de Stener hasta demostrar lo contrario</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Estimador de gravedad y conducta</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="prose"><p>Herramienta orientativa: combina el mecanismo, la localización, el resultado del estrés y los hallazgos radiológicos para sugerir grado y conducta. <b>No sustituye</b> el juicio clínico ni la valoración por cirugía de mano.</p></div>
+    <div class="calc-w"><div id="esgDedo-box"></div></div>
+    <div class="calc-note">Puntúa: mayor puntuación = mayor probabilidad de lesión inestable o quirúrgica.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas para derivar a cirugía de mano</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="fp fp-r"><b>Lesión de Stener</b> del pulgar (rotura completa del LCU con interposición del aductor).</div>
+    <div class="fp fp-r"><b>Rotura completa del LCU</b> del pulgar (laxitud &gt;30–35° o &gt;15° vs. sano) aunque no se demuestre Stener.</div>
+    <div class="fp fp-r"><b>Fractura-avulsión desplazada</b>: &gt;2 mm de desplazamiento o &gt;20–30 % de la superficie articular.</div>
+    <div class="fp fp-r"><b>Inestabilidad articular</b> (ausencia de tope firme) grado III.</div>
+    <div class="fp fp-r"><b>Luxación irreducible</b> o fractura-luxación de la IFP.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Tabla de grados</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Grado</th><th>Estrés</th><th>Rx</th><th>Conducta</th></tr></thead><tbody>
+      <tr><td class="dn">I</td><td>Tope firme, sin apertura</td><td>Normal</td><td>Buddy taping, movilización precoz</td></tr>
+      <tr><td class="dn">II</td><td>Tope firme, dolor, laxitud leve</td><td>Normal o avulsión no desplazada</td><td>Buddy taping / férula corta 1–3 sem, movilización protegida</td></tr>
+      <tr><td class="dm">III</td><td>Sin tope / apertura marcada</td><td>Normal o avulsión desplazada</td><td>Cirugía de mano (sobre todo pulgar / Stener)</td></tr>
+    </tbody></table></div>
+  </div></div>
+</div>
+<div class="panel" id="tab-tx"><!-- Tratamiento: fichas FARM por líneas --><div id="farm-body"></div></div>
+<div class="panel" id="tab-escen"><div class="chipbar" id="escen-chips"></div><div id="escen-body"></div></div>
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas del tratamiento</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><b>Recuperar la movilidad completa</b> sin dolor: el objetivo primario. La rigidez es la complicación más frecuente del esguince mal manejado.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><b>Restaurar la estabilidad</b> articular y la fuerza de pinza (crítico en el pulgar).</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><b>Retorno funcional / deportivo</b> progresivo, protegido con buddy taping.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Cronología y seguimiento</span><span class="sg">⌄</span></div><div class="sb">
+    <div class="tw"><table class="t"><thead><tr><th>Momento</th><th>Acción</th></tr></thead><tbody>
+      <tr><td>0–1 sem</td><td>Hielo, elevación, analgesia, buddy taping/férula; movilización activa protegida desde el inicio en grados I–II</td></tr>
+      <tr><td>1–3 sem</td><td>Retirar férula progresivamente; ejercicios de rango de movimiento; continuar sindactilia en actividad</td></tr>
+      <tr><td>3–6 sem</td><td>Fortalecimiento; edema residual "fusiforme" de la IFP puede persistir <b>meses</b> (avisar al paciente)</td></tr>
+      <tr><td>Reevaluar / derivar</td><td>Si persiste inestabilidad, dolor o pérdida de movilidad → cirugía de mano / terapia de mano</td></tr>
+    </tbody></table></div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Evitar la rigidez</div>No inmovilizar de más. En grados I–II la movilización precoz protegida da mejores resultados que la inmovilización rígida prolongada.</div></div>
+    <div class="alert a-r"><span class="ai">🚩</span><div><div class="at">Cuándo derivar</div>Sospecha de Stener, rotura completa del LCU, avulsión desplazada (&gt;2 mm o &gt;20–30 % articular), inestabilidad grado III, luxación irreducible, o boutonnière establecida.</div></div>
+  </div></div>
+</div>
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>Bibliografía</h2><p>Evidencia seleccionada 2022–2026 · esguince de dedo, LCU del pulgar y lesión de Stener</p></div>
+  <div class="biblio-section"><div class="biblio-section-hdr">Guías, revisiones y ensayos</div><div class="biblio-body">
+    <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">RCT</span><div class="biblio-ref">Efficacy and safety of kinesio taping for non-operative management of finger injuries. <em>BMC Musculoskeletal Disorders</em>. 2025.<br><a class="biblio-link" href="https://link.springer.com/article/10.1186/s12891-025-09044-6">link.springer.com/article/10.1186/s12891-025-09044-6</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Cohorte</span><div class="biblio-ref">Dorsal blocking orthoses for PIP joint volar plate injuries: impact of joint angle on outcomes. <em>Journal of Hand Therapy</em>. 2024.<br><a class="biblio-link" href="https://www.jhandtherapy.org/article/S0894-1130(24)00053-X/abstract">jhandtherapy.org/article/S0894-1130(24)00053-X</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-year">2023</span><span class="biblio-level lv-b">RCT</span><div class="biblio-ref">Management of stable PIP joint volar plate injuries with figure-of-8 orthoses: randomized controlled trial. <em>Journal of Hand Therapy</em>. 2023.<br><a class="biblio-link" href="https://www.sciencedirect.com/science/article/abs/pii/S0894113023001734">sciencedirect.com/science/article/abs/pii/S0894113023001734</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">Revisión</span><div class="biblio-ref">Ulnar Collateral Ligament Injury (Gamekeeper's Thumb). <em>StatPearls</em>. NCBI Bookshelf, act. 2024.<br><a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK482383/">ncbi.nlm.nih.gov/books/NBK482383</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">Revisión</span><div class="biblio-ref">Stener Lesion. <em>StatPearls</em>. NCBI Bookshelf, act. 2024.<br><a class="biblio-link" href="https://www.ncbi.nlm.nih.gov/books/NBK541004/">ncbi.nlm.nih.gov/books/NBK541004</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Serie qx</span><div class="biblio-ref">Management of Skier's Thumb with Stener Lesion Using Suture Anchor. <em>Int J Environ Sci</em>. 2024.<br><a class="biblio-link" href="https://theaspd.com/index.php/ijes/article/view/5289">theaspd.com/index.php/ijes/article/view/5289</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-year">2025</span><span class="biblio-level lv-exp">Referencia qx</span><div class="biblio-ref">Ligament reattachment with suture anchors — skier's thumb. <em>AO Surgery Reference</em>. 2025.<br><a class="biblio-link" href="https://surgeryreference.aofoundation.org/orthopedic-trauma/adult-trauma/thumb/proximal-phalanx-base-and-shaft-skiers-thumb/ligament-reattachment-with-suture-anchors">surgeryreference.aofoundation.org — skiers-thumb</a></div></div>
+    <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">Imagen</span><div class="biblio-ref">Ulnar Collateral Ligament Tears of the Thumb (RM y criterios de Stener). <em>Radsource MRI Web Clinic</em>.<br><a class="biblio-link" href="https://radsource.us/ulnar-collateral-ligament-tears-of-the-thumb/">radsource.us/ulnar-collateral-ligament-tears-of-the-thumb</a></div></div>
+  </div>
+  <div class="nivel-legend"><div class="nl-item"><span class="biblio-level lv-a">A</span> Metaanálisis/GPC</div><div class="nl-item"><span class="biblio-level lv-b">B</span> RCT/cohorte</div><div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Revisión/referencia</div></div>
+  </div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function val(id){return document.getElementById(id).value;}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* ===== FICHAS DE FÁRMACOS =====
+   FARM = [{n, color, tag, dosis, dosisSub, desc, rows:[[label,val]...], nota}]
+   tag con "⭐ " al inicio marca de elección. color = hex por fármaco/familia. */
+/* CATMETA: por cada categoría (cat) su chip: {label, sub, color}. */
+var CATMETA={
+  'GRADO I–II · CONSERVADOR':{label:'GRADO I–II · CONSERVADOR',sub:'Estable: sindactilia + movilización precoz',color:'#6d28d9'},
+  'ANALGESIA':{label:'ANALGESIA',sub:'Control del dolor, pauta corta',color:'#7c3aed'},
+  'PLACA VOLAR / IFP':{label:'PLACA VOLAR / IFP',sub:'Bloqueo de extensión y luxación',color:'#5b21b6'},
+  'QUIRÚRGICO / DERIVAR A MANO':{label:'QUIRÚRGICO / DERIVAR A MANO',sub:'Stener, LCU completo, avulsión, inestabilidad',color:'#7b1c1c'}
+};
+var FARM=[
+ {cat:'GRADO I–II · CONSERVADOR',n:'Buddy taping (sindactilia)',color:'#6d28d9',tag:'⭐ Elección · esguince estable',dlbl:'Técnica',dosis:'Fijar el dedo lesionado al dedo vecino sano con cinta',dosisSub:'Almohadillar entre dedos; no cubrir la articulación IFP',desc:'Permite movilización protegida usando el dedo sano como férula dinámica; evita la rigidez que produce la inmovilización rígida.',rows:[['Vía','Vendaje externo'],['Frecuencia','Durante actividad / diurno; revisar piel'],['Duración','3–6 semanas según grado y síntomas'],['Candidatos','Esguince grado I–II estable (IFP, colaterales)'],['Indicación','Distensión/rotura parcial con tope firme al estrés'],['Presentac. MX','Cinta atlética Micropore/Nexcare 3M; esparadrapo de tela'],['Contraindic.','Rotura completa inestable, fractura desplazada, LCU pulgar completo'],['E. adversos','Maceración/dermatitis por cinta, constricción si muy apretado']],nota:'Colocar gasa/fieltro entre los dedos para evitar úlceras por fricción. Revisar coloración distal.'},
+ {cat:'GRADO I–II · CONSERVADOR',n:'Férula corta + movilización precoz',color:'#6d28d9',tag:'Coadyuvante inicial',dlbl:'Pauta',dosis:'Férula en extensión o ligera flexión 1–3 semanas',dosisSub:'Iniciar rango de movimiento activo lo antes posible',desc:'Reposo articular breve para el dolor agudo; se retira pronto para prevenir rigidez. Hielo y elevación las primeras 48–72 h.',rows:[['Vía','Ortesis externa'],['Frecuencia','Continua los primeros días; retirar para ejercicios'],['Duración','Máx. 1–3 semanas; movilizar antes si tolera'],['Candidatos','Grado I–II con mucho dolor/edema inicial'],['Indicación','Fase aguda; puente hasta buddy taping'],['Presentac. MX','Férula de aluminio maleable Aluderm; termoplástico a medida'],['Contraindic.','Necesidad de inmovilización prolongada (revisa el diagnóstico)'],['E. adversos','Rigidez si se prolonga, atrofia']],nota:'Regla: "el peor enemigo del dedo es la inmovilización excesiva". Movilización protegida > inmovilización rígida.'},
+ {cat:'ANALGESIA',n:'Ibuprofeno / naproxeno (AINE)',color:'#7c3aed',tag:'Analgesia-antiinflamatorio · pauta corta',dlbl:'Dosis',dosis:'Ibuprofeno 400 mg VO c/8 h · Naproxeno 250–500 mg c/12 h',dosisSub:'Ciclo corto 3–5 días con alimentos',desc:'Controla dolor e inflamación en la fase aguda. Pauta breve por el perfil gastrointestinal/renal.',rows:[['Vía','Oral'],['Frecuencia','Ibuprofeno c/8 h; naproxeno c/12 h'],['Duración','3–5 días (la más corta eficaz)'],['Candidatos','Adultos sin contraindicación a AINE'],['Indicación','Dolor e inflamación del esguince agudo'],['Presentac. MX','Advil/Motrin (ibuprofeno); Flanax (naproxeno)'],['Contraindic.','Úlcera péptica, ERC, embarazo 3.er trim., alergia a AINE'],['E. adversos','Dispepsia, sangrado GI, retención hídrica']],nota:'Preferir paracetamol si hay contraindicación a AINE. Asociar protección gástrica en riesgo.'},
+ {cat:'ANALGESIA',n:'Paracetamol (acetaminofén)',color:'#7c3aed',tag:'Analgésico de base · seguro',dlbl:'Dosis',dosis:'500–1000 mg VO c/6–8 h',dosisSub:'Máx. 3–4 g/día',desc:'Analgésico de primera línea cuando el AINE está contraindicado; buen perfil de seguridad.',rows:[['Vía','Oral'],['Frecuencia','c/6–8 h según dolor'],['Duración','Según síntomas'],['Candidatos','Prácticamente todos; elección en gestantes'],['Indicación','Dolor leve-moderado del esguince'],['Presentac. MX','Tempra, Tylenol'],['Contraindic.','Hepatopatía grave; cuidado con alcohol'],['E. adversos','Hepatotoxicidad por sobredosis']],nota:'No supera el máx. diario; sumar dosis ocultas en combinados.'},
+ {cat:'PLACA VOLAR / IFP',n:'Férula dorsal de bloqueo de extensión',color:'#5b21b6',tag:'Lesión de placa volar de la IFP',dlbl:'Pauta',dosis:'Ortesis dorsal que bloquea la extensión, permite flexión',dosisSub:'Ángulo de bloqueo según lesión; reducir el tope semanalmente',desc:'Protege la placa volar en cicatrización evitando la hiperextensión, mientras permite flexión activa para conservar movilidad.',rows:[['Vía','Ortesis externa'],['Frecuencia','Continua; ejercicios de flexión dentro del tope'],['Duración','~3–6 semanas, aumentando extensión progresivamente'],['Candidatos','Avulsión estable de placa volar / tras reducción de luxación dorsal'],['Indicación','Hiperextensión de la IFP; luxación dorsal reducida estable'],['Presentac. MX','Ortesis termoplástica a medida (terapia de mano); férula figura de 8'],['Contraindic.','Fractura-luxación inestable → cirugía'],['E. adversos','Rigidez en flexión si no se progresa la extensión']],nota:'Luxación de IFP: reducir con tracción-flexión suave, comprobar estabilidad y Rx post-reducción; si irreducible o inestable → mano.'},
+ {cat:'QUIRÚRGICO / DERIVAR A MANO',n:'Reparación / reinserción con anclajes de sutura',color:'#7b1c1c',tag:'⭐ Stener · rotura completa LCU · avulsión',dlbl:'Intervención',dosis:'Reinserción del ligamento con anclaje óseo (o fijación del fragmento)',dosisSub:'Idealmente en las primeras 3 semanas para reparación directa',desc:'Restaura la estabilidad y la fuerza de pinza. Indispensable en la lesión de Stener porque el ligamento no cicatriza con tejido interpuesto.',rows:[['Vía','Quirúrgica (cirugía de mano)'],['Frecuencia','Procedimiento único + rehabilitación'],['Duración','Inmovilización post-op ~4–6 sem + terapia de mano'],['Candidatos','Stener, LCU completo del pulgar, avulsión desplazada, inestabilidad III, luxación irreducible'],['Indicación','Avulsión &gt;2 mm o &gt;20–30 % superficie articular; laxitud &gt;30–35° o &gt;15° vs. sano'],['Presentac. MX','Anclajes de sutura (Mitek/Arthrex); agujas K para fragmentos'],['Contraindic.','Lesión estable subsidiaria de tratamiento conservador'],['E. adversos','Rigidez, lesión de rama sensitiva radial, infección']],nota:'La reparación aguda directa da mejores resultados que la reconstrucción tardía. Ante sospecha de Stener, no demorar la derivación.'}
+];
+function renderFarm(){var el=document.getElementById('farm-body');if(!el)return;var h='';var prevCat=null;for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  if(d.cat&&d.cat!==prevCat){var _m=(typeof CATMETA!=='undefined'&&CATMETA[d.cat])?CATMETA[d.cat]:{};var _pc=_m.color||d.color||'var(--ac)';var _sub=_m.sub||'';h+='<div style="margin:18px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><span style="background:'+_pc+';color:#fff;font-size:12px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">'+(_m.label||d.cat)+'</span>'+(_sub?'<span style="font-size:12.5px;color:#6b7280;line-height:1.4;">'+_sub+'</span>':'')+'</div>';prevCat=d.cat;}
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">'+(d.dlbl||'Dosis')+'</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  el.innerHTML=h;}
+
+/* ===== MOTOR DE ESCALAS PUNTUADAS =====
+   SCREG[sid]={title, items:[{t,o:[[label,pts]...]}], interpret:function(total){return{band,cls,msg}}, max, note}
+   Renderiza en un contenedor con id = sid+'-box'. cls: 'res-ok' | 'res-mid' | 'res-high'. */
+var SCREG={
+ 'esgDedo':{title:'Riesgo esguince de dedo',max:8,note:'Orientativo. Rx antes del estrés. Sospecha de Stener/inestabilidad = valoración por cirugía de mano.',
+  items:[
+   {t:'Localización',o:[['IFP / colateral de dedo',0],['MCF del pulgar (LCU)',2]]},
+   {t:'Prueba de estrés',o:[['Tope firme, sin apertura',0],['Laxitud leve con tope',1],['Sin tope / apertura &gt;30–35° o &gt;15° vs. sano',3]]},
+   {t:'Radiografía',o:[['Normal',0],['Avulsión no desplazada',1],['Avulsión desplazada &gt;2 mm o &gt;20–30 % articular',3]]},
+   {t:'¿Nódulo palpable en borde cubital de MCF?',o:[['No',0],['Sí (sugiere Stener)',2]]}
+  ],
+  interpret:function(t){if(t<=1)return{band:'Grado I–II · estable',cls:'res-ok',msg:'Manejo conservador: buddy taping, movilización precoz, analgesia. Reevaluar si no mejora.'};if(t<=3)return{band:'Vigilar',cls:'res-mid',msg:'Estabilidad dudosa. Reexplorar (anestesia local si duele), considerar imagen y control estrecho.'};return{band:'Inestable / probable quirúrgico',cls:'res-high',msg:'Alta sospecha de rotura completa, Stener o avulsión desplazada → derivar a cirugía de mano.'};}}
+};
+var SCST={};
+function scInit(sid){var sc=SCREG[sid];var box=document.getElementById(sid+'-box');if(!box)return;var h='';for(var i=0;i<sc.items.length;i++){var it=sc.items[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+(i+1)+'. '+it.t+'</div><div id="'+sid+'-g'+i+'">';for(var j=0;j<it.o.length;j++){var p=it.o[j][1];h+='<button class="opt" onclick="scPick(\''+sid+'\','+i+','+p+',this)">'+it.o[j][0]+(p?' <b>('+(p>0?'+':'')+p+')</b>':'')+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="scReset(\''+sid+'\')">Reiniciar</button></div><div id="'+sid+'-res" class="calc-result"></div>';box.innerHTML=h;}
+function scPick(sid,i,pts,btn){SCST[sid]=SCST[sid]||{};SCST[sid][i]=pts;var g=btn.parentNode.querySelectorAll('.opt');for(var k=0;k<g.length;k++)g[k].classList.remove('on');btn.classList.add('on');scCalc(sid);}
+function scReset(sid){SCST[sid]={};var b=document.querySelectorAll('#'+sid+'-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById(sid+'-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function scCalc(sid){var sc=SCREG[sid],st=SCST[sid]||{},tot=0,n=0;for(var i=0;i<sc.items.length;i++){if(st[i]!=null){tot+=st[i];n++;}}var box=document.getElementById(sid+'-res');if(!box)return;if(n<sc.items.length){box.className='calc-result show res-mid';box.innerHTML='Responde las '+sc.items.length+' preguntas ('+n+'/'+sc.items.length+').';return;}var r=sc.interpret(tot);box.className='calc-result show '+r.cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">'+sc.title+' = '+tot+(sc.max?(' / '+sc.max):'')+' · '+r.band+'</div><div style="margin-top:6px;">'+r.msg+'</div>'+(sc.note?'<div class="calc-note">'+sc.note+'</div>':'');}
+
+/* ===== ESCENARIOS =====
+   ESCEN = {'Nombre':{p:'contexto', k:'clave', x:'conducta'}, ...} */
+var ESCEN={
+ 'Pulgar del guardabosques / Stener':{p:'Caída sobre pulgar en abducción (bastón de esquí). Dolor y tumefacción en borde cubital de la MCF, debilidad de la pinza.',k:'Estrés en valgo de la MCF: laxitud &gt;30–35° o &gt;15° vs. lado sano = rotura completa del LCU. Nódulo palpable = Stener. Rx antes del estrés.',x:'Rotura completa / Stener → CIRUGÍA: reinserción con anclaje de sutura (mejor en &lt;3 sem). Es la lesión clave del capítulo: no cicatriza sola.'},
+ 'Fractura por avulsión':{p:'Esguince con arrancamiento óseo en la inserción ligamentaria (base de falange o MCF del pulgar), visible en Rx.',k:'Medir desplazamiento y % de superficie articular. No estresar sobre el fragmento.',x:'No desplazada y &lt;20–30 % → conservador (buddy taping/férula). Desplazada &gt;2 mm o &gt;20–30 % → fijación quirúrgica (aguja K / anclaje).'},
+ 'Luxación de IFP':{p:'Dedo deformado tras impacto axial/hiperextensión; luxación dorsal la más común.',k:'Rx pre y post-reducción para descartar fractura-luxación. Comprobar estabilidad tras reducir.',x:'Reducción cerrada con tracción-flexión suave; férula dorsal de bloqueo de extensión + movilización protegida. Irreducible/inestable → mano.'},
+ 'Rigidez tras inmovilización prolongada':{p:'Paciente inmovilizado semanas "por precaución"; ahora con IFP rígida y edema fusiforme persistente.',k:'La rigidez es la complicación más frecuente y evitable del esguince de dedo.',x:'Terapia de mano: movilización activa/pasiva, control de edema; prevenir con movilización precoz desde el inicio en grados I–II.'},
+ 'Deportista (retorno con buddy taping)':{p:'Jugador de baloncesto/voleibol con esguince estable grado I–II que quiere volver a competir.',k:'Lesión estable con tope firme al estrés y Rx normal.',x:'Retorno progresivo protegido con buddy taping durante la actividad 3–6 sem; analgesia según necesidad; vigilar signos de inestabilidad.'},
+ 'Placa volar':{p:'Hiperextensión de la IFP; dolor volar, a veces con pequeña avulsión en la base de la falange media.',k:'Buscar hiperextensión anómala e inestabilidad; descartar fractura-luxación.',x:'Férula dorsal de bloqueo de extensión con flexión permitida, reduciendo el tope semanalmente; movilización protegida. Fractura-luxación inestable → mano.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+function initAll(){renderFarm();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('esgDedo');}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>

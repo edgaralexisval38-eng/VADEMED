@@ -31434,6 +31434,17 @@ function openDrugByName(nm){exitInicio(); var t=(nm||'').toLowerCase(); for(var 
 function soon(name){showToast(name+' \u00b7 proximamente');}
 
 function norm(s){return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+/* Las siglas de 4 letras o menos deben casar al INICIO de una palabra. Sin esto
+   "ira" encontraba "viral", "itu" encontraba "constituye" y "tac" "contacto",
+   asi que el medico tecleaba ICC y le salia Lupus. */
+function coincide(txt,q){ txt=norm(txt); if(!q) return false;
+  if(q.length>4) return txt.indexOf(q)>=0;
+  return new RegExp('(^|[^a-z0-9])'+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(txt); }
+/* Igual que coincide(), pero exige que la sigla sea una palabra COMPLETA:
+   "iam" casa con "... iam infarto ..." pero no dentro de "iamcest". */
+function coincideExacta(txt,q){ txt=norm(txt); if(!q) return false;
+  var esc=q.replace(/[.*+?^${}()|[\]\\]/g, function(c){ return '\\'+c; });
+  return new RegExp('(^|[^a-z0-9])'+esc+'([^a-z0-9]|$)').test(txt); }
 var RECENTS=[];
 function recKey(r){ return r.t+':'+(r.t==='d'?r.i:(r.t==='m'?r.f:r.k)); }
 function loadRecents(){ try{ var s=window.localStorage.getItem('vademed_recents'); if(s){ RECENTS=JSON.parse(s)||[]; } }catch(e){} if(!Array.isArray(RECENTS)) RECENTS=[]; RECENTS=RECENTS.map(function(x){ return (typeof x==='number')?{t:'d',i:x}:x; }).filter(function(x){ return x&&x.t; }); }
@@ -31707,7 +31718,19 @@ function iniSearchRun(q){
   var res=document.getElementById('iniResults'), cols=document.querySelector('#inicioView .ini-cols');
   if(!nq){ if(res){res.style.display='none';res.innerHTML='';} if(cols) cols.style.display=''; return; }
   if(cols) cols.style.display='none';
-  function sc(name,extra){ name=norm(name||''); var ex=norm(extra||''); if(name===nq)return 100; if(name.indexOf(nq)===0)return 82; var p=name.indexOf(nq); if(p>0){ return /[a-z0-9]/.test(name.charAt(p-1))?55:66; } if(ex.indexOf(nq)>=0)return 25; return 0; }
+  function sc(name,extra){ name=norm(name||''); var ex=norm(extra||'');
+ /* el alias se calcula PRIMERO y compite: antes la funcion regresaba por el nombre
+    y "Lupus (LES)" perdia contra "Lesion renal aguda" aunque LES fuera su sigla */
+ var _al = (ex && coincideExacta(ex,nq)) ? 84 : (coincide(ex,nq) ? 25 : 0);
+ if(name===nq)return 100;
+ if(name.indexOf(nq)===0)return Math.max(82,_al);
+ var corto=nq.length<=4;
+ var p=name.indexOf(nq);
+ if(p>0 && (!corto || coincide(name,nq))) return Math.max((!corto && /[a-z0-9]/.test(name.charAt(p-1)))?55:66,_al);
+ /* Una sigla que aparece como palabra COMPLETA en las claves es un ALIAS del tema
+    (IAM = sindrome coronario agudo, ICC = insuficiencia cardiaca), no una mencion
+    de paso. Valia 25 y quedaba debajo de cualquier calculadora; ahora pesa 70. */
+ return _al; }
   var hits=[], ord=0;
   GROUPS.forEach(function(g){
     var s=sc(g.label,g.sub);
@@ -32383,7 +32406,7 @@ function renderToolsPanel(q){
   var el=document.getElementById('toolsList'); if(!el) return;
   var nq=(typeof norm==='function')?norm(q||''):(q||'').toLowerCase();
   if(nq){
-    var items=TOOLS.filter(function(t){return norm(t.name).indexOf(nq)>=0||norm(t.sub||'').indexOf(nq)>=0||norm(t.kw||'').indexOf(nq)>=0;});
+    var items=TOOLS.filter(function(t){return coincide(t.name,nq)||coincide(t.sub||'',nq)||coincide(t.kw||'',nq);});
     el.innerHTML = items.length ? items.map(function(t){return toolRowHTML(t);}).join('') : '<div class="dempty">Sin resultados</div>';
     return;
   }
@@ -32395,7 +32418,7 @@ function renderToolsPanel(q){
   }).join('');
 }
 var LABS=[
- {panel:'Biometria hematica', tests:[
+ {panel:'Biometria hematica (BH)', tests:[
    {n:'Hemoglobina (Hb)', ref:'H 13&ndash;17 &middot; M 12&ndash;16 g/dL', hi:'Policitemia: vera o secundaria a hipoxia cronica (EPOC, apnea, altura), tabaquismo o deshidratacion. Buscar SatO2, tabaquismo y volemia.', lo:'Anemia. Buscar VCM (clasifica micro/normo/macrocitica), reticulocitos, ferritina y datos de sangrado.', kw:'hb hemoglobina anemia policitemia', grades:[{r:'H &ge;13 / M &ge;12 g/dL',l:'Normal',lv:'ok'},{r:'10&ndash;11.9 g/dL',l:'Anemia leve',lv:'warn'},{r:'8&ndash;9.9 g/dL',l:'Moderada',lv:'warn'},{r:'&lt;8 g/dL',l:'Grave',lv:'danger'}], next:'Si hay anemia, clasificar por VCM y pedir reticulocitos, ferritina y frotis de sangre.'},
    {n:'Hematocrito (Hto)', ref:'H 40&ndash;52 &middot; M 36&ndash;48 %', hi:'Deshidratacion o policitemia (sigue a la Hb).', lo:'Anemia o hemodilucion.', kw:'hematocrito hto'},
    {n:'Leucocitos', ref:'4,000&ndash;11,000 /&micro;L', hi:'Leucocitosis: infeccion bacteriana, inflamacion, estres, corticoides; si es muy alta valorar leucemia. Revisar el diferencial y buscar el foco.', lo:'Leucopenia: virica, sepsis grave, farmacos o falla medular. Revisar neutrofilos.', kw:'leucocitos blancos wbc leucocitosis leucopenia'},
@@ -32406,7 +32429,7 @@ var LABS=[
    {n:'RDW', ref:'11.5&ndash;14.5 %', hi:'Anisocitosis: sugiere ferropenia o anemia mixta/carencial.', lo:'', note:'Se interpreta junto al VCM para orientar el tipo de anemia.', kw:'rdw anisocitosis amplitud'},
    {n:'Reticulocitos', ref:'0.5&ndash;2.5 %', hi:'Respuesta medular adecuada: sangrado o hemolisis.', lo:'Medula hipoproliferativa: ferropenia, enfermedad cronica, aplasia.', kw:'reticulocitos'}
  ]},
- {panel:'Quimica y funcion renal', tests:[
+ {panel:'Quimica sanguinea (QS) y funcion renal', tests:[
    {n:'Glucosa en ayuno', ref:'70&ndash;100 mg/dL', hi:'&ge;126 en ayuno (en 2 ocasiones) = diabetes; 100&ndash;125 = glucosa alterada en ayuno. Confirmar con HbA1c.', lo:'&lt;70 = hipoglucemia: tratar y buscar causa (insulina, sulfonilureas, ayuno, sepsis, insuficiencia suprarrenal).', kw:'glucosa glicemia diabetes hipoglucemia', grades:[{r:'&lt;70 mg/dL',l:'Hipoglucemia',lv:'danger'},{r:'70&ndash;99',l:'Normal',lv:'ok'},{r:'100&ndash;125',l:'Prediabetes',lv:'warn'},{r:'&ge;126',l:'Diabetes',lv:'danger'}], next:'Confirmar con una segunda glucemia o con HbA1c; en hipoglucemia, tratar y buscar la causa.'},
    {n:'Urea / BUN', ref:'BUN 7&ndash;20 mg/dL (urea ~15&ndash;40)', hi:'Lesion renal, deshidratacion, sangrado digestivo o catabolismo. Una relacion BUN/creatinina alta sugiere causa prerrenal.', lo:'Desnutricion, hepatopatia o sobrehidratacion.', kw:'urea bun nitrogeno ureico'},
    {n:'Creatinina', ref:'H 0.7&ndash;1.3 &middot; M 0.6&ndash;1.1 mg/dL', hi:'Disminucion del filtrado (lesion renal aguda o cronica). Calcular la TFG y buscar causa prerrenal, renal o posrenal.', lo:'Baja masa muscular (no suele ser patologico).', kw:'creatinina renal', next:'Calcular la TFG (CKD-EPI), revisar la relacion BUN/creatinina y pedir examen de orina con cociente albumina/creatinina.'},
@@ -32421,7 +32444,7 @@ var LABS=[
    {n:'Magnesio (Mg)', ref:'1.7&ndash;2.2 mg/dL', hi:'Insuficiencia renal o exceso de aporte (sulfato de magnesio).', lo:'Alcohol, diureticos, perdidas; causa hipopotasemia e hipocalcemia refractarias y arritmias.', kw:'magnesio mg hipomagnesemia', grades:[{r:'1.7&ndash;2.2 mg/dL',l:'Normal',lv:'ok'},{r:'1.2&ndash;1.6',l:'HipoMg leve',lv:'warn'},{r:'&lt;1.2',l:'HipoMg grave',lv:'danger'},{r:'&gt;2.2',l:'HiperMg',lv:'warn'}]},
    {n:'Fosforo', ref:'2.5&ndash;4.5 mg/dL', hi:'Insuficiencia renal, lisis tumoral, hipoparatiroidismo.', lo:'Sindrome de realimentacion, alcoholismo, hiperparatiroidismo.', kw:'fosforo fosfato'}
  ]},
- {panel:'Perfil hepatico', tests:[
+ {panel:'Perfil hepatico (PFH)', tests:[
    {n:'ALT (TGP)', ref:'7&ndash;56 U/L', hi:'Lesion hepatocelular (mas especifica del higado): hepatitis virica, farmacos, esteatohepatitis.', lo:'', kw:'alt tgp transaminasa hepatico'},
    {n:'AST (TGO)', ref:'10&ndash;40 U/L', hi:'Lesion hepatocelular; tambien musculo y hemolisis. Una relacion AST/ALT &gt;2 sugiere causa alcoholica.', lo:'', kw:'ast tgo transaminasa'},
    {n:'Fosfatasa alcalina (FA)', ref:'44&ndash;147 U/L', hi:'Patron colestasico (obstruccion biliar) u oseo (crecimiento, Paget, metastasis). Diferenciar con la GGT.', lo:'', note:'La FA &ge;3 veces el limite orienta a colestasis o enfermedad osea; una GGT alta confirma el origen hepatico.', kw:'fosfatasa alcalina fa colestasis', grades:[{r:'Dentro de referencia',l:'Normal',lv:'ok'},{r:'&lt;3x el limite',l:'Elevacion leve',lv:'warn'},{r:'&ge;3x el limite',l:'Marcada (colestasis/osea)',lv:'danger'}]},
@@ -32644,8 +32667,8 @@ function renderLabsPanel(q){
   if(nq){
     var out=[];
     LABS.forEach(function(p){
-      var pm=norm(p.panel).indexOf(nq)>=0;
-      var tests=p.tests.filter(function(t){return pm||norm(t.n).indexOf(nq)>=0||norm(t.kw||'').indexOf(nq)>=0;});
+      var pm=coincide(p.panel,nq);
+      var tests=p.tests.filter(function(t){return pm||coincide(t.n,nq)||coincide(t.kw||'',nq);});
       if(tests.length) out.push(labGroupHTML(p, tests, true));
     });
     el.innerHTML = out.length ? out.join('') : '<div class="dempty">Sin resultados</div>';
@@ -32658,7 +32681,7 @@ function renderLabsPanel(q){
 var TEMAS=[
   {cat:'Cardiología y vascular', items:[
     {t:'Trombosis venosa profunda (TVP)', kw:'tvp trombosis venosa profunda wells dimero doppler anticoagulacion pierna edema', file:'RESUMENCLINIC/RESUMENES/TVP_v2.html'},
-    {t:'Tromboembolia pulmonar (TEP)', kw:'tep tromboembolia pulmonar embolia wells dimero angiotc anticoagulacion pesi disnea', file:'RESUMENCLINIC/RESUMENES/TEP_v2.html'},
+    {t:'Tromboembolia pulmonar (TEP)', kw:'tep tromboembolia pulmonar embolia wells dimero angiotc anticoagulacion pesi disnea dolor toracico dolor de pecho', file:'RESUMENCLINIC/RESUMENES/TEP_v2.html'},
     {t:'Bloqueos cardíacos', kw:'bloqueo AV primer segundo tercer grado bradicardia', file:'RESUMENCLINIC/RESUMENES/Bloqueos_Cardiacos.html'},
     {t:'EKG normal', kw:'ekg ecg electrocardiograma normal interpretacion', file:'RESUMENCLINIC/RESUMENES/EKG_Normal_ClinicaRapida.html'},
     {t:'Wolff-Parkinson-White (WPW)', kw:'wpw preexcitacion via accesoria delta taquicardia', file:'RESUMENCLINIC/RESUMENES/WPW_ClinicaRapida.html'},
@@ -32669,16 +32692,16 @@ var TEMAS=[
     {t:'Fibrilación ventricular / TV sin pulso', kw:'fibrilacion ventricular FV TV sin pulso paro desfibrilacion choque RCP adrenalina amiodarona ACLS desfibrilable', file:'RESUMENCLINIC/RESUMENES/Fibrilacion_Ventricular.html'},
     {t:'Asistolia / AESP', kw:'asistolia AESP paro no desfibrilable adrenalina RCP causas reversibles 5H 5T ACLS', file:'RESUMENCLINIC/RESUMENES/Asistolia_AESP.html'},
     {t:'Actividad eléctrica sin pulso (AESP)', kw:'AESP actividad electrica sin pulso paro no desfibrilable adrenalina causas reversibles 5H 5T', file:'RESUMENCLINIC/RESUMENES/Actividad_Electrica_Sin_Pulso.html'},
-    {t:'Hipertensión arterial', kw:'HAS presion', file:'RESUMENCLINIC/RESUMENES/01_HAS_HipertensionArterial_v2.html'},
-    {t:'Insuficiencia cardíaca', kw:'IC falla cardiaca', file:'RESUMENCLINIC/RESUMENES/03_IC_InsuficienciaCardiaca_v2.html'},
-    {t:'Síndrome coronario agudo', kw:'SCA IAM infarto SICA', file:'RESUMENCLINIC/RESUMENES/SCA_SindromeCoronarioAgudo.html'},
-    {t:'Angina inestable / SICA SEST', kw:'infarto sin elevacion', file:'RESUMENCLINIC/RESUMENES/AnginaInestable_SICA_SEST.html'},
-    {t:'Angina estable / síndrome coronario crónico', kw:'cardiopatia isquemica', file:'RESUMENCLINIC/RESUMENES/AnginaEstable_SindromeCoronarioCronico.html'},
+    {t:'Hipertensión arterial', kw:'HAS presion hta presion alta', file:'RESUMENCLINIC/RESUMENES/01_HAS_HipertensionArterial_v2.html'},
+    {t:'Insuficiencia cardíaca', kw:'IC falla cardiaca icc insuficiencia cardiaca congestiva falla cardiaca', file:'RESUMENCLINIC/RESUMENES/03_IC_InsuficienciaCardiaca_v2.html'},
+    {t:'Síndrome coronario agudo', kw:'SCA IAM infarto SICA iam iamcest scacest sicacest sca infarto agudo de miocardio elevacion del st dolor toracico dolor de pecho', file:'RESUMENCLINIC/RESUMENES/SCA_SindromeCoronarioAgudo.html'},
+    {t:'Angina inestable / SICA SEST', kw:'infarto sin elevacion sicasest scasest iamsest sin elevacion del st dolor toracico dolor de pecho', file:'RESUMENCLINIC/RESUMENES/AnginaInestable_SICA_SEST.html'},
+    {t:'Angina estable / síndrome coronario crónico', kw:'cardiopatia isquemica dolor toracico dolor de pecho angina de esfuerzo', file:'RESUMENCLINIC/RESUMENES/AnginaEstable_SindromeCoronarioCronico.html'},
     {t:'Fibrilación auricular', kw:'FA arritmia', file:'RESUMENCLINIC/RESUMENES/FibrilacionAuricular.html'},
     {t:'Aleteo (flutter) auricular', kw:'flutter aleteo auricular arritmia macroreentrada istmo cavotricuspideo dientes sierra ablacion anticoagulacion control frecuencia', file:'RESUMENCLINIC/RESUMENES/Flutter_Auricular.html'},
     {t:'Dislipidemia', kw:'colesterol trigliceridos', file:'RESUMENCLINIC/RESUMENES/26_Dislipidemia.html'},
     {t:'Insuficiencia arterial', kw:'arteriopatia periferica', file:'RESUMENCLINIC/RESUMENES/InsuficienciaArterial.html'},
-    {t:'Insuficiencia venosa', kw:'varices', file:'RESUMENCLINIC/RESUMENES/InsuficienciaVenosa.html'},
+    {t:'Insuficiencia venosa', kw:'varices ceap clasificacion ceap', file:'RESUMENCLINIC/RESUMENES/InsuficienciaVenosa.html'},
     {t:'Úlcera venosa', kw:'ulcera venosa insuficiencia venosa VCSS compresion', file:'RESUMENCLINIC/RESUMENES/Ulcera_Venosa_v2.html'},
     {t:'Úlcera arterial', kw:'ulcera arterial isquemica arteriopatia', file:'RESUMENCLINIC/RESUMENES/Ulcera_Arterial_v2.html'},
   ]},
@@ -32686,16 +32709,18 @@ var TEMAS=[
     {t:'Cetoacidosis diabética pediátrica', kw:'CAD pediatrica niño cetoacidosis diabetes infantil', file:'RESUMENCLINIC/RESUMENES/CAD_Pediatrica_ClinicaRapida.html'},
     {t:'Pie diabético y Charcot', kw:'pie diabetico charcot ulcera neuropatia diabetes', file:'RESUMENCLINIC/RESUMENES/Pie_Diabetico_Charcot.html'},
     {t:'Diabetes mellitus tipo 2', kw:'DM2 diabetes', file:'RESUMENCLINIC/RESUMENES/02_DM2_DiabetesMellitusT2.html'},
-    {t:'Cetoacidosis diabética', kw:'CAD', file:'RESUMENCLINIC/RESUMENES/CAD_CetoacidosisDiabetica_COMPLETA_v2.html'},
+    {t:'Cetoacidosis diabética', kw:'cad cetoacidosis diabetica cetosis cuerpos cetonicos insulina en bomba anion gap acidosis hiperglucemia', file:'RESUMENCLINIC/RESUMENES/CAD_CetoacidosisDiabetica_COMPLETA_v2.html'},
     {t:'Crisis hiperglucémica (CAD / EHH)', kw:'CAD EHH cetoacidosis estado hiperosmolar hiperglucemia crisis diabetes calculadora fluidoterapia insulina potasio', file:'RESUMENCLINIC/RESUMENES/CAD_EHH.html'},
-    {t:'Hipoglucemia', kw:'', file:'RESUMENCLINIC/RESUMENES/Hipoglucemia.html'},
-    {t:'Neuropatía diabética', kw:'', file:'RESUMENCLINIC/RESUMENES/NeuropatiaDiabetica.html'},
-    {t:'Calculadora de insulina', kw:'', file:'RESUMENCLINIC/RESUMENES/36_Calculadora_Insulina.html'},
+    {t:'Hipoglucemia', kw:'hipoglucemia glucosa baja dextrosa glucagon whipple neuroglucopenia desmayo diabetico sudoracion', file:'RESUMENCLINIC/RESUMENES/Hipoglucemia.html'},
+    {t:'Neuropatía diabética', kw:'neuropatia diabetica pie diabetico polineuropatia parestesias ardor monofilamento pregabalina gabapentina duloxetina', file:'RESUMENCLINIC/RESUMENES/NeuropatiaDiabetica.html'},
+    {t:'Calculadora de insulina', kw:'insulina basal bolo tdd correccion factor sensibilidad ratio carbohidratos glargina nph aspart esquema unidades', file:'RESUMENCLINIC/RESUMENES/36_Calculadora_Insulina.html'},
     {t:'Hipotiroidismo', kw:'tiroides', file:'RESUMENCLINIC/RESUMENES/27_Hipotiroidismo.html'},
     {t:'Hipertiroidismo', kw:'tiroides', file:'RESUMENCLINIC/RESUMENES/28_Hipertiroidismo.html'},
       {t:'Prediabetes', kw:'prediabetes glucosa alterada ayuno intolerancia carbohidratos hba1c 5.7 6.4 curva tolerancia oral riesgo diabetes metformina prevencion tamizaje findrisc', file:'RESUMENCLINIC/RESUMENES/Prediabetes_ClinicaRapida.html'},
     {t:'Obesidad', kw:'obesidad sobrepeso imc cintura semaglutida tirzepatida liraglutida orlistat cirugia bariatrica farmacoterapia peso metabolico', file:'RESUMENCLINIC/RESUMENES/Obesidad_ClinicaRapida.html'},
     {t:'Agonistas GLP-1', kw:'glp1 glp-1 agonista incretina semaglutida ozempic wegovy liraglutida victoza saxenda dulaglutida exenatida tirzepatida mounjaro perdida peso dm2 obesidad titulacion nausea pancreatitis mace renal', file:'RESUMENCLINIC/RESUMENES/GLP1_Agonistas_ClinicaRapida.html'},
+  
+    {t:'Hipotiroidismo subclínico', kw:'hipotiroidismo subclinico tsh elevada t4 libre normal levotiroxina anticuerpos anti tpo embarazo tamizaje tiroides seguimiento', file:'RESUMENCLINIC/RESUMENES/HipotiroidismoSubclinico_ClinicaRapida.html'}
   ]},
   {cat:'Nefrología e hidroelectrolítico', items:[
     {t:'Rabdomiólisis', kw:'rabdomiolisis ck creatina cinasa mioglobina lesion renal aguda hidratacion aplastamiento hiperkalemia', file:'RESUMENCLINIC/RESUMENES/RABDO_v2.html'},
@@ -32703,43 +32728,45 @@ var TEMAS=[
     {t:'Electrolitos', kw:'electrolitos sodio potasio calcio magnesio fosforo cloro bicarbonato desequilibrio hidroelectrolitico ionograma trastornos', file:'RESUMENCLINIC/RESUMENES/Electrolitos_3.html'},
     {t:'Fluidoterapia', kw:'fluidoterapia liquidos hidratacion cristaloides sueros reposicion volumen deshidratacion mantenimiento reanimacion hipovolemia', file:'RESUMENCLINIC/RESUMENES/Fluidoterapia.html'},
     {t:'Soluciones IV', kw:'soluciones intravenosas suero fisiologico salina 0.9 hartmann ringer lactato glucosada mixta cristaloides coloides osmolaridad tonicidad', file:'RESUMENCLINIC/RESUMENES/Soluciones_IV.html'},
-    {t:'Lesión renal aguda', kw:'LRA fallo renal agudo insuficiencia renal creatinina', file:'RESUMENCLINIC/RESUMENES/Lesion_Renal_Aguda.html'},
-    {t:'Hipernatremia', kw:'sodio', file:'RESUMENCLINIC/RESUMENES/Hipernatremia.html'},
-    {t:'Hiponatremia aguda', kw:'sodio', file:'RESUMENCLINIC/RESUMENES/HiponatremiaAguda.html'},
-    {t:'Hiponatremia crónica', kw:'sodio', file:'RESUMENCLINIC/RESUMENES/HiponatremiaCronica.html'},
+    {t:'Lesión renal aguda', kw:'LRA fallo renal agudo insuficiencia renal creatinina ira insuficiencia renal aguda', file:'RESUMENCLINIC/RESUMENES/Lesion_Renal_Aguda.html'},
+    {t:'Hipernatremia', kw:'hipernatremia sodio alto deshidratacion deficit de agua libre osmolaridad sed diabetes insipida', file:'RESUMENCLINIC/RESUMENES/Hipernatremia.html'},
+    {t:'Hiponatremia aguda', kw:'hiponatremia aguda sodio bajo siadh convulsion salino hipertonico osmolaridad edema cerebral', file:'RESUMENCLINIC/RESUMENES/HiponatremiaAguda.html'},
+    {t:'Hiponatremia crónica', kw:'hiponatremia cronica sodio bajo siadh mielinolisis correccion lenta restriccion hidrica tolvaptan', file:'RESUMENCLINIC/RESUMENES/HiponatremiaCronica.html'},
     {t:'Hiperpotasemia', kw:'hiperkalemia potasio', file:'RESUMENCLINIC/RESUMENES/Hiperkalemia.html'},
     {t:'Hipopotasemia', kw:'hipokalemia potasio', file:'RESUMENCLINIC/RESUMENES/Hipokalemia.html'},
-    {t:'Hipocalcemia', kw:'calcio', file:'RESUMENCLINIC/RESUMENES/Hipocalcemia.html'},
-    {t:'Hipercalcemia', kw:'calcio', file:'RESUMENCLINIC/RESUMENES/Hipercalcemia.html'},
+    {t:'Hipocalcemia', kw:'hipocalcemia calcio bajo tetania chvostek trousseau gluconato de calcio qt largo paratiroides', file:'RESUMENCLINIC/RESUMENES/Hipocalcemia.html'},
+    {t:'Hipercalcemia', kw:'hipercalcemia calcio alto hiperparatiroidismo malignidad bifosfonatos zoledronico calcitonina hidratacion', file:'RESUMENCLINIC/RESUMENES/Hipercalcemia.html'},
   ]},
   {cat:'Urología', items:[
     {t:'Cólico renal (litiasis urinaria)', kw:'colico renal litiasis urolitiasis nefrolitiasis calculo piedra rinon ureteral hematuria tamsulosina aine dolor lumbar obstruccion uro flanco', file:'RESUMENCLINIC/RESUMENES/Colico_Renal_Urolitiasis.html'},
     {t:'Hiperplasia prostática benigna (HBP)', kw:'hiperplasia prostatica benigna HBP prostata crecimiento tamsulosina alfabloqueante finasteride dutasteride sintomas urinarios luts psa retencion nocturia', file:'RESUMENCLINIC/RESUMENES/Hiperplasia_Prostatica_Benigna.html'},
     {t:'Incontinencia urinaria', kw:'incontinencia urinaria urgencia esfuerzo mixta vejiga hiperactiva anticolinergico oxibutinina solifenacina mirabegron kegel fisioterapia perdida orina', file:'RESUMENCLINIC/RESUMENES/Incontinencia_Urinaria.html'},
     {t:'Infección de vías urinarias', kw:'ITU IVU cistitis', file:'RESUMENCLINIC/RESUMENES/ITU_InfeccionTractoUrinario_4Poblaciones.html'},
-    {t:'Pielonefritis', kw:'', file:'RESUMENCLINIC/RESUMENES/13_Pielonefritis.html'},
+    {t:'Pielonefritis', kw:'pielonefritis infeccion renal fiebre puñopercusion giordano ceftriaxona urocultivo ivu alta complicada', file:'RESUMENCLINIC/RESUMENES/13_Pielonefritis.html'},
   
     {t:'Torsión testicular', kw:'escroto agudo dolor testiculo urgencia Prehn Gouverneur', file:'RESUMENCLINIC/RESUMENES/Torsion_Testicular.html'},
     {t:'Torsión de apéndice testicular', kw:'escroto agudo punto azul blue dot hidatide Morgagni', file:'RESUMENCLINIC/RESUMENES/Torsion_Apendice_Testicular.html'},
     {t:'Epididimitis', kw:'escroto agudo epididimo dolor Prehn orquiepididimitis', file:'RESUMENCLINIC/RESUMENES/Epididimitis.html'}]},
   {cat:'Infectología', items:[
-    {t:'Neumonía adquirida en la comunidad', kw:'NAC neumonia', file:'RESUMENCLINIC/RESUMENES/05_NAC_NeumoniaAdquiridaComunidad.html'},
-    {t:'Tuberculosis', kw:'tuberculosis TB tisis koch baciloscopia rifampicina isoniazida', file:'RESUMENCLINIC/RESUMENES/Tuberculosis.html'},
-    {t:'Sepsis y choque séptico', kw:'sepsis', file:'RESUMENCLINIC/RESUMENES/04_Sepsis_ChoqueSeptico_v2.html'},
-    {t:'Faringoamigdalitis', kw:'faringitis amigdalitis', file:'RESUMENCLINIC/RESUMENES/06_Faringoamigdalitis_v2.html'},
-    {t:'Sinusitis', kw:'rinosinusitis', file:'RESUMENCLINIC/RESUMENES/07_Sinusitis_v2.html'},
-    {t:'Otitis media', kw:'', file:'RESUMENCLINIC/RESUMENES/16_OtitisMedia.html'},
-    {t:'Resfriado común', kw:'catarro', file:'RESUMENCLINIC/RESUMENES/ResfriadoComun.html'},
+    {t:'Neumonía adquirida en la comunidad', kw:'NAC neumonia ira infeccion respiratoria aguda', file:'RESUMENCLINIC/RESUMENES/05_NAC_NeumoniaAdquiridaComunidad.html'},
+    {t:'Tuberculosis', kw:'tuberculosis TB tisis koch baciloscopia rifampicina isoniazida tbc tb koch bacilo', file:'RESUMENCLINIC/RESUMENES/Tuberculosis.html'},
+    {t:'Sepsis y choque séptico', kw:'sepsis choque septico qsofa sofa lactato vasopresor noradrenalina antibiotico primera hora paquete bundle', file:'RESUMENCLINIC/RESUMENES/04_Sepsis_ChoqueSeptico_v2.html'},
+    {t:'Faringoamigdalitis', kw:'faringitis amigdalitis ivrs infeccion de vias respiratorias superiores', file:'RESUMENCLINIC/RESUMENES/06_Faringoamigdalitis_v2.html'},
+    {t:'Sinusitis', kw:'rinosinusitis ivrs infeccion de vias respiratorias superiores', file:'RESUMENCLINIC/RESUMENES/07_Sinusitis_v2.html'},
+    {t:'Otitis media', kw:'otitis media aguda oido dolor otalgia otoscopia timpano amoxicilina niños supurada serosa', file:'RESUMENCLINIC/RESUMENES/16_OtitisMedia.html'},
+    {t:'Resfriado común', kw:'catarro ivrs infeccion de vias respiratorias superiores gripa catarro', file:'RESUMENCLINIC/RESUMENES/ResfriadoComun.html'},
     {t:'Rickettsiosis (fiebre manchada)', kw:'rickettsia', file:'RESUMENCLINIC/RESUMENES/RickettsiosisFiebreManchada.html'},
     {t:'Enfermedades exantemáticas', kw:'exantema sarampion rubeola', file:'RESUMENCLINIC/RESUMENES/EnfermedadesExantematicas.html'},
   
-    {t:'Otitis externa', kw:'oido nadador otalgia tragos gotas oticas Pseudomonas', file:'RESUMENCLINIC/RESUMENES/Otitis_Externa.html'}]},
+    {t:'Otitis externa', kw:'oido nadador otalgia tragos gotas oticas Pseudomonas', file:'RESUMENCLINIC/RESUMENES/Otitis_Externa.html'},
+    {t:'Mononucleosis infecciosa', kw:'mononucleosis infecciosa epstein barr vebe enfermedad del beso linfocitos atipicos faringoamigdalitis adenopatias esplenomegalia paul bunnell monospot ampicilina exantema', file:'RESUMENCLINIC/RESUMENES/Mononucleosis_ClinicaRapida.html'}
+  ]},
   {cat:'Infecciones de transmisión sexual', items:[
-    {t:'VIH / SIDA', kw:'vih sida', file:'RESUMENCLINIC/RESUMENES/21_VIH_SIDA.html'},
-    {t:'Sífilis', kw:'treponema', file:'RESUMENCLINIC/RESUMENES/19_Sifilis_v2.html'},
-    {t:'Gonorrea', kw:'gonococo', file:'RESUMENCLINIC/RESUMENES/33_Gonorrea.html'},
-    {t:'Virus del papiloma humano (VPH)', kw:'VPH condiloma verrugas', file:'RESUMENCLINIC/RESUMENES/20_VPH_v2.html'},
-    {t:'Herpes genital', kw:'herpes', file:'RESUMENCLINIC/RESUMENES/HerpesGenital.html'},
+    {t:'VIH / SIDA', kw:'vih sida its ets transmision sexual', file:'RESUMENCLINIC/RESUMENES/21_VIH_SIDA.html'},
+    {t:'Sífilis', kw:'treponema its ets transmision sexual', file:'RESUMENCLINIC/RESUMENES/19_Sifilis_v2.html'},
+    {t:'Gonorrea', kw:'gonococo its ets transmision sexual', file:'RESUMENCLINIC/RESUMENES/33_Gonorrea.html'},
+    {t:'Virus del papiloma humano (VPH)', kw:'VPH condiloma verrugas its ets transmision sexual', file:'RESUMENCLINIC/RESUMENES/20_VPH_v2.html'},
+    {t:'Herpes genital', kw:'herpes its ets transmision sexual', file:'RESUMENCLINIC/RESUMENES/HerpesGenital.html'},
   ]},
   {cat:'Ginecología y obstetricia', items:[
     {t:'Bartolinitis', kw:'bartolinitis absceso glandula bartolino marsupializacion drenaje vulva', file:'RESUMENCLINIC/RESUMENES/Bartolinitis.html'},
@@ -32757,7 +32784,7 @@ var TEMAS=[
     {t:'Spotting por anticonceptivos', kw:'spotting sangrado intermenstrual manchado anticonceptivos hormonales goteo escape breakthrough bleeding gotas sangre pastilla', file:'RESUMENCLINIC/RESUMENES/Spotting_Anticonceptivos.html'},
     {t:'Dismenorrea (cólicos menstruales)', kw:'dismenorrea colicos menstruales dolor regla menstruacion aine ibuprofeno naproxeno anticonceptivos primaria secundaria endometriosis', file:'RESUMENCLINIC/RESUMENES/Dismenorrea.html'},
     {t:'Vulvovaginitis', kw:'vaginosis candidiasis', file:'RESUMENCLINIC/RESUMENES/23_Vulvovaginitis.html'},
-    {t:'Sangrado uterino anormal', kw:'SUA', file:'RESUMENCLINIC/RESUMENES/34_SUA.html'},
+    {t:'Sangrado uterino anormal', kw:'sua sangrado uterino anormal metrorragia menorragia hipermenorrea palm coein hemorragia genital', file:'RESUMENCLINIC/RESUMENES/34_SUA.html'},
     {t:'Síndrome de ovario poliquístico', kw:'SOP ovario poliquistico', file:'RESUMENCLINIC/RESUMENES/30_SOMP.html'},
     {t:'Menopausia', kw:'climaterio', file:'RESUMENCLINIC/RESUMENES/29_Menopausia.html'},
     {t:'Cáncer cervicouterino', kw:'CACU cervix', file:'RESUMENCLINIC/RESUMENES/31_CACU.html'},
@@ -32765,19 +32792,19 @@ var TEMAS=[
   ]},
   {cat:'Gastroenterología', items:[
     {t:'Íleo paralítico', kw:'ileo paralitico adinamico posoperatorio obstruccion funcional distension abdominal', file:'RESUMENCLINIC/RESUMENES/Ileo_Paralitico.html'},
-    {t:'Colangitis aguda', kw:'colangitis aguda via biliar coledoco charcot reynolds cpre sepsis biliar ictericia', file:'RESUMENCLINIC/RESUMENES/Colangitis_ClinicaRapida.html'},
-    {t:'Enfermedad diverticular', kw:'enfermedad diverticular diverticulos diverticulitis colon sangrado', file:'RESUMENCLINIC/RESUMENES/EnfermedadDiverticular_ClinicaRapida.html'},
+    {t:'Colangitis aguda', kw:'colangitis aguda via biliar coledoco charcot reynolds cpre sepsis biliar ictericia abdomen agudo dolor abdominal', file:'RESUMENCLINIC/RESUMENES/Colangitis_ClinicaRapida.html'},
+    {t:'Enfermedad diverticular', kw:'enfermedad diverticular diverticulos diverticulitis colon sangrado abdomen agudo dolor abdominal', file:'RESUMENCLINIC/RESUMENES/EnfermedadDiverticular_ClinicaRapida.html'},
     {t:'Helicobacter pylori', kw:'helicobacter pylori h pylori gastritis ulcera erradicacion triple terapia', file:'RESUMENCLINIC/RESUMENES/Hpylori_ClinicaRapida.html'},
     {t:'Clostridioides difficile', kw:'clostridioides clostridium difficile c diff colitis pseudomembranosa diarrea vancomicina fidaxomicina', file:'RESUMENCLINIC/RESUMENES/Cdifficile_ClinicaRapida.html'},
-    {t:'Pancreatitis aguda', kw:'pancreatitis lipasa amilasa dolor abdominal', file:'RESUMENCLINIC/RESUMENES/Pancreatitis_Aguda.html'},
+    {t:'Pancreatitis aguda', kw:'pancreatitis lipasa amilasa dolor abdominal abdomen agudo dolor abdominal', file:'RESUMENCLINIC/RESUMENES/Pancreatitis_Aguda.html'},
     {t:'Enfermedad por reflujo (ERGE)', kw:'reflujo pirosis', file:'RESUMENCLINIC/RESUMENES/08_ERGE_v2.html'},
     {t:'Diarrea aguda', kw:'gastroenteritis', file:'RESUMENCLINIC/RESUMENES/11_DiarreaAguda.html'},
     {t:'Sangrado de tubo digestivo alto', kw:'STDA hemorragia', file:'RESUMENCLINIC/RESUMENES/14_STDA.html'},
     {t:'Sangrado de tubo digestivo bajo', kw:'STDB hemorragia', file:'RESUMENCLINIC/RESUMENES/15_STDB.html'},
     {t:'Síndrome de intestino irritable', kw:'SII colon irritable', file:'RESUMENCLINIC/RESUMENES/Sindrome_Intestino_Irritable.html'},
     {t:'Enfermedad hemorroidal', kw:'hemorroides', file:'RESUMENCLINIC/RESUMENES/Enfermedad_Hemorroidal.html'},
-    {t:'Colecistitis', kw:'vesicula', file:'RESUMENCLINIC/RESUMENES/Colecistitis.html'},
-    {t:'Apendicitis aguda', kw:'apendice apendicectomia mcburney enfermeria evidencia complicaciones diagnostico scores', file:'RESUMENCLINIC/RESUMENES/Apendicitis_Aguda_Completa.html'},
+    {t:'Colecistitis', kw:'vesicula abdomen agudo dolor abdominal', file:'RESUMENCLINIC/RESUMENES/Colecistitis.html'},
+    {t:'Apendicitis aguda', kw:'apendice apendicectomia mcburney enfermeria evidencia complicaciones diagnostico scores abdomen agudo dolor abdominal', file:'RESUMENCLINIC/RESUMENES/Apendicitis_Aguda_Completa.html'},
     {t:'Nutrición parenteral total', kw:'NPT nutricion parenteral aminoacidos lipidos dextrosa oligoelementos electrolitos osmolaridad via central', file:'RESUMENCLINIC/RESUMENES/Nutricion_Parenteral_Total_15.html'},
     {t:'Colitis ulcerosa (CUCI)', kw:'colitis ulcerosa cuci eii enfermedad inflamatoria intestinal mayo truelove witts mesalazina biologicos diarrea sangre tenesmo pancolitis proctitis', file:'RESUMENCLINIC/RESUMENES/CUCI_ColitisUlcerosa_ClinicaRapida.html'},
     {t:'Enfermedad de Crohn', kw:'crohn eii enfermedad inflamatoria intestinal transmural fistula estenosis ileon montreal cdai biologicos azatioprina calprotectina', file:'RESUMENCLINIC/RESUMENES/Crohn_ClinicaRapida.html'},
@@ -32786,8 +32813,8 @@ var TEMAS=[
     {t:'Tipos de dietas', kw:'dieta dietas hospitalaria blanda liquidos claros papilla progresion enteral parenteral polimerica iddsi textura disfagia espesante hiposodica renal diabetica nutricion indicaciones ayuno realimentacion', file:'RESUMENCLINIC/RESUMENES/TiposDeDietas_ClinicaRapida.html'},
   ]},
   {cat:'Neumología', items:[
-    {t:'Bronquiolitis', kw:'bronquiolitis VSR lactante sibilancias pediatria', file:'RESUMENCLINIC/RESUMENES/Bronquiolitis.html'},
-    {t:'Asma', kw:'', file:'RESUMENCLINIC/RESUMENES/16_Asma.html'},
+    {t:'Bronquiolitis', kw:'bronquiolitis VSR lactante sibilancias pediatria ira infeccion respiratoria aguda', file:'RESUMENCLINIC/RESUMENES/Bronquiolitis.html'},
+    {t:'Asma', kw:'asma broncoespasmo sibilancias salbutamol budesonida gina espirometria crisis asmatica rescate control inhalador', file:'RESUMENCLINIC/RESUMENES/16_Asma.html'},
     {t:'EPOC', kw:'epoc bronquitis enfisema', file:'RESUMENCLINIC/RESUMENES/EPOC.html'},
   
     {t:'Oxigenoterapia', kw:'oxigeno puntas nasales mascarilla Venturi reservorio alto flujo canula SpO2 hipoxemia', file:'RESUMENCLINIC/RESUMENES/Oxigenoterapia_ClinicaRapida.html'}]},
@@ -32800,15 +32827,20 @@ var TEMAS=[
     {t:'EVC hemorrágico', kw:'evc hemorragico hemorragia cerebral ictus acv', file:'RESUMENCLINIC/RESUMENES/EVC_Hemorragico_ClinicaRapida.html'},
     {t:'Parálisis de Bell', kw:'paralisis bell facial periferica nervio', file:'RESUMENCLINIC/RESUMENES/ParalisisBell_ClinicaRapida.html'},
     {t:'Traumatismo craneoencefálico', kw:'TCE trauma craneal', file:'RESUMENCLINIC/RESUMENES/22_TCE.html'},
-    {t:'Manejo del dolor', kw:'analgesia', file:'RESUMENCLINIC/RESUMENES/ManejoDelDolor.html'},
+  
+    {t:'Migraña', kw:'migraña migrana jaqueca cefalea aura ichd3 triptanes sumatriptan cgrp profilaxis topiramato propranolol amitriptilina fotofobia nausea estado migrañoso', file:'RESUMENCLINIC/RESUMENES/Migrana_ClinicaRapida.html'}
+  ,
+    {t:'Cefaleas (abordaje)', kw:'cefalea dolor de cabeza banderas rojas snoop primaria secundaria tensional racimos cluster hemorragia subaracnoidea trueno arteritis temporal hipertension intracraneal abordaje', file:'RESUMENCLINIC/RESUMENES/Cefaleas_ClinicaRapida.html'}
+  ,
+    {t:'Control del dolor', kw:'dolor analgesia escalera oms paracetamol aine tramadol morfina opioide naloxona coadyuvante neuropatico eva escala visual analoga paliativos titulacion', file:'RESUMENCLINIC/RESUMENES/ControlDelDolor_ClinicaRapida.html'}
   ]},
   {cat:'Psiquiatría y salud mental', items:[
     {t:'Trastorno bipolar', kw:'bipolar mania depresion animo psiquiatria', file:'RESUMENCLINIC/RESUMENES/bipolar.html'},
     {t:'Esquizofrenia', kw:'esquizofrenia psicosis antipsicoticos psiquiatria', file:'RESUMENCLINIC/RESUMENES/esquizofrenia.html'},
     {t:'Trastorno obsesivo-compulsivo (TOC)', kw:'toc obsesivo compulsivo ansiedad psiquiatria', file:'RESUMENCLINIC/RESUMENES/toc.html'},
-    {t:'Ansiedad', kw:'', file:'RESUMENCLINIC/RESUMENES/09_Ansiedad_v2.html'},
-    {t:'Depresión', kw:'', file:'RESUMENCLINIC/RESUMENES/10_Depresion_v2.html'},
-    {t:'Insomnio', kw:'sueño', file:'RESUMENCLINIC/RESUMENES/25_Insomnio.html'},
+    {t:'Ansiedad', kw:'ansiedad trastorno de ansiedad generalizada gad7 panico crisis de angustia sertralina benzodiacepina', file:'RESUMENCLINIC/RESUMENES/09_Ansiedad_v2.html'},
+    {t:'Depresión', kw:'depresion trastorno depresivo phq9 animo triste anhedonia isrs sertralina fluoxetina suicidio', file:'RESUMENCLINIC/RESUMENES/10_Depresion_v2.html'},
+    {t:'Insomnio', kw:'insomnio sueño higiene del sueño melatonina zolpidem trazodona conciliacion despertar terapia cognitiva', file:'RESUMENCLINIC/RESUMENES/25_Insomnio.html'},
     {t:'Trastorno del espectro autista', kw:'autismo TEA', file:'RESUMENCLINIC/RESUMENES/Autismo.html'},
   ]},
   {cat:'Dermatología y boca', items:[
@@ -32821,11 +32853,19 @@ var TEMAS=[
     {t:'Tiñas', kw:'tiña dermatofitosis micosis hongos piel', file:'RESUMENCLINIC/RESUMENES/Tinas.html'},
     {t:'Herpes zóster', kw:'zoster culebrilla', file:'RESUMENCLINIC/RESUMENES/17_HerpesZoster.html'},
     {t:'Herpes labial', kw:'fuego labial', file:'RESUMENCLINIC/RESUMENES/HerpesLabial.html'},
-    {t:'Estomatitis aftosa', kw:'aftas', file:'RESUMENCLINIC/RESUMENES/EstomatitisAftosa.html'},
-    {t:'Rinitis alérgica', kw:'alergia', file:'RESUMENCLINIC/RESUMENES/24_RinitisAlergica.html'},
-    {t:'Pediculosis', kw:'piojos', file:'RESUMENCLINIC/RESUMENES/Pediculosis.html'},
+    {t:'Estomatitis aftosa', kw:'aftas estomatitis aftosa ulceras orales boca llagas behcet corticoide topico dolor bucal', file:'RESUMENCLINIC/RESUMENES/EstomatitisAftosa.html'},
+    {t:'Rinitis alérgica', kw:'rinitis alergica alergia estornudos congestion nasal antihistaminico loratadina esteroide nasal polen', file:'RESUMENCLINIC/RESUMENES/24_RinitisAlergica.html'},
+    {t:'Pediculosis', kw:'piojos pediculosis liendres permetrina ivermectina cabeza escolar prurito capitis', file:'RESUMENCLINIC/RESUMENES/Pediculosis.html'},
   
-    {t:'Molusco contagioso', kw:'poxvirus papula umbilicada curetaje cantaridina niños', file:'RESUMENCLINIC/RESUMENES/Molusco_Contagioso.html'}]},
+    {t:'Molusco contagioso', kw:'poxvirus papula umbilicada curetaje cantaridina niños', file:'RESUMENCLINIC/RESUMENES/Molusco_Contagioso.html'},
+    {t:'Dermatitis de contacto alérgica', kw:'dermatitis contacto alergica hipersensibilidad tipo iv retardada patch test prueba del parche niquel cromo fragancias eccema corticoide topico alergeno', file:'RESUMENCLINIC/RESUMENES/DermatitisContactoAlergica_ClinicaRapida.html'}
+  ,
+    {t:'Dermatitis de contacto irritativa', kw:'dermatitis contacto irritativa ocupacional barrera cutanea detergentes solventes manos lavado guantes emolientes medicina del trabajo no inmunologica', file:'RESUMENCLINIC/RESUMENES/DermatitisContactoIrritativa_ClinicaRapida.html'}
+  ,
+    {t:'Dermatitis atópica', kw:'dermatitis atopica eccema atopico prurito marcha atopica filagrina emolientes corticoide topico tacrolimus dupilumab scorad easi flexuras niños th2', file:'RESUMENCLINIC/RESUMENES/DermatitisAtopica_ClinicaRapida.html'}
+  ,
+    {t:'Caída de cabello', kw:'caida de cabello caida del cabello perdida de pelo alopecia areata androgenica efluvio telogeno pull test minoxidil finasterida ferritina tiroides tricoscopia calvicie pelo', file:'RESUMENCLINIC/RESUMENES/CaidaDeCabello_ClinicaRapida.html'}
+  ]},
   {cat:'Pediatría y preventiva', items:[
     {t:'Niño sano', kw:'crecimiento desarrollo', file:'RESUMENCLINIC/RESUMENES/38_Nino_Sano.html'},
     {t:'Vacunas', kw:'inmunizaciones esquema', file:'RESUMENCLINIC/RESUMENES/37_Vacunas.html'},
@@ -32852,19 +32892,39 @@ var TEMAS=[
     {t:'Artritis reumatoide', kw:'artritis reumatoide AR fame metotrexato factor reumatoide anti ccp poliartritis simetrica', file:'RESUMENCLINIC/RESUMENES/Artritis_Reumatoide.html'},
     {t:'Artritis séptica', kw:'artritis septica infeccion articular monoartritis aspirado sinovial staphylococcus urgencia gonococica', file:'RESUMENCLINIC/RESUMENES/Artritis_Septica.html'},
     {t:'Crisis gotosa', kw:'gota acido urico', file:'RESUMENCLINIC/RESUMENES/CrisisGotosa.html'},
+  
+    {t:'Lupus eritematoso sistémico (LES)', kw:'lupus eritematoso sistemico les autoinmune ana anti dna anti sm complemento nefritis lupica hidroxicloroquina eritema malar fotosensibilidad slicc eular acr brote', file:'RESUMENCLINIC/RESUMENES/Lupus_LES_ClinicaRapida.html'}
   ]},
   {cat:'Hematología', items:[
     {t:'TRALI y TACO', kw:'trali taco transfusion reaccion lesion pulmonar sobrecarga circulatoria hemoderivados', file:'RESUMENCLINIC/RESUMENES/TRALI_TACO_ClinicaRapida.html'},
-    {t:'Anemias', kw:'anemia', file:'RESUMENCLINIC/RESUMENES/Anemias.html'},
+    {t:'Anemias', kw:'anemia hemoglobina baja ferropenica vcm reticulocitos ferritina hierro megaloblastica b12 folato transfusion', file:'RESUMENCLINIC/RESUMENES/Anemias.html'},
   ]},
   {cat:'Radiología e imagen', items:[
-    {t:'Unidades Hounsfield (UH)', kw:'hounsfield uh hu unidades tomografia tc computada densidad radiodensidad atenuacion ventana window realce contraste adenoma suprarrenal grasa calcio hemorragia quiste imagen radiologia', file:'RESUMENCLINIC/RESUMENES/UnidadesHounsfield_ClinicaRapida.html'},
+    {t:'Unidades Hounsfield (UH)', kw:'hounsfield uh hu unidades tomografia tc computada densidad radiodensidad atenuacion ventana window realce contraste adenoma suprarrenal grasa calcio hemorragia quiste imagen radiologia tac tomografia computada', file:'RESUMENCLINIC/RESUMENES/UnidadesHounsfield_ClinicaRapida.html'},
+  ]},
+  {cat:'Traumatología y lesiones', items:[
+  
+    {t:'Fractura del boxeador', kw:'fractura boxeador quinto metacarpiano cuello puñetazo angulacion rotacion dedo ferula reduccion jahss ortopedia mano golpe', file:'RESUMENCLINIC/RESUMENES/FracturaBoxeador_ClinicaRapida.html'}
+  ,
+    {t:'Esguince de dedo', kw:'esguince de dedo dedo de la mano interfalangica colateral volar placa buddy taping ferula jammed finger inestabilidad avulsion', file:'RESUMENCLINIC/RESUMENES/EsguinceDedo_ClinicaRapida.html'}
+  ,
+    {t:'Esguince de tobillo', kw:'esguince de tobillo torcedura tobillo inversion ligamento peroneo astragalino ottawa cajon anterior grado i ii iii vendaje rice funcional rehabilitacion', file:'RESUMENCLINIC/RESUMENES/EsguinceTobillo_ClinicaRapida.html'}
+  ,
+    {t:'Epicondilitis medial', kw:'epicondilitis medial epitrocleitis codo de golfista codo golfista flexores pronador tendinopatia dolor codo interno rehabilitacion excentrico', file:'RESUMENCLINIC/RESUMENES/EpicondilitisMedial_ClinicaRapida.html'}
+  ,
+    {t:'Epicondilitis lateral', kw:'epicondilitis lateral codo de tenista codo tenista extensores radial corto cozen mill tendinopatia dolor codo externo excentrico infiltracion', file:'RESUMENCLINIC/RESUMENES/EpicondilitisLateral_ClinicaRapida.html'}
+  ,
+    {t:'Gonalgia (dolor de rodilla)', kw:'gonalgia dolor de rodilla dolor rodilla menisco ligamento cruzado colateral condromalacia patelofemoral ottawa mcmurray lachman derrame gonartrosis', file:'RESUMENCLINIC/RESUMENES/Gonalgia_ClinicaRapida.html'}
+  ,
+    {t:'Lumbalgia', kw:'lumbalgia dolor lumbar dolor de espalda baja espalda baja banderas rojas ciatica lasegue hernia discal cauda equina inespecifica aines rehabilitacion reposo', file:'RESUMENCLINIC/RESUMENES/Lumbalgia_ClinicaRapida.html'}
+  ,
+    {t:'Cervicalgia', kw:'cervicalgia dolor de cuello dolor cuello torticolis contractura latigazo whiplash radiculopatia spurling banderas rojas canadian c spine mialgia trapecio', file:'RESUMENCLINIC/RESUMENES/Cervicalgia_ClinicaRapida.html'}
   ]},
   {cat:'Urgencias, toxicología y procedimientos', items:[
     {t:'Intoxicaciones agudas', kw:'intoxicacion toxico antidoto veneno urgencias', file:'RESUMENCLINIC/RESUMENES/Intoxicaciones_ClinicaRapida.html'},
     {t:'Ritmos de paro', kw:'paro cardiaco ritmos rcp desfibrilable asistolia fv tvsp', file:'RESUMENCLINIC/RESUMENES/Ritmos_Paro_ClinicaRapida.html'},
     {t:'Paracentesis', kw:'paracentesis ascitis procedimiento puncion abdominal', file:'RESUMENCLINIC/RESUMENES/Paracentesis_ClinicaRapida.html'},
-    {t:'Mordedura de perro', kw:'', file:'RESUMENCLINIC/RESUMENES/MordeduraPerro.html'},
+    {t:'Mordedura de perro', kw:'mordedura de perro rabia antirrabica profilaxis amoxicilina clavulanico herida lavado tetanos animal', file:'RESUMENCLINIC/RESUMENES/MordeduraPerro.html'},
     {t:'Mordedura de cascabel', kw:'serpiente vibora', file:'RESUMENCLINIC/RESUMENES/MordeduraCascabel.html'},
     {t:'Mordedura de viuda negra', kw:'araña latrodectus', file:'RESUMENCLINIC/RESUMENES/MordeduraViudaNegra.html'},
     {t:'Mordedura de Loxosceles', kw:'araña reclusa violinista', file:'RESUMENCLINIC/RESUMENES/MordeduraLoxosceles.html'},
@@ -32896,7 +32956,7 @@ function temaWheelFix(doc){try{if(!doc||doc.__vmWheel)return;doc.__vmWheel=true;
 function reportarTema(f){var name='este tema';try{(typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){if(t.file===f)name=t.t;});});}catch(e){}var sub=encodeURIComponent('VadeMed - Error en tema: '+name);var body=encodeURIComponent('Tema: '+name)+'%0A%0ADescribe el error o la correccion sugerida:%0A%0A';try{window.location.href='mailto:vademedmx@gmail.com?subject='+sub+'&body='+body;}catch(e){}}
 function tvToggleFav(el){ if(!_temaCurrent)return; favM(_temaCurrent, el); }
 var _temaHistPushed=false;
-var VM_TVER='t16';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
+var VM_TVER='t17';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
 /* Pre-cargado silencioso: tras cargar la app, bajamos los temas de la lista en segundo
    plano (poco a poco) para que abran INSTANTANEOS y funcionen sin internet. Solo en buena
    señal y si NO esta activado el ahorro de datos, para no gastar los datos del usuario. */
@@ -33127,7 +33187,7 @@ function renderTemasPanel(q){
     var out=[];
     TEMAS.forEach(function(p){
       var cm=norm(p.cat).indexOf(nq)>=0;
-      var items=p.items.filter(function(t){return cm||norm(t.t).indexOf(nq)>=0||norm(t.kw||'').indexOf(nq)>=0;});
+      var items=p.items.filter(function(t){return cm||coincide(t.t,nq)||coincide(t.kw||'',nq);});
       if(items.length) out.push(temaGroupHTML(p, items, true));
     });
     el.innerHTML = out.length ? out.join('') : '<div class="dempty">Sin resultados</div>';
@@ -33395,6 +33455,12 @@ function esMovil(){try{if(navigator.userAgentData&&typeof navigator.userAgentDat
 var VM_REVALIDA_DIAS=3;
 function _vmMarcarValido(acc,r){try{localStorage.setItem('vademed_acceso',JSON.stringify({codigo:acc.codigo,nombre:((r&&r.nombre)||acc.nombre||''),offline:!!(r&&r.offline)}));localStorage.setItem('vademed_lastvalid',String(Date.now()));}catch(e){}}
 var VM_NOVEDADES=[
+ {v:'2026.08.5', fecha:'15 de agosto de 2026', notas:[
+  {c:'Nuevo', ic:'🤕', t:'18 temas nuevos', d:'Cefaleas, migraña, mononucleosis, lupus, las tres dermatitis, hipotiroidismo subclínico y caída de cabello.'},
+  {c:'Nuevo', ic:'🦴', t:'Traumatología y lesiones, especialidad nueva', d:'Esguinces de tobillo y dedo, fractura del boxeador, epicondilitis, gonalgia, lumbalgia y cervicalgia.'},
+  {c:'Mejora', ic:'🔎', t:'El buscador entiende las siglas', d:'IAM, SICA, ICC, HTA, TBC, IVRS y más ya llevan a su tema. Antes ICC te sacaba Lupus.'},
+  {c:'Actualización', ic:'💉', t:'Control del dolor renovado', d:'Con fisiopatología, escalera de la OMS y más sobre seguridad de opioides.'}
+ ]},
  {v:'2026.08.4', fecha:'15 de agosto de 2026', notas:[
   {c:'Mejora', ic:'🛡', t:'Revisión de seguridad de las 124 calculadoras', d:'Ninguna acepta ya datos imposibles: si un dato está fuera de rango fisiológico, avisa en vez de calcular.'},
   {c:'Mejora', ic:'⛔', t:'Aviso cuando la dosis sale muy alta', d:'Parkland, goteo IV, infusión y antipirético pediátrico avisan si el resultado pasa de lo dable.'}

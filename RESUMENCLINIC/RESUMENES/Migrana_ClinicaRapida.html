@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Migraña · Clínica Rápida</title>
+<style>
+/* ===== CAMBIAR SOLO --ac y --acd POR EL COLOR DE LA ESPECIALIDAD ===== */
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#be185d;--acd:#831843;--acl:#fdf2f8;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.step{display:flex;gap:10px;margin-bottom:10px;}
+.step-n{background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.step-b{flex:1;font-size:12.5px;color:var(--gray-700);line-height:1.55;}.step-b b{color:var(--gray-900);}
+/* Calculadora / escalas */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+/* Chips */
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+/* Escenarios */
+.esc-hero{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+/* Bibliografía */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🧠</div>
+    <div>
+      <div class="hdr-eye">Neurología · Medicina interna</div>
+      <div class="hdr-title">Migraña</div>
+      <div class="hdr-sub">Cefalea primaria incapacitante · sistema trigémino-vascular · CGRP · evidencia 2024–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> G43.0 sin aura · G43.1 con aura · G43.2 estado migrañoso</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">~12–15% población</span>
+    <span class="badge">♀ 3:1</span>
+    <span class="badge">2ª causa de discapacidad</span>
+    <span class="badge">Anti-CGRP 1ª línea</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">12–15%</div><div class="qs-l">Prevalencia global</div></div>
+  <div class="qs"><div class="qs-v">♀18% / ♂6%</div><div class="qs-l">Por sexo</div></div>
+  <div class="qs"><div class="qs-v">4–72 h</div><div class="qs-l">Duración crisis</div></div>
+  <div class="qs"><div class="qs-v">≥15 d/mes</div><div class="qs-l">Migraña crónica</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">⚙️ Fisiopatología</button>
+  <button class="tab" onclick="showT('etio',this)">🔰 Desencadenantes/Fases</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Clínica y Dx (ICHD-3)</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ================= RESUMEN ================= -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧠</span><span class="st">Definición</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p><b>Migraña:</b> cefalea primaria crónica, episódica y recurrente, con crisis de dolor típicamente <b>unilateral, pulsátil, de intensidad moderada-grave</b>, que dura <b>4–72 h</b>, se acompaña de <b>náusea/vómito y/o foto-fonofobia</b> y empeora con la actividad física. En ~25–30% se precede de <b>aura</b> (síntomas neurológicos focales transitorios y reversibles).</p>
+      <p>Es un trastorno del <b>sistema trigémino-vascular</b> con base neurogénica: no es una simple cefalea vascular. Cursa en <b>fases</b> (prodromo → aura → cefalea → posdromo) y puede evolucionar de forma episódica a <b>crónica</b> (≥15 días de cefalea/mes durante ≥3 meses, con ≥8 días migrañosos).</p>
+    </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔑</span><span class="st">Puntos clave</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">1</div><div class="kt"><b>Diagnóstico clínico</b> por criterios <b>ICHD-3</b>; la neuroimagen NO se requiere de rutina salvo banderas rojas (SNNOOP10).</div></div>
+      <div class="kp"><div class="kn">2</div><div class="kt"><b>Trate temprano y a dosis plena.</b> Estratifique según discapacidad (MIDAS/HIT-6), no de forma escalonada rígida.</div></div>
+      <div class="kp"><div class="kn">3</div><div class="kt"><b>Triptanes</b> = agudo específico de elección; los nuevos <b>gepants (ubrogepant, rimegepant, zavegepant)</b> y el <b>ditán (lasmiditán)</b> son opciones sin vasoconstricción.</div></div>
+      <div class="kp"><div class="kn">4</div><div class="kt">Indique <b>preventivo</b> si ≥4–6 días de cefalea/mes o discapacidad significativa. Los <b>anti-CGRP</b> son ahora <b>1ª línea</b> (AHS 2024), sin necesidad de fallar orales previos.</div></div>
+      <div class="kp"><div class="kn">5</div><div class="kt">Vigile y prevenga la <b>cefalea por abuso de medicación</b> (analgésicos simples &lt;15 d/mes; triptanes/combinados/opioides &lt;10 d/mes). <b>Evite opioides y butalbital.</b></div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t"><thead><tr><th>Parámetro</th><th>Cifra</th></tr></thead><tbody>
+        <tr><td>Prevalencia global (1 año)</td><td><span class="dn">~12–15%</span></td></tr>
+        <tr><td>Mujeres</td><td><span class="dn">~18%</span></td></tr>
+        <tr><td>Hombres</td><td><span class="dn">~6%</span></td></tr>
+        <tr><td>Relación ♀:♂</td><td><span class="dn">~3:1</span> (tras pubertad)</td></tr>
+        <tr><td>Pico de prevalencia</td><td>25–55 años (edad laboral productiva)</td></tr>
+        <tr><td>Migraña crónica</td><td><span class="dn">~1–2%</span> de la población</td></tr>
+        <tr><td>Con aura</td><td>~25–30% de los pacientes</td></tr>
+        <tr><td>Carga global</td><td><span class="dn">2ª causa</span> mundial de años vividos con discapacidad (YLD); <b>1ª en mujeres jóvenes</b></td></tr>
+      </tbody></table></div>
+      <div class="alert a-i"><span class="ai">ℹ️</span><div><div class="at">Progresión</div>~2.5% de la migraña episódica progresa a crónica por año; factores: uso excesivo de analgésicos, obesidad, depresión, alta frecuencia basal, roncopatía/apnea.</div></div>
+    </div></div>
+</div>
+
+<!-- ================= FISIOPATOLOGÍA ================= -->
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Sistema trigémino-vascular</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p>El evento central es la activación del <b>sistema trigémino-vascular</b>: las neuronas del <b>ganglio trigémino</b> inervan los vasos meníngeos (duramadre) y, al activarse, liberan neuropéptidos vasoactivos —principalmente <b>CGRP (péptido relacionado con el gen de la calcitonina)</b>, además de <b>sustancia P</b> y PACAP.</p>
+      <p>Esto produce <b>inflamación neurogénica estéril</b>: vasodilatación meníngea, extravasación de plasma y sensibilización de los nociceptores. La señal viaja por el V par hacia el <b>núcleo caudal del trigémino</b> (complejo trigémino-cervical) y de ahí al tálamo y la corteza → percepción del dolor.</p>
+    </div>
+    <div class="diag"><b>CGRP — el eje terapéutico</b><br>El CGRP es el vasodilatador más potente conocido y está elevado durante las crisis. Su bloqueo (anticuerpos monoclonales y gepants) reduce la transmisión nociceptiva sin causar vasoconstricción, lo que explica su eficacia y su mejor perfil cardiovascular frente a los triptanes.</div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌊</span><span class="st">Depresión cortical propagada (aura)</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p>El <b>aura</b> es el correlato clínico de la <b>depresión cortical propagada (CSD)</b>: una onda de despolarización neuronal y glial que avanza por la corteza a <b>~3 mm/min</b>, seguida de una supresión de la actividad. Se origina típicamente en la corteza occipital (aura visual) y se propaga hacia adelante.</p>
+      <p>La CSD abre canales <b>Panx1</b>, activa metaloproteinasas y estimula terminaciones trigéminas, sirviendo de puente entre el aura y la activación del dolor. La progresión lenta (5–60 min) y la marcha de los síntomas la distinguen del ictus/AIT (inicio súbito).</p>
+    </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔥</span><span class="st">Sensibilización central y periférica</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p><b>Sensibilización periférica:</b> los nociceptores meníngeos bajan su umbral → el dolor se vuelve pulsátil y empeora con maniobras que aumentan la presión (Valsalva, agacharse, actividad).</p>
+      <p><b>Sensibilización central</b> (neuronas de 2º orden en el núcleo trigémino): produce <b>alodinia cutánea</b> (dolor al peinarse, usar lentes, tacto), marcador clínico de crisis avanzada. Una vez establecida, los triptanes pierden eficacia → refuerza tratar <b>temprano</b>, antes de la alodinia.</p>
+    </div>
+    <div class="fp fp-p"><b>Implicación práctica:</b> la ventana óptima para el agudo es la fase temprana del dolor (leve-moderado, sin alodinia). Tarde = respuesta pobre y recurrencia.</div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Tronco, hipotálamo y genética</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p><b>Tronco encefálico:</b> la <b>sustancia gris periacueductal</b> y el <b>núcleo del rafe/locus coeruleus</b> modulan (y desinhiben) la vía del dolor —el llamado "generador migrañoso".</p>
+      <p><b>Hipotálamo:</b> se activa en la <b>fase prodrómica</b> (horas antes); explica síntomas premonitorios como bostezos, avidez por alimentos, poliuria, cambios de ánimo y la relación con ciclos de sueño/comida.</p>
+      <p><b>Base genética / canalopatías:</b> la <b>migraña hemipléjica familiar</b> es monogénica (canalopatías: <em>CACNA1A</em>, <em>ATP1A2</em>, <em>SCN1A</em>). La migraña común es poligénica (&gt;100 loci), con mayor umbral de excitabilidad cortical heredado.</p>
+    </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Por qué funcionan los fármacos</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="diag"><b>Triptanes</b> — agonistas <b>5-HT<sub>1B/1D</sub></b>: 1D inhibe la liberación de CGRP en la terminal trigémina (efecto pre-sináptico) y 1B produce vasoconstricción de vasos meníngeos → de ahí su <b>contraindicación cardiovascular</b>.</div>
+      <div class="diag"><b>Gepants y anticuerpos anti-CGRP</b> — bloqueo directo del <b>CGRP</b> o su receptor: cortan la inflamación neurogénica <b>sin vasoconstricción</b> (seguros en enfermedad vascular).</div>
+      <div class="diag"><b>Ditanes (lasmiditán)</b> — agonista selectivo <b>5-HT<sub>1F</sub></b>: inhibe la vía trigémina <b>sin acción vascular (sin 5-HT<sub>1B</sub>)</b> → sin vasoconstricción, pero con efectos centrales (mareo, somnolencia).</div>
+    </div></div>
+</div>
+
+<!-- ================= DESENCADENANTES / FASES ================= -->
+<div class="panel" id="tab-etio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔰</span><span class="st">Las 4 fases de la crisis</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="step"><div class="step-n">1</div><div class="step-b"><b>Prodromo (premonitoria)</b> — horas a 1–2 días antes. Bostezos, avidez de comida, irritabilidad/ánimo, fatiga, poliuria, rigidez de cuello. Origen hipotalámico. Reconocerla permite tratamiento anticipado.</div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-b"><b>Aura</b> — 5–60 min, en ~25–30%. Síntomas focales totalmente reversibles: visuales (escotoma centelleante, líneas en zigzag), sensitivos (parestesias en marcha), del habla/lenguaje. Se desarrollan gradualmente.</div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-b"><b>Cefalea</b> — 4–72 h. Dolor pulsátil unilateral, náusea/vómito, foto-fonofobia, osmofobia, alodinia. Empeora con actividad; el paciente busca reposo en oscuridad y silencio.</div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-b"><b>Posdromo ("resaca migrañosa")</b> — horas a 1 día. Agotamiento, dificultad de concentración, dolor residual al mover la cabeza, ánimo alterado.</div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚡</span><span class="st">Desencadenantes (frecuencia relativa)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t"><thead><tr><th>Desencadenante</th><th>Frecuencia</th><th>Nota</th></tr></thead><tbody>
+        <tr><td><b>Estrés</b> (o su alivio, "cefalea de fin de semana")</td><td><span class="dn">~60–80%</span></td><td>El más reportado</td></tr>
+        <tr><td><b>Menstruación / caída de estrógenos</b></td><td><span class="dn">~50%</span> de mujeres</td><td>Perimenstrual (−2 a +3 d)</td></tr>
+        <tr><td>Alteración del <b>sueño</b> (falta o exceso)</td><td>~50%</td><td>Higiene de sueño</td></tr>
+        <tr><td><b>Ayuno / saltarse comidas</b></td><td>~40%</td><td>Hipoglucemia relativa</td></tr>
+        <tr><td><b>Deshidratación</b></td><td>~30–40%</td><td>Fácil de corregir</td></tr>
+        <tr><td><b>Alcohol / vino tinto</b></td><td>~30%</td><td>Vasoactivos, sulfitos, taninos</td></tr>
+        <tr><td><b>Cafeína</b> (exceso o abstinencia)</td><td>~30%</td><td>Bidireccional</td></tr>
+        <tr><td>Estímulos sensoriales (<b>luces</b>, olores, ruido)</td><td>~30–40%</td><td>Luz brillante/parpadeante</td></tr>
+        <tr><td>Cambios climáticos / presión barométrica</td><td>~30%</td><td>Variable</td></tr>
+      </tbody></table></div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Ojo con los "desencadenantes" dietéticos</div>Muchos (chocolate, avidez de dulce) son en realidad <b>síntomas prodrómicos</b>, no causas. Recomiende un <b>diario de cefalea</b> antes de restricciones dietéticas amplias.</div></div>
+    </div></div>
+</div>
+
+<!-- ================= CLÍNICA Y DX ================= -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">ICHD-3 · Migraña SIN aura (1.1)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="diag">
+        <b>A.</b> ≥ 5 crisis que cumplen B–D.<br>
+        <b>B.</b> Duración <b>4–72 h</b> (sin tratar o mal tratadas).<br>
+        <b>C.</b> ≥ 2 de las 4 características: (1) <b>unilateral</b>; (2) <b>pulsátil</b>; (3) intensidad <b>moderada-grave</b>; (4) <b>empeora con / condiciona evitar</b> actividad física rutinaria.<br>
+        <b>D.</b> Durante la cefalea ≥ 1 de: (1) <b>náusea y/o vómito</b>; (2) <b>fotofobia y fonofobia</b>.<br>
+        <b>E.</b> No explicada mejor por otro diagnóstico ICHD-3.
+      </div>
+      <div class="alert a-i"><span class="ai">💡</span><div>Regla mnemotécnica <b>POUND</b>: <b>P</b>ulsátil, dur<b>O</b> 4–72 h, <b>U</b>nilateral, <b>N</b>áusea, <b>D</b>isabling (incapacitante). ≥4/5 hace muy probable la migraña.</div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✨</span><span class="st">ICHD-3 · Migraña CON aura (1.2)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="diag">
+        <b>A.</b> ≥ 2 crisis que cumplen B–C.<br>
+        <b>B.</b> ≥ 1 síntoma de aura <b>totalmente reversible</b>: visual, sensitivo, del habla/lenguaje, motor, troncoencefálico o retiniano.<br>
+        <b>C.</b> ≥ 3 de 6: (1) ≥1 aura se propaga en <b>≥5 min</b>; (2) ≥2 síntomas <b>en sucesión</b>; (3) cada aura dura <b>5–60 min</b>; (4) ≥1 aura <b>unilateral</b>; (5) ≥1 aura <b>positiva</b> (centelleos, hormigueo); (6) la cefalea acompaña o sigue al aura en &lt;60 min.
+      </div>
+      <div class="alert a-r"><span class="ai">🚩</span><div><div class="at">Aura atípica = estudiar</div>Aura &gt;60 min, aura sin cefalea de novo en &gt;50 años, aura siempre del mismo lado, o síntomas <b>negativos/motores</b> súbitos → descartar causa vascular (AIT/ictus).</div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🗂️</span><span class="st">Subtipos y variantes</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t"><thead><tr><th>Tipo</th><th>Rasgo distintivo</th></tr></thead><tbody>
+        <tr><td><b>Crónica (1.3)</b></td><td>≥15 días de cefalea/mes ≥3 meses, con <b>≥8 días migrañosos</b>/mes</td></tr>
+        <tr><td><b>Menstrual</b></td><td>Crisis −2 a +3 días del sangrado, ≥2/3 ciclos; suele ser sin aura, intensa y prolongada</td></tr>
+        <tr><td><b>Vestibular</b></td><td>Vértigo/mareo episódico (5 min–72 h) con rasgos migrañosos; causa frecuente de vértigo recurrente</td></tr>
+        <tr><td><b>Hemipléjica (familiar/esporádica)</b></td><td>Aura con <b>debilidad motora</b> reversible; canalopatía. <b>Contraindica triptanes/ergóticos</b></td></tr>
+        <tr><td><b>Con aura del tronco</b> (antes basilar)</td><td>Disartria, vértigo, diplopía, ataxia, tinnitus, ↓conciencia. <b>Contraindica triptanes</b></td></tr>
+        <tr><td><b>Retiniana</b></td><td>Aura visual <b>monocular</b> reversible</td></tr>
+      </tbody></table></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas · SNNOOP10</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Obligan a descartar cefalea secundaria (neuroimagen ± PL ± laboratorio)</div>
+        <b>S</b> — Síntomas sistémicos (fiebre, pérdida de peso)<br>
+        <b>N</b> — Enfermedad Neoplásica o VIH/inmunosupresión<br>
+        <b>N</b> — Déficit Neurológico o alteración de conciencia<br>
+        <b>O</b> — Inicio (Onset) súbito / en trueno ("thunderclap")<br>
+        <b>O</b> — Edad (Older) &gt;50 años de inicio nuevo → arteritis de células gigantes<br>
+        <b>P</b> — Patrón cambiado / Progresivo / Postural<br>
+        <b>P</b> — Precipitada por Valsalva; Papiledema; Punción (post-PL); en el embarazo/Puerperio; dolor Periorbitario con ojo rojo; postraumática; abuso de analgésicos (Painkiller); trastorno del sistema inmune (los "10")
+      </div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t"><thead><tr><th></th><th>Migraña</th><th>Tensional</th><th>En racimos (cluster)</th></tr></thead><tbody>
+        <tr><td><b>Localización</b></td><td>Unilateral</td><td>Bilateral, "banda"</td><td>Estrictamente unilateral, periorbitaria</td></tr>
+        <tr><td><b>Carácter</b></td><td>Pulsátil</td><td>Opresivo</td><td>Punzante, atroz</td></tr>
+        <tr><td><b>Duración</b></td><td>4–72 h</td><td>30 min–7 días</td><td>15–180 min</td></tr>
+        <tr><td><b>Actividad</b></td><td>Empeora; busca reposo</td><td>No empeora</td><td><b>Inquieto/agitado</b></td></tr>
+        <tr><td><b>Autonómico</b></td><td>No (o leve)</td><td>No</td><td><b>Sí</b> (lagrimeo, rinorrea, Horner, ptosis)</td></tr>
+        <tr><td><b>Sexo</b></td><td>♀ &gt; ♂</td><td>♀ ≈ ♂</td><td>♂ &gt; ♀</td></tr>
+      </tbody></table></div>
+    </div></div>
+</div>
+
+<!-- ================= ESCALAS ================= -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">MIDAS · discapacidad por migraña</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose"><p>Cuantifica los <b>días de discapacidad en los últimos 3 meses</b>. Guía la necesidad de preventivo y mide respuesta al tratamiento.</p></div>
+      <div class="calc-w"><div id="midas-box"></div></div>
+      <div class="alert a-i"><span class="ai">ℹ️</span><div>El MIDAS suma <b>5 ítems</b> (días perdidos/reducidos en trabajo/escuela, tareas domésticas y actividades sociales). Grados I–IV. Los ítems A y B (frecuencia e intensidad) no puntúan pero orientan.</div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Interpretación MIDAS</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t"><thead><tr><th>Puntaje</th><th>Grado</th><th>Discapacidad</th></tr></thead><tbody>
+        <tr><td>0–5</td><td><b>I</b></td><td>Mínima o nula</td></tr>
+        <tr><td>6–10</td><td><b>II</b></td><td>Leve</td></tr>
+        <tr><td>11–20</td><td><b>III</b></td><td>Moderada</td></tr>
+        <tr><td>≥21</td><td><b>IV</b></td><td>Grave → considerar preventivo y derivación</td></tr>
+      </tbody></table></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">HIT-6 (escala alterna)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose"><p>6 ítems sobre el impacto de la cefalea (dolor, actividad, ánimo, concentración, cansancio). Rango <b>36–78</b>.</p></div>
+      <div class="tw"><table class="t"><thead><tr><th>Puntaje</th><th>Impacto</th></tr></thead><tbody>
+        <tr><td>≤49</td><td>Poco o ninguno</td></tr>
+        <tr><td>50–55</td><td>Algún impacto</td></tr>
+        <tr><td>56–59</td><td>Impacto sustancial</td></tr>
+        <tr><td>≥60</td><td>Impacto <b>grave</b> → tratamiento intensivo</td></tr>
+      </tbody></table></div>
+      <div class="calc-note">Diferencia mínima clínicamente relevante ≈ 2.3 puntos.</div>
+    </div></div>
+</div>
+
+<!-- ================= TRATAMIENTO ================= -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-g"><span class="ai">🎯</span><div><div class="at">Principios</div>Agudo: tratar <b>temprano</b>, dosis plena, limitar días de uso. Preventivo si <b>≥4–6 días/mes</b> o discapacidad (MIDAS III–IV). <b>Anti-CGRP = 1ª línea</b> preventiva (AHS 2024). Objetivo: ↓≥50% días de cefalea.</div></div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ================= ESCENARIOS ================= -->
+<div class="panel" id="tab-escen"><div class="chipbar" id="escen-chips"></div><div id="escen-body"></div></div>
+
+<!-- ================= SEGUIMIENTO ================= -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas terapéuticas</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">1</div><div class="kt"><b>↓ ≥50%</b> en días de cefalea/mes (objetivo estándar de respuesta preventiva).</div></div>
+      <div class="kp"><div class="kn">2</div><div class="kt">↓ discapacidad medida por <b>MIDAS/HIT-6</b> y ↓ uso de medicación aguda.</div></div>
+      <div class="kp"><div class="kn">3</div><div class="kt">Mejorar función/calidad de vida y evitar la <b>cronificación</b>.</div></div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📓</span><span class="st">Diario de cefalea</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p>Herramienta clave: registrar <b>frecuencia, duración, intensidad, desencadenantes, medicación tomada y respuesta, y días con menstruación</b>. Distingue días migrañosos de días de cefalea, detecta abuso de medicación y mide respuesta objetiva al preventivo.</p>
+    </div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⏱️</span><span class="st">Duración del preventivo</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-b"><b>Titular lento, evaluar tarde:</b> los orales requieren <b>≥8 semanas a dosis objetivo</b>; juzgue eficacia a los <b>3 meses</b> (hasta 6 con anti-CGRP en algunos respondedores tardíos).</div>
+      <div class="fp fp-a"><b>Retiro:</b> si hay control sostenido, considere retirar/reducir tras <b>6–12 meses</b>. Con anti-CGRP, valorar "vacaciones terapéuticas" y reintroducir si recae.</div>
+      <div class="fp fp-r"><b>Evitar abuso:</b> reforzar límites de días de uso agudo en cada visita; el abuso perpetúa la cronificación y bloquea la respuesta al preventivo.</div>
+    </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">↗️</span><span class="st">Cuándo escalar / derivar</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-w"><span class="ai">⚠️</span><div>Fracaso de ≥2–3 preventivos orales; migraña crónica; abuso de medicación refractario; migraña hemipléjica/con aura del tronco; embarazo con migraña difícil; dudas diagnósticas o banderas rojas → <b>Neurología / clínica de cefalea</b>.</div></div>
+    </div></div>
+</div>
+
+<!-- ================= BIBLIOGRAFÍA ================= -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía</h2><p>Guías y evidencia 2022–2026 · Migraña</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Guías y posicionamientos</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Guía</span>
+        <div class="biblio-ref">Charles A, et al. <em>CGRP-targeting therapies are a first-line option for the prevention of migraine: an American Headache Society position statement update.</em> Headache. 2024.</div>
+        <a class="biblio-link" href="https://headachejournal.onlinelibrary.wiley.com/doi/10.1111/head.14692" target="_blank">🔗 head.14692</a></div>
+      <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-year">2018/2024</span><span class="biblio-level lv-a">Clasif.</span>
+        <div class="biblio-ref">IHS. <em>The International Classification of Headache Disorders, 3rd edition (ICHD-3).</em> Cephalalgia.</div>
+        <a class="biblio-link" href="https://ichd-3.org/" target="_blank">🔗 ichd-3.org</a></div>
+      <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Consenso</span>
+        <div class="biblio-ref">American Headache Society. <em>Consensus statement: CGRP-targeting therapies for the prevention of migraine — guideline summary.</em></div>
+        <a class="biblio-link" href="https://americanheadachesociety.org/research/library/cgrp-targeting-therapies-as-a-first-line-option-for-migraine-prevention" target="_blank">🔗 americanheadachesociety.org</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Tratamiento agudo y nuevos fármacos</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-year">2026</span><span class="biblio-level lv-b">Revisión</span>
+        <div class="biblio-ref">Raffaelli B, Portes Souza MN. <em>2025 Highlights in acute migraine treatment.</em> Cephalalgia. 2026.</div>
+        <a class="biblio-link" href="https://journals.sagepub.com/doi/10.1177/03331024251405467" target="_blank">🔗 Cephalalgia 2026</a></div>
+      <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Revisión</span>
+        <div class="biblio-ref">Frontiers in Pharmacology. <em>Gepants: targeting the CGRP pathway for migraine relief.</em> 2025.</div>
+        <a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12678924/" target="_blank">🔗 PMC12678924</a></div>
+      <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-year">2026</span><span class="biblio-level lv-b">Revisión</span>
+        <div class="biblio-ref">Expert Rev Neurother. <em>Positioning rimegepant in migraine prophylaxis: updated evidence and emerging perspectives.</em> 2026.</div>
+        <a class="biblio-link" href="https://www.tandfonline.com/doi/full/10.1080/14737175.2026.2621879" target="_blank">🔗 tandfonline 2026</a></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Preventivo · anti-CGRP y toxina</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-year">2010</span><span class="biblio-level lv-a">ECA</span>
+        <div class="biblio-ref">Dodick DW, et al. <em>OnabotulinumtoxinA for chronic migraine: pooled results from the PREEMPT program.</em> Headache/Cephalalgia. 2010.</div>
+        <a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/20487038/" target="_blank">🔗 PMID 20487038</a></div>
+      <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Consenso</span>
+        <div class="biblio-ref">Bendtsen L, et al. <em>Guideline on the use of onabotulinumtoxinA in chronic migraine — European Headache Federation.</em> J Headache Pain. 2018.</div>
+        <a class="biblio-link" href="https://link.springer.com/article/10.1186/s10194-018-0921-8" target="_blank">🔗 J Headache Pain</a></div>
+      <div class="biblio-item"><span class="biblio-num">9</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Revisión</span>
+        <div class="biblio-ref">Medaptly. <em>Migraine medication review — triptans, gepants and ditans: comprehensive evidence review.</em> 2025.</div>
+        <a class="biblio-link" href="https://www.medaptly.com/research/neurology/migraine-medication-review-triptans-gepants-ditans/" target="_blank">🔗 medaptly.com</a></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">A</span> Guía/ECA</div>
+    <div class="nl-item"><span class="biblio-level lv-b">B</span> Revisión</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Opinión de experto</div>
+  </div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function val(id){return document.getElementById(id).value;}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* ===== FICHAS DE FÁRMACOS ===== */
+var CATMETA={
+ 'AGUDO · inespecífico':{label:'AGUDO · inespecífico',sub:'AINE y paracetamol — tratar temprano, dosis plena',color:'#be185d'},
+ 'AGUDO · triptanes':{label:'AGUDO · específico (triptanes)',sub:'Agonistas 5-HT₁B/₁D — de elección en crisis moderada-grave',color:'#9d174d'},
+ 'AGUDO · nuevos/antieméticos':{label:'AGUDO · nuevos y antieméticos',sub:'Gepants, ditán y procinéticos — EVITA opioides/butalbital',color:'#a21caf'},
+ 'PREVENTIVO · oral':{label:'PREVENTIVO · oral',sub:'Indicar si ≥4–6 días/mes o discapacidad',color:'#7c3aed'},
+ 'PREVENTIVO · anti-CGRP/toxina':{label:'PREVENTIVO · anti-CGRP y toxina',sub:'1ª línea (AHS 2024); toxina SOLO en migraña crónica',color:'#0f766e'},
+ 'EVITAR / abuso':{label:'EVITAR / abuso',sub:'Cefalea por abuso de medicación',color:'#7b1c1c'}
+};
+var FARM=[
+ /* ---- AGUDO inespecífico ---- */
+ {cat:'AGUDO · inespecífico',n:'Naproxeno sódico',color:'#be185d',tag:'⭐ AINE de elección',dosis:'500–550 mg VO',desc:'Larga acción; útil también en migraña menstrual y para prevenir recurrencia.',rows:[['Vía','Oral'],['Frecuencia','Al inicio; repetir a 12 h si precisa'],['Duración','&lt;15 días/mes (evitar abuso)'],['Candidatos','Crisis leve-moderada; sin úlcera/ERC'],['Indicación','1ª línea inespecífica'],['Presentac. MX','Flanax®, genéricos (275/550 mg)'],['Contraindic.','Úlcera péptica, ERC, 3.ᵉʳ trimestre'],['E. adversos','Dispepsia, sangrado GI, ↑TA']],nota:'Combinable con triptán en crisis intensas; tratar en fase temprana antes de la alodinia.'},
+ {cat:'AGUDO · inespecífico',n:'Ibuprofeno',color:'#be185d',tag:'AINE',dosis:'400–600 mg VO',desc:'Buena evidencia; inicio rápido.',rows:[['Vía','Oral'],['Frecuencia','Cada 6–8 h según necesidad'],['Duración','&lt;15 días/mes'],['Candidatos','Crisis leve-moderada'],['Indicación','1ª línea inespecífica'],['Presentac. MX','Advil®, Motrin®, genéricos'],['Contraindic.','Úlcera, ERC, ICC, 3.ᵉʳ trimestre'],['E. adversos','GI, renal, ↑TA']],nota:'Formulaciones líquidas/rápidas dan inicio más veloz.'},
+ {cat:'AGUDO · inespecífico',n:'Ácido acetilsalicílico (ASA)',color:'#be185d',tag:'AINE',dosis:'900–1000 mg VO',desc:'Dosis alta única, con o sin metoclopramida.',rows:[['Vía','Oral (efervescente absorbe más rápido)'],['Frecuencia','Dosis única al inicio'],['Duración','&lt;15 días/mes'],['Candidatos','Adultos sin contraindicación'],['Indicación','1ª línea inespecífica económica'],['Presentac. MX','Aspirina®, efervescente'],['Contraindic.','Úlcera, &lt;16 años (Reye), 3.ᵉʳ trimestre'],['E. adversos','GI, sangrado']],nota:'Coste bajo, alta disponibilidad; combinar con procinético mejora respuesta.'},
+ {cat:'AGUDO · inespecífico',n:'Paracetamol',color:'#be185d',tag:'Analgésico simple',dosis:'1000 mg VO',desc:'Opción cuando los AINE están contraindicados; menos potente.',rows:[['Vía','Oral'],['Frecuencia','Cada 6–8 h (máx 3–4 g/día)'],['Duración','&lt;15 días/mes'],['Candidatos','Embarazo (1ª línea), intolerancia a AINE'],['Indicación','Crisis leve; embarazo'],['Presentac. MX','Tylenol®, Tempra®, genéricos'],['Contraindic.','Hepatopatía grave'],['E. adversos','Hepatotoxicidad en sobredosis']],nota:'Preferido en embarazo. Solo o combinado con cafeína/AINE.'},
+ /* ---- AGUDO triptanes ---- */
+ {cat:'AGUDO · triptanes',n:'Sumatriptán',color:'#9d174d',tag:'⭐ Triptán de referencia',dosis:'50–100 mg VO · 6 mg SC · 10–20 mg nasal',desc:'El más estudiado. Vía SC = inicio más rápido (crisis intensa, vómito, estado migrañoso).',rows:[['Vía','Oral / subcutánea / nasal'],['Frecuencia','Repetir a ≥2 h; máx 200 mg VO o 12 mg SC/día'],['Duración','&lt;10 días/mes (evitar abuso)'],['Candidatos','Migraña moderada-grave sin riesgo CV'],['Indicación','Agudo específico de elección'],['Presentac. MX','Imigran® (VO, nasal, SC)'],['Contraindic.','Cardiopatía isquémica, ECV/ictus, HTA no controlada, hemipléjica/tronco, embarazo (relativo)'],['E. adversos','Opresión torácica/cuello, parestesias, mareo']],nota:'No usar en las 24 h de un ergótico u otro triptán. Precaución con ISRS/IMAO (síndrome serotoninérgico, raro).'},
+ {cat:'AGUDO · triptanes',n:'Rizatriptán',color:'#9d174d',tag:'⭐ Inicio rápido',dosis:'10 mg VO (oblea ODT)',desc:'Inicio rápido; presentación bucodispersable útil con náusea.',rows:[['Vía','Oral / oblea (ODT)'],['Frecuencia','Repetir a ≥2 h; máx 30 mg/día'],['Duración','&lt;10 días/mes'],['Candidatos','Necesidad de respuesta rápida'],['Indicación','Agudo específico'],['Presentac. MX','Maxalt®, Maxalt MLT®'],['Contraindic.','Igual que sumatriptán; reducir a 5 mg con propranolol'],['E. adversos','Astenia, mareo, náusea']],nota:'Con propranolol usar 5 mg (interacción farmacocinética).'},
+ {cat:'AGUDO · triptanes',n:'Zolmitriptán',color:'#9d174d',tag:'Triptán',dosis:'2.5–5 mg VO / nasal',desc:'Nasal con buen inicio; alternativa a sumatriptán.',rows:[['Vía','Oral, ODT, nasal'],['Frecuencia','Repetir a ≥2 h; máx 10 mg/día'],['Duración','&lt;10 días/mes'],['Candidatos','Preferencia por vía nasal'],['Indicación','Agudo específico'],['Presentac. MX','Zomig® (disponibilidad variable)'],['Contraindic.','Igual clase triptanes'],['E. adversos','Parestesias, sabor amargo (nasal)']],nota:'Buena opción si hay náusea temprana.'},
+ {cat:'AGUDO · triptanes',n:'Eletriptán',color:'#9d174d',tag:'Triptán potente',dosis:'40–80 mg VO',desc:'Alta eficacia y baja recurrencia.',rows:[['Vía','Oral'],['Frecuencia','Repetir a ≥2 h; máx 80 mg/día'],['Duración','&lt;10 días/mes'],['Candidatos','Respuesta pobre a otros triptanes'],['Indicación','Agudo específico'],['Presentac. MX','Relpax® (disponibilidad variable)'],['Contraindic.','Clase triptanes; evitar con inhibidores potentes de CYP3A4'],['E. adversos','Astenia, somnolencia']],nota:'Interacción con ketoconazol/claritromicina/ritonavir (CYP3A4).'},
+ {cat:'AGUDO · triptanes',n:'Naratriptán / Frovatriptán',color:'#9d174d',tag:'⭐ Larga acción (menstrual)',dosis:'Naratriptán 2.5 mg · Frovatriptán 2.5 mg',desc:'Vida media larga → menor recurrencia; ideales para mini-profilaxis de migraña menstrual.',rows:[['Vía','Oral'],['Frecuencia','Inicio más lento; frova hasta 5 mg/día'],['Duración','&lt;10 días/mes'],['Candidatos','Migraña menstrual, crisis prolongadas/recurrentes'],['Indicación','Mini-profilaxis perimenstrual (−2 a +3 d)'],['Presentac. MX','Disponibilidad variable en MX'],['Contraindic.','Clase triptanes'],['E. adversos','Mejor tolerados; menos opresión torácica']],nota:'Frovatriptán (t½ ~26 h) es el preferido para pauta corta perimenstrual.'},
+ /* ---- AGUDO nuevos / antieméticos ---- */
+ {cat:'AGUDO · nuevos/antieméticos',n:'Ubrogepant',color:'#a21caf',tag:'⭐ Gepant agudo',dosis:'50–100 mg VO',desc:'Antagonista del receptor CGRP. Sin vasoconstricción → seguro en enfermedad cardiovascular.',rows:[['Vía','Oral'],['Frecuencia','Repetir a ≥2 h; máx 200 mg/día'],['Duración','Sin cronificación descrita; no causa CAM'],['Candidatos','Contraindicación/falla a triptanes; riesgo CV'],['Indicación','Agudo específico sin riesgo vascular'],['Presentac. MX','Ubrelvy® (disponibilidad variable en MX)'],['Contraindic.','Inhibidores potentes de CYP3A4'],['E. adversos','Náusea, somnolencia']],nota:'Puede usarse en pacientes con cardiopatía donde el triptán está vetado.'},
+ {cat:'AGUDO · nuevos/antieméticos',n:'Rimegepant',color:'#a21caf',tag:'⭐ Gepant dual (agudo+preventivo)',dosis:'75 mg ODT',desc:'Único fármaco con doble indicación: agudo y, cada 3.ᵉʳ día, preventivo.',rows:[['Vía','Oral bucodispersable (ODT)'],['Frecuencia','Agudo: 75 mg a demanda (máx 1/día)'],['Duración','No induce CAM'],['Candidatos','Migraña con componente agudo y preventivo'],['Indicación','Agudo y preventivo'],['Presentac. MX','Nurtec ODT® (disponibilidad variable en MX)'],['Contraindic.','CYP3A4 potentes; insuf. hepática grave'],['E. adversos','Náusea']],nota:'Sin efecto de vasoconstricción ni riesgo de cefalea por abuso.'},
+ {cat:'AGUDO · nuevos/antieméticos',n:'Zavegepant nasal',color:'#a21caf',tag:'Gepant intranasal',dosis:'10 mg nasal',desc:'Inicio rápido por vía nasal; útil con náusea/vómito.',rows:[['Vía','Intranasal'],['Frecuencia','1 dosis; máx 1/día'],['Duración','No induce CAM'],['Candidatos','Necesidad de inicio rápido, vómito'],['Indicación','Agudo específico no vascular'],['Presentac. MX','Zavzpret® (disponibilidad variable / no disp. MX)'],['Contraindic.','Hipersensibilidad'],['E. adversos','Disgeusia, molestia nasal, náusea']],nota:'Alternativa no vasoconstrictora a los triptanes nasales.'},
+ {cat:'AGUDO · nuevos/antieméticos',n:'Lasmiditán',color:'#a21caf',tag:'Ditán (5-HT₁F)',dosis:'50–100–200 mg VO',desc:'Agonista 5-HT₁F selectivo, sin vasoconstricción; efectos centrales.',rows:[['Vía','Oral'],['Frecuencia','1 dosis; no repetir en la misma crisis'],['Duración','&lt;10 días/mes'],['Candidatos','Riesgo CV con contraindicación a triptán'],['Indicación','Agudo específico no vascular'],['Presentac. MX','Reyvow® (disponibilidad variable / no disp. MX)'],['Contraindic.','No conducir 8 h; precaución serotoninérgica'],['E. adversos','Mareo, somnolencia, parestesias']],nota:'Advertir NO conducir ni operar maquinaria por ≥8 h tras la dosis.'},
+ {cat:'AGUDO · nuevos/antieméticos',n:'Metoclopramida / Proclorperazina',color:'#a21caf',tag:'Antieméticos-procinéticos',dosis:'Metoclopramida 10 mg · Proclorperazina 10 mg',desc:'Tratan náusea/vómito y potencian la absorción de analgésicos; antimigrañosos por sí mismos (IV en urgencias).',rows:[['Vía','Oral / IV / IM'],['Frecuencia','Según necesidad'],['Duración','Corto plazo'],['Candidatos','Náusea/vómito prominente; crisis en urgencias'],['Indicación','Coadyuvante o estado migrañoso'],['Presentac. MX','Metoclopramida (Primperan®), proclorperazina'],['Contraindic.','Parkinson; riesgo de distonía/QT'],['E. adversos','Distonía aguda, acatisia, sedación']],nota:'En urgencias, metoclopramida IV + AINE ± líquidos es una pauta eficaz.'},
+ /* ---- PREVENTIVO oral ---- */
+ {cat:'PREVENTIVO · oral',n:'Propranolol',color:'#7c3aed',tag:'⭐ Betabloqueante 1ª línea',dosis:'40–160 mg/día',desc:'Betabloqueante con mejor evidencia preventiva; útil si hay ansiedad/temblor/HTA.',rows:[['Vía','Oral (fraccionado o LP)'],['Frecuencia','Titular cada 1–2 semanas'],['Duración','Evaluar a 8–12 semanas'],['Candidatos','Migraña episódica; comorbilidad ansiosa/HTA'],['Indicación','Preventivo de 1ª línea oral'],['Presentac. MX','Inderalici®, genéricos'],['Contraindic.','Asma, bradicardia, bloqueo AV, depresión grave'],['E. adversos','Fatiga, hipotensión, frialdad distal, pesadillas']],nota:'Metoprolol es alternativa. Evitar retiro brusco.'},
+ {cat:'PREVENTIVO · oral',n:'Topiramato',color:'#7c3aed',tag:'⭐ Neuromodulador 1ª línea',dosis:'50–100 mg/día (hasta 200)',desc:'Eficaz en episódica y crónica; único además de la toxina/anti-CGRP con evidencia en crónica.',rows:[['Vía','Oral (titular 25 mg/sem)'],['Frecuencia','Repartido BID'],['Duración','Evaluar a 8–12 semanas'],['Candidatos','Migraña frecuente/crónica; con sobrepeso'],['Indicación','Preventivo 1ª línea'],['Presentac. MX','Topamax®, genéricos'],['Contraindic.','Embarazo (TERATÓGENO), litiasis renal, glaucoma'],['E. adversos','Parestesias, ↓peso, deterioro cognitivo/palabras, litiasis']],nota:'TERATÓGENO y ↓eficacia de anticonceptivos a dosis altas: anticoncepción fiable en mujeres fértiles.'},
+ {cat:'PREVENTIVO · oral',n:'Amitriptilina',color:'#7c3aed',tag:'Tricíclico',dosis:'10–75 mg noche',desc:'Útil si coexisten insomnio, cefalea tensional o depresión.',rows:[['Vía','Oral nocturna'],['Frecuencia','Titular desde 10 mg'],['Duración','Evaluar a 8–12 semanas'],['Candidatos','Migraña + insomnio/dolor crónico/ánimo'],['Indicación','Preventivo oral'],['Presentac. MX','Tryptanol®, genéricos'],['Contraindic.','Cardiopatía/QT largo, glaucoma, retención urinaria'],['E. adversos','Somnolencia, boca seca, aumento de peso, estreñimiento']],nota:'Dosis bajas nocturnas; nortriptilina se tolera algo mejor.'},
+ {cat:'PREVENTIVO · oral',n:'Candesartán',color:'#7c3aed',tag:'ARA-II',dosis:'8–16 mg/día',desc:'Buena evidencia con excelente tolerancia; opción si hay HTA.',rows:[['Vía','Oral'],['Frecuencia','Una vez al día'],['Duración','Evaluar a 8–12 semanas'],['Candidatos','Migraña + HTA; intolerancia a betabloqueante'],['Indicación','Preventivo oral'],['Presentac. MX','Atacand®, genéricos'],['Contraindic.','Embarazo, hiperpotasemia, estenosis a. renal'],['E. adversos','Mareo, hipotensión']],nota:'Alternativa bien tolerada; evitar en embarazo.'},
+ {cat:'PREVENTIVO · oral',n:'Flunarizina',color:'#7c3aed',tag:'Bloqueante de calcio',dosis:'5–10 mg noche',desc:'Eficaz (muy usada fuera de EE. UU.); útil en migraña con aura/vestibular.',rows:[['Vía','Oral nocturna'],['Frecuencia','Una vez al día'],['Duración','Evaluar a 8–12 semanas'],['Candidatos','Migraña vestibular; niños/adolescentes'],['Indicación','Preventivo oral'],['Presentac. MX','Sibelium®, genéricos'],['Contraindic.','Depresión, parkinsonismo'],['E. adversos','Aumento de peso, somnolencia, parkinsonismo/depresión']],nota:'Vigilar síntomas extrapiramidales y ánimo en uso prolongado.'},
+ {cat:'PREVENTIVO · oral',n:'Ácido valproico',color:'#7c3aed',tag:'Neuromodulador',dosis:'500–1000 mg/día',desc:'Eficaz pero de uso restringido por teratogenicidad.',rows:[['Vía','Oral'],['Frecuencia','Repartido'],['Duración','Evaluar a 8–12 semanas'],['Candidatos','Varones / mujeres sin capacidad de gestar'],['Indicación','Preventivo de reserva'],['Presentac. MX','Depakene®, Epival®'],['Contraindic.','EMBARAZO / mujeres fértiles, hepatopatía'],['E. adversos','Teratogenia (tubo neural, ↓CI), ↑peso, temblor, alopecia, hepatotoxicidad']],nota:'EVITAR en mujeres en edad fértil (programas de prevención de embarazo).'},
+ /* ---- PREVENTIVO anti-CGRP / toxina ---- */
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'Erenumab',color:'#0f766e',tag:'⭐ Anti-receptor CGRP',dosis:'70–140 mg SC mensual',desc:'Anticuerpo contra el RECEPTOR de CGRP. 1ª línea preventiva (AHS 2024).',rows:[['Vía','Subcutánea (autoinyector)'],['Frecuencia','Mensual'],['Duración','Evaluar a 3 meses (hasta 6)'],['Candidatos','Migraña episódica o crónica; sin necesidad de fallar orales'],['Indicación','Preventivo 1ª línea'],['Presentac. MX','Aimovig® (disponibilidad variable en MX)'],['Contraindic.','Embarazo (datos limitados); precaución CV/HTA'],['E. adversos','Estreñimiento, reacción en sitio, ↑TA']],nota:'Vigilar estreñimiento e hipertensión. Respuesta a menudo en semanas.'},
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'Fremanezumab',color:'#0f766e',tag:'⭐ Anti-ligando CGRP',dosis:'225 mg mensual · 675 mg trimestral',desc:'Anticuerpo contra el LIGANDO CGRP; opción de dosis trimestral.',rows:[['Vía','Subcutánea'],['Frecuencia','Mensual o trimestral'],['Duración','Evaluar a 3 meses'],['Candidatos','Episódica y crónica'],['Indicación','Preventivo 1ª línea'],['Presentac. MX','Ajovy® (disponibilidad variable en MX)'],['Contraindic.','Embarazo (datos limitados)'],['E. adversos','Reacción en sitio de inyección']],nota:'La opción trimestral mejora la adherencia.'},
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'Galcanezumab',color:'#0f766e',tag:'Anti-ligando CGRP',dosis:'Carga 240 mg → 120 mg mensual',desc:'Anti-ligando; también aprobado en cefalea en racimos.',rows:[['Vía','Subcutánea'],['Frecuencia','Dosis de carga y luego mensual'],['Duración','Evaluar a 3 meses'],['Candidatos','Episódica y crónica'],['Indicación','Preventivo 1ª línea'],['Presentac. MX','Emgality® (disponibilidad variable en MX)'],['Contraindic.','Embarazo (datos limitados)'],['E. adversos','Reacción en sitio']],nota:'Requiere dosis de carga inicial de 240 mg.'},
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'Eptinezumab',color:'#0f766e',tag:'Anti-ligando IV',dosis:'100–300 mg IV trimestral',desc:'Única vía intravenosa; inicio de efecto rápido (día 1).',rows:[['Vía','Intravenosa (infusión ~30 min)'],['Frecuencia','Cada 3 meses'],['Duración','Evaluar a 3–6 meses'],['Candidatos','Necesidad de inicio rápido; adherencia'],['Indicación','Preventivo 1ª línea'],['Presentac. MX','Vyepti® (disponibilidad variable / no disp. MX)'],['Contraindic.','Embarazo (datos limitados)'],['E. adversos','Rinofaringitis, reacción a la infusión']],nota:'Útil cuando se busca respuesta preventiva rápida.'},
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'Atogepant',color:'#0f766e',tag:'⭐ Gepant preventivo oral',dosis:'60 mg/día VO (10–60 mg)',desc:'Gepant oral aprobado como preventivo de migraña episódica y crónica.',rows:[['Vía','Oral diaria'],['Frecuencia','Una vez al día'],['Duración','Evaluar a 3 meses'],['Candidatos','Preferencia por vía oral sin inyección'],['Indicación','Preventivo 1ª línea (oral anti-CGRP)'],['Presentac. MX','Qulipta® (disponibilidad variable en MX)'],['Contraindic.','CYP3A4 potentes; insuf. hepática grave'],['E. adversos','Náusea, estreñimiento, fatiga']],nota:'Alternativa oral a los anticuerpos inyectables.'},
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'Rimegepant (preventivo)',color:'#0f766e',tag:'Gepant dual preventivo',dosis:'75 mg VO cada 3.ᵉʳ día',desc:'Mismo fármaco que en agudo; a días alternos actúa como preventivo.',rows:[['Vía','Oral (ODT)'],['Frecuencia','Cada tercer día'],['Duración','Evaluar a 3 meses'],['Candidatos','Migraña con necesidad aguda y preventiva'],['Indicación','Preventivo (y agudo)'],['Presentac. MX','Nurtec ODT® (disponibilidad variable en MX)'],['Contraindic.','CYP3A4 potentes; insuf. hepática grave'],['E. adversos','Náusea']],nota:'Combina profilaxis y rescate en una sola molécula.'},
+ {cat:'PREVENTIVO · anti-CGRP/toxina',n:'OnabotulinumtoxinA',color:'#0f766e',tag:'⭐ SOLO migraña crónica',dosis:'155–195 U cada 12 sem (PREEMPT)',desc:'Protocolo PREEMPT: 31 puntos fijos (155 U) ± 8 puntos "seguir el dolor" (hasta 195 U) en 7 músculos pericraneales.',rows:[['Vía','Inyección IM pericraneal'],['Frecuencia','Cada 12 semanas'],['Duración','Evaluar tras 2 ciclos'],['Candidatos','SOLO migraña CRÓNICA (≥15 d/mes)'],['Indicación','Migraña crónica (no episódica)'],['Presentac. MX','Botox®'],['Contraindic.','Infección local, trastorno de unión NM, embarazo'],['E. adversos','Ptosis, dolor cervical, debilidad local']],nota:'No indicada en migraña episódica. Requiere entrenamiento en el protocolo PREEMPT.'},
+ /* ---- EVITAR / abuso ---- */
+ {cat:'EVITAR / abuso',n:'Cefalea por abuso de medicación (CAM)',color:'#7b1c1c',tag:'🚫 Prevenir y tratar',dosis:'Límites: simples &lt;15 d/mes · triptanes/combinados/opioides/ergóticos &lt;10 d/mes',desc:'El uso frecuente de agudos cronifica la migraña. Tratamiento: educación, retiro del fármaco y puente preventivo.',rows:[['Vía','—'],['Frecuencia','—'],['Duración','—'],['Candidatos','Cefalea ≥15 d/mes con uso excesivo de agudos'],['Indicación','Suspender el agudo abusado; iniciar/optimizar preventivo'],['Presentac. MX','—'],['Contraindic.','—'],['E. adversos','Rebote transitorio al retirar']],nota:'Anti-CGRP y toxina son eficaces incluso con CAM concurrente y ayudan a romper el ciclo.'},
+ {cat:'EVITAR / abuso',n:'Opioides y butalbital',color:'#7b1c1c',tag:'🚫 EVITAR',dosis:'No recomendados',desc:'Opioides (codeína, tramadol) y barbitúricos (butalbital) empeoran el pronóstico, cronifican y generan dependencia.',rows:[['Vía','—'],['Frecuencia','—'],['Duración','—'],['Candidatos','Ninguno de forma rutinaria'],['Indicación','Evitar; retirar si ya en uso'],['Presentac. MX','—'],['Contraindic.','Migraña (uso rutinario)'],['E. adversos','Cronificación, CAM, dependencia, sedación']],nota:'Su uso es el factor de riesgo modificable más potente de progresión a migraña crónica.'}
+];
+function renderFarm(){var el=document.getElementById('farm-body');if(!el)return;var h='';var prevCat=null;for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  if(d.cat&&d.cat!==prevCat){var _m=(typeof CATMETA!=='undefined'&&CATMETA[d.cat])?CATMETA[d.cat]:{};var _pc=_m.color||d.color||'var(--ac)';var _sub=_m.sub||'';h+='<div style="margin:18px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><span style="background:'+_pc+';color:#fff;font-size:12px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">'+(_m.label||d.cat)+'</span>'+(_sub?'<span style="font-size:12.5px;color:#6b7280;line-height:1.4;">'+_sub+'</span>':'')+'</div>';prevCat=d.cat;}
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">'+(d.dlbl||'Dosis')+'</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  el.innerHTML=h;}
+
+/* ===== MOTOR DE ESCALAS PUNTUADAS ===== */
+var SCREG={
+ 'midas':{title:'MIDAS',max:null,
+  items:[
+   {t:'Días de TRABAJO/ESCUELA perdidos por cefalea (últimos 3 meses)',o:[['0 días',0],['1–5',3],['6–10',8],['11–20',15],['≥21',25]]},
+   {t:'Días con productividad laboral/escolar REDUCIDA ≥50% (sin contar los ya perdidos)',o:[['0 días',0],['1–5',3],['6–10',8],['11–20',15],['≥21',25]]},
+   {t:'Días sin poder hacer TAREAS DEL HOGAR por cefalea',o:[['0 días',0],['1–5',3],['6–10',8],['11–20',15],['≥21',25]]},
+   {t:'Días con tareas del hogar REDUCIDAS ≥50% (sin contar los ya perdidos)',o:[['0 días',0],['1–5',3],['6–10',8],['11–20',15],['≥21',25]]},
+   {t:'Días perdidos de ACTIVIDADES FAMILIARES/SOCIALES/OCIO por cefalea',o:[['0 días',0],['1–5',3],['6–10',8],['11–20',15],['≥21',25]]}
+  ],
+  interpret:function(t){
+   if(t<=5)return{band:'Grado I',cls:'res-ok',msg:'Discapacidad mínima o nula. Manejo agudo optimizado; preventivo generalmente no necesario.'};
+   if(t<=10)return{band:'Grado II',cls:'res-mid',msg:'Discapacidad leve. Reforzar tratamiento agudo; valorar preventivo si la frecuencia es alta.'};
+   if(t<=20)return{band:'Grado III',cls:'res-mid',msg:'Discapacidad moderada. Indicar tratamiento PREVENTIVO.'};
+   return{band:'Grado IV',cls:'res-high',msg:'Discapacidad GRAVE. Preventivo (considerar anti-CGRP de 1ª línea) y valorar derivación a Neurología.'};
+  },
+  note:'Los ítems A (frecuencia de cefalea) y B (intensidad 0–10) no puntúan pero complementan la evaluación.'}
+};
+var SCST={};
+function scInit(sid){var sc=SCREG[sid];var box=document.getElementById(sid+'-box');if(!box)return;var h='';for(var i=0;i<sc.items.length;i++){var it=sc.items[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+(i+1)+'. '+it.t+'</div><div id="'+sid+'-g'+i+'">';for(var j=0;j<it.o.length;j++){var p=it.o[j][1];h+='<button class="opt" onclick="scPick(\''+sid+'\','+i+','+p+',this)">'+it.o[j][0]+(p?' <b>('+(p>0?'+':'')+p+')</b>':'')+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="scReset(\''+sid+'\')">Reiniciar</button></div><div id="'+sid+'-res" class="calc-result"></div>';box.innerHTML=h;}
+function scPick(sid,i,pts,btn){SCST[sid]=SCST[sid]||{};SCST[sid][i]=pts;var g=btn.parentNode.querySelectorAll('.opt');for(var k=0;k<g.length;k++)g[k].classList.remove('on');btn.classList.add('on');scCalc(sid);}
+function scReset(sid){SCST[sid]={};var b=document.querySelectorAll('#'+sid+'-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById(sid+'-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function scCalc(sid){var sc=SCREG[sid],st=SCST[sid]||{},tot=0,n=0;for(var i=0;i<sc.items.length;i++){if(st[i]!=null){tot+=st[i];n++;}}var box=document.getElementById(sid+'-res');if(!box)return;if(n<sc.items.length){box.className='calc-result show res-mid';box.innerHTML='Responde las '+sc.items.length+' preguntas ('+n+'/'+sc.items.length+').';return;}var r=sc.interpret(tot);box.className='calc-result show '+r.cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">'+sc.title+' = '+tot+(sc.max?(' / '+sc.max):'')+' · '+r.band+'</div><div style="margin-top:6px;">'+r.msg+'</div>'+(sc.note?'<div class="calc-note">'+sc.note+'</div>':'');}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+ 'Migraña menstrual':{p:'Crisis perimenstruales (−2 a +3 días), suelen ser sin aura, más intensas, prolongadas y resistentes.',
+  k:'Ligadas a la caída de estrógenos. Registrar con diario de cefalea para confirmar el patrón.',
+  x:'Agudo: AINE (naproxeno) o triptán de acción larga. MINI-PROFILAXIS perimenstrual: frovatriptán o naratriptán 2×/día durante 5–6 días alrededor del sangrado; o naproxeno. Si además tiene migraña frecuente, preventivo continuo.'},
+ 'Embarazo':{p:'La mayoría mejora en 2.º–3.ᵉʳ trimestre. Objetivo: mínima medicación eficaz y evitar teratógenos.',
+  k:'PARACETAMOL es 1ª línea aguda. AINE solo en 2.º trimestre (evitar en 1.º y contraindicados en 3.ᵉʳ). Triptán si es necesario: SUMATRIPTÁN tiene más datos de seguridad.',
+  x:'Preventivo si es imprescindible: PROPRANOLOL (preferido). EVITAR valproato y topiramato (teratógenos) y candesartán/IECA. Priorizar medidas no farmacológicas, hidratación, sueño.'},
+ 'Aura + anticoncepción':{p:'Mujer con migraña CON AURA que solicita anticoncepción hormonal combinada.',
+  k:'La migraña con aura + estrógenos AUMENTA el riesgo de ictus isquémico.',
+  x:'Los ANTICONCEPTIVOS COMBINADOS (con estrógeno) están CONTRAINDICADOS en migraña con aura. Ofrecer métodos SOLO de progestágeno (píldora, implante, DIU-LNG) o no hormonales. Reforzar cese tabáquico y control de FRCV.'},
+ 'Migraña crónica':{p:'≥15 días de cefalea/mes ≥3 meses con ≥8 días migrañosos. Alta discapacidad y frecuente CAM.',
+  k:'Descartar y tratar el abuso de medicación. Es indicación de terapias avanzadas.',
+  x:'Preventivos con evidencia en crónica: ONABOTULINUMTOXINA (PREEMPT) y ANTI-CGRP (anticuerpos o atogepant/rimegepant); topiramato como oral. Suelen combinarse. Manejar comorbilidad (sueño, ánimo, obesidad).'},
+ 'Estado migrañoso':{p:'Crisis incapacitante que dura &gt;72 h pese a tratamiento (status migrainosus).',
+  k:'Buscar deshidratación, abuso de agudos y causa secundaria si el patrón cambió.',
+  x:'HIDRATACIÓN IV, ANTIEMÉTICO (metoclopramida/proclorperazina IV), AINE IV (ketorolaco) y/o triptán SC, CORTICOIDE (dexametasona) para prevenir recurrencia. Considerar sulfato de magnesio; valorar manejo en urgencias/observación. EVITAR opioides.'},
+ 'Abuso de medicación':{p:'Cefalea ≥15 d/mes con uso excesivo de agudos (simples ≥15 d/mes; triptanes/combinados/opioides ≥10 d/mes).',
+  k:'Perpetúa la cronificación y bloquea la respuesta al preventivo.',
+  x:'Educación + RETIRO del fármaco abusado (abrupto o gradual según fármaco) + puente sintomático (AINE de larga acción, corticoide corto) + iniciar/optimizar PREVENTIVO. Anti-CGRP y toxina funcionan aun con CAM.'},
+ 'Pediátrico':{p:'Crisis más cortas, con frecuencia bilaterales, y con síntomas GI/autonómicos prominentes.',
+  k:'Medidas de estilo de vida (sueño, hidratación, comidas, pantallas) y manejo del efecto placebo son muy relevantes.',
+  x:'Agudo: ibuprofeno o paracetamol; triptanes aprobados en adolescentes (p. ej. rizatriptán, sumatriptán/naproxeno, zolmitriptán nasal). Preventivo si hay discapacidad: considerar flunarizina/propranolol/topiramato o amitriptilina; TCC y biofeedback útiles.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+function initAll(){renderFarm();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('midas');}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>

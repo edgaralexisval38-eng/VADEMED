@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Gonalgia · Clínica Rápida</title>
+<style>
+/* ===== CAMBIAR SOLO --ac y --acd POR EL COLOR DE LA ESPECIALIDAD ===== */
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#15803d;--acd:#14532d;--acl:#f0fdf4;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.step{display:flex;gap:10px;margin-bottom:10px;}
+.step-n{background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.step-b{flex:1;font-size:12.5px;color:var(--gray-700);line-height:1.55;}.step-b b{color:var(--gray-900);}
+/* Calculadora / escalas */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+/* Chips */
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+/* Escenarios */
+.esc-hero{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+/* Bibliografía */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦵</div>
+    <div>
+      <div class="hdr-eye">Traumatología · Medicina interna · Reumatología</div>
+      <div class="hdr-title">Gonalgia</div>
+      <div class="hdr-sub">Dolor de rodilla · abordaje por causa y localización · evidencia 2024–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> M25.5 dolor articular · M23.- si hay lesión interna de rodilla</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">OA la + común en &gt;50a</span>
+    <span class="badge">Femoropatelar en jóvenes</span>
+    <span class="badge">Ottawa knee rules</span>
+    <span class="badge">Séptica = urgencia</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">~10–15%</div><div class="qs-l">OA sintomática &gt;60a</div></div>
+  <div class="qs"><div class="qs-v">Localización</div><div class="qs-l">guía el Dx</div></div>
+  <div class="qs"><div class="qs-v">Ottawa</div><div class="qs-l">Sens ~99% #</div></div>
+  <div class="qs"><div class="qs-v">Ejercicio</div><div class="qs-l">1ª línea OA</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">⚙️ Fisiopatología</button>
+  <button class="tab" onclick="showT('etio',this)">⚠️ Etiología</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Clínica y Dx</button>
+  <button class="tab" onclick="showT('esc',this)">📊 Escalas</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ==================== RESUMEN ==================== -->
+<div class="panel on" id="tab-res">
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">No perder de vista</div>Rodilla caliente, roja, con derrame y fiebre &rarr; descartar <b>artritis séptica</b> (artrocentesis urgente). Traumatismo con imposibilidad de cargar peso o bloqueo &rarr; aplicar <b>reglas de Ottawa</b> y valorar lesión ligamentaria/fractura.</div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Resumen ejecutivo</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p>La <b>gonalgia</b> es uno de los motivos de consulta musculoesquelética más frecuentes. La causa se predice en gran medida por la <b>edad</b> y la <b>localización del dolor</b>. En el adulto mayor domina la <b>artrosis (OA)</b>; en el joven/deportista, el <b>dolor femoropatelar</b> y las lesiones meniscales/ligamentarias.</p>
+      <p>El abordaje inicial es clínico: anamnesis (mecánico vs inflamatorio, trauma, bloqueo, inestabilidad), inspección/derrame y <b>maniobras dirigidas</b>. La imagen se solicita de forma selectiva (reglas de Ottawa para radiografía tras trauma; RM ante sospecha de lesión interna). Ante <b>derrame</b> caliente o de causa incierta &rarr; <b>artrocentesis</b> con análisis de líquido (celularidad, cristales, Gram/cultivo).</p>
+      <p>El tratamiento de la OA se sostiene en <b>ejercicio y control de peso</b> como núcleo, con AINE tópico como primer fármaco. La gota aguda se trata con AINE, colchicina o corticoide. La artritis séptica es una <b>urgencia</b> (antibiótico IV + drenaje).</p>
+    </div></div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Epidemiología (con %)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Dato</th><th>Cifra aprox.</th></tr>
+        <tr><td>OA de rodilla sintomática en &gt;60 años</td><td><span class="dn">~10–15%</span> (creciente con edad y obesidad)</td></tr>
+        <tr><td>OA radiográfica de rodilla &gt;45 años</td><td>~20–30%</td></tr>
+        <tr><td>Dolor femoropatelar en jóvenes/deportistas</td><td>Causa +frecuente de gonalgia anterior; ~25% en corredores</td></tr>
+        <tr><td>Prevalencia de gota (adultos)</td><td>~3–4% (predominio varón, sube con edad)</td></tr>
+        <tr><td>Artritis séptica de rodilla</td><td>Rara pero grave; mortalidad ~10%, daño articular si se demora</td></tr>
+        <tr><td>Obesidad como factor de riesgo de OA</td><td>Cada 5 kg/m² de IMC ↑ riesgo de OA de rodilla sustancialmente</td></tr>
+      </table></div>
+      <div class="alert a-i"><span class="ai">💡</span><div>La <b>localización</b> (anterior / medial / lateral / posterior) reduce el diagnóstico diferencial antes de cualquier estudio.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Puntos clave</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">1</div><div class="kt"><b>Edad + localización</b> orientan el diagnóstico mejor que cualquier prueba aislada.</div></div>
+      <div class="kp"><div class="kn">2</div><div class="kt"><b>Ejercicio y peso</b> son el núcleo del tratamiento de la OA, por encima de los analgésicos.</div></div>
+      <div class="kp"><div class="kn">3</div><div class="kt">Ante <b>derrame</b> caliente &rarr; artrocentesis; nunca demorar en sospecha de <b>séptica</b>.</div></div>
+      <div class="kp"><div class="kn">4</div><div class="kt">Las <b>reglas de Ottawa</b> permiten evitar radiografías innecesarias tras trauma.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FISIOPATOLOGÍA ==================== -->
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Causas por estructura</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p>La rodilla es una articulación compleja (fémur-tibia-rótula, meniscos, ligamentos, bursas, tendones). El dolor puede originarse en cualquiera de estas estructuras; cada una tiene un mecanismo característico.</p>
+    </div>
+    <div class="fp fp-p"><b>Artrosis (OA):</b> degradación progresiva del <b>cartílago articular</b>, remodelado del hueso subcondral, formación de <b>osteofitos</b> e inflamación sinovial de bajo grado. Es un proceso de todo el órgano articular, no solo "desgaste". Dolor mecánico que aumenta con el uso.</div>
+    <div class="fp fp-b"><b>Dolor femoropatelar:</b> sobrecarga y mal alineamiento del aparato extensor (aumento del ángulo Q, debilidad de cuádriceps/glúteo medio) que altera el <b>tracking</b> rotuliano. Dolor anterior, peor al bajar escaleras, sentadillas y sedestación prolongada (signo del cine).</div>
+    <div class="fp fp-b"><b>Lesiones meniscales:</b> traumáticas (giro con pie fijo, jóvenes) o <b>degenerativas</b> (mayores). Dolor en interlínea, chasquido, bloqueo o sensación de fallo.</div>
+    <div class="fp fp-b"><b>Lesiones ligamentarias:</b> <b>LCA</b> (giro/desaceleración, "pop" + derrame agudo + inestabilidad), <b>LCM/LCL</b> (estrés en valgo/varo), <b>LCP</b> (golpe directo en tibia anterior, dashboard).</div>
+    <div class="fp fp-a"><b>Tendinopatías:</b> rotuliana ("rodilla del saltador", dolor en polo inferior de rótula) y cuadricipital; por sobrecarga repetitiva con degeneración del tendón.</div>
+    <div class="fp fp-a"><b>Bursitis:</b> <b>anserina</b> (dolor medial infraarticular, frecuente en mujeres con OA/sobrepeso) y <b>prerrotuliana</b> (dolor/tumefacción anterior por apoyo repetido, "rodilla de la sirvienta").</div>
+    <div class="fp fp-r"><b>Artritis por cristales:</b> <b>gota</b> (urato monosódico) y <b>pseudogota</b> (pirofosfato cálcico/condrocalcinosis). Monoartritis aguda muy dolorosa, roja y caliente.</div>
+    <div class="fp fp-r"><b>Artritis séptica:</b> invasión bacteriana de la articulación (S. aureus más frecuente). Destrucción rápida del cartílago; <b>urgencia</b>.</div>
+    <div class="fp fp-p"><b>Artritis reumatoide (AR):</b> sinovitis inflamatoria simétrica; la rodilla puede afectarse en poliartritis.</div>
+    <div class="fp fp-p"><b>Osgood-Schlatter:</b> apofisitis por tracción de la tuberosidad tibial anterior en el adolescente en crecimiento activo.</div>
+    <div class="fp fp-p"><b>Quiste de Baker:</b> distensión de la bursa gastrocnemio-semimembranosa (posterior), a menudo secundaria a patología intraarticular (OA/meniscal). Puede simular TVP si se rompe.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📍</span><span class="st">Diagnóstico por localización del dolor</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Localización</th><th>Causas más probables</th></tr>
+        <tr><td><b>Anterior</b></td><td>Dolor femoropatelar, tendinopatía rotuliana/cuadricipital, bursitis prerrotuliana, Osgood-Schlatter (adolescente)</td></tr>
+        <tr><td><b>Medial</b></td><td>OA compartimento medial, lesión menisco interno/LCM, bursitis anserina</td></tr>
+        <tr><td><b>Lateral</b></td><td>Menisco externo, síndrome de la banda iliotibial, LCL, OA lateral</td></tr>
+        <tr><td><b>Posterior</b></td><td>Quiste de Baker, lesión LCP, patología del hueco poplíteo</td></tr>
+        <tr><td><b>Difuso / derrame</b></td><td>Artritis (séptica, cristales, AR), OA avanzada, hemartros (LCA/fractura)</td></tr>
+      </table></div>
+      <div class="diag"><b>Regla práctica:</b> dolor <b>mecánico</b> (empeora con uso, mejora en reposo) sugiere OA/meniscal/tendinopatía; dolor <b>inflamatorio</b> (rigidez matinal &gt;30 min, calor, derrame) sugiere artritis (cristales, séptica, AR).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ETIOLOGÍA POR EDAD ==================== -->
+<div class="panel" id="tab-etio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚠️</span><span class="st">Etiología por grupo de edad</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="diag"><b>Niño / adolescente:</b> Osgood-Schlatter y otras <b>apofisitis</b> por tracción, dolor femoropatelar, dolores de crecimiento, luxación rotuliana. <b>Alerta:</b> dolor nocturno, fiebre o masa &rarr; descartar infección/neoplasia; dolor de rodilla referido de <b>cadera</b> (epifisiólisis/Perthes).</div>
+      <div class="diag"><b>Adulto joven / deportista:</b> lesiones <b>deportivas</b> (LCA, meniscales), dolor <b>femoropatelar</b>, tendinopatía rotuliana, síndrome de banda iliotibial.</div>
+      <div class="diag"><b>Adulto mayor:</b> <b>OA</b> (causa dominante), lesión <b>meniscal degenerativa</b>, <b>gota</b>/pseudogota, quiste de Baker secundario. Considerar comorbilidad y polifarmacia al elegir tratamiento.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Factores de riesgo de OA de rodilla</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">•</div><div class="kt"><b>Obesidad / sobrepeso</b> (el más modificable; carga mecánica + inflamación metabólica).</div></div>
+      <div class="kp"><div class="kn">•</div><div class="kt"><b>Edad avanzada</b> y <b>sexo femenino</b> (posmenopausia).</div></div>
+      <div class="kp"><div class="kn">•</div><div class="kt"><b>Lesión previa</b> (meniscectomía, rotura de LCA &rarr; OA postraumática).</div></div>
+      <div class="kp"><div class="kn">•</div><div class="kt"><b>Mal alineamiento</b> (varo/valgo), debilidad de cuádriceps, ocupación con carga repetida.</div></div>
+      <div class="kp"><div class="kn">•</div><div class="kt">Factores genéticos.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CLÍNICA Y DX ==================== -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔎</span><span class="st">Anamnesis y exploración inicial</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p><b>Anamnesis:</b> mecanismo (trauma, giro, golpe), inicio (agudo vs insidioso), patrón (mecánico vs inflamatorio), bloqueo/fallo, rigidez matutina, síntomas sistémicos (fiebre), episodios previos.</p>
+      <p><b>Exploración:</b> inspección (eje, atrofia de cuádriceps, tumefacción), palpación por zonas (interlíneas, polo rotuliano, pata de ganso), rango de movimiento, prueba de <b>derrame</b> (signo de la oleada / peloteo rotuliano), maniobras específicas.</p>
+    </div></div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🤚</span><span class="st">Maniobras exploratorias</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Maniobra</th><th>Evalúa</th><th>Positivo si…</th></tr>
+        <tr><td><b>McMurray</b></td><td>Menisco</td><td>Dolor/chasquido al rotar tibia con flexo-extensión</td></tr>
+        <tr><td><b>Apley (compresión)</b></td><td>Menisco</td><td>Dolor al comprimir y rotar en prono</td></tr>
+        <tr><td><b>Lachman</b></td><td>LCA (más sensible)</td><td>Desplazamiento anterior tibial sin tope firme (30° flexión)</td></tr>
+        <tr><td><b>Cajón anterior</b></td><td>LCA</td><td>Desplazamiento tibial anterior (90° flexión)</td></tr>
+        <tr><td><b>Cajón posterior</b></td><td>LCP</td><td>Desplazamiento tibial posterior</td></tr>
+        <tr><td><b>Estrés valgo</b></td><td>LCM</td><td>Apertura/dolor medial (0° y 30°)</td></tr>
+        <tr><td><b>Estrés varo</b></td><td>LCL</td><td>Apertura/dolor lateral</td></tr>
+        <tr><td><b>Aprensión rotuliana</b></td><td>Inestabilidad rotuliana</td><td>Aprensión al desplazar rótula lateralmente</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📸</span><span class="st">Reglas de Ottawa: ¿cuándo radiografía?</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-i"><span class="ai">📸</span><div><div class="at">Radiografía de rodilla tras trauma SOLO si ≥1 criterio</div>Sensibilidad ~99% para fractura; permite reducir radiografías innecesarias.</div></div>
+      <div class="kp"><div class="kn">1</div><div class="kt">Edad <b>≥55 años</b>.</div></div>
+      <div class="kp"><div class="kn">2</div><div class="kt">Dolor aislado en la <b>cabeza del peroné</b>.</div></div>
+      <div class="kp"><div class="kn">3</div><div class="kt">Dolor aislado en la <b>rótula</b>.</div></div>
+      <div class="kp"><div class="kn">4</div><div class="kt">Incapacidad de <b>flexionar la rodilla a 90°</b>.</div></div>
+      <div class="kp"><div class="kn">5</div><div class="kt">Incapacidad de <b>cargar peso</b> (4 pasos) inmediatamente y en urgencias.</div></div>
+      <div class="calc-note">Aplicables a trauma agudo. La tabla completa también está en la pestaña Escalas.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💉</span><span class="st">Artrocentesis y análisis del líquido</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Indicación urgente</div>Todo <b>derrame con sospecha de séptica</b> (rodilla caliente + fiebre) o monoartritis aguda de causa incierta &rarr; artrocentesis <b>antes</b> del antibiótico.</div></div>
+      <div class="tw"><table class="t">
+        <tr><th>Líquido</th><th>Aspecto</th><th>Leucocitos/mm³</th><th>Clave</th></tr>
+        <tr><td>Normal</td><td>Claro, viscoso</td><td>&lt;200</td><td>—</td></tr>
+        <tr><td>No inflamatorio (OA)</td><td>Claro-amarillo</td><td>&lt;2.000</td><td>Mononucleares</td></tr>
+        <tr><td>Inflamatorio (cristales/AR)</td><td>Turbio</td><td>2.000–50.000</td><td>Cristales urato (aguja, birrefringencia negativa) / pirofosfato (romboidal, positiva)</td></tr>
+        <tr><td><b>Séptico</b></td><td>Purulento</td><td class="dm">&gt;50.000 (a menudo &gt;100.000), PMN &gt;90%</td><td>Gram + cultivo; tratar como séptico si dudas</td></tr>
+      </table></div>
+      <div class="diag"><b>RM:</b> ante sospecha de lesión interna (meniscal/ligamentaria) no aclarada, bloqueo mecánico, o hallazgos que cambiarían la conducta quirúrgica. No es de primera línea en OA (el diagnóstico es clínico-radiográfico).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ESCALAS ==================== -->
+<div class="panel" id="tab-esc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">WOMAC simplificado (dolor · rigidez · función)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose"><p>Cada ítem de 0 (ninguno) a 4 (extremo). Valora impacto de la OA de rodilla; útil para seguimiento longitudinal.</p></div>
+      <div id="womac-box"></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📸</span><span class="st">Reglas de Ottawa de rodilla</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Criterio (≥1 &rarr; radiografía)</th></tr>
+        <tr><td>Edad ≥55 años</td></tr>
+        <tr><td>Dolor aislado en cabeza del peroné</td></tr>
+        <tr><td>Dolor aislado en la rótula</td></tr>
+        <tr><td>Incapacidad de flexionar a 90°</td></tr>
+        <tr><td>Incapacidad de cargar peso (4 pasos) al momento y en urgencias</td></tr>
+      </table></div>
+      <div class="calc-note">Sensibilidad ~98–99% para fractura clínicamente significativa; alta capacidad para descartar.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩻</span><span class="st">Clasificación radiográfica de Kellgren-Lawrence (OA)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Grado</th><th>Hallazgos radiográficos</th></tr>
+        <tr><td><b>0</b></td><td>Normal, sin cambios</td></tr>
+        <tr><td><b>1 (dudoso)</b></td><td>Posible osteofito, sin pinzamiento articular</td></tr>
+        <tr><td><b>2 (leve)</b></td><td>Osteofito definido, espacio articular conservado o mínimo pinzamiento</td></tr>
+        <tr><td><b>3 (moderado)</b></td><td>Osteofitos múltiples, pinzamiento definido, esclerosis subcondral</td></tr>
+        <tr><td><b>4 (grave)</b></td><td>Pinzamiento marcado, esclerosis intensa, deformidad ósea</td></tr>
+      </table></div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div>La <b>clínica y la radiografía discrepan con frecuencia</b>: hay OA radiográfica sin dolor y viceversa. Tratar al paciente, no la imagen.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TRATAMIENTO ==================== -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-g"><span class="ai">💊</span><div><div class="at">Principios</div>OA: <b>ejercicio + peso</b> son el núcleo. Gota aguda: AINE, colchicina o corticoide. Séptica: <b>urgencia</b> (ATB IV + drenaje). Marcas comerciales de México a título orientativo.</div></div>
+  <div id="farm-body"></div>
+</div>
+
+<!-- ==================== ESCENARIOS ==================== -->
+<div class="panel" id="tab-escen"><div class="chipbar" id="escen-chips"></div><div id="escen-body"></div></div>
+
+<!-- ==================== SEGUIMIENTO ==================== -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Metas del tratamiento</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">1</div><div class="kt">Reducir <b>dolor</b> y mejorar <b>función</b> (seguir con WOMAC/KOOS a lo largo del tiempo).</div></div>
+      <div class="kp"><div class="kn">2</div><div class="kt">Mantener <b>ejercicio</b> y actividad; en OA con sobrepeso, meta de <b>pérdida de peso ≥5–10%</b>.</div></div>
+      <div class="kp"><div class="kn">3</div><div class="kt">Preservar autonomía; reevaluar analgesia y ajustar según respuesta y comorbilidad.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">➡️</span><span class="st">Cuándo derivar a traumatología</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-r"><b>Urgente:</b> sospecha de artritis séptica, fractura, bloqueo mecánico verdadero, hemartros agudo/inestabilidad (rotura LCA).</div>
+      <div class="fp fp-a"><b>Preferente:</b> OA avanzada incapacitante refractaria a tratamiento conservador óptimo (candidato a <b>prótesis</b>); lesión meniscal/ligamentaria sintomática que no mejora.</div>
+      <div class="fp fp-b"><b>Programada:</b> dolor persistente sin diagnóstico claro, o necesidad de infiltración/valoración especializada.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🦿</span><span class="st">Criterios para artroplastia (prótesis)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="prose"><p>Considerar cuando confluyen: <b>OA avanzada</b> (Kellgren-Lawrence 3–4), <b>dolor y limitación funcional intensos</b> que afectan la calidad de vida, y <b>fracaso del tratamiento conservador</b> óptimo (ejercicio, peso, fármacos). La decisión es individualizada según edad, comorbilidad y expectativas; no se basa solo en la radiografía.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BIBLIOGRAFÍA ==================== -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía</h2><p>Guías y evidencia 2019–2026 · OARSI, ACR, NICE, ESSKA</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Artrosis de rodilla</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Bannuru RR, et al. <em>OARSI guidelines for the non-surgical management of knee, hip, and polyarticular osteoarthritis</em>. Osteoarthritis Cartilage.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/31278997/">pubmed.ncbi.nlm.nih.gov/31278997</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Kolasinski SL, et al. <em>2019 ACR/Arthritis Foundation Guideline for the Management of Osteoarthritis of the Hand, Hip, and Knee</em>. Arthritis Care Res.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/31908149/">pubmed.ncbi.nlm.nih.gov/31908149</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-year">2022</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">NICE. <em>Osteoarthritis in over 16s: diagnosis and management (NG226)</em>.<a class="biblio-link" href="https://www.nice.org.uk/guidance/ng226">nice.org.uk/guidance/ng226</a></div></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Trauma, menisco y femoropatelar</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-year">2020</span><span class="biblio-level lv-b">Validación</span><div class="biblio-ref">Sims J, et al. <em>Validation of the Ottawa knee rule in adults: A single centre study</em>. J Med Radiat Sci.<a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7476189/">pmc.ncbi.nlm.nih.gov/articles/PMC7476189</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-year">2025</span><span class="biblio-level lv-a">Consenso</span><div class="biblio-ref">Prill R, et al. <em>The formal EU-US Meniscus Rehabilitation 2024 Consensus (ESSKA-AOSSM-AASPT), Part II</em>. Knee Surg Sports Traumatol Arthrosc.<a class="biblio-link" href="https://esskajournals.onlinelibrary.wiley.com/doi/10.1002/ksa.12689">esskajournals.onlinelibrary.wiley.com/doi/10.1002/ksa.12689</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-year">2019</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Willy RW, et al. <em>Patellofemoral Pain: Clinical Practice Guidelines (APTA)</em>. J Orthop Sports Phys Ther.<a class="biblio-link" href="https://www.jospt.org/doi/10.2519/jospt.2019.0302">jospt.org/doi/10.2519/jospt.2019.0302</a></div></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Cristales y urgencia infecciosa</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">FitzGerald JD, et al. <em>2020 American College of Rheumatology Guideline for the Management of Gout</em>. Arthritis Care Res.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/32391934/">pubmed.ncbi.nlm.nih.gov/32391934</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-year">2023</span><span class="biblio-level lv-b">Guía</span><div class="biblio-ref">Sigmund IK, et al. <em>Guideline for management of septic arthritis in native joints (SANJO)</em>. J Bone Jt Infect.<a class="biblio-link" href="https://jbji.copernicus.org/articles/8/29/2023/">jbji.copernicus.org/articles/8/29/2023</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">9</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Metaanálisis</span><div class="biblio-ref">Exercise therapy vs arthroscopic partial meniscectomy for degenerative meniscal tear: long-term meta-analysis of RCTs. PubMed.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/38531745/">pubmed.ncbi.nlm.nih.gov/38531745</a></div></div>
+    </div>
+  </div>
+  <div class="nivel-legend">
+    <div class="nl-item"><span class="biblio-level lv-a">Guía</span> Guía de práctica clínica</div>
+    <div class="nl-item"><span class="biblio-level lv-b">Validación</span> Estudio/validación</div>
+    <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Consenso de expertos</div>
+  </div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function val(id){return document.getElementById(id).value;}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* ===== FICHAS DE FÁRMACOS =====
+   FARM = [{n, color, tag, dosis, dosisSub, desc, rows:[[label,val]...], nota}]
+   tag con "⭐ " al inicio marca de elección. color = hex por fármaco/familia. */
+/* CATMETA: por cada categoría (cat) su chip: {label, sub, color}. */
+var CATMETA={
+  'ARTROSIS':{label:'ARTROSIS (OA)',sub:'Ejercicio y peso = núcleo; AINE tópico primero',color:'#15803d'},
+  'FEMOROPATELAR':{label:'FEMOROPATELAR / TENDINOPATÍA',sub:'Rehabilitación activa; excéntrico en tendinopatía',color:'#16a34a'},
+  'GOTA':{label:'CRISTALES (GOTA)',sub:'Brote: AINE / colchicina / corticoide; urato fuera del brote',color:'#b45309'},
+  'URGENCIAS':{label:'URGENCIAS',sub:'Séptica, fractura, rotura de LCA: NO demorar',color:'#7b1c1c'},
+  'COADYUVANTES':{label:'COADYUVANTES',sub:'Fisioterapia, ortesis, medidas físicas',color:'#0c3b6e'}
+};
+var FARM=[
+  {cat:'ARTROSIS',n:'Ejercicio + control de peso',color:'#15803d',tag:'⭐ NÚCLEO del tratamiento',dosis:'Ejercicio ≥150 min/sem + pérdida de peso ≥5–10%',desc:'Fortalecimiento de cuádriceps, ejercicio aeróbico y de rango; la reducción de peso alivia carga articular e inflamación.',rows:[['Vía','Programa estructurado'],['Frecuencia','La mayoría de los días de la semana'],['Duración','Mantenido de por vida'],['Candidatos','Toda OA de rodilla'],['Indicación','1ª línea universal (OARSI/ACR/NICE)'],['Presentac. MX','Fisioterapia / educación'],['Contraindic.','Prácticamente ninguna; adaptar al paciente'],['E. adversos','Molestia inicial transitoria']],nota:'Recomendación más fuerte y transversal de todas las guías; supera a los analgésicos en beneficio sostenido.'},
+  {cat:'ARTROSIS',n:'Diclofenaco gel tópico',color:'#15803d',tag:'⭐ 1er fármaco',dosis:'Diclofenaco 1% gel: 2–4 g en la rodilla 3–4 veces/día',desc:'AINE tópico: eficacia comparable a oral en rodilla con menor exposición sistémica. Preferido en mayores y con comorbilidad.',rows:[['Vía','Tópica'],['Frecuencia','3–4 veces/día'],['Duración','Según síntomas'],['Candidatos','OA de pocas articulaciones; mayores'],['Indicación','1ª línea farmacológica'],['Presentac. MX','Voltaren Emulgel'],['Contraindic.','Alergia a AINE; piel lesionada'],['E. adversos','Irritación cutánea local (leve)']],nota:'Primera opción farmacológica por su seguridad; probar antes que AINE oral.'},
+  {cat:'ARTROSIS',n:'AINE oral (naproxeno / ibuprofeno)',color:'#15803d',tag:'2ª línea farmacológica',dosis:'Naproxeno 250–500 mg c/12 h · Ibuprofeno 400–600 mg c/8 h',desc:'A la dosis eficaz más baja y por el menor tiempo. Considerar gastroprotección con IBP en riesgo GI.',rows:[['Vía','Oral'],['Frecuencia','c/8–12 h'],['Duración','Cursos cortos'],['Candidatos','Dolor no controlado con tópico'],['Indicación','OA sintomática'],['Presentac. MX','Flanax (naproxeno), Advil/Motrin (ibuprofeno)'],['Contraindic.','ERC, úlcera, ICC, anticoagulación, edad muy avanzada'],['E. adversos','GI, renal, HTA, cardiovascular']],nota:'Sopesar riesgo GI/renal/cardiovascular; evitar uso crónico. Considerar COX-2 selectivo si riesgo GI.'},
+  {cat:'ARTROSIS',n:'Paracetamol',color:'#16a34a',tag:'Efecto modesto',dosis:'500–1000 mg c/6–8 h (máx 3–4 g/día)',desc:'Beneficio pequeño en OA; útil como coadyuvante o cuando AINE están contraindicados.',rows:[['Vía','Oral'],['Frecuencia','c/6–8 h'],['Duración','Según necesidad'],['Candidatos','Contraindicación a AINE'],['Indicación','Analgesia leve'],['Presentac. MX','Tempra, Tylenol'],['Contraindic.','Hepatopatía; alcohol'],['E. adversos','Hepatotoxicidad a dosis altas']],nota:'Las guías recientes lo relegan por eficacia limitada; no monoterapia de rutina.'},
+  {cat:'ARTROSIS',n:'Duloxetina',color:'#16a34a',tag:'Dolor crónico',dosis:'30 mg/día 1 sem, luego 60 mg/día',desc:'IRSN útil en OA con dolor persistente o componente de sensibilización central; también si coexiste depresión.',rows:[['Vía','Oral'],['Frecuencia','1 vez/día'],['Duración','Prolongada'],['Candidatos','Dolor crónico refractario a AINE'],['Indicación','OA con dolor difuso'],['Presentac. MX','Cymbalta'],['Contraindic.','IMAO, glaucoma no controlado, hepatopatía'],['E. adversos','Náusea, somnolencia, boca seca']],nota:'Opción condicional en las guías; introducir de forma gradual y retirar gradualmente.'},
+  {cat:'ARTROSIS',n:'Capsaicina tópica',color:'#16a34a',tag:'Coadyuvante tópico',dosis:'Crema 0.025–0.075% 3–4 veces/día',desc:'Depleciona sustancia P; alternativa tópica en OA de rodilla, especialmente si intolerancia a AINE.',rows:[['Vía','Tópica'],['Frecuencia','3–4 veces/día'],['Duración','Continua para efecto'],['Candidatos','OA localizada'],['Indicación','Alternativa a AINE tópico'],['Presentac. MX','Capsaicina tópica'],['Contraindic.','Piel lesionada; cara/mucosas'],['E. adversos','Ardor/quemazón local inicial']],nota:'Lavar manos tras aplicar; el ardor inicial disminuye con el uso continuado.'},
+  {cat:'ARTROSIS',n:'Infiltración de corticoide intraarticular',color:'#15803d',tag:'Para el brote',dosis:'Triamcinolona 40 mg o metilprednisolona 40 mg intraarticular',desc:'Alivio a corto plazo (semanas) en brote inflamatorio/derrame. No repetir con excesiva frecuencia.',rows:[['Vía','Intraarticular'],['Frecuencia','Puntual; no &gt;3–4/año'],['Duración','Efecto de semanas'],['Candidatos','Brote doloroso con derrame'],['Indicación','OA con exacerbación'],['Presentac. MX','Kenalog / Kenacort'],['Contraindic.','Sospecha de infección articular'],['E. adversos','Flare postinyección, atrofia local, ↑glucemia']],nota:'Descartar séptica antes de infiltrar. Beneficio a corto plazo; uso repetido controvertido.'},
+  {cat:'ARTROSIS',n:'Ácido hialurónico intraarticular',color:'#16a34a',tag:'Controvertido',dosis:'Serie intraarticular según producto (1–5 inyecciones)',desc:'Viscosuplementación. Evidencia inconsistente; recomendación condicional/en contra según guía. Considerar en casos seleccionados refractarios.',rows:[['Vía','Intraarticular'],['Frecuencia','Según preparado'],['Duración','Variable'],['Candidatos','OA refractaria seleccionada'],['Indicación','Alternativa cuando fallan otras'],['Presentac. MX','Synvisc, Ostenil'],['Contraindic.','Infección; alergia'],['E. adversos','Dolor/derrame local transitorio']],nota:'OARSI/ACR/NICE no lo recomiendan de rutina; beneficio clínico dudoso.'},
+  {cat:'ARTROSIS',n:'Artroplastia (prótesis de rodilla)',color:'#15803d',tag:'OA avanzada incapacitante',dosis:'Reemplazo articular total o unicompartimental',desc:'Tratamiento definitivo de la OA terminal con dolor y limitación intensos refractarios al manejo conservador.',rows:[['Vía','Quirúrgica'],['Frecuencia','Única'],['Duración','Prótesis duradera'],['Candidatos','KL 3–4 + dolor/limitación intensos + fracaso conservador'],['Indicación','OA avanzada incapacitante'],['Presentac. MX','Cirugía de traumatología/ortopedia'],['Contraindic.','Infección activa; riesgo quirúrgico prohibitivo'],['E. adversos','Infección protésica, TEV, aflojamiento']],nota:'Decisión individualizada; la radiografía por sí sola no indica la cirugía.'},
+
+  {cat:'FEMOROPATELAR',n:'Ejercicio de cuádriceps y cadera',color:'#16a34a',tag:'⭐ 1ª línea',dosis:'Programa de fortalecimiento cuádriceps + abductores/rotadores de cadera',desc:'Pilar del dolor femoropatelar; corrige déficits que alteran el tracking rotuliano. Combinar cadera + rodilla mejora resultados.',rows:[['Vía','Ejercicio terapéutico'],['Frecuencia','Varias veces/semana'],['Duración','6–12 semanas y mantenimiento'],['Candidatos','Dolor femoropatelar del corredor/joven'],['Indicación','1ª línea (APTA)'],['Presentac. MX','Fisioterapia'],['Contraindic.','Ninguna relevante'],['E. adversos','Molestia transitoria']],nota:'Recomendación fuerte de la guía APTA; superior al reposo o a fármacos aislados.'},
+  {cat:'FEMOROPATELAR',n:'AINE corto + vendaje/taping',color:'#16a34a',tag:'Coadyuvante',dosis:'AINE oral/tópico en curso corto + vendaje rotuliano',desc:'Control sintomático mientras avanza la rehabilitación; el taping puede reducir dolor a corto plazo.',rows:[['Vía','Oral/tópica + vendaje'],['Frecuencia','Según síntomas'],['Duración','Curso corto'],['Candidatos','Dolor agudo/limitante'],['Indicación','Alivio puente'],['Presentac. MX','Flanax / Voltaren Emulgel + taping'],['Contraindic.','Las de AINE'],['E. adversos','Los de AINE; irritación por vendaje']],nota:'Adyuvante, no sustituye al ejercicio. El vendaje ayuda a tolerar la carga.'},
+  {cat:'FEMOROPATELAR',n:'Ejercicio excéntrico (tendinopatía rotuliana)',color:'#16a34a',tag:'⭐ Tendinopatía',dosis:'Sentadillas excéntricas en plano declinado, progresivas',desc:'Base del tratamiento de la tendinopatía rotuliana ("rodilla del saltador"); estimula remodelado del tendón. Carga progresiva.',rows:[['Vía','Ejercicio terapéutico'],['Frecuencia','Diaria/según protocolo'],['Duración','12 semanas típicamente'],['Candidatos','Tendinopatía rotuliana/cuadricipital'],['Indicación','1ª línea tendinopatía'],['Presentac. MX','Fisioterapia guiada'],['Contraindic.','Rotura tendinosa completa'],['E. adversos','Dolor tolerable durante la carga']],nota:'Evitar infiltraciones de corticoide en el tendón (riesgo de rotura).'},
+
+  {cat:'GOTA',n:'AINE (naproxeno / indometacina)',color:'#b45309',tag:'⭐ Brote agudo',dosis:'Naproxeno 500 mg c/12 h · Indometacina 50 mg c/8 h hasta resolución',desc:'Primera opción del brote en paciente sin contraindicación; iniciar cuanto antes y mantener hasta 2–3 días tras resolver.',rows:[['Vía','Oral'],['Frecuencia','c/8–12 h'],['Duración','Hasta resolver el brote'],['Candidatos','Brote sin ERC/úlcera'],['Indicación','Gota aguda (ACR 2020)'],['Presentac. MX','Flanax, Indocin'],['Contraindic.','ERC, úlcera, anticoagulación, ICC'],['E. adversos','GI, renal, HTA']],nota:'AINE, colchicina y corticoide son igual de válidos; elegir por comorbilidad.'},
+  {cat:'GOTA',n:'Colchicina',color:'#b45309',tag:'⭐ Brote agudo',dosis:'1 mg al inicio + 0.5 mg a la hora (máx 1.5 mg el 1er día)',desc:'Régimen de dosis baja (igual de eficaz y mejor tolerado que dosis altas). Más eficaz en las primeras 24 h del brote.',rows:[['Vía','Oral'],['Frecuencia','1 mg + 0.5 mg a la hora; luego 0.5 mg 1–2/día'],['Duración','Hasta resolver'],['Candidatos','Brote precoz'],['Indicación','Gota aguda (ACR 2020)'],['Presentac. MX','Colchimax, Colchicina'],['Contraindic.','ERC/hepatopatía graves; interacción con inhibidores CYP3A4/P-gp (claritromicina, verapamilo)'],['E. adversos','Diarrea, náusea; toxicidad medular en sobredosis']],nota:'Ajustar dosis en ERC; vigilar interacciones (estatinas, macrólidos).'},
+  {cat:'GOTA',n:'Corticoide (prednisona / intraarticular)',color:'#b45309',tag:'Brote agudo',dosis:'Prednisona 30–40 mg/día 3–5 días, luego descenso; o corticoide intraarticular',desc:'Opción de elección si AINE y colchicina contraindicados (ERC). Intraarticular útil en mono/oligoartritis tras excluir séptica.',rows:[['Vía','Oral o intraarticular'],['Frecuencia','1 vez/día'],['Duración','5–10 días con descenso'],['Candidatos','ERC, intolerancia a AINE/colchicina'],['Indicación','Gota aguda (ACR 2020)'],['Presentac. MX','Meticorten (prednisona)'],['Contraindic.','Infección no controlada; DM descompensada'],['E. adversos','Hiperglucemia, HTA, insomnio']],nota:'Excluir artritis séptica antes de infiltrar una articulación caliente.'},
+  {cat:'GOTA',n:'Alopurinol / Febuxostat (urato)',color:'#b45309',tag:'Profilaxis · FUERA del brote',dosis:'Alopurinol iniciar 100 mg/día (50 en ERC) y titular; objetivo urato &lt;6 mg/dL',desc:'Terapia reductora de urato ("treat-to-target"). Indicada en gota recurrente, tofos o daño articular. Cubrir con colchicina/AINE los primeros 3–6 meses.',rows:[['Vía','Oral'],['Frecuencia','1 vez/día'],['Duración','Crónica/indefinida'],['Candidatos','≥2 brotes/año, tofos, urolitiasis'],['Indicación','Hipouricemiante de mantenimiento'],['Presentac. MX','Zyloprim (alopurinol), Adenuric (febuxostat)'],['Contraindic.','Hipersensibilidad; HLA-B*58:01 (alopurinol); cautela cardiovascular con febuxostat'],['E. adversos','Rash/DRESS (alopurinol), hepatotoxicidad']],nota:'No iniciar ni suspender durante el brote agudo; sí puede continuarse si ya lo tomaba. Titular hasta la meta de urato.'},
+
+  {cat:'URGENCIAS',n:'Artritis séptica: ATB IV + drenaje',color:'#7b1c1c',tag:'🚨 URGENCIA — no demorar',dosis:'Artrocentesis urgente + antibiótico IV empírico + lavado/drenaje articular',desc:'Tras tomar líquido y hemocultivos, iniciar ATB empírico que cubra S. aureus (incl. SARM según entorno) y ajustar por Gram/cultivo. Drenaje quirúrgico o por aspiración repetida.',rows:[['Vía','IV + procedimiento'],['Frecuencia','Inmediata'],['Duración','ATB ~2–4+ semanas según evolución'],['Candidatos','Rodilla caliente + derrame purulento/fiebre'],['Indicación','Artritis séptica (SANJO 2023)'],['Presentac. MX','Manejo hospitalario'],['Contraindic.','No demorar por estudios'],['E. adversos','Los del antibiótico; los del procedimiento']],nota:'La demora causa destrucción articular irreversible; ante la duda, tratar como séptica.'},
+  {cat:'URGENCIAS',n:'Fractura / bloqueo mecánico / rotura de LCA',color:'#7b1c1c',tag:'🚨 Derivar',dosis:'Inmovilización, analgesia y derivación a traumatología',desc:'Fractura (Ottawa +), bloqueo verdadero (asa de cubo meniscal) o hemartros con inestabilidad (rotura LCA) requieren valoración especializada, RM y a menudo cirugía.',rows:[['Vía','Ortopédica/quirúrgica'],['Frecuencia','Urgente/preferente'],['Duración','Según lesión'],['Candidatos','Trauma con criterios de alarma'],['Indicación','Lesión estructural aguda'],['Presentac. MX','Traumatología'],['Contraindic.','—'],['E. adversos','Los de la cirugía si procede']],nota:'No forzar la movilidad ante bloqueo verdadero; inmovilizar y derivar.'},
+
+  {cat:'COADYUVANTES',n:'Fisioterapia',color:'#0c3b6e',tag:'Transversal',dosis:'Programa individualizado de fortalecimiento, propiocepción y rango',desc:'Complementa a todas las causas mecánicas; mejora función y reduce recaídas.',rows:[['Vía','Rehabilitación'],['Frecuencia','Regular'],['Duración','Semanas-meses'],['Candidatos','OA, femoropatelar, meniscal, postoperatorio'],['Indicación','Coadyuvante universal'],['Presentac. MX','Servicio de rehabilitación'],['Contraindic.','Ninguna relevante'],['E. adversos','Molestia transitoria']],nota:'La adherencia determina el resultado; educar y fijar metas realistas.'},
+  {cat:'COADYUVANTES',n:'Ortesis / bastón',color:'#0c3b6e',tag:'Apoyo mecánico',dosis:'Bastón en el lado contralateral; rodillera/plantillas según indicación',desc:'Descarga la articulación y mejora la estabilidad; el bastón reduce carga en OA sintomática.',rows:[['Vía','Dispositivo externo'],['Frecuencia','Durante la marcha'],['Duración','Según necesidad'],['Candidatos','OA, inestabilidad, dolor con carga'],['Indicación','Ayuda funcional'],['Presentac. MX','Ortopedia'],['Contraindic.','—'],['E. adversos','Dependencia si mal indicado']],nota:'Enseñar la técnica correcta (bastón contralateral) para que sea eficaz.'},
+  {cat:'COADYUVANTES',n:'Medidas físicas (frío / calor)',color:'#0c3b6e',tag:'Sintomático',dosis:'Frío en fase aguda/inflamatoria; calor en rigidez crónica',desc:'Alivio sintomático simple y seguro, coadyuvante del resto de medidas.',rows:[['Vía','Local'],['Frecuencia','15–20 min varias veces/día'],['Duración','Según síntomas'],['Candidatos','Cualquier gonalgia sintomática'],['Indicación','Coadyuvante'],['Presentac. MX','Compresas frío/calor'],['Contraindic.','Trastornos de sensibilidad/vasculares'],['E. adversos','Lesión térmica si mal uso']],nota:'Proteger la piel; no aplicar directo sobre piel insensible.'}
+];
+function renderFarm(){var el=document.getElementById('farm-body');if(!el)return;var h='';var prevCat=null;for(var i=0;i<FARM.length;i++){var d=FARM[i];var id='farm-'+i;var open=(i===0);
+  if(d.cat&&d.cat!==prevCat){var _m=(typeof CATMETA!=='undefined'&&CATMETA[d.cat])?CATMETA[d.cat]:{};var _pc=_m.color||d.color||'var(--ac)';var _sub=_m.sub||'';h+='<div style="margin:18px 0 8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><span style="background:'+_pc+';color:#fff;font-size:12px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">'+(_m.label||d.cat)+'</span>'+(_sub?'<span style="font-size:12.5px;color:#6b7280;line-height:1.4;">'+_sub+'</span>':'')+'</div>';prevCat=d.cat;}
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+d.tag+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">'+(d.dlbl||'Dosis')+'</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';}
+  el.innerHTML=h;}
+
+/* ===== MOTOR DE ESCALAS PUNTUADAS =====
+   SCREG[sid]={title, items:[{t,o:[[label,pts]...]}], interpret:function(total){return{band,cls,msg}}, max, note}
+   Renderiza en un contenedor con id = sid+'-box'. cls: 'res-ok' | 'res-mid' | 'res-high'. */
+var SCREG={};var SCST={};
+SCREG['womac']={title:'WOMAC simplificado',max:24,
+  items:[
+    {t:'Dolor al caminar en llano',o:[['Ninguno',0],['Leve',1],['Moderado',2],['Intenso',3],['Extremo',4]]},
+    {t:'Dolor al subir o bajar escaleras',o:[['Ninguno',0],['Leve',1],['Moderado',2],['Intenso',3],['Extremo',4]]},
+    {t:'Rigidez matutina',o:[['Ninguna',0],['Leve',1],['Moderada',2],['Intensa',3],['Extrema',4]]},
+    {t:'Dificultad para levantarse de una silla',o:[['Ninguna',0],['Leve',1],['Moderada',2],['Intensa',3],['Extrema',4]]},
+    {t:'Dificultad para subir escaleras (función)',o:[['Ninguna',0],['Leve',1],['Moderada',2],['Intensa',3],['Extrema',4]]},
+    {t:'Dificultad en tareas domésticas',o:[['Ninguna',0],['Leve',1],['Moderada',2],['Intensa',3],['Extrema',4]]}
+  ],
+  interpret:function(t){if(t<=5)return{band:'Impacto leve',cls:'res-ok',msg:'Síntomas leves; reforzar ejercicio y control de peso.'};if(t<=12)return{band:'Impacto moderado',cls:'res-mid',msg:'Optimizar tratamiento: ejercicio + AINE tópico/oral; reevaluar.'};if(t<=18)return{band:'Impacto grave',cls:'res-high',msg:'Función muy limitada; considerar coadyuvantes/infiltración y valoración especializada.'};return{band:'Impacto muy grave',cls:'res-high',msg:'OA incapacitante; valorar derivación a traumatología y candidatura a prótesis.'};},
+  note:'Versión simplificada con fines orientativos (0=ninguno, 4=extremo). El WOMAC completo tiene 24 ítems.'};
+function scInit(sid){var sc=SCREG[sid];var box=document.getElementById(sid+'-box');if(!box)return;var h='';for(var i=0;i<sc.items.length;i++){var it=sc.items[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+(i+1)+'. '+it.t+'</div><div id="'+sid+'-g'+i+'">';for(var j=0;j<it.o.length;j++){var p=it.o[j][1];h+='<button class="opt" onclick="scPick(\''+sid+'\','+i+','+p+',this)">'+it.o[j][0]+(p?' <b>('+(p>0?'+':'')+p+')</b>':'')+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="scReset(\''+sid+'\')">Reiniciar</button></div><div id="'+sid+'-res" class="calc-result"></div>';box.innerHTML=h;}
+function scPick(sid,i,pts,btn){SCST[sid]=SCST[sid]||{};SCST[sid][i]=pts;var g=btn.parentNode.querySelectorAll('.opt');for(var k=0;k<g.length;k++)g[k].classList.remove('on');btn.classList.add('on');scCalc(sid);}
+function scReset(sid){SCST[sid]={};var b=document.querySelectorAll('#'+sid+'-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById(sid+'-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function scCalc(sid){var sc=SCREG[sid],st=SCST[sid]||{},tot=0,n=0;for(var i=0;i<sc.items.length;i++){if(st[i]!=null){tot+=st[i];n++;}}var box=document.getElementById(sid+'-res');if(!box)return;if(n<sc.items.length){box.className='calc-result show res-mid';box.innerHTML='Responde las '+sc.items.length+' preguntas ('+n+'/'+sc.items.length+').';return;}var r=sc.interpret(tot);box.className='calc-result show '+r.cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">'+sc.title+' = '+tot+(sc.max?(' / '+sc.max):'')+' · '+r.band+'</div><div style="margin-top:6px;">'+r.msg+'</div>'+(sc.note?'<div class="calc-note">'+sc.note+'</div>':'');}
+
+/* ===== ESCENARIOS =====
+   ESCEN = {'Nombre':{p:'contexto', k:'clave', x:'conducta'}, ...} */
+var ESCEN={
+  'Artritis séptica (URGENCIA)':{p:'Rodilla monoarticular caliente, roja, con derrame, dolor intenso y fiebre; imposibilidad de mover.',k:'Toda monoartritis aguda febril con derrame es séptica hasta demostrar lo contrario. Leucocitos en líquido a menudo &gt;50.000 con predominio de PMN.',x:'Artrocentesis URGENTE (líquido: celularidad, Gram, cultivo) + hemocultivos, luego antibiótico IV empírico anti-S. aureus y drenaje/lavado. NO demorar por estudios de imagen.'},
+  'Gota aguda':{p:'Varón con antecedente de hiperuricemia; monoartritis de rodilla (o podagra previa) de inicio nocturno, muy dolorosa y roja.',k:'Cristales de urato monosódico (aguja, birrefringencia negativa) en el líquido confirman. Excluir séptica si duda.',x:'Iniciar precozmente AINE, colchicina (1 mg + 0.5 mg a la hora) o corticoide según comorbilidad. No iniciar hipouricemiante en el brote (sí continuar si ya lo tomaba). Titular urato &lt;6 mg/dL fuera del brote.'},
+  'Rodilla con derrame':{p:'Derrame articular de causa no clara, con o sin trauma; peloteo rotuliano positivo.',k:'La artrocentesis diferencia no inflamatorio (OA), inflamatorio (cristales/AR) y séptico, y alivia.',x:'Artrocentesis diagnóstica-terapéutica y análisis del líquido. Orientar tratamiento por el resultado; si hemartros tras trauma, sospechar LCA/fractura.'},
+  'OA avanzada':{p:'Adulto mayor con dolor mecánico crónico, crepitación, rigidez breve y limitación progresiva; KL 3–4.',k:'La radiografía confirma pero la conducta la marca la clínica (dolor y función).',x:'Optimizar ejercicio + peso + AINE tópico/oral; infiltración en brotes. Si fracaso conservador con incapacidad &rarr; derivar a traumatología para valorar prótesis.'},
+  'Dolor femoropatelar del corredor':{p:'Joven/deportista con dolor anterior peor al bajar escaleras, sentadillas y sedestación prolongada (signo del cine). Sin derrame.',k:'Diagnóstico clínico; aprensión rotuliana y déficit de cuádriceps/glúteo medio.',x:'Rehabilitación con fortalecimiento de cuádriceps y cadera (1ª línea), AINE corto y taping como puente. Modificar carga de entrenamiento. Buen pronóstico.'},
+  'Sospecha de rotura de LCA':{p:'Trauma deportivo con giro/desaceleración, "pop" audible, derrame agudo (hemartros) e inestabilidad ("se me va la rodilla").',k:'Lachman positivo (más sensible que cajón anterior). Aplicar Ottawa para descartar fractura.',x:'Inmovilizar, analgesia, RM y derivar a traumatología. Manejo según demanda funcional (rehabilitación vs reconstrucción).'},
+  'Bloqueo meniscal':{p:'Imposibilidad de extender completamente la rodilla ("bloqueo") tras giro, con dolor en interlínea y chasquidos.',k:'Sugiere asa de cubo meniscal. McMurray/Apley positivos; RM confirma.',x:'No forzar la extensión; analgesia y derivación preferente a traumatología. Valorar artroscopia si bloqueo verdadero persistente.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+function initAll(){renderFarm();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('womac');}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>
