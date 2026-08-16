@@ -268,7 +268,21 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🧭</span><div><div class="at">Algoritmo interactivo</div>Primero descarta la forma maligna; luego separa micótica de bacteriana y decide la gota según el tímpano.</div></div>
 <div class="an"><div id="algo-box"></div></div>
 </div>
-<div class="panel" id="tab-txc"><div id="txc-body"></div></div>
+<div class="panel" id="tab-txc">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💊</span><span class="st">Tratamiento por población — toca un chip</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div id="oe-pop-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+      <button class="pchip on" onclick="showOePop('adulto',this)">🧑 Adulto</button>
+      <button class="pchip" onclick="showOePop('pedi',this)">👶 Pediátrico</button>
+      <button class="pchip" onclick="showOePop('embarazo',this)">🤰 Embarazo</button>
+      <button class="pchip" onclick="showOePop('diabetico',this)">🩸 Diabético/inmuno</button>
+      <button class="pchip" onclick="showOePop('perfor',this)">🦻 Perforación/tubos</button>
+      <button class="pchip" onclick="showOePop('otomicosis',this)">🍄 Otomicosis</button>
+      <button class="pchip" onclick="showOePop('evitar',this)">❌ Qué evitar</button>
+    </div>
+    <div id="oe-pop-out"></div>
+  </div></div>
+</div>
 <div class="panel" id="tab-farm">
 <div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🔎</span><div>Gotas óticas, analgesia, antifúngico y sistémico, con dosis y duración. Toca para desplegar o <strong>busca por nombre</strong>.</div></div>
 <input class="calc-in" id="farm-q" type="text" placeholder="🔎 Buscar (ciprofloxacino, ofloxacino, clotrimazol…)" oninput="filtrarFarmacos(this.value)" style="margin-bottom:12px;">
@@ -564,19 +578,62 @@ var F_NO_DOLOR={n:'❌ No evaluar/tratar el dolor',no:true,linea:'NO hacer',
   ea:'Sufrimiento innecesario, mala adherencia',
   nota:'La guía es explícita: evaluar y tratar el dolor es parte del estándar.'};
 
-var TXC=[
- ['Analgesia','Recomendación fuerte de la guía',C1,[F_PARA,F_IBU,F_OPIOIDE]],
- ['Tópico de primera línea','Gotas óticas (NO antibiótico oral)',AZ,[F_CIPRODEXA,F_OFLOX,F_POLI]],
- ['Medidas y administración','Mejoran la eficacia del tópico',CO,[F_LIMPIEZA,F_MECHA,F_SECO]],
- ['Casos especiales','Maligna / otomicosis',C2,[F_MALIGNA,F_OTOMIC]],
- ['❌ NO hacer','Errores frecuentes',RJ,[F_NO_ORAL,F_NO_NEO,F_NO_DOLOR]]
+function oeIntro(icon,title,txt,col){return '<div style="border-radius:8px;padding:11px 13px;margin-bottom:12px;background:'+col+'11;border-left:4px solid '+col+';font-size:12.5px;line-height:1.6;color:#374151;"><b style="color:'+col+';">'+icon+' '+title+':</b> '+txt+'</div>';}
+var OEDS=[
+ {n:'Paracetamol · jarabe 160 mg/5 mL',conc:32,lo:10,hi:15,freq:'c/6-8 h',max:'75 mg/kg/día'},
+ {n:'Paracetamol · gotas 100 mg/mL',conc:100,lo:10,hi:15,freq:'c/6-8 h',max:'75 mg/kg/día'},
+ {n:'Ibuprofeno · susp 100 mg/5 mL',conc:20,lo:5,hi:10,freq:'c/6-8 h (>6m)',max:'40 mg/kg/día'},
+ {n:'Ibuprofeno · gotas 40 mg/mL',conc:40,lo:5,hi:10,freq:'c/6-8 h (>6m)',max:'40 mg/kg/día'}
 ];
-function buildTxc(){
-  TXIDX=0;
-  var h='<div class="alert a-i" style="margin-bottom:12px;"><span class="ai">🎯</span><div><div class="at">Dolor + gota tópica; el oral casi nunca</div>Trata el <b>dolor</b> (recomendación fuerte) e inicia una <b>gota ótica</b> tópica; el <b>antibiótico oral NO se usa de rutina</b>. Limpia el conducto y usa <b>mecha</b> si está muy edematoso. Ojo con la <b>otitis externa maligna</b> del diabético. La <span style="color:#f5b301;">★</span> marca lo prioritario.</div></div>';
-  for(var i=0;i<TXC.length;i++)h+=buildLinea(TXC[i][0],TXC[i][1],TXC[i][2],TXC[i][3],TXC[i][2]);
-  document.getElementById('txc-body').innerHTML=h;
-}
+function oeCalcHTML(){var opt='';for(var i=0;i<OEDS.length;i++)opt+='<option value="'+i+'">'+OEDS[i].n+'</option>';
+ return '<div style="background:linear-gradient(135deg,#5a2410,#c05a2e);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 4px 14px rgba(192,90,46,.25);">'
+  +'<div style="font-size:13px;font-weight:800;color:#fff;display:flex;align-items:center;gap:7px;margin-bottom:11px;">🧮 Calculadora de analgesia pediátrica</div>'
+  +'<div style="display:flex;gap:9px;flex-wrap:wrap;">'
+  +'<div style="flex:0 0 92px;"><div style="font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.85);font-weight:700;margin-bottom:4px;">Peso (kg)</div>'
+  +'<input id="oe-peso" type="number" inputmode="decimal" placeholder="12" oninput="calcOe()" style="width:100%;padding:10px;border:none;border-radius:9px;font-size:16px;font-weight:800;color:#111;font-family:inherit;box-sizing:border-box;"></div>'
+  +'<div style="flex:1;min-width:205px;"><div style="font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.85);font-weight:700;margin-bottom:4px;">Fármaco · presentación</div>'
+  +'<select id="oe-farm" onchange="calcOe()" style="width:100%;padding:10px;border:none;border-radius:9px;font-size:13px;font-weight:600;color:#111;font-family:inherit;background:#fff;box-sizing:border-box;">'+opt+'</select></div>'
+  +'</div><div id="oe-out" style="margin-top:11px;"></div></div>';}
+function calcOe(){var wEl=document.getElementById('oe-peso');var fEl=document.getElementById('oe-farm');var o=document.getElementById('oe-out');if(!o||!fEl)return;
+ var w=parseFloat(wEl&&wEl.value);
+ if(!w||w<=0){o.innerHTML='<div style="background:rgba(255,255,255,.15);border-radius:9px;padding:12px 14px;font-size:12.5px;color:#fff;">✏️ Escribe el peso para calcular la dosis.</div>';return;}
+ var d=OEDS[parseInt(fEl.value,10)];var loMg=Math.round(w*d.lo),hiMg=Math.round(w*d.hi);
+ var loMl=Math.round(loMg/d.conc*10)/10,hiMl=Math.round(hiMg/d.conc*10)/10;var nm=d.n.split('·')[0].trim();
+ var gotas='';if(/gotas/i.test(d.n)){var loG=Math.round(loMl*20),hiG=Math.round(hiMl*20);gotas='<div style="margin-top:6px;padding:7px 10px;background:#fdf0e9;border-radius:8px;font-size:13px;color:#7a3410;font-weight:700;">💧 ≈ '+loG+'–'+hiG+' gotas por toma <span style="font-weight:500;color:#a86b4c;font-size:11px;">(≈20 gotas/mL · confirma el gotero)</span></div>';}
+ var chip=function(v,l){return '<div style="flex:1;min-width:88px;background:#f9fafb;border-radius:8px;padding:7px 9px;"><div style="font-size:13px;font-weight:800;color:#111;">'+v+'</div><div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px;">'+l+'</div></div>';};
+ var h='<div style="background:#fff;border-radius:10px;padding:13px 14px;">'
+  +'<div style="font-size:10.5px;font-weight:700;text-transform:uppercase;color:#c05a2e;letter-spacing:.5px;">'+nm+' · '+w+' kg</div>'
+  +'<div style="font-size:26px;font-weight:800;color:#111;line-height:1.15;margin:3px 0;">'+loMl+'–'+hiMl+' mL <span style="font-size:13px;font-weight:600;color:#6b7280;">/ toma</span></div>'
+  +gotas
+  +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px;">'+chip(loMg+'–'+hiMg+' mg',d.conc+' mg/mL')+chip(d.freq,'frecuencia')+chip(d.max,'máximo')+'</div>'
+  +'<div style="font-size:10.5px;color:#9ca3af;margin-top:9px;font-style:italic;">La analgesia es parte del estándar en otitis externa. Dosificar por PESO.</div></div>';
+ o.innerHTML=h;}
+var OE_POP={
+ adulto:function(){return oeIntro('🧑','Adulto','dolor + gota tópica; el antibiótico ORAL casi nunca se usa.',C1)
+   +buildLinea('Tópico · 1ª línea','Gotas óticas (no oral)',AZ,[F_CIPRODEXA,F_OFLOX],AZ)
+   +buildLinea('Medidas','Mejoran la eficacia del tópico',CO,[F_LIMPIEZA,F_MECHA,F_SECO],CO)
+   +buildLinea('Analgesia','Recomendación fuerte de la guía',C1,[F_PARA,F_IBU,F_OPIOIDE],C1);},
+ pedi:function(){return oeIntro('👶','Pediátrico','gotas de quinolona (ciprodexa/ofloxacino) seguras; analgesia por PESO con la calculadora. Evita neomicina si hay tubos/perforación.',C1)
+   +oeCalcHTML()
+   +buildLinea('Tópico · 1ª línea','Seguras en niños',AZ,[F_CIPRODEXA,F_OFLOX],AZ)
+   +buildLinea('Analgesia','Por peso (usa la calculadora)',C1,[F_PARA,F_IBU],C1)
+   +buildLinea('Medidas','',CO,[F_LIMPIEZA,F_SECO],CO);},
+ embarazo:function(){return oeIntro('🤰','Embarazo','tópico de elección (ciprodexa/ofloxacino óticos); EVITA quinolonas SISTÉMICAS; paracetamol para el dolor.',C1)
+   +buildLinea('Tópico · 1ª línea','Seguro en embarazo',AZ,[F_CIPRODEXA,F_OFLOX],AZ)
+   +buildLinea('Analgesia','Paracetamol de elección',C1,[F_PARA],C1)
+   +buildLinea('Medidas','',CO,[F_LIMPIEZA,F_SECO],CO);},
+ diabetico:function(){return '<div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Sospecha otitis externa MALIGNA (necrotizante)</div>Diabético/inmunocomprometido con otalgia intensa, otorrea que no mejora, tejido de granulación en el suelo del conducto o parálisis facial → <b>urgencia</b>: derivar a ORL, imagen (TC/RM) y antibiótico SISTÉMICO antipseudomonas prolongado (~6 semanas).</div></div>'
+   +buildLinea('Manejo de la maligna','Sistémico + ORL',RJ,[F_MALIGNA],RJ)
+   +buildLinea('Tópico coadyuvante','',AZ,[F_CIPRODEXA,F_OFLOX],AZ)
+   +buildLinea('Analgesia','',C1,[F_PARA,F_IBU],C1);},
+ perfor:function(){return oeIntro('🦻','Con perforación / tubos','usa SOLO gotas de quinolona (ciprodexa/ofloxacino), NO ototóxicas; EVITA neomicina/aminoglucósidos.',AZ)
+   +buildLinea('Tópico seguro','No ototóxico',AZ,[F_CIPRODEXA,F_OFLOX],AZ)
+   +buildLinea('❌ Evitar','Ototóxico con perforación',RJ,[F_NO_NEO],RJ);},
+ otomicosis:function(){return oeIntro('🍄','Otomicosis','hongos (Aspergillus/Candida): LIMPIEZA meticulosa + antifúngico tópico; acidificar el conducto.',CO)
+   +buildLinea('Manejo','Limpieza + antifúngico',CO,[F_OTOMIC,F_LIMPIEZA],CO);},
+ evitar:function(){return buildLinea('❌ Qué NO hacer','Errores frecuentes',RJ,[F_NO_ORAL,F_NO_NEO,F_NO_DOLOR],RJ);}
+};
+function showOePop(id,btn){var ch=document.querySelectorAll('#oe-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('oe-pop-out');if(out&&OE_POP[id]){out.innerHTML=OE_POP[id]();if(id==='pedi')calcOe();}}
 
 /* ===== FÁRMACOS (acordeón) ===== */
 var FARMACOS=[
@@ -711,7 +768,7 @@ function algoGo(k){
 
 /* ===== INIT ===== */
 window.addEventListener('load',function(){
-  buildTxc(); renderFarm(''); buildInd();
+  showOePop('adulto',document.querySelector('#oe-pop-chips .pchip.on')); renderFarm(''); buildInd();
   setEscen('difusa',document.querySelector('#escen-chips .pchip')); algoStart();
 });
 

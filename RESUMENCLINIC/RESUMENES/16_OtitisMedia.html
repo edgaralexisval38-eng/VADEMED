@@ -99,7 +99,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
     <div>
       <div class="hdr-eye">Pediatría · Medicina General · ORL</div>
       <div class="hdr-title">Otitis Media Aguda</div>
-      <div class="hdr-sub">AAP 2013 · Consenso SEIP/AEPap 2023 · Guía-ABE 2023 · GPC México</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> H66.9</div>
+      <div class="hdr-sub">AAP 2013 · Consenso SEIP/AEPap 2023 · Guía-ABE 2023 · GPC México</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> H66.0 supurativa aguda · H65.0 serosa · H66.9 sin especificar</div>
     </div>
   </div>
   <div class="hdr-badges">
@@ -424,7 +424,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
     <div class="bib-i"><div><span class="bib-n">3</span><span class="bib-y">2023</span></div><div class="bib-r"><strong>Guía-ABE:</strong> Otitis media aguda (v.3/2023).</div></div>
     <div class="bib-i"><div><span class="bib-n">4</span><span class="bib-y">2006</span></div><div class="bib-r">Rovers MM et al. <strong>Antibiotics for acute otitis media: meta-analysis (IPD).</strong> Lancet 2006;368:1429-1435.</div></div>
     <div class="bib-i"><div><span class="bib-n">5</span><span class="bib-y">1997</span></div><div class="bib-r">Varsano I et al. <strong>Ceftriaxona IM vs amoxicilina-clavulanato oral en OMA.</strong> Eur J Pediatr 1997.</div></div>
-    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">2024</span></div><div class="bib-r"><strong>MSD Manual · GPC México</strong> — Otitis Media Aguda.</div></div>
+    <div class="bib-i"><div><span class="bib-n">6</span><span class="bib-y">2024</span></div><div class="bib-r"><strong>MSD Manual · GPC IMSS</strong> — Otitis Media Aguda.</div></div>
   </div></div>
 </div>
 
@@ -458,38 +458,50 @@ function calcGrav(){
 function resetGrav(){var c=document.getElementById('grav-items');if(c){var r=c.querySelectorAll('input');for(var i=0;i<r.length;i++)r[i].checked=false;}var el=document.getElementById('grav-result');if(el){el.style.display='none';el.innerHTML='';}}
 
 /* ===== Calculadora pediátrica ===== */
-function omaCalcHTML(idp){
-  return '<div class="calc-w"><div style="font-size:12px;font-weight:700;color:var(--ac);margin-bottom:10px;">Calculadora pediátrica por peso (amoxicilina dosis alta + analgesia)</div>'
-    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;"><span style="font-size:12px;color:#374151;">Peso:</span>'
-    +'<input id="'+idp+'-peso" type="number" min="3" max="40" placeholder="kg" class="calc-in"><span style="font-size:12px;color:#6b7280;">kg</span>'
-    +'<button onclick="calcOma(\''+idp+'\')" style="padding:7px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer;">Calcular</button></div>'
-    +'<div id="'+idp+'-result" style="display:none;"></div></div>';
-}
-function calcOma(idp){
-  var kg=parseFloat(document.getElementById(idp+'-peso').value);
-  var out=document.getElementById(idp+'-result');
-  if(!kg||kg<3||kg>40){out.style.display='block';out.innerHTML='<div style="color:#c0392b;font-size:12px;">Ingresa un peso entre 3 y 40 kg.</div>';return;}
-  function R(n){return Math.round(n);}function R1(n){return Math.round(n*10)/10;}
-  var dayL=R(80*kg),dayH=Math.min(R(90*kg),3000);
-  var c8=R(85*kg/3),c12=R(85*kg/2);
-  var c8_250=R1(c8/50),c8_400=R1(c8/80),c12_250=R1(c12/50),c12_400=R1(c12/80);
-  var para=R(15*kg),ibu=R(10*kg);
-  var ceft=Math.min(R(50*kg),1000);
-  function row(t,v){return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">'+t+'</span><span style="font-weight:700;color:#0a7c5c;text-align:right;max-width:62%;">'+v+'</span></div>';}
-  var h='<div style="background:#f0faf6;border-radius:var(--rs);padding:10px 12px;">';
-  h+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--ac);margin-bottom:6px;">Dosis para '+kg+' kg</div>';
-  h+='<div style="font-size:11px;font-weight:700;color:#0a5c45;margin:4px 0 2px;">AMOXICILINA (80-90 mg/kg/día)</div>';
-  h+=row('Dosis diaria',dayL+'-'+dayH+' mg/día');
-  h+=row('c/8h',c8+' mg ≈ '+c8_250+' mL (250/5) · '+c8_400+' mL (400/5)');
-  h+=row('c/12h',c12+' mg ≈ '+c12_250+' mL (250/5) · '+c12_400+' mL (400/5)');
-  h+='<div style="font-size:11px;font-weight:700;color:#7a4a00;margin:8px 0 2px;">ANALGESIA</div>';
-  h+=row('Paracetamol (15 mg/kg c/6-8h)',para+' mg/dosis');
-  h+=row('Ibuprofeno >6m (10 mg/kg c/6-8h)',ibu+' mg/dosis');
-  h+='<div style="font-size:11px;font-weight:700;color:#1a3a5c;margin:8px 0 2px;">RESCATE</div>';
-  h+=row('Ceftriaxona IM (50 mg/kg, máx 1 g)',ceft+' mg/dosis × 1-3 días');
+var OMEDS=[
+ {n:'Amoxicilina · susp 250 mg/5 mL',mode:'atb',conc:50,dayLo:80,dayHi:90,maxDay:3000,max:'3 g/día'},
+ {n:'Amoxicilina · susp 400 mg/5 mL',mode:'atb',conc:80,dayLo:80,dayHi:90,maxDay:3000,max:'3 g/día'},
+ {n:'Amoxi-clavulanato ES 600/5 (amox)',mode:'atb',conc:120,dayLo:80,dayHi:90,maxDay:3000,max:'amox 3 g/día'},
+ {n:'Paracetamol · jarabe 160 mg/5 mL',mode:'dose',conc:32,lo:10,hi:15,freq:'c/6-8 h',max:'75 mg/kg/día'},
+ {n:'Paracetamol · gotas 100 mg/mL',mode:'dose',conc:100,lo:10,hi:15,freq:'c/6-8 h',max:'75 mg/kg/día'},
+ {n:'Ibuprofeno · susp 100 mg/5 mL',mode:'dose',conc:20,lo:5,hi:10,freq:'c/6-8 h (>6m)',max:'40 mg/kg/día'},
+ {n:'Ibuprofeno · gotas 40 mg/mL',mode:'dose',conc:40,lo:5,hi:10,freq:'c/6-8 h (>6m)',max:'40 mg/kg/día'}
+];
+function omaCalcHTML(idp){var opt='';for(var i=0;i<OMEDS.length;i++)opt+='<option value="'+i+'">'+OMEDS[i].n+'</option>';
+ return '<div style="background:linear-gradient(135deg,#0a5c45,#0a7c5c);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 4px 14px rgba(10,124,92,.25);">'
+  +'<div style="font-size:13px;font-weight:800;color:#fff;display:flex;align-items:center;gap:7px;margin-bottom:11px;">🧮 Calculadora pediátrica por peso</div>'
+  +'<div style="display:flex;gap:9px;flex-wrap:wrap;">'
+  +'<div style="flex:0 0 92px;"><div style="font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.85);font-weight:700;margin-bottom:4px;">Peso (kg)</div>'
+  +'<input id="'+idp+'-peso" type="number" inputmode="decimal" placeholder="12" oninput="calcOma(\''+idp+'\')" style="width:100%;padding:10px;border:none;border-radius:9px;font-size:16px;font-weight:800;color:#111;font-family:inherit;box-sizing:border-box;"></div>'
+  +'<div style="flex:1;min-width:205px;"><div style="font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.85);font-weight:700;margin-bottom:4px;">Fármaco · presentación</div>'
+  +'<select id="'+idp+'-farm" onchange="calcOma(\''+idp+'\')" style="width:100%;padding:10px;border:none;border-radius:9px;font-size:13px;font-weight:600;color:#111;font-family:inherit;background:#fff;box-sizing:border-box;">'+opt+'</select></div>'
+  +'</div><div id="'+idp+'-out" style="margin-top:11px;"></div></div>';}
+function calcOma(idp){var wEl=document.getElementById(idp+'-peso');var fEl=document.getElementById(idp+'-farm');var o=document.getElementById(idp+'-out');if(!o||!fEl)return;
+ var kg=parseFloat(wEl&&wEl.value);
+ if(!kg||kg<=0){o.innerHTML='<div style="background:rgba(255,255,255,.15);border-radius:9px;padding:12px 14px;font-size:12.5px;color:#fff;">✏️ Escribe el peso para calcular la dosis.</div>';return;}
+ var d=OMEDS[parseInt(fEl.value,10)];var nm=d.n.split('·')[0].trim();
+ var chip=function(v,l){return '<div style="flex:1;min-width:88px;background:#f9fafb;border-radius:8px;padding:7px 9px;"><div style="font-size:13px;font-weight:800;color:#111;">'+v+'</div><div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:.3px;">'+l+'</div></div>';};
+ var h='<div style="background:#fff;border-radius:10px;padding:13px 14px;">';
+ h+='<div style="font-size:10.5px;font-weight:700;text-transform:uppercase;color:#0a7c5c;letter-spacing:.5px;">'+nm+' · '+kg+' kg</div>';
+ if(d.mode==='atb'){
+  var dayLo=Math.round(kg*d.dayLo),dayHi=Math.min(Math.round(kg*d.dayHi),d.maxDay);
+  var mid=Math.round(kg*85);var c12=Math.round(mid/2),c8=Math.round(mid/3);
+  var c12ml=Math.round(c12/d.conc*10)/10,c8ml=Math.round(c8/d.conc*10)/10;
+  h+='<div style="font-size:24px;font-weight:800;color:#111;line-height:1.15;margin:3px 0;">'+dayLo+'–'+dayHi+' mg <span style="font-size:13px;font-weight:600;color:#6b7280;">/ día</span></div>';
+  h+='<div style="margin-top:6px;display:flex;flex-direction:column;gap:6px;">';
+  h+='<div style="padding:8px 10px;background:#f0faf6;border-radius:8px;font-size:13px;color:#0a5c45;"><b>c/12 h (2 tomas):</b> '+c12+' mg ≈ <b>'+c12ml+' mL</b> por toma</div>';
+  h+='<div style="padding:8px 10px;background:#f0faf6;border-radius:8px;font-size:13px;color:#0a5c45;"><b>c/8 h (3 tomas):</b> '+c8+' mg ≈ <b>'+c8ml+' mL</b> por toma</div>';
   h+='</div>';
-  out.style.display='block';out.innerHTML=h;
-}
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px;">'+chip(d.conc+' mg/mL','concentración')+chip(d.max,'máximo')+'</div>';
+ } else {
+  var loMg=Math.round(kg*d.lo),hiMg=Math.round(kg*d.hi);
+  var loMl=Math.round(loMg/d.conc*10)/10,hiMl=Math.round(hiMg/d.conc*10)/10;
+  h+='<div style="font-size:26px;font-weight:800;color:#111;line-height:1.15;margin:3px 0;">'+loMl+'–'+hiMl+' mL <span style="font-size:13px;font-weight:600;color:#6b7280;">/ toma</span></div>';
+  if(/gotas/i.test(d.n)){var loG=Math.round(loMl*20),hiG=Math.round(hiMl*20);h+='<div style="margin-top:6px;padding:7px 10px;background:#ecfdf5;border-radius:8px;font-size:13px;color:#0a5c45;font-weight:700;">💧 ≈ '+loG+'–'+hiG+' gotas por toma <span style="font-weight:500;color:#5b8f7c;font-size:11px;">(≈20 gotas/mL · confirma el gotero)</span></div>';}
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px;">'+chip(loMg+'–'+hiMg+' mg',d.conc+' mg/mL')+chip(d.freq,'frecuencia')+chip(d.max,'máximo')+'</div>';
+ }
+ h+='<div style="font-size:10.5px;color:#9ca3af;margin-top:9px;font-style:italic;">Amoxicilina a dosis ALTA (80–90 mg/kg/día) para OMA. Dosificar por PESO; verifica la concentración del frasco.</div>';
+ h+='</div>';o.innerHTML=h;}
 
 /* ===== Fichas de fármaco (chips) ===== */
 function omaFpToggle(id){var el=document.getElementById(id),arr=document.getElementById(id+'-arr');if(!el)return;var open=el.style.display==='none'||el.style.display==='';el.style.display=open?'block':'none';if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';}
@@ -625,7 +637,7 @@ var OMA_POP={
     +'<div class="prose"><p><strong>Medidas preventivas:</strong> completar VNC-13 (+ VNC-15/20), influenza anual, eliminar humo de tabaco, suspender chupete (o solo al inicio del sueño), promover lactancia materna.</p><p><strong>Profilaxis antibiótica:</strong> NO recomendada (Guía-ABE 2023, AAP 2013) — aumenta resistencias sin beneficio claro en la era post-VNC-13.</p></div>';
   }
 };
-function showOmaPop(id,btn){var ch=document.querySelectorAll('#oma-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('oma-pop-out');if(out&&OMA_POP[id])out.innerHTML=OMA_POP[id]();}
+function showOmaPop(id,btn){var ch=document.querySelectorAll('#oma-pop-chips .pchip');for(var i=0;i<ch.length;i++)ch[i].classList.remove('on');if(btn)btn.classList.add('on');var out=document.getElementById('oma-pop-out');if(out&&OMA_POP[id]){out.innerHTML=OMA_POP[id]();if(id==='pedi')calcOma('oma-ped');}}
 
 /* ===== Tx Hosp ===== */
 var HOSP_POP={
