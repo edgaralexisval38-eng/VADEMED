@@ -32773,7 +32773,10 @@ var TOOLS=[
      } else {
        lin.push(R[rt]+' SC '+cuando+' de cada alimento: '+d1+' UI en el desayuno, '+d2+' UI en la comida y '+d3+' UI en la cena.');
      }
-     lin.push('Corrección: agregar '+R[rt].replace('Insulina ','')+' 1 UI por cada '+fs+' mg/dL de glucemia por arriba de '+obj+' mg/dL. Antes de dormir, la mitad de la corrección.');
+     /* La formula (glucemia-objetivo)/factor no se puede resolver de cabeza junto a la
+        cama: en la indicacion va la tabla YA RESUELTA, que es lo que se ejecuta. */
+     var txtEsc=esc.map(function(x){ return x[0]+' mg/dL '+x[1]+' UI'; }).join(', ');
+     lin.push('Corrección ADICIONAL al bolo, con '+R[rt].replace('Insulina ','')+', según glucemia capilar antes del alimento: '+txtEsc+'. Antes de dormir, la mitad. Por debajo de '+obj+' mg/dL no se corrige.');
      lin.push('Glucemia capilar antes de cada alimento y antes de dormir.');
      var plano=lin.join('\n');
      try{ window.__IND_TXT=plano; }catch(e){}
@@ -32785,7 +32788,9 @@ var TOOLS=[
 
      var tabla='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);"><b>Corrección de este paciente</b> &mdash; unidades ADICIONALES al bolo, calculadas con su factor de '+fs+' mg/dL y objetivo de '+obj+' mg/dL:';
      for(var e2=0;e2<esc.length;e2++){ tabla+='<div style="margin-top:3px;">'+esc[e2][0]+' mg/dL: +'+esc[e2][1]+' U</div>'; }
-     tabla+='<div style="margin-top:5px;opacity:.85;">Se suma al bolo de la comida. Antes de dormir, la mitad. Por debajo de '+obj+' mg/dL no se corrige; por debajo de 70, tratar la hipoglucemia.</div></div>';
+     tabla+='<div style="margin-top:7px;opacity:.85;"><b>Cómo se usa:</b> se mide la glucemia ANTES del alimento. Se aplica el bolo de esa comida MÁS las unidades de la tabla. Ejemplo: si al bolo le tocan 5 U y la glucemia es de 260 mg/dL, se aplican 5 U del bolo + '+esc[2][1]+' U de corrección en la misma jeringa. Antes de dormir solo la mitad de la corrección, porque la hipoglucemia nocturna no se siente. Por debajo de '+obj+' mg/dL no se corrige; por debajo de 70, tratar la hipoglucemia.</div>';
+     if(fs>90) tabla+='<div style="margin-top:6px;">Con una dosis total tan baja el paciente es MUY sensible: 1 unidad le baja unos '+fs+' mg/dL, así que la corrección sale casi nula. Si necesita corregir en casi todas las tomas, lo que hay que subir es la dosis de base, no la corrección.</div>';
+     tabla+='<div style="margin-top:6px;opacity:.75;">De dónde sale: factor de sensibilidad = '+reglaFS+' ÷ '+dtd+' U/día = '+fs+' mg/dL por unidad. Corrección = (glucemia − '+obj+') ÷ '+fs+'.</div></div>';
      var picos='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);"><b>Perfil de acción</b> &mdash; sirve para saber a qué hora esperar el pico o la hipoglucemia:'
       +'<div style="margin-top:4px;">'+PB[bt][0]+': '+PB[bt][1]+'.</div>'
       +'<div style="margin-top:3px;">'+PR[rt][0]+': '+PR[rt][1]+'.</div>';
@@ -32864,7 +32869,8 @@ var TOOLS=[
        lin.push(B[bt]+' '+am+' UI SC en la mañana y '+pm+' UI SC antes de dormir.');
      } else if(bt==='detemir'){ lin.push(B[bt]+' '+basal+' UI SC cada 24 h, antes de dormir.');
      } else { lin.push(B[bt]+' '+basal+' UI SC cada 24 h, en la mañana.'); }
-     lin.push(R[rt]+' SC por razón necesaria '+(rt==='regular'?'30 minutos antes':'antes')+' de cada alimento: 1 UI por cada '+fsP+' mg/dL de glucemia por arriba de '+objG+' mg/dL. Antes de dormir, la mitad.');
+     var txtEscP=escP.map(function(x){ return x[0]+' mg/dL '+x[1]+' UI'; }).join(', ');
+     lin.push(R[rt]+' SC por razón necesaria '+(rt==='regular'?'30 minutos antes':'antes')+' de cada alimento, según glucemia capilar: '+txtEscP+'. Antes de dormir, la mitad. Por debajo de '+objG+' mg/dL no se aplica.');
      lin.push('Glucemia capilar antes de cada alimento y antes de dormir.');
      var plano=lin.join('\n');
      try{ window.__IND_TXT=plano; }catch(e){}
@@ -32878,7 +32884,8 @@ var TOOLS=[
        : 'Cuándo elegirlo: el paciente come poco, de forma irregular, o está en ayuno; también como inicio más sencillo y con menos pinchazos. En el ensayo Basal Plus el control fue equivalente al basal-bolo (glucemia media ~155 contra ~158 mg/dL) con algo menos de hipoglucemia (13 % contra 16 %), y ambos superaron a la escala móvil sola (~172 mg/dL).')+extra;
      var tabla='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);"><b>Corrección de este paciente</b> &mdash; factor de '+fsP+' mg/dL, objetivo '+objG+' mg/dL:';
      for(var e3=0;e3<escP.length;e3++){ tabla+='<div style="margin-top:3px;">'+escP[e3][0]+' mg/dL: '+escP[e3][1]+' U</div>'; }
-     tabla+='<div style="margin-top:5px;opacity:.85;">Antes de dormir, la mitad. Por debajo de 70, tratar la hipoglucemia. Si necesita corregir en casi todas las tomas dos días seguidos, subir la basal.</div></div>';
+     tabla+='<div style="margin-top:7px;opacity:.85;"><b>Cómo se usa:</b> se mide la glucemia ANTES del alimento y se aplican SOLO las unidades de la tabla (aquí no hay bolo fijo). Antes de dormir, la mitad. Por debajo de '+objG+' mg/dL no se aplica; por debajo de 70, tratar la hipoglucemia. Si necesita corregir en casi todas las tomas dos días seguidos, subir la basal.</div>'
+      +'<div style="margin-top:6px;opacity:.75;">De dónde sale: factor de sensibilidad = '+reglaFS+' ÷ '+dtdEst+' U/día estimadas = '+fsP+' mg/dL por unidad. Corrección = (glucemia − '+objG+') ÷ '+fsP+'.</div></div>';
      var PB={glargina:['Glargina','sin pico, dura 20–24 h'],degludec:['Degludec','sin pico, dura más de 42 h'],detemir:['Detemir','pico leve a las 6–8 h, dura 12–24 h'],nph:['NPH','PICO a las 4–8 h, dura 12–16 h']};
      var PR={lispro:['Lispro','inicia 10–20 min, pico 1–2 h, dura 3–5 h'],aspart:['Aspart','inicia 10–20 min, pico 1–2 h, dura 3–5 h'],glulisina:['Glulisina','inicia 10–20 min, pico 1–2 h, dura 3–5 h'],regular:['Rápida (regular)','inicia 30 min, PICO 2–4 h, dura 6–8 h']};
      var picos='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);"><b>Perfil de acción</b> &mdash; sirve para saber a qué hora esperar el pico o la hipoglucemia:'
