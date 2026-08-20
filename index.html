@@ -32717,15 +32717,17 @@ var TOOLS=[
      return {big:txt,label:'Dosis de corrección',level:lvl,lines:L,note:n+_esc(col)};
    }},
   {key:'basalbolo', type:'calculadora', name:'Esquema basal-bolo (calculadora)',
-   sub:'Dosis total, basal, prandial y corrección',
-   desc:'Calcula el esquema basal-bolo completo a partir del peso: dosis total diaria, insulina basal, bolos con cada comida, factor de sensibilidad y relación insulina/hidratos de carbono. Es el esquema de elección en el hospitalizado que come.',
-   act:'Repartir la dosis total: mitad como basal (glargina o detemir una vez al día, o NPH repartida) y mitad como prandial dividida en tres comidas, con análogo rápido justo antes de comer. Añadir la corrección con la escala si hace falta. Medir glucemia antes de cada comida y al acostarse. Reajustar a diario: si hay hipoglucemia, bajar 10–20 %.',
-   kw:'basal bolo basal-bolo esquema insulina hospitalizado glargina detemir nph lispro aspart glulisina dosis total diaria prandial correccion factor sensibilidad rabbit ratio carbohidratos 500 1800',
-   body:'<div class="tool-form">'+tField('Peso',tNum('bb_p','kg',70,0.5))+tField('Situaci&oacute;n cl&iacute;nica',tSel('bb_f',[['0.4','Est&aacute;ndar &mdash; glucemia 140&ndash;200 mg/dL (0,4 U/kg)'],['0.5','Hiperglucemia marcada &mdash; 201&ndash;400 mg/dL (0,5 U/kg)'],['0.3','Reducida &mdash; 70 a&ntilde;os o m&aacute;s, o creatinina 2 o mayor (0,3 U/kg)'],['0.6','Resistencia &mdash; obesidad o corticoides (0,6 U/kg)']],'0.4'))+'</div>',
+   sub:'Consulta y hospital · con indicación para copiar',
+   desc:'Calcula el esquema basal-bolo a partir del peso: dosis total diaria, insulina basal, bolos con cada comida, factor de sensibilidad y relación insulina/hidratos. Las dosis de consulta son más bajas que las del hospitalizado; elija el escenario que corresponda.',
+   act:'Repartir la dosis total: mitad como basal y mitad como prandial dividida en tres comidas, con análogo rápido justo antes de comer. Medir glucemia antes de cada alimento y antes de dormir. Reajustar cada 3 días en consulta y a diario en el hospital: si hay hipoglucemia, bajar 10–20 %.',
+   kw:'basal bolo basal-bolo esquema insulina hospitalizado ambulatorio consulta glargina detemir degludec nph lispro aspart glulisina regular dosis total diaria prandial correccion factor sensibilidad rabbit ratio carbohidratos 500 1800 indicacion receta copiar insulinizacion dm2 dm1',
+   body:'<div class="tool-form">'+tField('Peso',tNum('bb_p','kg',70,0.5))+tField('Escenario',tSel('bb_f',[['0.2','CONSULTA &mdash; inicio de insulina en DM2 (0,2 U/kg/d&iacute;a)'],['0.3','CONSULTA &mdash; DM2 con requerimiento moderado o DM1 al inicio (0,3)'],['0.5','CONSULTA &mdash; DM1 establecido (0,5)'],['0.7','CONSULTA &mdash; DM1 con resistencia: adolescente, obesidad (0,7)'],['h0.3','HOSPITAL &mdash; 70 a&ntilde;os o m&aacute;s, o creatinina 2 o mayor (0,3)'],['h0.4','HOSPITAL &mdash; glucemia 140&ndash;200 mg/dL (0,4)'],['h0.5','HOSPITAL &mdash; glucemia 201&ndash;400 mg/dL (0,5)'],['h0.6','HOSPITAL &mdash; obesidad o corticoides (0,6)']],'0.3'))+tField('Insulina basal',tSel('bb_b',[['glargina','Glargina (una vez al d&iacute;a)'],['degludec','Degludec (una vez al d&iacute;a)'],['detemir','Detemir (una vez al d&iacute;a)'],['nph','NPH (repartida ma&ntilde;ana y noche)']],'glargina'))+tField('Insulina r&aacute;pida',tSel('bb_r',[['lispro','Lispro'],['aspart','Aspart'],['glulisina','Glulisina'],['regular','R&aacute;pida (regular)']],'lispro'))+'</div>',
    compute:function(){
      var _e=tRango('bb_p',2,400,'el peso','kg');if(_e)return _e;
      var p=nv('bb_p'); if(!p) return {big:'—',level:'info'};
-     var f=parseFloat(sv('bb_f')||'0.4');
+     var sel=sv('bb_f')||'0.3';
+     var hosp=sel.charAt(0)==='h';
+     var f=parseFloat(hosp?sel.slice(1):sel);
      var dtd=Math.round(p*f);
      if(dtd<1) return {big:'—',label:'Peso demasiado bajo',level:'info'};
      var basal=Math.round(dtd*0.5);
@@ -32733,44 +32735,96 @@ var TOOLS=[
      var porComida=Math.round(prandialTot/3);
      var fs=Math.round(1800/dtd);
      var ratio=Math.round(500/dtd);
-     var MOT={'0.3':'Reducida por edad o función renal','0.4':'Estándar','0.5':'Hiperglucemia marcada','0.6':'Resistencia a la insulina'};
+     var MOT={'0.2':'Consulta · inicio de insulina en DM2','0.3':hosp?'Hospital · 70 años o más, o creatinina 2 o mayor':'Consulta · DM2 moderado o DM1 al inicio','0.5':hosp?'Hospital · glucemia 201–400 mg/dL':'Consulta · DM1 establecido','0.7':'Consulta · DM1 con resistencia','0.4':'Hospital · glucemia 140–200 mg/dL','0.6':'Hospital · obesidad o corticoides'};
+
+     /* ---- indicacion en texto plano, lista para pegar en la nota ---- */
+     var B={glargina:'Insulina glargina',degludec:'Insulina degludec',detemir:'Insulina detemir',nph:'Insulina NPH'};
+     var R={lispro:'Insulina lispro',aspart:'Insulina aspart',glulisina:'Insulina glulisina',regular:'Insulina rápida (regular)'};
+     var bt=sv('bb_b')||'glargina', rt=sv('bb_r')||'lispro';
+     var lin=[];
+     if(bt==='nph'){
+       /* La NPH dura ~12-16 h: una sola aplicacion deja descubierta parte del dia. */
+       var am=Math.round(basal*2/3), pm=basal-am;
+       lin.push(B[bt]+' '+am+' UI SC en la mañana y '+pm+' UI SC antes de dormir.');
+     } else if(bt==='detemir'){
+       lin.push(B[bt]+' '+basal+' UI SC cada 24 h, antes de dormir.');
+     } else {
+       lin.push(B[bt]+' '+basal+' UI SC cada 24 h, en la mañana.');
+     }
+     lin.push(R[rt]+' '+porComida+' UI SC '+(rt==='regular'?'30 minutos antes':'justo antes')+' de desayuno, comida y cena.');
+     lin.push('Glucemia capilar antes de cada alimento y antes de dormir.');
+     var plano=lin.join('\n');
+     try{ window.__IND_TXT=plano; }catch(e){}
+     var caja='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><b>Indicación para copiar</b>'
+      +'<button type="button" onclick="doCopy(window.__IND_TXT,\'Indicación copiada\')" style="margin-left:auto;background:#2f6fe0;color:#fff;border:0;border-radius:8px;padding:6px 13px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;">Copiar</button></div>';
+     for(var i=0;i<lin.length;i++){ caja+='<div style="margin-top:4px;line-height:1.55;">'+lin[i]+'</div>'; }
+     caja+='</div>';
+
+     var nota=(hosp
+       ? 'Paciente hospitalizado. Si NO está comiendo, no se dan los bolos prandiales: solo basal más corrección (esquema basal plus). Reajuste diario. Frente a la escala móvil sola, el basal-bolo llevó a objetivo (menos de 140 mg/dL) al 66 % contra 38 % en pacientes médicos, y en cirugía redujo complicaciones del 24,3 % al 8,6 % (ensayos RABBIT 2).'
+       : 'Paciente de consulta. Se empieza bajo y se sube despacio: reevaluar cada 3 días con el registro de glucemias. Si la glucemia en ayuno sigue alta, subir SOLO la basal 2 U cada 3 días. Si aparece hipoglucemia (menos de 70), bajar la dosis total 10–20 % ese mismo día. En DM2 muchas veces basta la basal sola con los antidiabéticos orales antes de pasar a basal-bolo.')
+      +' Si la glucemia en ayuno está alta, el problema es la basal; si sube después de comer, es el bolo.';
+
      return {big:dtd+' U/día',label:'Dosis total diaria',level:'ok',
-       lines:[{k:'Criterio',v:MOT[String(f)]+' ('+String(f).replace('.',',')+' U/kg)'},
-              {k:'BASAL (50 %)',v:basal+' U · glargina o detemir 1 vez al día'},
+       lines:[{k:'Escenario',v:(MOT[String(f)]||'')+' ('+String(f).replace('.',',')+' U/kg)'},
+              {k:'BASAL (50 %)',v:basal+' U'+(bt==='nph'?' repartidas mañana y noche':' · una vez al día')},
               {k:'PRANDIAL (50 %)',v:prandialTot+' U repartidas: '+porComida+' U con cada comida'},
-              {k:'Análogo rápido',v:'justo antes de desayuno, comida y cena'},
               {k:'Factor de sensibilidad',v:'1 U baja ~'+fs+' mg/dL (1800 ÷ '+dtd+')'},
               {k:'Relación insulina/HC',v:'1 U por cada ~'+ratio+' g de hidratos (500 ÷ '+dtd+')'}],
-       note:'Si el paciente NO está comiendo, no se dan los bolos prandiales: solo basal más corrección (eso es el esquema basal plus). Reajuste diario: si la glucemia en ayuno está alta, subir la basal 10–20 %; si hay hipoglucemia (menos de 70), bajar la dosis total 20 %. Frente a la escala móvil sola, el basal-bolo llevó a objetivo (menos de 140 mg/dL) al 66 % contra 38 % en pacientes médicos, sin más hipoglucemia grave (ensayo RABBIT 2); en cirugía redujo complicaciones del 24,3 % al 8,6 %, pero con más hipoglucemia leve (23,1 % contra 4,7 %).'};
+       note:caja+'<div style="margin-top:10px;">'+nota+'</div>'};
    }},
   {key:'basalplus', type:'calculadora', name:'Esquema basal plus (calculadora)',
-   sub:'Basal una vez al día + corrección',
-   desc:'Insulina basal una vez al día más correcciones con insulina rápida antes de las comidas, sin bolos prandiales fijos. Pensado para el paciente que come poco o de forma irregular, o para empezar de forma más simple que el basal-bolo.',
-   act:'Aplicar la basal calculada una vez al día, a la misma hora. Medir glucemia antes de cada comida y al acostarse, y corregir con la escala solo si hace falta. Si el paciente necesita corrección en casi todas las tomas durante 2 días seguidos, ya no alcanza: pasar a basal-bolo o subir la basal.',
-   kw:'basal plus basalplus esquema insulina glargina detemir correccion hospitalizado come poco irregular ayuno simplificado umpierrez',
-   body:'<div class="tool-form">'+tField('Peso',tNum('bp_p','kg',70,0.5))+tField('Situaci&oacute;n cl&iacute;nica',tSel('bp_f',[['0.25','Est&aacute;ndar (0,25 U/kg)'],['0.15','70 a&ntilde;os o m&aacute;s, o TFG baja (0,15 U/kg)'],['0.3','Resistencia &mdash; obesidad o corticoides (0,3 U/kg)']],'0.25'))+tField('Glucemia actual (opcional, para la correcci&oacute;n)',tNum('bp_g','mg/dL',0,1))+'</div>',
+   sub:'Basal una vez al día + corrección · con indicación para copiar',
+   desc:'Insulina basal más correcciones con insulina rápida antes de las comidas, sin bolos prandiales fijos. Para el paciente que come poco o de forma irregular, o como inicio más simple que el basal-bolo. Incluye el escenario de consulta, donde la dosis es más baja.',
+   act:'Aplicar la basal calculada una vez al día, a la misma hora. Medir glucemia antes de cada alimento y antes de dormir, y corregir solo si hace falta. Si el paciente necesita corrección en casi todas las tomas durante 2 días seguidos, ya no alcanza: subir la basal o pasar a basal-bolo.',
+   kw:'basal plus basalplus esquema insulina glargina detemir degludec nph correccion hospitalizado ambulatorio consulta come poco irregular ayuno simplificado umpierrez insulinizacion dm2 indicacion receta copiar',
+   body:'<div class="tool-form">'+tField('Peso',tNum('bp_p','kg',70,0.5))+tField('Escenario',tSel('bp_f',[['0.1','CONSULTA &mdash; inicio de insulina basal en DM2 (0,1 U/kg/d&iacute;a)'],['0.2','CONSULTA &mdash; DM2 con requerimiento moderado (0,2)'],['0.15','HOSPITAL &mdash; 70 a&ntilde;os o m&aacute;s, o TFG baja (0,15)'],['0.25','HOSPITAL &mdash; est&aacute;ndar (0,25)'],['0.3','HOSPITAL &mdash; obesidad o corticoides (0,3)']],'0.25'))+tField('Insulina basal',tSel('bp_b',[['glargina','Glargina (una vez al d&iacute;a)'],['degludec','Degludec (una vez al d&iacute;a)'],['detemir','Detemir (una vez al d&iacute;a)'],['nph','NPH (repartida ma&ntilde;ana y noche)']],'glargina'))+tField('Insulina r&aacute;pida para la correcci&oacute;n',tSel('bp_r',[['lispro','Lispro'],['aspart','Aspart'],['glulisina','Glulisina'],['regular','R&aacute;pida (regular)']],'lispro'))+tField('Glucemia actual (opcional, para la correcci&oacute;n)',tNum('bp_g','mg/dL',0,1))+'</div>',
    compute:function(){
      var _e=tChk(tRango('bp_p',2,400,'el peso','kg'),tRango('bp_g',0,1200,'la glucemia','mg/dL'));if(_e)return _e;
      var p=nv('bp_p'); if(!p) return {big:'—',level:'info'};
      var f=parseFloat(sv('bp_f')||'0.25');
      var basal=Math.round(p*f);
      if(basal<1) return {big:'—',label:'Peso demasiado bajo',level:'info'};
-     var fsAprox=Math.round(1800/(basal*2));
-     var L=[{k:'Criterio',v:String(f).replace('.',',')+' U/kg'},
-            {k:'BASAL',v:basal+' U · glargina o detemir, 1 vez al día'},
+     var consulta=(f<=0.2 && f!==0.15);
+     var MOT={'0.1':'Consulta · inicio de insulina basal en DM2','0.2':'Consulta · DM2 con requerimiento moderado','0.15':'Hospital · 70 años o más, o TFG baja','0.25':'Hospital · estándar','0.3':'Hospital · obesidad o corticoides'};
+     var L=[{k:'Escenario',v:(MOT[String(f)]||'')+' ('+String(f).replace('.',',')+' U/kg)'},
+            {k:'BASAL',v:basal+' U'},
             {k:'PRANDIAL fija',v:'ninguna (esa es la diferencia con basal-bolo)'},
-            {k:'Corrección',v:'insulina rápida antes de cada comida, según la escala móvil'}];
-     var g=nv('bp_g'), extra='';
+            {k:'Corrección',v:'insulina rápida antes de cada alimento, según la escala móvil'}];
+     var g=nv('bp_g'), corr='', extra='';
      if(g){
        if(g<70){ L.push({k:'Corrección ahora',v:'NO corregir: hipoglucemia'}); extra=' La glucemia actual está por debajo de 70: tratar la hipoglucemia, no aplicar insulina.'; }
        else if(g<150){ L.push({k:'Corrección ahora',v:'0 U'}); }
        else { var col=(basal*2)<40?'b':((basal*2)<=100?'m':'a');
          var T={b:['1 U','2 U','3 U','4 U','5 U'],m:['1–2 U','3 U','5 U','7 U','8 U'],a:['2 U','4 U','7 U','10 U','12 U']};
          var i=g<200?0:(g<250?1:(g<300?2:(g<350?3:4)));
-         L.push({k:'Corrección ahora',v:T[col][i]+' de insulina rápida'}); }
+         corr=T[col][i];
+         L.push({k:'Corrección ahora',v:corr+' de insulina rápida'}); }
      }
+     /* ---- indicacion en texto plano ---- */
+     var B={glargina:'Insulina glargina',degludec:'Insulina degludec',detemir:'Insulina detemir',nph:'Insulina NPH'};
+     var R={lispro:'Insulina lispro',aspart:'Insulina aspart',glulisina:'Insulina glulisina',regular:'Insulina rápida (regular)'};
+     var bt=sv('bp_b')||'glargina', rt=sv('bp_r')||'lispro';
+     var lin=[];
+     if(bt==='nph'){ var am=Math.round(basal*2/3), pm=basal-am;
+       lin.push(B[bt]+' '+am+' UI SC en la mañana y '+pm+' UI SC antes de dormir.');
+     } else if(bt==='detemir'){ lin.push(B[bt]+' '+basal+' UI SC cada 24 h, antes de dormir.');
+     } else { lin.push(B[bt]+' '+basal+' UI SC cada 24 h, en la mañana.'); }
+     lin.push(R[rt]+' SC por razón necesaria '+(rt==='regular'?'30 minutos antes':'antes')+' de cada alimento, según escala de corrección.');
+     lin.push('Glucemia capilar antes de cada alimento y antes de dormir.');
+     var plano=lin.join('\n');
+     try{ window.__IND_TXT=plano; }catch(e){}
+     var caja='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><b>Indicación para copiar</b>'
+      +'<button type="button" onclick="doCopy(window.__IND_TXT,\'Indicación copiada\')" style="margin-left:auto;background:#2f6fe0;color:#fff;border:0;border-radius:8px;padding:6px 13px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;">Copiar</button></div>';
+     for(var i2=0;i2<lin.length;i2++){ caja+='<div style="margin-top:4px;line-height:1.55;">'+lin[i2]+'</div>'; }
+     caja+='</div>';
+     var nota=(consulta
+       ? 'Paciente de consulta: en DM2 esta suele ser la primera insulina, junto con los antidiabéticos orales que ya tomaba. Titular subiendo 2 U cada 3 días hasta que la glucemia en ayuno quede en meta.'
+       : 'Cuándo elegirlo: el paciente come poco, de forma irregular, o está en ayuno; también como inicio más sencillo y con menos pinchazos. En el ensayo Basal Plus el control fue equivalente al basal-bolo (glucemia media ~155 contra ~158 mg/dL) con algo menos de hipoglucemia (13 % contra 16 %), y ambos superaron a la escala móvil sola (~172 mg/dL).')+extra;
      return {big:basal+' U/día',label:'Insulina basal',level:'ok',lines:L,
-       note:'Cuándo elegirlo: el paciente come poco, de forma irregular, o está en ayuno intermitente; también como inicio más sencillo y con menos pinchazos. El factor de sensibilidad estimado es de ~'+fsAprox+' mg/dL por unidad si la dosis total termina siendo el doble de la basal. En el ensayo Basal Plus el control fue equivalente al basal-bolo (glucemia media ~155 contra ~158 mg/dL) con algo menos de hipoglucemia (13 % contra 16 %), y ambos superaron claramente a la escala móvil sola (~172 mg/dL).'+extra};
+       note:caja+'<div style="margin-top:10px;">'+nota+'</div>'};
    }}
 ];
 
