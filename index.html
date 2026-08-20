@@ -32674,10 +32674,21 @@ var TOOLS=[
    kw:'escala movil insulina correccion sliding scale hiperglucemia glucemia capilar rapida lispro aspart glulisina regular hospitalizado factor sensibilidad esquema correccion',
    body:'<div class="tool-form">'+tField('Glucemia capilar',tNum('em_g','mg/dL',250,1))+tField('Sensibilidad a la insulina',tSel('em_s',[['auto','Calcularla por la dosis total diaria'],['b','Baja &mdash; sensible o menos de 40 U/d&iacute;a'],['m','Media &mdash; 40&ndash;100 U/d&iacute;a'],['a','Alta &mdash; resistente o m&aacute;s de 100 U/d&iacute;a']],'m'))+tField('Dosis total diaria de insulina (solo si eligi&oacute; calcularla)',tNum('em_dtd','U/día',0,1))+'<div class="cf-l">Momento</div><div class="t-toggles">'+tTog('em_noche','Al acostarse (dar la mitad)')+'</div></div>',
    compute:function(){
+     /* La tabla completa se muestra SIEMPRE debajo del resultado: ver solo la celda
+        que aplica obliga a recordar el resto o a salirse de la calculadora. */
+     function _esc(act){
+       var R=[['b','Sensibilidad baja (menos de 40 U/día o sensible)','150–199 mg/dL 1 U · 200–249 mg/dL 2 U · 250–299 mg/dL 3 U · 300–349 mg/dL 4 U · 350 o más mg/dL 5 U'],
+              ['m','Sensibilidad media (40–100 U/día)','150–199 mg/dL 1–2 U · 200–249 mg/dL 3 U · 250–299 mg/dL 5 U · 300–349 mg/dL 7 U · 350 o más mg/dL 8 U'],
+              ['a','Sensibilidad alta (más de 100 U/día o resistente)','150–199 mg/dL 2 U · 200–249 mg/dL 4 U · 250–299 mg/dL 7 U · 300–349 mg/dL 10 U · 350 o más mg/dL 12 U']];
+       var s='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);"><b>Escala completa</b> &mdash; unidades de insulina rápida:';
+       for(var i=0;i<R.length;i++){ var on=(R[i][0]===act);
+         s+='<div style="margin-top:6px;line-height:1.5;'+(on?'font-weight:700;':'opacity:.82;')+'">'+(on?'&#9654; ':'')+R[i][1]+': '+R[i][2]+'.</div>'; }
+       return s+'</div>';
+     }
      var _e=tChk(tRango('em_g',20,1200,'la glucemia','mg/dL'),tRango('em_dtd',0,400,'la dosis total diaria','U/día'));if(_e)return _e;
      var g=nv('em_g'); if(!g) return {big:'—',level:'info'};
-     if(g<70) return {big:'No corregir',label:'Hipoglucemia',level:'danger',lines:[{k:'Glucemia',v:g+' mg/dL'}],note:'Menos de 70 mg/dL es hipoglucemia: NO se aplica insulina. Dar 15 g de hidratos de carbono de absorción rápida y volver a medir a los 15 minutos. Si no despierta o no tolera la vía oral: glucosa intravenosa o glucagón.'};
-     if(g<150) return {big:'0 U',label:'Sin corrección',level:'ok',lines:[{k:'Glucemia',v:g+' mg/dL'}],note:'Por debajo de 150 mg/dL no se corrige. Mantener el esquema basal y prandial que ya tenga.'};
+     if(g<70) return {big:'No corregir',label:'Hipoglucemia',level:'danger',lines:[{k:'Glucemia',v:g+' mg/dL'}],note:'Menos de 70 mg/dL es hipoglucemia: NO se aplica insulina. Dar 15 g de hidratos de carbono de absorción rápida y volver a medir a los 15 minutos. Si no despierta o no tolera la vía oral: glucosa intravenosa o glucagón.'+_esc('')};
+     if(g<150) return {big:'0 U',label:'Sin corrección',level:'ok',lines:[{k:'Glucemia',v:g+' mg/dL'}],note:'Por debajo de 150 mg/dL no se corrige. Mantener el esquema basal y prandial que ya tenga.'+_esc('')};
      var col=sv('em_s')||'m', dtd=nv('em_dtd'), auto='';
      if(col==='auto'){ if(!dtd) return {big:'—',label:'Falta la dosis total diaria',level:'info',note:'Eligió calcular la sensibilidad por la dosis total diaria: escriba cuántas unidades de insulina usa al día en total. Si no la conoce, estímela en 0,5 U/kg/día o elija la columna a mano.'};
        col = dtd<40?'b':(dtd<=100?'m':'a'); auto=' (calculada con '+dtd+' U/día)'; }
@@ -32699,7 +32710,7 @@ var TOOLS=[
      if(noche) n+=' Al acostarse se da solo la mitad: la hipoglucemia nocturna no se percibe y es la más peligrosa.';
      if(g>=350) n+=' Con 350 mg/dL o más: buscar cetonas y descartar cetoacidosis antes de tratarlo como una hiperglucemia simple.';
      n+=' Recordatorio: la escala móvil SOLA no es tratamiento. Si se usa más de 24–48 h, ajustar la basal.';
-     return {big:txt,label:'Dosis de corrección',level:lvl,lines:L,note:n};
+     return {big:txt,label:'Dosis de corrección',level:lvl,lines:L,note:n+_esc(col)};
    }},
   {key:'basalbolo', type:'calculadora', name:'Esquema basal-bolo (calculadora)',
    sub:'Dosis total, basal, prandial y corrección',
