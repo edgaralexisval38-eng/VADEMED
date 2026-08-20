@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dengue · Clínica Rápida</title>
+<style>
+/* ===== CAMBIAR SOLO --ac y --acd POR EL COLOR DE LA ESPECIALIDAD ===== */
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#b91c1c;--acd:#7f1d1d;--acl:#fef2f2;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.step{display:flex;gap:10px;margin-bottom:10px;}
+.step-n{background:var(--ac);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.step-b{flex:1;font-size:12.5px;color:var(--gray-700);line-height:1.55;}.step-b b{color:var(--gray-900);}
+/* Calculadora / escalas */
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;}
+.opt{display:inline-block;padding:8px 12px;margin:3px 5px 3px 0;border:1.5px solid var(--bd);border-radius:16px;font-size:12px;font-weight:600;background:#fff;color:var(--gray-900);cursor:pointer;font-family:inherit;text-align:left;}
+.opt.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.calc-btn{padding:8px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--ac);color:#fff;cursor:pointer;font-family:inherit;}
+.calc-btn.sc{background:var(--gray-100);color:var(--gray-700);}
+.calc-result{margin-top:12px;padding:12px 14px;border-radius:var(--rs);font-size:13px;line-height:1.6;display:none;}.calc-result.show{display:block;}
+.res-ok{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.res-mid{background:var(--al);color:var(--a);border-left:3px solid var(--am);}.res-high{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.calc-note{font-size:11px;color:var(--gray-600);margin-top:8px;font-style:italic;}
+/* Chips */
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+/* Escenarios */
+.esc-hero{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.esc-hero-t{font-size:15px;font-weight:700;}.esc-hero-p{font-size:12px;opacity:.85;margin-top:3px;line-height:1.5;}
+.esc-info{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:12px 14px;margin-bottom:10px;}
+.fu-r{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-100);}.fu-r:last-child{border-bottom:none;}
+.fu-t{min-width:110px;font-size:11px;font-weight:700;color:var(--ac);text-transform:uppercase;}.fu-x{font-size:12.5px;color:var(--gray-700);line-height:1.55;flex:1;}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+/* Bibliografía */
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">🦟</div>
+    <div>
+      <div class="hdr-eye">Infectología · Medicina interna · Urgencias</div>
+      <div class="hdr-title">Dengue</div>
+      <div class="hdr-sub">Arbovirosis por Aedes · clasificación OMS por grupos · fuga plasmática · evidencia 2023–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> A90 (dengue clásico) · A91 (dengue hemorrágico) · en versiones recientes A97.0 sin signos de alarma, A97.1 con signos de alarma, A97.2 grave</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">4 serotipos DENV</span>
+    <span class="badge">Grupos A/B/C</span>
+    <span class="badge">NS1/IgM</span>
+    <span class="badge">Sin AINE</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">2–7 días</div><div class="qs-l">Fase febril</div></div>
+  <div class="qs"><div class="qs-v">Día 3–7</div><div class="qs-l">Fase crítica</div></div>
+  <div class="qs"><div class="qs-v">24–48 h</div><div class="qs-l">Ventana de fuga</div></div>
+  <div class="qs"><div class="qs-v">Sostén</div><div class="qs-l">Sin antiviral</div></div>
+</div>
+
+<div class="tabbar">
+  <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+  <button class="tab" onclick="showT('fisio',this)">⚙️ Fisiopatología</button>
+  <button class="tab" onclick="showT('etio',this)">⚠️ Riesgo</button>
+  <button class="tab" onclick="showT('dx',this)">🔎 Clínica y Dx</button>
+  <button class="tab" onclick="showT('esc',this)">🚨 Signos de alarma</button>
+  <button class="tab" onclick="showT('tx',this)">💊 Tratamiento</button>
+  <button class="tab" onclick="showT('escen',this)">⚙️ Escenarios</button>
+  <button class="tab" onclick="showT('seg',this)">📅 Seguimiento</button>
+  <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+</div>
+
+<!-- ================= RESUMEN ================= -->
+<div class="panel on" id="tab-res">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📋</span><span class="st">Definición</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p><b>Dengue:</b> enfermedad febril aguda causada por el <b>virus dengue (DENV)</b>, un flavivirus con <b>4 serotipos (DENV-1 a DENV-4)</b>, transmitido por mosquitos <em>Aedes aegypti</em> y <em>Ae. albopictus</em>. El espectro clínico va desde infección asintomática/febril indiferenciada hasta <b>dengue grave</b> con fuga plasmática, choque, hemorragia y falla orgánica.</p>
+      <p>La OMS (2009) reemplazó la vieja clasificación (FD / FHD / SCD) por una <b>estratificación operativa por gravedad y riesgo</b>: <b>dengue sin signos de alarma (Grupo A)</b>, <b>dengue con signos de alarma (Grupo B)</b> y <b>dengue grave (Grupo C)</b>. No existe antiviral; el manejo es de <b>sostén guiado por líquidos y monitoreo</b>.</p>
+    </div></div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🌍</span><span class="st">Epidemiología</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-b"><b>Carga global:</b> ~<b>half of the world population</b> (≈50%) vive en zonas de riesgo; se estiman <b>100–400 millones</b> de infecciones/año. Endémico en <b>México</b> y toda la franja tropical/subtropical de América, Asia y África. En 2023–2024 las Américas registraron cifras récord de casos.</div>
+      <div class="fp fp-a"><b>Serotipos:</b> los <b>4 serotipos</b> cocirculan en México; la infección confiere inmunidad <b>homotípica de por vida</b> pero solo protección <b>cruzada transitoria</b> (~meses) frente a los otros serotipos.</div>
+      <div class="fp fp-r"><b>Segunda infección heteróloga = mayor riesgo:</b> una <b>segunda infección</b> por un serotipo distinto es el principal factor de <b>dengue grave</b>, por <b>amplificación dependiente de anticuerpos (ADE)</b>: anticuerpos subneutralizantes previos facilitan la entrada viral a monocitos/macrófagos y amplifican la viremia y la respuesta inflamatoria.</div>
+      <div class="diag">
+        <b>Estacionalidad en México:</b> transmisión ligada a temporada de lluvias/calor (mayor en verano-otoño), con predominio en estados costeros y del sureste. La vigilancia epidemiológica y el control vectorial son ejes del programa nacional.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Fases clínicas de la enfermedad</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Fase</th><th>Tiempo</th><th>Qué ocurre</th><th>Vigilancia</th></tr>
+        <tr><td><b>Febril</b></td><td>Días 1–7 (2–7 d)</td><td>Fiebre alta, mialgias/artralgias, cefalea, dolor retro-ocular, exantema, prueba de torniquete +. Viremia alta.</td><td>Hidratación oral, antipirético (paracetamol). Buscar signos de alarma.</td></tr>
+        <tr><td class="dm"><b>Crítica</b></td><td>Defervescencia, <b>día 3–7</b></td><td>Coincide con la <b>caída de la fiebre</b>. Ventana de <b>fuga plasmática de 24–48 h</b>: ↑Hto, derrames, hipoalbuminemia, choque, sangrado. Nadir de plaquetas.</td><td class="dm">Máximo riesgo. Hto seriado, plaquetas, diuresis, signos vitales. Aquí ocurre el choque.</td></tr>
+        <tr><td class="dn"><b>Recuperación</b></td><td>Días 7–10</td><td>Reabsorción del líquido extravasado, mejoría hemodinámica, exantema de recuperación (&quot;islas blancas en mar rojo&quot;), prurito, bradicardia. Hto baja, diuresis aumenta.</td><td class="dn">Riesgo de <b>sobrecarga de volumen</b>/edema pulmonar si se sigue hidratando IV. Suspender/reducir líquidos.</td></tr>
+      </table></div>
+      <div class="alert a-r"><span class="ai">⏱️</span><div><div class="at">La regla de oro</div>El deterioro NO ocurre con la fiebre alta, sino <b>cuando cae la fiebre (defervescencia)</b>. Nunca dé de alta a un paciente que apenas entra a la fase crítica.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🚩</span><span class="st">Banderas rojas — Signos de alarma</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Signos de alarma OMS (predicen progresión a grave)</div>
+        Dolor abdominal intenso/continuo · Vómito persistente · Acumulación clínica de líquidos (ascitis, derrame pleural) · Sangrado de mucosas · Letargo/irritabilidad · Hepatomegalia &gt;2 cm · Aumento del Hto con caída rápida y concurrente de plaquetas.</div></div>
+      <div class="alert a-w"><span class="ai">➡️</span><div><div class="at">Conducta</div>Uno o más signos de alarma = <b>Grupo B → hospitalizar</b> e iniciar líquidos IV con monitoreo. Ver pestaña <b>🚨 Signos de alarma</b> para la lista funcional.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">❌</span><span class="st">Errores frecuentes</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">1</div><div class="kt"><b>Dar AINE o aspirina</b> (o dipirona/metamizol para la fiebre): ↑ riesgo de sangrado y gastropatía. Solo <b>paracetamol</b>.</div></div>
+      <div class="kp"><div class="kn">2</div><div class="kt"><b>Usar esteroides o inmunoglobulina de rutina:</b> sin beneficio demostrado en dengue; no reducen mortalidad ni evitan el choque.</div></div>
+      <div class="kp"><div class="kn">3</div><div class="kt"><b>No vigilar Hto y plaquetas seriados</b> en la fase crítica: se pierde la ventana para detectar fuga plasmática y choque temprano.</div></div>
+      <div class="kp"><div class="kn">4</div><div class="kt"><b>Sobrehidratar</b> (bolos repetidos sin reevaluar, o mantener IV en recuperación): causa derrame pleural, ascitis y <b>edema agudo de pulmón</b>.</div></div>
+      <div class="kp"><div class="kn">5</div><div class="kt"><b>Alta prematura durante la defervescencia</b> (día 3–7) sin haber superado la fase crítica: el paciente puede chocar en casa.</div></div>
+      <div class="kp"><div class="kn">6</div><div class="kt"><b>Transfundir plaquetas profilácticas</b> solo por cifra baja sin sangrado: no está indicado; la trombocitopenia aislada no se transfunde.</div></div>
+      <div class="kp"><div class="kn">7</div><div class="kt"><b>Inyecciones intramusculares</b> y procedimientos invasivos no esenciales: riesgo de hematoma por coagulopatía/trombocitopenia.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🏥</span><span class="st">Criterios de hospitalización</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="fp fp-a"><b>Grupo B → ingreso hospitalario:</b> cualquier <b>signo de alarma</b>; o condición coexistente / de riesgo social (embarazo, lactante/&lt;1 año, adulto mayor, obesidad, diabetes, ERC, hemoglobinopatía, inmunosupresión, aislamiento social, difícil acceso a atención).</div>
+      <div class="fp fp-r"><b>Grupo C → ingreso urgente / UCI:</b> <b>dengue grave</b> = fuga plasmática con choque o distrés respiratorio por acumulación de líquidos; sangrado grave; o compromiso orgánico serio (AST/ALT ≥1000, alteración de conciencia, miocarditis, falla renal/hepática).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FISIOPATOLOGÍA ================= -->
+<div class="panel" id="tab-fisio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">⚙️</span><span class="st">Cascada fisiopatológica</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="diag">
+        <b>1) Inoculación y viremia:</b> el mosquito inocula DENV → replicación en células dendríticas de piel y ganglios → <b>viremia</b> (células diana: monocitos/macrófagos, células endoteliales, hepatocitos). El pico de viremia coincide con la fiebre.<br><br>
+        <b>2) Tormenta de citocinas:</b> la activación de linfocitos T y monocitos infectados libera <b>TNF-α, IL-6, IL-8, IL-10, VEGF</b> y activa complemento → daño del <b>glicocálix endotelial</b>.<br><br>
+        <b>3) ↑ Permeabilidad capilar → FUGA PLASMÁTICA:</b> aumento transitorio y reversible de la permeabilidad vascular con salida de plasma al tercer espacio → <b>derrame pleural, ascitis, hipoalbuminemia</b>. Es el evento central del dengue grave.<br><br>
+        <b>4) Hemoconcentración y choque:</b> la pérdida de volumen intravascular eleva el <b>hematocrito (↑Hto)</b> y reduce el retorno venoso → choque hipovolémico/distributivo. La ventana crítica dura <b>24–48 h</b>.<br><br>
+        <b>5) Trombocitopenia y coagulopatía:</b> supresión medular, destrucción periférica inmunomediada y consumo → <b>trombocitopenia</b>; disfunción plaquetaria y alteración de la coagulación → sangrado.
+      </div>
+      <div class="fp fp-r"><b>ADE (amplificación dependiente de anticuerpos):</b> en una <b>segunda infección por serotipo heterólogo</b>, los anticuerpos preexistentes <b>subneutralizantes</b> se unen al virus pero no lo neutralizan; el complejo virus-anticuerpo entra a monocitos vía receptor Fcγ → <b>mayor carga viral y respuesta inflamatoria amplificada</b> → mayor probabilidad de fuga plasmática y dengue grave. Es la base del riesgo aumentado tras infección secundaria y de la seguridad restringida de vacunas a seropositivos.</div>
+      <div class="fp fp-b"><b>Correlato clínico:</b> ↑Hto + ↓plaquetas + hipoalbuminemia + derrames = fuga activa. La reabsorción del líquido en la recuperación revierte el Hto y expone al riesgo de <b>sobrecarga</b> si no se ajustan los líquidos.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FACTORES DE RIESGO ================= -->
+<div class="panel" id="tab-etio">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔴</span><span class="st">Factores de riesgo de gravedad</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Factor</th><th>Por qué aumenta el riesgo</th></tr>
+        <tr><td class="dm"><b>Segunda infección heteróloga</b></td><td>Principal factor: ADE amplifica viremia e inflamación → fuga plasmática y choque.</td></tr>
+        <tr><td><b>Lactantes / &lt;1 año</b></td><td>Anticuerpos maternos residuales facilitan ADE; menor reserva hemodinámica; choque rápido.</td></tr>
+        <tr><td><b>Embarazo</b></td><td>Mayor riesgo materno y perinatal; hemodinamia alterada; riesgo hemorrágico periparto; transmisión vertical.</td></tr>
+        <tr><td><b>Extremos de edad (adulto mayor)</b></td><td>Comorbilidad, menor tolerancia a fuga/sobrecarga, presentación atípica.</td></tr>
+        <tr><td><b>Comorbilidad</b></td><td>Diabetes, obesidad, ERC, hemoglobinopatías (anemia falciforme), enfermedad ulceropéptica, cardiopatía, inmunosupresión.</td></tr>
+      </table></div>
+      <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Uso clínico</div>La presencia de cualquiera de estos factores <b>baja el umbral para hospitalizar</b> (Grupo B) aunque no haya aún signos de alarma.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CLÍNICA Y DX ================= -->
+<div class="panel" id="tab-dx">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🩺</span><span class="st">Cuadro clínico</span><span class="sg">⌄</span></div>
+    <div class="sb"><div class="prose">
+      <p>Tras incubación de <b>4–10 días</b>: fiebre alta de inicio súbito con <b>≥2</b> de: náusea/vómito, exantema, mialgias/artralgias, cefalea, <b>dolor retro-ocular</b>, leucopenia, prueba de torniquete positiva. Puede haber petequias, dolor abdominal y sangrado leve de mucosas.</p>
+    </div>
+      <div class="fp fp-p"><b>Prueba de torniquete (lazo):</b> inflar manguito a la presión media (PAS+PAD)/2 durante 5 min; <b>positiva si ≥10–20 petequias por pulgada²</b> (≈2,5 cm). Apoya el diagnóstico y sugiere fragilidad capilar; su negatividad no lo descarta.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧪</span><span class="st">Pruebas diagnósticas por tiempo</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Prueba</th><th>Ventana útil</th><th>Uso</th></tr>
+        <tr><td><b>Antígeno NS1</b></td><td class="dn">Días 1–5 (fase febril)</td><td>Diagnóstico temprano; alta especificidad. Puede ser negativo en infección secundaria.</td></tr>
+        <tr><td><b>RT-PCR / detección de ARN</b></td><td>Días 1–5</td><td>Confirma infección aguda y permite <b>serotipificar</b>. Estándar en fase virémica.</td></tr>
+        <tr><td><b>IgM (ELISA)</b></td><td class="dn">Desde el día 4–5 en adelante</td><td>Infección aguda/reciente; puede haber reacción cruzada con otros flavivirus (zika).</td></tr>
+        <tr><td><b>IgG</b></td><td>Convaleciente</td><td>Título alto/temprano sugiere infección secundaria.</td></tr>
+      </table></div>
+      <div class="fp fp-b"><b>Regla práctica:</b> <b>≤5 días</b> de fiebre → NS1 ± PCR. <b>&gt;5 días</b> → IgM. La <b>biometría hemática seriada</b> guía el manejo tanto o más que la serología.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔬</span><span class="st">Biometría hemática (BH)</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="kp"><div class="kn">✓</div><div class="kt"><b>Leucopenia</b> — hallazgo temprano y frecuente; apoya el diagnóstico en fase febril.</div></div>
+      <div class="kp"><div class="kn">✓</div><div class="kt"><b>Trombocitopenia</b> — progresiva, con nadir cerca de la defervescencia (fase crítica).</div></div>
+      <div class="kp"><div class="kn">✓</div><div class="kt"><b>↑ Hematocrito</b> — marcador de <b>hemoconcentración/fuga plasmática</b>; un ↑Hto con caída rápida de plaquetas es signo de alarma.</div></div>
+      <div class="alert a-i"><span class="ai">📈</span><div><div class="at">Monitoreo</div>Registre <b>Hto basal</b> del paciente. Un ascenso ≥20% sobre el basal (o caída ≥20% tras líquidos) orienta la conducta hídrica.</div></div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔀</span><span class="st">Diagnóstico diferencial</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Entidad</th><th>Clave diferencial</th></tr>
+        <tr><td><b>Chikungunya</b></td><td>Artralgia/artritis intensa y persistente (puede cronificar); menos fuga plasmática y trombocitopenia marcada.</td></tr>
+        <tr><td><b>Zika</b></td><td>Exantema pruriginoso, conjuntivitis no purulenta, fiebre leve; riesgo teratogénico (microcefalia). Reacción cruzada serológica.</td></tr>
+        <tr><td><b>Otras</b></td><td>Malaria, leptospirosis, fiebre tifoidea, rickettsiosis, influenza, COVID-19, sarampión, sepsis bacteriana.</td></tr>
+      </table></div>
+      <div class="fp fp-a"><b>Nota:</b> en zonas endémicas dengue, chikungunya y zika cocirculan y comparten vector (Aedes); considere <b>coinfección</b> y pruebe según disponibilidad.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SIGNOS DE ALARMA (SCREG) ================= -->
+<div class="panel" id="tab-esc">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🚨</span><div><div class="at">Checklist de signos de alarma OMS</div>Marca los presentes: el motor cuenta y clasifica en <b>Grupo A / B / C</b>. Un solo signo de alarma ya define <b>Grupo B</b>.</div></div>
+  <div class="calc-w"><div id="sc-box"></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📊</span><span class="st">Clasificación OMS 2009 por grupos</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="tw"><table class="t">
+        <tr><th>Grupo</th><th>Definición</th><th>Destino</th></tr>
+        <tr><td class="dn"><b>A</b></td><td>Dengue <b>sin</b> signos de alarma y <b>sin</b> factores de riesgo/comorbilidad; tolera vía oral, diuresis normal.</td><td>Manejo <b>ambulatorio</b> con vigilancia diaria.</td></tr>
+        <tr><td class="dm"><b>B</b></td><td>Dengue <b>con signos de alarma</b>, o con condición coexistente / riesgo social (embarazo, lactante, adulto mayor, comorbilidad).</td><td><b>Hospitalizar</b>; líquidos IV y monitoreo.</td></tr>
+        <tr><td style="color:#7f1d1d;font-weight:700;"><b>C</b></td><td><b>Dengue grave:</b> fuga plasmática con <b>choque</b> o distrés respiratorio por líquidos; <b>sangrado grave</b>; o compromiso orgánico serio.</td><td><b>Urgencia / UCI</b>; reanimación con líquidos.</td></tr>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TRATAMIENTO ================= -->
+<div class="panel" id="tab-tx">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Tratamiento por situación — toca un chip</div>No hay antiviral: el manejo es de <b>SOSTÉN</b> (líquidos + monitoreo + antipirético). La <b>⭐</b> marca el fármaco de elección.</div></div>
+  <div class="chipbar" id="tx-chips"></div>
+  <div id="tx-body"></div>
+</div>
+
+<!-- ================= ESCENARIOS ================= -->
+<div class="panel" id="tab-escen"><div class="chipbar" id="escen-chips"></div><div id="escen-body"></div></div>
+
+<!-- ================= SEGUIMIENTO ================= -->
+<div class="panel" id="tab-seg">
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📅</span><span class="st">Vigilancia y criterios de alta</span><span class="sg">⌄</span></div>
+    <div class="sb">
+      <div class="step"><div class="step-n">1</div><div class="step-b"><b>Ambulatorio (Grupo A):</b> revisión clínica <b>diaria</b> mientras dure la fiebre y hasta 24–48 h después de la defervescencia; BH según evolución. Hoja de datos de alarma por escrito.</div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-b"><b>Hospitalizado:</b> signos vitales, diuresis, Hto y plaquetas seriados (frecuencia según gravedad). Vigilar la transición a fase de recuperación.</div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-b"><b>Recuperación — evitar sobrecarga:</b> al reabsorberse el líquido, <b>reducir/suspender líquidos IV</b> para no precipitar edema pulmonar. Diuresis abundante y bradicardia son normales.</div></div>
+      <div class="fp fp-g" style="background:var(--gl);border-color:var(--gm);"><b>Criterios de alta (todos):</b> afebril ≥48 h sin antipirético · mejoría clínica y de bienestar · <b>plaquetas en ascenso</b> (&gt;50 000 tendencia) · Hto estable sin líquidos IV · sin dificultad respiratoria · diuresis adecuada · tolera vía oral.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= BIBLIOGRAFÍA ================= -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía y evidencia</h2><p>Guías OMS/OPS, CENETEC (México) y revisiones 2023–2026</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Guías de práctica clínica</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-year">2009</span><span class="biblio-level lv-a">Guía OMS</span>
+        <div class="biblio-ref">WHO/TDR. <em>Dengue: Guidelines for Diagnosis, Treatment, Prevention and Control</em>. New edition. Geneva: WHO; 2009. (Clasificación por grupos A/B/C y signos de alarma).</div>
+        <a class="biblio-link" href="https://iris.who.int/handle/10665/44188">iris.who.int/handle/10665/44188 · PMID 23762963</a>
+      </div>
+      <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-year">2022–2024</span><span class="biblio-level lv-a">Guía OPS</span>
+        <div class="biblio-ref">PAHO/WHO. <em>Algorithms for the Clinical Management of Dengue Patients</em> / Pocket Guideline for Dengue Clinical Case Management (rev.). Washington DC: PAHO.</div>
+        <a class="biblio-link" href="https://www.paho.org/en/documents/algorithms-clinical-management-dengue-patients">paho.org/en/documents/algorithms-clinical-management-dengue-patients</a>
+      </div>
+      <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Guía OPS</span>
+        <div class="biblio-ref">PAHO/WHO. <em>Guidelines for the Clinical Diagnosis and Treatment of Dengue, Chikungunya, and Zika</em>. Washington DC: PAHO.</div>
+        <a class="biblio-link" href="https://iris.paho.org/items/f63304c2-4d16-48c3-acc5-6187f60ccee6">iris.paho.org/items/f63304c2-4d16-48c3-acc5-6187f60ccee6</a>
+      </div>
+      <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">CENETEC MX</span>
+        <div class="biblio-ref">CENETEC / Secretaría de Salud. <em>Clasificación, diagnóstico y tratamiento integral del dengue</em>. GPC SSA-151-08. México.</div>
+        <a class="biblio-link" href="https://www.gob.mx/salud/documentos/guias-practicas-clinicas">gob.mx/salud/documentos/guias-practicas-clinicas</a>
+      </div>
+      <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">CDC</span>
+        <div class="biblio-ref">CDC. <em>Dengue Clinical Case Management — Pocket Guide (update)</em>. Atlanta: CDC; 2024.</div>
+        <a class="biblio-link" href="https://www.cdc.gov/dengue/hcp/pocketguide/index.html">cdc.gov/dengue/hcp/pocketguide</a>
+      </div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Revisiones y fisiopatología</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Revisión</span>
+        <div class="biblio-ref">Complexities of Dengue Fever: Pathogenesis, Clinical Features and Management Strategies. <em>PMC</em>; 2025.</div>
+        <a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11910338/">pmc.ncbi.nlm.nih.gov/articles/PMC11910338</a>
+      </div>
+      <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Revisión</span>
+        <div class="biblio-ref">Dengue: a focused review for the emergency clinician. <em>PMC</em>; 2024.</div>
+        <a class="biblio-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11254539/">pmc.ncbi.nlm.nih.gov/articles/PMC11254539</a>
+      </div>
+      <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">ADE</span>
+        <div class="biblio-ref">The role of antibody-dependent enhancement in dengue vaccination. <em>Trop Dis Travel Med Vaccines</em>. 2024.</div>
+        <a class="biblio-link" href="https://link.springer.com/article/10.1186/s40794-024-00231-2">doi.org/10.1186/s40794-024-00231-2</a>
+      </div>
+    </div>
+    <div class="nivel-legend">
+      <div class="nl-item"><span class="biblio-level lv-a">A</span> Guía/consenso</div>
+      <div class="nl-item"><span class="biblio-level lv-b">B</span> Revisión</div>
+      <div class="nl-item"><span class="biblio-level lv-exp">Exp</span> Mecanístico</div>
+    </div>
+  </div>
+  <div class="alert a-w" style="margin-top:12px;"><span class="ai">⚖️</span><div><div class="at">Aviso</div>Material de referencia rápida para profesionales de salud. No sustituye el juicio clínico ni las guías institucionales vigentes (OMS/OPS/CENETEC). Verifique dosis, presentaciones y contraindicaciones antes de prescribir.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function renderChips(cid,keys,fn,active){var c=document.getElementById(cid);var h='';keys.forEach(function(k){h+='<span class="pchip'+(k===active?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+k+'</span>';});c.innerHTML=h;}
+function val(id){return document.getElementById(id).value;}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:105px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* ===== FICHAS DE FÁRMACOS ===== */
+var CATMETA={
+  'A':{label:'Grupo A (ambulatorio)',chip:'🟢 Grupo A (ambulatorio)',color:'#0f7a5a',obj:'Dengue sin signos de alarma ni comorbilidad. Manejo en casa con hidratación oral, paracetamol, reposo y vigilancia diaria; educar los datos de alarma para regresar.'},
+  'B':{label:'Grupo B (signos de alarma)',chip:'🟡 Grupo B (signos de alarma)',color:'#d97706',obj:'Signos de alarma o comorbilidad/riesgo: hospitalizar. Cristaloide isotónico IV titulado por Hto/diuresis; monitoreo estrecho de Hto, plaquetas y diuresis.'},
+  'C':{label:'Grupo C (grave / choque)',chip:'🔴 Grupo C (grave/choque)',color:'#b91c1c',obj:'Dengue grave: reanimación con cristaloides en bolo, reevaluar cada bolo; choque refractario → considerar coloide; transfundir solo ante sangrado; manejo en UCI.'},
+  'pedi':{label:'Pediátrico',chip:'👶 Pediátrico',color:'#1a6bbd',obj:'Líquidos y dosis por peso. Use la calculadora para bolo, mantenimiento (Holliday-Segar) y paracetamol.'},
+  'embarazo':{label:'Embarazo',chip:'🤰 Embarazo',color:'#7e22ce',obj:'Alto riesgo materno-fetal. Paracetamol seguro; monitoreo materno-fetal; manejo hídrico conservador; vigilar sangrado periparto y coordinar con obstetricia.'},
+  'evitar':{label:'Qué evitar',chip:'⛔ Qué evitar',color:'#7f1d1d',obj:'Fármacos y conductas que aumentan el daño en dengue.'}
+};
+var FARM=[
+  {cat:'A',n:'Paracetamol (acetaminofén)',color:'#0f7a5a',tag:'⭐ Antipirético/analgésico de elección',dlbl:'Dosis adulto',dosis:'500–1000 mg VO cada 6–8 h',dosisSub:'Máx 3–4 g/día (≤75 mg/kg/día); menos si hepatopatía',desc:'Único antipirético recomendado en dengue. Controla fiebre y dolor sin aumentar el riesgo hemorrágico.',
+    rows:[['Vía','Oral (IV si no tolera)'],['Frecuencia','c/6–8 h por razón necesaria'],['Duración','Mientras dure la fiebre/dolor'],['Candidatos','Todos los grupos, incluida embarazada y pediátrico'],['Indicación','Fiebre y mialgias del dengue'],['Present. MX','Tempra®, Tylenol®, genérico IMSS: tab 500 mg; sol/gotas ped'],['Contraindic.','Hepatopatía grave; ajustar dosis'],['E. adversos','Hepatotoxicidad por sobredosis']],
+    nota:'Evite exceder 3–4 g/día. No combine con otros productos que contengan paracetamol. NO usar AINE ni aspirina.'},
+  {cat:'A',n:'Hidratación oral / SRO',color:'#0f7a5a',tag:'⭐ Sostén ambulatorio',dlbl:'Meta',dosis:'Ingesta abundante de líquidos VO',dosisSub:'Adulto: ~2–3 L/día; SRO, agua, jugos, caldos',desc:'Prevenir la deshidratación y mantener diuresis. Educar reposo relativo y evitar deshidratación por fiebre/vómito.',
+    rows:[['Vía','Oral'],['Frecuencia','Fraccionada, todo el día'],['Duración','Fase febril y hasta recuperación'],['Candidatos','Grupo A que tolera VO y orina normal'],['Indicación','Mantener volumen y diuresis'],['Present. MX','Vida Suero Oral® (SRO) sobres'],['Contraindic.','Intolerancia oral, vómito persistente → IV'],['E. adversos','Ninguno relevante']],
+    nota:'Entregar por escrito los SIGNOS DE ALARMA para regresar de inmediato. Vigilancia clínica DIARIA hasta 48 h tras la defervescencia.'},
+  {cat:'B',n:'Cristaloide isotónico (SSN 0.9% / Hartmann)',color:'#d97706',tag:'⭐ Líquido IV de elección',dlbl:'Esquema Grupo B',dosis:'5–7 mL/kg/h × 1–2 h → 3–5 mL/kg/h × 2–4 h → 2–3 mL/kg/h',dosisSub:'Titular según Hto, diuresis (meta 0.5 mL/kg/h) y signos vitales',desc:'Solución salina 0.9% o Ringer lactato/Hartmann. Se ajusta de forma escalonada y descendente según respuesta; reevaluar Hto seriado.',
+    rows:[['Vía','IV periférica'],['Frecuencia','Infusión continua titulada'],['Duración','24–48 h (ventana de fuga), luego reducir'],['Candidatos','Grupo B hospitalizado'],['Indicación','Signos de alarma / intolerancia oral'],['Present. MX','SSN 0.9% 500–1000 mL; Hartmann 500–1000 mL (IMSS)'],['Contraindic.','Sobrecarga hídrica; precaución en cardiopatía/ERC'],['E. adversos','Edema, derrames si sobrehidratación']],
+    nota:'Reduzca el ritmo en cuanto mejoren Hto y diuresis. La sobrehidratación es una causa mayor de morbilidad (edema pulmonar).'},
+  {cat:'C',n:'Cristaloide en BOLO (reanimación)',color:'#b91c1c',tag:'⭐ 1.ª línea del choque',dlbl:'Esquema Grupo C (choque)',dosis:'Bolo 10–20 mL/kg de cristaloide en 15–30 min',dosisSub:'Reevaluar tras cada bolo; repetir según respuesta; luego descender ritmo',desc:'Choque compensado: iniciar 5–10 mL/kg/h ó bolo 10 mL/kg; choque hipotensivo: bolo 20 mL/kg rápido. Reevaluar Hto y hemodinamia entre bolos.',
+    rows:[['Vía','IV (2 accesos / intraóseo si preciso)'],['Frecuencia','Bolos guiados por respuesta'],['Duración','Hasta estabilizar; destetar pronto'],['Candidatos','Grupo C con choque'],['Indicación','Dengue grave / choque hipovolémico'],['Present. MX','SSN 0.9% / Hartmann (IMSS)'],['Contraindic.','Reevaluar para evitar sobrecarga'],['E. adversos','Sobrecarga, edema pulmonar']],
+    nota:'Si el Hto SUBE pese a bolos y persiste el choque → seguir con cristaloide/coloide. Si el Hto CAE con choque → sospechar HEMORRAGIA y transfundir.'},
+  {cat:'C',n:'Coloide (choque refractario)',color:'#b91c1c',tag:'2.ª línea',dlbl:'Indicación',dosis:'10–20 mL/kg de coloide en bolo',dosisSub:'Tras fallo de bolos de cristaloide con Hto persistentemente alto',desc:'Considerar coloide (p. ej. gelatina/almidón según disponibilidad y guía) cuando el choque no responde a cristaloides y el Hto sigue elevado.',
+    rows:[['Vía','IV'],['Frecuencia','Bolo, reevaluar'],['Duración','Corto plazo, en UCI'],['Candidatos','Choque refractario a cristaloide'],['Indicación','Fuga masiva con Hto alto persistente'],['Present. MX','Coloide disponible institucional'],['Contraindic.','Sangrado activo (preferir hemoderivados); nefropatía'],['E. adversos','Coagulopatía, reacción, daño renal']],
+    nota:'No sustituye a la transfusión cuando la causa del choque es hemorragia (Hto en descenso).'},
+  {cat:'C',n:'Hemoderivados (sangrado grave)',color:'#b91c1c',tag:'Sangrado con inestabilidad',dlbl:'Indicación',dosis:'Concentrado eritrocitario 5–10 mL/kg / sangre fresca 10–20 mL/kg',dosisSub:'Plaquetas/plasma solo ante sangrado activo o CID, NO profiláctico',desc:'Transfundir ante sangrado grave con inestabilidad o caída de Hto con choque. La trombocitopenia aislada sin sangrado NO se transfunde.',
+    rows:[['Vía','IV'],['Frecuencia','Según sangrado/hemodinamia'],['Duración','Hasta control del sangrado'],['Candidatos','Sangrado grave / choque hemorrágico'],['Indicación','Hemorragia significativa'],['Present. MX','CE, plasma fresco, concentrado plaquetario (banco de sangre)'],['Contraindic.','Transfusión profiláctica por cifra baja sin sangrado'],['E. adversos','Reacción transfusional, sobrecarga (TACO)']],
+    nota:'La cifra de plaquetas por sí sola no indica transfusión: se decide por sangrado clínico.'},
+  {cat:'pedi',n:'Paracetamol pediátrico',color:'#1a6bbd',tag:'⭐ Antipirético pediátrico',dlbl:'Dosis por peso',dosis:'10–15 mg/kg/dosis VO cada 6 h',dosisSub:'Máx 5 dosis/día; no exceder 75 mg/kg/día',desc:'Antipirético de elección en niños con dengue. Use la calculadora para la dosis según peso.',
+    rows:[['Vía','Oral (gotas/suspensión)'],['Frecuencia','c/6 h PRN'],['Duración','Mientras dure la fiebre'],['Candidatos','Todos los niños'],['Indicación','Fiebre/dolor'],['Present. MX','Gotas 100 mg/mL; susp 160 mg/5 mL'],['Contraindic.','Hepatopatía'],['E. adversos','Hepatotoxicidad por sobredosis']],
+    nota:'NUNCA aspirina en niños (riesgo de Reye y sangrado). Vigilar hidratación oral estrecha.'},
+  {cat:'pedi',n:'Líquidos IV pediátricos',color:'#1a6bbd',tag:'Cristaloide por peso',dlbl:'Esquema',dosis:'Mantenimiento Holliday-Segar + bolo 10–20 mL/kg si choque',dosisSub:'Grupo B: 3–5 mL/kg/h titulado; Grupo C: bolo y reevaluar',desc:'Cálculo de líquidos por peso. Mantenimiento diario: 100 mL/kg (primeros 10 kg) + 50 mL/kg (siguientes 10 kg) + 20 mL/kg (resto). Use la calculadora.',
+    rows:[['Vía','IV'],['Frecuencia','Continua / bolos'],['Duración','Ventana de fuga; destetar'],['Candidatos','Niños Grupo B/C'],['Indicación','Fuga plasmática / choque'],['Present. MX','SSN 0.9% / Hartmann'],['Contraindic.','Sobrecarga'],['E. adversos','Edema, derrames']],
+    nota:'El niño descompensa rápido y tolera mal la sobrecarga: reevaluar con frecuencia y titular a la baja al mejorar.'},
+  {cat:'embarazo',n:'Paracetamol en embarazo',color:'#7e22ce',tag:'⭐ Seguro en gestación',dlbl:'Dosis',dosis:'500–1000 mg VO c/6–8 h (máx 3 g/día)',dosisSub:'Antipirético de elección durante el embarazo',desc:'Control de fiebre y dolor. Evitar AINE (sobre todo en el 3.er trimestre) y aspirina.',
+    rows:[['Vía','Oral/IV'],['Frecuencia','c/6–8 h PRN'],['Duración','Mientras dure la fiebre'],['Candidatos','Embarazada con dengue'],['Indicación','Fiebre/dolor'],['Present. MX','Genérico IMSS tab 500 mg'],['Contraindic.','Hepatopatía'],['E. adversos','Hepatotoxicidad por sobredosis']],
+    nota:'Manejo conjunto con obstetricia. Vigilancia materno-fetal; el manejo hídrico es más conservador por el riesgo de sobrecarga y edema.'},
+  {cat:'evitar',n:'❌ AINE (ibuprofeno, ketorolaco, naproxeno, diclofenaco)',color:'#7f1d1d',tag:'CONTRAINDICADO',dlbl:'No usar',dosis:'Evitar por completo',dosisSub:'Aumentan sangrado gastrointestinal y disfunción plaquetaria',desc:'Los AINE agravan el riesgo hemorrágico y pueden dañar la función renal en el paciente con fuga/hipovolemia.',
+    rows:[['Vía','—'],['Frecuencia','—'],['Duración','—'],['Candidatos','Ninguno'],['Indicación','Ninguna en dengue'],['Present. MX','—'],['Contraindic.','Todo paciente con dengue'],['E. adversos','Hemorragia, gastropatía, daño renal']],
+    nota:'Sustituir siempre por paracetamol para fiebre y dolor.'},
+  {cat:'evitar',n:'❌ Aspirina (AAS) / dipirona-metamizol',color:'#7f1d1d',tag:'CONTRAINDICADO',dlbl:'No usar',dosis:'Evitar',dosisSub:'AAS: antiagregante → sangrado; riesgo de Sd. de Reye en niños',desc:'La aspirina inhibe la agregación plaquetaria y aumenta el sangrado; en niños se asocia a síndrome de Reye. Metamizol: riesgo hematológico.',
+    rows:[['Vía','—'],['Frecuencia','—'],['Duración','—'],['Candidatos','Ninguno'],['Indicación','Ninguna'],['Present. MX','—'],['Contraindic.','Dengue (todos)'],['E. adversos','Hemorragia, Reye (niños)']],
+    nota:'Nunca para la fiebre del dengue. Preferir paracetamol.'},
+  {cat:'evitar',n:'❌ Esteroides / Ig IV de rutina y vía IM',color:'#7f1d1d',tag:'SIN INDICACIÓN DE RUTINA',dlbl:'No usar',dosis:'No indicados de rutina',dosisSub:'Sin beneficio en mortalidad ni prevención del choque',desc:'Corticoides e inmunoglobulina IV no han demostrado beneficio en dengue. Evitar inyecciones IM por riesgo de hematoma con trombocitopenia.',
+    rows:[['Vía','—'],['Frecuencia','—'],['Duración','—'],['Candidatos','Ninguno (uso de rutina)'],['Indicación','Ninguna sistemática'],['Present. MX','—'],['Contraindic.','Uso rutinario en dengue'],['E. adversos','Hiperglucemia, inmunosupresión; hematoma (IM)']],
+    nota:'Evitar también sobrehidratación y procedimientos invasivos innecesarios.'}
+];
+var TXCATS=[];
+function farmCardH(d,i,open){var id='farm-'+i;var h='';
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+(d.tag||'')+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);">'+(open?'▼':'►')+'</span></div>';
+  h+='<div class="ind-drug-b'+(open?' show':'')+'" id="'+id+'" style="padding:0;">';
+  h+='<div style="background:'+d.color+'14;padding:12px 14px;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';letter-spacing:.5px;">'+(d.dlbl||'Dosis')+'</div>';
+  h+='<div style="font-size:14px;font-weight:800;color:'+d.color+';margin:2px 0;">'+d.dosis+'</div>';
+  if(d.dosisSub)h+='<div style="font-size:12px;font-weight:700;color:#c0392b;">'+d.dosisSub+'</div>';
+  if(d.desc)h+='<div style="font-size:12px;color:#374151;line-height:1.55;margin-top:5px;">'+d.desc+'</div>';
+  h+='</div><div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';return h;}
+function initTx(){var seen={};TXCATS=[];for(var i=0;i<FARM.length;i++){var c=FARM[i].cat;if(c&&!seen[c]){seen[c]=1;TXCATS.push(c);}}
+  var cb=document.getElementById('tx-chips');if(!cb)return;var h='';
+  for(var i=0;i<TXCATS.length;i++){var m=(typeof CATMETA!=='undefined'&&CATMETA[TXCATS[i]])?CATMETA[TXCATS[i]]:{};h+='<span class="pchip'+(i===0?' on':'')+'" onclick="showTxCat('+i+',this)">'+(m.chip||m.label||TXCATS[i])+'</span>';}
+  cb.innerHTML=h;showTxCat(0,cb.querySelector('.pchip'));}
+function showTxCat(idx,el){var cat=TXCATS[idx];var c=document.querySelectorAll('#tx-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');
+  var m=(typeof CATMETA!=='undefined'&&CATMETA[cat])?CATMETA[cat]:{};var col=m.color||'var(--ac)';var h='';var intro=m.obj||m.sub;
+  if(intro)h+='<div style="border-radius:8px;padding:11px 13px;margin-bottom:12px;background:'+col+'11;border-left:4px solid '+col+';font-size:12.5px;line-height:1.6;color:#374151;"><b style="color:'+col+';">'+(m.label||cat)+':</b> '+intro+'</div>';
+  if(typeof TXCALC!=='undefined'&&TXCALC[cat])h+=TXCALC[cat]();
+  var first=true;for(var i=0;i<FARM.length;i++){if(FARM[i].cat!==cat)continue;h+=farmCardH(FARM[i],i,first);first=false;}
+  document.getElementById('tx-body').innerHTML=h;
+  if(typeof txCalcInit==='function')txCalcInit(cat);}
+
+/* ===== CALCULADORA PEDIÁTRICA (líquidos + paracetamol) ===== */
+var TXCALC={
+  'pedi':function(){return '<div class="calc-w"><div class="calc-lbl">Calculadora pediátrica — peso del paciente</div>'+
+    '<input id="pw" type="number" inputmode="decimal" min="1" max="100" step="0.5" oninput="pediCalc()" placeholder="Peso en kg" style="width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:inherit;">'+
+    '<div id="pedi-out" class="calc-result show res-mid" style="margin-top:12px;">Escribe el peso para calcular bolo, mantenimiento y paracetamol.</div>'+
+    '<div class="calc-note">Bolo choque 10–20 mL/kg · Mantenimiento Holliday-Segar (100/50/20 mL/kg/día) · Paracetamol 10–15 mg/kg/dosis.</div></div>';}
+};
+function pediCalc(){var w=parseFloat(val('pw'));var o=document.getElementById('pedi-out');if(!o)return;
+  if(!w||w<=0){o.className='calc-result show res-mid';o.innerHTML='Escribe un peso válido (kg).';return;}
+  var bMin=Math.round(w*10),bMax=Math.round(w*20);
+  var maint;if(w<=10)maint=w*100;else if(w<=20)maint=1000+(w-10)*50;else maint=1500+(w-20)*20;
+  maint=Math.round(maint);var maintHr=Math.round(maint/24);
+  var paMin=Math.round(w*10),paMax=Math.round(w*15);
+  o.className='calc-result show res-high';
+  o.innerHTML='<div style="font-size:15px;font-weight:800;">Peso '+w+' kg</div>'+
+    '<div style="margin-top:6px;"><b>Bolo (choque):</b> '+bMin+'–'+bMax+' mL (10–20 mL/kg) en 15–30 min, reevaluar.</div>'+
+    '<div><b>Mantenimiento (Holliday-Segar):</b> '+maint+' mL/día ≈ '+maintHr+' mL/h.</div>'+
+    '<div><b>Paracetamol:</b> '+paMin+'–'+paMax+' mg por dosis (10–15 mg/kg) c/6 h.</div>';}
+function txCalcInit(cat){if(cat==='pedi'){var el=document.getElementById('pw');if(el&&el.value)pediCalc();}}
+
+/* ===== MOTOR DE ESCALAS / SCREG (signos de alarma) ===== */
+var SCREG={
+  sc:{title:'Signos de alarma',max:7,
+    items:[
+      {t:'Dolor abdominal intenso o continuo',o:[['No',0],['Sí',1]]},
+      {t:'Vómito persistente',o:[['No',0],['Sí',1]]},
+      {t:'Acumulación clínica de líquidos (ascitis / derrame pleural)',o:[['No',0],['Sí',1]]},
+      {t:'Sangrado de mucosas',o:[['No',0],['Sí',1]]},
+      {t:'Letargo o irritabilidad',o:[['No',0],['Sí',1]]},
+      {t:'Hepatomegalia >2 cm',o:[['No',0],['Sí',1]]},
+      {t:'↑ Hematocrito con caída rápida y concurrente de plaquetas',o:[['No',0],['Sí',1]]}
+    ],
+    interpret:function(t){
+      if(t===0)return{band:'Grupo A',cls:'res-ok',msg:'Sin signos de alarma. Si además no hay comorbilidad ni riesgo social → manejo AMBULATORIO (hidratación oral, paracetamol, vigilancia diaria y datos de alarma). Reclasifique a B si hay embarazo, lactante, adulto mayor o comorbilidad.'};
+      return{band:'Grupo B (≥1 signo de alarma)',cls:'res-high',msg:'Uno o más signos de alarma presentes ('+t+'/7) → HOSPITALIZAR (Grupo B): cristaloide IV titulado y monitoreo de Hto/plaquetas/diuresis. Si hay CHOQUE, distrés por líquidos, sangrado grave o falla orgánica → Grupo C (grave) y reanimación/UCI.'};
+    },
+    note:'La escala cuenta signos de alarma OMS 2009. El Grupo C se define clínicamente por choque, sangrado grave o compromiso orgánico, no por el conteo.'}
+};
+var SCST={};
+function scInit(sid){var sc=SCREG[sid];var box=document.getElementById(sid+'-box');if(!box)return;var h='';for(var i=0;i<sc.items.length;i++){var it=sc.items[i];h+='<div class="calc-lbl" style="margin-top:12px;">'+(i+1)+'. '+it.t+'</div><div id="'+sid+'-g'+i+'">';for(var j=0;j<it.o.length;j++){var p=it.o[j][1];h+='<button class="opt" onclick="scPick(\''+sid+'\','+i+','+p+',this)">'+it.o[j][0]+(p?' <b>('+(p>0?'+':'')+p+')</b>':'')+'</button>';}h+='</div>';}h+='<div style="margin-top:12px;"><button class="calc-btn sc" onclick="scReset(\''+sid+'\')">Reiniciar</button></div><div id="'+sid+'-res" class="calc-result"></div>';box.innerHTML=h;}
+function scPick(sid,i,pts,btn){SCST[sid]=SCST[sid]||{};SCST[sid][i]=pts;var g=btn.parentNode.querySelectorAll('.opt');for(var k=0;k<g.length;k++)g[k].classList.remove('on');btn.classList.add('on');scCalc(sid);}
+function scReset(sid){SCST[sid]={};var b=document.querySelectorAll('#'+sid+'-box .opt');for(var i=0;i<b.length;i++)b[i].classList.remove('on');var r=document.getElementById(sid+'-res');if(r){r.className='calc-result';r.innerHTML='';}}
+function scCalc(sid){var sc=SCREG[sid],st=SCST[sid]||{},tot=0,n=0;for(var i=0;i<sc.items.length;i++){if(st[i]!=null){tot+=st[i];n++;}}var box=document.getElementById(sid+'-res');if(!box)return;if(n<sc.items.length){box.className='calc-result show res-mid';box.innerHTML='Responde las '+sc.items.length+' preguntas ('+n+'/'+sc.items.length+').';return;}var r=sc.interpret(tot);box.className='calc-result show '+r.cls;box.innerHTML='<div style="font-size:16px;font-weight:800;">'+sc.title+' = '+tot+(sc.max?(' / '+sc.max):'')+' · '+r.band+'</div><div style="margin-top:6px;">'+r.msg+'</div>'+(sc.note?'<div class="calc-note">'+sc.note+'</div>':'');}
+
+/* ===== ESCENARIOS ===== */
+var ESCEN={
+  'Fase crítica / defervescencia':{p:'Día 3–7, la fiebre cede pero comienza la fuga plasmática.',k:'Vigilancia máxima 24–48 h: Hto seriado, plaquetas, diuresis, signos vitales. La defervescencia NO es mejoría: es la ventana de choque.',x:'Hospitalizar si hay signos de alarma (Grupo B). Cristaloide IV titulado 3–5 mL/kg/h. Reducir líquidos al normalizar Hto y diuresis. No dar de alta durante esta ventana.'},
+  'Choque por dengue':{p:'Grupo C: hipotensión, taquicardia, pulso débil, llenado capilar lento, ↑Hto.',k:'Choque hipovolémico por fuga plasmática. Reanimar guiado por Hto y hemodinamia.',x:'Bolo cristaloide 10–20 mL/kg en 15–30 min, reevaluar. Repetir si persiste. Choque refractario con Hto alto → coloide. Hto que cae con choque → sospechar hemorragia y transfundir. UCI.'},
+  'Sangrado grave':{p:'Hemorragia mucosa/digestiva significativa, o caída de Hto con inestabilidad.',k:'La trombocitopenia aislada NO se transfunde; se transfunde por sangrado clínico.',x:'Concentrado eritrocitario/sangre fresca ante sangrado con inestabilidad o Hto en descenso con choque. Plaquetas/plasma solo si sangrado activo o CID. Evitar AINE/aspirina/IM.'},
+  'Embarazo':{p:'Gestante con dengue: alto riesgo materno-fetal.',k:'Presentación puede solaparse con preeclampsia/HELLP; riesgo hemorrágico periparto y transmisión vertical.',x:'Paracetamol para fiebre; evitar AINE (sobre todo 3.er trimestre) y aspirina. Manejo hídrico conservador, monitoreo materno-fetal, manejo conjunto con obstetricia.'},
+  'Lactante / <1 año':{p:'Anticuerpos maternos residuales facilitan ADE; descompensa rápido.',k:'Menor reserva hemodinámica; signos de choque sutiles (irritabilidad, letargo, llenado capilar).',x:'Umbral bajo para hospitalizar. Líquidos por peso (calculadora), reevaluación frecuente, evitar sobrecarga. Nunca aspirina.'},
+  'Coinfección / segunda infección':{p:'Segunda infección por serotipo heterólogo o coinfección con chikungunya/zika.',k:'La 2.ª infección heteróloga es el principal factor de dengue grave por ADE.',x:'Vigilancia estrecha de fuga plasmática; considerar coinfección en zona endémica. Manejo de sostén; no hay antiviral específico.'}
+};
+function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen',key);var d=ESCEN[key];
+  var h='<div class="esc-hero"><div class="esc-hero-t">'+key+'</div><div class="esc-hero-p">'+d.p+'</div></div><div class="esc-info">';
+  h+='<div class="fu-r"><div class="fu-t">Clave</div><div class="fu-x">'+d.k+'</div></div>';
+  h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
+  document.getElementById('escen-body').innerHTML=h;}
+
+function initAll(){initTx();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('sc');}
+window.addEventListener('load',initAll);
+</script>
+</body>
+</html>
