@@ -32677,16 +32677,20 @@ var TOOLS=[
      /* La tabla completa se muestra SIEMPRE debajo del resultado: ver solo la celda
         que aplica obliga a recordar el resto o a salirse de la calculadora. */
      function _esc(act){
-       var R=[['b','Sensibilidad baja (menos de 40 U/día o sensible)','150–199 mg/dL 1 U · 200–249 mg/dL 2 U · 250–299 mg/dL 3 U · 300–349 mg/dL 4 U · 350 o más mg/dL 5 U'],
-              ['m','Sensibilidad media (40–100 U/día)','150–199 mg/dL 1–2 U · 200–249 mg/dL 3 U · 250–299 mg/dL 5 U · 300–349 mg/dL 7 U · 350 o más mg/dL 8 U'],
-              ['a','Sensibilidad alta (más de 100 U/día o resistente)','150–199 mg/dL 2 U · 200–249 mg/dL 4 U · 250–299 mg/dL 7 U · 300–349 mg/dL 10 U · 350 o más mg/dL 12 U']];
-       var s='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);"><b>Escala completa</b> &mdash; unidades de insulina rápida:';
+       var R=[['b','Sensibilidad baja (menos de 40 U/d\u00eda o sensible)','150-199 mg/dL 1 U, 200-249 mg/dL 2 U, 250-299 mg/dL 3 U, 300-349 mg/dL 4 U, \u2265350 mg/dL 5 U.'],
+              ['m','Sensibilidad media (40-100 U/d\u00eda)','150-199 mg/dL 1-2 U, 200-249 mg/dL 3 U, 250-299 mg/dL 5 U, 300-349 mg/dL 7 U, \u2265350 mg/dL 8 U.'],
+              ['a','Sensibilidad alta (m\u00e1s de 100 U/d\u00eda o resistente)','150-199 mg/dL 2 U, 200-249 mg/dL 4 U, 250-299 mg/dL 7 U, 300-349 mg/dL 10 U, \u2265350 mg/dL 12 U.']];
+       var plano=R.map(function(x){return x[1]+': '+x[2];}).join('\n');
+       try{ window.__ESCALA_TXT=plano; }catch(e){}
+       var s='<div style="margin-top:10px;padding-top:9px;border-top:1px solid rgba(0,0,0,.14);">'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><b>Escala completa</b>'
+        +'<button type="button" onclick="doCopy(window.__ESCALA_TXT,\'Escala copiada\')" style="margin-left:auto;background:#2f6fe0;color:#fff;border:0;border-radius:8px;padding:6px 13px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;">Copiar</button></div>';
        for(var i=0;i<R.length;i++){ var on=(R[i][0]===act);
-         s+='<div style="margin-top:6px;line-height:1.5;'+(on?'font-weight:700;':'opacity:.82;')+'">'+(on?'&#9654; ':'')+R[i][1]+': '+R[i][2]+'.</div>'; }
+         s+='<div style="margin-top:4px;line-height:1.55;padding:5px 7px;border-radius:6px;'+(on?'background:rgba(47,111,224,.10);':'')+'">'+R[i][1]+': '+R[i][2]+'</div>'; }
        return s+'</div>';
      }
      var _e=tChk(tRango('em_g',20,1200,'la glucemia','mg/dL'),tRango('em_dtd',0,400,'la dosis total diaria','U/día'));if(_e)return _e;
-     var g=nv('em_g'); if(!g) return {big:'—',level:'info'};
+     var g=nv('em_g'); if(!g) return {big:'—',label:'Escribe la glucemia',level:'info',note:_esc('')};
      if(g<70) return {big:'No corregir',label:'Hipoglucemia',level:'danger',lines:[{k:'Glucemia',v:g+' mg/dL'}],note:'Menos de 70 mg/dL es hipoglucemia: NO se aplica insulina. Dar 15 g de hidratos de carbono de absorción rápida y volver a medir a los 15 minutos. Si no despierta o no tolera la vía oral: glucosa intravenosa o glucagón.'+_esc('')};
      if(g<150) return {big:'0 U',label:'Sin corrección',level:'ok',lines:[{k:'Glucemia',v:g+' mg/dL'}],note:'Por debajo de 150 mg/dL no se corrige. Mantener el esquema basal y prandial que ya tenga.'+_esc('')};
      var col=sv('em_s')||'m', dtd=nv('em_dtd'), auto='';
