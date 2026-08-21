@@ -138,6 +138,20 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 .bib-r{color:var(--gray-700);line-height:1.65;}
 .bib-l{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--g);text-decoration:none;font-weight:500;}
 @media(max-width:480px){.lab-g{grid-template-columns:1fr;}}
+.hbchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.hbchip.on{background:var(--b);border-color:var(--b);color:#fff;}
+.hbcm.on{background:var(--am);border-color:var(--am);color:#fff;}
+.hb-out{margin-top:12px;border-radius:var(--rs);padding:14px;border:1px solid var(--bd);}
+.hb-out.ok{background:var(--gl);border-color:var(--gm);}
+.hb-out.mid{background:var(--al);border-color:var(--am);}
+.hb-out.high{background:var(--rl);border-color:var(--rm);}
+.hb-out .hb-tt{font-size:14px;font-weight:800;margin-bottom:6px;}
+.hb-out.ok .hb-tt{color:var(--g);}
+.hb-out.mid .hb-tt{color:var(--a);}
+.hb-out.high .hb-tt{color:var(--r);}
+.hb-blk{background:rgba(255,255,255,0.65);border-radius:var(--rs);padding:9px 11px;margin-top:8px;font-size:12.5px;line-height:1.55;color:var(--gray-900);}
+.hb-blk b{color:inherit;}
+.hb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray-600);margin-bottom:3px;}
 </style>
 </head>
 <body>
@@ -148,7 +162,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
     <div>
       <div class="hdr-eye">Consulta General · Endocrinología</div>
       <div class="hdr-title">Diabetes Tipo 2</div>
-      <div class="hdr-sub">ADA 2026 · EASD 2024</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> E11.9</div>
+      <div class="hdr-sub">ADA 2026 · EASD 2024</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> E11.9 (sin complicaciones) · E11.2 con complicaciones renales · E11.3 oftálmicas · E11.4 neurológicas · E11.5 circulatorias periféricas · E11.7 complicaciones múltiples</div>
     </div>
   </div>
   <div class="hdr-badges">
@@ -345,6 +359,40 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 
 <!-- TX CONSULTA -->
 <div class="panel" id="tab-txc">
+
+  <!-- CRIBADOR HbA1c -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Calculadora: ¿qué hago con esta HbA1c?</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="calc-w">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+        <span style="font-size:12.5px;font-weight:700;color:var(--gray-900);">HbA1c del paciente:</span>
+        <input id="hb-input" class="calc-in" type="number" inputmode="decimal" step="0.1" min="3" max="20" placeholder="%" oninput="calcHbA1c()">
+        <span style="font-size:13px;font-weight:700;color:var(--gray-600);">%</span>
+      </div>
+
+      <div class="hb-lbl">Comorbilidad (selecciona las que apliquen)</div>
+      <div id="hb-como-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+        <button type="button" class="hbchip hbcm" onclick="toggleHbComo('ecv',this)">❤️ ECV establecida</button>
+        <button type="button" class="hbchip hbcm" onclick="toggleHbComo('ic',this)">🫀 Insuf. cardíaca</button>
+        <button type="button" class="hbchip hbcm" onclick="toggleHbComo('erc',this)">🫘 ERC</button>
+        <button type="button" class="hbchip hbcm" onclick="toggleHbComo('obesidad',this)">⚖️ Obesidad</button>
+      </div>
+
+      <div class="hb-lbl">Perfil / meta individualizada</div>
+      <div id="hb-meta-chips" style="display:flex;flex-wrap:wrap;gap:6px;">
+        <button type="button" class="hbchip on" onclick="setHbMeta('std',this)">Estándar (menor de 7%)</button>
+        <button type="button" class="hbchip" onclick="setHbMeta('anciano',this)">Anciano frágil (menor de 8%)</button>
+        <button type="button" class="hbchip" onclick="setHbMeta('joven',this)">Joven sin comorbilidad (menor de 6.5%)</button>
+      </div>
+
+      <div id="hb-out" class="hb-out"></div>
+
+      <div style="font-size:10.5px;color:var(--gray-600);margin-top:10px;line-height:1.5;font-style:italic;">
+        Orientativo — basado en ADA 2025-2026. Individualizar según el paciente, la tolerancia y el juicio clínico. No sustituye la valoración médica.
+      </div>
+    </div>
+  </div></div>
+
   <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🥗</span><span class="st">Cambios de estilo de vida — siempre la base</span><span class="sg">⌄</span></div>
   <div class="sb hidden">
     <div class="tw"><table class="t">
@@ -392,7 +440,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
         <tr><td><span style="background:#7a4a00;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">iDPP-4</span></td><td class="dn">Saxagliptina</td><td>2.5-5 mg</td><td class="dm">5 mg/día</td><td>c/24h</td><td>Tab 2.5, 5 mg</td><td style="font-size:11px;color:var(--gray-600);">EVITAR en IC (SAVOR-TIMI: más hospitalización por IC).</td></tr>
         <tr><td><span style="background:#5b21b6;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">SU</span></td><td class="dn">Glimepirida</td><td>1-2 mg</td><td class="dm">8 mg/día</td><td>c/24h desayuno</td><td>Tab 1, 2, 4 mg</td><td style="font-size:11px;color:var(--gray-600);">SU preferida. Menor riesgo que glibenclamida. No anciano.</td></tr>
         <tr><td><span style="background:#5b21b6;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">SU</span></td><td class="dn">Gliclazida MR</td><td>30 mg</td><td class="dm">120 mg/día</td><td>c/24h desayuno</td><td>Tab MR 30, 60 mg</td><td style="font-size:11px;color:var(--gray-600);">Menor riesgo CV entre SU (ADVANCE). Hasta TFG 30.</td></tr>
-        <tr><td><span style="background:#5b21b6;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">SU</span></td><td class="dn">Glibenclamida</td><td>2.5 mg</td><td class="dm">20 mg/día</td><td>c/12h ac</td><td>Tab 5 mg · Cuadro básico</td><td style="font-size:11px;color:var(--gray-600);color:var(--r);font-weight:600;">CONTRAINDICADA en anciano mayor 70, IRC, hepatopatía.</td></tr>
+        <tr><td><span style="background:#5b21b6;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">SU</span></td><td class="dn">Glibenclamida</td><td>2.5 mg</td><td class="dm">20 mg/día</td><td>c/12h ac</td><td>Tab 5 mg · IMSS</td><td style="font-size:11px;color:var(--gray-600);color:var(--r);font-weight:600;">CONTRAINDICADA en anciano mayor 70, IRC, hepatopatía.</td></tr>
         <tr><td><span style="background:#374151;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">TZD</span></td><td class="dn">Pioglitazona</td><td>15-30 mg</td><td class="dm">45 mg/día</td><td>c/24h</td><td>Tab 15, 30, 45 mg</td><td style="font-size:11px;color:var(--gray-600);">Hígado graso. Retención líquidos. CI en IC.</td></tr>
         <tr><td><span style="background:#374151;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">Glinida</span></td><td class="dn">Repaglinida</td><td>0.5 mg</td><td class="dm">16 mg/día</td><td>c/8h solo si come</td><td>Tab 0.5, 1, 2 mg</td><td style="font-size:11px;color:var(--gray-600);">Horario irregular de comidas. Solo tomar si va a comer.</td></tr>
         <tr><td><span style="background:#374151;color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">iAlfa-gluc</span></td><td class="dn">Acarbosa</td><td>25 mg</td><td class="dm">300 mg/día</td><td>c/8h con primer bocado</td><td>Tab 50, 100 mg</td><td style="font-size:11px;color:var(--gray-600);">Glucosa postprandial. Sin hipoglucemia. Flatulencia frecuente.</td></tr>
@@ -412,11 +460,11 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
         <tr><td class="dn">Glargina U-300 (Toujeo)</td><td>Basal ultra</td><td>6h</td><td>Sin pico</td><td>Mayor de 36h</td><td>Misma hora cada día</td><td>Pluma 1.5 mL (450 U)</td></tr>
         <tr><td class="dn">Degludec (Tresiba)</td><td>Basal ultra</td><td>1h</td><td>Sin pico</td><td>Mayor de 42h</td><td>Flexible — hasta 8h sin perder efecto</td><td>Pluma FlexTouch 100 y 200 UI/mL</td></tr>
         <tr><td class="dn">Detemir (Levemir)</td><td>Basal</td><td>1-2h</td><td>Relativo</td><td>12-24h (dosis-dependiente)</td><td>1-2 veces al día</td><td>Pluma FlexPen 3 mL</td></tr>
-        <tr><td class="dn">NPH (Humulin N)</td><td>Intermedia</td><td>1-2h</td><td>4-10h</td><td>12-18h</td><td>30 min antes de comer · Mezclar bien</td><td>Frasco 10 mL · Cuadro básico</td></tr>
+        <tr><td class="dn">NPH (Humulin N)</td><td>Intermedia</td><td>1-2h</td><td>4-10h</td><td>12-18h</td><td>30 min antes de comer · Mezclar bien</td><td>Frasco 10 mL · IMSS</td></tr>
         <tr><td class="dn">Lispro (Humalog)</td><td>Análogo rápido</td><td>10-15 min</td><td>1-2h</td><td>3-5h</td><td>Inmediatamente antes de comer</td><td>Pluma KwikPen · Frasco 10 mL</td></tr>
         <tr><td class="dn">Aspart (NovoRapid)</td><td>Análogo rápido</td><td>10-20 min</td><td>1-3h</td><td>3-5h</td><td>5-10 min antes de comer</td><td>Pluma FlexPen · Frasco 10 mL</td></tr>
-        <tr><td class="dn">Regular (Humulin R)</td><td>Humana rápida</td><td>30 min</td><td>2-4h</td><td>6-8h</td><td>30 min ANTES de comer</td><td>Frasco 10 mL · Cuadro básico</td></tr>
-        <tr><td class="dn">NPH/Regular 70/30</td><td>Premezclada</td><td>30 min</td><td>2-8h bifásico</td><td>10-16h</td><td>30 min antes desayuno y cena</td><td>Frasco 10 mL · Cuadro básico</td></tr>
+        <tr><td class="dn">Regular (Humulin R)</td><td>Humana rápida</td><td>30 min</td><td>2-4h</td><td>6-8h</td><td>30 min ANTES de comer</td><td>Frasco 10 mL · IMSS</td></tr>
+        <tr><td class="dn">NPH/Regular 70/30</td><td>Premezclada</td><td>30 min</td><td>2-8h bifásico</td><td>10-16h</td><td>30 min antes desayuno y cena</td><td>Frasco 10 mL · IMSS</td></tr>
       </tbody>
     </table></div>
 
@@ -456,13 +504,62 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
     <div style="background:var(--gray-100);border-left:4px solid #6b7280;border-radius:var(--rs);padding:12px;">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:6px;">Esquema 4 — Premezclada 70/30 · Simplificado</div>
       <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
-        <strong>Cuándo:</strong> Recursos limitados (disponible en cuadro básico). Paciente con horario fijo de comidas. Anciano con apoyo familiar.<br>
+        <strong>Cuándo:</strong> Recursos limitados (disponible en IMSS). Paciente con horario fijo de comidas. Anciano con apoyo familiar.<br>
         <strong>Dosis:</strong> 2/3 antes del desayuno + 1/3 antes de la cena. Inicio: 0.3-0.4 U/kg/día.<br>
         <strong>Ejemplo 70 kg:</strong> 28 U/día → 18-20 U antes desayuno + 8-10 U antes cena (30 min antes)<br>
         <strong>Limitación:</strong> Horario de comidas debe ser fijo. Mayor riesgo de hipoglucemia entre comidas.
       </div>
     </div>
   </div></div>
+  </div></div>
+
+  <!-- TITULACION Y ESCALAMIENTO DE INSULINA -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">📈</span><span class="st">Insulina: cómo titular y cuándo escalar</span><span class="sg">⌄</span></div>
+  <div class="sb hidden">
+    <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">⭐</span><div><div class="at">Preferir GLP-1 RA antes o junto a la insulina</div>Los GLP-1 RA logran control con menos peso y menos hipoglucemia. Considerar combinaciones fijas: <strong>iGlarLixi</strong> (glargina + lixisenatida) o <strong>IDegLira</strong> (degludec + liraglutida).</div></div>
+
+    <div style="background:var(--gl);border-left:4px solid var(--gm);border-radius:var(--rs);padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px;">1 · Cuándo iniciar insulina</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        HbA1c mayor o igual a 10% &middot; Glucosa mayor o igual a 300 mg/dL con síntomas &middot; Catabolismo o pérdida de peso involuntaria &middot; Falla a orales a dosis máximas.
+      </div>
+    </div>
+
+    <div style="background:var(--bl);border-left:4px solid var(--bm);border-radius:var(--rs);padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--b);margin-bottom:6px;">2 · Basal — iniciar y titular (regla 2-0-2)</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        <strong>Iniciar:</strong> 10 U o 0.1-0.2 U/kg por la noche.<br>
+        <strong>Titulación 2-0-2:</strong> +2 U cada 3 días si el ayuno está mayor de 130 mg/dL &middot; -2 U si el ayuno está menor de 80 mg/dL o hay hipoglucemia.<br>
+        <strong>Meta de ayuno:</strong> 80-130 mg/dL. Mantener metformina e iSGLT-2.
+      </div>
+    </div>
+
+    <div style="background:var(--al);border-left:4px solid var(--am);border-radius:var(--rs);padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--a);margin-bottom:6px;">3 · Sobrebasalización — cuándo NO seguir subiendo la basal</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        Señales de que la basal ya no es la solución:<br>
+        · Dosis basal mayor de 0.5 U/kg/día &middot; Ayuno en meta pero HbA1c aún alta.<br>
+        · Diferencia glucosa noche-mañana mayor de 50 mg/dL &middot; Hipoglucemias.<br>
+        <strong>Conducta:</strong> NO subir más la basal → agregar insulina prandial o intensificar el GLP-1 RA.
+      </div>
+    </div>
+
+    <div style="background:var(--bl);border-left:4px solid var(--bm);border-radius:var(--rs);padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--b);margin-bottom:6px;">4 · Basal-plus — agregar 1 bolo</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        <strong>Agregar:</strong> 1 bolo (lispro/aspart) de 4 U, o el 10% de la basal, o 0.1 U/kg, en la comida de mayor pico.<br>
+        <strong>Titular:</strong> +1-2 U hasta que la glucosa 2 h posprandial quede menor de 180 mg/dL.
+      </div>
+    </div>
+
+    <div style="background:var(--gray-100);border-left:4px solid #6b7280;border-radius:var(--rs);padding:12px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--gray-600);margin-bottom:6px;">5 · Basal-bolo completo</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        Si persiste fuera de meta con basal-plus → <strong>3 bolos</strong>.<br>
+        <strong>DTD:</strong> 0.3-0.5 U/kg/día (obeso 0.5-1.0) &middot; <strong>50% basal + 50% en 3 bolos.</strong><br>
+        <strong>Factor de corrección:</strong> 1800 ÷ DTD = mg/dL que baja 1 U.
+      </div>
+    </div>
   </div></div>
 </div>
 
@@ -524,7 +621,37 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
     <div id="esq-out"></div>
   </div></div>
 
-</div>
+  <!-- BASAL-BOLO-CORRECCION Y TRANSICION IV -> SC -->
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛠️</span><span class="st">Basal-bolo-corrección y transición de insulina IV a SC</span><span class="sg open">⌄</span></div>
+  <div class="sb">
+    <div class="alert a-r"><span class="ai">🚫</span><div><div class="at">No usar solo la escala móvil</div>La escala móvil (sliding scale) como <strong>único</strong> método es reactiva e insuficiente. Usar siempre <strong>basal-bolo-corrección</strong>.</div></div>
+
+    <div style="background:var(--bl);border-left:4px solid var(--bm);border-radius:var(--rs);padding:12px;margin:10px 0 8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--b);margin-bottom:6px;">Dosis total diaria hospitalaria</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        <strong>DTD:</strong> 0.3-0.5 U/kg/día &middot; usar <strong>0.2-0.3 U/kg/día</strong> si es anciano, ERC o insulin-naive.<br>
+        Repartir: <strong>50% basal + 50% prandial</strong> dividido en 3 comidas + <strong>corrección</strong>.
+      </div>
+    </div>
+
+    <div style="background:var(--al);border-left:4px solid var(--am);border-radius:var(--rs);padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--a);margin-bottom:6px;">Paciente en ayuno / NPO</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        Dejar <strong>solo la basal</strong> (50-80% de la habitual) + corrección. <strong>Suspender los bolos prandiales</strong> mientras no coma.
+      </div>
+    </div>
+
+    <div style="background:var(--gl);border-left:4px solid var(--gm);border-radius:var(--rs);padding:12px;margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--g);margin-bottom:6px;">Transición de infusión IV a SC</div>
+      <div style="font-size:12px;color:var(--gray-700);line-height:1.7;">
+        <strong>Estimar el requerimiento:</strong> promedio de las últimas 6 h estables × 4, o el 80% del total IV de 24 h.<br>
+        <strong>Traslape clave:</strong> aplicar la <strong>basal SC 2 h antes</strong> de suspender la infusión IV, para evitar el rebote hiperglucémico y la cetoacidosis.
+      </div>
+    </div>
+
+    <div class="alert a-i"><span class="ai">🎯</span><div><div class="at">Metas glucémicas intrahospitalarias</div>UCI: 140-180 mg/dL &middot; Piso: preprandial menor de 140 / aleatoria menor de 180 mg/dL &middot; Evitar glucosa menor de 70 mg/dL.</div></div>
+  </div></div>
+
 </div>
 
 <!-- ALGORITMO -->
@@ -833,22 +960,64 @@ function calcH() {
   }
 }
 
+var _pcId = 0;
+function findFarmByName(nombre) {
+  if (typeof FARMACOS_DM === 'undefined') return null;
+  var base = nombre.split('(')[0].replace(/\s+/g, ' ').trim().toLowerCase();
+  for (var i = 0; i < FARMACOS_DM.length; i++) {
+    var fn = FARMACOS_DM[i].n.toLowerCase();
+    if (base === fn || base.indexOf(fn) === 0 || fn.indexOf(base) === 0) return FARMACOS_DM[i];
+  }
+  return null;
+}
+function togPCard(id) {
+  var b = document.getElementById(id), a = document.getElementById(id + '-ar');
+  if (!b) return;
+  if (b.style.display === 'none') { b.style.display = 'block'; if (a) a.style.transform = 'rotate(180deg)'; }
+  else { b.style.display = 'none'; if (a) a.style.transform = 'rotate(0deg)'; }
+}
 function mkCard(linea, nombre, inicio, max, intervalo, pres, nota, c) {
   var hc = {e1:'#0a5c45', e2:'#0c3b6e', e3:'#7a4a00', e4:'#7b1c1c'};
-  var bc = {e1:'rgba(10,92,69,0.07)', e2:'rgba(12,59,110,0.07)', e3:'rgba(122,74,0,0.07)', e4:'rgba(123,28,28,0.07)'};
   var h = hc[c] || '#0a5c45';
-  var b = bc[c] || 'rgba(10,92,69,0.07)';
-  return '<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:8px;overflow:hidden;">'
-    + '<div style="background:' + h + ';color:#fff;padding:9px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
-    + '<span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;">' + linea + '</span>'
-    + '<span style="font-size:13px;font-weight:700;">' + nombre + '</span></div>'
-    + '<div style="padding:10px 12px;">'
-    + '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Dosis inicio</span><span style="font-weight:600;">' + inicio + '</span></div>'
-    + '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Dosis máxima</span><span style="font-weight:700;color:#c0392b;">' + max + '</span></div>'
-    + '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;">Intervalo</span><span style="font-weight:600;">' + intervalo + '</span></div>'
-    + '<div style="background:#f9fafb;border-radius:6px;padding:6px 10px;margin-top:6px;font-size:11px;color:#6b7280;"><strong style="color:' + h + ';">Presentación MX:</strong> ' + pres + '</div>'
-    + '<div style="background:' + b + ';border-radius:6px;padding:7px 10px;margin-top:6px;font-size:11px;color:#374151;line-height:1.5;">' + nota + '</div>'
-    + '</div></div>';
+  var tint = h + '14', tint2 = h + '11';
+  var f = findFarmByName(nombre);
+  var id = 'pc' + (_pcId++);
+  function row(l, v, red) {
+    return '<div style="display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;"><span style="color:#6b7280;flex-shrink:0;">' + l + '</span><span style="font-weight:600;text-align:right;' + (red ? 'color:#c0392b;' : 'color:#111827;') + '">' + v + '</span></div>';
+  }
+  var s = '<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;margin-bottom:8px;overflow:hidden;">';
+  s += '<div onclick="togPCard(\'' + id + '\')" style="background:' + h + ';color:#fff;padding:9px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;">'
+    + '<span style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;">' + linea + '</span>'
+    + '<span style="font-size:13px;font-weight:700;flex:1;">' + nombre + '</span>'
+    + '<span id="' + id + '-ar" style="font-size:16px;color:rgba(255,255,255,0.8);transition:transform .15s;">&#8964;</span></div>';
+  s += '<div id="' + id + '" style="display:none;">';
+  // Bloque DOSIS destacado
+  s += '<div style="background:' + tint + ';padding:11px 13px;border-bottom:1px solid #f3f4f6;">'
+    + '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:' + h + ';letter-spacing:.4px;margin-bottom:4px;">Dosis</div>'
+    + '<div style="font-size:15px;font-weight:800;color:' + h + ';">' + inicio + '</div>'
+    + '<div style="font-size:12px;color:#374151;margin-top:3px;"><b>Máxima:</b> <span style="color:#c0392b;font-weight:700;">' + max + '</span> &middot; <b>Intervalo:</b> ' + intervalo + '</div>'
+    + '<div style="font-size:11px;color:#6b7280;margin-top:5px;"><b style="color:' + h + ';">Presentación MX:</b> ' + pres + '</div></div>';
+  // Filas ricas desde la ficha del fármaco
+  if (f) {
+    s += '<div style="padding:4px 13px;">';
+    if (f.fda) s += row('FDA/Embarazo', f.fda);
+    if (f.ci) s += row('Contraindicaciones', f.ci, true);
+    if (f.ea) s += row('Efectos adversos', '&#9888; ' + f.ea);
+    s += '</div>';
+  }
+  // Nota del escalón (contexto)
+  if (nota) s += '<div style="background:' + tint2 + ';padding:9px 13px;font-size:12px;color:#374151;line-height:1.55;"><b style="color:' + h + ';">En este escalón:</b> ' + nota + '</div>';
+  // Nota clínica desde la ficha
+  if (f) {
+    s += '<div style="background:#f9fafb;border-top:1px solid #f3f4f6;padding:10px 13px;font-size:12px;color:#374151;line-height:1.6;">'
+      + '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:' + h + ';margin-bottom:5px;">Nota clínica</div>'
+      + '<div style="margin-bottom:5px;"><b>Mecanismo:</b> ' + f.cl + '</div>';
+    if (f.intx) s += '<div style="margin-bottom:5px;"><b>Interacciones:</b> ' + f.intx + '</div>';
+    if (f.ev) s += '<div><b>Evidencia:</b> ' + f.ev + '</div>';
+    s += '</div>';
+  }
+  s += '</div></div>';
+  return s;
 }
 
 function mkE(label, titulo, c, cards) {
@@ -934,7 +1103,7 @@ var PERFILES = {
           'Pluma FlexTouch 100 UI/mL o 200 UI/mL',
           'Mayor duración de acción (42h+). Menor hipoglucemia nocturna que glargina. Horario flexible. Preferida en anciano. Iniciar al 80% de dosis de glargina previa.', 'e4')
       + mkCard('Si recursos limitados', 'Insulina NPH', '0.1-0.2 U/kg antes de cenar', 'Máx 0.5 U/kg/día', 'c/12h o c/24h antes de cenar',
-          'Frasco 10 mL 100 UI/mL · Cuadro básico institucional',
+          'Frasco 10 mL 100 UI/mL · Cuadro básico IMSS',
           'Bajo costo. Mayor hipoglucemia nocturna que análogos. Mezclar bien antes de inyectar (rodar 10 veces). Pico a las 4-10h.', 'e4'))
     + mkN('Con basal optimizada y glucosa ayuno en meta: si HbA1c persiste mayor de 7% → agregar 1 bolo prandial (lispro o aspart 4 U antes de la comida más grande). Ver sección de insulinas para esquemas completos.');
   },
@@ -1033,7 +1202,7 @@ var PERFILES = {
           'Pluma Solostar 100 UI/mL',
           'ERC reduce eliminación renal de insulina → acumulación → mayor riesgo de hipoglucemia. Iniciar siempre con dosis bajas y titular despacio. Monitoreo glucémico frecuente.', 'e4')
       + mkCard('Alternativa en ERC avanzada', 'Insulina NPH + Regular', 'NPH 0.1 U/kg/noche · Regular 0.05 U/kg ac', 'Ajustar por glucemia', 'NPH c/12h · Regular c/8h ac',
-          'Frasco 10 mL · Cuadro básico institucional',
+          'Frasco 10 mL · Cuadro básico IMSS',
           'Opciones de bajo costo. Mayor riesgo de hipoglucemia que análogos. Disponibles en primer nivel. Reducir dosis en ERC avanzada.', 'e4'))
     + mkN('EVITAR en ERC: Metformina si TFG menor 30 · Glibenclamida si TFG menor 30 · iSGLT-2 si TFG menor 20 para efecto glucémico (pueden continuar para efecto renal hasta TFG 20) · Espironolactona si K+ mayor 5.0.');
   },
@@ -1093,7 +1262,7 @@ var PERFILES = {
           'Pluma FlexTouch 100 UI/mL · 200 UI/mL',
           'ADA 2026 prefiere degludec en anciano: menor hipoglucemia nocturna, horario flexible (hasta 8h sin perder efecto). Educar siempre al familiar o cuidador para reconocer hipoglucemia.', 'e3')
       + mkCard('Alternativa de bajo costo', 'Insulina NPH', '0.1 U/kg antes de cenar', 'Máx 0.3 U/kg/día en anciano', 'c/24h antes de cenar',
-          'Frasco 10 mL · Cuadro básico institucional',
+          'Frasco 10 mL · Cuadro básico IMSS',
           'Mayor riesgo de hipoglucemia nocturna que análogos. Siempre educar a familiar. Monitoreo de glucosa frecuente. Reducir dosis si apetito disminuye.', 'e3'))
     + mkN('En anciano mayor de 80 años o frágil: meta HbA1c 7.5-8.5%. Simplificar el esquema terapéutico. La polifarmacia es el enemigo. La hipoglucemia mata más rápido que la hiperglucemia moderada.');
   },
@@ -1145,107 +1314,252 @@ window.addEventListener('load', function() {
   renderAlgoStep('start');
   showComp('retino', document.querySelector('#tab-comp .pchip.on'));
   showEsq('nph', document.querySelector('#tab-txh .pchip.on'));
+  calcHbA1c();
 });
 
 var FARMACOS_DM=[
-  {n:"Metformina",m:"Glucophage · generico · Cuadro basico",cl:"Biguanida -- inhibe producción hepática de glucosa via AMPK",pi:"Primera linea sin comorbilidades · Suspender antes de contraste IV",co:"#0a5c45",
-   ini:"500 mg c/12h con alimentos",obj:"1700-2550 mg/dia · Titular cada 2 semanas",iv:"c/8-12h con alimentos · LP permite c/24h",pr:"Tab 500 mg · Tab 850 mg · Tab LP 500-1000 mg · Cuadro basico",
+  {n:"Metformina",fda:"Cat B &middot; usable en el embarazo (algunos prefieren insulina) &middot; compatible con lactancia",intx:"Contraste yodado IV (suspender 48 h por riesgo de acidosis lactica) &middot; alcohol (acidosis lactica) &middot; cimetidina, ranitidina y dolutegravir aumentan sus niveles &middot; diureticos y AINE reducen la TFG",cat:"biguanida",m:"Glucophage · generico · Cuadro basico IMSS",cl:"Biguanida -- inhibe producción hepática de glucosa via AMPK",pi:"Primera linea sin comorbilidades · Suspender antes de contraste IV",co:"#0a5c45",
+   ini:"500 mg c/12h con alimentos",obj:"1700-2550 mg/dia · Titular cada 2 semanas",iv:"c/8-12h con alimentos · LP permite c/24h",dur:"Cronico/indefinido mientras se mantenga el control y la tolerancia",pr:"Tab 500 mg · Tab 850 mg · Tab LP 500-1000 mg · Cuadro basico IMSS",
    ind:"DM2 sin ECV, IC ni ERC · Primera linea ADA 2025 sin comorbilidades · Coadyuvante con cualquier otro antidiabetico",
    ci:"TFG menor de 30 · Hepatopatia severa · Alcoholismo · Insuficiencia respiratoria grave · Suspender 48h antes de contraste IV",
    prec:"Suspender 48h antes de contraste yodado IV · Reducir dosis si TFG 30-60 · Deficit de vitamina B12 con uso prolongado · Sin hipoglucemia como monoterapia · Nausea inicial cede con titulacion lenta",
+   ea:"Molestias gastrointestinales frecuentes: nausea, diarrea, dolor abdominal, sabor metalico (mejoran con titulacion lenta y presentacion LP) · Deficit de vitamina B12 a largo plazo · Muy rara: acidosis lactica",
    tit:"Convencional: iniciar 500 mg c/12h con comidas · Semana 2: 500 mg c/8h · Semana 4: 850-1000 mg c/12h · Meta: 1700-2550 mg/dia. LP (liberacion prolongada): iniciar 500-1000 mg c/24h con la cena · Escalar a 1500-2000 mg c/24h · Misma eficacia, significativamente menos nausea y diarrea · PREFERIR LP en pacientes con efectos GI o para mejorar adherencia.",
    ev:"ADA 2025: primera linea sin comorbilidades. Reduce HbA1c 1-2%. Evidencia CV en UKPDS. Sin hipoglucemia. Bajo costo."},
-  {n:"Empagliflozina",m:"Jardiance",cl:"Inhibidor SGLT-2 -- glucosuria independiente de insulina",pi:"Primera linea en DM2 con IC o ERC -- cardioprotector y nefroprotector",co:"#0c3b6e",
-   ini:"10 mg c/24h por la manana",obj:"10-25 mg c/24h",iv:"c/24h manana · con o sin alimentos",pr:"Tab 10 mg · Tab 25 mg",
+  {n:"Empagliflozina",fda:"Evitar en el embarazo (suspender al confirmarlo) &middot; no recomendada en lactancia",intx:"Diureticos (hipovolemia e hipotension) &middot; potencia a la insulina y a las sulfonilureas: reducir su dosis para evitar hipoglucemia &middot; litio (puede bajar sus niveles)",cat:"isglt2",m:"Jardiance",cl:"Inhibidor SGLT-2 -- glucosuria independiente de insulina",pi:"Primera linea en DM2 con IC o ERC -- cardioprotector y nefroprotector",co:"#0c3b6e",
+   ini:"10 mg c/24h por la manana",obj:"10-25 mg c/24h",iv:"c/24h manana · con o sin alimentos",dur:"Cronico/indefinido; el beneficio cardiorrenal se mantiene solo mientras se use",pr:"Tab 10 mg · Tab 25 mg",
    ind:"DM2 con IC (EMPEROR-Reduced) · DM2 con ERC (EMPA-KIDNEY) · DM2 con ECV o riesgo CV alto",
    ci:"TFG menor de 20 · Infecciones urinarias recurrentes · Cetoacidosis diabetica · Embarazo",
    prec:"Cetoacidosis euglicemica (rara pero grave -- glucosa puede ser normal) · Candidiasis genital · Suspender 3-4 dias antes de cirugia mayor · Gangrena de Fournier (muy raro)",
+   ea:"Poliuria y sed · Candidiasis genital e infecciones urinarias · Depleccion de volumen e hipotension (sobre todo con diureticos) · Leve aumento inicial de creatinina reversible",
    tit:"10 mg c/24h. Si necesita mas control glucemico: 25 mg. Para efecto cardiorrenal: 10 mg es suficiente.",
    ev:"EMPEROR-Reduced: reduce 25% muerte CV + hospitalizacion por IC. EMPA-KIDNEY: reduce 28% progresión ERC. ADA 2025: primera linea en DM2 con IC o ERC."},
-  {n:"Dapagliflozina",m:"Forxiga",cl:"Inhibidor SGLT-2 -- aprobada en IC incluso sin DM",pi:"Primera linea en DM2 con IC o ERC -- unica aprobada en IC sin DM",co:"#0c3b6e",
-   ini:"10 mg c/24h por la manana",obj:"10 mg c/24h (dosis unica)",iv:"c/24h manana",pr:"Tab 5 mg · Tab 10 mg",
+  {n:"Dapagliflozina",fda:"Evitar en el embarazo &middot; no recomendada en lactancia",intx:"Diureticos (hipovolemia) &middot; ajustar insulina y sulfonilureas por hipoglucemia &middot; rifampicina puede reducir su exposicion",cat:"isglt2",m:"Forxiga",cl:"Inhibidor SGLT-2 -- aprobada en IC incluso sin DM",pi:"Primera linea en DM2 con IC o ERC -- unica aprobada en IC sin DM",co:"#0c3b6e",
+   ini:"10 mg c/24h por la manana",obj:"10 mg c/24h (dosis unica)",iv:"c/24h manana",dur:"Cronico/indefinido; el beneficio cardiorrenal se mantiene solo mientras se use",pr:"Tab 5 mg · Tab 10 mg",
    ind:"DM2 con ICFEr (DAPA-HF: aprobada incluso sin DM) · DM2 con ERC (DAPA-CKD) · DM2 con ECV",
    ci:"TFG menor de 25 · Infecciones urinarias recurrentes · Cetoacidosis diabetica · Embarazo",
    prec:"Candidiasis genital · Infecciones urinarias · Suspender antes de cirugia mayor · Cetoacidosis euglicemica",
+   ea:"Poliuria y sed · Candidiasis genital e infecciones urinarias · Depleccion de volumen e hipotension · Leve aumento inicial de creatinina reversible",
    tit:"10 mg c/24h. Dosis unica -- no escalar.",
    ev:"DAPA-HF: reduce 26% muerte CV + empeoramiento IC. DAPA-CKD: reduce 39% progresión ERC. ADA 2025: primera linea en DM2 con IC o ERC."},
-  {n:"Semaglutida SC",m:"Ozempic · pluma semanal",cl:"Agonista GLP-1 -- estimula insulina de manera glucosa-dependiente",pi:"Primera linea en DM2 con ECV o necesidad de pérdida de peso",co:"#7a4a00",
-   ini:"0.25 mg SC c/7 dias x 4 semanas",obj:"0.5-1 mg/semana · Maximo 2 mg/semana",iv:"SC c/7 dias · mismo dia · cualquier zona",pr:"Pluma Ozempic 0.25-2 mg",
+  {n:"Canagliflozina",fda:"Evitar en el embarazo &middot; no recomendada en lactancia",intx:"Diureticos (hipovolemia) &middot; ajustar insulina y sulfonilureas &middot; inductores (rifampicina, fenitoina) reducen su efecto &middot; puede aumentar la digoxina",cat:"isglt2",m:"Invokana",cl:"Inhibidor SGLT-2 -- glucosuria con beneficio cardiorrenal de clase",pi:"Beneficio renal (CREDENCE) -- vigilar riesgo de amputacion (CANVAS)",co:"#0c3b6e",
+   ini:"100 mg c/24h antes del primer alimento",obj:"100-300 mg c/24h",iv:"c/24h por la manana antes del desayuno",dur:"Cronico/indefinido; suspender si hay lesion en pie o proceso que aumente el riesgo de amputacion",pr:"Tab 100 mg · Tab 300 mg (Invokana)",
+   ind:"DM2 con ERC (CREDENCE: reduce progresion renal) · DM2 con ECV o riesgo CV alto (CANVAS) · Beneficio cardiorrenal de clase iSGLT-2",
+   ci:"TFG menor de 30 para inicio · Cetoacidosis diabetica · Embarazo · Antecedente de amputacion no traumatica (valorar riesgo)",
+   prec:"Cetoacidosis euglicemica · Candidiasis genital · Riesgo aumentado de amputacion de miembros inferiores en CANVAS -- vigilar pies y suspender ante ulcera o infeccion · Gangrena de Fournier (muy raro)",
+   ea:"Poliuria, candidiasis genital e infecciones urinarias · Depleccion de volumen · Senal de amputacion de dedos/pie en CANVAS · Leve aumento inicial de creatinina reversible",
+   tit:"100 mg c/24h con el primer alimento. Escalar a 300 mg si TFG mayor de 60 y requiere mas control glucemico.",
+   ev:"CANVAS: reduce MACE pero con senal de aumento de amputaciones. CREDENCE: reduce 30% progresion renal. ADA 2025: opcion cardiorrenal dentro de la clase iSGLT-2."},
+  {n:"Semaglutida SC",fda:"Contraindicada en el embarazo &mdash; suspender al menos 2 meses antes de concebir &middot; evitar en lactancia",intx:"Retrasa el vaciamiento gastrico (puede alterar la absorcion de orales) &middot; reducir sulfonilurea o insulina al combinar por hipoglucemia &middot; NO combinar con iDPP-4",cat:"incretina",m:"Ozempic · pluma semanal",cl:"Agonista GLP-1 -- estimula insulina de manera glucosa-dependiente",pi:"Primera linea en DM2 con ECV o necesidad de pérdida de peso",co:"#7a4a00",
+   ini:"0.25 mg SC c/7 dias x 4 semanas",obj:"0.5-1 mg/semana · Maximo 2 mg/semana",iv:"SC c/7 dias · mismo dia · cualquier zona",dur:"Cronico/indefinido; suspender si pancreatitis o intolerancia GI persistente",pr:"Pluma Ozempic 0.25-2 mg",
    ind:"DM2 con ECV establecida (SUSTAIN-6: reduce MACE 26%) · DM2 con obesidad · Sin control con metformina",
    ci:"Carcinoma medular de tiroides personal o familiar · MEN-2 · Gastroparesia · Embarazo",
    prec:"Nausea al inicio -- titular MUY despacio · No combinar con iDPP-4 · Pancreatitis (muy raro)",
+   ea:"Nausea, vomito, diarrea y estrenimiento (dosis-dependientes, mejoran con el tiempo) · Saciedad precoz y disminucion del apetito · Reacciones en el sitio de inyeccion",
    tit:"0.25 mg/semana x4. Subir a 0.5 mg x4. Luego 1 mg. Maximo 2 mg/semana. Titular despacio.",
    ev:"SUSTAIN-6: reduce 26% MACE. ADA 2025: primera linea en DM2 con ECV. Mayor pérdida de peso (5-10%)."},
-  {n:"Tirzepatida",m:"Mounjaro",cl:"Agonista dual GIP/GLP-1 -- mayor pérdida de peso de todos los antidiabeticos",pi:"Primera eleccion en DM2 con obesidad -- hasta 20% de pérdida de peso",co:"#7a4a00",
-   ini:"2.5 mg SC c/7 dias x 4 semanas",obj:"5-10 mg/semana · Maximo 15 mg/semana",iv:"SC c/7 dias",pr:"Pluma Mounjaro 2.5 / 5 / 7.5 / 10 / 12.5 / 15 mg",
+  {n:"Semaglutida oral",fda:"Contraindicada en el embarazo &mdash; suspender al menos 2 meses antes de concebir &middot; evitar en lactancia",intx:"El ayuno estricto condiciona su absorcion; separar de otros orales &middot; retrasa el vaciamiento gastrico &middot; reducir sulfonilurea o insulina &middot; la levotiroxina puede requerir ajuste &middot; NO con iDPP-4",cat:"incretina",m:"Rybelsus · tableta diaria",cl:"Agonista GLP-1 oral -- unico GLP-1 en presentacion en tableta",pi:"Alternativa oral al GLP-1 inyectable -- exige ayuno estricto para absorberse",co:"#7a4a00",
+   ini:"3 mg c/24h x 30 dias (dosis de inicio, no terapeutica)",obj:"7-14 mg c/24h",iv:"c/24h en ayuno, con un sorbo de agua sola (maximo 120 mL), 30 min antes del primer alimento, bebida u otro medicamento",dur:"Cronico/indefinido; suspender si pancreatitis o intolerancia GI persistente",pr:"Tab 3 mg · Tab 7 mg · Tab 14 mg (Rybelsus)",
+   ind:"DM2 sin control con metformina · Preferencia por la via oral · Beneficio de peso y perfil CV de clase GLP-1",
+   ci:"Carcinoma medular de tiroides personal o familiar · MEN-2 · Gastroparesia · Embarazo",
+   prec:"Absorcion muy dependiente del ayuno: tomar con el estomago vacio, agua sola y esperar 30 min · Nausea al inicio -- titular despacio · No combinar con iDPP-4",
+   ea:"Nausea, vomito, diarrea y disminucion del apetito · Reflujo y saciedad precoz · Reduccion de la absorcion si no se respeta el ayuno",
+   tit:"3 mg/dia x 30 dias (solo para tolerancia) · Subir a 7 mg/dia · Si requiere mas control: 14 mg/dia. Siempre en ayuno con agua sola.",
+   ev:"PIONEER: eficacia comparable a los GLP-1 inyectables de dosis baja-media. ADA 2025: opcion oral dentro de la clase GLP-1."},
+  {n:"Tirzepatida",fda:"Contraindicada en el embarazo &mdash; suspender al menos 2 meses antes de concebir &middot; puede reducir la eficacia de anticonceptivos orales (usar metodo de barrera 4 semanas tras cada aumento) &middot; evitar en lactancia",intx:"Retrasa el vaciamiento gastrico &middot; reducir sulfonilurea o insulina al combinar &middot; puede disminuir la absorcion de anticonceptivos orales &middot; NO con iDPP-4",cat:"incretina",m:"Mounjaro",cl:"Agonista dual GIP/GLP-1 -- mayor pérdida de peso de todos los antidiabeticos",pi:"Primera eleccion en DM2 con obesidad -- hasta 20% de pérdida de peso",co:"#7a4a00",
+   ini:"2.5 mg SC c/7 dias x 4 semanas",obj:"5-10 mg/semana · Maximo 15 mg/semana",iv:"SC c/7 dias",dur:"Cronico/indefinido; suspender si pancreatitis o intolerancia GI persistente",pr:"Pluma Mounjaro 2.5 / 5 / 7.5 / 10 / 12.5 / 15 mg",
    ind:"DM2 con obesidad (SURPASS: hasta -20% peso) · DM2 sin control con metformina · ADA 2025: primera eleccion en DM2+obesidad",
    ci:"Carcinoma medular de tiroides · MEN-2 · Gastroparesia · Embarazo",
    prec:"Mayor nausea que semaglutida -- titular MUY despacio · Reducir SU e insulina al combinar",
+   ea:"Nausea, vomito, diarrea y estrenimiento (mayores que con semaglutida) · Disminucion marcada del apetito · Reacciones en el sitio de inyeccion",
    tit:"2.5 mg/semana x4. Subir 2.5 mg cada 4 semanas. Dosis efectiva usual 5-10 mg.",
    ev:"SURPASS-2: superior a semaglutida en HbA1c y peso. Hasta -2.3% HbA1c y -20% peso. ADA 2025: primera eleccion en DM2+obesidad."},
-  {n:"Liraglutida",m:"Victoza · pluma diaria",cl:"Agonista GLP-1 diario -- efecto CV demostrado",pi:"Primera linea en DM2 con ECV -- LEADER reduce muerte CV",co:"#7a4a00",
-   ini:"0.6 mg SC c/24h x 1 semana",obj:"1.2-1.8 mg/dia",iv:"SC c/24h misma hora",pr:"Pluma Victoza 6 mg/mL",
+  {n:"Liraglutida",fda:"Contraindicada en el embarazo &mdash; suspender antes de concebir &middot; evitar en lactancia",intx:"Retrasa el vaciamiento gastrico &middot; reducir sulfonilurea o insulina al combinar &middot; NO combinar con iDPP-4",cat:"incretina",m:"Victoza · pluma diaria",cl:"Agonista GLP-1 diario -- efecto CV demostrado",pi:"Primera linea en DM2 con ECV -- LEADER reduce muerte CV",co:"#7a4a00",
+   ini:"0.6 mg SC c/24h x 1 semana",obj:"1.2-1.8 mg/dia",iv:"SC c/24h misma hora",dur:"Cronico/indefinido; suspender si pancreatitis o intolerancia GI persistente",pr:"Pluma Victoza 6 mg/mL",
    ind:"DM2 con ECV establecida (LEADER: reduce MACE 13%) · Alternativa a semaglutida si se prefiere dosis diaria",
    ci:"Carcinoma medular de tiroides · MEN-2 · Gastroparesia · Embarazo",
    prec:"Nausea -- titular despacio · Pancreatitis (raro) · No combinar con iDPP-4",
+   ea:"Nausea, vomito, diarrea y estrenimiento (mejoran con el tiempo) · Disminucion del apetito · Reacciones en el sitio de inyeccion",
    tit:"0.6 mg/dia x1 semana. 1.2 mg/dia. Si sin respuesta en 4-8 semanas: 1.8 mg/dia.",
    ev:"LEADER: reduce 13% MACE. Primera GLP-1 con reducción de muerte CV. ADA 2025: primera linea en DM2 con ECV."},
-  {n:"Sitagliptina",m:"Januvia · generico",cl:"Inhibidor DPP-4 -- aumenta GLP-1 endogeno de manera glucosa-dependiente",pi:"Alternativa segura sin hipoglucemia -- ideal en anciano · Ajustar dosis en ERC",co:"#374151",
-   ini:"100 mg c/24h",obj:"100 mg c/24h · 50 mg si TFG 30-50 · 25 mg si TFG menor de 30",iv:"c/24h con o sin alimentos",pr:"Tab 25 mg · Tab 50 mg · Tab 100 mg",
+  {n:"Dulaglutida",fda:"Contraindicada en el embarazo &mdash; suspender al menos 2 meses antes de concebir &middot; evitar en lactancia",intx:"Retrasa el vaciamiento gastrico &middot; reducir sulfonilurea o insulina al combinar &middot; NO combinar con iDPP-4",cat:"incretina",m:"Trulicity · pluma semanal",cl:"Agonista GLP-1 semanal",pi:"Primera linea en DM2 con ECV o riesgo CV alto -- REWIND",co:"#7a4a00",
+   ini:"0.75 mg SC c/7 dias",obj:"1.5 mg/semana · hasta 4.5 mg/semana",iv:"SC c/7 dias el mismo dia, con o sin alimentos",dur:"Cronico/indefinido; suspender si pancreatitis o intolerancia GI persistente",pr:"Pluma Trulicity 0.75 / 1.5 / 3 / 4.5 mg",
+   ind:"DM2 con ECV o multiples factores de riesgo CV (REWIND: reduce MACE 12%) · DM2 sin control con metformina · Obesidad",
+   ci:"Carcinoma medular de tiroides · MEN-2 · Gastroparesia · Embarazo",
+   prec:"Nausea al inicio · No combinar con iDPP-4 · Reducir SU e insulina al combinar",
+   ea:"Nausea, vomito, diarrea y estrenimiento (mejoran con el tiempo) · Disminucion del apetito · Reacciones en el sitio de inyeccion",
+   tit:"0.75 mg/semana de inicio · Subir a 1.5 mg · Si requiere mas control: 3 y hasta 4.5 mg/semana cada 4 semanas.",
+   ev:"REWIND: reduce 12% MACE en prevencion primaria y secundaria. ADA 2025: primera linea en DM2 con ECV o riesgo CV alto."},
+  {n:"Sitagliptina",fda:"Datos limitados en el embarazo &mdash; evitar; preferir insulina &middot; evitar en lactancia",intx:"NO combinar con GLP-1 RA (mismo eje incretina) &middot; potencia a la insulina o sulfonilurea (ajustar) &middot; puede aumentar levemente la digoxina",cat:"idpp4",m:"Januvia · generico",cl:"Inhibidor DPP-4 -- aumenta GLP-1 endogeno de manera glucosa-dependiente",pi:"Alternativa segura sin hipoglucemia -- ideal en anciano · Ajustar dosis en ERC",co:"#374151",
+   ini:"100 mg c/24h",obj:"100 mg c/24h · 50 mg si TFG 30-50 · 25 mg si TFG menor de 30",iv:"c/24h con o sin alimentos",dur:"Cronico/indefinido mientras se mantenga el control y la tolerancia",pr:"Tab 25 mg · Tab 50 mg · Tab 100 mg",
    ind:"DM2 sin hipoglucemia como objetivo · Anciano · ERC (ajustable) · Intolerancia a otros agentes",
    ci:"DM tipo 1 · Cetoacidosis diabetica · Hipersensibilidad",
    prec:"Ajustar en ERC · Pancreatitis (raro) · Artralgia severa (raro) · No combinar con GLP-1 RA",
+   ea:"Generalmente bien tolerada · Nasofaringitis y cefalea · Rara: artralgia severa, pancreatitis, reacciones cutaneas y penfigoide ampolloso",
    tit:"100 mg c/24h. Sin titulacion. Ajustar segun TFG: 30-50 dar 50 mg; menor de 30 dar 25 mg.",
    ev:"Neutral en CV (TECOS). Sin hipoglucemia. Neutral en peso. Util en anciano y ERC. ADA 2025: alternativa cuando otros estan contraindicados."},
-  {n:"Glibenclamida",m:"Daonil · generico · Cuadro basico",cl:"Sulfonilurea -- estimula insulina independientemente de la glucosa",pi:"EVITAR en anciano mayor de 70 años -- hipoglucemia grave potencialmente fatal",co:"#7b1c1c",
-   ini:"2.5 mg c/24h con desayuno",obj:"5-10 mg/dia · Maximo 20 mg/dia",iv:"c/12-24h con alimentos",pr:"Tab 5 mg · Cuadro basico",
+  {n:"Linagliptina",fda:"Datos limitados en el embarazo &mdash; evitar; preferir insulina &middot; evitar en lactancia",intx:"NO combinar con GLP-1 RA &middot; inductores potentes (rifampicina) reducen su eficacia &middot; ajustar insulina o sulfonilurea asociadas",cat:"idpp4",m:"Trajenta",cl:"Inhibidor DPP-4 de eliminacion biliar -- no requiere ajuste renal",pi:"iDPP-4 de eleccion en ERC avanzada -- unica sin ajuste de dosis por TFG",co:"#374151",
+   ini:"5 mg c/24h",obj:"5 mg c/24h (dosis unica)",iv:"c/24h con o sin alimentos",dur:"Cronico/indefinido mientras se mantenga el control y la tolerancia",pr:"Tab 5 mg (Trajenta)",
+   ind:"DM2 con ERC de cualquier grado sin ajuste de dosis · Anciano · Sin hipoglucemia como objetivo",
+   ci:"DM tipo 1 · Cetoacidosis diabetica · Hipersensibilidad",
+   prec:"Sin ajuste renal por eliminacion biliar · Pancreatitis (raro) · No combinar con GLP-1 RA · Rara: penfigoide ampolloso",
+   ea:"Generalmente muy bien tolerada · Nasofaringitis · Rara: artralgia, pancreatitis, penfigoide ampolloso",
+   tit:"5 mg c/24h. Dosis unica, sin titulacion ni ajuste por TFG.",
+   ev:"CARMELINA y CAROLINA: neutral en CV y seguro en ERC. ADA 2025: iDPP-4 preferido en ERC avanzada por no requerir ajuste de dosis."},
+  {n:"Vildagliptina",fda:"Datos limitados en el embarazo &mdash; evitar; preferir insulina &middot; evitar en lactancia",intx:"NO combinar con GLP-1 RA &middot; precaucion con IECA (mayor riesgo de angioedema) &middot; ajustar insulina o sulfonilurea",cat:"idpp4",m:"Galvus · Galvus Met",cl:"Inhibidor DPP-4",pi:"iDPP-4 sin hipoglucemia -- vigilar funcion hepatica",co:"#374151",
+   ini:"50 mg c/12h",obj:"50 mg c/12h · 50 mg c/24h si ERC (TFG menor de 50)",iv:"c/12h (o c/24h si se combina con sulfonilurea o hay ERC)",dur:"Cronico/indefinido; suspender si elevacion significativa de transaminasas",pr:"Tab 50 mg (Galvus) · Combinacion con metformina (Galvus Met)",
+   ind:"DM2 sin hipoglucemia como objetivo · Anciano · Alternativa a sitagliptina",
+   ci:"DM tipo 1 · Cetoacidosis diabetica · Hepatopatia o transaminasas mayores de 3 veces el limite · Hipersensibilidad",
+   prec:"Vigilar transaminasas antes y durante el tratamiento · Reducir a 50 mg/dia si ERC (TFG menor de 50) · Pancreatitis (raro) · No combinar con GLP-1 RA",
+   ea:"Generalmente bien tolerada · Cefalea y mareo · Rara: elevacion de transaminasas, pancreatitis, reacciones cutaneas",
+   tit:"50 mg c/12h. Si se combina con sulfonilurea o hay ERC: 50 mg c/24h.",
+   ev:"Neutral en peso y sin hipoglucemia; requiere vigilancia hepatica. ADA 2025: alternativa dentro de la clase iDPP-4."},
+  {n:"Saxagliptina",fda:"Datos limitados en el embarazo &mdash; evitar; preferir insulina &middot; evitar en lactancia",intx:"NO combinar con GLP-1 RA &middot; inhibidores potentes de CYP3A4 (ketoconazol, claritromicina) aumentan sus niveles: usar 2.5 mg &middot; ajustar insulina o sulfonilurea",cat:"idpp4",m:"Onglyza",cl:"Inhibidor DPP-4",pi:"iDPP-4 sin hipoglucemia -- EVITAR en insuficiencia cardiaca",co:"#374151",
+   ini:"5 mg c/24h",obj:"2.5-5 mg c/24h · 2.5 mg si TFG menor de 45",iv:"c/24h con o sin alimentos",dur:"Cronico/indefinido; suspender o evitar si aparece o empeora insuficiencia cardiaca",pr:"Tab 2.5 mg · Tab 5 mg (Onglyza)",
+   ind:"DM2 sin hipoglucemia como objetivo · Anciano (con precaucion CV) · ERC ajustando dosis",
+   ci:"DM tipo 1 · Cetoacidosis diabetica · Hipersensibilidad grave",
+   prec:"EVITAR en insuficiencia cardiaca (SAVOR-TIMI: aumento de hospitalizacion por IC) · Ajustar a 2.5 mg si TFG menor de 45 · Pancreatitis (raro) · No combinar con GLP-1 RA",
+   ea:"Generalmente bien tolerada · Infecciones respiratorias y urinarias · Mayor hospitalizacion por insuficiencia cardiaca · Rara: pancreatitis, reacciones de hipersensibilidad",
+   tit:"5 mg c/24h. Reducir a 2.5 mg si TFG menor de 45. Evitar si hay insuficiencia cardiaca.",
+   ev:"SAVOR-TIMI 53: neutral en MACE pero con aumento de hospitalizacion por IC. ADA 2025: evitar en pacientes con insuficiencia cardiaca."},
+  {n:"Glibenclamida",fda:"Evitar en el embarazo (cruza la placenta y causa hipoglucemia neonatal) &middot; evitar en lactancia",intx:"Potenciada por fluconazol, sulfamidas, AINE y warfarina (hipoglucemia) &middot; los betabloqueadores enmascaran la hipoglucemia &middot; alcohol (efecto disulfiram) &middot; corticoides y tiazidas reducen su efecto",cat:"su",m:"Daonil · generico · Cuadro basico IMSS",cl:"Sulfonilurea -- estimula insulina independientemente de la glucosa",pi:"EVITAR en anciano mayor de 70 años -- hipoglucemia grave potencialmente fatal",co:"#7b1c1c",
+   ini:"2.5 mg c/24h con desayuno",obj:"5-10 mg/dia · Maximo 20 mg/dia",iv:"c/12-24h con alimentos",dur:"Cronico/indefinido; suspender ante hipoglucemias de repeticion o al iniciar un agente mas seguro",pr:"Tab 5 mg · Cuadro basico IMSS",
    ind:"DM2 sin alternativas de mayor seguridad disponibles · Bajo costo cuando otros no son accesibles",
    ci:"CONTRAINDICADA en anciano mayor de 70 años · ERC avanzada · Embarazo · Hepatopatia severa",
    prec:"Hipoglucemia prolongada y grave -- especialmente en anciano, ayuno, alcohol · Aumento de peso · Si hipoglucemia: observar minimo 24 horas",
+   ea:"Hipoglucemia frecuente y prolongada (la mas alta entre las SU) · Aumento de peso · Rara: reacciones cutaneas, colestasis, hiponatremia",
    tit:"2.5 mg con desayuno. Aumentar 2.5 mg cada 2 semanas. SIEMPRE con alimento.",
-   ev:"Eficacia glucemica equivalente pero peor seguridad. ADA 2025: no recomendada como primera eleccion. Cuadro basico."},
-  {n:"Insulina Glargina",m:"Lantus · Toujeo · Basaglar",cl:"Insulina basal de accion prolongada sin pico -- duracion 24h o mas",pi:"Mejor insulina basal -- sin pico · menor hipoglucemia nocturna que NPH",co:"#0c3b6e",
-   ini:"0.1-0.2 UI/kg noche (ej: 10 UI en 70 kg)",obj:"Glucosa ayuno 80-130 mg/dL · Regla del 3: aumentar 2-3 UI si glucosa mayor de 130 por 3 dias",iv:"SC c/24h misma hora · preferentemente noche · NO IV",pr:"Lantus frasco/pluma 100 UI/mL · Toujeo pluma 300 UI/mL",
-   ind:"DM2 con descontrol severo HbA1c mayor de 10% · No logra meta con orales maximos · ERC avanzada",
-   ci:"Hipoglucemia activa · NO IV · NO mezclar con otras insulinas",
-   prec:"NO mezclar en jeringa con otras insulinas · Rotacion de sitios · Refrigeracion · Lipohipertrofia con sitio fijo",
-   tit:"10 UI noche. Aumentar 2-3 UI cada 3 dias si glucosa ayuno mayor de 130. Meta: ayuno 80-130.",
-   ev:"Equivalente a NPH en eficacia pero menor hipoglucemia nocturna. ADA 2025: insulina basal de eleccion al iniciar insulinizacion."},
-  {n:"Insulina NPH",m:"Insulina isofana · Cuadro basico",cl:"Insulina de accion intermedia -- pico a las 4-10 horas",pi:"Insulina basal accesible de cuadro basico -- mayor riesgo de hipoglucemia nocturna que glargina",co:"#374151",
-   ini:"0.1-0.2 UI/kg al acostarse",obj:"Glucosa ayuno 80-130 mg/dL · Misma regla del 3",iv:"SC c/24h o c/12h al acostarse",pr:"Frasco 100 UI/mL · Cuadro basico",
-   ind:"DM2 cuando el costo es una limitacion · Cuadro basico · Sin acceso a analogos",
-   ci:"Hipoglucemia activa · NO IV",
-   prec:"Pico de accion 4-10h -- mayor hipoglucemia nocturna · Resuspender girando 10 veces antes de usar · Turbio al agitar es normal",
-   tit:"10 UI al acostarse. Aumentar 2-3 UI si glucosa ayuno mayor de 130. Si hipoglucemia nocturna: reducir dosis o dar colacion.",
-   ev:"Equivalente a glargina en eficacia pero mayor hipoglucemia nocturna. Cuadro basico."},
-  {n:"Pioglitazona",m:"Actos · generico",cl:"Tiazolidinediona -- agonista PPAR-gamma · mejora sensibilidad a insulina",pi:"Util en higado graso y resistencia a insulina -- CONTRAINDICADA en IC y osteoporosis",co:"#374151",
-   ini:"15-30 mg c/24h",obj:"15-45 mg c/24h",iv:"c/24h",pr:"Tab 15 mg · Tab 30 mg · Tab 45 mg",
+   ev:"Eficacia glucemica equivalente pero peor seguridad. ADA 2025: no recomendada como primera eleccion. Cuadro basico IMSS."},
+  {n:"Glimepirida",fda:"Evitar en el embarazo &middot; evitar en lactancia",intx:"Potenciada por fluconazol, sulfamidas y AINE (hipoglucemia) &middot; betabloqueadores enmascaran la hipoglucemia &middot; corticoides y tiazidas reducen su efecto",cat:"su",m:"Amaryl · generico",cl:"Sulfonilurea de segunda generacion -- menor hipoglucemia que glibenclamida",pi:"SU de eleccion si se requiere una sulfonilurea -- mejor perfil que glibenclamida",co:"#7b1c1c",
+   ini:"1-2 mg c/24h con el desayuno",obj:"1-4 mg/dia · Maximo 8 mg/dia",iv:"c/24h con el primer alimento del dia",dur:"Cronico/indefinido; suspender ante hipoglucemias de repeticion",pr:"Tab 1 mg · Tab 2 mg · Tab 4 mg (Amaryl)",
+   ind:"DM2 que requiere una sulfonilurea · Bajo costo · Preferida sobre glibenclamida por su perfil de seguridad",
+   ci:"DM tipo 1 · Cetoacidosis diabetica · Hepatopatia o ERC severa · Embarazo · Alergia a sulfas",
+   prec:"Hipoglucemia (menor que glibenclamida pero presente) · Aumento de peso · Precaucion en anciano y ERC · Tomar con alimento",
+   ea:"Hipoglucemia · Aumento de peso · Rara: reacciones cutaneas, alteraciones hematologicas, hiponatremia",
+   tit:"1-2 mg con el desayuno. Aumentar 1-2 mg cada 1-2 semanas segun glucemia. Maximo 8 mg/dia.",
+   ev:"Menor riesgo de hipoglucemia que glibenclamida. ADA 2025: si se usa una SU, preferir las de nueva generacion (glimepirida o gliclazida)."},
+  {n:"Gliclazida MR",fda:"Evitar en el embarazo &middot; evitar en lactancia",intx:"Potenciada por fluconazol, miconazol y AINE (hipoglucemia) &middot; betabloqueadores enmascaran la hipoglucemia &middot; corticoides reducen su efecto",cat:"su",m:"Diamicron MR",cl:"Sulfonilurea de liberacion modificada -- mejor perfil CV y menor hipoglucemia",pi:"SU con mejor perfil de seguridad -- util hasta TFG 30",co:"#7b1c1c",
+   ini:"30 mg c/24h con el desayuno",obj:"30-120 mg c/24h",iv:"c/24h con el desayuno (liberacion modificada, no partir ni masticar)",dur:"Cronico/indefinido; suspender ante hipoglucemias de repeticion",pr:"Tab MR 30 mg · Tab MR 60 mg (Diamicron MR)",
+   ind:"DM2 que requiere una sulfonilurea · Util hasta TFG 30 · Menor hipoglucemia que otras SU (ADVANCE)",
+   ci:"DM tipo 1 · Cetoacidosis diabetica · TFG menor de 30 · Hepatopatia severa · Embarazo · Alergia a sulfas",
+   prec:"Hipoglucemia (la menor entre las SU) · Aumento de peso leve · No partir ni masticar la tableta MR · Precaucion en anciano",
+   ea:"Hipoglucemia (menos frecuente que otras SU) · Aumento de peso leve · Rara: alteraciones hematologicas, molestias GI",
+   tit:"30 mg con el desayuno. Aumentar cada 2-4 semanas hasta 120 mg/dia segun glucemia.",
+   ev:"ADVANCE: control intensivo con gliclazida sin exceso de mortalidad. Mejor perfil CV y de hipoglucemia dentro de las SU. ADA 2025: SU preferida junto con glimepirida."},
+  {n:"Repaglinida",fda:"Evitar en el embarazo &middot; evitar en lactancia",intx:"CONTRAINDICADA con gemfibrozilo (aumenta mucho sus niveles) &middot; claritromicina y antifungicos azolicos la potencian &middot; rifampicina la reduce &middot; betabloqueadores enmascaran la hipoglucemia",cat:"glinida",m:"NovoNorm · Prandin",cl:"Meglitinida (glinida) -- secretagogo prandial de accion rapida y corta",pi:"Control de glucosa posprandial -- tomar solo si va a comer · util en horarios irregulares",co:"#374151",
+   ini:"0.5-1 mg antes de cada comida principal",obj:"0.5-4 mg antes de cada comida · Maximo 16 mg/dia",iv:"15 min antes de cada comida · si omite la comida, omite la dosis",dur:"Cronico/indefinido; una dosis por cada comida realizada",pr:"Tab 0.5 mg · Tab 1 mg · Tab 2 mg (NovoNorm)",
+   ind:"DM2 con hiperglucemia posprandial predominante · Horarios de comida irregulares · Alternativa a la SU en ERC (metabolismo hepatico)",
+   ci:"DM tipo 1 · Cetoacidosis diabetica · Hepatopatia severa · Uso concomitante con gemfibrozilo",
+   prec:"Hipoglucemia (menor y mas corta que la SU) · No tomar si se salta la comida · Metabolismo hepatico (util en ERC) · Aumento de peso leve",
+   ea:"Hipoglucemia (mas breve que con SU) · Aumento de peso leve · Molestias gastrointestinales",
+   tit:"0.5-1 mg antes de cada comida. Ajustar segun glucemia posprandial hasta 4 mg por comida (maximo 16 mg/dia).",
+   ev:"Secretagogo de accion corta con menor hipoglucemia entre comidas. ADA 2025: opcion util en horarios irregulares o cuando la SU esta limitada."},
+  {n:"Acarbosa",fda:"Evitar en el embarazo (datos insuficientes) &middot; evitar en lactancia",intx:"Puede reducir la absorcion de digoxina y de metformina &middot; si hay hipoglucemia por combinacion, tratar con glucosa pura (no sacarosa) &middot; resinas y enzimas digestivas disminuyen su efecto",cat:"iag",m:"Glucobay · generico",cl:"Inhibidor de alfa-glucosidasa -- retrasa la absorcion intestinal de carbohidratos",pi:"Control posprandial sin hipoglucemia -- limitado por flatulencia",co:"#374151",
+   ini:"25 mg c/8h con el primer bocado",obj:"50-100 mg c/8h · Maximo 300 mg/dia",iv:"con el primer bocado de cada comida principal",dur:"Cronico/indefinido; suspender si intolerancia GI persistente",pr:"Tab 50 mg · Tab 100 mg (Glucobay)",
+   ind:"DM2 con hiperglucemia posprandial · Complemento de otros agentes · Sin hipoglucemia en monoterapia",
+   ci:"Enfermedad inflamatoria intestinal · Obstruccion o predisposicion a obstruccion intestinal · Cirrosis · Embarazo",
+   prec:"Flatulencia, distension y diarrea (frecuentes, mejoran con titulacion muy lenta) · Si hay hipoglucemia por combinacion, tratar con glucosa y no con sacarosa · Vigilar transaminasas a dosis altas",
+   ea:"Flatulencia, distension abdominal y diarrea (muy frecuentes) · Elevacion transitoria de transaminasas a dosis altas",
+   tit:"25 mg c/8h con el primer bocado. Aumentar muy lento cada 4-8 semanas hasta 50-100 mg c/8h para minimizar la flatulencia.",
+   ev:"STOP-NIDDM: reduccion de eventos CV y de progresion a diabetes. Reduce HbA1c 0.5-0.8%. Limitada por la tolerancia GI. ADA 2025: opcion de menor eficacia."},
+  {n:"Pioglitazona",fda:"Evitar en el embarazo &middot; evitar en lactancia",intx:"Gemfibrozilo aumenta sus niveles (reducir dosis) &middot; rifampicina los disminuye &middot; con insulina aumenta el riesgo de edema e insuficiencia cardiaca &middot; puede reducir la eficacia de anticonceptivos orales",cat:"tzd",m:"Actos · generico",cl:"Tiazolidinediona -- agonista PPAR-gamma · mejora sensibilidad a insulina",pi:"Util en higado graso y resistencia a insulina -- CONTRAINDICADA en IC y osteoporosis",co:"#374151",
+   ini:"15-30 mg c/24h",obj:"15-45 mg c/24h",iv:"c/24h",dur:"Cronico/indefinido; suspender si aparece edema, insuficiencia cardiaca o hematuria",pr:"Tab 15 mg · Tab 30 mg · Tab 45 mg",
    ind:"DM2 con resistencia a insulina predominante · Higado graso no alcoholico · Mejora perfil lipidico aterogenico",
    ci:"Insuficiencia cardíaca (CONTRAINDICADA -- retencion liquidos) · Osteoporosis severa · Cancer de vejiga activo",
    prec:"Retencion de liquidos y edema · Aumento de peso · Mayor riesgo de fractura en mujeres · Monitorear función hepática",
+   ea:"Edema y retencion de liquidos · Aumento de peso · Anemia dilucional leve · Mayor riesgo de fractura en mujeres · Posible descompensacion de IC",
    tit:"15 mg c/24h inicio. Aumentar a 30 mg en 8-12 semanas. Maximo 45 mg/dia.",
-   ev:"Reduce resistencia a insulina. Mejora higado graso. Pero: retencion de liquidos, peso, fracturas, IC limitan su uso."}
+   ev:"Reduce resistencia a insulina. Mejora higado graso. Pero: retencion de liquidos, peso, fracturas, IC limitan su uso."},
+  {n:"Insulina Glargina",fda:"Datos limitados; la NPH sigue siendo la basal de eleccion en el embarazo, aunque la glargina se considera aceptable &middot; compatible con lactancia",intx:"Betabloqueadores enmascaran la hipoglucemia &middot; corticoides, tiazidas y simpaticomimeticos aumentan el requerimiento &middot; alcohol e IECA pueden potenciar la hipoglucemia &middot; NO mezclar en la misma jeringa",cat:"insulina",m:"Lantus · Toujeo · Basaglar",cl:"Insulina basal de accion prolongada sin pico -- duracion 24h o mas",pi:"Mejor insulina basal -- sin pico · menor hipoglucemia nocturna que NPH",co:"#0c3b6e",
+   ini:"0.1-0.2 UI/kg noche (ej: 10 UI en 70 kg)",obj:"Glucosa ayuno 80-130 mg/dL · Regla del 3: aumentar 2-3 UI si glucosa mayor de 130 por 3 dias",iv:"SC c/24h misma hora · preferentemente noche · NO IV",dur:"Indefinida; ajustar por titulacion segun glucosa de ayuno",pr:"Lantus frasco/pluma 100 UI/mL · Toujeo pluma 300 UI/mL",
+   ind:"DM2 con descontrol severo HbA1c mayor de 10% · No logra meta con orales maximos · ERC avanzada",
+   ci:"Hipoglucemia activa · NO IV · NO mezclar con otras insulinas",
+   prec:"NO mezclar en jeringa con otras insulinas · Rotacion de sitios · Refrigeracion · Lipohipertrofia con sitio fijo",
+   ea:"Hipoglucemia · Aumento de peso · Lipohipertrofia en sitios de inyeccion · Reaccion local",
+   tit:"10 UI noche. Aumentar 2-3 UI cada 3 dias si glucosa ayuno mayor de 130. Meta: ayuno 80-130.",
+   ev:"Equivalente a NPH en eficacia pero menor hipoglucemia nocturna. ADA 2025: insulina basal de eleccion al iniciar insulinizacion."},
+  {n:"Insulina Degludec",fda:"Datos limitados en el embarazo &mdash; preferir insulinas con mas experiencia (NPH, detemir) &middot; compatible con lactancia",intx:"Betabloqueadores enmascaran la hipoglucemia &middot; corticoides aumentan el requerimiento &middot; los ajustes tardan 3-4 dias en reflejarse &middot; NO mezclar con otras insulinas",cat:"insulina",m:"Tresiba",cl:"Insulina basal de accion ultralarga -- duracion mayor de 42 horas",pi:"Basal ultralarga -- horario flexible y menor hipoglucemia nocturna",co:"#0c3b6e",
+   ini:"0.1-0.2 UI/kg c/24h (ej: 10 UI en 70 kg)",obj:"Glucosa ayuno 80-130 mg/dL · Regla del 3",iv:"SC c/24h a cualquier hora (horario flexible por duracion mayor de 42h) · NO IV",dur:"Indefinida; ajustar por titulacion (los cambios tardan 3-4 dias en reflejarse)",pr:"Tresiba pluma 100 UI/mL · pluma 200 UI/mL",
+   ind:"DM2 con descontrol que requiere basal · Alto riesgo de hipoglucemia nocturna · Necesidad de horario flexible · ERC",
+   ci:"Hipoglucemia activa · NO IV",
+   prec:"NO mezclar con otras insulinas · Duracion muy larga: los ajustes tardan 3-4 dias en reflejarse · Rotacion de sitios",
+   ea:"Hipoglucemia (menor nocturna que glargina U100) · Aumento de peso · Lipohipertrofia · Reaccion local",
+   tit:"10 UI c/24h. Aumentar 2-3 UI cada 3-4 dias si glucosa ayuno mayor de 130. Meta: ayuno 80-130.",
+   ev:"DEVOTE: no inferioridad CV y menor hipoglucemia severa que glargina U100. ADA 2025: basal de segunda generacion con menor hipoglucemia."},
+  {n:"Insulina NPH",fda:"Segura &mdash; insulina basal de eleccion en el embarazo &middot; compatible con lactancia",intx:"Betabloqueadores enmascaran la hipoglucemia &middot; corticoides y tiazidas aumentan el requerimiento &middot; alcohol potencia la hipoglucemia",cat:"insulina",m:"Insulina isofana · Cuadro basico IMSS",cl:"Insulina de accion intermedia -- pico a las 4-10 horas",pi:"Insulina basal accesible de cuadro basico -- mayor riesgo de hipoglucemia nocturna que glargina",co:"#374151",
+   ini:"0.1-0.2 UI/kg al acostarse",obj:"Glucosa ayuno 80-130 mg/dL · Misma regla del 3",iv:"SC c/24h o c/12h al acostarse",dur:"Indefinida; ajustar por titulacion segun glucosa de ayuno",pr:"Frasco 100 UI/mL · Cuadro basico IMSS",
+   ind:"DM2 cuando el costo es una limitacion · Cuadro basico IMSS · Sin acceso a analogos",
+   ci:"Hipoglucemia activa · NO IV",
+   prec:"Pico de accion 4-10h -- mayor hipoglucemia nocturna · Resuspender girando 10 veces antes de usar · Turbio al agitar es normal",
+   ea:"Hipoglucemia (mayor nocturna por el pico) · Aumento de peso · Lipohipertrofia · Reaccion local",
+   tit:"10 UI al acostarse. Aumentar 2-3 UI si glucosa ayuno mayor de 130. Si hipoglucemia nocturna: reducir dosis o dar colacion.",
+   ev:"Equivalente a glargina en eficacia pero mayor hipoglucemia nocturna. Cuadro basico IMSS."},
+  {n:"Insulina Lispro / Aspart",fda:"Seguras &mdash; de eleccion para el bolo prandial en el embarazo (lispro y aspart aprobadas) &middot; compatibles con lactancia",intx:"Betabloqueadores enmascaran la hipoglucemia &middot; corticoides aumentan el requerimiento &middot; alcohol potencia la hipoglucemia",cat:"insulina",m:"Humalog · NovoRapid · analogo rapido",cl:"Analogo de insulina de accion rapida -- cobertura prandial (bolo)",pi:"Insulina prandial de eleccion -- inicio 10-20 min, permite aplicar justo antes de comer",co:"#0c3b6e",
+   ini:"0.1 UI/kg o 4 UI antes de cada comida principal",obj:"Glucosa posprandial a 2h menor de 180 mg/dL",iv:"SC 0-15 min antes de cada comida (inicio 10-20 min, pico 1-2h, duracion 3-5h)",dur:"Indefinida; ajustar por titulacion segun glucosa posprandial",pr:"Humalog o NovoRapid frasco o pluma 100 UI/mL",
+   ind:"Esquema basal-bolo · Control posprandial · Correccion de hiperglucemia · Bomba de insulina",
+   ci:"Hipoglucemia activa",
+   prec:"Aplicar cerca de la comida (accion muy rapida) · Riesgo de hipoglucemia si se retrasa la comida · Contar carbohidratos para la dosis optima · Rotacion de sitios",
+   ea:"Hipoglucemia · Aumento de peso · Lipohipertrofia · Reaccion local",
+   tit:"Iniciar 4 UI o 0.1 UI/kg antes de cada comida. Ajustar 1-2 UI segun la glucosa posprandial y la preprandial siguiente.",
+   ev:"Menor hipoglucemia posprandial tardia que la insulina regular por su perfil mas fisiologico. ADA 2025: analogos rapidos preferidos para el bolo prandial."},
+  {n:"Insulina Regular",fda:"Segura &mdash; usable en el embarazo &middot; unica insulina utilizable en infusion IV &middot; compatible con lactancia",intx:"Betabloqueadores enmascaran la hipoglucemia &middot; corticoides y tiazidas aumentan el requerimiento &middot; alcohol potencia la hipoglucemia",cat:"insulina",m:"Insulina R · Humulin R · Cuadro basico IMSS",cl:"Insulina humana de accion rapida -- unica insulina que puede aplicarse IV",pi:"Insulina prandial accesible -- aplicar 30 min antes de comer · util IV en hospital",co:"#0c3b6e",
+   ini:"0.1 UI/kg o 4-6 UI 30 min antes de cada comida",obj:"Glucosa posprandial a 2h menor de 180 mg/dL",iv:"SC 30 min antes de cada comida (inicio 30 min, pico 2-4h, duracion 6-8h) · puede darse en infusion IV en el hospital",dur:"Indefinida; ajustar por titulacion (en infusion IV es de uso agudo y temporal)",pr:"Frasco 100 UI/mL · Cuadro basico IMSS",
+   ind:"Esquema prandial cuando el costo limita los analogos · Infusion IV en cetoacidosis o estado hiperosmolar · Cuadro basico IMSS",
+   ci:"Hipoglucemia activa",
+   prec:"Aplicar 30 min antes de comer (inicio mas lento que los analogos) · Mayor hipoglucemia posprandial tardia · Rotacion de sitios · Unica utilizable en infusion IV",
+   ea:"Hipoglucemia (mayor posprandial tardia que los analogos) · Aumento de peso · Lipohipertrofia",
+   tit:"4-6 UI 30 min antes de cada comida. Ajustar 2 UI segun las glucemias.",
+   ev:"Eficaz pero con perfil menos fisiologico que los analogos rapidos. Insustituible para infusion IV en urgencias. Cuadro basico IMSS."},
+  {n:"Insulina Premezclada 70/30",fda:"Segura &mdash; usable en el embarazo si se requiere un esquema simple (componentes NPH y regular) &middot; compatible con lactancia",intx:"Betabloqueadores enmascaran la hipoglucemia &middot; corticoides aumentan el requerimiento &middot; requiere horarios de comida fijos &middot; NO IV",cat:"insulina",m:"NPH/Regular 70-30 · Humulin 70-30 · Cuadro basico IMSS",cl:"Mezcla fija 70% NPH (basal) + 30% regular (prandial)",pi:"Esquema simple de 2 aplicaciones -- comun en IMSS · menos flexible",co:"#0c3b6e",
+   ini:"0.3-0.5 UI/kg/dia repartida: 2/3 antes del desayuno + 1/3 antes de la cena",obj:"Glucosa de ayuno y precena 80-130 mg/dL",iv:"SC c/12h: 2/3 de la dosis en el desayuno y 1/3 en la cena, 30 min antes · resuspender antes de usar · NO IV",dur:"Indefinida; ajustar por titulacion segun ayuno y precena",pr:"Frasco o pluma 100 UI/mL (70/30) · Cuadro basico IMSS",
+   ind:"DM2 que requiere insulinizacion con un esquema simple · Recursos limitados · Cuadro basico IMSS · Buena adherencia a esquema de 2 dosis",
+   ci:"Hipoglucemia activa · NO IV · Horarios de comida muy irregulares",
+   prec:"Requiere horarios de comida fijos · Hipoglucemia por el componente regular (media manana y madrugada) · Resuspender girando antes de aplicar · Menos flexible que basal-bolo",
+   ea:"Hipoglucemia (media manana y nocturna) · Aumento de peso · Lipohipertrofia · Reaccion local",
+   tit:"Iniciar 0.3-0.5 UI/kg/dia: 2/3 en el desayuno y 1/3 en la cena. Ajustar la dosis de la cena por la glucosa de ayuno y la del desayuno por la glucosa de precena.",
+   ev:"Esquema simple de 2 aplicaciones con control razonable pero mayor hipoglucemia y menos flexibilidad que basal-bolo. Cuadro basico IMSS."}
 ];
 
 function renderFichaDM(f,idx){
-  var bc=f.co==="#0a5c45"?"rgba(10,92,69,0.06)":f.co==="#0c3b6e"?"rgba(12,59,110,0.06)":f.co==="#7a4a00"?"rgba(122,74,0,0.06)":f.co==="#7b1c1c"?"rgba(123,28,28,0.06)":"rgba(55,65,81,0.06)";
+  var doseBg=f.co+"14",noteBg=f.co+"11";
+  var star=(f.pi&&f.pi.toLowerCase().indexOf("primera")!==-1)?"<span title='Agente de primera linea' style='margin-right:5px;'>&#11088;</span>":"";
+  function fila(lbl,val,color){
+    return "<div style='display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'>"
+      +"<span style='color:#6b7280;font-weight:600;flex-shrink:0;'>"+lbl+"</span>"
+      +"<span style='text-align:right;line-height:1.5;color:"+(color||"#374151")+";'>"+val+"</span></div>";
+  }
   return "<div style='background:#fff;border-radius:10px;border:0.5px solid #e2e8f0;margin-bottom:8px;overflow:hidden;'>"
     +"<div onclick='toggleFichaDM("+idx+")' style='background:"+f.co+";color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;'>"
-    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+f.n+"</div><div style='font-size:11px;opacity:0.75;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
+    +"<div style='flex:1;'><div style='font-size:14px;font-weight:700;'>"+star+f.n+"</div><div style='font-size:11px;opacity:0.8;margin-top:2px;'>"+f.m+" &middot; "+f.pi+"</div></div>"
     +"<span style='font-size:18px;color:rgba(255,255,255,0.7);' id='darr-"+idx+"'>&#8964;</span></div>"
     +"<div id='dbody-"+idx+"' style='display:none;'>"
-    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Clase farmacologica</div><div style='font-size:12px;color:#374151;'>"+f.cl+"</div></div>"
-    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'>"
-    +"<div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Dosis</div>"
-    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'><span style='color:#6b7280;'>Inicio</span><span style='font-weight:600;'>"+f.ini+"</span></div>"
-    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'><span style='color:#6b7280;'>Objetivo</span><span style='font-weight:700;color:#c0392b;'>"+f.obj+"</span></div>"
-    +"<div style='display:flex;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid #f3f4f6;font-size:12px;'><span style='color:#6b7280;'>Intervalo</span><span style='font-weight:600;'>"+f.iv+"</span></div>"
-    +"<div style='background:#f9fafb;border-radius:6px;padding:5px 9px;margin-top:6px;font-size:11px;color:#6b7280;'><strong style='color:"+f.co+";'>Presentacion MX:</strong> "+f.pr+"</div></div>"
-    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Titulacion</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.tit+"</div></div>"
-    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Indicaciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.ind+"</div></div>"
-    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Contraindicaciones</div><div style='font-size:12px;color:#c0392b;line-height:1.6;'>"+f.ci+"</div></div>"
-    +"<div style='padding:12px 14px;border-bottom:0.5px solid #f3f4f6;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Precauciones</div><div style='font-size:12px;color:#374151;line-height:1.6;'>"+f.prec+"</div></div>"
-    +"<div style='padding:12px 14px;'><div style='font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:6px;'>Evidencia</div><div style='font-size:12px;color:#374151;line-height:1.6;background:"+bc+";border-radius:6px;padding:8px 10px;'>"+f.ev+"</div></div>"
+    // BLOQUE DOSIS destacado
+    +"<div style='margin:12px 14px 10px;background:"+doseBg+";border-radius:8px;padding:12px 13px;'>"
+      +"<div style='font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6b7280;margin-bottom:4px;'>Dosis objetivo</div>"
+      +"<div style='font-size:18px;font-weight:800;color:"+f.co+";line-height:1.3;'>"+f.obj+"</div>"
+      +"<div style='font-size:11.5px;color:#374151;margin-top:7px;'><strong>Inicio:</strong> "+f.ini+"</div>"
+      +"<div style='font-size:11.5px;color:#374151;margin-top:6px;line-height:1.6;'><strong style='color:"+f.co+";'>Preparacion/Titulacion:</strong> "+f.tit+"</div>"
+    +"</div>"
+    // FILAS etiqueta -> valor
+    +"<div style='padding:0 14px 4px;'>"
+      +fila("Via/Administracion",f.iv)
+      +fila("Presentaciones MX",f.pr,f.co)
+      +fila("Duracion",f.dur)
+      +fila("FDA/Embarazo",f.fda,f.co)
+      +fila("Contraindicaciones",f.ci,"#c0392b")
+      +fila("Efectos adversos","&#9888;&#65039; "+f.ea)
+    +"</div>"
+    // BLOQUE NOTA CLINICA
+    +"<div style='margin:8px 14px 14px;background:"+noteBg+";border-radius:8px;padding:12px 13px;'>"
+      +"<div style='font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:"+f.co+";margin-bottom:7px;'>Nota clinica</div>"
+      +"<div style='font-size:12px;color:#374151;line-height:1.65;'>"
+        +"<div style='margin-bottom:6px;'><strong>Mecanismo:</strong> "+f.cl+"</div>"
+        +"<div style='margin-bottom:6px;'><strong>Indicaciones:</strong> "+f.ind+"</div>"
+        +"<div style='margin-bottom:6px;'><strong>Precauciones:</strong> "+f.prec+"</div>"
+        +"<div style='margin-bottom:6px;'><strong>Interacciones:</strong> "+f.intx+"</div>"
+        +"<div><strong>Evidencia:</strong> "+f.ev+"</div>"
+      +"</div>"
+    +"</div>"
     +"</div></div>";
 }
 function toggleFichaDM(idx){
@@ -1253,17 +1567,147 @@ function toggleFichaDM(idx){
   if(b.style.display==="none"){b.style.display="block";a.style.transform="rotate(180deg)";}
   else{b.style.display="none";a.style.transform="rotate(0deg)";}
 }
+var FARM_CAT_DM="todos";
+function filtrarFarmClaseDM(cat,btn){
+  FARM_CAT_DM=cat;
+  var chips=document.querySelectorAll("#tab-farm .pchip");
+  for(var i=0;i<chips.length;i++)chips[i].classList.remove("on");
+  if(btn)btn.classList.add("on");
+  var s=document.getElementById("farm-dm-search");
+  filtrarFarmacosDM(s?s.value:"");
+}
 function filtrarFarmacosDM(q){
   var list=document.getElementById("farm-dm-list"),count=document.getElementById("farm-dm-count");
   if(!list)return;
   var term=q.toLowerCase().trim(),html="",found=0;
   for(var i=0;i<FARMACOS_DM.length;i++){
     var f=FARMACOS_DM[i];
+    if(FARM_CAT_DM!=="todos"&&f.cat!==FARM_CAT_DM)continue;
     var s=(f.n+" "+f.m+" "+f.cl+" "+f.pi+" "+f.ind).toLowerCase();
     if(!term||s.indexOf(term)!==-1){html+=renderFichaDM(f,i);found++;}
   }
   list.innerHTML=html||"<div style='text-align:center;padding:20px;color:#9ca3af;font-size:13px;'>Sin resultados</div>";
   if(count)count.textContent=found+(found===1?" farmaco":" farmacos");
+}
+
+// ========== CRIBADOR HbA1c ==========
+var HB_META="std";
+var HB_COMO={ecv:false,ic:false,erc:false,obesidad:false};
+var HB_METAS={
+  std:{v:7.0,l:"Estandar &mdash; HbA1c menor de 7%"},
+  anciano:{v:8.0,l:"Anciano fragil &mdash; HbA1c menor de 8%"},
+  joven:{v:6.5,l:"Joven sin comorbilidad &mdash; HbA1c menor de 6.5%"}
+};
+function setHbMeta(m,btn){
+  HB_META=m;
+  var chips=document.querySelectorAll("#hb-meta-chips .hbchip");
+  for(var i=0;i<chips.length;i++)chips[i].classList.remove("on");
+  if(btn)btn.classList.add("on");
+  calcHbA1c();
+}
+function toggleHbComo(k,btn){
+  HB_COMO[k]=!HB_COMO[k];
+  if(btn)btn.classList.toggle("on");
+  calcHbA1c();
+}
+function hbItem(t,d){
+  return "<div class='hb-blk'><div style='font-weight:700;margin-bottom:2px;'>"+t+"</div>"+d+"</div>";
+}
+function hbComoBloques(){
+  var s="";
+  if(HB_COMO.ecv)s+=hbItem("&#10084;&#65039; ECV / ateroesclerosis","Priorizar <b>GLP-1 RA con beneficio CV</b> (semaglutida, liraglutida o dulaglutida), con o sin metformina &mdash; reduce MACE INDEPENDIENTE de la HbA1c. Alternativa/adicional: iSGLT-2. <b>No suspender</b> aunque se alcance la meta.");
+  if(HB_COMO.ic)s+=hbItem("&#129504; Insuficiencia cardiaca","Priorizar <b>iSGLT-2</b> (dapagliflozina o empagliflozina) &mdash; reduce hospitalizacion por IC INDEPENDIENTE de la HbA1c (util incluso con FEr). <b>Evitar pioglitazona y saxagliptina</b> (empeoran IC).");
+  if(HB_COMO.erc)s+=hbItem("&#129731; ERC","Priorizar <b>iSGLT-2</b> (empagliflozina/dapagliflozina/canagliflozina) mientras TFG lo permita (iniciar hasta TFG ~20) &mdash; nefroproteccion. Añadir <b>IECA/ARA-II</b> y, si albuminuria persistente, <b>finerenona</b>. Si no tolera iSGLT-2: GLP-1 RA. Ajustar metformina (evitar si TFG menor de 30).");
+  if(HB_COMO.obesidad)s+=hbItem("&#9878;&#65039; Obesidad / control de peso","Priorizar <b>tirzepatida (GIP/GLP-1) o semaglutida</b> &mdash; mayor perdida de peso (hasta 15-20%). Valorar cirugia bariatrica si IMC mayor de 35 con comorbilidad. Evitar SU, TZD e insulina en exceso (ganan peso).");
+  if(s)s="<div style='margin-top:10px;'><div class='hb-lbl'>Comorbilidad &mdash; prioriza el agente sin importar la HbA1c</div>"+s+"</div>";
+  return s;
+}
+function hbExpectativa(brecha){
+  var necesita;
+  if(brecha<=1.0) necesita="Con una brecha de <b>"+brecha+"%</b>, <b>un solo agente</b> suele bastar para alcanzar la meta.";
+  else if(brecha<=2.0) necesita="Con una brecha de <b>"+brecha+"%</b>, probablemente necesites <b>2 agentes</b> (o uno potente tipo GLP-1/tirzepatida).";
+  else if(brecha<3.5) necesita="Con una brecha de <b>"+brecha+"%</b>, se requieren <b>2-3 agentes potentes</b> (GLP-1/tirzepatida) o combinacion inyectable.";
+  else necesita="Con una brecha de <b>"+brecha+"%</b>, difícilmente la cierran los orales: valora <b>insulina o combinacion inyectable</b> de inicio.";
+  return hbItem("Descenso esperado por clase",
+    "Metformina y sulfonilureas ~1.0-1.5% &middot; iSGLT-2 e iDPP-4 ~0.5-1.0% &middot; GLP-1 RA ~1.0-1.8% &middot; <b>tirzepatida ~1.5-2.5%</b> &middot; insulina: sin techo (se titula a meta).<br>"+necesita);
+}
+function hbPilares(){
+  var estatina = HB_COMO.ecv
+    ? "<b>estatina de ALTA intensidad</b> (atorvastatina 40-80 o rosuvastatina 20-40), meta LDL menor de 55 mg/dL"
+    : "<b>estatina de moderada-alta intensidad</b> (la mayoria de los DM2 de 40-75 años la requieren), meta LDL menor de 70 mg/dL";
+  var antiag = HB_COMO.ecv
+    ? "<b>Antiagregante:</b> aspirina 75-100 mg/dia (prevencion secundaria en ECV establecida)."
+    : "<b>Antiagregante:</b> no de rutina en prevencion primaria; individualizar por riesgo.";
+  var nefro = (HB_COMO.erc)
+    ? "<b>Renoproteccion:</b> IECA o ARA-II a dosis maxima tolerada + iSGLT-2; añadir finerenona si albuminuria persistente."
+    : "<b>Renoproteccion:</b> IECA/ARA-II si hipertension o albuminuria (revisar relacion albumina/creatinina anual).";
+  return "<div style='margin-top:10px;'><div class='hb-lbl'>Pilares que NO dependen de la glucosa (siempre)</div>"
+    +hbItem("&#129656; Lipidos / PA","Iniciar "+estatina+". <b>Presion arterial menor de 130/80</b> mmHg. "+antiag+" "+nefro)
+    +hbItem("&#127793; Estilo de vida","Perdida de peso <b>5-10%</b> (mayor de 15% puede remitir la DM2) &middot; ejercicio <b>150 min/sem</b> (aerobico + resistencia) &middot; reducir carbohidratos refinados &middot; suspender tabaco.")
+    +hbItem("&#128065; Tamizaje de complicaciones","Fondo de ojo, monofilamento (pie), albuminuria/TFG y perfil lipidico &mdash; al diagnostico y anual.")+"</div>";
+}
+function hbSeguimiento(v,mv){
+  var cuando = (v<=mv+0.0001) ? "en <b>6 meses</b>" : "en <b>3 meses</b> (cada cambio de tratamiento se evalua a las 12 semanas)";
+  return hbItem("&#128197; Seguimiento","Repetir HbA1c "+cuando+". Automonitoreo de glucosa capilar si usa insulina o sulfonilurea. Ajustar/intensificar si no alcanza la meta.");
+}
+function hbInsulinaDetalle(){
+  return hbItem("&#128137; Como iniciar y titular la insulina",
+    "<b>Basal:</b> glargina/detemir/NPH 10 U o 0.1-0.2 U/kg por la noche.<br>"
+    +"<b>Titulacion regla 2-0-2:</b> +2 U cada 3 dias si el ayuno esta mayor de 130; -2 U si menor de 80 o hay hipoglucemia; meta de ayuno 80-130.<br>"
+    +"<b>Mantener:</b> metformina siempre; conservar iSGLT-2 y/o GLP-1 (sobre todo por comorbilidad). <b>Preferir asociar GLP-1 RA</b> antes de intensificar insulina (menos peso e hipoglucemia).<br>"
+    +"<b>Cuando pasar a basal-plus / basal-bolo:</b> si el ayuno ya esta en meta pero la HbA1c sigue alta, o la basal supera <b>0.5 U/kg</b> (sobrebasalizacion) &rarr; agregar 1 bolo prandial en la comida de mayor pico (4 U o 0.1 U/kg) y titular a glucosa 2 h post menor de 180; escalar a 3 bolos si persiste.<br>"
+    +"<b>Desescalar</b> la insulina al ceder la glucotoxicidad. Si hay perdida de peso marcada, cetonas o edad joven &rarr; descartar <b>DM1/LADA</b>.");
+}
+function calcHbA1c(){
+  var el=document.getElementById("hb-input"),out=document.getElementById("hb-out");
+  if(!el||!out)return;
+  var meta=HB_METAS[HB_META],mv=meta.v;
+  var v=parseFloat((el.value||"").replace(",","."));
+  var metaLine="<div class='hb-blk'><b>Meta individualizada:</b> "+meta.l+"</div>";
+  if(isNaN(v)||v<3||v>20){
+    out.className="hb-out";
+    out.innerHTML="<div class='hb-tt' style='color:var(--gray-700);'>Ingresa una HbA1c valida</div>"
+      +"<div style='font-size:12px;color:var(--gray-600);'>Escribe el valor de HbA1c (%) para obtener la conducta sugerida.</div>"
+      +metaLine;
+    return;
+  }
+  var brecha=Math.round((v-mv)*10)/10, cls, tt, cuerpo="";
+  var tieneComo=HB_COMO.ecv||HB_COMO.ic||HB_COMO.erc||HB_COMO.obesidad;
+  if(v>=10){
+    cls="high";
+    tt="&#128137; HbA1c "+v+"% &mdash; iniciar INSULINA basal";
+    cuerpo+=hbItem("Descontrol severo (HbA1c mayor o igual a 10%, o glucosa mayor de 300 con sintomas catabolicos)",
+      "Iniciar <b>insulina basal</b> como eje del tratamiento (± GLP-1 RA). Mantener metformina y los agentes con beneficio CV/renal. Al mejorar la glucotoxicidad muchos pacientes se <b>desescalan</b> a esquema oral/inyectable no insulinico.");
+    cuerpo+=hbInsulinaDetalle();
+  } else if(v<=mv+0.0001){
+    cls="ok";
+    tt="&#9989; HbA1c "+v+"% &mdash; en meta";
+    cuerpo+=hbItem("Conducta","<b>Mantener el tratamiento actual</b> y reforzar el estilo de vida. Si hay comorbilidad CV/renal, conservar GLP-1/iSGLT-2 aunque este en meta.");
+    if(HB_META!=="joven" && v<mv-1.0)
+      cuerpo+=hbItem("&#9888;&#65039; Posible sobretratamiento","HbA1c bastante por DEBAJO de la meta: si usa <b>sulfonilurea o insulina</b>, valora <b>desintensificar</b> por riesgo de hipoglucemia (sobre todo en el anciano).");
+  } else {
+    cls="mid";
+    tt="&#9888;&#65039; HbA1c "+v+"% &mdash; sobre meta (brecha "+brecha+"%)";
+    if(brecha<1.5){
+      cuerpo+=hbItem("Brecha menor de 1.5% &mdash; monoterapia",
+        "<b>Metformina</b> titulada (500 mg &rarr; hasta 2000-2550 mg/dia) + estilo de vida"
+        +(tieneComo?", pero <b>si hay comorbilidad, inicia directamente el agente indicado</b> (ver abajo).":".")
+        +" Reevaluar en 3 meses.");
+    } else if(v>=9||brecha>=2){
+      cuerpo+=hbItem("HbA1c alta (mayor o igual a 9% o brecha mayor o igual a 2%), sin sintomas",
+        "<b>Terapia doble o triple de inicio.</b> Base metformina + <b>GLP-1 RA o iSGLT-2</b> (elige por comorbilidad y peso). Por la magnitud, valora de una vez una <b>combinacion inyectable</b> (GLP-1 RA, o basal + GLP-1). Si aparecen sintomas catabolicos &rarr; insulina.");
+    } else {
+      cuerpo+=hbItem("Brecha 1.5-2% &mdash; terapia dual",
+        "<b>Metformina + un 2.º agente</b> desde el inicio. Elegir el 2.º por prioridad: <b>iSGLT-2/GLP-1</b> si comorbilidad o sobrepeso; <b>iDPP-4</b> si se busca neutralidad y sin hipoglucemia; <b>sulfonilurea/glinida</b> solo si el costo manda (vigilar hipoglucemia).");
+    }
+  }
+  cuerpo+=hbExpectativa(brecha>0?brecha:0);
+  cuerpo+=hbComoBloques();
+  cuerpo+=hbPilares();
+  cuerpo+=hbSeguimiento(v,mv);
+  cuerpo+=hbItem("&#128200; ¿A donde ir?","Toca la pestaña <b>Fármacos</b> para la ficha completa de cada opcion, o <b>Tx Consulta</b> para el algoritmo por perfil y los esquemas de insulina.");
+  out.className="hb-out "+cls;
+  out.innerHTML="<div class='hb-tt'>"+tt+"</div>"+metaLine+cuerpo;
 }
 
 
@@ -2785,7 +3229,7 @@ var COMPS = {
           <tr><td class="dn">Duloxetina — 1ª línea ADA 2026</td><td>30 mg c/24h con alimentos</td><td>60-120 mg/día</td><td>También para depresión concomitante · Evitar en hepatopatía</td></tr>
           <tr><td class="dn">Gabapentina — 1ª línea ADA 2026</td><td>300 mg al acostarse</td><td>900-3600 mg/día en 3 tomas</td><td>Sedación · Ajustar en ERC · Sin potencial de abuso significativo</td></tr>
           <tr><td class="dn">Pregabalina</td><td>75 mg c/12h</td><td>150-300 mg c/12h</td><td>Inicio más rápido que gabapentina · Potencial de abuso · Ajustar en ERC</td></tr>
-          <tr><td class="dn">Amitriptilina — alternativa</td><td>10-25 mg al acostarse</td><td>25-75 mg al acostarse</td><td>Bajo costo · Cuadro básico institucional · Evitar en anciano (lista Beers) · Riesgo cardíaco</td></tr>
+          <tr><td class="dn">Amitriptilina — alternativa</td><td>10-25 mg al acostarse</td><td>25-75 mg al acostarse</td><td>Bajo costo · Cuadro básico IMSS · Evitar en anciano (lista Beers) · Riesgo cardíaco</td></tr>
           <tr><td class="dn">Tramadol — si falla todo lo anterior</td><td>50 mg c/8h</td><td>50-100 mg c/8h</td><td>Potencial de dependencia · Última línea · No a largo plazo</td></tr>
           <tr><td class="dn">Capsaicina tópica 0.075%</td><td>Aplicar 3-4 veces al día</td><td>Ardor inicial mejora con el uso</td><td>Sin efectos sistémicos · Útil como coadyuvante</td></tr>
         </tbody>
@@ -2983,12 +3427,12 @@ var ESQUEMAS = {
 
   nph: function() {
     return `
-    <div class="alert a-i"><span class="ai">💡</span><div><div class="at">NPH + Regular — el esquema del cuadro básico</div>El más accesible en hospitales públicos de México. Ambas insulinas están en el cuadro básico. Requiere mayor vigilancia por el pico de la NPH.</div></div>
+    <div class="alert a-i"><span class="ai">💡</span><div><div class="at">NPH + Regular — el esquema del cuadro básico IMSS</div>El más accesible en hospitales públicos de México. Ambas insulinas están en el cuadro básico. Requiere mayor vigilancia por el pico de la NPH.</div></div>
 
     <div class="tw" style="margin-top:10px;"><table class="t">
       <thead><tr><th>Cuándo usar</th><th>Ventaja</th><th>Desventaja</th></tr></thead>
       <tbody>
-        <tr><td>Paciente de piso estable · Hospital sin análogos · Bajo costo</td><td>Cuadro básico institucional · Bajo costo · Familiar para el personal de enfermería</td><td>Pico de NPH a las 4-10h = mayor hipoglucemia nocturna · Menos predecible que análogos · Requiere horario estricto de comidas</td></tr>
+        <tr><td>Paciente de piso estable · Hospital sin análogos · Bajo costo</td><td>Cuadro básico IMSS · Bajo costo · Familiar para el personal de enfermería</td><td>Pico de NPH a las 4-10h = mayor hipoglucemia nocturna · Menos predecible que análogos · Requiere horario estricto de comidas</td></tr>
       </tbody>
     </table></div>
 
@@ -3142,6 +3586,18 @@ function showEsq(id, btn) {
         oninput="filtrarFarmacosDM(this.value)">
     </div>
     <div id="farm-dm-count" style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:right;"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+      <button class="pchip on" onclick="filtrarFarmClaseDM('todos',this)">Todos</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('biguanida',this)">Metformina/Biguanida</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('isglt2',this)">iSGLT-2</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('incretina',this)">GLP-1 / GIP RA</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('idpp4',this)">iDPP-4</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('su',this)">Sulfonilureas</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('tzd',this)">TZD</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('glinida',this)">Glinidas</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('iag',this)">iα-glucosidasa</button>
+      <button class="pchip" onclick="filtrarFarmClaseDM('insulina',this)">Insulinas</button>
+    </div>
   </div>
   <div id="farm-dm-list"></div>
 </div>

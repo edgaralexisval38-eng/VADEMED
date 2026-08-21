@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Infusiones vasoactivas · Clínica Rápida</title>
+<style>
+:root{--g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;--b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;--r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;--a:#7a4a00;--am:#d97706;--al:#fff8e1;--bd:#e2e8f0;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;--ac:#b91c1c;--acd:#7f1d1d;--acl:#fee2e2;--rad:10px;--rs:6px;}
+html,body{overflow-x:hidden;max-width:100%;margin:0;padding:0;}*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:var(--gray-900);font-size:14px;}
+.hdr{color:#fff;background:linear-gradient(135deg,var(--acd),var(--ac));}.hdr-top{padding:14px 16px 10px;display:flex;align-items:flex-start;gap:12px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.hdr-eye{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.6);margin-bottom:3px;}
+.hdr-title{font-size:19px;font-weight:700;}.hdr-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-top:3px;}
+.hdr-badges{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--acd),var(--ac));}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.18);color:#fff;}
+.qstats{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-bottom:1px solid var(--bd);}
+.qs{padding:10px 6px;text-align:center;border-right:1px solid var(--bd);}.qs:last-child{border-right:none;}
+.qs-v{font-size:12px;font-weight:700;color:var(--ac);}.qs-l{font-size:9px;color:var(--gray-600);text-transform:uppercase;margin-top:2px;}
+.topbar{position:sticky;top:0;z-index:60;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.06);}
+.tabbar{display:flex;overflow-x:auto;background:#fff;border-bottom:2px solid var(--bd);scrollbar-width:none;flex-wrap:nowrap;position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabbar::-webkit-scrollbar{display:none;}
+.searchwrap{position:relative;padding:8px 12px;background:#fff;border-bottom:1px solid var(--bd);display:flex;gap:8px;align-items:center;}
+.searchbox{position:relative;flex:1;}
+.searchbox .si-mag{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;opacity:.7;}
+#q{width:100%;padding:10px 12px 10px 34px;border:1.5px solid var(--bd);border-radius:22px;font-size:14px;font-family:inherit;color:var(--gray-900);background:var(--gray-50);}
+#q:focus{outline:none;border-color:var(--ac);background:#fff;}
+.az-btn{padding:9px 12px;border:1.5px solid var(--bd);border-radius:22px;background:#fff;color:var(--ac);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.az-btn:hover{background:var(--acl);}
+.qres{position:absolute;left:12px;right:12px;top:calc(100% - 2px);background:#fff;border:1px solid var(--bd);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14);max-height:60vh;overflow-y:auto;z-index:80;display:none;}
+.qri{padding:9px 13px;border-bottom:1px solid var(--gray-100);cursor:pointer;}
+.qri:last-child{border-bottom:none;}
+.qri:hover,.qri.act{background:var(--acl);}
+.qri-n{font-size:13px;font-weight:700;color:var(--gray-900);}
+.qri-m{font-size:11px;color:var(--gray-600);margin-top:2px;}
+.qri-empty{padding:12px 14px;font-size:12.5px;color:var(--gray-600);cursor:default;}
+.qri-hdr{padding:7px 13px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-600);background:var(--gray-50);border-bottom:1px solid var(--bd);position:sticky;top:0;}
+.tab{padding:10px 13px;font-size:12px;font-weight:600;color:var(--gray-600);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.on{color:var(--ac);border-bottom-color:var(--ac);}
+.panel{display:none;padding:14px 14px 80px;}.panel.on{display:block;}
+.sec{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:12px;overflow:hidden;}
+.sh{padding:11px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.si{font-size:16px;flex-shrink:0;}.st{font-size:13px;font-weight:700;color:var(--gray-900);flex:1;}
+.sg{font-size:18px;color:var(--gray-600);transition:transform 0.2s;}.sg.open{transform:rotate(180deg);}
+.sb{padding:14px;}.sb.hidden{display:none;}
+.alert{border-radius:var(--rs);padding:9px 12px;font-size:12.5px;line-height:1.55;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start;}
+.ai{font-size:16px;flex-shrink:0;}.at{font-weight:700;margin-bottom:2px;}
+.a-r{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}.a-w{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.a-g{background:var(--gl);color:var(--g);border-left:3px solid var(--gm);}.a-i{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.tw{overflow-x:auto;border-radius:var(--rs);border:1px solid var(--bd);margin-bottom:8px;}
+table.t{width:100%;border-collapse:collapse;font-size:12px;}
+.t th{background:var(--gray-50);color:var(--gray-600);font-size:10px;text-transform:uppercase;padding:7px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--bd);}
+.t td{padding:8px 10px;border-bottom:1px solid var(--gray-100);vertical-align:top;}.t tr:last-child td{border-bottom:none;}
+.dn{font-weight:700;color:var(--ac);}.dm{color:var(--r);font-weight:600;}
+.prose{font-size:13px;line-height:1.72;color:var(--gray-700);}.prose p{margin-bottom:9px;}.prose b,.prose strong{color:var(--gray-900);}
+.kp{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:var(--rs);background:var(--acl);border-left:3px solid var(--ac);margin-bottom:6px;}
+.kn{background:var(--ac);color:#fff;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.kt{font-size:12.5px;color:var(--gray-700);line-height:1.55;}.kt b{color:var(--gray-900);}
+.fp{border-radius:var(--rs);padding:11px 13px;font-size:12.5px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;border-left:3px solid;}.fp b{color:var(--gray-900);}
+.fp-r{background:var(--rl);border-color:var(--rm);}.fp-a{background:var(--al);border-color:var(--am);}.fp-b{background:var(--bl);border-color:var(--bm);}.fp-p{background:var(--acl);border-color:var(--ac);}
+.diag{background:var(--gray-50);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin:6px 0 10px;font-size:12px;line-height:1.7;color:var(--gray-700);}.diag b{color:var(--ac);}
+.calc-w{background:#fff;border:1px solid var(--bd);border-radius:var(--rad);padding:14px;margin-bottom:12px;}
+.calc-lbl{display:block;font-size:11px;font-weight:700;color:var(--gray-700);letter-spacing:.3px;margin-bottom:5px;}
+.calc-inp{width:100%;padding:9px 11px;border:1.5px solid var(--bd);border-radius:var(--rs);font-size:14px;font-family:inherit;color:var(--gray-900);background:#fff;margin-bottom:12px;}
+.calc-inp:focus{outline:none;border-color:var(--ac);}
+.chipbar,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pchip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:#fff;color:var(--gray-900);}
+.pchip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.biblio-header{background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;}
+.biblio-header h2{font-size:15px;font-weight:700;margin-bottom:4px;}.biblio-header p{font-size:12px;opacity:0.85;}
+.biblio-section{background:#fff;border-radius:var(--rad);border:1px solid var(--bd);margin-bottom:10px;overflow:hidden;}
+.biblio-section-hdr{background:var(--bl);padding:8px 14px;font-size:12px;font-weight:700;color:var(--b);border-bottom:1px solid var(--bd);}
+.biblio-body{padding:10px 14px;}.biblio-item{padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12px;}.biblio-item:last-child{border-bottom:none;}
+.biblio-num{display:inline-block;background:var(--bl);color:var(--b);font-weight:700;font-size:10px;padding:1px 6px;border-radius:4px;margin-bottom:4px;}
+.biblio-year{display:inline-block;background:#e8f5e9;color:#1b5e20;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.biblio-level{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.lv-a{background:#d1fae5;color:#065f46;}.lv-b{background:#dbeafe;color:#1e40af;}.lv-exp{background:#ede9fe;color:#4c1d95;}
+.biblio-ref{color:var(--gray-700);line-height:1.65;}.biblio-ref em{color:var(--b);font-style:italic;}
+.biblio-link{display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:var(--bm);text-decoration:none;font-weight:500;word-break:break-all;}
+.nivel-legend{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:var(--gray-50);border-top:1px solid var(--bd);font-size:11px;}
+.nl-item{display:flex;align-items:center;gap:4px;color:var(--gray-600);}
+.ind-drug-b{display:none;}.ind-drug-b.show{display:block;}
+@media print{.tabbar{display:none!important;}.panel{display:block!important;}.sb.hidden{display:block!important;}.ind-drug-b{display:block!important;}body{background:#fff;}}
+</style>
+</head>
+<body>
+<button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid var(--bd);font-size:13px;color:var(--ac);cursor:pointer;width:100%;font-family:inherit;">← Regresar</button>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-icon">💉</div>
+    <div>
+      <div class="hdr-eye">UCI · Urgencias · Anestesiología · Medicina crítica</div>
+      <div class="hdr-title">Infusiones IV en cuidados críticos</div>
+      <div class="hdr-sub">Vasopresores, inotrópicos, antiarrítmicos, sedación/analgesia, bloqueo neuromuscular, vasodilatadores, insulina y más · recetas listas para la hoja de enfermería · adulto · evidencia 2024–2026</div><div class="hdr-sub" style="margin-top:4px;"><b>CIE-10:</b> Tema de procedimiento, sin código propio. Se codifica la causa: R57.0 choque cardiogénico · R57.1 hipovolémico · R57.9 no especificado · A41.9 sepsis</div>
+    </div>
+  </div>
+  <div class="hdr-badges">
+    <span class="badge">Recetas copiables</span>
+    <span class="badge">Concentración final</span>
+    <span class="badge">mL/h por bomba · 10 unidades</span>
+    <span class="badge">Buscador general</span>
+    <span class="badge">Central vs periférico</span>
+  </div>
+</div>
+
+<div class="qstats">
+  <div class="qs"><div class="qs-v">38 fármacos</div><div class="qs-l">7 categorías</div></div>
+  <div class="qs"><div class="qs-v">Buscador</div><div class="qs-l">Escribe y salta a la ficha</div></div>
+  <div class="qs"><div class="qs-v">Bomba dedicada</div><div class="qs-l">1 vía por fármaco</div></div>
+  <div class="qs"><div class="qs-v">Doble check</div><div class="qs-l">Verificación x2</div></div>
+</div>
+
+<div class="topbar">
+  <div class="searchwrap">
+    <div class="searchbox">
+      <span class="si-mag">🔍</span>
+      <input id="q" type="text" autocomplete="off" oninput="searchRun(this.value)" onkeydown="searchKey(event)" onfocus="if(this.value)searchRun(this.value)" placeholder="Buscar fármaco… (norepinefrina, insulina, midazolam…)">
+      <div id="qres" class="qres"></div>
+    </div>
+    <button class="az-btn" onclick="searchAll()">A–Z</button>
+  </div>
+  <div class="tabbar">
+    <button class="tab on" onclick="showT('res',this)">📋 Resumen</button>
+    <button class="tab" onclick="showT('vaso',this)">🩸 Vasopresores</button>
+    <button class="tab" onclick="showT('inotro',this)">❤️ Inotrópicos</button>
+    <button class="tab" onclick="showT('antiar',this)">⚡ Antiarrítmicos</button>
+    <button class="tab" onclick="showT('sed',this)">😴 Sedación/analgesia</button>
+    <button class="tab" onclick="showT('bnm',this)">🧊 Bloqueo NM</button>
+    <button class="tab" onclick="showT('vaso2',this)">💧 Vasodilatadores</button>
+    <button class="tab" onclick="showT('otros',this)">🧪 Metabólico/otros</button>
+    <button class="tab" onclick="showT('calc',this)">🧮 Calculadora</button>
+    <button class="tab" onclick="showT('bib',this)">📚 Bibliografía</button>
+  </div>
+</div>
+
+<!-- ============ RESUMEN ============ -->
+<div class="panel on" id="tab-res">
+  <div class="alert a-r"><span class="ai">🚨</span><div><div class="at">Cómo usar esta referencia</div>Cada fármaco trae una <b>receta lista para copiar</b> a la hoja de enfermería (dosis del vial + diluyente + volumen → <b>concentración final</b> + dosis inicial + meta clínica). Verifica siempre contra el protocolo local y la ficha técnica. Las presentaciones/marcas MX son orientativas. <b>No sustituye el juicio clínico.</b></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🛡️</span><span class="st">Principios de seguridad (leer antes de infundir)</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="kp"><div class="kn">1</div><div class="kt"><b>Doble verificación independiente</b> del fármaco, la dilución, la concentración y la programación de la bomba por dos personas.</div></div>
+    <div class="kp"><div class="kn">2</div><div class="kt"><b>Bomba de infusión dedicada</b> y línea exclusiva para cada vasoactivo; rotula la vía (fármaco, concentración, dosis, hora).</div></div>
+    <div class="kp"><div class="kn">3</div><div class="kt"><b>No administres bolos de vasopresores</b> salvo indicación explícita (p. ej. bolo de fenilefrina). Los vasopresores se titulan en infusión continua.</div></div>
+    <div class="kp"><div class="kn">4</div><div class="kt"><b>Titula a una meta</b> (PAM, FC, gasto), en pasos pequeños; espera el estado estacionario antes de subir de nuevo.</div></div>
+    <div class="kp"><div class="kn">5</div><div class="kt"><b>Retiro gradual (weaning)</b>: reduce por escalones vigilando la PAM; nunca suspendas de golpe un vasopresor a dosis alta.</div></div>
+    <div class="kp"><div class="kn">6</div><div class="kt"><b>Acceso venoso central preferente</b> para vasopresores a dosis significativa o infusión prolongada. Periférico solo transitorio (vena grande, catéter permeable, vigilancia estrecha), típicamente <b>&lt;6 h</b> como puente al central.</div></div>
+    <div class="kp"><div class="kn">7</div><div class="kt"><b>Extravasación de vasopresor</b> → detener, aspirar, elevar y tratar con <b>fentolamina</b> local (5–10 mg en SF); alternativas tópicas: nitroglicerina/terbutalina según protocolo.</div></div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🧭</span><span class="st">Receptores y efecto — mapa rápido</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <tr><th>Fármaco</th><th>Receptores</th><th>Efecto dominante</th></tr>
+    <tr><td class="dn">Norepinefrina</td><td>α1 &gt;&gt; β1</td><td>Vasoconstricción (↑PAM), inotropía leve</td></tr>
+    <tr><td class="dn">Epinefrina</td><td>β1, β2, α1</td><td>Inotropía + vasoconstricción (dosis-dep.)</td></tr>
+    <tr><td class="dn">Vasopresina</td><td>V1 (no adrenérgico)</td><td>Vasoconstricción; ahorra catecolaminas</td></tr>
+    <tr><td class="dn">Fenilefrina</td><td>α1 puro</td><td>Vasoconstricción sin taquicardia</td></tr>
+    <tr><td class="dn">Dopamina</td><td>Dopa &lt; β1 &lt; α1 (dosis-dep.)</td><td>Inótropo/vasopresor; más arritmias</td></tr>
+    <tr><td class="dn">Dobutamina</td><td>β1 &gt; β2</td><td>Inotropía + vasodilatación</td></tr>
+    <tr><td class="dn">Milrinona</td><td>Inhibidor PDE-3</td><td>Inodilatador (inotropía + vasodilatación)</td></tr>
+    <tr><td class="dn">Levosimendán</td><td>Sensibiliza Ca²⁺ / K-ATP</td><td>Inodilatador prolongado</td></tr>
+  </table></div>
+    <div class="diag">α1 = vasoconstricción · β1 = fuerza y frecuencia cardiaca · β2 = vasodilatación/broncodilatación · Dopa = vasodilatación renal/esplácnica (dosis baja) · V1 = vasoconstricción por vasopresina (útil en acidosis y para reducir dosis de catecolaminas).</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🎯</span><span class="st">Qué elegir según el escenario</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <tr><th>Situación</th><th>1ª elección</th><th>Añadir / alternativa</th></tr>
+    <tr><td>Choque séptico</td><td class="dm">Norepinefrina</td><td>+ Vasopresina 0.03 U/min; + epinefrina o inótropo si gasto bajo</td></tr>
+    <tr><td>Choque cardiogénico</td><td class="dm">Norepinefrina (si hipotensión)</td><td>+ Dobutamina/Milrinona (inótropo)</td></tr>
+    <tr><td>Anafilaxia</td><td class="dm">Epinefrina</td><td>IM primero; infusión si refractaria</td></tr>
+    <tr><td>Choque distributivo con taquiarritmia</td><td class="dm">Fenilefrina / Vasopresina</td><td>Evitan taquicardia</td></tr>
+    <tr><td>Bradicardia / bloqueo</td><td class="dm">Epinefrina / Dopamina</td><td>Puente a marcapasos</td></tr>
+    <tr><td>Bajo gasto normotenso</td><td class="dm">Dobutamina</td><td>Milrinona (si β-bloqueo crónico)</td></tr>
+  </table></div>
+    <div class="alert a-w"><span class="ai">⚠️</span><div><div class="at">Reanimar el volumen primero</div>Los vasopresores no sustituyen la <b>reanimación con líquidos</b> ni la corrección de la causa. En hipovolemia no corregida, elevan la PAM a costa de perfusión.</div></div>
+  </div></div>
+</div>
+
+<!-- ============ VASOPRESORES ============ -->
+<div class="panel" id="tab-vaso">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🩸</span><div><div class="at">Vasopresores — toca una tarjeta para desplegar</div>Cada ficha trae su <b>receta copiable</b>, concentración final y monitoreo de enfermería. La <b>⭐</b> marca la 1ª línea del escenario correspondiente.</div></div>
+  <div id="vaso-body"></div>
+</div>
+
+<!-- ============ INOTRÓPICOS ============ -->
+<div class="panel" id="tab-inotro">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">❤️</span><div><div class="at">Inotrópicos e inodilatadores</div>Aumentan la contractilidad; varios <b>bajan la resistencia vascular</b> (pueden hipotensar). Vigila FC, TA y gasto.</div></div>
+  <div id="inotro-body"></div>
+</div>
+
+<!-- ============ ANTIARRÍTMICOS ============ -->
+<div class="panel" id="tab-antiar">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">⚡</span><div><div class="at">Antiarrítmicos en infusión</div>Muchos se dosifican en <b>mg/min</b> o <b>µg/kg/min</b>, no por concentración fija. Revisa la vía (central para amiodarona concentrada) y el monitoreo continuo con ECG.</div></div>
+  <div id="antiar-body"></div>
+</div>
+
+<!-- ============ SEDACIÓN Y ANALGESIA ============ -->
+<div class="panel" id="tab-sed">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">😴</span><div><div class="at">Sedación y analgesia en infusión</div>Titula a una <b>meta de sedación (RASS)</b> y de dolor (EVA/BPS). Analgesia primero (analgosedación). Vigila depresión respiratoria en el no ventilado y realiza <b>interrupciones diarias</b> cuando sea seguro.</div></div>
+  <div id="sed-body"></div>
+</div>
+
+<!-- ============ BLOQUEO NEUROMUSCULAR ============ -->
+<div class="panel" id="tab-bnm">
+  <div class="alert a-r" style="margin-bottom:10px;"><span class="ai">🧊</span><div><div class="at">Bloqueo neuromuscular — regla de oro</div><b>NUNCA</b> sin sedación y analgesia profundas (el paciente paralizado sigue consciente si no está bien sedado). Monitoriza el bloqueo con <b>TOF</b> (tren de cuatro) y protege la córnea. Suspende para valoración neurológica cuando proceda.</div></div>
+  <div id="bnm-body"></div>
+</div>
+
+<!-- ============ VASODILATADORES / ANTIHIPERTENSIVOS ============ -->
+<div class="panel" id="tab-vaso2">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💧</span><div><div class="at">Vasodilatadores y antihipertensivos IV</div>Para emergencia hipertensiva, reducir la <b>TA de forma controlada</b> (línea arterial ideal): no bajar &gt;20–25% en la 1ª hora salvo indicación específica (disección aórtica, EAP). Vigila hipotensión brusca.</div></div>
+  <div id="vaso2-body"></div>
+</div>
+
+<!-- ============ METABÓLICO / ENDOCRINO / OTROS ============ -->
+<div class="panel" id="tab-otros">
+  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">🧪</span><div><div class="at">Metabólico, endocrino y otros</div>Insulina, anticoagulación, electrolitos, diuréticos y adyuvantes de uso frecuente en UCI. Muchos exigen <b>monitoreo de laboratorio seriado</b> (glucosa, K⁺, TTPa, gasometría). Revisa siempre el protocolo local.</div></div>
+  <div id="otros-body"></div>
+</div>
+
+<!-- ============ CALCULADORA ============ -->
+<div class="panel" id="tab-calc">
+  <div class="esc-hero" style="background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;border-radius:var(--rad);padding:14px 16px;margin-bottom:12px;">
+    <div style="font-size:16px;font-weight:800;">🧮 Velocidad de bomba (mL/h)</div>
+    <div style="font-size:12px;opacity:.9;margin-top:4px;line-height:1.5;">Soporta 10 unidades de dosificación. Actualiza en vivo. Selecciona el fármaco para precargar concentración, dosis y unidad estándar.</div>
+  </div>
+
+  <div class="calc-w">
+    <div style="background:linear-gradient(135deg,var(--acl),#fff);border-radius:var(--rs);padding:11px 13px;margin:-14px -14px 14px -14px;border-bottom:1px solid var(--bd);">
+      <div style="font-size:13px;font-weight:800;color:var(--acd);">Datos de la infusión</div>
+    </div>
+
+    <label class="calc-lbl">Fármaco (precarga concentración, dosis y unidad)</label>
+    <select id="c-drug" class="calc-inp" oninput="calcPreset()"></select>
+
+    <label class="calc-lbl">Unidad de la dosis</label>
+    <select id="c-unit" class="calc-inp" oninput="calcUnitChange()"></select>
+
+    <div id="peso-wrap">
+      <label class="calc-lbl">Peso del paciente (kg)</label>
+      <input id="c-peso" class="calc-inp" type="number" inputmode="decimal" value="70" oninput="calcRun()" placeholder="kg">
+    </div>
+
+    <label class="calc-lbl" id="lbl-conc">Concentración final (µg/mL)</label>
+    <input id="c-conc" class="calc-inp" type="number" inputmode="decimal" value="16" oninput="calcRun()" placeholder="conc">
+
+    <label class="calc-lbl" id="lbl-dosis">Dosis (µg/kg/min)</label>
+    <input id="c-dosis" class="calc-inp" type="number" inputmode="decimal" step="0.001" value="0.05" oninput="calcRun()" placeholder="dosis">
+
+    <div id="c-out" style="margin-top:4px;"></div>
+
+    <div id="c-formula" style="font-size:11px;color:var(--gray-600);margin-top:12px;font-style:italic;line-height:1.6;"></div>
+  </div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">🔢</span><span class="st">Unidades y fórmulas soportadas</span><span class="sg">⌄</span></div>
+  <div class="sb"><div class="tw"><table class="t">
+    <tr><th>Unidad</th><th>Concentración</th><th>mL/h =</th></tr>
+    <tr><td class="dn">µg/kg/min</td><td>µg/mL</td><td>dosis × peso × 60 ÷ conc</td></tr>
+    <tr><td class="dn">µg/kg/h</td><td>µg/mL</td><td>dosis × peso ÷ conc</td></tr>
+    <tr><td class="dn">µg/min</td><td>µg/mL</td><td>dosis × 60 ÷ conc</td></tr>
+    <tr><td class="dn">mg/kg/min</td><td>mg/mL</td><td>dosis × peso × 60 ÷ conc</td></tr>
+    <tr><td class="dn">mg/kg/h</td><td>mg/mL</td><td>dosis × peso ÷ conc</td></tr>
+    <tr><td class="dn">mg/min</td><td>mg/mL</td><td>dosis × 60 ÷ conc</td></tr>
+    <tr><td class="dn">mg/h</td><td>mg/mL</td><td>dosis ÷ conc</td></tr>
+    <tr><td class="dn">U/kg/h</td><td>U/mL</td><td>dosis × peso ÷ conc</td></tr>
+    <tr><td class="dn">U/h</td><td>U/mL</td><td>dosis ÷ conc</td></tr>
+    <tr><td class="dn">U/min</td><td>U/mL</td><td>dosis × 60 ÷ conc</td></tr>
+  </table></div></div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">✅</span><span class="st">Ejemplos resueltos (verificados)</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="diag"><b>Norepinefrina</b> 16 µg/mL, 70 kg, 0.05 µg/kg/min → 0.05 × 70 × 60 ÷ 16 = 210 ÷ 16 = <b>13.1 mL/h</b> (total 3.5 µg/min).</div>
+    <div class="diag"><b>Insulina</b> 1 U/mL, 80 kg, 0.1 U/kg/h → 0.1 × 80 ÷ 1 = <b>8 mL/h</b> (total 8 U/h).</div>
+    <div class="diag"><b>Midazolam</b> 1 mg/mL, 5 mg/h → 5 ÷ 1 = <b>5 mL/h</b>.</div>
+    <div class="diag"><b>Nitroglicerina</b> 200 µg/mL, 20 µg/min → 20 × 60 ÷ 200 = 1200 ÷ 200 = <b>6 mL/h</b>.</div>
+  </div></div>
+
+  <div class="sec"><div class="sh" onclick="tog(this)"><span class="si">💧</span><span class="st">Casos especiales</span><span class="sg">⌄</span></div>
+  <div class="sb">
+    <div class="fp fp-p"><b>Vasopresina:</b> dosis FIJA 0.03 U/min (no por peso). A 0.2 U/mL → 0.03 × 60 ÷ 0.2 = <b>9 mL/h</b>. Usa la unidad <b>U/min</b>.</div>
+    <div class="fp fp-a"><b>Antiarrítmicos en mg/min</b> (amiodarona, lidocaína, procainamida): unidad <b>mg/min</b>. Amiodarona 1 mg/min a 1.8 mg/mL → 1 × 60 ÷ 1.8 = <b>33 mL/h</b>; fase 0.5 mg/min → <b>17 mL/h</b>.</div>
+    <div class="fp fp-b"><b>Diltiazem / nicardipino / midazolam</b> en mg/h directo: mL/h = mg/h ÷ conc (mg/mL). Diltiazem 1 mg/mL, 10 mg/h = <b>10 mL/h</b>.</div>
+    <div class="fp fp-r"><b>Insulina:</b> purga ~20 mL del sistema (adsorción al plástico) y NO inicies si K⁺ &lt; 3.3 mEq/L.</div>
+  </div></div>
+</div>
+
+<!-- ============ BIBLIOGRAFÍA ============ -->
+<div class="panel" id="tab-bib">
+  <div class="biblio-header"><h2>📚 Bibliografía</h2><p>Guías y referencias de dosificación 2020–2026 · medicina crítica</p></div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Guías de choque y reanimación</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">1</span><span class="biblio-year">2021</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Evans L, Rhodes A, Alhazzani W, et al. <em>Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021.</em> Crit Care Med. 2021;49(11):e1063–e1143.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/34605781/">PMID: 34605781 · doi:10.1097/CCM.0000000000005337</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">2</span><span class="biblio-year">2020</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Panchal AR, Bartos JA, Cabañas JG, et al. <em>Part 3: Adult Basic and Advanced Life Support: 2020 AHA Guidelines for CPR and ECC (ACLS).</em> Circulation. 2020;142(16_suppl_2):S366–S468.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/33081529/">PMID: 33081529 · doi:10.1161/CIR.0000000000000916</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">3</span><span class="biblio-year">2023</span><span class="biblio-level lv-a">Actualización</span><div class="biblio-ref">American Heart Association. <em>2023 Focused Update on Adult Advanced Cardiovascular Life Support.</em> Circulation. 2024;149(5):e254–e273.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/38108133/">doi:10.1161/CIR.0000000000001194</a></div></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Vasopresores, inotrópicos y dosificación</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">4</span><span class="biblio-year">2024</span><span class="biblio-level lv-b">Consenso</span><div class="biblio-ref">Chow JH, Wittwer ED, Wall MH, et al. <em>Contemporary use of vasopressor and inotropic agents in shock (consensus/revisión).</em> 2024.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/?term=vasopressor+inotrope+shock+review+2024">PubMed: vasopressor/inotrope shock 2024</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">5</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Referencia</span><div class="biblio-ref">IBM Micromedex / Lexicomp. <em>Drug monographs: norepinephrine, epinephrine, vasopressin, phenylephrine, dopamine, dobutamine, milrinone, amiodarone, lidocaine, esmolol, diltiazem, procainamide (IV infusion dosing).</em> Actualización 2025.<a class="biblio-link" href="https://www.micromedexsolutions.com/">micromedexsolutions.com</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">6</span><span class="biblio-year">2016</span><span class="biblio-level lv-b">ECA</span><div class="biblio-ref">Mehta S, et al. (VANISH / VASST y estudios de vasopresina) — <em>Vasopressin vs norepinephrine in septic shock.</em> N Engl J Med / JAMA.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/18305265/">PMID: 18305265 (VASST) · doi:10.1056/NEJMoa067373</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">7</span><span class="biblio-year">2010</span><span class="biblio-level lv-b">ECA</span><div class="biblio-ref">De Backer D, Biston P, Devriendt J, et al. <em>Comparison of dopamine and norepinephrine in the treatment of shock (SOAP II).</em> N Engl J Med. 2010;362(9):779–789.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/20200382/">PMID: 20200382 · doi:10.1056/NEJMoa0907118</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">8</span><span class="biblio-year">2024</span><span class="biblio-level lv-exp">Institucional</span><div class="biblio-ref">CENETEC / Secretaría de Salud (México). <em>Guías de práctica clínica y cuadro básico de medicamentos: manejo del choque y fármacos vasoactivos (IMSS/SSa).</em> Verificar presentaciones y protocolos locales.<a class="biblio-link" href="http://www.cenetec.salud.gob.mx/">cenetec.salud.gob.mx</a></div></div>
+    </div>
+    <div class="nivel-legend">
+      <span class="nl-item"><span class="biblio-level lv-a">Guía/Actualización</span> alta fuerza</span>
+      <span class="nl-item"><span class="biblio-level lv-b">ECA/Referencia</span> soporte</span>
+      <span class="nl-item"><span class="biblio-level lv-exp">Institucional</span> práctica local</span>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Sedación, analgesia y bloqueo neuromuscular</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">9</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Devlin JW, Skrobik Y, Gélinas C, et al. <em>Clinical Practice Guidelines for the Prevention and Management of Pain, Agitation/Sedation, Delirium, Immobility, and Sleep Disruption in Adult Patients in the ICU (PADIS).</em> Crit Care Med. 2018;46(9):e825–e873.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/30113379/">PMID: 30113379 · doi:10.1097/CCM.0000000000003299</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">10</span><span class="biblio-year">2010</span><span class="biblio-level lv-b">ECA</span><div class="biblio-ref">Papazian L, Forel JM, Gacouin A, et al. <em>Neuromuscular blockers in early acute respiratory distress syndrome (ACURASYS).</em> N Engl J Med. 2010;363(12):1107–1116.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/20843245/">PMID: 20843245 · doi:10.1056/NEJMoa1005372</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">11</span><span class="biblio-year">2019</span><span class="biblio-level lv-b">ECA</span><div class="biblio-ref">National Heart, Lung, and Blood Institute PETAL Clinical Trials Network (Moss M, et al). <em>Early Neuromuscular Blockade in the Acute Respiratory Distress Syndrome (ROSE).</em> N Engl J Med. 2019;380(21):1997–2008.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/31112383/">PMID: 31112383 · doi:10.1056/NEJMoa1901686</a></div></div>
+    </div>
+  </div>
+  <div class="biblio-section">
+    <div class="biblio-section-hdr">Emergencia hipertensiva, endocrino y otros</div>
+    <div class="biblio-body">
+      <div class="biblio-item"><span class="biblio-num">12</span><span class="biblio-year">2018</span><span class="biblio-level lv-a">Guía</span><div class="biblio-ref">Whelton PK, Carey RM, Aronow WS, et al. <em>2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults (incluye emergencias hipertensivas).</em> Hypertension. 2018;71(6):e13–e115.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/29133356/">PMID: 29133356 · doi:10.1161/HYP.0000000000000065</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">13</span><span class="biblio-year">2009</span><span class="biblio-level lv-a">Consenso</span><div class="biblio-ref">Kitabchi AE, Umpierrez GE, Miles JM, Fisher JN. <em>Hyperglycemic Crises in Adult Patients With Diabetes (manejo de CAD/EHH con insulina IV).</em> Diabetes Care. 2009;32(7):1335–1343.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/19564476/">PMID: 19564476 · doi:10.2337/dc09-9032</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">14</span><span class="biblio-year">2024</span><span class="biblio-level lv-a">Consenso</span><div class="biblio-ref">ElSayed NA, et al; American Diabetes Association / EASD. <em>The management of hyperglycemic crises: consensus report (DKA/HHS 2024).</em> Diabetes Care / Diabetologia. 2024.<a class="biblio-link" href="https://pubmed.ncbi.nlm.nih.gov/38934531/">PMID: 38934531 · doi:10.2337/dci24-0032</a></div></div>
+      <div class="biblio-item"><span class="biblio-num">15</span><span class="biblio-year">2025</span><span class="biblio-level lv-b">Referencia</span><div class="biblio-ref">IBM Micromedex / Lexicomp / UpToDate. <em>Drug monographs (IV infusion dosing): midazolam, propofol, dexmedetomidine, fentanyl, ketamine, morphine, remifentanil, rocuronium, cisatracurium, vecuronium, nitroglycerin, nitroprusside, nicardipine, clevidipine, labetalol, insulin, heparin, magnesium, potassium, aminophylline, octreotide, furosemide, sodium bicarbonate.</em> Actualización 2025.<a class="biblio-link" href="https://www.micromedexsolutions.com/">micromedexsolutions.com</a></div></div>
+    </div>
+  </div>
+  <div class="alert a-w" style="margin-top:10px;"><span class="ai">⚠️</span><div><div class="at">Aviso educativo</div>Material de referencia rápida para profesionales de la salud. <b>No sustituye el juicio clínico, los protocolos locales ni las fichas técnicas.</b> Verifica cada dosis, dilución, concentración y compatibilidad antes de preparar y administrar. Las presentaciones/marcas MX son orientativas y pueden variar por institución.</div></div>
+</div>
+
+<script>
+function showT(id,el){var p=document.querySelectorAll('.panel');for(var i=0;i<p.length;i++)p[i].classList.remove('on');var t=document.getElementById('tab-'+id);if(t)t.classList.add('on');var b=document.querySelectorAll('.tab');for(var j=0;j<b.length;j++)b[j].classList.remove('on');if(el)el.classList.add('on');window.scrollTo(0,0);}
+function tog(h){var sb=h.nextElementSibling,sg=h.querySelector('.sg');if(sb)sb.classList.toggle('hidden');if(sg)sg.classList.toggle('open');}
+function togInd(id){var b=document.getElementById(id);var ar=document.getElementById(id+'-ar');b.classList.toggle('show');if(ar)ar.textContent=b.classList.contains('show')?'▼':'►';}
+function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3f4f6;font-size:12px;gap:10px;"><span style="color:#6b7280;min-width:112px;flex-shrink:0;text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px;">'+t+'</span><span style="font-weight:600;color:'+c+';text-align:right;line-height:1.45;">'+v+'</span></div>';}
+
+/* Copiar receta al portapapeles */
+function copiarRx(id,btn){var el=document.getElementById(id);var txt=el?(el.innerText||el.textContent):'';
+  function ok(){var t=btn.textContent;btn.textContent='✓ Copiado';setTimeout(function(){btn.textContent=t;},1600);}
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,function(){fallback(txt,ok);});}else{fallback(txt,ok);}}catch(e){fallback(txt,ok);}}
+function fallback(txt,ok){try{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();}catch(e){}}
+
+/* ===== FICHAS DE FÁRMACOS ===== */
+var FARM=[
+/* --------- VASOPRESORES --------- */
+ {cat:'vaso',n:'Norepinefrina (noradrenalina)',clase:'Vasopresor · α1 &gt;&gt; β1 · 1ª línea',color:'#b91c1c',estrella:true,
+  receta:'NOREPINEFRINA 4 mg IV + SG5% 250 mL (16 µg/mL) — infusión continua por bomba — iniciar a 0.05 µg/kg/min y titular hasta PAM ≥65 mmHg. Vigilar TA/PAM, FC, perfusión periférica y sitio de infusión. Preferentemente por acceso venoso central.',
+  rows:[['Presentación','Ampolleta 4 mg/4 mL (1 mg/mL)'],['Dilución estándar','4 mg + SG5% 250 mL'],['Concentración final','16 µg/mL'],['Indicaciones','Choque séptico (1ª línea); choque distributivo/vasodilatador; hipotensión refractaria'],['Dosis inicial','0.05 µg/kg/min (≈2–4 µg/min)'],['Rango/titulación','0.05–0.5 (hasta ~1) µg/kg/min'],['Dosis máx.','~1 µg/kg/min (revalorar causa)'],['Meta clínica','PAM ≥65 mmHg'],['Inicio / t½','Rápido / ~2–3 min'],['Vía','Central preferente (riesgo de necrosis por extravasación); periférica solo corto en vena gruesa'],['Contraindicaciones','No absolutas; corregir hipovolemia antes (relativa); precaución en arritmia/isquemia'],['Monitoreo','TA/PAM, FC, ritmo, diuresis, perfusión, sitio'],['Precauciones','Extravasación → isquemia; usar SG5% o SF']],
+  nota:'Vasopresor de <b>1ª línea en choque séptico</b> y en la mayoría de los choques con hipotensión. Extravasación: detener, tratar con <b>fentolamina</b> local. Se puede concentrar (p. ej. 16 mg/250 mL = 64 µg/mL) por acceso central para restringir volumen.'},
+
+ {cat:'vaso',n:'Epinefrina (adrenalina)',clase:'Vasopresor / inótropo · β1, β2, α1',color:'#991b1b',estrella:true,
+  receta:'EPINEFRINA 4 mg IV + SG5% 250 mL (16 µg/mL) — infusión continua por bomba — iniciar a 0.01–0.05 µg/kg/min (≈2–10 µg/min) y titular a respuesta. Vigilar FC, ritmo (arritmias), PAM, lactato y glucemia. Acceso venoso central.',
+  rows:[['Presentación','Ampolleta 1 mg/1 mL (1:1000)'],['Dilución estándar','4 mg + SG5% 250 mL'],['Concentración final','16 µg/mL'],['Indicaciones','Anafilaxia; choque (séptico/anafiláctico/cardiogénico); paro y post-paro; bradicardia refractaria'],['Dosis inicial','0.01–0.05 µg/kg/min (2–10 µg/min)'],['Rango/titulación','0.01–0.5 µg/kg/min'],['Dosis máx.','~0.5 µg/kg/min (individualizar)'],['Meta clínica','PAM/gasto; anafilaxia: revertir'],['Inicio / t½','Rápido / ~2–3 min'],['Vía','Central para infusión (vasoconstricción/necrosis por extravasación); IM en anafilaxia'],['Contraindicaciones','Sin absolutas en urgencia vital; precaución en cardiopatía isquémica y taquiarritmia'],['Monitoreo','FC, arritmias, PAM, lactato, glucemia'],['Precauciones','Isquemia, taquiarritmia, hiperglucemia']],
+  nota:'1ª línea en <b>anafilaxia</b> (IM primero; infusión si refractaria) y en <b>bradicardia/paro</b>. Coadyuvante en choque séptico con gasto bajo. Puede elevar el lactato (efecto β) sin significar hipoperfusión.'},
+
+ {cat:'vaso',n:'Vasopresina',clase:'Vasopresor no adrenérgico · V1',color:'#9f1239',estrella:false,
+  receta:'VASOPRESINA 20 U IV + SG5% 100 mL (0.2 U/mL) — infusión continua por bomba — dosis FIJA 0.03 U/min (≈9 mL/h), NO titular por peso ni por kg. Vigilar PAM, perfusión distal, isquemia (dedos, mesentérica), sodio. Acceso venoso central.',
+  rows:[['Presentación','Ámpula 20 U/mL (frasco 1 mL)'],['Dilución estándar','20 U + SG5% 100 mL'],['Concentración final','0.2 U/mL'],['Indicaciones','Coadyuvante en choque séptico (ahorrador de catecolaminas); choque vasodilatador'],['Dosis inicial','0.03 U/min (fija ≈9 mL/h)'],['Rango/titulación','No se titula (dosis fija)'],['Dosis máx.','0.03–0.04 U/min (evitar más)'],['Meta clínica','Coadyuvante para ↓ norepinefrina'],['Inicio / t½','Rápido / ~10–20 min'],['Vía','Central (vasoconstrictor potente; riesgo de isquemia distal por extravasación)'],['Contraindicaciones','NO en choque cardiogénico, isquemia coronaria ni mesentérica; precaución vascular periférica'],['Monitoreo','PAM, isquemia distal/mesentérica, Na, diuresis'],['Precauciones','Isquemia; no como monoterapia inicial']],
+  nota:'<b>Coadyuvante</b> a norepinefrina en choque séptico para reducir su dosis; útil en acidosis (efecto V1 no adrenérgico). <b>Dosis fija</b>, no por kg. No se usa para reanimar de novo como único agente.'},
+
+ {cat:'vaso',n:'Fenilefrina',clase:'Vasopresor · α1 puro',color:'#be123c',estrella:false,
+  receta:'FENILEFRINA 10 mg IV + SG5% 100 mL (100 µg/mL) — infusión continua por bomba — iniciar 0.5–2 µg/kg/min y titular a PAM; o bolo 50–200 µg IV en hipotensión aguda. Vigilar PAM, FC (bradicardia refleja). Puede usarse por vía periférica corta.',
+  rows:[['Presentación','Ámpula 10 mg/mL'],['Dilución estándar','10 mg + SG5% 100 mL'],['Concentración final','100 µg/mL'],['Indicaciones','Hipotensión con taquicardia; hipotensión por anestesia/vasoplejía; peri-inducción'],['Dosis inicial','0.5–2 µg/kg/min'],['Bolo','50–200 µg IV (según protocolo)'],['Rango/titulación','0.5–5 µg/kg/min'],['Meta clínica','PAM sin taquicardia'],['Inicio / t½','Rápido / ~5 min'],['Vía','Periférica corta aceptable (vena gruesa, línea permeable); central si prolongada'],['Contraindicaciones','Bradicardia; ICC de bajo gasto (↑ poscarga); precaución en vasculopatía periférica grave'],['Monitoreo','PAM, FC (bradicardia refleja)'],['Precauciones','↓ gasto por poscarga; bradicardia']],
+  nota:'Útil cuando la <b>taquicardia</b> limita otros agentes (α1 puro, sin cronotropía). Puede reducir el gasto por aumento de poscarga. El bolo es útil en hipotensión transitoria (p. ej. peri-inducción).'},
+
+ {cat:'vaso',n:'Dopamina',clase:'Vasopresor / inótropo dosis-dependiente',color:'#7f1d1d',estrella:false,
+  receta:'DOPAMINA 400 mg IV + SG5% 250 mL (1600 µg/mL) — infusión continua por bomba — 5–20 µg/kg/min (efecto vasopresor; ≤5 µg/kg/min efecto inótropo/dopaminérgico). Titular a PAM/FC. Vigilar arritmias, FC, PAM. Acceso central si infusión prolongada.',
+  rows:[['Presentación','Ámpula 200 mg/5 mL (40 mg/mL)'],['Dilución estándar','400 mg + SG5% 250 mL'],['Concentración final','1600 µg/mL'],['Indicaciones','Bradicardia sintomática (puente); choque (2ª línea, si taquiarritmia poco probable)'],['Dosis inicial','5 µg/kg/min (subir según meta)'],['Rango/titulación','5–20 µg/kg/min (vasopresor)'],['Dosis máx.','20 µg/kg/min'],['Meta clínica','PAM/FC; bradicardia como puente'],['Inicio / t½','Rápido / ~2 min'],['Vía','Central preferente si prolongada (extravasación → necrosis); periférica solo breve'],['Contraindicaciones','Taquiarritmias/FA rápida; feocromocitoma; hipovolemia no corregida'],['Monitoreo','ECG/arritmias, FC, PAM, diuresis'],['Precauciones','Más taquiarritmias que norepinefrina']],
+  nota:'Segunda opción frente a norepinefrina: en SOAP II se asoció a <b>más arritmias</b> y mayor mortalidad en el subgrupo de choque cardiogénico. La "dosis renal" (≤3 µg/kg/min) <b>no</b> protege el riñón. Útil como puente en bradicardia.'},
+
+/* --------- INOTRÓPICOS --------- */
+ {cat:'inotro',n:'Dobutamina',clase:'Inótropo · β1 &gt; β2',color:'#1a6bbd',estrella:true,
+  receta:'DOBUTAMINA 250 mg IV + SG5% 250 mL (1000 µg/mL) — infusión continua por bomba — iniciar 2.5 µg/kg/min y titular 2.5–20 µg/kg/min según gasto/perfusión. Vigilar FC (taquicardia), TA (puede hipotensar), arritmias. Puede administrarse por vía periférica.',
+  rows:[['Presentación','Frasco 250 mg/20 mL (12.5 mg/mL)'],['Dilución estándar','250 mg + SG5% 250 mL'],['Concentración final','1000 µg/mL (1 mg/mL)'],['Indicaciones','Choque cardiogénico; IC de bajo gasto; disfunción miocárdica en sepsis'],['Dosis inicial','2.5 µg/kg/min'],['Rango/titulación','2.5–20 µg/kg/min'],['Dosis máx.','20 µg/kg/min'],['Meta clínica','↑ gasto/perfusión (choque cardiogénico)'],['Inicio / t½','Rápido / ~2 min'],['Vía','Periférica aceptable (vena gruesa) o central; central preferente si concentrada/prolongada'],['Contraindicaciones','Miocardiopatía hipertrófica obstructiva; estenosis aórtica grave; taquiarritmia no controlada; precaución en SCA'],['Monitoreo','FC, TA, ritmo, gasto, perfusión'],['Precauciones','Taquicardia, hipotensión, arritmia']],
+  nota:'Inótropo de elección en <b>bajo gasto</b> (cardiogénico, sepsis con disfunción miocárdica). Vasodilata (β2): puede bajar la TA — combinar con norepinefrina si hay hipotensión. Puede inducir taquicardia.'},
+
+ {cat:'inotro',n:'Milrinona',clase:'Inodilatador · inhibidor PDE-3',color:'#0c3b6e',estrella:false,
+  receta:'MILRINONA 20 mg IV + SG5% 100 mL (200 µg/mL) — infusión continua por bomba — mantenimiento 0.375–0.75 µg/kg/min (carga OPCIONAL 50 µg/kg en 10 min, a menudo se omite por hipotensión). Ajustar en insuficiencia renal. Vigilar TA (hipotensión), arritmias. Acceso central preferente.',
+  rows:[['Presentación','Ámpula 20 mg/20 mL (1 mg/mL)'],['Dilución estándar','20 mg + SG5% 100 mL'],['Concentración final','200 µg/mL'],['Indicaciones','IC descompensada de bajo gasto; hipertensión pulmonar/disfunción de VD; bajo β-bloqueo crónico'],['Carga (opcional)','50 µg/kg en 10 min (suele omitirse)'],['Mantenimiento','0.375–0.75 µg/kg/min'],['Dosis máx.','0.75 µg/kg/min'],['Meta clínica','↑ gasto sin ↑ demanda de O₂ miocárdica'],['Inicio / t½','~5–15 min / ~2–4 h (↑ en IRC)'],['Vía','Central preferente (infusión prolongada); periférica posible'],['Contraindicaciones','Hipotensión significativa; estenosis aórtica/pulmonar grave; ajustar en falla renal (acumula)'],['Monitoreo','TA, ECG/arritmias, función renal, diuresis'],['Precauciones','Hipotensión; ajuste renal; t½ larga']],
+  nota:'Inodilatador útil cuando el paciente recibe <b>β-bloqueo crónico</b> (no depende del receptor β). <b>Vida media larga</b> y <b>eliminación renal</b>: acumula en falla renal. La carga suele omitirse por riesgo de hipotensión.'},
+
+ {cat:'inotro',n:'Levosimendán',clase:'Inodilatador · sensibilizador de Ca²⁺',color:'#0a5c45',estrella:false,
+  receta:'LEVOSIMENDÁN 12.5 mg IV + SG5% 500 mL (25 µg/mL = 0.025 mg/mL) — infusión continua por bomba durante 24 h — 0.05–0.2 µg/kg/min (± carga 6–12 µg/kg en 10 min, frecuentemente omitida por hipotensión). Vigilar TA, FC, arritmias, K. Acceso central preferente.',
+  rows:[['Presentación','Vial 12.5 mg/5 mL (2.5 mg/mL)'],['Dilución estándar','12.5 mg + SG5% 500 mL'],['Concentración final','25 µg/mL (0.025 mg/mL)'],['Indicaciones','IC aguda descompensada de bajo gasto; disfunción sistólica (incl. bajo β-bloqueo)'],['Carga (opcional)','6–12 µg/kg en 10 min (suele omitirse)'],['Mantenimiento','0.05–0.2 µg/kg/min × 24 h'],['Duración','Infusión de 24 h (efecto prolongado)'],['Meta clínica','↑ gasto en IC descompensada'],['Inicio / t½','Efecto días (metabolito activo)'],['Vía','Central preferente; periférica posible'],['Contraindicaciones','Hipotensión grave; estenosis grave del tracto de salida; TFG baja; hipopotasemia; QT largo/torsades'],['Monitoreo','TA, FC, ECG, K⁺, magnesio'],['Precauciones','Hipotensión, taquicardia, hipopotasemia']],
+  nota:'Efecto inotrópico <b>prolongado</b> (metabolito activo dura días) tras una sola infusión de 24 h. No aumenta el consumo de O₂ como las catecolaminas. Frecuente omitir la carga por hipotensión; corregir hipovolemia antes.'},
+
+/* --------- ANTIARRÍTMICOS --------- */
+ {cat:'antiar',n:'Amiodarona',clase:'Antiarrítmico clase III',color:'#b45309',estrella:true,
+  receta:'AMIODARONA — carga 150 mg + SG5% 100 mL a pasar en 10 min; luego 1 mg/min × 6 h y 0.5 mg/min × 18 h (900 mg + SG5% 500 mL = 1.8 mg/mL). Usar SOLO SG5% (precipita con salino). Concentraciones &gt;2 mg/mL o infusión &gt;1 h → vía central + filtro en línea. Vigilar TA, FC, ECG (QT), flebitis.',
+  rows:[['Presentación','Ámpula 150 mg/3 mL (50 mg/mL)'],['Carga','150 mg + SG5% 100 mL en 10 min'],['Mantenimiento','1 mg/min × 6 h, luego 0.5 mg/min × 18 h'],['Indicaciones','TV/FV (paro); FA/flutter con RVR; TSV; tormenta eléctrica'],['Mezcla mantto.','900 mg + SG5% 500 mL = 1.8 mg/mL'],['mL/h (1 mg/min)','≈33 mL/h; fase 0.5 mg/min ≈17 mL/h'],['Dosis máx. 24 h','~2.2 g IV'],['Diluyente','SOLO SG5% (precipita con SF)'],['Vía','Periférica corta solo para la carga; central para infusión &gt;2 mg/mL o &gt;1 h (flebítica) + filtro en línea'],['Contraindicaciones','Bradicardia/BAV avanzado sin marcapaso; QT largo (relativo); tiroidopatía; hipersensibilidad al yodo'],['Monitoreo','TA, FC, ECG (QT), flebitis, tiroides/hígado'],['Precauciones','Hipotensión/bradicardia si rápido; QT largo']],
+  nota:'Antiarrítmico de <b>amplio espectro</b> (FV/TV, FA, TSV). Pasa la carga en 10 min (no en bolo rápido: hipotensión). <b>Incompatible con salino</b> — solo SG5%. Flebítico: preferir vía central con filtro para infusión prolongada.'},
+
+ {cat:'antiar',n:'Lidocaína',clase:'Antiarrítmico clase Ib',color:'#7a4a00',estrella:false,
+  receta:'LIDOCAÍNA — bolo 1–1.5 mg/kg IV (repetir 0.5–0.75 mg/kg c/5–10 min, máx ~3 mg/kg); infusión 1–4 mg/min (2 g + SG5% 250 mL = 8 mg/mL, o + 500 mL = 4 mg/mL). Vigilar neurotoxicidad (parestesias, temblor, convulsiones), FC, ECG. Reducir dosis en falla hepática/gasto bajo.',
+  rows:[['Presentación','Frasco 2% (20 mg/mL) sin epinefrina'],['Bolo','1–1.5 mg/kg IV; repetir 0.5–0.75 mg/kg'],['Infusión','1–4 mg/min'],['Indicaciones','TV/FV (2ª línea, sobre todo en isquemia); TV monomórfica'],['Dilución estándar','2 g + SG5% 250 mL (8 mg/mL)'],['Alterna','2 g + SG5% 500 mL (4 mg/mL)'],['mL/h (2 mg/min)','≈15 mL/h a 8 mg/mL'],['Dosis máx.','Bolos ≤3 mg/kg; infusión ≤4 mg/min'],['Vía','Periférica aceptable o central'],['Contraindicaciones','BAV de alto grado sin marcapaso; síndrome de Stokes-Adams; ajustar en hepatopatía/bajo gasto'],['Monitoreo','SNC (neurotoxicidad), FC, ECG, TA'],['Precauciones','↓ dosis en falla hepática/↓ gasto/edad']],
+  nota:'Alternativa a amiodarona en <b>TV/FV</b>. Toxicidad dosis-dependiente del SNC: parestesias peribucales → temblor → convulsiones. Usar el frasco <b>sin epinefrina</b>. Ajustar en hepatopatía y bajo gasto (acumula).'},
+
+ {cat:'antiar',n:'Esmolol',clase:'Betabloqueador β1 ultracorto',color:'#6d28d9',estrella:false,
+  receta:'ESMOLOL — carga 500 µg/kg IV en 1 min; infusión 50–200 (hasta 300) µg/kg/min (2.5 g + SG5% 250 mL = 10 mg/mL). Betabloqueo ultracorto (t½ ~9 min). Vigilar FC, TA (hipotensión), broncoespasmo, signos de falla cardiaca.',
+  rows:[['Presentación','Vial 2.5 g/10 mL o 100 mg/10 mL'],['Carga','500 µg/kg IV en 1 min'],['Infusión','50–200 (hasta 300) µg/kg/min'],['Dilución estándar','2.5 g + SG5% 250 mL'],['Concentración final','10 mg/mL (10 000 µg/mL)'],['Indicaciones','Control de FC en FA/flutter/TSV; taquiarritmias; HTA perioperatoria; tirotoxicosis'],['Inicio / t½','&lt;2 min / ~9 min (ultracorto)'],['Meta clínica','Control de FC (FA/flutter, TSV, tirotoxicosis)'],['Vía','Periférica en vena gruesa (irritante); central preferente a conc. altas (10 mg/mL)'],['Contraindicaciones','Bradicardia/BAV 2–3° sin marcapaso; ICC descompensada; broncoespasmo grave; choque cardiogénico'],['Monitoreo','FC, TA, broncoespasmo, perfusión'],['Precauciones','Hipotensión, bradicardia, IC descompensada, asma']],
+  nota:'β-bloqueo <b>titulable y reversible en minutos</b> — ideal cuando preocupa tolerar un betabloqueo. Evitar en insuficiencia cardiaca aguda descompensada, bradicardia y broncoespasmo grave.'},
+
+ {cat:'antiar',n:'Diltiazem',clase:'Calcioantagonista no dihidropiridínico',color:'#0f766e',estrella:false,
+  receta:'DILTIAZEM — bolo 0.25 mg/kg IV (≈20 mg) en 2 min; si respuesta insuficiente repetir 0.35 mg/kg (≈25 mg) a los 15 min; infusión 5–15 mg/h (125 mg + SG5% 125 mL = 1 mg/mL). Control de FC en FA/flutter. Vigilar FC, TA (hipotensión), signos de IC.',
+  rows:[['Presentación','Ámpula 25 mg / 50 mg (polvo o solución)'],['Bolo','0.25 mg/kg en 2 min; repetir 0.35 mg/kg'],['Infusión','5–15 mg/h'],['Dilución estándar','125 mg + SG5% 125 mL'],['Concentración final','1 mg/mL'],['Indicaciones','Control de FC en FA/flutter (función sistólica conservada); TSV'],['mL/h','= mg/h ÷ 1 (10 mg/h = 10 mL/h)'],['Meta clínica','Control de frecuencia en FA/flutter'],['Inicio / t½','~3 min / ~3–5 h'],['Vía','Periférica aceptable o central'],['Contraindicaciones','FEVI baja/ICC; WPW con FA (preexcitación); BAV avanzado; hipotensión; síndrome del seno enfermo'],['Monitoreo','FC, TA, ECG, signos de IC'],['Precauciones','Hipotensión; evitar en IC con FE baja, WPW']],
+  nota:'Control de frecuencia en <b>FA/flutter</b> con función sistólica conservada. Evitar en insuficiencia cardiaca con fracción de eyección reducida y en preexcitación (WPW). Programar la infusión directamente en mg/h.'},
+
+ {cat:'antiar',n:'Procainamida',clase:'Antiarrítmico clase Ia',color:'#9a3412',estrella:false,
+  receta:'PROCAINAMIDA — carga 20–50 mg/min IV hasta 17 mg/kg o hasta que ceda la arritmia, el QRS se ensanche &gt;50% o aparezca hipotensión; mantenimiento 1–4 mg/min (2 g + SG5% 500 mL = 4 mg/mL). Vigilar ECG continuo (QRS/QT), TA (hipotensión). Reducir en falla renal/cardiaca.',
+  rows:[['Presentación','Ámpula 100 mg/mL o 500 mg/mL'],['Carga','20–50 mg/min hasta 17 mg/kg'],['Fin de carga','Cede arritmia · QRS +50% · hipotensión · dosis máx.'],['Mantenimiento','1–4 mg/min'],['Indicaciones','TV monomórfica estable; FA preexcitada (WPW)'],['Dilución estándar','2 g + SG5% 500 mL (4 mg/mL)'],['mL/h (2 mg/min)','≈30 mL/h a 4 mg/mL'],['Meta clínica','TV estable, FA en WPW, conversión'],['Vía','Periférica aceptable o central'],['Contraindicaciones','QT largo/torsades; BAV; ICC grave; lupus (LES); miastenia gravis'],['Monitoreo','ECG continuo (QRS, QT), TA'],['Precauciones','Hipotensión, QT largo, ↓ dosis en IR/IC']],
+  nota:'Opción en <b>TV monomórfica estable</b> y en FA preexcitada (WPW). Detener la carga si el <b>QRS se ensancha &gt;50%</b>, hay hipotensión o se alcanza la dosis máxima. Acumula el metabolito NAPA en falla renal.'},
+
+/* --------- SEDACIÓN Y ANALGESIA --------- */
+ {cat:'sed',n:'Midazolam',clase:'Sedante · benzodiacepina',color:'#6d28d9',estrella:false,syn:'dormicum benzodiacepina',
+  receta:'MIDAZOLAM 50 mg IV + SF o SG5% 50 mL (1 mg/mL) — infusión continua por bomba — bolo 1–2 mg; iniciar 0.02–0.2 mg/kg/h (≈1–10 mg/h) y titular a la meta de RASS. Vigilar sedación (RASS), depresión respiratoria y TA. Acumula en insuficiencia renal/hepática. Vía periférica o central.',
+  rows:[['Presentación','Ámpula 5 mg/5 mL, 15 mg/3 mL o 50 mg/10 mL'],['Dilución estándar','50 mg + SF/SG5% 50 mL'],['Concentración final','1 mg/mL'],['Indicaciones','Sedación en ventilación mecánica; estatus epiléptico; agitación grave'],['Bolo','1–2 mg IV lento'],['Dosis inicial','0.02–0.2 mg/kg/h (≈1–10 mg/h)'],['Rango/titulación','Titular a RASS objetivo'],['Meta clínica','Sedación (RASS −2 a 0 según meta)'],['Inicio / t½','2–5 min / ~2–6 h (acumula)'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Hipotensión/choque (relativa); glaucoma de ángulo cerrado agudo; hipersensibilidad'],['Monitoreo','RASS, FR, SatO₂, TA, delirium'],['Precauciones','Depresión respiratoria; acumula en IRC/hepática; delirium']],
+  nota:'Benzodiacepina de acción intermedia; su metabolito activo <b>acumula en falla renal y hepática</b>, prolongando la sedación. Preferir sedantes no benzodiacepínicos (propofol, dexmedetomidina) cuando se busca reducir el delirium.'},
+
+ {cat:'sed',n:'Propofol',clase:'Sedante · emulsión lipídica',color:'#7c3aed',estrella:true,syn:'diprivan',
+  receta:'PROPOFOL 10 mg/mL (emulsión 1%, SIN diluir) — infusión continua por bomba por línea dedicada — iniciar 5 µg/kg/min y titular 5–50 µg/kg/min (0.3–3 mg/kg/h) a la meta de RASS. Vigilar TA, triglicéridos y datos de PRIS (acidosis, rabdomiólisis). Evitar &gt;4 mg/kg/h por &gt;48 h. Vía dedicada.',
+  rows:[['Presentación','Emulsión 10 mg/mL (1%), frasco 20/50/100 mL'],['Dilución estándar','Sin diluir (10 mg/mL); línea dedicada'],['Concentración final','10 mg/mL (10 000 µg/mL)'],['Indicaciones','Sedación en ventilación mecánica; inducción anestésica; estatus epiléptico refractario'],['Dosis inicial','5 µg/kg/min (≈0.3 mg/kg/h)'],['Rango/titulación','5–50 µg/kg/min (0.3–3 mg/kg/h)'],['Dosis máx.','Evitar &gt;4 mg/kg/h por &gt;48 h (PRIS)'],['Meta clínica','Sedación titulable (RASS); despertar rápido'],['Inicio / t½','&lt;1 min / recuperación rápida'],['Vía','Vía dedicada; periférica gruesa o central (emulsión lipídica; dolor a la inyección)'],['Contraindicaciones','Inestabilidad hemodinámica/hipotensión; alergia a huevo/soya (controvertida); evitar dosis altas prolongadas (PRIS)'],['Monitoreo','TA, FR, triglicéridos, CPK, pH, K⁺ (PRIS)'],['Precauciones','Hipotensión, hipertrigliceridemia, PRIS, aporte calórico lipídico']],
+  nota:'Sedante de <b>inicio y salida rápidos</b>, ideal para valoración neurológica frecuente. Vigila el <b>síndrome por infusión de propofol (PRIS)</b> con dosis altas y prolongadas: acidosis metabólica, rabdomiólisis, falla cardiaca. Aporta ~1.1 kcal/mL (lípidos).'},
+
+ {cat:'sed',n:'Dexmedetomidina',clase:'Sedante · agonista α2',color:'#5b21b6',estrella:false,syn:'precedex dexmed',
+  receta:'DEXMEDETOMIDINA 200 µg IV + SF 50 mL (4 µg/mL) — infusión continua por bomba — 0.2–1.4 µg/kg/h (carga 1 µg/kg en 10 min OPCIONAL, suele omitirse). Titular a RASS. Vigilar bradicardia e hipotensión. No produce depresión respiratoria marcada. Vía periférica o central.',
+  rows:[['Presentación','Vial 200 µg/2 mL (100 µg/mL)'],['Dilución estándar','200 µg + SF 50 mL'],['Concentración final','4 µg/mL'],['Indicaciones','Sedación ligera cooperativa; destete/extubación; prevención y manejo de delirium'],['Carga (opcional)','1 µg/kg en 10 min (suele omitirse)'],['Mantenimiento','0.2–1.4 µg/kg/h'],['Meta clínica','Sedación ligera cooperativa; menos delirium'],['Inicio / t½','~15 min / ~2 h'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Bloqueo cardiaco avanzado (2–3°) sin marcapaso; bradicardia; hipotensión'],['Monitoreo','FC (bradicardia), TA, RASS'],['Precauciones','Bradicardia, hipotensión (o HTA con la carga); rebote al suspender brusco']],
+  nota:'Agonista α2 central: sedación <b>cooperativa sin depresión respiratoria</b> marcada, útil para extubación y prevención de delirium. La carga puede causar HTA transitoria seguida de hipotensión/bradicardia, por lo que suele omitirse.'},
+
+ {cat:'sed',n:'Fentanilo',clase:'Analgésico opioide',color:'#4c1d95',estrella:true,syn:'fentanil',
+  receta:'FENTANILO 1000 µg (1 mg) IV + SF 100 mL (10 µg/mL) — infusión continua por bomba — 0.5–3 µg/kg/h (≈25–200 µg/h). Titular a analgesia/analgosedación. Vigilar depresión respiratoria, rigidez torácica y sedación. Vía periférica o central.',
+  rows:[['Presentación','Ámpula 500 µg/10 mL (50 µg/mL)'],['Dilución estándar','1000 µg + SF 100 mL'],['Concentración final','10 µg/mL'],['Indicaciones','Analgesia y analgosedación del paciente ventilado; dolor agudo intenso'],['Dosis inicial','0.5–3 µg/kg/h (≈25–200 µg/h)'],['Bolo','25–100 µg IV según analgesia'],['Meta clínica','Analgesia/analgosedación'],['Inicio / t½','1–2 min / acumula en infusión prolongada'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Sin absolutas; precaución en depresión respiratoria no protegida, hipovolemia y bradicardia'],['Monitoreo','FR, SatO₂, sedación, dolor (EVA/BPS), rigidez'],['Precauciones','Depresión respiratoria, rigidez torácica (bolo rápido), tolerancia']],
+  nota:'Opioide de elección para <b>analgosedación</b> del paciente ventilado. En infusión prolongada su vida media contexto-sensible se alarga (acumula). El bolo rápido puede causar <b>rigidez torácica</b>.'},
+
+ {cat:'sed',n:'Ketamina',clase:'Analgésico/sedante disociativo',color:'#6366f1',estrella:false,syn:'ketalar',
+  receta:'KETAMINA 500 mg IV + SF 100 mL (5 mg/mL) — infusión continua por bomba — analgesia 0.1–0.3 mg/kg/h; dosis mayores para sedación. Vigilar TA/FC (↑), sialorrea y reacciones disociativas. Vía periférica o central.',
+  rows:[['Presentación','Vial 500 mg/10 mL (50 mg/mL)'],['Dilución estándar','500 mg + SF 100 mL'],['Concentración final','5 mg/mL'],['Indicaciones','Analgesia adyuvante ahorradora de opioides; sedación; broncoespasmo; inducción en inestable'],['Dosis (analgesia)','0.1–0.3 mg/kg/h'],['Dosis (sedación)','Mayores (según protocolo)'],['Meta clínica','Analgesia adyuvante; sedación disociativa'],['Inicio / t½','&lt;1 min (IV) / ~2–3 h'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Relativas: HTA grave no controlada; cardiopatía isquémica; hipertensión intracraneal (controvertida); psicosis'],['Monitoreo','TA, FC, sialorrea, disociación'],['Precauciones','↑ TA/FC, sialorrea, alucinaciones/emergencia; broncodilata']],
+  nota:'Analgésico disociativo que <b>preserva el impulso respiratorio y la TA</b> (simpaticomimético), útil como adyuvante ahorrador de opioides y en el broncoespasmo. Las reacciones disociativas se mitigan con benzodiacepina.'},
+
+ {cat:'sed',n:'Morfina',clase:'Analgésico opioide',color:'#4338ca',estrella:false,syn:'sulfato de morfina',
+  receta:'MORFINA 50 mg IV + SF 50 mL (1 mg/mL) — infusión continua por bomba — 1–10 mg/h. Titular a analgesia. Vigilar depresión respiratoria, hipotensión y náusea. Ajustar en falla renal (metabolito activo). Vía periférica o central.',
+  rows:[['Presentación','Ámpula 10 mg/mL'],['Dilución estándar','50 mg + SF 50 mL'],['Concentración final','1 mg/mL'],['Indicaciones','Analgesia; edema agudo pulmonar (adyuvante); disnea/dolor terminal'],['Dosis inicial','1–10 mg/h'],['Bolo','2–4 mg IV lento'],['Meta clínica','Analgesia'],['Inicio / t½','~5–10 min / ~2–4 h (↑ en IRC)'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Hipotensión/inestabilidad; íleo/obstrucción intestinal; insuficiencia respiratoria no protegida; ajustar en IRC'],['Monitoreo','FR, SatO₂, TA, dolor, náusea'],['Precauciones','Depresión respiratoria, hipotensión (histamina), acumula metabolito M6G en IRC']],
+  nota:'Opioide con <b>metabolito activo (M6G) que acumula en falla renal</b>. Puede liberar histamina (hipotensión, prurito). Menos titulable que el fentanilo por su vida media más larga.'},
+
+ {cat:'sed',n:'Remifentanilo',clase:'Analgésico opioide ultracorto',color:'#7e22ce',estrella:false,syn:'ultiva',
+  receta:'REMIFENTANILO 2 mg IV + SF 100 mL (20 µg/mL) — infusión continua por bomba — 0.025–0.2 µg/kg/min. Titular a analgesia. Metabolismo por esterasas (ultracorto): recuperación en minutos pero también apnea rápida al detener. Vía periférica o central.',
+  rows:[['Presentación','Vial 2 mg / 5 mg (polvo)'],['Dilución estándar','2 mg + SF 100 mL'],['Concentración final','20 µg/mL'],['Indicaciones','Analgosedación ultracorta y titulable en ventilación mecánica; procedimientos'],['Dosis inicial','0.025–0.2 µg/kg/min'],['Meta clínica','Analgosedación ultracorta y titulable'],['Inicio / t½','&lt;1 min / t½ contexto-sensible ~3–5 min'],['Vía','Vía dedicada; periférica o central (purgar; sin bolos residuales en la línea)'],['Contraindicaciones','No administrar en bolo a pacientes no ventilados (apnea/tórax rígido); hipersensibilidad'],['Monitoreo','FR, SatO₂, TA, FC, dolor'],['Precauciones','Apnea/rigidez; hiperalgesia; sin analgesia residual al suspender (planear analgesia puente)']],
+  nota:'Opioide de <b>metabolismo por esterasas plasmáticas</b>, independiente de la función hepática/renal, con vida media constante. Al suspender no queda analgesia residual: prever un analgésico de transición.'},
+
+/* --------- BLOQUEO NEUROMUSCULAR --------- */
+ {cat:'bnm',n:'Rocuronio',clase:'Bloqueador NM no despolarizante',color:'#0e7490',estrella:true,syn:'esmeron',
+  receta:'ROCURONIO 500 mg IV + SF 500 mL (1 mg/mL) — infusión continua por bomba — bolo de intubación 0.6–1.2 mg/kg; infusión 8–12 µg/kg/min titulada por TOF. SIEMPRE con sedación y analgesia adecuadas. Reversión: sugammadex. Vía periférica o central.',
+  rows:[['Presentación','Vial 50 mg/5 mL (10 mg/mL)'],['Dilución estándar','500 mg + SF 500 mL'],['Concentración final','1 mg/mL (1000 µg/mL)'],['Indicaciones','Intubación de secuencia rápida; asincronía/SDRA; control ventilatorio (con sedación/analgesia y TOF)'],['Bolo intubación','0.6–1.2 mg/kg'],['Infusión','8–12 µg/kg/min'],['Reversión','Sugammadex (o neostigmina)'],['Meta clínica','Bloqueo titulado (TOF 1–2/4)'],['Inicio / t½','~1–2 min / ~30–60 min'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Sin sedación/analgesia profundas; hipersensibilidad al fármaco'],['Monitoreo','TOF, sedación (RASS/BIS), analgesia, TA/FC, córnea'],['Precauciones','Awareness si sedación insuficiente; acumula en falla hepática/renal']],
+  nota:'Bloqueador no despolarizante de <b>inicio rápido</b>, reversible con <b>sugammadex</b>. <b>Nunca</b> sin sedación y analgesia profundas: el paciente paralizado permanece consciente si no está bien sedado. Monitoriza el bloqueo con TOF.'},
+
+ {cat:'bnm',n:'Cisatracurio',clase:'Bloqueador NM no despolarizante',color:'#0891b2',estrella:true,syn:'nimbex',
+  receta:'CISATRACURIO 2 mg/mL — infusión continua por bomba — 1–3 µg/kg/min titulado por TOF (SDRA grave con ventilación protectora). SIEMPRE con sedación y analgesia adecuadas. Eliminación de Hofmann (útil en falla renal/hepática). Vía periférica o central.',
+  rows:[['Presentación','Vial 2 mg/mL (o 20 mg/10 mL)'],['Dilución estándar','Sin diluir 2 mg/mL o según protocolo'],['Concentración final','2 mg/mL (2000 µg/mL)'],['Indicaciones','SDRA grave (sincronía ventilatoria); preferido en falla renal/hepática (eliminación de Hofmann)'],['Infusión','1–3 µg/kg/min'],['Eliminación','Hofmann (no depende de riñón/hígado)'],['Meta clínica','Sincronía en SDRA grave; TOF titulado'],['Inicio / t½','~2–3 min / ~20–30 min'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Sin sedación/analgesia profundas; hipersensibilidad'],['Monitoreo','TOF, sedación/analgesia, TA/FC, córnea'],['Precauciones','Awareness si sedación insuficiente; debilidad prolongada']],
+  nota:'Preferido en <b>falla renal y hepática</b> por su eliminación órgano-independiente (Hofmann). Es el relajante habitual para el <b>bloqueo neuromuscular en SDRA</b> grave. Requiere sedación/analgesia profundas y monitoreo TOF.'},
+
+ {cat:'bnm',n:'Vecuronio',clase:'Bloqueador NM no despolarizante',color:'#155e75',estrella:false,syn:'norcuron',
+  receta:'VECURONIO — infusión continua por bomba — 0.8–1.2 µg/kg/min titulado por TOF (bolo de intubación 0.08–0.1 mg/kg). SIEMPRE con sedación y analgesia adecuadas. Ajustar en falla renal/hepática. Vía periférica o central.',
+  rows:[['Presentación','Vial 10 mg (polvo) → reconstituir'],['Dilución estándar','10 mg + SF/SG5% (p. ej. 1 mg/mL)'],['Concentración final','Según dilución (p. ej. 1 mg/mL)'],['Indicaciones','Relajación en ventilación mecánica/asincronía (con sedación/analgesia y TOF)'],['Bolo intubación','0.08–0.1 mg/kg'],['Infusión','0.8–1.2 µg/kg/min'],['Meta clínica','Bloqueo titulado por TOF'],['Inicio / t½','~2–3 min / ~30–40 min'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Sin sedación/analgesia profundas; ajustar/evitar en falla renal y hepática; hipersensibilidad'],['Monitoreo','TOF, sedación/analgesia, TA/FC, córnea'],['Precauciones','Acumula en falla renal/hepática (debilidad prolongada); awareness si sedación insuficiente']],
+  nota:'Bloqueador no despolarizante de duración intermedia con <b>eliminación renal y hepática</b> (acumula en falla orgánica → debilidad prolongada). Requiere, como todos, sedación/analgesia profundas y monitoreo TOF.'},
+
+/* --------- VASODILATADORES / ANTIHIPERTENSIVOS --------- */
+ {cat:'vaso2',n:'Nitroglicerina',clase:'Vasodilatador · nitrato',color:'#b45309',estrella:true,syn:'ntg trinitrato solinitrina',
+  receta:'NITROGLICERINA 50 mg IV + SG5% 250 mL (200 µg/mL) — infusión continua por bomba — iniciar 5–10 µg/min y titular hasta ~200 µg/min según TA/dolor. Vigilar TA y cefalea; tolerancia con el tiempo. Usar equipo que NO adsorba (el PVC adsorbe). Vía periférica o central.',
+  rows:[['Presentación','Ámpula 50 mg/10 mL (5 mg/mL)'],['Dilución estándar','50 mg + SG5% 250 mL'],['Concentración final','200 µg/mL'],['Indicaciones','SCA/angina; edema agudo pulmonar/ICC; emergencia hipertensiva con isquemia'],['Dosis inicial','5–10 µg/min'],['Rango/titulación','Titular hasta ~200 µg/min'],['Meta clínica','SCA, edema agudo pulmonar, control de TA/isquemia'],['Inicio / t½','1–2 min / ~1–4 min'],['Vía','Periférica aceptable o central; equipo no-PVC (adsorbe)'],['Contraindicaciones','Hipotensión; inhibidores de PDE-5 (sildenafil); IAM de VD/precarga-dependiente; taponamiento; estenosis aórtica grave'],['Monitoreo','TA, FC, cefalea, dolor torácico'],['Precauciones','Hipotensión (con inhibidores de PDE-5, IAM de VD); tolerancia; adsorción a PVC']],
+  nota:'Venodilatador (a dosis altas también arterial) útil en <b>SCA, edema agudo pulmonar y emergencia hipertensiva</b>. Contraindicada con inhibidores de PDE-5 (sildenafil) y en infarto de ventrículo derecho. El <b>PVC adsorbe</b> nitroglicerina: usa equipo compatible.'},
+
+ {cat:'vaso2',n:'Nitroprusiato de sodio',clase:'Vasodilatador arterial y venoso',color:'#9a3412',estrella:false,syn:'nipride nitroprussiato',
+  receta:'NITROPRUSIATO DE SODIO 50 mg IV + SG5% 250 mL (200 µg/mL) — infusión continua por bomba — 0.3–3 (máx 10) µg/kg/min, titular a TA. PROTEGER DE LA LUZ (envolver el equipo). Riesgo de toxicidad por cianuro/tiocianato: limitar dosis y tiempo, vigilar acidosis. Vía central preferente.',
+  rows:[['Presentación','Vial 50 mg (polvo) → reconstituir'],['Dilución estándar','50 mg + SG5% 250 mL'],['Concentración final','200 µg/mL'],['Indicaciones','Emergencia hipertensiva; disección aórtica (con β-bloqueo); ICC grave (reducción de poscarga)'],['Dosis inicial','0.3 µg/kg/min'],['Rango/titulación','0.3–3 µg/kg/min (máx 10, breve)'],['Meta clínica','Emergencia hipertensiva; reducción de poscarga'],['Inicio / t½','Segundos / ~1–2 min'],['Vía','Central preferente (titulación fina/línea arterial); periférica posible; PROTEGER DE LA LUZ'],['Contraindicaciones','Hipoperfusión cerebral/hepática; insuficiencia renal grave (tiocianato); embarazo; hipovolemia'],['Monitoreo','TA (línea arterial), estado ácido-base, lactato, tiocianato si prolongado'],['Precauciones','Toxicidad por cianuro/tiocianato (dosis alta, IR/IH, uso prolongado); hipotensión brusca; robo coronario']],
+  nota:'Vasodilatador arterial y venoso <b>potente y de acción inmediata</b>. Riesgo de <b>toxicidad por cianuro/tiocianato</b> con dosis altas (&gt;2 µg/kg/min prolongado) o falla renal/hepática: vigila acidosis metabólica y limita dosis/tiempo. Fotosensible: proteger de la luz.'},
+
+ {cat:'vaso2',n:'Nicardipino',clase:'Calcioantagonista dihidropiridínico',color:'#c2410c',estrella:false,syn:'cardene',
+  receta:'NICARDIPINO 25 mg IV + SG5% o SF 250 mL (0.1 mg/mL = 100 µg/mL) — infusión continua por bomba — iniciar 5 mg/h y subir 2.5 mg/h c/5–15 min hasta máx 15 mg/h. Titular a TA. Vigilar TA y taquicardia refleja. Vía periférica (rotar sitio) o central.',
+  rows:[['Presentación','Ámpula 25 mg/10 mL (2.5 mg/mL)'],['Dilución estándar','25 mg + SG5%/SF 250 mL'],['Concentración final','0.1 mg/mL (100 µg/mL)'],['Indicaciones','Emergencia hipertensiva; HTA en HSA/ictus (control suave, sin efecto sobre conducción AV)'],['Dosis inicial','5 mg/h'],['Titulación','+2.5 mg/h c/5–15 min'],['Dosis máx.','15 mg/h'],['Meta clínica','Emergencia/urgencia hipertensiva'],['Inicio / t½','5–15 min / ~40 min'],['Vía','Periférica aceptable (rotar sitio c/12 h por flebitis) o central'],['Contraindicaciones','Estenosis aórtica avanzada; ICC/disfunción sistólica; hipersensibilidad'],['Monitoreo','TA, FC (taquicardia refleja)'],['Precauciones','Taquicardia refleja; flebitis (rotar sitio); precaución en IC/estenosis Ao grave']],
+  nota:'Calcioantagonista dihidropiridínico de <b>titulación suave</b> para emergencia hipertensiva, sin efecto sobre la conducción AV. Produce <b>taquicardia refleja</b>. Por vía periférica conviene rotar el sitio por flebitis.'},
+
+ {cat:'vaso2',n:'Clevidipino',clase:'Calcioantagonista ultracorto',color:'#ea580c',estrella:false,syn:'cleviprex',
+  receta:'CLEVIDIPINO emulsión 0.5 mg/mL (LISTA, sin diluir) — infusión continua por bomba por línea dedicada — iniciar 1–2 mg/h y duplicar c/90 s según respuesta hasta 16–32 mg/h. Titular a TA. Emulsión lipídica (vigilar triglicéridos, línea dedicada). Vía periférica o central.',
+  rows:[['Presentación','Emulsión 0.5 mg/mL (vial 50/100 mL)'],['Dilución estándar','Lista para usar (no diluir)'],['Concentración final','0.5 mg/mL'],['Indicaciones','Emergencia hipertensiva (perioperatoria; control fino y rápido)'],['Dosis inicial','1–2 mg/h'],['Titulación','Duplicar c/90 s'],['Dosis máx.','16–32 mg/h'],['Meta clínica','Emergencia hipertensiva (control fino y rápido)'],['Inicio / t½','2–4 min / ~1 min (esterasas)'],['Vía','Vía dedicada; periférica o central (emulsión lipídica)'],['Contraindicaciones','Alergia a soya/huevo; hipertrigliceridemia/pancreatitis lipídica; estenosis aórtica grave'],['Monitoreo','TA, FC, triglicéridos, aporte lipídico'],['Precauciones','Emulsión lipídica (alergia a soya/huevo, hipertrigliceridemia); línea dedicada']],
+  nota:'Calcioantagonista arterial <b>ultracorto</b> (metabolismo por esterasas), de titulación muy fina. Es una <b>emulsión lipídica</b> (como el propofol): línea dedicada, precaución con alergia a soya/huevo e hipertrigliceridemia.'},
+
+ {cat:'vaso2',n:'Labetalol',clase:'Bloqueador α + β',color:'#a16207',estrella:false,syn:'trandate',
+  receta:'LABETALOL 200 mg IV + SF 200 mL (1 mg/mL) — infusión continua por bomba 0.5–2 mg/min, o bolos 20 mg IV → 20–80 mg c/10 min (máx acumulado 300 mg). Bloqueo α+β. Titular a TA. Vigilar bradicardia y broncoespasmo. Vía periférica o central.',
+  rows:[['Presentación','Ámpula 100 mg/20 mL (5 mg/mL)'],['Dilución estándar','200 mg + SF 200 mL'],['Concentración final','1 mg/mL'],['Indicaciones','Emergencia hipertensiva; preeclampsia/eclampsia; disección aórtica; HTA neurológica'],['Infusión','0.5–2 mg/min'],['Bolos','20 mg → 20–80 mg c/10 min (máx 300 mg)'],['Meta clínica','Emergencia hipertensiva, disección aórtica, eclampsia'],['Inicio / t½','5–10 min / ~5–8 h'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Asma/EPOC broncoespástico; bradicardia/BAV avanzado; ICC descompensada; choque cardiogénico'],['Monitoreo','TA, FC, broncoespasmo'],['Precauciones','Bradicardia, bloqueo AV, broncoespasmo (asma), IC descompensada']],
+  nota:'Bloqueador combinado <b>α + β</b>: baja la TA sin taquicardia refleja, útil en <b>disección aórtica, emergencia hipertensiva neurológica y eclampsia</b>. Evitar en bradicardia, bloqueo AV avanzado, asma/broncoespasmo e IC descompensada.'},
+
+/* --------- METABÓLICO / ENDOCRINO / OTROS --------- */
+ {cat:'otros',n:'Insulina regular (rápida) IV',clase:'Hormona · control glucémico',color:'#0369a1',estrella:true,syn:'insulina rapida humana R actrapid',
+  receta:'INSULINA REGULAR (rápida) 100 U IV + SF 100 mL (1 U/mL) — infusión continua por bomba — CAD/EHH: 0.1 U/kg/h (± bolo 0.1 U/kg), titular por glucosa (meta descenso 50–75 mg/dL/h). NO iniciar si K &lt; 3.3 mEq/L; vigilar potasio y glucosa horaria; agregar dextrosa al llegar a ~200–250 mg/dL. Purgar ~20 mL del sistema (adsorción al plástico). Vía periférica o central.',
+  rows:[['Presentación','Frasco 100 U/mL (insulina R/rápida)'],['Dilución estándar','100 U + SF 100 mL'],['Concentración final','1 U/mL'],['Indicaciones','CAD/EHH; hiperpotasemia; hiperglucemia crítica del paciente grave'],['Dosis (CAD/EHH)','0.1 U/kg/h (± bolo 0.1 U/kg)'],['Titulación','Por glucosa (descenso 50–75 mg/dL/h)'],['Meta clínica','Resolución de CAD/EHH; glucemia controlada'],['Inicio / t½','Minutos / ~5–9 min IV'],['Vía','Periférica aceptable o central; purgar ~20 mL (adsorción al plástico)'],['Contraindicaciones','Hipopotasemia K &lt; 3.3 mEq/L (reponer K⁺ primero); hipoglucemia'],['Monitoreo','Glucosa horaria, K⁺, brecha aniónica, pH'],['Precauciones','NO iniciar si K &lt; 3.3 (reponer antes); hipoglucemia/hipopotasemia; agregar dextrosa a ~200–250 mg/dL']],
+  nota:'En CAD/EHH la infusión se titula por glucemia horaria. <b>El potasio cae al corregir la acidosis</b>: no iniciar insulina con K &lt; 3.3 mEq/L (repón primero) y monitoriza estrechamente. La insulina <b>se adsorbe al plástico</b>: purga ~20 mL del equipo antes de conectar.'},
+
+ {cat:'otros',n:'Atropina',clase:'Anticolinérgico · bradicardia',color:'#7c2d12',estrella:false,syn:'sulfato de atropina',
+  receta:'ATROPINA (bradicardia sintomática) — NO es una infusión típica — bolo 0.5–1 mg IV c/3–5 min hasta máx 3 mg. Si la bradicardia es refractaria: iniciar infusión de cronótropo (isoproterenol, epinefrina o dopamina) y/o marcapaso. Vigilar FC, ECG y perfusión. Vía periférica.',
+  rows:[['Presentación','Ámpula 1 mg/mL'],['Uso','Bolo IV (no infusión de rutina)'],['Dosis','0.5–1 mg IV c/3–5 min'],['Indicaciones','Bradicardia sintomática; bloqueo AV nodal; intoxicación colinérgica/organofosforados'],['Dosis máx.','3 mg (dosis vagolítica total)'],['Siguiente paso','Isoproterenol / epinefrina / dopamina o marcapaso'],['Meta clínica','Bradicardia sintomática (↑ FC/PAM)'],['Inicio / t½','&lt;1 min / ~2–3 h'],['Vía','Periférica (bolo IV; no infusión típica)'],['Contraindicaciones','Relativas: glaucoma de ángulo estrecho; taquiarritmia; isquemia miocárdica; poco útil en BAV infranodal'],['Monitoreo','FC, ECG, TA, estado mental, perfusión'],['Precauciones','Dosis &lt; 0.5 mg → bradicardia paradójica; retención urinaria, midriasis, delirium; poco útil en bloqueo AV infranodal o corazón trasplantado']],
+  nota:'Primera medida farmacológica en <b>bradicardia sintomática</b>. <b>No usar dosis &lt; 0.5 mg</b> (bradicardia paradójica). Si no responde tras 3 mg, pasar a <b>cronótropo en infusión</b> (isoproterenol, epinefrina o dopamina) o marcapaso transcutáneo/transvenoso.'},
+
+ {cat:'otros',n:'Isoproterenol',clase:'Agonista β · cronótropo',color:'#be123c',estrella:false,syn:'isoprenalina isuprel',
+  receta:'ISOPROTERENOL 2 mg IV + SG5% 250 mL (8 µg/mL) — infusión continua por bomba — 2–10 µg/min, titular a FC/ritmo. Útil en bradicardia/BAV como puente a marcapaso y en torsades. Vigilar arritmias e isquemia. Vía central preferente.',
+  rows:[['Presentación','Ámpula 1 mg/5 mL o 0.2 mg/mL'],['Dilución estándar','2 mg + SG5% 250 mL'],['Concentración final','8 µg/mL'],['Indicaciones','Bradicardia/BAV (puente a marcapaso); torsades bradicardia-dependiente; síndrome de Brugada (tormenta)'],['Dosis inicial','2 µg/min'],['Rango/titulación','2–10 µg/min'],['Meta clínica','Bradicardia/BAV (puente a marcapaso), torsades'],['Inicio / t½','Rápido / ~2–5 min'],['Vía','Central preferente; periférica posible en urgencia'],['Contraindicaciones','Cardiopatía isquémica/angina; taquiarritmias; QT largo por otra causa'],['Monitoreo','FC, ECG, TA, isquemia (dolor torácico)'],['Precauciones','Taquiarritmias, isquemia miocárdica, hipotensión (β2)']],
+  nota:'Agonista β1/β2 puro (cronótropo/inótropo, vasodilatador). Puente farmacológico en <b>bradicardia y bloqueo AV</b> hacia el marcapaso, y en <b>torsades</b> bradicardia-dependiente. Aumenta el consumo de O₂ miocárdico: cuidado en cardiopatía isquémica.'},
+
+ {cat:'otros',n:'Heparina no fraccionada',clase:'Anticoagulante',color:'#1d4ed8',estrella:true,syn:'hnf heparina sodica',
+  receta:'HEPARINA NO FRACCIONADA 25 000 U IV + SF 250 mL (100 U/mL) — infusión continua por bomba — bolo 60–80 U/kg, luego 12–18 U/kg/h, titular por TTPa/anti-Xa según protocolo (nomograma). Vigilar sangrado y plaquetas (TIH). Vía periférica o central.',
+  rows:[['Presentación','Frasco 5000 U/mL o 1000 U/mL'],['Dilución estándar','25 000 U + SF 250 mL'],['Concentración final','100 U/mL'],['Indicaciones','SICA; TEP/TVP; anticoagulación (FA, circuitos extracorpóreos, puente)'],['Bolo','60–80 U/kg (según indicación/protocolo)'],['Infusión','12–18 U/kg/h'],['Titulación','TTPa o anti-Xa (nomograma)'],['Meta clínica','Anticoagulación (TEV, SCA, etc.)'],['Inicio / t½','Inmediato / ~60–90 min'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Sangrado activo; antecedente de TIH; plaquetopenia grave; cirugía de SNC/ocular reciente'],['Monitoreo','TTPa/anti-Xa, hemoglobina, plaquetas (TIH), sangrado'],['Precauciones','Sangrado; trombocitopenia inducida por heparina (TIH); antídoto: protamina']],
+  nota:'Anticoagulante titulado por <b>TTPa o anti-Xa</b> con nomograma peso-dependiente. Vigila la <b>trombocitopenia inducida por heparina (TIH)</b> con recuento plaquetario. Antídoto: <b>protamina</b>.'},
+
+ {cat:'otros',n:'Sulfato de magnesio',clase:'Electrolito · anticonvulsivo/antiarrítmico',color:'#0f766e',estrella:false,syn:'magnesio mgso4 sulmetin',
+  receta:'SULFATO DE MAGNESIO — preeclampsia/eclampsia: carga 4–6 g IV en 15–20 min → infusión 1–2 g/h. Torsades: 1–2 g IV (diluido). Vigilar reflejos osteotendinosos, FR, diuresis y magnesemia. Antídoto: gluconato de calcio. Vía periférica o central.',
+  rows:[['Presentación','Ámpula 1 g/10 mL (10%) o al 20–50%'],['Carga (eclampsia)','4–6 g IV en 15–20 min'],['Mantenimiento','1–2 g/h'],['Indicaciones','Preeclampsia/eclampsia; torsades de pointes; asma grave refractaria; hipomagnesemia'],['Torsades','1–2 g IV (diluido) en 5–15 min'],['Meta clínica','Profilaxis/tratamiento de convulsiones; torsades'],['Inicio / t½','Rápido / depende de función renal'],['Vía','Periférica aceptable (infusión lenta) o central'],['Contraindicaciones','Bloqueo AV; insuficiencia renal (ajustar/vigilar); miastenia gravis'],['Monitoreo','Reflejos, FR, diuresis (&gt;30 mL/h), Mg sérico, ECG'],['Precauciones','Toxicidad: hiporreflexia → depresión respiratoria → paro; acumula en falla renal; antídoto gluconato de calcio']],
+  nota:'De elección en <b>preeclampsia/eclampsia</b> (neuroprotección/anticonvulsivo) y en <b>torsades de pointes</b>. Monitoriza signos de toxicidad (pérdida de reflejos, depresión respiratoria, oliguria). Antídoto: <b>gluconato de calcio</b> IV.'},
+
+ {cat:'otros',n:'Cloruro de potasio (KCl)',clase:'Electrolito · reposición',color:'#4d7c0f',estrella:false,syn:'potasio kcl fosfato de potasio',
+  receta:'CLORURO DE POTASIO (KCl) — reposición IV SIEMPRE diluida — periférico máx 10 mEq/h (concentración ≤40 mEq/L); central hasta 20–40 mEq/h con monitor ECG. NUNCA en bolo ni sin diluir. Vigilar ECG, potasio sérico y sitio de infusión. Vía periférica (diluida) o central (concentrada).',
+  rows:[['Presentación','Ámpula KCl 1–2 mEq/mL (concentrado)'],['Dilución','SIEMPRE diluir; periférico ≤40 mEq/L'],['Indicaciones','Hipopotasemia (reposición)'],['Velocidad periférica','Máx 10 mEq/h'],['Velocidad central','20–40 mEq/h con monitor ECG'],['Meta clínica','Corrección de hipopotasemia'],['Inicio / t½','Reposición gradual'],['Vía','Central para conc. altas/velocidad &gt;10 mEq/h; periférica diluida ≤10 mEq/h'],['Contraindicaciones','Hiperpotasemia; oliguria/IRA sin monitoreo estrecho; NUNCA en bolo'],['Monitoreo','ECG continuo, K⁺ seriado, Mg²⁺, diuresis, sitio (flebitis)'],['Precauciones','NUNCA en bolo (paro cardiaco); ardor/flebitis periférica; corregir Mg si refractario; cuidado en falla renal']],
+  nota:'La reposición IV de potasio <b>nunca</b> se da en bolo ni concentrada sin diluir: riesgo de <b>paro cardiaco</b>. Ritmos rápidos (&gt;10 mEq/h) requieren vía central y monitoreo ECG. Corrige el <b>magnesio</b> si la hipopotasemia es refractaria.'},
+
+ {cat:'otros',n:'Aminofilina',clase:'Metilxantina · broncodilatador',color:'#a21caf',estrella:false,syn:'teofilina',
+  receta:'AMINOFILINA — carga 5–6 mg/kg IV en 30 min (diluida en SG5%/SF) → mantenimiento 0.5–0.7 mg/kg/h. Titular por respuesta y niveles séricos. Vigilar taquiarritmias, temblor y convulsiones (toxicidad). Vía periférica o central.',
+  rows:[['Presentación','Ámpula 250 mg/10 mL (25 mg/mL)'],['Carga','5–6 mg/kg IV en 30 min'],['Mantenimiento','0.5–0.7 mg/kg/h'],['Indicaciones','Broncoespasmo refractario (asma/EPOC); bradicardia (off-label, uso selecto)'],['Ajuste','↓ en IC, hepatopatía y ancianos; ↑ en fumadores'],['Meta clínica','Broncoespasmo refractario; bradicardia (uso selecto)'],['Inicio / t½','Rápido / ~6–8 h (variable)'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Taquiarritmias; IAM; convulsiones/epilepsia; niveles tóxicos de teofilina'],['Monitoreo','Niveles de teofilina (10–20 µg/mL), FC/ECG, SNC'],['Precauciones','Ventana terapéutica estrecha: taquiarritmias, convulsiones; múltiples interacciones']],
+  nota:'Metilxantina de <b>ventana terapéutica estrecha</b>: la toxicidad (taquiarritmias, convulsiones) puede aparecer cerca del rango terapéutico. Ajusta por comorbilidad e interacciones; monitoriza niveles séricos.'},
+
+ {cat:'otros',n:'Octreótida',clase:'Análogo de somatostatina',color:'#0d9488',estrella:false,syn:'octreotide sandostatina somatostatina',
+  receta:'OCTREÓTIDA (hemorragia por várices) 500 µg IV + SF 100 mL (5 µg/mL) — infusión continua por bomba — bolo 50 µg IV → 50 µg/h durante 3–5 días. Vigilar glucemia, FC y sangrado. Vía periférica o central.',
+  rows:[['Presentación','Ámpula 50 / 100 / 500 µg'],['Dilución estándar','500 µg + SF 100 mL'],['Concentración final','5 µg/mL'],['Indicaciones','Hemorragia digestiva por várices; fístulas digestivas/pancreáticas; síndrome carcinoide'],['Bolo','50 µg IV'],['Infusión','50 µg/h × 3–5 días'],['Meta clínica','Hemorragia variceal (↓ flujo esplácnico)'],['Inicio / t½','Rápido / ~1.5 h'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Sin absolutas; precaución en diabetes (glucemia) y patología biliar/vesicular'],['Monitoreo','Sangrado/Hb, glucemia, FC, ECG (QT)'],['Precauciones','Hiper/hipoglucemia, bradicardia, náusea; barro biliar en uso prolongado']],
+  nota:'Análogo de somatostatina que reduce el flujo esplácnico en la <b>hemorragia digestiva por várices</b>, junto con endoscopia y antibiótico profiláctico. Vigila la glucemia (altera insulina/glucagón).'},
+
+ {cat:'otros',n:'Furosemida',clase:'Diurético de asa',color:'#2563eb',estrella:false,syn:'lasix',
+  receta:'FUROSEMIDA — infusión continua por bomba 0.05–0.4 mg/kg/h (tras bolo IV inicial). Titular a la diuresis objetivo. Vigilar diuresis, potasio, función renal y ototoxicidad a dosis altas / infusión rápida. Vía periférica o central.',
+  rows:[['Presentación','Ámpula 20 mg/2 mL (10 mg/mL)'],['Bolo inicial','p. ej. 20–40 mg IV (o equivalente a la dosis VO)'],['Infusión','0.05–0.4 mg/kg/h'],['Indicaciones','Sobrecarga de volumen/edema agudo pulmonar; IC; oliguria (resistencia a diuréticos)'],['Meta clínica','Diuresis en IC/sobrecarga; oliguria'],['Inicio / t½','~5 min / ~1.5–2 h (↑ en IR)'],['Vía','Periférica aceptable o central'],['Contraindicaciones','Hipovolemia; anuria sin respuesta; hipopotasemia grave; alergia a sulfas'],['Monitoreo','Diuresis horaria, K⁺/Na⁺/Mg²⁺, función renal, TA'],['Precauciones','Hipopotasemia, hipovolemia, ototoxicidad (dosis altas / ≥4 mg/min); alergia a sulfas']],
+  nota:'La <b>infusión continua</b> puede lograr diuresis más sostenida que los bolos en resistencia a diuréticos. Limita la velocidad (≤4 mg/min) para reducir la <b>ototoxicidad</b>. Vigila electrolitos, sobre todo el potasio.'},
+
+ {cat:'otros',n:'Bicarbonato de sodio',clase:'Alcalinizante · electrolito',color:'#475569',estrella:false,syn:'bicarbonato nahco3',
+  receta:'BICARBONATO DE SODIO — infusión IV en acidosis metabólica grave o hiperpotasemia — diluir (p. ej. 150 mEq en 1 L de SG5% ≈ isotónico) e infundir según déficit y pH. Vigilar pH, sodio, potasio y calcio ionizado. Vía periférica (diluido) o central.',
+  rows:[['Presentación','Ámpula 1 mEq/mL (7.5–8.4%)'],['Dilución','Diluir (p. ej. 150 mEq + 1 L SG5% ≈ isotónico)'],['Indicaciones','Acidosis metabólica grave (pH &lt; 7.1); hiperpotasemia; intoxicaciones con QRS ancho (bloqueadores de Na)'],['Meta clínica','Corrección parcial de la acidemia/hiperK'],['Inicio / t½','Rápido'],['Vía','Periférica (diluido; vía sola por incompatibilidades) o central'],['Contraindicaciones','Alcalosis; hipernatremia; hipopotasemia; hipocalcemia; sobrecarga de volumen; sin ventilación adecuada'],['Monitoreo','Gasometría (pH, HCO₃, pCO₂), Na⁺, K⁺, Ca²⁺ ionizado'],['Precauciones','Hipernatremia, hipopotasemia, hipocalcemia, sobrecarga de volumen, alcalosis; no mezclar con calcio (precipita); requiere ventilación adecuada']],
+  nota:'Uso <b>selectivo</b> (acidosis metabólica grave, hiperpotasemia, ciertas intoxicaciones); no corrige la causa. Requiere <b>ventilación adecuada</b> (genera CO₂). No administrar por la misma vía que soluciones con calcio (precipita).'}
+];
+
+function farmCardH(d,i,cat){var id=cat+'-farm-'+i;var rx='rx-'+cat+'-'+i;var h='';
+  h+='<div id="card-'+id+'" style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:10px;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+d.color+';color:#fff;padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">';
+  h+='<div><div style="font-size:11px;opacity:0.85;margin-bottom:2px;">'+(d.estrella?'⭐ ':'')+d.clase+'</div><div style="font-size:14px;font-weight:800;">'+d.n+'</div></div>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);flex-shrink:0;">►</span></div>';
+  h+='<div class="ind-drug-b" id="'+id+'" style="padding:0;">';
+  /* RECETA COPIABLE */
+  h+='<div style="padding:12px 14px;background:'+d.color+'12;border-bottom:1px solid #f3f4f6;">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;">';
+  h+='<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:'+d.color+';">📋 Receta para enfermería</div>';
+  h+='<button onclick="copiarRx(\''+rx+'\',this)" style="padding:5px 12px;border:none;border-radius:6px;background:'+d.color+';color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">Copiar</button></div>';
+  h+='<div id="'+rx+'" style="user-select:all;-webkit-user-select:all;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;color:#111827;background:#fff;border:1px dashed '+d.color+';border-radius:6px;padding:10px 12px;">'+d.receta+'</div>';
+  h+='</div>';
+  /* FILAS */
+  h+='<div style="padding:8px 14px;">';
+  for(var k=0;k<d.rows.length;k++)h+=poprowP(d.rows[k][0],d.rows[k][1],'#374151');
+  h+='</div>';
+  /* NOTA */
+  h+='<div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
+  h+='</div></div>';return h;}
+
+function renderCat(cat){var el=document.getElementById(cat+'-body');if(!el)return;var h='';for(var i=0;i<FARM.length;i++){if(FARM[i].cat!==cat)continue;h+=farmCardH(FARM[i],i,cat);}el.innerHTML=h;}
+
+/* ===== BUSCADOR GENERAL ===== */
+var CATNAME={vaso:'Vasopresores',inotro:'Inotrópicos',antiar:'Antiarrítmicos',sed:'Sedación y analgesia',bnm:'Bloqueo neuromuscular',vaso2:'Vasodilatadores',otros:'Metabólico/otros'};
+var SEARCHSEL=-1,SEARCHIDS=[];
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function searchRun(q){var box=document.getElementById('qres');if(!box)return;q=(q||'').trim().toLowerCase();
+  if(!q){box.style.display='none';box.innerHTML='';SEARCHIDS=[];SEARCHSEL=-1;return;}
+  var terms=q.split(/\s+/);var ids=[];
+  for(var i=0;i<FARM.length;i++){var d=FARM[i];
+    var hay=((d.n||'')+' '+(d.clase||'')+' '+(d.syn||'')+' '+(CATNAME[d.cat]||'')).toLowerCase();
+    var ok=true;for(var t=0;t<terms.length;t++){if(hay.indexOf(terms[t])<0){ok=false;break;}}
+    if(ok)ids.push(i);}
+  renderResults(ids,'Resultados ('+ids.length+')');}
+function searchAll(){var ids=[];for(var i=0;i<FARM.length;i++)ids.push(i);
+  ids.sort(function(a,b){return FARM[a].n.localeCompare(FARM[b].n,'es');});
+  var qi=document.getElementById('q');if(qi)qi.value='';
+  renderResults(ids,'Todos los fármacos (A–Z) · '+ids.length);}
+function renderResults(ids,hdr){var box=document.getElementById('qres');SEARCHIDS=ids;SEARCHSEL=-1;
+  if(!ids.length){box.innerHTML='<div class="qri-empty">Sin resultados. Prueba con el nombre genérico (p. ej. noradrenalina, midazolam, insulina).</div>';box.style.display='block';return;}
+  var h='<div class="qri-hdr">'+esc(hdr)+'</div>';
+  for(var j=0;j<ids.length;j++){var i=ids[j];var d=FARM[i];
+    h+='<div class="qri" data-i="'+i+'" onclick="gotoDrug('+i+')"><div class="qri-n">'+d.n+'</div><div class="qri-m">'+d.clase+' · '+(CATNAME[d.cat]||'')+'</div></div>';}
+  box.innerHTML=h;box.style.display='block';}
+function searchKey(ev){var box=document.getElementById('qres');if(!box||box.style.display==='none')return;
+  var items=box.querySelectorAll('.qri');if(!items.length)return;
+  if(ev.key==='ArrowDown'){ev.preventDefault();SEARCHSEL=Math.min(SEARCHSEL+1,items.length-1);highlightSel(items);}
+  else if(ev.key==='ArrowUp'){ev.preventDefault();SEARCHSEL=Math.max(SEARCHSEL-1,0);highlightSel(items);}
+  else if(ev.key==='Enter'){ev.preventDefault();var pick=SEARCHSEL>=0?items[SEARCHSEL]:items[0];if(pick)gotoDrug(parseInt(pick.getAttribute('data-i'),10));}
+  else if(ev.key==='Escape'){box.style.display='none';}}
+function highlightSel(items){for(var k=0;k<items.length;k++)items[k].classList.toggle('act',k===SEARCHSEL);if(SEARCHSEL>=0&&items[SEARCHSEL])items[SEARCHSEL].scrollIntoView({block:'nearest'});}
+function activateTab(cat){var tabs=document.querySelectorAll('.tab');for(var k=0;k<tabs.length;k++){var oc=tabs[k].getAttribute('onclick')||'';if(oc.indexOf("showT('"+cat+"'")>=0){showT(cat,tabs[k]);return;}}}
+function gotoDrug(i){var d=FARM[i];if(!d)return;var cat=d.cat;activateTab(cat);
+  var id=cat+'-farm-'+i;var body=document.getElementById(id);
+  if(body&&!body.classList.contains('show'))togInd(id);
+  var target=document.getElementById('card-'+id)||body;
+  if(target)setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'center'});},70);
+  var box=document.getElementById('qres');if(box){box.style.display='none';}
+  var qi=document.getElementById('q');if(qi)qi.value='';}
+document.addEventListener('click',function(ev){var sw=document.querySelector('.searchwrap');var box=document.getElementById('qres');if(box&&sw&&!sw.contains(ev.target))box.style.display='none';});
+
+/* ===== CALCULADORA ===== */
+var UNITS=[
+ {u:'µg/kg/min',cu:'µg/mL',wt:true, f:function(d,kg,c){return d*kg*60/c;}, e:function(d,kg,c){return d+' × '+kg+' × 60 ÷ '+c;}},
+ {u:'µg/kg/h', cu:'µg/mL',wt:true, f:function(d,kg,c){return d*kg/c;},    e:function(d,kg,c){return d+' × '+kg+' ÷ '+c;}},
+ {u:'µg/min',  cu:'µg/mL',wt:false,f:function(d,kg,c){return d*60/c;},    e:function(d,kg,c){return d+' × 60 ÷ '+c;}},
+ {u:'mg/kg/min',cu:'mg/mL',wt:true, f:function(d,kg,c){return d*kg*60/c;}, e:function(d,kg,c){return d+' × '+kg+' × 60 ÷ '+c;}},
+ {u:'mg/kg/h', cu:'mg/mL',wt:true, f:function(d,kg,c){return d*kg/c;},    e:function(d,kg,c){return d+' × '+kg+' ÷ '+c;}},
+ {u:'mg/min',  cu:'mg/mL',wt:false,f:function(d,kg,c){return d*60/c;},    e:function(d,kg,c){return d+' × 60 ÷ '+c;}},
+ {u:'mg/h',    cu:'mg/mL',wt:false,f:function(d,kg,c){return d/c;},       e:function(d,kg,c){return d+' ÷ '+c;}},
+ {u:'U/kg/h',  cu:'U/mL', wt:true, f:function(d,kg,c){return d*kg/c;},    e:function(d,kg,c){return d+' × '+kg+' ÷ '+c;}},
+ {u:'U/h',     cu:'U/mL', wt:false,f:function(d,kg,c){return d/c;},       e:function(d,kg,c){return d+' ÷ '+c;}},
+ {u:'U/min',   cu:'U/mL', wt:false,f:function(d,kg,c){return d*60/c;},    e:function(d,kg,c){return d+' × 60 ÷ '+c;}}
+];
+function unitByName(u){for(var i=0;i<UNITS.length;i++)if(UNITS[i].u===u)return UNITS[i];return UNITS[0];}
+var CALCDRUGS=[
+ {n:'Norepinefrina — 16 µg/mL',conc:16,dosis:0.05,unidad:'µg/kg/min'},
+ {n:'Epinefrina — 16 µg/mL',conc:16,dosis:0.03,unidad:'µg/kg/min'},
+ {n:'Fenilefrina — 100 µg/mL',conc:100,dosis:0.5,unidad:'µg/kg/min'},
+ {n:'Dopamina — 1600 µg/mL',conc:1600,dosis:10,unidad:'µg/kg/min'},
+ {n:'Dobutamina — 1000 µg/mL',conc:1000,dosis:5,unidad:'µg/kg/min'},
+ {n:'Milrinona — 200 µg/mL',conc:200,dosis:0.375,unidad:'µg/kg/min'},
+ {n:'Levosimendán — 25 µg/mL',conc:25,dosis:0.1,unidad:'µg/kg/min'},
+ {n:'Vasopresina — 0.2 U/mL (dosis fija)',conc:0.2,dosis:0.03,unidad:'U/min'},
+ {n:'Amiodarona — 1.8 mg/mL',conc:1.8,dosis:1,unidad:'mg/min'},
+ {n:'Lidocaína — 8 mg/mL',conc:8,dosis:2,unidad:'mg/min'},
+ {n:'Procainamida — 4 mg/mL',conc:4,dosis:2,unidad:'mg/min'},
+ {n:'Diltiazem — 1 mg/mL',conc:1,dosis:10,unidad:'mg/h'},
+ {n:'Nitroglicerina — 200 µg/mL',conc:200,dosis:20,unidad:'µg/min'},
+ {n:'Nitroprusiato — 200 µg/mL',conc:200,dosis:0.3,unidad:'µg/kg/min'},
+ {n:'Nicardipino — 0.1 mg/mL',conc:0.1,dosis:5,unidad:'mg/h'},
+ {n:'Clevidipino — 0.5 mg/mL',conc:0.5,dosis:2,unidad:'mg/h'},
+ {n:'Labetalol — 1 mg/mL',conc:1,dosis:1,unidad:'mg/min'},
+ {n:'Midazolam — 1 mg/mL',conc:1,dosis:5,unidad:'mg/h'},
+ {n:'Propofol — 10 mg/mL',conc:10,dosis:2,unidad:'mg/kg/h'},
+ {n:'Dexmedetomidina — 4 µg/mL',conc:4,dosis:0.5,unidad:'µg/kg/h'},
+ {n:'Fentanilo — 10 µg/mL',conc:10,dosis:50,unidad:'µg/h'},
+ {n:'Ketamina — 5 mg/mL',conc:5,dosis:0.2,unidad:'mg/kg/h'},
+ {n:'Morfina — 1 mg/mL',conc:1,dosis:3,unidad:'mg/h'},
+ {n:'Remifentanilo — 20 µg/mL',conc:20,dosis:0.05,unidad:'µg/kg/min'},
+ {n:'Rocuronio — 1000 µg/mL',conc:1000,dosis:10,unidad:'µg/kg/min'},
+ {n:'Cisatracurio — 2000 µg/mL',conc:2000,dosis:2,unidad:'µg/kg/min'},
+ {n:'Insulina regular — 1 U/mL',conc:1,dosis:0.1,unidad:'U/kg/h'},
+ {n:'Heparina — 100 U/mL',conc:100,dosis:15,unidad:'U/kg/h'},
+ {n:'Isoproterenol — 8 µg/mL',conc:8,dosis:3,unidad:'µg/min'},
+ {n:'Furosemida — 10 mg/mL',conc:10,dosis:10,unidad:'mg/h'},
+ {n:'Octreótida — 5 µg/mL',conc:5,dosis:50,unidad:'µg/h'},
+ {n:'Personalizado',conc:null,dosis:null,unidad:null}
+];
+function calcInit(){var s=document.getElementById('c-drug');if(!s)return;var h='';for(var i=0;i<CALCDRUGS.length;i++)h+='<option value="'+i+'">'+CALCDRUGS[i].n+'</option>';s.innerHTML=h;
+  var u=document.getElementById('c-unit');var uh='';for(var j=0;j<UNITS.length;j++)uh+='<option value="'+UNITS[j].u+'">'+UNITS[j].u+'</option>';u.innerHTML=uh;
+  calcPreset();}
+function calcPreset(){var i=parseInt(document.getElementById('c-drug').value,10);var d=CALCDRUGS[i];
+  if(d&&d.conc!=null){document.getElementById('c-conc').value=d.conc;document.getElementById('c-dosis').value=d.dosis;document.getElementById('c-unit').value=d.unidad;}
+  calcSyncLabels();calcRun();}
+function calcUnitChange(){calcSyncLabels();calcRun();}
+function calcSyncLabels(){var un=unitByName(document.getElementById('c-unit').value);
+  document.getElementById('lbl-conc').textContent='Concentración final ('+un.cu+')';
+  document.getElementById('lbl-dosis').textContent='Dosis ('+un.u+')';
+  var pw=document.getElementById('peso-wrap');if(pw)pw.style.opacity=un.wt?'1':'0.45';}
+function num(id){var v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;}
+function calcRun(){var un=unitByName(document.getElementById('c-unit').value);
+  var kg=num('c-peso'),conc=num('c-conc'),dosis=num('c-dosis');var o=document.getElementById('c-out');if(!o)return;
+  var needKg=un.wt;var fml=document.getElementById('c-formula');
+  if(conc==null||dosis==null||conc<=0||dosis<0||(needKg&&(kg==null||kg<=0))){
+    o.innerHTML='<div style="padding:12px 14px;border-radius:6px;background:var(--al);color:var(--a);border-left:3px solid var(--am);font-size:13px;">Ingresa '+(needKg?'peso, ':'')+'concentración y dosis válidos (&gt;0).</div>';
+    if(fml)fml.innerHTML='';return;}
+  var mlh=un.f(dosis,kg,conc);
+  var totLine;
+  if(needKg){var totU=un.u.replace('/kg','');totLine='Total: <b>'+(dosis*kg).toFixed(3).replace(/\.?0+$/,'')+' '+totU+'</b> · '+dosis+' '+un.u+' × '+kg+' kg';}
+  else{totLine='Dosis: <b>'+dosis+' '+un.u+'</b>';}
+  o.innerHTML='<div style="padding:14px 16px;border-radius:8px;background:linear-gradient(135deg,var(--acd),var(--ac));color:#fff;">'
+   +'<div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;opacity:.85;">Velocidad de bomba</div>'
+   +'<div style="font-size:30px;font-weight:800;line-height:1.1;margin:2px 0;">'+mlh.toFixed(1)+' <span style="font-size:16px;font-weight:700;">mL/h</span></div>'
+   +'<div style="font-size:12px;opacity:.9;">'+totLine+'</div>'
+   +'<div style="font-size:11px;opacity:.8;margin-top:6px;">'+un.e(dosis,kg,conc)+' = '+mlh.toFixed(2)+' mL/h</div>'
+   +'</div>';
+  if(fml)fml.innerHTML='Fórmula ('+un.u+'): <b>mL/h = '+un.e('dosis',needKg?'peso':'',conc).replace(/  +/g,' ').replace('  ',' ')+'</b> (conc en '+un.cu+'). Verifica el resultado y la programación con doble chequeo.';}
+
+window.addEventListener('load',function(){renderCat('vaso');renderCat('inotro');renderCat('antiar');renderCat('sed');renderCat('bnm');renderCat('vaso2');renderCat('otros');calcInit();});
+</script>
+</body>
+</html>
