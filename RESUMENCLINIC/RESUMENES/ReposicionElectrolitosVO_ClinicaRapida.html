@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Reposición de Electrolitos Vía Oral</title>
+
+<style>
+/* ── TOKENS ── */
+:root{
+  --g:#0a5c45;--gm:#0f7a5a;--gl:#e1f5ee;
+  --b:#0c3b6e;--bm:#1a6bbd;--bl:#e6f1fb;
+  --r:#7b1c1c;--rm:#c0392b;--rl:#fdeaea;
+  --a:#7a4a00;--am:#d97706;--al:#fff8e1;
+  --bd:#e6ebf1;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;
+  --gray-600:#6b7280;--gray-700:#374151;--gray-900:#111827;
+  --sh:0 1px 2px rgba(16,24,40,.04),0 6px 16px rgba(16,24,40,.06);
+  --sh-sm:0 1px 2px rgba(16,24,40,.06);
+  --text-1:#111827;--text-2:#6b7280;--text-3:#9ca3af;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#eef2f6;color:var(--text-1);font-size:14px;line-height:1.55;min-height:100vh;}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,#0369a1 0%,#0ea5e9 100%);color:#fff;padding:18px 24px 16px;}
+.hdr-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:1100px;margin:0 auto;}
+.hdr-left{display:flex;align-items:center;gap:14px;}
+.hdr-icon{width:48px;height:48px;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.24);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.hdr-title{font-size:18px;font-weight:700;line-height:1.2;letter-spacing:-.2px;}
+.hdr-sub{font-size:12px;opacity:.82;margin-top:2px;}
+.hdr-badges{display:flex;gap:6px;flex-shrink:0;}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.badge-cb{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;}
+.badge-iv{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.88);}
+@media(max-width:520px){.hdr-badges{display:none;}}
+
+/* ── TAB BAR ── */
+.tabbar{background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(8px);-webkit-backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--bd);position:static;overflow-y:hidden;touch-action:pan-x;z-index:50;}
+.tabs-wrap{display:flex;padding:0 20px;gap:0;overflow-x:auto;scrollbar-width:none;max-width:1100px;margin:0 auto;}
+.tabs-wrap::-webkit-scrollbar{display:none;}
+.tab{display:flex;align-items:center;gap:7px;padding:11px 16px 10px;border:none;background:transparent;font-size:12.5px;font-weight:600;color:var(--gray-600);cursor:pointer;border-bottom:2.5px solid transparent;transition:color .13s,border-color .13s;white-space:nowrap;font-family:inherit;}
+.tab:hover{color:var(--gray-900);}
+.tab.active{color:#0369a1;border-bottom-color:#0ea5e9;}
+.tsym{font-size:12px;font-weight:700;padding:2px 6px;border-radius:5px;background:var(--gray-100);color:var(--gray-700);}
+.tab.active .tsym{background:#e0f2fe;color:#075985;}
+.tab.iv-tab.active{color:#7c3aed;border-bottom-color:#7c3aed;}
+.tab.iv-tab.active .tsym{background:#ede9fe;color:#5b21b6;}
+.tab-div{width:1px;background:var(--bd);margin:8px 6px;flex-shrink:0;}
+
+/* ── PANELS ── */
+.panels{padding:20px 24px 40px;max-width:1100px;margin:0 auto;}
+.panel{display:none;}.panel.active{display:block;animation:fIn .16s ease;}
+@keyframes fIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PANEL HEAD ── */
+.panel-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;}
+.pel{font-size:30px;font-weight:800;line-height:1;letter-spacing:-.5px;color:#0369a1;}
+.pel-iv{color:#7c3aed;}
+.pname{font-size:15px;font-weight:700;color:var(--text-1);margin-bottom:3px;}
+.pcond{font-size:12px;color:var(--text-2);}
+
+/* ── ALERT STRIPS ── */
+.strip{display:flex;align-items:flex-start;gap:10px;border-radius:10px;padding:11px 15px;margin-bottom:14px;font-size:12.5px;line-height:1.6;}
+.strip.info{background:var(--bl);color:var(--b);border-left:3px solid var(--bm);}
+.strip.info strong{color:var(--b);}
+.strip.warn{background:var(--rl);color:var(--r);border-left:3px solid var(--rm);}
+.strip.warn strong{color:var(--rm);}
+.strip.amber{background:var(--al);color:var(--a);border-left:3px solid var(--am);}
+.strip.amber strong{color:var(--am);}
+.strip-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+
+/* ── SEVERITY SECTIONS ── */
+.sev-section{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:var(--sh-sm);}
+.sev-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--bd);}
+.sev-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+.sev-range{font-size:12px;font-weight:500;color:var(--text-2);font-variant-numeric:tabular-nums;}
+.sev-range .u{font-weight:400;color:var(--text-3);font-size:11px;}
+.sev-note{margin-left:auto;font-size:11px;color:var(--text-3);}
+.sev-body{background:var(--gray-50);padding:14px;}
+.leve .sev-header{background:var(--gl);}
+.leve .sev-badge{background:rgba(10,92,69,.12);color:var(--g);}
+.moderada .sev-header{background:var(--al);}
+.moderada .sev-badge{background:rgba(122,74,0,.12);color:var(--a);}
+.severa .sev-header{background:var(--rl);}
+.severa .sev-badge{background:rgba(123,28,28,.12);color:var(--r);}
+
+/* IV warning strip */
+.iv-warn{display:flex;align-items:flex-start;gap:10px;padding:13px 16px;background:var(--rl);border-top:1px solid #f5bfbf;font-size:12px;color:var(--r);line-height:1.55;}
+.iv-warn strong{color:var(--rm);}
+
+/* IV elec section header */
+.elec-hdr{display:flex;align-items:center;gap:12px;padding:13px 18px;background:#fff;border:1px solid var(--bd);border-radius:12px;margin-bottom:10px;margin-top:6px;box-shadow:var(--sh-sm);}
+.elec-sym{font-size:22px;font-weight:800;line-height:1;min-width:48px;text-align:center;}
+.elec-label{font-size:14px;font-weight:700;color:var(--text-1);}
+.elec-sub{font-size:11.5px;color:var(--text-2);margin-top:1px;}
+
+/* VSO grid */
+.vso-grid{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 4px;}
+.vso-item{display:flex;flex-direction:column;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:6px 11px;min-width:68px;}
+.vso-ion{font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--text-3);text-transform:uppercase;}
+.vso-val{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:#0369a1;}
+.vso-unit{font-size:9.5px;color:var(--text-3);}
+
+/* PO4 table */
+.po4-table{width:100%;border-collapse:collapse;}
+.po4-table th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);text-align:left;padding:8px 13px;border-bottom:1px solid var(--bd);background:var(--gray-50);}
+.po4-table td{font-size:12.5px;color:var(--text-1);padding:10px 13px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.55;}
+.po4-table tr:last-child td{border-bottom:none;}
+.po4-table td:first-child{font-weight:600;white-space:nowrap;}
+.notag{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;background:var(--rl);color:var(--r);font-size:10px;font-weight:700;border:1px solid #f5bfbf;}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--bd);padding:16px 24px 28px;display:flex;flex-wrap:wrap;gap:16px 32px;max-width:1100px;margin:0 auto;}
+.flabel{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:5px;}
+.fitems{display:flex;flex-wrap:wrap;gap:5px 14px;}
+.fitem{font-size:12px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+.fdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.fnote{width:100%;font-size:11.5px;color:var(--text-3);padding-top:12px;border-top:1px solid var(--bd);line-height:1.65;}
+
+@media(max-width:700px){.panels{padding:14px 12px 32px;}.hdr{padding:14px 16px 13px;}.tabs-wrap{padding:0 8px;}}
+@media(prefers-reduced-motion:reduce){.panel.active{animation:none;}}
+</style>
+</head>
+<body>
+
+<!-- MARKUP -->
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-icon">⚗️</div>
+      <div>
+        <div class="hdr-title">Reposición de Electrolitos Vía Oral</div>
+        <div class="hdr-sub">Referencia clínica rápida · Cuadro Básico 2024</div>
+      </div>
+    </div>
+    <div class="hdr-badges">
+      <span class="badge badge-cb">Cuadro Básico</span>
+      <span class="badge badge-iv">💧 VO + IV</span>
+    </div>
+  </div>
+</div>
+
+<div class="tabbar">
+  <div class="tabs-wrap" role="tablist">
+    <button class="tab active" data-el="K"   onclick="switchTab('K')"   role="tab"><span class="tsym">K⁺</span> Potasio</button>
+    <button class="tab"        data-el="Na"  onclick="switchTab('Na')"  role="tab"><span class="tsym">Na⁺</span> Sodio</button>
+    <button class="tab"        data-el="Mg"  onclick="switchTab('Mg')"  role="tab"><span class="tsym">Mg²⁺</span> Magnesio</button>
+    <button class="tab"        data-el="Ca"  onclick="switchTab('Ca')"  role="tab"><span class="tsym">Ca²⁺</span> Calcio</button>
+    <button class="tab"        data-el="PO4" onclick="switchTab('PO4')" role="tab"><span class="tsym">PO₄³⁻</span> Fósforo</button>
+    <div class="tab-div"></div>
+    <button class="tab iv-tab" data-el="IV"  onclick="switchTab('IV')"  role="tab"><span class="tsym">💉</span> Reposición IV</button>
+  </div>
+</div>
+
+<div class="panels">
+
+<!-- K⁺ -->
+<div class="panel active" id="panel-K">
+  <div class="panel-head">
+    <div class="pel">K⁺</div>
+    <div><div class="pname">Potasio — Hipokalemia oral</div><div class="pcond">Clasificación sérica en mEq/L · ★ marca el tratamiento de elección de cada línea</div></div>
+  </div>
+  <div class="strip info"><span class="strip-icon">ℹ️</span><div><strong>Cuadro Básico ✓:</strong> Cloruro de potasio sol. 10% (frasco 237 mL) y tabletas LP 600 mg. <strong>Contraindicado en IRA, hiperkalemia y oliguria.</strong> Ajustar dosis si TFG &lt; 30 mL/min. Administrar siempre con alimentos o diluido.</div></div>
+  <div id="K-body"></div>
+</div>
+
+<!-- Na⁺ -->
+<div class="panel" id="panel-Na">
+  <div class="panel-head">
+    <div class="pel">Na⁺</div>
+    <div><div class="pname">Sodio — Hiponatremia oral (SRO)</div><div class="pcond">Sales de rehidratación oral · Solo con depleción de volumen concomitante</div></div>
+  </div>
+  <div class="strip warn"><span class="strip-icon">⚠️</span><div><strong>Indicación estricta:</strong> La SRO corrige Na⁺ <em>solo si hay hipovolemia</em> (pérdidas GI, diarrea, vómito). Hiponatremia euvolémica (SIADH) o hipervolémica (ICC, cirrosis) → restricción hídrica ± IV. Nunca usar SRO en estas situaciones.</div></div>
+  <div class="strip info">
+    <span class="strip-icon">💧</span>
+    <div>
+      <strong>Vida Suero Oral (VSO) · Fórmula OMS 2002 · ✓ Cuadro Básico</strong> — sobre 27.9 g para 1 L agua hervida fría.
+      <div class="vso-grid">
+        <div class="vso-item"><span class="vso-ion">Na⁺</span><span class="vso-val">75</span><span class="vso-unit">mEq/L</span></div>
+        <div class="vso-item"><span class="vso-ion">K⁺</span><span class="vso-val">20</span><span class="vso-unit">mEq/L</span></div>
+        <div class="vso-item"><span class="vso-ion">Cl⁻</span><span class="vso-val" style="color:var(--text-2);">65</span><span class="vso-unit">mEq/L</span></div>
+        <div class="vso-item"><span class="vso-ion">Citrato</span><span class="vso-val" style="color:var(--text-2);">10</span><span class="vso-unit">mmol/L</span></div>
+        <div class="vso-item"><span class="vso-ion">Glucosa</span><span class="vso-val" style="color:var(--text-2);">75</span><span class="vso-unit">mmol/L</span></div>
+        <div class="vso-item"><span class="vso-ion">Osm</span><span class="vso-val" style="color:var(--text-2);">245</span><span class="vso-unit">mOsm/L</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="Na-body"></div>
+</div>
+
+<!-- Mg²⁺ -->
+<div class="panel" id="panel-Mg">
+  <div class="panel-head">
+    <div class="pel">Mg²⁺</div>
+    <div><div class="pname">Magnesio — Hipomagnesemia oral</div><div class="pcond">Clasificación sérica en mg/dL · Absorción oral ~40% · Cofactor de K⁺ y Ca²⁺</div></div>
+  </div>
+  <div class="strip info"><span class="strip-icon">ℹ️</span><div><strong>Cuadro Básico:</strong> Óxido de Mg 400 mg (disponibilidad variable). <strong>Descartar hipocalcemia e hipokalemia concomitantes</strong> — la deficiencia de Mg impide su corrección. Ajustar en TFG &lt; 30 mL/min. La diarrea osmótica es el principal efecto adverso y limita la dosis.</div></div>
+  <div id="Mg-body"></div>
+</div>
+
+<!-- Ca²⁺ -->
+<div class="panel" id="panel-Ca">
+  <div class="panel-head">
+    <div class="pel">Ca²⁺</div>
+    <div><div class="pname">Calcio — Hipocalcemia oral</div><div class="pcond">Ca total corregido por albúmina o Ca ionizado · ★ marca el tratamiento de elección</div></div>
+  </div>
+  <div class="strip info"><span class="strip-icon">ℹ️</span><div><strong>Cuadro Básico ✓:</strong> Carbonato de Ca 500 mg (= 200 mg Ca elemental). <strong>Corrección por albúmina:</strong> Ca corr. = Ca medido + 0.8 × (4 − Alb g/dL). Carbonato necesita ácido gástrico → tomar con alimentos. En IBP o aclorhidria → gluconato de Ca.</div></div>
+  <div id="Ca-body"></div>
+</div>
+
+<!-- PO₄³⁻ -->
+<div class="panel" id="panel-PO4">
+  <div class="panel-head">
+    <div class="pel">PO₄³⁻</div>
+    <div><div class="pname">Fósforo — Hipofosfatemia</div><div class="pcond">Clasificación sérica en mg/dL · Sin preparado oral en Cuadro Básico</div></div>
+  </div>
+  <div class="strip warn"><span class="strip-icon">⚠️</span><div><strong>No existe preparado oral de fósforo en el Cuadro Básico.</strong> Manejo basado en dieta y gestión especial con farmacia hospitalaria. Casos moderados-severos: referir para formulación magistral o fosfato IV.</div></div>
+  <div id="PO4-body"></div>
+</div>
+
+<!-- REPOSICIÓN IV -->
+<div class="panel" id="panel-IV">
+  <div class="panel-head">
+    <div class="pel pel-iv">💉</div>
+    <div><div class="pname">Reposición IV de Electrolitos</div><div class="pcond">Indicado cuando la vía oral es insuficiente, hay síntomas graves o el déficit es severo · Monitoreo ECG y laboratorio obligatorios</div></div>
+  </div>
+  <div class="strip amber"><span class="strip-icon">⚠️</span><div><strong>Precauciones generales IV:</strong> Nunca administrar K⁺ o Ca²⁺ en bolo directo. Verificar función renal antes. Monitorear ECG durante reposición de K⁺ y Ca²⁺. Tener antídotos disponibles: gluconato Ca para hipermagnesemia.</div></div>
+  <div id="IV-body"></div>
+</div>
+
+</div><!-- /panels -->
+
+<div class="footer">
+  <div>
+    <div class="flabel">Severidad</div>
+    <div class="fitems">
+      <div class="fitem"><span class="fdot" style="background:var(--gm)"></span> Leve — ambulatorio</div>
+      <div class="fitem"><span class="fdot" style="background:var(--am)"></span> Moderada — vigilancia 24–72 h</div>
+      <div class="fitem"><span class="fdot" style="background:var(--rm)"></span> Severa — valorar IV / urgencias</div>
+    </div>
+  </div>
+  <div>
+    <div class="flabel">Disponibilidad</div>
+    <div class="fitems">
+      <div class="fitem"><span style="color:var(--gm);font-weight:700;">✓ CB</span>&nbsp;Cuadro Básico vigente</div>
+      <div class="fitem"><span style="color:var(--am);font-weight:700;">*</span>&nbsp;Disponibilidad variable</div>
+      <div class="fitem"><span style="color:var(--rm);font-weight:700;">✗</span>&nbsp;No en Cuadro Básico</div>
+    </div>
+  </div>
+  <div class="fnote">Material de apoyo educativo — verificar contra la GPC vigente (CENETEC) y el protocolo de la unidad. Ajustar dosis en insuficiencia renal. Corregir siempre la causa subyacente.</div>
+</div>
+
+<script>
+/* ── ENGINE ── */
+var TXIDX = 0; // global — nunca se resetea dentro de sevHTML
+
+function fdTog(id){
+  var e = document.getElementById(id);
+  var arr = document.getElementById('arr-' + id);
+  if (!e) return;
+  var opening = e.style.display === 'none';
+  e.style.display = opening ? 'block' : 'none';
+  if (arr) arr.style.transform = opening ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function txrow(t, v, c){
+  return '<div style="display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #eef2f6;font-size:12.5px;">'
+    + '<span style="color:#9ca3af;min-width:120px;flex-shrink:0;">' + t + '</span>'
+    + '<span style="font-weight:600;color:' + (c || '#111827') + ';text-align:right;line-height:1.5;">' + v + '</span></div>';
+}
+
+function txCardHTML(f, color, abrir){
+  var id = 'txc-' + (TXIDX++);
+  var col = f.no ? '#c0392b' : color;
+  var star = f.elec ? '<span style="color:#f5b301;font-size:14px;margin-right:3px;" title="Tratamiento de elección">★</span>' : '';
+  var h = '<div style="background:#fff;border-radius:12px;border:1px solid #e6ebf1;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(16,24,40,.06);">';
+  h += '<div onclick="fdTog(\'' + id + '\')" style="background:' + col + ';color:#fff;padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;user-select:none;">';
+  h += '<div><div style="font-size:10.5px;opacity:.82;margin-bottom:3px;letter-spacing:.2px;">' + star + (f.linea || '') + '</div>'
+    + '<div style="font-size:15px;font-weight:800;line-height:1.2;letter-spacing:-.1px;">' + f.n + '</div></div>';
+  h += '<span id="arr-' + id + '" style="font-size:20px;color:rgba(255,255,255,.7);transition:transform .2s;flex-shrink:0;">⌄</span></div>';
+  h += '<div id="' + id + '" style="display:' + (abrir ? 'block' : 'none') + ';">';
+  if (f.da || f.frec || f.dur || f.adm){
+    h += '<div style="background:' + col + '18;padding:13px 16px;border-bottom:1px solid #eef2f6;">';
+    if (f.da){
+      h += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;color:' + col + ';letter-spacing:.5px;">' + (f.dlbl || 'Dosis / aplicación') + '</div>';
+      h += '<div style="font-size:15px;font-weight:800;color:' + col + ';margin-top:2px;line-height:1.3;">' + f.da + '</div>';
+    }
+    if (f.frec) h += '<div style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:' + col + '22;border:1px solid ' + col + '44;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;color:' + col + ';">🔁 ' + f.frec + '</div>';
+    if (f.dur)  h += '<div style="font-size:12px;font-weight:700;color:#b91c1c;margin-top:7px;line-height:1.55;">⏱ ' + f.dur + '</div>';
+    if (f.adm)  h += '<div style="font-size:12px;color:#6b7280;margin-top:6px;line-height:1.6;">' + f.adm + '</div>';
+    h += '</div>';
+  }
+  if (f.hoja) h += '<div style="background:#eff6ff;border-left:3.5px solid #2563eb;padding:11px 15px;border-bottom:1px solid #bfdbfe;">'
+    + '<div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:#1d4ed8;letter-spacing:.5px;margin-bottom:6px;">📋 Prescripción · Hoja de enfermería</div>'
+    + '<div style="font-size:12.5px;font-weight:600;color:#1e3a5f;line-height:1.75;font-family:\'Courier New\',Courier,monospace;">' + f.hoja + '</div></div>';
+  h += '<div style="padding:10px 16px;border-bottom:1px solid #eef2f6;">';
+  if (f.mec)  h += txrow('Mecanismo', f.mec, '#374151');
+  if (f.ind)  h += txrow('Indicación', f.ind, col);
+  if (f.dmax) h += txrow('Dosis máxima', f.dmax, '#92400e');
+  if (f.vel)  h += txrow('Velocidad / preparación', f.vel, '#374151');
+  if (f.mon)  h += txrow('Monitoreo', f.mon, '#b45309');
+  if (f.via)  h += txrow('Vía / Ámbito', f.via, '#374151');
+  if (f.pres) h += txrow('Presentaciones', f.pres, '#6b7280');
+  if (f.ci)   h += txrow('Contraindicaciones', f.ci, '#c0392b');
+  if (f.ea)   h += txrow('Efectos adversos', f.ea, '#6b7280');
+  h += '</div>';
+  if (f.nota) h += '<div style="padding:11px 16px;background:' + (f.no ? '#fdeaea' : '#e6f1fb') + ';">'
+    + '<div style="font-size:9.5px;font-weight:700;text-transform:uppercase;color:' + col + ';margin-bottom:4px;letter-spacing:.5px;">Nota clínica</div>'
+    + '<div style="font-size:12.5px;color:#374151;line-height:1.7;">' + f.nota + '</div></div>';
+  h += '</div></div>';
+  return h;
+}
+
+function sevHTML(cls, label, range, note, drugs, color, ivWarn){
+  // NO resetea TXIDX — el contador es global para evitar IDs duplicados
+  var h = '<div class="sev-section ' + cls + '">';
+  h += '<div class="sev-header"><span class="sev-badge">● ' + label + '</span>'
+    + '<span class="sev-range">' + range + '</span>'
+    + (note ? '<span class="sev-note">' + note + '</span>' : '') + '</div>';
+  h += '<div class="sev-body">';
+  for (var i = 0; i < drugs.length; i++) h += txCardHTML(drugs[i], color, i === 0);
+  if (ivWarn) h += '<div class="iv-warn"><span style="font-size:18px;flex-shrink:0;">⚠️</span><div>' + ivWarn + '</div></div>';
+  h += '</div></div>';
+  return h;
+}
+
+function elecSection(sym, name, sub, symColor, content){
+  return '<div class="elec-hdr">'
+    + '<div class="elec-sym" style="color:' + symColor + ';">' + sym + '</div>'
+    + '<div><div class="elec-label">' + name + '</div><div class="elec-sub">' + sub + '</div></div>'
+    + '</div>' + content;
+}
+
+/* ══════════════════════════════════════
+   K⁺ ORAL
+══════════════════════════════════════ */
+var K_LEVE = [
+  {n:'Cloruro de potasio sol. oral 10%',linea:'1ª línea — hipokalemia leve',elec:true,
+   dlbl:'Dosis por toma',da:'10 – 20 mEq &nbsp;(5 – 10 mL)',frec:'c/12 h con alimentos',
+   dur:'Meta: 20–40 mEq/día · hasta K⁺ ≥ 3.5 mEq/L',
+   adm:'Diluir en 120 mL de agua o jugo de naranja. Con o después de los alimentos.',
+   mec:'Reposición directa del déficit de K⁺; restaura el potencial de membrana muscular y cardíaco.',
+   ind:'Hipokalemia leve (K 3.0–3.5 mEq/L) sin síntomas neuromusculares ni alteración en ECG.',
+   dmax:'Máx 40 mEq/dosis oral. Máx 200 mEq/día VO.',via:'Vía oral · Ambulatorio',
+   pres:'Genérico (✓ CB) · K-Lor® sol. 10% (frasco 237 mL)',
+   ci:'Hiperkalemia · IRA / anuria · IECA + ahorradores de K sin monitoreo.',
+   ea:'Náusea, vómito, dolor abdominal · Irritación gástrica · Hiperkalemia si dosis excesiva.',
+   nota:'<strong>Diluir siempre — nunca concentrado.</strong> El jugo de naranja mejora la palatabilidad. Controlar K sérico y ECG a las 24–48 h.',
+   hoja:'KCl sol. 10% — 5 mL (10 mEq) VO c/12 h con alimentos.<br>Diluir en 120 mL de agua o jugo antes de administrar.'},
+  {n:'Cloruro de potasio tabs LP 600 mg',linea:'Alternativa — presentación sólida',elec:false,
+   dlbl:'Dosis por toma',da:'2 – 3 tabletas &nbsp;(16 – 24 mEq)',frec:'c/12 h con alimentos',
+   dur:'Meta: 32–48 mEq/día · hasta K⁺ ≥ 3.5 mEq/L',
+   adm:'Tragar enteras — NO masticar ni triturar. Con vaso lleno de agua y alimentos.',
+   mec:'Liberación controlada de KCl; reduce el pico luminal y la irritación mucosa vs. solución.',
+   ind:'Hipokalemia leve si el paciente rechaza la solución o requiere presentación sólida.',
+   dmax:'Máx 5 tabletas (40 mEq) por dosis. Máx 200 mEq/día.',via:'Vía oral · Ambulatorio',
+   pres:'Genérico (✓ CB) · Slow-K® 600 mg · Lento-Kal® 600 mg',
+   ci:'Estenosis esofágica/gástrica · Dismotilidad severa · Disfagia · Hiperkalemia · IRA.',
+   ea:'Irritación GI menor que solución · Úlcera gástrica (raro) · Bezoar en estasis severa.',
+   nota:'No fragmentar la tableta — pierde el efecto de liberación prolongada. Si hay disfagia, cambiar a solución.',
+   hoja:'KCl 600 mg — 2 tabletas VO c/12 h con alimentos.<br>Tragar enteras con vaso lleno de agua. No triturar ni masticar.'},
+  {n:'Sales de potasio efervescentes 20 mEq',linea:'Alternativa — mejor palatabilidad',elec:false,
+   dlbl:'Dosis por toma',da:'1 – 2 sobres / comprimidos &nbsp;(20 – 40 mEq)',frec:'c/12 h con alimentos',
+   dur:'Meta: 20–40 mEq/día · hasta K⁺ ≥ 3.5 mEq/L',
+   adm:'Disolver en 120–240 mL de agua. Esperar que cese la efervescencia antes de beber.',
+   mec:'Reposición directa de K⁺; la efervescencia mejora la palatabilidad y la adherencia.',
+   ind:'Hipokalemia leve; alternativa si el paciente rechaza solución o tabletas.',
+   dmax:'Máx 40–60 mEq/día en dosis divididas.',via:'Vía oral · Ambulatorio',
+   pres:'K-Lor Eferv® 20 mEq · Potasio Liomont Eferv® · <em>(Disponibilidad variable — no siempre en CB)</em>',
+   ci:'Hiperkalemia · IRA · IECA + ahorrador de K sin monitoreo.',
+   ea:'Náusea leve · Distensión por gas si no se espera el cese de efervescencia.',
+   nota:'<strong>Verificar disponibilidad local</strong>: no siempre en cuadro básico. Disolver completamente antes de ingerir.',
+   hoja:'Sales K⁺ efervescentes 20 mEq — 1 sobre VO c/12 h.<br>Disolver en 120 mL de agua; esperar fin de efervescencia antes de tomar.'}
+];
+var K_MODERADA = [
+  {n:'Cloruro de potasio sol. oral 10%',linea:'1ª línea — hipokalemia moderada',elec:true,
+   dlbl:'Dosis por toma',da:'20 – 40 mEq &nbsp;(10 – 20 mL)',frec:'c/8 h con alimentos',
+   dur:'Meta: 60–80 mEq/día · ECG basal · hasta K⁺ ≥ 3.0 mEq/L',
+   adm:'Diluir en 120–240 mL de agua o jugo. Horarios: 7 am, 3 pm, 11 pm.',
+   mec:'Reposición de déficit moderado de K⁺; restaura excitabilidad muscular y previene arritmias.',
+   ind:'Hipokalemia moderada (K 2.5–2.9 mEq/L), tolera VO, sin síntomas neuromusculares severos.',
+   dmax:'Máx 40 mEq/dosis VO · Máx 200 mEq/día.',via:'Vía oral · Ambulatorio con vigilancia / Urgencias',
+   pres:'Genérico (✓ CB) · K-Lor® sol. 10%',
+   ci:'Hiperkalemia · IRA · K ≥ 3.0 con síntomas neuromusculares → escalar a IV.',
+   ea:'Náusea, vómito · Irritación gástrica · Hiperkalemia de rebote sin monitoreo.',
+   nota:'<strong>Solicitar ECG basal.</strong> Repetir K sérico a las 24–48 h. Si debilidad proximal, calambres severos o alteración en ECG → IV.',
+   hoja:'KCl sol. 10% — 20 mL (40 mEq) VO c/8 h con alimentos.<br>Diluir en 120–240 mL de agua o jugo. Solicitar ECG basal y K sérico a las 24 h.'},
+  {n:'Cloruro de potasio tabs LP 600 mg',linea:'Alternativa — si intolerancia a solución',elec:false,
+   dlbl:'Dosis por toma',da:'3 – 5 tabletas &nbsp;(24 – 40 mEq)',frec:'c/8 h con alimentos',
+   dur:'Meta: 60–80 mEq/día · hasta K⁺ ≥ 3.0 mEq/L',
+   adm:'Tragar enteras con vaso lleno de agua.',
+   mec:'Véase leve. En moderada, la solución es superior por ajustabilidad de dosis.',
+   ind:'Hipokalemia moderada solo si hay intolerancia comprobada a la solución.',
+   dmax:'Máx 5 tabs (40 mEq)/dosis.',via:'Vía oral · Ambulatorio con vigilancia',
+   pres:'Genérico (✓ CB) · Slow-K® · Lento-Kal®',
+   ci:'Dismotilidad · Estenosis GI · Disfagia · IRA.',
+   ea:'Irritación GI · Úlcera gástrica rara.',
+   nota:'<strong>Preferir solución en moderada</strong> por flexibilidad de dosificación. Tabletas solo si la solución produce náusea intolerable.',
+   hoja:'KCl 600 mg — 3–5 tabletas VO c/8 h con alimentos.<br>Tragar enteras con vaso lleno de agua. No triturar.'}
+];
+var K_SEVERA = [
+  {n:'Cloruro de potasio sol. oral 10%',linea:'Puente temporal · solo si asintomático',elec:false,
+   dlbl:'Dosis por toma',da:'40 mEq &nbsp;(20 mL) — dosis máxima oral',frec:'c/6 h (máx 160 mEq/día)',
+   dur:'Solo mientras se gestiona la vía IV · No superar 24 h sin IV si K &lt; 2.5',
+   adm:'Diluir en 240 mL. Administrar lentamente. ECG continuo si es posible.',
+   mec:'Reposición urgente de K⁺; la absorción oral es más lenta e impredecible que IV en emergencia.',
+   ind:'K &lt; 2.5 mEq/L ÚNICAMENTE si: paciente asintomático + tolera VO + no hay acceso IV inmediato.',
+   dmax:'40 mEq/dosis · 160 mEq/día VO (límite absoluto en ausencia de IV).',via:'Vía oral / SNG · Urgencias',
+   pres:'Genérico (✓ CB) · K-Lor® sol. 10%',
+   ci:'Síntomas neuromusculares · Arritmia · K &lt; 2.0 mEq/L · Incapacidad para tolerar VO.',
+   ea:'Náusea, vómito (precipita pérdida adicional) · Riesgo de aspiración.',
+   nota:'<strong>La vía oral en K &lt; 2.5 mEq/L es un puente temporal.</strong> Gestionar acceso IV inmediatamente. ECG obligatorio en todo K &lt; 2.5.',
+   hoja:'KCl sol. 10% — 20 mL (40 mEq) VO c/6 h. Diluir en 240 mL de agua.<br>⚠ Solo puente temporal — solicitar acceso IV urgente. ECG obligatorio.'}
+];
+
+/* ══════════════════════════════════════
+   Na⁺ ORAL
+══════════════════════════════════════ */
+var Na_LEVE = [
+  {n:'Sales de rehidratación oral (VSO)',linea:'1ª línea — hiponatremia leve + hipovolemia',elec:true,
+   dlbl:'Volumen',da:'500 – 1 000 mL',frec:'A libre demanda en 4 h · reevaluar al término',
+   dur:'Hasta corrección de hipovolemia y Na ≥ 130 mEq/L',
+   adm:'Administrar en sorbos pequeños y frecuentes. No restringir agua si hay sed.',
+   mec:'Absorción acoplada Na⁺-glucosa por cotransportador SGLT1 en yeyuno.',
+   ind:'Hiponatremia leve (Na 130–135 mEq/L) CON hipovolemia (diarrea, vómito, ingesta disminuida).',
+   dmax:'Sin límite estricto — guiado por clínica y laboratorio.',via:'Vía oral / SNG · Ambulatorio / Urgencias',
+   pres:'Vida Suero Oral (VSO) ✓ CB (sobre 27.9 g) · Pedialyte® · Electrolit®',
+   ci:'Hiponatremia euvolémica o hipervolémica · Íleo u obstrucción · Vómito incoercible.',
+   ea:'Náusea leve si se ingiere rápido · Hipernatremia si exceso en IRC.',
+   nota:'Reevaluar estado hídrico, Na sérico y signos vitales al terminar la rehidratación. No usar bebidas deportivas — contenido de Na inadecuado.',
+   hoja:'VSO (Vida Suero Oral) — 1 sobre disuelto en 1 L de agua hervida fría.<br>Administrar 500–1 000 mL a libre demanda en 4 h. Revalorar al término.'}
+];
+var Na_MODERADA = [
+  {n:'Sales de rehidratación oral (VSO)',linea:'1ª línea — hiponatremia moderada + hipovolemia',elec:true,
+   dlbl:'Volumen',da:'50 – 100 mL/kg',frec:'En 4 – 6 h · control sérico al término',
+   dur:'Hasta Na ≥ 128 mEq/L · Meta corrección ≤ 8–10 mEq/L/24 h',
+   adm:'Si no tolera VO → SNG. Alícuotas cada 15–20 min para facilitar tolerancia.',
+   mec:'La absorción intestinal permite corrección segura y gradual del déficit de Na⁺.',
+   ind:'Hiponatremia moderada (Na 125–129 mEq/L) CON hipovolemia; consciente sin deterioro neurológico.',
+   dmax:'Corrección Na: no superar 8–10 mEq/L/día — riesgo de mielinólisis osmótica.',via:'Vía oral / SNG · Urgencias',
+   pres:'Vida Suero Oral (VSO) ✓ CB · Pedialyte® · Electrolit®',
+   ci:'Deterioro neurológico · Convulsiones · Na &lt; 125 con síntomas · Hiponatremia no hipovolémica.',
+   ea:'Hipercorrección (riesgo de mielinólisis) · Náusea · Distensión gástrica.',
+   nota:'<strong>Meta de corrección: ≤ 8–10 mEq/L en 24 h.</strong> Si deterioro de consciencia o convulsiones → <strong>IV urgente · NaCl 3%.</strong>',
+   hoja:'VSO 1 sobre en 1 L agua hervida fría. Administrar 50–100 mL/kg en 4–6 h.<br>Sorbos pequeños c/15–20 min. Control Na sérico al término. Meta: ≤ 10 mEq/L/24 h.'}
+];
+var Na_SEVERA = [
+  {n:'⚠ Contraindicación de vía oral',linea:'Severa / euvolémica / hipervolémica — IV obligatorio',elec:false,no:true,
+   dlbl:'',da:'',frec:'',dur:'',adm:'',mec:'',ind:'',dmax:'',via:'',pres:'',ci:'',ea:'',
+   nota:'Na &lt; 125 mEq/L con síntomas, hiponatremia euvolémica (SIADH) o hipervolémica (ICC, cirrosis): SRO CONTRAINDICADA. Remitir a urgencias para NaCl 3% IV. Corrección máxima: 1–2 mEq/L/h si convulsiones, luego ≤ 8–10 mEq/L/24 h.',
+   hoja:'⚠ NO administrar SRO. Referir a urgencias para NaCl 3% IV urgente.<br>Solicitar Na sérico stat y valoración médica inmediata.'}
+];
+
+/* ══════════════════════════════════════
+   Mg²⁺ ORAL
+══════════════════════════════════════ */
+var Mg_LEVE = [
+  {n:'Óxido de magnesio 400 mg',linea:'1ª línea — hipomagnesemia leve',elec:true,
+   dlbl:'Dosis por toma',da:'400 mg &nbsp;(241 mg Mg elemental · 19.8 mEq)',frec:'c/24 h con alimentos',
+   dur:'Hasta Mg ≥ 1.5 mg/dL · habitualmente 1–2 semanas',
+   adm:'Con alimentos para reducir irritación GI. Si diarrea, reducir a 200 mg/día.',
+   mec:'Reposición de Mg²⁺; cofactor de >300 enzimas, incluyendo Na-K-ATPasa.',
+   ind:'Hipomagnesemia leve (Mg 1.5–1.8 mg/dL) asintomática. Mantenimiento tras IV.',
+   dmax:'Máx 800–1200 mg/día VO (ajustar si TFG &lt; 30 mL/min).',via:'Vía oral · Ambulatorio',
+   pres:'Genérico * (disponibilidad variable) · MagOx 400® · Magnesio Liomont®',
+   ci:'IRC severa (TFG &lt; 15) · Bloqueo cardíaco · Miastenia gravis.',
+   ea:'Diarrea osmótica (frecuente) · Náusea.',
+   nota:'<strong>Absorción oral ~40%</strong> — se requieren días-semanas para normalizar. Confirmar disponibilidad. Si diarrea intensa → cambiar a citrato de Mg o IV.',
+   hoja:'Óxido Mg 400 mg — 1 tableta VO c/24 h con alimentos.<br>Duración: 1–2 semanas o hasta Mg ≥ 1.5 mg/dL. Control Mg sérico al término.'},
+  {n:'Cloruro de magnesio 530 mg tabs',linea:'Alternativa — mejor tolerancia GI que óxido',elec:false,
+   dlbl:'Dosis por toma',da:'530 mg &nbsp;(63 mg Mg elemental · 5.2 mEq)',frec:'c/8 h con alimentos',
+   dur:'Hasta Mg ≥ 1.5 mg/dL · 1–3 semanas',
+   adm:'Con o después de alimentos. Si diarrea, separar más las dosis.',
+   mec:'Similar a óxido de Mg; el cloruro es más soluble y tiene absorción ligeramente mayor.',
+   ind:'Hipomagnesemia leve; alternativa si óxido produce diarrea intolerable.',
+   dmax:'Máx ~9 tabs/día. Ajustar en IRC.',via:'Vía oral · Ambulatorio',
+   pres:'MgCl₂ genérico (comercial — no siempre en CB) · Beuschel® · Cloruro Mg 530 mg',
+   ci:'IRA severa · Bloqueo AV.',
+   ea:'Diarrea (menor que óxido) · Distensión abdominal.',
+   nota:'Disponibilidad fuera de cuadro básico — gestionar con farmacia. Mejor biodisponibilidad que el óxido en algunos pacientes.',
+   hoja:'Cloruro Mg 530 mg — 1 tableta VO c/8 h con alimentos.<br>Duración: 1–3 semanas o hasta Mg ≥ 1.5 mg/dL.'},
+  {n:'Sulfato de magnesio oral (Sal Inglesa / Sal de Epsom)',linea:'Alternativa — acceso comercial inmediato',elec:false,
+   dlbl:'Dosis por toma',da:'2 – 3 g MgSO₄ &nbsp;(≈ 200 – 300 mg Mg elemental)',frec:'c/12 – 24 h con agua abundante',
+   dur:'Máx 3–5 días · verificar Mg sérico al término',
+   adm:'Disolver en 240 mL de agua fría. Tomar alejado de los alimentos (se absorbe mejor). Beber abundante agua durante el día.',
+   mec:'Sal inorgánica de Mg; absorción intestinal parcial (~50% por vía pasiva). El resto ejerce efecto osmótico laxante.',
+   ind:'Hipomagnesemia leve cuando no se dispone de óxido o cloruro de Mg. Alternativa de urgencia de bajo costo.',
+   dmax:'Máx 3–4 g/día VO. Dosis mayores → efecto laxante catártico prominente. Ajustar en IRC.',via:'Vía oral · Ambulatorio / Farmacia libre',
+   pres:'Sal Inglesa MgSO₄·7H₂O (polvo) — farmacias y tiendas naturistas · No en cuadro básico oral',
+   ci:'IRC severa · Bloqueo cardíaco · Diarrea activa · Miastenia gravis.',
+   ea:'<strong>Diarrea osmótica inevitable a dosis terapéuticas</strong> — efecto laxante prominente, riesgo de deshidratación. Calambres abdominales. Raramente hipermagnesemia en IRC.',
+   nota:'Principal limitación: la diarrea que produce puede perpetuar el déficit de Mg si hay pérdidas GI concomitantes. Útil como solución emergente de corto plazo (1–3 días). <strong>No confundir con la presentación IV (SO₄Mg 50% ampolleta) — nunca administrar la ampolleta oral.</strong>',
+   hoja:'SO₄Mg polvo (Sal Inglesa) 2–3 g disueltos en 240 mL de agua fría.<br>Administrar VO c/12–24 h. Máximo 3–5 días. Verificar Mg sérico al término.'}
+];
+var Mg_MODERADA = [
+  {n:'Óxido de magnesio 400 mg',linea:'1ª línea — hipomagnesemia moderada',elec:true,
+   dlbl:'Dosis por toma',da:'400 – 800 mg',frec:'c/12 h con alimentos',
+   dur:'Meta: Mg ≥ 1.5 mg/dL · 2–4 semanas (absorción limitada)',
+   adm:'Con alimentos. Si hay diarrea con 800 mg, reducir a 400 mg c/12 h y agregar IV.',
+   mec:'Reposición gradual del pool intracelular de Mg²⁺. Absorción ~40% limita velocidad de corrección.',
+   ind:'Hipomagnesemia moderada (Mg 1.0–1.4 mg/dL) asintomática o con síntomas leves.',
+   dmax:'Máx 1200 mg/día VO. Si no se corrige en 72 h → valorar IV.',via:'Vía oral · Ambulatorio con vigilancia / Urgencias',
+   pres:'Genérico * · MagOx 400® · Magnesio Liomont®',
+   ci:'TFG &lt; 30 mL/min (reducir dosis) · Bloqueo cardíaco · Arritmia activa → IV.',
+   ea:'Diarrea frecuente (limita adherencia) · Hipotensión en dosis altas con IR.',
+   nota:'Monitorear Mg sérico c/72 h. <strong>La corrección oral lleva días-semanas.</strong> Si diarrea impide la dosis → complementar con SO₄Mg 2 g IV. Corregir hipocalemia e hipocalcemia concomitantes.',
+   hoja:'Óxido Mg 400 mg — 1–2 tabletas VO c/12 h con alimentos.<br>Control Mg sérico cada 72 h. Si no corrige en 72 h → valorar IV.'}
+];
+var Mg_SEVERA = [
+  {n:'SO₄Mg IV · Complemento VO posterior',linea:'Severa — IV de elección · VO como mantenimiento',elec:true,
+   dlbl:'IV primero',da:'SO₄Mg 2–4 g IV en 20–60 min · luego Óxido Mg VO',frec:'IV × 1 bolo inicial · VO c/8 h',
+   dur:'IV según respuesta · VO hasta Mg ≥ 1.5 mg/dL',
+   adm:'IV: diluir en 100 mL SSF, infundir lento. VO (óxido 400 mg): iniciar al estabilizar el IV.',
+   mec:'IV: distribución rápida intracelular de Mg²⁺; VO: mantenimiento tras saturar compartimento extracelular.',
+   ind:'Hipomagnesemia severa (Mg &lt; 1.0 mg/dL) o sintomática (tetania, arritmia, convulsiones).',
+   dmax:'IV: máx 8–12 g/día. VO mantenimiento: máx 1200 mg/día.',via:'IV primero (urgencias) · VO como mantenimiento',
+   pres:'SO₄Mg 50% ampolleta (✓ CB IV) · Óxido Mg 400 mg VO *',
+   ci:'Bloqueo AV completo · Hipocalcemia severa no corregida · Miastenia gravis · IRA severa.',
+   ea:'IV: rubor, hipotensión, depresión respiratoria — antídoto: Gluconato Ca 1 g IV. VO: diarrea.',
+   nota:'<strong>En tetania, arritmias o convulsiones → SO₄Mg IV urgente.</strong> Tener gluconato de Ca listo como antídoto. Monitorear ROT, FR y diuresis durante IV.',
+   hoja:'① SO₄Mg 2 g (4 mL al 50%) + SSF 0.9% 96 mL = 100 mL IV en 20–60 min.<br>② Al estabilizar: Óxido Mg 400 mg 1 tab VO c/8 h con alimentos.'}
+];
+
+/* ══════════════════════════════════════
+   Ca²⁺ ORAL
+══════════════════════════════════════ */
+var Ca_LEVE = [
+  {n:'Carbonato de calcio 500 mg',linea:'1ª línea — hipocalcemia leve',elec:true,
+   dlbl:'Dosis por toma',da:'2 – 3 tabletas &nbsp;(400 – 600 mg Ca elemental)',frec:'c/8 – 12 h con alimentos',
+   dur:'Hasta Ca ≥ 8.0 mg/dL · control sérico a las 72 h',
+   adm:'CON alimentos — necesita ácido gástrico. Separar ≥2 h de hierro, tiroxina, bifosfonatos.',
+   mec:'Aporta Ca²⁺ elemental (40% del peso del carbonato) para corregir el déficit.',
+   ind:'Hipocalcemia leve (Ca total 8.0–8.5 mg/dL o ionizado 1.10–1.15 mmol/L) asintomática.',
+   dmax:'Máx 500 mg Ca elemental/toma · Máx 2 000 mg/día.',via:'Vía oral · Ambulatorio',
+   pres:'Genérico (✓ CB) · Caltrate 600® · Os-Cal® · Calcio Liomont®',
+   ci:'Hipercalcemia · Nefrolitiasis por Ca · Sarcoidosis · IBP o aclorhidria → usar gluconato.',
+   ea:'Estreñimiento (frecuente) · Distensión · Hipercalcemia si dosis excesiva.',
+   nota:'<strong>Tomar con alimentos</strong>. En IBP/omeprazol o aclorhidria la absorción cae drásticamente → cambiar a gluconato de Ca. Agregar vitamina D si déficit de 25-OHD.',
+   hoja:'Carbonato Ca 500 mg — 2 tabletas VO c/8–12 h con alimentos.<br>Separar ≥ 2 h de hierro, tiroxina y bifosfonatos. Control Ca sérico a las 72 h.'},
+  {n:'Gluconato de calcio oral 1 g',linea:'Alternativa — aclorhidria / IBP / post-gastrectomía',elec:false,
+   dlbl:'Dosis por toma',da:'3 – 6 g gluconato &nbsp;(270 – 540 mg Ca elemental)',frec:'c/8 h · con o sin alimentos',
+   dur:'Hasta Ca ≥ 8.0 mg/dL · control sérico a las 72 h',
+   adm:'Puede tomarse con o sin alimentos — no depende de ácido gástrico. Repartir en 3 tomas.',
+   mec:'Sal de calcio soluble a cualquier pH — absorción independiente de ácido gástrico.',
+   ind:'Hipocalcemia leve en pacientes con IBP, aclorhidria, post-gastrectomía o Crohn.',
+   dmax:'Contenido de Ca elemental 9% p/p → se requieren 6–8 g/día. Máx 2 000 mg Ca/día.',via:'Vía oral · Ambulatorio',
+   pres:'Gluconato Ca 500 mg / 1 g tabs (comercial, no siempre en CB) · Calcionate® · Genérico',
+   ci:'Hipercalcemia · Nefrolitiasis · Sarcoidosis · Digoxina (riesgo de toxicidad).',
+   ea:'Náusea leve · Estreñimiento (menos que carbonato).',
+   nota:'<strong>Indicado específicamente en gastropatía, gastrectomía o IBP crónico.</strong> Requiere más tabletas (9% vs 40% Ca elemental). Verificar disponibilidad — frecuentemente gestión especial.',
+   hoja:'Gluconato Ca 1 g — 3–6 tabletas VO c/8 h con o sin alimentos.<br>No depende de ácido gástrico. Control Ca sérico a las 72 h.'}
+];
+var Ca_MODERADA = [
+  {n:'Carbonato de calcio 500 mg',linea:'1ª línea — hipocalcemia moderada',elec:true,
+   dlbl:'Dosis por toma',da:'3 – 4 tabletas &nbsp;(600 – 800 mg Ca elemental)',frec:'c/8 h con alimentos',
+   dur:'Meta: Ca ≥ 8.0 mg/dL · monitorear c/48–72 h',
+   adm:'Con alimentos. Si IBP → cambiar a gluconato. Iniciar calcitriol 0.25 µg/día si PTH baja.',
+   mec:'Reposición de Ca²⁺ elemental; requiere vitamina D activa para absorción óptima.',
+   ind:'Hipocalcemia moderada (Ca total 7.5–7.9 mg/dL o ionizado 1.00–1.09 mmol/L) sin síntomas graves.',
+   dmax:'Máx 800 mg Ca elemental/dosis · Máx 2 400 mg/día.',via:'Vía oral · Ambulatorio con vigilancia',
+   pres:'Genérico (✓ CB) · Caltrate 600® · Calcio Liomont®',
+   ci:'Hipercalcemia · IBP / aclorhidria → gluconato · Digoxina.',
+   ea:'Estreñimiento · Hipercalcemia por exceso · Nefrolitiasis en uso prolongado.',
+   nota:'Monitorear Ca sérico c/48–72 h. <strong>Agregar calcitriol</strong> si hipoparatiroidismo o déficit severo de vitamina D. Si no sube Ca en 72 h → escalar a IV.',
+   hoja:'Carbonato Ca 500 mg — 3–4 tabletas VO c/8 h con alimentos.<br>Control Ca sérico c/48–72 h. Si no sube en 72 h → escalar a IV.'},
+  {n:'Gluconato de calcio oral 1 g',linea:'Alternativa — aclorhidria / IBP / post-gastrectomía',elec:false,
+   dlbl:'Dosis por toma',da:'4 – 6 g gluconato &nbsp;(360 – 540 mg Ca elemental)',frec:'c/8 h · con o sin alimentos',
+   dur:'Meta: Ca ≥ 8.0 mg/dL · hasta estabilización',
+   adm:'Sin necesidad de ácido gástrico. Con o sin alimentos.',
+   mec:'Absorción independiente de pH — crucial en gastropatías.',
+   ind:'Hipocalcemia moderada en pacientes que no absorben carbonato (IBP, aclorhidria, Crohn).',
+   dmax:'Máx 2 000 mg Ca elemental/día. Monitorear Ca c/48 h.',via:'Vía oral · Ambulatorio con vigilancia',
+   pres:'Gluconato Ca 1 g tabs · Calcionate® · Gluconato Ca genérico (verificar disponibilidad)',
+   ci:'Hipercalcemia · Digoxina · Sarcoidosis.',
+   ea:'Náusea · Estreñimiento · Hipercalcemia en dosis altas.',
+   nota:'La cantidad necesaria es alta (6–8 tabs de 1 g para 540–720 mg Ca elem.). Si es impráctica, combinar con calcitriol o escalar a IV.',
+   hoja:'Gluconato Ca 1 g — 4–6 tabletas VO c/8 h con o sin alimentos.<br>Control Ca sérico c/48–72 h. Si no sube → escalar a IV.'}
+];
+var Ca_SEVERA = [
+  {n:'Gluconato de Ca IV + Carbonato VO coadyuvante',linea:'Severa — IV urgente · VO como mantenimiento',elec:true,
+   dlbl:'IV primero',da:'Gluconato Ca 1–2 g IV en 10 min · luego Carbonato Ca VO',frec:'IV × 1 bolo · VO c/6–8 h',
+   dur:'IV hasta Ca > 7.5 mg/dL y sin síntomas · VO indefinido según causa',
+   adm:'IV: 10–20 mL gluconato Ca 10% lento en 10 min con ECG. VO posterior.',
+   mec:'IV: elevación rápida de Ca²⁺ ionizado para revertir tetania y arritmias. VO: mantenimiento.',
+   ind:'Ca &lt; 7.5 mg/dL o sintomática: tetania, Chvostek/Trousseau, QTc largo, convulsiones.',
+   dmax:'IV: 2 g bolo inicial; infusión 0.5–1.5 mg Ca elem./kg/h. VO: máx 2 400 mg Ca/día.',via:'IV urgencias → luego VO',
+   pres:'Gluconato Ca 10% ampolleta IV (✓ CB) · Carbonato Ca 500 mg VO (✓ CB)',
+   ci:'Hipercalcemia · Digoxina · Bicarbonato IV simultáneo (precipita).',
+   ea:'IV: rubor, bradicardia, hipotensión si se infunde rápido. VO: estreñimiento, hipercalcemia.',
+   nota:'<strong>Tetania, Chvostek/Trousseau, QTc largo o convulsiones → Gluconato Ca IV URGENTE.</strong> ECG continuo durante bolo. Iniciar VO al estabilizar. Agregar calcitriol si hipoparatiroidismo.',
+   hoja:'① Gluconato Ca 10% 10–20 mL (1–2 g) + SSF 30–80 mL = 50–100 mL IV en 10 min. ECG continuo.<br>② Estabilizado: Carbonato Ca 500 mg 2 tab VO c/6–8 h con alimentos.'}
+];
+
+/* ══════════════════════════════════════
+   PO₄³⁻ ORAL
+══════════════════════════════════════ */
+function buildPO4(){
+  var h = '';
+  h += '<div class="sev-section leve"><div class="sev-header"><span class="sev-badge">● Leve</span><span class="sev-range">2.0 – 2.5 <span class="u">mg/dL</span></span></div>';
+  h += '<div class="sev-body"><div style="overflow-x:auto;"><table class="po4-table"><thead><tr><th>Estrategia</th><th>Fuentes</th><th>Aporte orientativo</th><th>Conducta</th></tr></thead><tbody>';
+  h += '<tr><td>Dieta rica en fósforo</td><td>Lácteos · Carnes y aves · Leguminosas · Nueces · Huevo · Pescado</td><td style="font-variant-numeric:tabular-nums;font-size:11.5px;">1 vaso leche = ~230 mg PO₄<br>100 g pollo = ~220 mg PO₄<br>100 g nuez = ~500 mg PO₄</td><td style="font-size:12px;">Primera línea en leve asintomática. Orientación nutricional. Control sérico en 5–7 días.</td></tr>';
+  h += '</tbody></table></div></div></div>';
+  h += '<div class="sev-section moderada"><div class="sev-header"><span class="sev-badge">● Moderada</span><span class="sev-range">1.0 – 1.9 <span class="u">mg/dL</span></span></div>';
+  h += '<div class="sev-body"><div style="overflow-x:auto;"><table class="po4-table"><thead><tr><th>Estrategia</th><th>Producto</th><th>Disponibilidad</th><th>Conducta</th></tr></thead><tbody>';
+  h += '<tr><td>Dieta intensificada</td><td>5–6 porciones/día de fuentes ricas en PO₄</td><td style="color:var(--gm);font-weight:700;">✓ Siempre</td><td style="font-size:12px;">Complemento obligatorio a cualquier manejo farmacológico.</td></tr>';
+  h += '<tr><td>Fosfato sódico/potásico oral</td><td>K-Phos® Neutral · Neutra-Phos® · Fleet® Phospho-Soda</td><td><span class="notag">✗ No en CB</span></td><td style="font-size:12px;">Gestionar con farmacia hospitalaria. 250–500 mg PO₄ elemental c/6 h con alimentos. Control sérico c/48 h.</td></tr>';
+  h += '</tbody></table></div></div></div>';
+  h += '<div class="sev-section severa"><div class="sev-header"><span class="sev-badge">● Severa</span><span class="sev-range">&lt; 1.0 <span class="u">mg/dL · o sintomática</span></span></div>';
+  h += '<div class="sev-body"><div class="iv-warn" style="border-top:none;border-radius:8px;"><span style="font-size:18px;flex-shrink:0;">⚠️</span><div><strong>Reposición IV obligatoria — remitir a urgencias.</strong><br><span style="font-size:12px;color:var(--r);margin-top:4px;display:block;opacity:.85;">Fosfato de potasio IV: 0.08–0.16 mmol/kg en 6 h (leve-mod) · 0.32–0.64 mmol/kg en 8–12 h (severa). Síntomas: rabdomiólisis, disfunción miocárdica, hemólisis, encefalopatía.</span></div></div></div></div>';
+  return h;
+}
+
+/* ══════════════════════════════════════
+   REPOSICIÓN IV — todos los electrolitos
+══════════════════════════════════════ */
+var KIV_MODLEVE = [
+  {n:'Cloruro de potasio IV — Acceso periférico',linea:'K 2.5–3.4 mEq/L con indicación IV',elec:true,
+   dlbl:'Dosis / infusión',da:'10 – 20 mEq/h · en SSF 0.9% o DAD 5%',frec:'Ciclos de 1–2 h · controlar K c/4 h',
+   dur:'Hasta K ≥ 3.5 mEq/L',
+   adm:'Concentración máxima periférica: 40 mEq/L. Diluir en 250–500 mL SSF. Infundir con bomba.',
+   mec:'Reposición directa del pool de K⁺ intracelular con absorción y distribución controlada.',
+   ind:'Hipokalemia sintomática o moderada-severa que no corrige con VO, o intolerancia oral.',
+   dmax:'Máx 10–20 mEq/h periférico · Máx 40 mEq/L de concentración.',
+   vel:'10–20 mEq/h en periférico. Nunca en bolo directo IV — paro cardíaco.',
+   mon:'K sérico c/4 h · ECG continuo si K &lt; 3.0 · Diuresis horaria.',via:'IV periférico · Urgencias / Hospitalización',
+   pres:'KCl 2 mEq/mL ampolleta (CB IV) · KCl 10% frasco',
+   ci:'K ≥ 3.5 mEq/L · IRA oligúrica · Bloqueo cardíaco de alto grado.',
+   ea:'Dolor y flebitis en sitio de infusión · Hiperkalemia si velocidad excesiva · Arritmias.',
+   nota:'<strong>NUNCA en bolo — el K IV directo causa fibrilación ventricular.</strong> En periférico siempre diluir a ≤ 40 mEq/L. Preferir acceso central si se requieren concentraciones mayores o velocidades >20 mEq/h.',
+   hoja:'KCl 20 mEq (10 mL al 2 mEq/mL) + SSF 0.9% 240 mL = 250 mL IV en 60 min por bomba.<br>Acceso periférico. Repetir c/4 h hasta K ≥ 3.5. Control K sérico c/4 h.'}
+];
+var KIV_SEVERA = [
+  {n:'Cloruro de potasio IV — Acceso central + ECG',linea:'K &lt; 2.5 mEq/L o arritmia severa',elec:true,
+   dlbl:'Dosis / infusión',da:'20 – 40 mEq/h · en SSF 0.9% · acceso central',frec:'ECG continuo · K sérico c/2 h',
+   dur:'Hasta K ≥ 3.0 mEq/L; luego reducir velocidad o pasar a VO',
+   adm:'Concentración central: hasta 100–200 mEq/L. Infundir con bomba de infusión. UCI o área monitorizada.',
+   mec:'Corrección rápida del déficit severo de K⁺; restaura potencial de membrana y previene arritmia fatal.',
+   ind:'Hipokalemia severa (K &lt; 2.5 mEq/L) o cualquier K con arritmia ventricular, debilidad muscular severa o parálisis.',
+   dmax:'Máx 40 mEq/h con ECG continuo y acceso central. Máx 400 mEq/día en casos extremos.',
+   vel:'20–40 mEq/h con acceso central y monitoreo cardíaco continuo.',
+   mon:'ECG continuo · K sérico c/1–2 h · ROT · Diuresis · Mg sérico (corregir concomitante).',via:'IV central · UCI / Área monitorizada',
+   pres:'KCl 2 mEq/mL ampolleta (✓ CB IV)',
+   ci:'Hiperkalemia · Oliguria sin monitoreo · Sin acceso a ECG continuo.',
+   ea:'Arritmias (si velocidad excesiva) · Hiperkalemia de rebote · Espasmo venoso.',
+   nota:'<strong>Si hay hipomagnesemia concomitante, corregir primero el Mg</strong> — la hipokalemia refractaria es frecuentemente por déficit de Mg. Verificar fosfato sérico si hay debilidad severa.',
+   hoja:'KCl 40 mEq (20 mL al 2 mEq/mL) + SSF 0.9% 230 mL = 250 mL IV en 60 min por bomba.<br>ACCESO CENTRAL. ECG continuo. Control K sérico c/1–2 h.'}
+];
+
+var NaIV_HIPOVOL = [
+  {n:'Solución salina isotónica (SSF 0.9%)',linea:'Hiponatremia + hipovolemia — expansión de volumen',elec:true,
+   dlbl:'Volumen inicial',da:'250 – 500 mL en 30 min · luego ajustar',frec:'Reevaluar cada 2–4 h con Na sérico',
+   dur:'Hasta corrección de hipovolemia y Na ≥ 130 mEq/L · máx corrección 8–10 mEq/L/24 h',
+   adm:'Bolo inicial para corregir hipoperfusión. Continuar con infusión a ritmo calculado según déficit de Na.',
+   mec:'Na = 154 mEq/L → corrige hipovolemia y aporta Na hipertónico relativo al paciente hiponatrémico.',
+   ind:'Hiponatremia con hipovolemia documentada que no corrige con SRO oral.',
+   dmax:'Corrección Na: ≤ 8–10 mEq/L/24 h. En hiponatremia crónica: ≤ 6–8 mEq/L/24 h — riesgo de mielinólisis.',
+   vel:'Calcular con fórmula de Adrogue: ΔNa = (Na_sol − Na_pac) / (0.6×peso+1). Ajustar c/2 h.',
+   mon:'Na sérico c/2 h inicialmente · Estado neurológico · Balance hídrico.',via:'IV periférico · Urgencias / Hospitalización',
+   pres:'SSF 0.9% frasco 250 mL / 500 mL / 1 L (✓ CB IV)',
+   ci:'Hiponatremia euvolémica o hipervolémica · Hipernatremia.',
+   ea:'Sobrecarga de volumen (edema, HTA) · Acidosis hiperclorémica · Hipercorrección de Na.',
+   nota:'<strong>Meta: corrección ≤ 8–10 mEq/L/24 h</strong> para evitar mielinólisis osmótica pontina. Verificar Na sérico cada 2 h las primeras 6 h. Si hay hipercorrección → administrar agua libre (glucosa 5% o desmopresina).',
+   hoja:'SSF 0.9% 500 mL IV en bolo en 30 min (corrección de hipovolemia).<br>Luego: infusión calculada por fórmula de Adrogue. Control Na sérico c/2 h. Meta: ≤ 10 mEq/L/24 h.'}
+];
+var NaIV_SEV = [
+  {n:'NaCl hipertónico 3% — Hiponatremia sintomática',linea:'Na &lt; 125 con síntomas agudos / convulsiones',elec:true,
+   dlbl:'Dosis de rescate',da:'100 – 150 mL en 10 – 20 min (bolo)',frec:'Puede repetirse hasta 3 veces si persisten síntomas',
+   dur:'Hasta resolución de síntomas · luego infusión lenta hasta Na +8 mEq/L en 24 h',
+   adm:'Bolo IV rápido 100 mL NaCl 3% en 10–20 min. Luego: infusión lenta calculada con fórmula de Adrogue. Acceso central preferible.',
+   mec:'Aporta 513 mEq/L de Na → eleva rápidamente osmolaridad sérica y alivia edema cerebral.',
+   ind:'Hiponatremia severa sintomática: convulsiones, coma, herniación cerebral o focalidad neurológica.',
+   dmax:'Corrección aguda: no superar +5 mEq/L en la 1ª hora. Máx corrección: 8–10 mEq/L/24 h (crónica ≤ 6).',
+   vel:'Bolo 100 mL en 10–20 min × 3 si síntomas activos. Luego: ajustar con fórmula de Adrogue.',
+   mon:'Na sérico c/1 h durante bolo · ECG · Estado neurológico · Osmolaridad.',via:'IV central (preferible) o periférico · UCI / Urgencias',
+   pres:'NaCl 3% frasco 250 mL (preparar en farmacia o con ampolletas NaCl) · No siempre en CB — verificar',
+   ci:'Hipovolemia severa sin corrección de volumen previa · Hipercorrección activa · Hipernatremia.',
+   ea:'Mielinólisis osmótica si hipercorrección · Hipernatremia · Flebitis en periférico · Sobrecarga de volumen.',
+   nota:'<strong>En convulsiones activas: 150 mL NaCl 3% en 20 min → puede repetirse 2 veces más.</strong> Una vez que ceden los síntomas, pasar a corrección gradual. NUNCA corregir Na más de 10 mEq/L en 24 h en hiponatremia crónica (riesgo de mielinólisis pontina).',
+   hoja:'NaCl 3% 100 mL IV en 10–20 min (bolo). Repetir × 3 si persisten síntomas.<br>ECG y Na sérico c/1 h durante bolo. Acceso central preferible.'}
+];
+
+var MgIV_STD = [
+  {n:'Sulfato de magnesio IV — Reposición estándar',linea:'Mg 0.8–1.4 mg/dL sintomático o no corrige VO',elec:true,
+   dlbl:'Dosis',da:'1 – 2 g SO₄Mg (2 – 4 mL al 50%) en 100 mL SSF',frec:'En 30 – 60 min · repetir c/6 h si Mg &lt; 1.0',
+   dur:'Hasta Mg ≥ 1.5 mg/dL · luego mantenimiento VO',
+   adm:'Diluir en 100 mL SSF 0.9% o DAD 5%. Infundir lentamente. Monitorear ROT y FR durante infusión.',
+   mec:'Distribución rápida intracelular de Mg²⁺; cofactor de Na-K-ATPasa (clave para corregir K⁺ y Ca²⁺ refractarios).',
+   ind:'Hipomagnesemia sintomática o moderada-severa (Mg &lt; 1.4 mg/dL) que no corrige con VO.',
+   dmax:'Máx 8 g/día IV en hipomagnesemia severa. Reducir 50% si TFG &lt; 30 mL/min.',
+   vel:'1–2 g en 30–60 min. Infusión rápida → hipotensión y rubor.',
+   mon:'ROT patelar (reflejo aquíleo debe estar presente) · FR · PA · Mg sérico c/4 h.',via:'IV periférico o central · Urgencias / Hospitalización',
+   pres:'SO₄Mg 50% ampolleta 10 mL = 5 g (✓ CB IV)',
+   ci:'Bloqueo AV completo · Miastenia gravis · IRA severa (ajustar).',
+   ea:'Rubor, calor, sudoración (muy frecuente) · Hipotensión · Depresión respiratoria · Hipermagnesemia.',
+   nota:'<strong>Antídoto: Gluconato Ca 1 g IV</strong> en caso de toxicidad por hipermagnesemia (abolición de ROT o depresión respiratoria). Tenerlo siempre disponible durante la infusión.',
+   hoja:'SO₄Mg 2 g (4 mL al 50%) + SSF 0.9% 96 mL = 100 mL IV en 30–60 min por bomba.<br>Repetir c/6 h si Mg &lt; 1.0 mg/dL. ROT, FR y PA durante cada infusión.'}
+];
+var MgIV_EMERG = [
+  {n:'SO₄Mg IV — Emergencia (tetania / arritmia)',linea:'Hipomagnesemia con tetania, arritmia o convulsiones',elec:true,
+   dlbl:'Bolo de rescate',da:'2 g SO₄Mg (4 mL al 50%) en 100 mL SSF',frec:'En 5 – 10 min · monitoreo ECG continuo',
+   dur:'Una sola dosis de emergencia; luego infusión 1 g/h × 4–6 h',
+   adm:'Infundir en 5–10 min (urgencia). Monitoreo ECG continuo. Acceso IV seguro. Gluconato Ca disponible.',
+   mec:'Elevación rápida de Mg²⁺ sérico → estabiliza membrana excitable, antagoniza Ca²⁺ en canales (efecto antiarrítmico).',
+   ind:'Tetania, torsades de pointes por hipoMg, convulsiones refractarias, arritmia ventricular.',
+   dmax:'Bolo máx 2 g en 5–10 min. Luego infusión mantenimiento 1 g/h.',
+   vel:'Bolo 2 g en 5–10 min (emergencia). Mantener velocidad de infusión &lt; 1 g/min.',
+   mon:'ECG continuo · ROT continuo · FR c/5 min · PA c/5 min.',via:'IV central preferible / periférico si urgencia · UCI',
+   pres:'SO₄Mg 50% ampolleta (✓ CB IV) · Gluconato Ca 10% ampolleta (antídoto)',
+   ci:'Bloqueo AV de alto grado · IRA sin ajuste · Hipermagnesemia preexistente.',
+   ea:'Depresión respiratoria · Paro cardíaco si se infunde en bolo &gt; 1 g/min · Hipotensión severa.',
+   nota:'<strong>Tener siempre Gluconato Ca 1 g IV preparado como antídoto.</strong> Si ROT abolidos o FR &lt; 12/min → suspender SO₄Mg inmediatamente y administrar Gluconato Ca 1 g IV en 10 min.',
+   hoja:'SO₄Mg 2 g (4 mL al 50%) + SSF 0.9% 96 mL = 100 mL IV en 5–10 min (URGENCIA).<br>ECG continuo. ROT y FR c/5 min. Gluconato Ca 1 g IV listo como antídoto.'}
+];
+
+var CaIV_LEVE = [
+  {n:'Gluconato de calcio IV 10% — Dosis estándar',linea:'Hipocalcemia sintomática o Ca &lt; 7.5 mg/dL',elec:true,
+   dlbl:'Dosis',da:'1 – 2 g (10 – 20 mL gluconato Ca 10%) en SSF',frec:'En 10 min con ECG · repetir si síntomas persisten',
+   dur:'Bolo hasta revertir síntomas · luego infusión de mantenimiento',
+   adm:'Diluir 10–20 mL en 50–100 mL SSF. Infundir lento en 10 min. NO mezclar con bicarbonato o fosfato (precipita).',
+   mec:'Eleva rápidamente Ca²⁺ ionizado → estabiliza membrana excitable, revierte tetania y arritmias.',
+   ind:'Hipocalcemia severa o sintomática: tetania, Chvostek+, Trousseau+, QTc > 500 ms, convulsiones.',
+   dmax:'Bolo: máx 2 g. Infusión mantenimiento: 0.5–1.5 mg Ca elem./kg/h (= aprox. 5–15 mL gluconato 10%/h).',
+   vel:'Bolo: 1 g en 10 min. Infusión: 50 mg Ca elem./h → titular con Ca sérico.',
+   mon:'ECG continuo durante bolo · Ca sérico c/4 h · Mg sérico (corregir si bajo) · Fosfato.',via:'IV periférico (gluconato) · Urgencias / Hospitalización',
+   pres:'Gluconato Ca 10% ampolleta 10 mL = 1 g (✓ CB IV)',
+   ci:'Hipercalcemia · Digoxina (riesgo de toxicidad) · Bicarbonato IV simultáneo (precipita).',
+   ea:'Bradicardia, bloqueo AV si infusión rápida · Necrosis tisular si extravasa (menos que CaCl₂) · Hipercalcemia.',
+   nota:'<strong>Gluconato Ca es preferible al cloruro Ca en periférico</strong> — menor riesgo de necrosis tisular por extravasación. Cada 10 mL de gluconato Ca 10% = 90 mg Ca elemental (vs 360 mg en CaCl₂ 10% — 4 veces más potente).',
+   hoja:'Gluconato Ca 10% 10–20 mL + SSF 30–80 mL = 50–100 mL IV en 10 min con ECG.<br>Mantenimiento: Gluconato Ca 10% 10 mL/h IV continuo. Acceso periférico.'}
+];
+var CaIV_MANT = [
+  {n:'Cloruro de calcio 10% — Acceso central',linea:'Emergencia severa o acceso central disponible',elec:false,
+   dlbl:'Dosis',da:'0.5 – 1 g CaCl₂ (5 – 10 mL al 10%) en SSF',frec:'En 10 min · solo en emergencia crítica',
+   dur:'Dosis única de rescate. Continuar con gluconato Ca para mantenimiento.',
+   adm:'SOLO acceso central — extravasación causa necrosis tisular severa. Diluir siempre.',
+   mec:'3× más potente que gluconato Ca por mg de Ca elemental. Eleva Ca²⁺ ionizado más rápido.',
+   ind:'Hipocalcemia crítica con acceso central disponible: paro cardíaco por hipocalcemia, post-tiroidectomía.',
+   dmax:'Máx 1 g en bolo. No exceder 2 g/día.',
+   vel:'1 g en 10 min mínimo. Nunca en bolo directo.',
+   mon:'ECG continuo · Ca sérico c/1 h · Inspeccionar sitio de acceso.',via:'IV central OBLIGATORIO · UCI',
+   pres:'CaCl₂ 10% ampolleta 10 mL (CB IV en algunos centros)',
+   ci:'Periférico · Pacientes con digoxina · Hipercalcemia.',
+   ea:'Necrosis tisular severa si extravasa · Bradicardia · Hipercalcemia.',
+   nota:'Reservar para emergencias críticas con acceso central. Para la mayoría de los casos, el gluconato de Ca IV es más seguro y suficiente. No mezclar en la misma línea con bicarbonato, fosfato o SO₄Mg.',
+   hoja:'CaCl₂ 10% 10 mL (1 g) + SSF 40 mL = 50 mL IV en 10 min. SOLO ACCESO CENTRAL.<br>ECG continuo. Inspeccionar sitio de infusión c/15 min. No mezclar con bicarbonato.'}
+];
+
+var PO4IV = [
+  {n:'Fosfato potásico IV (KH₂PO₄ / K₂HPO₄)',linea:'Hipofosfatemia moderada-severa o sintomática',elec:true,
+   dlbl:'Dosis según severidad',da:'Mod: 0.08–0.16 mmol PO₄/kg · Sev: 0.32–0.64 mmol/kg',frec:'Mod: en 6 h · Sev: en 8–12 h · repetir si PO₄ &lt; 1.5',
+   dur:'Hasta PO₄ ≥ 2.0 mg/dL · luego mantenimiento VO si es posible',
+   adm:'Diluir en 250–500 mL SSF 0.9% o DAD 5%. Infundir lentamente. NUNCA bolo directo.',
+   mec:'Reposición directa del pool intracelular de fosfato; esencial para síntesis de ATP y 2,3-DPG.',
+   ind:'Hipofosfatemia moderada (1.0–1.9 mg/dL) sintomática o severa (&lt; 1.0 mg/dL) con disfunción orgánica.',
+   dmax:'Máx 0.64 mmol/kg en una infusión. Máx velocidad: 7–10 mmol/h.',
+   vel:'0.08–0.16 mmol/kg en 6 h (moderada) · 0.32–0.64 mmol/kg en 8–12 h (severa).',
+   mon:'PO₄ sérico c/6 h · Ca sérico (riesgo de hipocalcemia por quelación) · K sérico (fosfato potásico aporta K⁺) · ECG.',via:'IV periférico o central · Urgencias / Hospitalización',
+   pres:'Fosfato potásico IV (K₂HPO₄) — no siempre disponible en CB; gestionar con farmacia · 1 mmol PO₄ = 31 mg',
+   ci:'Hipercalcemia · Hiperfosfatemia · IRA severa · Hiperkalemia (por la carga de K⁺).',
+   ea:'Hipocalcemia (quelación de Ca) · Hiperkalemia · Hipotensión · Calcificaciones metastásicas si infusión rápida.',
+   nota:'<strong>Monitorear Ca sérico durante la infusión</strong> — el fosfato quelita Ca²⁺ y puede precipitar hipocalcemia. Si el paciente está en digoxina, extremar precaución con la hipocalcemia. Síntomas de hipofosfatemia severa (&lt; 1.0 mg/dL): rabdomiólisis, hemólisis, disfunción miocárdica, insuficiencia respiratoria, encefalopatía.',
+   hoja:'Fosfato K⁺ IV en 250 mL SSF 0.9%:<br>· Moderada: 0.08–0.16 mmol/kg para 6 h.<br>· Severa: 0.32–0.64 mmol/kg para 8–12 h.<br>Control PO₄ y Ca sérico c/6 h. K sérico c/4 h.'}
+];
+
+/* ══════════════════════════════════════
+   RENDER
+══════════════════════════════════════ */
+function render(){
+  document.getElementById('K-body').innerHTML =
+    sevHTML('leve','Leve','3.0 – 3.5 <span class="u">mEq/L</span>','Meta: 20–40 mEq/día',K_LEVE,'#0f7a5a') +
+    sevHTML('moderada','Moderada','2.5 – 2.9 <span class="u">mEq/L</span>','Meta: 60–80 mEq/día · ECG basal',K_MODERADA,'#d97706') +
+    sevHTML('severa','Severa','&lt; 2.5 <span class="u">mEq/L</span>','Preferir IV si sintomático',K_SEVERA,'#c0392b',
+      '<strong>IV de elección:</strong> KCl 10 mEq/h IV periférico (máx 20 mEq/h en monitoreo). Si K &lt; 2.0 o síntomas → central + ECG continuo + urgencias.');
+
+  document.getElementById('Na-body').innerHTML =
+    sevHTML('leve','Leve + hipovolemia','Na 130 – 135 <span class="u">mEq/L</span>','',Na_LEVE,'#0f7a5a') +
+    sevHTML('moderada','Moderada + hipovolemia','Na 125 – 129 <span class="u">mEq/L</span>','Corrección ≤ 10 mEq/L/24 h',Na_MODERADA,'#d97706') +
+    sevHTML('severa','Severa / No hipovolémica','Na &lt; 125 <span class="u">mEq/L · o euvolémica / hipervolémica</span>','',Na_SEVERA,'#c0392b');
+
+  document.getElementById('Mg-body').innerHTML =
+    sevHTML('leve','Leve','1.5 – 1.8 <span class="u">mg/dL</span>','',Mg_LEVE,'#0f7a5a') +
+    sevHTML('moderada','Moderada','1.0 – 1.4 <span class="u">mg/dL</span>','',Mg_MODERADA,'#d97706') +
+    sevHTML('severa','Severa','&lt; 1.0 <span class="u">mg/dL · o sintomática</span>','IV preferible',Mg_SEVERA,'#c0392b');
+
+  document.getElementById('Ca-body').innerHTML =
+    sevHTML('leve','Leve','Ca total 8.0 – 8.5 <span class="u">mg/dL</span>','',Ca_LEVE,'#0f7a5a') +
+    sevHTML('moderada','Moderada','Ca total 7.5 – 7.9 <span class="u">mg/dL</span>','',Ca_MODERADA,'#d97706') +
+    sevHTML('severa','Severa','Ca total &lt; 7.5 <span class="u">mg/dL · o sintomática</span>','IV urgente',Ca_SEVERA,'#c0392b');
+
+  document.getElementById('PO4-body').innerHTML = buildPO4();
+
+  document.getElementById('IV-body').innerHTML =
+    elecSection('K⁺','Potasio IV','Hipokalemia que requiere reposición parenteral','#0f7a5a',
+      sevHTML('moderada','Leve – Moderada (K 2.5–3.4 mEq/L + indicación IV)','IV periférico','',KIV_MODLEVE,'#d97706') +
+      sevHTML('severa','Severa (K &lt; 2.5 mEq/L o arritmia)','Central + ECG continuo','',KIV_SEVERA,'#c0392b',
+        '<strong>Si hipomagnesemia concomitante → corregir Mg primero.</strong> La hipokalemia refractaria a menudo es por déficit de Mg²⁺.')
+    ) +
+    elecSection('Na⁺','Sodio IV','Hiponatremia sintomática o que no corrige con SRO','#1a6bbd',
+      sevHTML('leve','Hiponatremia + hipovolemia — SSF isotónico','','',NaIV_HIPOVOL,'#d97706') +
+      sevHTML('severa','Severa sintomática — NaCl 3% hipertónico','Convulsiones / coma','',NaIV_SEV,'#c0392b')
+    ) +
+    elecSection('Mg²⁺','Magnesio IV','Hipomagnesemia moderada-severa o sintomática','#7c3aed',
+      sevHTML('moderada','Reposición estándar — Mg 0.8–1.4 mg/dL sintomático','','',MgIV_STD,'#d97706') +
+      sevHTML('severa','Emergencia — tetania / arritmia / convulsiones','SO₄Mg bolo urgente','',MgIV_EMERG,'#c0392b')
+    ) +
+    elecSection('Ca²⁺','Calcio IV','Hipocalcemia sintomática o Ca &lt; 7.5 mg/dL','#b45309',
+      sevHTML('moderada','Gluconato Ca IV — Periférico','Indicación inicial','',CaIV_LEVE,'#d97706') +
+      sevHTML('severa','Cloruro Ca IV — Solo acceso central','Emergencia crítica','',CaIV_MANT,'#c0392b')
+    ) +
+    elecSection('PO₄³⁻','Fósforo IV','Hipofosfatemia moderada-severa o sintomática','#0f7a5a',
+      sevHTML('moderada','Fosfato potásico IV — Mod / Severa','Gestionar con farmacia','',PO4IV,'#c0392b')
+    );
+}
+
+function switchTab(el){
+  document.querySelectorAll('.tab').forEach(function(t){
+    var on = t.dataset.el === el;
+    t.classList.toggle('active', on);
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('.panel').forEach(function(p){
+    p.classList.toggle('active', p.id === 'panel-' + el);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

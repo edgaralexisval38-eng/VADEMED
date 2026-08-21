@@ -33445,6 +33445,7 @@ var TEMAS=[
     {t:'Rabdomiólisis', kw:'rabdomiolisis ck creatina cinasa mioglobina lesion renal aguda hidratacion aplastamiento hiperkalemia', file:'RESUMENCLINIC/RESUMENES/RABDO_v2.html'},
     {t:'Síndrome de realimentación', kw:'sindrome realimentacion refeeding hipofosfatemia fosforo potasio magnesio desnutricion', file:'RESUMENCLINIC/RESUMENES/SindromeRealimentacion_ClinicaRapida.html'},
     {t:'Electrolitos', kw:'electrolitos sodio potasio calcio magnesio fosforo cloro bicarbonato desequilibrio hidroelectrolitico ionograma trastornos', file:'RESUMENCLINIC/RESUMENES/Electrolitos_3.html'},
+    {t:'Electrolitos por vía oral', kw:'reposicion oral electrolitos vo potasio oral kcl cloruro de potasio hipokalemia leve magnesio oral oxido de magnesio calcio oral carbonato citrato fosforo oral sodio suero vida suero receta ambulatorio alta cuadro basico', file:'RESUMENCLINIC/RESUMENES/ReposicionElectrolitosVO_ClinicaRapida.html'},
     {t:'Fluidoterapia', kw:'fluidoterapia liquidos hidratacion cristaloides sueros reposicion volumen deshidratacion mantenimiento reanimacion hipovolemia', file:'RESUMENCLINIC/RESUMENES/Fluidoterapia.html'},
     {t:'Soluciones IV', kw:'soluciones intravenosas suero fisiologico salina 0.9 hartmann ringer lactato glucosada mixta cristaloides coloides osmolaridad tonicidad', file:'RESUMENCLINIC/RESUMENES/Soluciones_IV.html'},
     {t:'Lesión renal aguda', kw:'LRA fallo renal agudo insuficiencia renal creatinina ira insuficiencia renal aguda', file:'RESUMENCLINIC/RESUMENES/Lesion_Renal_Aguda.html'},
@@ -33696,7 +33697,7 @@ function temaWheelFix(doc){try{if(!doc||doc.__vmWheel)return;doc.__vmWheel=true;
 function reportarTema(f){var name='este tema';try{(typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){if(t.file===f)name=t.t;});});}catch(e){}var sub=encodeURIComponent('VadeMed - Error en tema: '+name);var body=encodeURIComponent('Tema: '+name)+'%0A%0ADescribe el error o la correccion sugerida:%0A%0A';try{window.location.href='mailto:vademedmx@gmail.com?subject='+sub+'&body='+body;}catch(e){}}
 function tvToggleFav(el){ if(!_temaCurrent)return; favM(_temaCurrent, el); }
 var _temaHistPushed=false;
-var VM_TVER='t28';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
+var VM_TVER='t29';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
 /* Pre-cargado silencioso: tras cargar la app, bajamos los temas de la lista en segundo
    plano (poco a poco) para que abran INSTANTANEOS y funcionen sin internet. Solo en buena
    señal y si NO esta activado el ahorro de datos, para no gastar los datos del usuario. */
@@ -34308,7 +34309,15 @@ function vmRetomarTema(){
     if(Date.now() - (d.ts||0) > 1800000){ sessionStorage.removeItem('vm_leyendo'); return; }
     var nom = 'Tema';
     try{ (typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(c){ (c.items||[]).forEach(function(x){ if(x.file===d.f) nom=x.t; }); }); }catch(e){}
-    setTimeout(function(){ try{ openTemaFile(d.f, nom); }catch(e){} }, 400);
+    setTimeout(function(){
+      try{
+        /* si ya abriste un tema tú mismo en este rato, no lo pisamos */
+        var tv = document.getElementById('temaViewer');
+        if(tv && getComputedStyle(tv).display !== 'none') return;
+        if(sessionStorage.getItem('vm_leyendo') !== s) return;
+        openTemaFile(d.f, nom);
+      }catch(e){}
+    }, 400);
   }catch(e){}
 }
 function unlockApp(){document.documentElement.classList.remove('vmgate');var v=document.getElementById('obView');if(v)v.style.display='none';try{if(typeof renderPerfil==='function')renderPerfil();if(typeof perfilHero==='function')perfilHero();}catch(e){}try{vmIdleReset();}catch(e){}
@@ -34331,6 +34340,9 @@ function _vmMarcarValido(acc,r){try{localStorage.setItem('vademed_acceso',JSON.s
    contra el perfil: asi no vuelve a preguntar en cada apertura. */
 function vmLastCod(){try{return localStorage.getItem('vademed_lastvalid_cod')||'';}catch(e){return '';}}
 var VM_NOVEDADES=[
+ {v:'2026.08.14', fecha:'21 de agosto de 2026', notas:[
+  {c:'Nuevo', ic:'\uD83D\uDC8A', t:'Electrolitos por vía oral', d:'Tema nuevo en Nefrología: cómo reponer potasio, sodio, magnesio, calcio y fósforo por boca. Va por gravedad (leve, moderada, severa) y en cada nivel marca el tratamiento de elección con su dosis, cada cuánto, con qué diluirlo y hasta dónde subir. Cada tarjeta trae la línea ya redactada para copiar a la hoja de enfermería, más mecanismo, dosis máxima, contraindicaciones y efectos adversos. El tema de Electrolitos que ya estaba resuelve la corrección intravenosa; este resuelve la receta con la que se va el paciente a casa.'}
+ ]},
  {v:'2026.08.13', fecha:'21 de agosto de 2026', notas:[
   {c:'Arreglo', ic:'🔑', t:'Ya no pide verificar el acceso en cada apertura', d:'Un cambio reciente hacía que la app revisara tu código contra el servidor cada vez que la abrías, y si el servidor no tenía tu perfil te mandaba de nuevo a la pantalla de registro. Ahora recuerda cuál código fue el validado y solo vuelve a revisar cada 3 días. El candado sigue igual de cerrado: un código distinto no entra con la validación de otro.'},
   {c:'Mejora', ic:'📖', t:'Si el celular recarga la app, vuelves al tema que leías', d:'En iPhone, cuando el sistema anda corto de memoria Safari descarta la pestaña y la vuelve a cargar desde cero: por eso "se reiniciaba" y te sacaba del tema. Ahora la app recuerda qué tema tenías abierto y lo reabre sola. Si lo cierras tú, no lo reabre.'}
