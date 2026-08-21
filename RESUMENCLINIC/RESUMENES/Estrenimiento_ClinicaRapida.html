@@ -340,9 +340,14 @@ table.t{width:100%;border-collapse:collapse;font-size:12px;}
 
 <!-- ================= TRATAMIENTO ================= -->
 <div class="panel" id="tab-tx">
-  <div class="alert a-i" style="margin-bottom:10px;"><span class="ai">💊</span><div><div class="at">Tratamiento ambulatorio — toca un chip</div>Primero los chips por <b>CLASE</b> (escalona: <b>medidas base → PEG ⭐ → estimulante → secretagogo/procinético</b>); después los chips por <b>SITUACIÓN/POBLACIÓN</b> (adulto crónico, anciano, embarazo, pediátrico, OIC, disinergia). La <b>⭐</b> marca el de elección.</div></div>
-  <div class="chipbar" id="tx-chips"></div>
-  <div id="tx-body"></div>
+
+  <div class="esc-hero" style="margin-bottom:12px;"><div class="esc-hero-t">👥 Por población / situación — plan escalonado</div><div class="esc-hero-p">Elige una población: se despliega un plan por pasos (Paso 1 → Paso 2 → …) con fármaco, dosis, presentación en México, duración y nota.</div></div>
+  <div class="chipbar" id="pob-chips"></div>
+  <div id="pob-body"></div>
+
+  <div class="esc-hero" style="margin:20px 0 12px;background:linear-gradient(135deg,#0c3b6e,#1a6bbd);"><div class="esc-hero-t">💊 Por clase de laxante — vademécum</div><div class="esc-hero-p">Fichas individuales de cada clase con dosis, presentación en México, contraindicaciones y nota clínica.</div></div>
+  <div class="chipbar" id="clase-chips"></div>
+  <div id="clase-body"></div>
 </div>
 
 <!-- ================= TRATAMIENTO HOSPITALARIO ================= -->
@@ -442,7 +447,7 @@ function poprowP(t,v,c){return '<div style="display:flex;justify-content:space-b
 var CATMETA={
   'base':{label:'Medidas base',chip:'🥗 Medidas base',color:'#0f7a5a',obj:'Primera línea universal: fibra dietética progresiva (20–35 g/día), líquidos suficientes, actividad física, y hábito defecatorio tras las comidas (reflejo gastrocólico) con buena postura. Base de todo el manejo.'},
   'bolo':{label:'Formadores de bolo',chip:'🌾 Formadores de bolo',color:'#0f7a5a',obj:'Fibra soluble/insoluble que aumenta la masa y retiene agua. Útiles en tránsito NORMAL. Evitar/precaución en tránsito lento y disinergia (empeoran distensión). Aumentar despacio con líquidos.'},
-  'osmo':{label:'Osmóticos',chip:'💧 Osmóticos ⭐',color:'#b45309',obj:'Retienen agua en la luz por gradiente osmótico → heces más blandas. PEG es el laxante de ELECCIÓN de mantenimiento (mejor evidencia y tolerancia). Titulables, seguros a largo plazo.'},
+  'osmo':{label:'Osmóticos — Polietilenglicol (PEG / macrogol 3350)',chip:'💧 Osmóticos ⭐',color:'#b45309',obj:'Retienen agua en la luz por gradiente osmótico → heces más blandas. El PEG (polietilenglicol / macrogol 3350) es el laxante de ELECCIÓN de mantenimiento (mejor evidencia y tolerancia). Titulables, seguros a largo plazo.'},
   'estim':{label:'Estimulantes',chip:'⚡ Estimulantes',color:'#d97706',obj:'Estimulan la motilidad y secreción colónica; efecto rápido (6–12 h). Segunda línea o rescate a demanda si el osmótico no basta. Seguros en uso adecuado; útiles como coadyuvante.'},
   'emol':{label:'Emolientes / lubricantes',chip:'🧴 Emolientes',color:'#7a4a00',obj:'Ablandan y lubrican las heces. Eficacia limitada como monoterapia; papel adyuvante (evitar esfuerzo tras fisura/hemorroides/postoperatorio). Aceite mineral: cuidado por aspiración.'},
   'secre':{label:'Secretagogos / procinéticos',chip:'🧬 Secretagogos/procinéticos',color:'#0c3b6e',obj:'Para estreñimiento crónico y SII-C REFRACTARIO a laxantes. Aumentan secreción intestinal (linaclotida, lubiprostona) o la motilidad (prucaloprida, agonista 5-HT4). Requieren receta y valoración.'},
@@ -450,8 +455,8 @@ var CATMETA={
   'adulto':{label:'Adulto crónico funcional',chip:'👤 Adulto crónico',color:'#0f7a5a',obj:'Ruta escalonada del estreñimiento crónico funcional del adulto.'},
   'anciano':{label:'Anciano',chip:'👵 Anciano',color:'#7a4a00',obj:'Consideraciones en el adulto mayor: polifarmacia, inmovilidad, riesgo de impactación e incontinencia por rebosamiento.'},
   'embarazo':{label:'Embarazo',chip:'🤰 Embarazo',color:'#7e22ce',obj:'Opciones seguras en la gestación y qué evitar.'},
-  'pedi':{label:'Pediátrico',chip:'👶 Pediátrico',color:'#1a6bbd',obj:'Desimpactación y mantenimiento con PEG por peso. Usa la calculadora.'},
-  'opioide':{label:'Inducido por opioides',chip:'💊 Por opioides (OIC)',color:'#7b1c1c',obj:'Esquema del estreñimiento inducido por opioides.'},
+  'pedi':{label:'Pediátrico',chip:'👶 Pediátrico',color:'#1a6bbd',obj:'Desimpactación y mantenimiento con PEG (polietilenglicol / macrogol) por peso. Usa la calculadora y sigue las fichas como pasos: Paso 0 desimpactar → Paso 1 mantenimiento → alternativas → rescate → estimulantes.'},
+  'opioide':{label:'Inducido por opioides (OIC)',chip:'💊 Opioides (OIC)',color:'#7b1c1c',obj:'Esquema del estreñimiento inducido por opioides.'},
   'disinergia':{label:'Disinergia',chip:'🔀 Disinergia',color:'#0c3b6e',obj:'Defecación disinérgica: biofeedback, NO escalar laxantes.'},
   'hospbase':{label:'Paciente hospitalizado',chip:'🛏️ Paciente hospitalizado',color:'#0f7a5a',obj:'Profilaxis y manejo del estreñimiento del paciente encamado/hospitalizado: inmovilidad, opioides, anticolinérgicos, deshidratación y ayuno. Registra la última evacuación y descarta íleo/obstrucción antes de estimular.'},
   'impact':{label:'Impactación fecal aguda',chip:'🧱 Impactación / fecaloma',color:'#c0392b',obj:'Manejo de la impactación fecal / fecaloma en el paciente hospitalizado.'},
@@ -593,7 +598,7 @@ function farmCardH(d,i,open){var id='farm-'+i;var h='';
   h+='</div><div style="padding:10px 14px;background:'+d.color+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+d.color+';margin-bottom:4px;">⭐ Nota clínica</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+d.nota+'</div></div>';
   h+='</div></div>';return h;}
 var TXGRP={
-  tx:{cats:['base','bolo','osmo','estim','emol','secre','pamora','adulto','anciano','embarazo','pedi','opioide','disinergia'],chips:'tx-chips',body:'tx-body'},
+  clase:{cats:['base','bolo','osmo','estim','emol','secre','pamora'],chips:'clase-chips',body:'clase-body'},
   txh:{cats:['hospbase','impact','rescate','ogilvie','oichosp'],chips:'txh-chips',body:'txh-body'}
 };
 function initTxGroups(){for(var g in TXGRP)initTxG(g);}
@@ -604,8 +609,97 @@ function showTxG(g,idx,el){var G=TXGRP[g];var cat=G.cats[idx];var c=document.que
   var m=(typeof CATMETA!=='undefined'&&CATMETA[cat])?CATMETA[cat]:{};var col=m.color||'var(--ac)';var h='';var intro=m.obj||m.sub;
   if(intro)h+='<div style="border-radius:8px;padding:11px 13px;margin-bottom:12px;background:'+col+'11;border-left:4px solid '+col+';font-size:12.5px;line-height:1.6;color:#374151;"><b style="color:'+col+';">'+(m.label||cat)+':</b> '+intro+'</div>';
   if(typeof TXCALC!=='undefined'&&TXCALC[cat])h+=TXCALC[cat]();
-  var first=true;for(var i=0;i<FARM.length;i++){if(FARM[i].cat!==cat)continue;h+=farmCardH(FARM[i],i,first);first=false;}
+  for(var i=0;i<FARM.length;i++){if(FARM[i].cat!==cat)continue;h+=farmCardH(FARM[i],i,false);}
   document.getElementById(G.body).innerHTML=h;
+  if(typeof txCalcInit==='function')txCalcInit(cat);}
+
+/* ===== GRUPO POR POBLACIÓN / SITUACIÓN — PLAN ESCALONADO ===== */
+var POB_CATS=['adulto','anciano','embarazo','pedi','opioide','disinergia'];
+function escArrow(){return '<div style="text-align:center;color:#b45309;font-size:22px;line-height:1;margin:0 0 8px;">↓</div>';}
+var _pasoId=0;
+function mkPaso(s){var col=s.color||'#b45309';var id='paso-'+(_pasoId++);var h='';
+  h+='<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">';
+  h+='<div onclick="togInd(\''+id+'\')" style="background:'+col+';color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;">';
+  h+='<span style="background:rgba(255,255,255,0.22);border-radius:8px;padding:3px 9px;font-size:11px;font-weight:800;white-space:nowrap;flex-shrink:0;">'+s.paso+'</span>';
+  h+='<span style="font-size:14px;font-weight:800;line-height:1.3;flex:1;">'+s.t+'</span>';
+  h+='<span id="'+id+'-ar" style="font-size:18px;color:rgba(255,255,255,0.8);flex-shrink:0;">►</span></div>';
+  h+='<div class="ind-drug-b" id="'+id+'" style="padding:0;">';
+  if(s.sub)h+='<div style="background:'+col+'14;padding:9px 14px;border-bottom:1px solid #f3f4f6;font-size:12.5px;font-weight:700;color:'+col+';">'+s.sub+'</div>';
+  h+='<div style="padding:8px 14px;">';
+  for(var k=0;k<s.rows.length;k++)h+=poprowP(s.rows[k][0],s.rows[k][1],'#374151');
+  h+='</div>';
+  if(s.nota)h+='<div style="padding:10px 14px;background:'+col+'11;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:'+col+';margin-bottom:4px;">⭐ Nota</div><div style="font-size:12px;color:#374151;line-height:1.6;">'+s.nota+'</div></div>';
+  h+='</div></div>';return h;}
+var POB_PLAN={
+  'adulto':[
+    {paso:'Paso 1',color:'#0f7a5a',t:'Medidas base + fibra (psyllium)',sub:'Universal; de elección en tránsito normal',
+      rows:[['Fármaco','Fibra dietética 20–35 g/día + psyllium'],['Dosis','Psyllium 3.5–7 g VO 1–3×/día con agua abundante'],['Present. MX','Metamucil®, Plantaben®, psyllium genérico (Plantago ovata)'],['Duración','Mantenido; reevaluar en 2–4 semanas'],['Ojo','Puede empeorar distensión en tránsito lento/disinergia']],
+      nota:'Aprovechar el reflejo gastrocólico (defecar tras las comidas), hidratación y actividad física.'},
+    {paso:'Paso 2',color:'#0f7a5a',t:'PEG (polietilenglicol / macrogol) — osmótico de ELECCIÓN ⭐',sub:'Mejor evidencia y tolerancia; seguro a largo plazo',
+      rows:[['Fármaco','PEG 3350 (macrogol)'],['Dosis','13.1–17 g/día (1 sobre); titular 0.5–2 sobres a Bristol 3–4'],['Present. MX','Movicol® 13.8 g, Contumax®, genéricos de macrogol 3350'],['Duración','Uso prolongado seguro'],['Ojo','No genera dependencia ni gas relevante']],
+      nota:'Titular por consistencia, no por número fijo de dosis. De elección también en anciano y embarazo.'},
+    {paso:'Paso 3',color:'#d97706',t:'+ Estimulante a demanda',sub:'Coadyuvante cuando el PEG no basta',
+      rows:[['Fármaco','Bisacodilo o senósidos'],['Dosis','Bisacodilo 5–10 mg VO noche / sup 10 mg; senósidos 8.6–17.2 mg noche'],['Present. MX','Dulcolax® (grageas 5 mg, supositorio 10 mg); Senokot®, Ciruelax®'],['Duración','A demanda o pautas cortas'],['Ojo','No usar si obstrucción o impactación no resuelta']],
+      nota:'Seguro en uso adecuado; no causa &quot;colon catártico&quot; con uso razonable.'},
+    {paso:'Paso 4',color:'#0c3b6e',t:'Refractario → secretagogo/procinético + fisiología anorrectal',sub:'Tras optimizar base + PEG + estimulante',
+      rows:[['Fármaco','Linaclotida (secretagogo) o prucaloprida (procinético)'],['Dosis','Linaclotida 145 µg/día (72 µg en CIC); prucaloprida 2 mg/día (1 mg anciano/ERC)'],['Present. MX','Constella®/Linzess® (linaclotida); Resolor® (prucaloprida)'],['Estudiar','Manometría anorrectal + prueba de expulsión con balón'],['Duración','Crónico']],
+      nota:'Si la fisiología muestra disinergia → biofeedback del piso pélvico (no escalar más laxantes).'}
+  ],
+  'anciano':[
+    {paso:'Paso 1',color:'#7a4a00',t:'PEG (polietilenglicol / macrogol) — de elección ⭐',sub:'Seguro en el adulto mayor',
+      rows:[['Fármaco','PEG 3350 (macrogol)'],['Dosis','13.1–17 g/día; titular a Bristol 3–4'],['Present. MX','Movicol® 13.8 g, Contumax®, genéricos'],['Duración','Uso prolongado seguro'],['Antes','Corregir fármacos culpables, inmovilidad, hidratación, hipotiroidismo']],
+      nota:'PEG no causa hipermagnesemia ni depende de la función renal; ideal en el anciano.'},
+    {paso:'Paso 2',color:'#7a4a00',t:'+ Supositorio de glicerina de rescate',sub:'Rescate rectal suave',
+      rows:[['Fármaco','Supositorio de glicerina'],['Dosis','1 supositorio rectal a demanda (efecto 15–30 min)'],['Present. MX','Supositorios de glicerina (adulto), genérico'],['Duración','A demanda']],
+      nota:'Útil para vaciar el recto y reentrenar el hábito defecatorio.'},
+    {paso:'⚠️ Evitar',color:'#c0392b',t:'Precauciones geriátricas',sub:'Seguridad en el anciano frágil / ERC',
+      rows:[['Evitar','Sales de magnesio y enema de fosfato (Travad®/Fleet®) en ERC'],['Evitar','Aceite mineral (riesgo de aspiración / neumonía lipoidea)'],['Vigilar','Impactación e incontinencia por rebosamiento → tacto rectal'],['Regla','Desimpactar antes de iniciar el mantenimiento']],
+      nota:'La &quot;diarrea&quot; paradójica del anciano suele ser rebosamiento por fecaloma: explorar el recto.'}
+  ],
+  'embarazo':[
+    {paso:'Paso 1',color:'#7e22ce',t:'Fibra (psyllium) + líquidos',sub:'Primera medida, segura',
+      rows:[['Fármaco','Psyllium + hidratación'],['Dosis','3.5–7 g VO 1–3×/día con agua abundante'],['Present. MX','Metamucil®, Plantaben®, psyllium genérico'],['Duración','Toda la gestación'],['Ojo','Aumentar despacio para reducir gas']],
+      nota:'Base del manejo; combinar con actividad física según tolerancia obstétrica.'},
+    {paso:'Paso 2',color:'#7e22ce',t:'PEG (polietilenglicol / macrogol) de elección o lactulosa',sub:'Laxantes seguros en el embarazo',
+      rows:[['Fármaco','PEG 3350 (elección) o lactulosa'],['Dosis','PEG 13.1–17 g/día; lactulosa 15–30 mL 1–2×/día'],['Present. MX','Movicol® 13.8 g; Lactulax®, Regulact® (jarabe 10 g/15 mL)'],['Duración','Según necesidad; titular'],['Ojo','Lactulosa da más gas/cólico que el PEG']],
+      nota:'PEG es de elección por seguridad y eficacia; prácticamente no se absorbe.'},
+    {paso:'Rescate',color:'#7e22ce',t:'Supositorio de glicerina',sub:'Rescate rectal ocasional',
+      rows:[['Fármaco','Supositorio de glicerina'],['Dosis','1 supositorio a demanda'],['Present. MX','Supositorios de glicerina, genérico'],['Duración','Puntual']],
+      nota:'Seguro en el embarazo para rescate ocasional.'},
+    {paso:'⚠️ Evitar',color:'#c0392b',t:'Evitar en el embarazo',sub:'Priorizar seguridad materno-fetal',
+      rows:[['Evitar','Senósidos de forma crónica (uso puntual aceptable)'],['Evitar','Aceite mineral (malabsorción de vitaminas / aspiración)'],['Evitar','Sales de magnesio a dosis alta'],['Evitar','Secretagogos y PAMORA (sin datos de seguridad)']],
+      nota:'Preferir PEG / lactulosa / psyllium + supositorio de glicerina.'}
+  ],
+  'opioide':[
+    {paso:'Paso 1',color:'#7b1c1c',t:'Profilaxis desde el día 1: PEG ± estimulante',sub:'Todo opioide crónico lleva laxante profiláctico',
+      rows:[['Fármaco','PEG (polietilenglicol / macrogol) ± estimulante (sen/bisacodilo)'],['Dosis','PEG 13.1–17 g/día; senósidos 8.6–17.2 mg noche o bisacodilo 5–10 mg'],['Present. MX','Movicol® 13.8 g; Senokot®/Ciruelax®; Dulcolax®'],['Duración','Mientras dure el opioide'],['No usar','Fibra sola (puede empeorar el OIC)']],
+      nota:'El OIC no desarrolla tolerancia: persiste mientras dure el opioide. Profilaxis desde el inicio.'},
+    {paso:'Paso 2',color:'#7b1c1c',t:'Si falla → PAMORA (antagonista µ periférico)',sub:'Revierte el OIC sin quitar la analgesia central',
+      rows:[['Fármaco','Metilnaltrexona SC, naloxegol VO o naldemedina VO'],['Dosis','Metilnaltrexona 8 mg (38–61 kg)/12 mg (62–114 kg) SC c/48 h; naloxegol 25 mg/día'],['Present. MX','Relistor® (metilnaltrexona), Moventig® (naloxegol); disponibilidad variable'],['Requisito','Descartar obstrucción mecánica ANTES de la PAMORA'],['Duración','Mientras dure el opioide']],
+      nota:'CONTRAINDICADA en obstrucción mecánica (riesgo de perforación).'}
+  ],
+  'disinergia':[
+    {paso:'Paso 1',color:'#0c3b6e',t:'Biofeedback del piso pélvico — 1.ª línea ⭐',sub:'NO escalar laxantes',
+      rows:[['Tratamiento','Reeducación de la coordinación recto-anal (biofeedback)'],['Eficacia','Alta tasa de respuesta'],['Duración','Sesiones dirigidas por piso pélvico'],['Regla','Los laxantes ablandan pero NO corrigen la incoordinación']],
+      nota:'Sospechar si &quot;ningún laxante funciona&quot; pese a heces blandas, con esfuerzo/bloqueo anal.'},
+    {paso:'Paso 2',color:'#0c3b6e',t:'Laxante solo como coadyuvante',sub:'Para consistencia, no como solución',
+      rows:[['Fármaco','PEG (polietilenglicol / macrogol) o supositorio de glicerina'],['Dosis','PEG 13.1–17 g/día; glicerina a demanda'],['Present. MX','Movicol® 13.8 g; supositorios de glicerina'],['Duración','Coadyuvante']],
+      nota:'Mantener consistencia Bristol 3–4 mientras se reeduca la defecación.'},
+    {paso:'Dx',color:'#0c3b6e',t:'Diagnóstico y referencia',sub:'Confirmar y derivar',
+      rows:[['Estudios','Manometría anorrectal + prueba de expulsión con balón'],['Complementar','Defecografía si hay dudas'],['Referir','Gastroenterología / unidad de piso pélvico'],['No hacer','Cirugía sin descartar disinergia']],
+      nota:'La disinergia frecuentemente acompaña al tránsito lento; identificarla cambia el tratamiento.'}
+  ]
+};
+function initPob(){var cb=document.getElementById('pob-chips');if(!cb)return;var h='';
+  for(var i=0;i<POB_CATS.length;i++){var m=(CATMETA[POB_CATS[i]])||{};h+='<span class="pchip'+(i===0?' on':'')+'" onclick="showPob('+i+',this)">'+(m.chip||m.label||POB_CATS[i])+'</span>';}
+  cb.innerHTML=h;showPob(0,cb.querySelector('.pchip'));}
+function showPob(idx,el){var cat=POB_CATS[idx];var c=document.querySelectorAll('#pob-chips .pchip');for(var i=0;i<c.length;i++)c[i].classList.remove('on');if(el)el.classList.add('on');
+  var m=(CATMETA[cat])||{};var col=m.color||'#b45309';var h='';
+  if(m.obj)h+='<div style="border-radius:8px;padding:11px 13px;margin-bottom:12px;background:'+col+'11;border-left:4px solid '+col+';font-size:12.5px;line-height:1.6;color:#374151;"><b style="color:'+col+';">'+(m.label||cat)+':</b> '+m.obj+'</div>';
+  if(typeof TXCALC!=='undefined'&&TXCALC[cat])h+=TXCALC[cat]();
+  if(cat==='pedi'){for(var i=0;i<FARM.length;i++){if(FARM[i].cat!=='pedi')continue;h+=farmCardH(FARM[i],i,false);}}
+  else{var steps=POB_PLAN[cat]||[];for(var i=0;i<steps.length;i++){if(i>0)h+=escArrow();h+='<div style="margin-bottom:8px;">'+mkPaso(steps[i])+'</div>';}}
+  document.getElementById('pob-body').innerHTML=h;
   if(typeof txCalcInit==='function')txCalcInit(cat);}
 
 /* ===== CALCULADORA PEDIÁTRICA DE PEG POR PESO ===== */
@@ -667,7 +761,7 @@ function showEscen(key){renderChips('escen-chips',Object.keys(ESCEN),'showEscen'
   h+='<div class="fu-r"><div class="fu-t">Conducta</div><div class="fu-x">'+d.x+'</div></div></div>';
   document.getElementById('escen-body').innerHTML=h;}
 
-function initAll(){initTxGroups();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('roma');}
+function initAll(){initTxGroups();initPob();if(Object.keys(ESCEN).length)showEscen(Object.keys(ESCEN)[0]);scInit('roma');}
 window.addEventListener('load',initAll);
 </script>
 </body>
