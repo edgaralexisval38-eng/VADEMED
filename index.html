@@ -849,6 +849,28 @@ html.dark .tool-act{background:rgba(47,111,224,.12);border-color:rgba(47,111,224
 #temaScroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--card);position:relative;}
 #temaFrame{display:block;width:100%;height:100%;min-height:100%;border:none;background:var(--card);}
 #temaInline{display:block;width:100%;min-height:100%;background:var(--card);}
+
+/* ===== Detalles de sensación nativa ==================================
+   1) El destello gris al tocar es lo que mas delata que es una pagina web.
+      Estaba puesto en UN solo boton; ahora es global.
+   2) touch-action:manipulation quita el retardo del doble toque para hacer
+      zoom, que se siente como si el boton tardara en responder.
+   3) La seleccion de texto se bloquea SOLO en botones y barras. En el
+      contenido NO se toca: el medico necesita poder copiar dosis. */
+*{-webkit-tap-highlight-color:transparent;}
+button,.drow,.lcard,.tab,.bnav a,.bnav button,[onclick]{touch-action:manipulation;}
+button,.bnav,.tabbar,.topbar,.hub-cat,.tab{-webkit-user-select:none;user-select:none;}
+
+/* ===== Entrada de vista ==============================================
+   Antes las vistas aparecian de golpe (display none/block), que se lee como
+   un salto y no como una navegacion. Una entrada de 160 ms lo suaviza.
+   SOLO opacidad: transform crearia un bloque contenedor y romperia los
+   elementos con position:fixed que viven dentro de las vistas. */
+#hubView,#homeView,#detailView,#toolView,#temasPanel,#perfilView,#pedCalcView{animation:vmEntra .16s ease-out;}
+@keyframes vmEntra{from{opacity:.35}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  #hubView,#homeView,#detailView,#toolView,#temasPanel,#perfilView,#pedCalcView{animation:none;}
+}
 </style>
 <script>try{document.documentElement.classList.add('vmgate');}catch(e){}</script>
 <style>.vmgate .app{visibility:hidden!important}.vmgate #obView{display:block!important}</style>
@@ -31572,6 +31594,7 @@ function renderList(filter){
   }).join('') : '<div class="dempty">Sin resultados</div>';
 }
 function openDrug(i){
+  vmGuardar('lista:'+(typeof CURGROUP!=='undefined'?CURGROUP:''));
   DRUG=DRUGS[i]; MAXDAY=(DRUG.calc&&DRUG.calc.maxDay)||0;
   pushRecent(i);
   [].forEach.call(document.querySelectorAll('.drow'),function(r){r.classList.toggle('active',+r.getAttribute('data-i')===i);});
@@ -31583,10 +31606,30 @@ function openDrug(i){
   $('detailView').style.display='block';
   window.scrollTo({top:0});
 }
+/* ---- Memoria de scroll ----------------------------------------------
+   Guarda donde ibas en cada lista y te devuelve ahi al volver, como haria
+   una app nativa. Sin esto cada regreso te mandaba al principio. */
+var VM_SCROLL = {};
+function vmScrollY(){ try{ return window.scrollY || document.documentElement.scrollTop || 0; }catch(e){ return 0; } }
+function vmGuardar(clave){ try{ VM_SCROLL[clave] = vmScrollY(); }catch(e){} }
+function vmVolver(clave){
+  try{
+    var y = VM_SCROLL[clave] || 0;
+    if(!y){ window.scrollTo(0,0); return; }
+    /* dos pasadas: la primera antes de pintar, la segunda cuando el alto
+       de la lista ya es el definitivo (si no, el navegador la recorta) */
+    window.scrollTo(0,y);
+    requestAnimationFrame(function(){ window.scrollTo(0,y); });
+    setTimeout(function(){ if(Math.abs(vmScrollY()-y) > 4) window.scrollTo(0,y); }, 60);
+  }catch(e){}
+}
+/* que el navegador no pelee con nosotros al usar atras */
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+
 function goHome(){
   $('detailView').style.display='none';
   $('homeView').style.display='block';
-  window.scrollTo({top:0});
+  vmVolver('lista:'+(typeof CURGROUP!=='undefined'?CURGROUP:''));
 }
 
 var ICON_CHILD='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="2.4" stroke="currentColor" stroke-width="1.8"/><path d="M12 8.4c-2 0-3.3 1.3-3.6 3.2l-.5 3.1M12 8.4c2 0 3.3 1.3 3.6 3.2l.5 3.1M9 12.5V20M15 12.5V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
@@ -33755,6 +33798,7 @@ while((cm=asgRe.exec(temaJs))){ if(!KW[cm[1]]&&!PROHIBIDO[cm[1]]) names[cm[1]]=1
   return true;
 }
 function openTemaFile(f){
+  vmGuardar('temas');
   _temaCurrent=f;
   var _wide=esEscritorio();
   var _detalle=_wide && esTemaDeLista(f);
@@ -33825,7 +33869,7 @@ function openTemaFile(f){
     }
   } else { try{ window.open(f,'_blank'); }catch(e){ location.href=f; } }
 }
-function closeTemaViewer(fromPop){ try{ var _tp=window.__temaPrev; if(_tp){ for(var _k in _tp){ if(_tp.hasOwnProperty(_k)){ if(_tp[_k]===undefined){ try{delete window[_k];}catch(_e){window[_k]=undefined;} } else { window[_k]=_tp[_k]; } } } window.__temaPrev=null; } }catch(e){} try{ var _ti=document.getElementById('temaInline'); if(_ti) _ti.innerHTML=''; }catch(e){} if(esEscritorio() && document.querySelector('.app').classList.contains('mode-temas')){ var _fr=document.getElementById('temaFrame'); if(_fr) _fr.src='about:blank'; try{goInicio();}catch(e){} return; } try{document.documentElement.classList.remove('tema-open');}catch(e){} var fr=document.getElementById('temaFrame'); if(fr) fr.src='about:blank'; var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none'; document.documentElement.style.overflow=''; document.body.style.overflow=''; var iv=document.getElementById('inicioView'); var onIni=iv&&getComputedStyle(iv).display!=='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display=onIni?'none':''; if(fromPop===true){ _temaHistPushed=false; } else if(_temaHistPushed){ _temaHistPushed=false; try{history.back();}catch(e){} } }
+function closeTemaViewer(fromPop){ try{ var _tp=window.__temaPrev; if(_tp){ for(var _k in _tp){ if(_tp.hasOwnProperty(_k)){ if(_tp[_k]===undefined){ try{delete window[_k];}catch(_e){window[_k]=undefined;} } else { window[_k]=_tp[_k]; } } } window.__temaPrev=null; } }catch(e){} try{ var _ti=document.getElementById('temaInline'); if(_ti) _ti.innerHTML=''; }catch(e){} if(esEscritorio() && document.querySelector('.app').classList.contains('mode-temas')){ var _fr=document.getElementById('temaFrame'); if(_fr) _fr.src='about:blank'; try{goInicio();}catch(e){} return; } try{document.documentElement.classList.remove('tema-open');}catch(e){} var fr=document.getElementById('temaFrame'); if(fr) fr.src='about:blank'; var tv=document.getElementById('temaViewer'); if(tv) tv.style.display='none'; document.documentElement.style.overflow=''; document.body.style.overflow=''; var iv=document.getElementById('inicioView'); var onIni=iv&&getComputedStyle(iv).display!=='none'; var bn=document.querySelector('.bnav'); if(bn) bn.style.display=onIni?'none':''; try{ vmVolver('temas'); }catch(e){} if(fromPop===true){ _temaHistPushed=false; } else if(_temaHistPushed){ _temaHistPushed=false; try{history.back();}catch(e){} } }
 window.addEventListener('popstate',function(){ var tv=document.getElementById('temaViewer'); if(tv && tv.style.display==='flex' && _temaHistPushed){ closeTemaViewer(true); } });
 window.addEventListener('resize',function(){ try{ if(window.__temaFit){ window.__temaFit(); setTimeout(window.__temaFit,220); } }catch(e){} });
 function openTemaExternal(){ if(_temaCurrent){ try{ window.open(_temaCurrent,'_blank'); }catch(e){ location.href=_temaCurrent; } } }
@@ -34512,5 +34556,6 @@ try{ welcomeInit(); }catch(e){}
 </body>
 </html>{c:'Nuevo', ic:'🧮', t:'Tres calculadoras de insulina: escala móvil, basal-bolo y basal plus', d:'La escala móvil da las unidades por glucemia y sensibilidad. Basal-bolo calcula dosis total, basal, bolos, factor de sensibilidad y razón insulina/hidratos. Basal plus, la basal y la corrección. Cada una trae el porcentaje de control y de hipoglucemia de los ensayos.'},
   {c:'Nuevo', ic:'🧂', t:'Reposición oral de electrolitos', d:'Cloruro de potasio oral (gragea de 8 mEq y efervescente de 20 mEq) y magnesio oral (óxido, cloruro, lactato) con el magnesio ELEMENTAL de cada sal. Calcio con el elemental por tableta. Y el buscador de medicamentos ya encuentra por palabras clave: escribe «reposición de electrolitos» y salen los seis.'},
+  {c:'Mejora', ic:'✨', t:'La app se siente más fluida', d:'Al volver de un fármaco o de un tema, ahora regresas al punto exacto de la lista donde ibas, en vez de saltar al principio. Además se quitó el destello gris al tocar, el retardo del doble toque, y las vistas entran con una transición corta en lugar de aparecer de golpe.'},
   {c:'Corrección', ic:'⏱️', t:'Ahora todas las dosis dicen cada cuánto', d:'Había 12 indicaciones que daban los miligramos pero no el intervalo (captopril sublingual, neostigmina, efedrina, haloperidol y olanzapina en agitación, bisacodilo rectal y más). Revisadas las 917 filas de dosis de adulto. Además, el cloruro de potasio tenía DOS fichas: se fusionaron en una sola con las seis indicaciones, oral e intravenosa.'},
   
