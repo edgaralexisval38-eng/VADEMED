@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VadeMed</title>
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="apple-touch-icon" href="icon3.png">
@@ -64,7 +64,7 @@ html.dark #inicioView .nv.on{color:#5b93ea;}
 html.dark #inicioView .nv.on svg{background:rgba(47,111,224,.22);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;}
-.app{max-width:440px;margin:0 auto;background:var(--app);min-height:100vh;position:relative;padding-bottom:78px;overflow:hidden;}
+.app{max-width:440px;margin:0 auto;background:var(--app);min-height:100vh;min-height:100dvh;position:relative;padding-bottom:78px;overflow:hidden;}
 /* ===== Presentación en TABLET: tarjeta centrada elegante sobre fondo ambiente =====
    En celular la app llena la pantalla (no se ve el fondo). En tablet, la columna queda
    centrada como una tarjeta flotante sobre un degradado suave, en vez de una tira perdida. */
@@ -94,8 +94,7 @@ html.dark body{background:radial-gradient(145% 95% at 50% -12%, #1a1d26 0%, #0e0
 .ini-row:active,.rec:active,.drow:active,.qcalc:active{transform:scale(.975);}
 /* Lista escalonada al abrir un grupo */
 @keyframes vmItemIn{from{opacity:0;transform:translateY(9px);}to{opacity:1;transform:none;}}
-.vm-stagger>.drow{animation:vmItemIn .30s cubic-bezier(.32,.72,0,1) both;}
-.vm-stagger>.drow:nth-child(1){animation-delay:.02s}.vm-stagger>.drow:nth-child(2){animation-delay:.05s}.vm-stagger>.drow:nth-child(3){animation-delay:.08s}.vm-stagger>.drow:nth-child(4){animation-delay:.11s}.vm-stagger>.drow:nth-child(5){animation-delay:.14s}.vm-stagger>.drow:nth-child(6){animation-delay:.17s}.vm-stagger>.drow:nth-child(7){animation-delay:.20s}.vm-stagger>.drow:nth-child(8){animation-delay:.23s}.vm-stagger>.drow:nth-child(n+9){animation-delay:.26s}
+.vm-stagger>.drow{animation:vmItemIn .30s cubic-bezier(.32,.72,0,1) both;}.vm-stagger>.drow:nth-child(1){animation-delay:.02s}.vm-stagger>.drow:nth-child(2){animation-delay:.05s}.vm-stagger>.drow:nth-child(3){animation-delay:.08s}.vm-stagger>.drow:nth-child(4){animation-delay:.11s}.vm-stagger>.drow:nth-child(5){animation-delay:.14s}.vm-stagger>.drow:nth-child(6){animation-delay:.17s}.vm-stagger>.drow:nth-child(7){animation-delay:.20s}.vm-stagger>.drow:nth-child(8){animation-delay:.23s}.vm-stagger>.drow:nth-child(n+9){animation-delay:.26s}
 /* Shimmer mientras carga un tema */
 #temaViewer .tv-bar{position:relative;z-index:4;}
 .tv-skel{position:absolute;inset:0;background:var(--app);z-index:3;padding:66px 18px 18px;display:none;}
@@ -866,11 +865,17 @@ button,.bnav,.tabbar,.topbar,.hub-cat,.tab{-webkit-user-select:none;user-select:
    un salto y no como una navegacion. Una entrada de 160 ms lo suaviza.
    SOLO opacidad: transform crearia un bloque contenedor y romperia los
    elementos con position:fixed que viven dentro de las vistas. */
-#hubView,#homeView,#detailView,#toolView,#temasPanel,#perfilView,#pedCalcView{animation:vmEntra .16s ease-out;}
+#hubView,#detailView,#toolView,#perfilView,#pedCalcView{animation:vmEntra .16s ease-out;}
 @keyframes vmEntra{from{opacity:.35}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){
-  #hubView,#homeView,#detailView,#toolView,#temasPanel,#perfilView,#pedCalcView{animation:none;}
+  #hubView,#detailView,#toolView,#perfilView,#pedCalcView{animation:none;}
 }
+
+/* Con viewport-fit=cover el contenido llega hasta el borde de la pantalla,
+   asi que hay que devolverle el respiro abajo o el ultimo elemento queda
+   debajo del indicador de inicio del iPhone. */
+.app{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px));}
+.app.mode-inicio{padding-bottom:calc(98px + env(safe-area-inset-bottom,0px));}
 </style>
 <script>try{document.documentElement.classList.add('vmgate');}catch(e){}</script>
 <style>.vmgate .app{visibility:hidden!important}.vmgate #obView{display:block!important}</style>
@@ -34556,6 +34561,7 @@ try{ welcomeInit(); }catch(e){}
 </body>
 </html>{c:'Nuevo', ic:'🧮', t:'Tres calculadoras de insulina: escala móvil, basal-bolo y basal plus', d:'La escala móvil da las unidades por glucemia y sensibilidad. Basal-bolo calcula dosis total, basal, bolos, factor de sensibilidad y razón insulina/hidratos. Basal plus, la basal y la corrección. Cada una trae el porcentaje de control y de hipoglucemia de los ensayos.'},
   {c:'Nuevo', ic:'🧂', t:'Reposición oral de electrolitos', d:'Cloruro de potasio oral (gragea de 8 mEq y efervescente de 20 mEq) y magnesio oral (óxido, cloruro, lactato) con el magnesio ELEMENTAL de cada sal. Calcio con el elemental por tableta. Y el buscador de medicamentos ya encuentra por palabras clave: escribe «reposición de electrolitos» y salen los seis.'},
+  {c:'Corrección', ic:'📱', t:'Arreglos para iPhone', d:'La pantalla brincaba sola al hacer scroll porque el alto se medía sin contar la barra de Safari, que se contrae. Ahora sigue la altura real. Además, las 5 reglas que respetan la muesca y el indicador de inicio del iPhone estaban escritas pero inactivas: faltaba una línea en el encabezado.'},
   {c:'Mejora', ic:'✨', t:'La app se siente más fluida', d:'Al volver de un fármaco o de un tema, ahora regresas al punto exacto de la lista donde ibas, en vez de saltar al principio. Además se quitó el destello gris al tocar, el retardo del doble toque, y las vistas entran con una transición corta en lugar de aparecer de golpe.'},
   {c:'Corrección', ic:'⏱️', t:'Ahora todas las dosis dicen cada cuánto', d:'Había 12 indicaciones que daban los miligramos pero no el intervalo (captopril sublingual, neostigmina, efedrina, haloperidol y olanzapina en agitación, bisacodilo rectal y más). Revisadas las 917 filas de dosis de adulto. Además, el cloruro de potasio tenía DOS fichas: se fusionaron en una sola con las seis indicaciones, oral e intravenosa.'},
   
