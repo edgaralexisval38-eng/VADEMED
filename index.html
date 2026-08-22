@@ -842,6 +842,8 @@ html.dark .tool-act{background:rgba(47,111,224,.12);border-color:rgba(47,111,224
 .tv-back svg{width:20px;height:20px;}
 .tv-title{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tv-ext{background:none;border:none;color:var(--gray);cursor:pointer;padding:6px;border-radius:10px;display:flex;}
+.tv-star{background:none;border:none;color:var(--gray);cursor:pointer;padding:6px;border-radius:10px;display:flex;flex-shrink:0;}
+.tv-star:active{background:var(--line);}
 .tv-star svg{width:22px;height:22px;}.tv-star.on{color:#f5b301;}.tv-star.on svg path{fill:#f5b301;}
 .tv-ext:active{background:var(--line);}
 .tv-ext svg{width:20px;height:20px;}
@@ -1419,6 +1421,7 @@ window.addEventListener('load',function(){setTimeout(function(){sp.classList.add
     <div class="tv-bar">
       <button class="tv-back" onclick="closeTemaViewer()"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Volver</button>
       <div class="tv-title" id="tvTitle">Tema</div>
+      <button class="tv-star" id="tvStar" onclick="tvToggleFav(this)" aria-label="Agregar a favoritos"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9 6.8 19l1-5.8L3.5 9.1l5.9-.9L12 3z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button>
       <button class="tv-ext" onclick="openTemaExternal()" aria-label="Abrir en pestaña nueva"><svg viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-8 8M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="tv-skel" aria-hidden="true">
@@ -33713,7 +33716,7 @@ function temaWheelFix(doc){try{if(!doc||doc.__vmWheel)return;doc.__vmWheel=true;
 function reportarTema(f){var name='este tema';try{(typeof TEMAS!=='undefined'?TEMAS:[]).forEach(function(p){p.items.forEach(function(t){if(t.file===f)name=t.t;});});}catch(e){}var sub=encodeURIComponent('VadeMed - Error en tema: '+name);var body=encodeURIComponent('Tema: '+name)+'%0A%0ADescribe el error o la correccion sugerida:%0A%0A';try{window.location.href='mailto:vademedmx@gmail.com?subject='+sub+'&body='+body;}catch(e){}}
 function tvToggleFav(el){ if(!_temaCurrent)return; favM(_temaCurrent, el); }
 var _temaHistPushed=false;
-var VM_TVER='t30';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
+var VM_TVER='t31';  /* etiqueta de version de los temas; subir (t2, t3...) al editar temas */
 /* Pre-cargado silencioso: tras cargar la app, bajamos los temas de la lista en segundo
    plano (poco a poco) para que abran INSTANTANEOS y funcionen sin internet. Solo en buena
    señal y si NO esta activado el ahorro de datos, para no gastar los datos del usuario. */
@@ -34356,6 +34359,10 @@ function _vmMarcarValido(acc,r){try{localStorage.setItem('vademed_acceso',JSON.s
    contra el perfil: asi no vuelve a preguntar en cada apertura. */
 function vmLastCod(){try{return localStorage.getItem('vademed_lastvalid_cod')||'';}catch(e){return '';}}
 var VM_NOVEDADES=[
+ {v:'2026.08.17', fecha:'21 de agosto de 2026', notas:[
+  {c:'Corrección', ic:'⭐', t:'Vuelve la estrella de favoritos en los temas', d:'No faltaba en algunos temas: faltaba en los 208. El botón nunca llegó a ponerse en la barra del visor, aunque el código lo buscaba en tres sitios para pintarlo encendido o apagado. Ahora está junto al título, al lado del botón de abrir en pestaña nueva.'},
+  {c:'Mejora', ic:'🏷️', t:'CIE-10 en los 20 temas que no lo traían', d:'Cuatro sí eran diagnóstico y llevan su código: neumonía intrahospitalaria, electrolitos, electrolitos por vía oral y agonistas GLP-1. Los otros 16 son procedimientos o referencias -suturas, sondas, dermatomas, dietas- y CIE-10 codifica diagnósticos, no procedimientos: en esos aparece el código del diagnóstico que los indica, que es el que necesitas para la nota. Por ejemplo, sonda endopleural muestra J93.9 neumotórax y J90 derrame pleural.'}
+ ]},
  {v:'2026.08.16', fecha:'21 de agosto de 2026', notas:[
   {c:'Nuevo', ic:'\uD83E\uDEC1', t:'Neumonía intrahospitalaria (HAP/VAP)', d:'Tema nuevo en Infectología, al lado de la neumonía de la comunidad. Cubre la que aparece a las 48 h o más de estar internado y la asociada a ventilador: cuándo sospecharla, cómo cubrir de entrada según el riesgo de gérmenes multirresistentes, y cuándo desescalar con el cultivo.'}
  ]},
